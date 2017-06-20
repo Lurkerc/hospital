@@ -9,7 +9,7 @@
     <!-- 数据搜索 -->
     <el-form :inline="true" :model="searchObj" ref="searchForm" class="el-form-item-search">
       <el-form-item label="房间号：">
-        <el-input v-model.number="searchObj.roomNum" :maxlength="8" />
+        <el-input v-model="searchObj.roomNum" :maxlength="8" />
       </el-form-item>
       <el-form-item label="使用类型：">
         <el-select v-model="searchObj.employType" placeholder="请选择">

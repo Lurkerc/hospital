@@ -25,7 +25,7 @@
 
         <el-col :span="8" :offset="2">
           <el-form-item label="维修费用：" prop="cost" required>
-            <el-input v-model.number="formValidate.cost"></el-input>
+            <el-input v-model="formValidate.cost"></el-input>
           </el-form-item>
         </el-col>
 

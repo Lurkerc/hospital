@@ -13,7 +13,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="数量：" prop="borrowerNum" required>
-            <el-input v-model.number="formValidate.borrowerNum"></el-input>
+            <el-input v-model="formValidate.borrowerNum"></el-input>
           </el-form-item>
         </el-col>
 

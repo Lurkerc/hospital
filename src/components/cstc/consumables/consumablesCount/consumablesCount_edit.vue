@@ -13,13 +13,13 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="预期数量：" prop="expectNum" required>
-            <el-input v-model.number="formValidate.expectNum"></el-input>
+            <el-input v-model="formValidate.expectNum"></el-input>
           </el-form-item>
         </el-col>
 
         <el-col :span="8" :offset="2">
           <el-form-item label="实际数量：" prop="actualNum" required>
-            <el-input v-model.number="formValidate.actualNum"></el-input>
+            <el-input v-model="formValidate.actualNum"></el-input>
           </el-form-item>
         </el-col>
 

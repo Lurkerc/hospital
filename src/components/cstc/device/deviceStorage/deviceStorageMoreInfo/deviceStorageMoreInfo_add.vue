@@ -9,8 +9,8 @@
         </el-col>
         <el-col :span="9" :offset="2">
           <el-form-item label="单价：" prop="price" required>
-            <!--<el-input v-model.number="formValidate.price" @blur="formatRMB" placeholder="请输入单价"></el-input>-->
-            <el-input v-model.number="formValidate.price" placeholder="请输入单价"></el-input>
+            <!--<el-input v-model="formValidate.price" @blur="formatRMB" placeholder="请输入单价"></el-input>-->
+            <el-input v-model="formValidate.price" placeholder="请输入单价"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="9" :offset="2">

@@ -28,7 +28,7 @@
         <el-col :span="18" :offset="2">
           <el-col :span="11">
             <el-form-item label="所在楼层：" prop="floor" required>
-              <el-input v-model.number="formValidate.floor" placeholder="请输入所在楼层：1"></el-input>
+              <el-input v-model="formValidate.floor" placeholder="请输入所在楼层：1"></el-input>
             </el-form-item>
           </el-col>
         </el-col>

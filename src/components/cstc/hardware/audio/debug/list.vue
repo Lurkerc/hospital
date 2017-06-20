@@ -27,7 +27,7 @@
             <div class="floatRight">
               <el-button size="small" type="info" @click="setBoxVol('add')">增大音量</el-button>
               <el-button size="small" type="info" @click="setBoxVol('red')">减小音量</el-button>
-              <el-input placeholder="音量" size="small" :maxlength="3" v-model.number="boxVol" class="setVolume">
+              <el-input placeholder="音量" size="small" :maxlength="3" v-model="boxVol" class="setVolume">
                 <el-button slot="append" type="info" @click="setBoxVol(false)">设置音量</el-button>
               </el-input>
             </div>

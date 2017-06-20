@@ -167,8 +167,9 @@ let mustRules = {
 
   // 数字
   number: {
-    type: 'number',
+    // type: 'number',
     message: '该项必须为数字',
+    pattern: /^\d{1,10}$/,
     trigger: defEvent
   },
 };

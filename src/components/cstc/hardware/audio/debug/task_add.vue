@@ -36,7 +36,7 @@
                 </el-select> 秒
               </el-radio>
               <el-radio label="FREQUENCY">播放次数：
-                <el-input v-model.number="formValidate.frequency" placeholder="0为循环播放" :maxLength="4" style="width:158px;"></el-input>
+                <el-input v-model="formValidate.frequency" placeholder="0为循环播放" :maxLength="4" style="width:158px;"></el-input>
               </el-radio>
             </el-radio-group>
           </el-form-item>

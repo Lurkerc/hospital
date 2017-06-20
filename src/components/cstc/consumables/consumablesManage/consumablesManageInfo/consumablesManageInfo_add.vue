@@ -9,12 +9,12 @@
         </el-col>
         <el-col :span="9" :offset="2">
           <el-form-item label="购买数量：" prop="buyNum" required>
-            <el-input v-model.number="formValidate.buyNum" placeholder="请输入购买数量"></el-input>
+            <el-input v-model="formValidate.buyNum" placeholder="请输入购买数量"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="9" :offset="2">
           <el-form-item label="单价：" prop="price" required>
-            <el-input v-model.number="formValidate.price" placeholder="请输入单价"></el-input>
+            <el-input v-model="formValidate.price" placeholder="请输入单价"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="9" :offset="2">

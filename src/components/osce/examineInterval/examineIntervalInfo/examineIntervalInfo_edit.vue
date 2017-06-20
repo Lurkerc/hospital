@@ -33,7 +33,7 @@
             <el-form-item label-width="0" prop="restNum">
               <span style="float:left;">每考 </span>
               <el-col :span="5">
-                <el-input v-model.number="info.restNum" size="small" :disabled="!canEdit"></el-input>
+                <el-input v-model="info.restNum" size="small" :disabled="!canEdit"></el-input>
               </el-col>
               <span> 站休息一次 </span>
             </el-form-item>
@@ -42,7 +42,7 @@
             <el-form-item label-width="0" prop="restTime">
               <span style="float:left;">每次休息 </span>
               <el-col :span="5">
-                <el-input v-model.number="info.restTime" size="small" :disabled="!canEdit"></el-input>
+                <el-input v-model="info.restTime" size="small" :disabled="!canEdit"></el-input>
               </el-col>
               <span> 分钟</span>
             </el-form-item>
@@ -51,7 +51,7 @@
             <el-form-item label-width="0" prop="moveTime">
               <span style="float:left;">换站时间：</span>
               <el-col :span="5">
-                <el-input v-model.number="info.moveTime" size="small" :disabled="!canEdit"></el-input>
+                <el-input v-model="info.moveTime" size="small" :disabled="!canEdit"></el-input>
               </el-col>
               <span>分钟</span>
             </el-form-item>
@@ -60,7 +60,7 @@
             <el-form-item label-width="0" prop="basicsTime">
               <span style="float:left;">考试时间基数：</span>
               <el-col :span="5">
-                <el-input v-model.number="info.basicsTime" size="small" :disabled="!canEdit"></el-input>
+                <el-input v-model="info.basicsTime" size="small" :disabled="!canEdit"></el-input>
               </el-col>
               <span>分钟</span>
             </el-form-item>

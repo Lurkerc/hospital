@@ -11,13 +11,13 @@
 
         <el-col :span="8" :offset="2">
           <el-form-item label="参考单价：" prop="price" placeholder="请输入" required>
-            <el-input v-model.number="formValidate.price"></el-input>
+            <el-input v-model="formValidate.price"></el-input>
           </el-form-item>
         </el-col>
 
         <el-col :span="8" :offset="2">
           <el-form-item label="库存：" prop="stock" placeholder="请输入" required>
-            <el-input v-model.number="formValidate.stock"></el-input>
+            <el-input v-model="formValidate.stock"></el-input>
           </el-form-item>
         </el-col>
 
