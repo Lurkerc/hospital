@@ -647,11 +647,11 @@ export default {
         * */
         conductDate(date,format){
 
-          if(typeof date =='string'){
-            date =  parseDate(date,format)
-          }else {
-            date =  formatDate(date,format)
-          }
+          // if(typeof date =='string'){
+          //   date =  parseDate(date,format)
+          // }else {
+            date =  formatDate(date,format);
+          // }
           return date
         },
 
