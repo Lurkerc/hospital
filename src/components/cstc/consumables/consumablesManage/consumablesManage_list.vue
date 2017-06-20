@@ -27,7 +27,7 @@
         </el-table-column>
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="序号" type="index" width="100" align="center"></el-table-column>
-        <el-table-column label="名称" prop="consumablesName" show-overflow-tooltip></el-table-column>
+        <el-table-column label="耗材名称" prop="consumablesName" show-overflow-tooltip></el-table-column>
         <el-table-column label="库存" prop="stock" show-overflow-tooltip>
           <template scope="scope">
             {{ scope.row.stock || 0 }}
@@ -76,8 +76,10 @@
         <div class="remove">确认导出吗</div>
         <el-row>
           <el-col :span="10" :offset="14">
-            <a :href="derUrl"><el-button @click="affirmDerive"  type="primary">确定</el-button></a>
-            <el-button class="but-col" @click=" deriveModal=false" >取消</el-button>
+            <a :href="derUrl">
+              <el-button @click="affirmDerive" type="primary">确定</el-button>
+            </a>
+            <el-button class="but-col" @click=" deriveModal=false">取消</el-button>
           </el-col>
           </el-col>
         </el-row>
@@ -130,7 +132,7 @@
     data() {
       return {
         api, // 当前模块api
-        derUrl:'',
+        derUrl: '',
         operailityData: '', // 操作数据集
         multipleSelection: [], // 表格选中索引
         dynamicHt: 100, // 表格自适应高度
@@ -303,12 +305,12 @@
       // 导出耗材
       derive() {
         let deviceTypeIds = [];
-        for(let i=0;i<this.multipleSelection.length;i++){
+        for (let i = 0; i < this.multipleSelection.length; i++) {
           deviceTypeIds.push(this.multipleSelection[i].id);
         }
         deviceTypeIds = deviceTypeIds.join(',');
-        this.derUrl = '/api/consumables/excelExport?ids='+deviceTypeIds;
-          this.openModel('derive');
+        this.derUrl = '/api/consumables/excelExport?ids=' + deviceTypeIds;
+        this.openModel('derive');
       },
       // 盘点完成返回盘点页面
       addCountDone(target, title, updata) {
@@ -335,7 +337,7 @@
       },
 
       //确定导出
-      affirmDerive(){
+      affirmDerive() {
         this.cancel('derive')
 
       },

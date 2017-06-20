@@ -4,11 +4,12 @@
       <el-row>
 
         <el-col :span="8" :offset="2">
-          <el-form-item label="设备名称：" prop="consumablesId" required>
-            <el-select v-model="formValidate.consumablesId" filterable placeholder="请选择">
+          <el-form-item label="耗材名称：" required>
+            <!--<el-select v-model="formValidate.consumablesId" filterable placeholder="请选择">
               <el-option v-for="item in deviceOptions" :key="item.id" :label="item.consumablesName" :value="item.id">
               </el-option>
-            </el-select>
+            </el-select>-->
+            {{ formValidate.consumablesName }}
           </el-form-item>
         </el-col>
         <el-col :span="8" :offset="2">
@@ -87,7 +88,7 @@
           callParEvent: 'listenSubEvent'
         },
         countDate: 0,
-        // 设备名称
+        // 耗材名称
         deviceOptions: [],
         //form表单bind数据
         formValidate: {
@@ -201,8 +202,9 @@
        * 组件初始化入口
        * */
       init() {
-        this.getSelectData();
+        // this.getSelectData();
         //this.ajax(this.listMessTitle)
+        this.getDataForServer();
       }
     }
   }

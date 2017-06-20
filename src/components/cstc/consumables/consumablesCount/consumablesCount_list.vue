@@ -8,7 +8,7 @@
     </div>
     <!-- 数据搜索 -->
     <el-form :inline="true" :model="searchObj" ref="searchForm" label-width="86px" class="el-form-item-search" style="margin-top:10px">
-      <el-form-item label="设备名称：">
+      <el-form-item label="耗材名称：">
         <el-input v-model="searchObj.consumablesName" />
       </el-form-item>
       <el-form-item label="盘点人：">
@@ -35,7 +35,7 @@
             <el-button size="small" type="warning" @click="edit(scope.$index,scope.row)">修改</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="设备名称" prop="consumablesName" align="center"></el-table-column>
+        <el-table-column label="耗材名称" prop="consumablesName" align="center"></el-table-column>
         <el-table-column label="预期数量" prop="expectNum" show-overflow-tooltip></el-table-column>
         <el-table-column label="实际数量" prop="actualNum" show-overflow-tooltip></el-table-column>
         <el-table-column label="相差数量" prop="differenceNum" show-overflow-tooltip></el-table-column>
@@ -102,7 +102,7 @@
         api,
         // 搜索
         searchObj: {
-          consumablesName: '', // 设备名称
+          consumablesName: '', // 耗材名称
           inventoryMan: '', // 盘点人
           inventoryStartTime: '', // 开始时间
           inventoryEndTime: '', // 结束时间

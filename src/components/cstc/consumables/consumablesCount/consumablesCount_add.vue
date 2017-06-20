@@ -4,7 +4,7 @@
       <el-row>
 
         <el-col :span="8" :offset="2">
-          <el-form-item label="设备名称：" prop="consumablesId" required>
+          <el-form-item label="耗材名称：" prop="consumablesId" required>
             <el-select v-model="formValidate.consumablesId" filterable placeholder="请选择">
               <el-option v-for="item in deviceOptions" :key="item.id" :label="item.consumablesName" :value="item.id">
               </el-option>
@@ -75,7 +75,7 @@
           callParEvent: 'listenSubEvent'
         },
         countDate: 0,
-        // 设备名称
+        // 耗材名称
         deviceOptions: [],
         //form表单bind数据
         formValidate: {

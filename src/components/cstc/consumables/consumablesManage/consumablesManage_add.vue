@@ -4,7 +4,7 @@
       <el-row>
 
         <el-col :span="8" :offset="2">
-          <el-form-item label="物品名称：" prop="consumablesName" placeholder="请输入" required>
+          <el-form-item label="耗材名称：" prop="consumablesName" placeholder="请输入" required>
             <el-input v-model="formValidate.consumablesName"></el-input>
           </el-form-item>
         </el-col>
@@ -72,7 +72,7 @@
 
         //form表单bind数据
         formValidate: {
-          consumablesName: '', // 设备名称
+          consumablesName: '', // 耗材名称
           describes: '', // 描述
           stock: '', // 库存
           price: '', // 单价
