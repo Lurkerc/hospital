@@ -43,12 +43,14 @@
             width: 100%;
             text-align: center;
             color: white;
+            font-weight: bold;
         }
         .roomNum {
-            top: 10px;
+            top: 14px;
         }
         .roomType {
-            bottom: 10px;
+            color: red;
+            bottom: 2px;
         }
         .carouselContent {
             height: 20px;

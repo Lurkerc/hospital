@@ -45,7 +45,7 @@
                 :key="index+'-'+cIndex" @roomClick="roomClick" @iconAdd="addRoomChildren(index)" @iconRemove="removeRoomChildren(index,cIndex)"
                 style="width:80px;margin-left:40px;"></room>
 
-              <room v-else :option="{hasMore: cIndex > 0,hasAdd:false,hasRemove:false,}" :initData="{index: index,cIndex:cIndex,name:roomData[index].stationName}"
+              <room v-else :option="{hasMore: cIndex > 0,hasAdd:false,hasRemove:false,}" :initData="{index: index,cIndex:cIndex,name:roomData[index].stationName,roomNum:item.room[cIndex].roomNum,roomType:roomData[index].stationType === 'SP' ? 'SP' : ''}"
                 :key="index+'-'+cIndex" style="width:80px;margin-left:40px;"></room>
             </el-tooltip>
           </template>
