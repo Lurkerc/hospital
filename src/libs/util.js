@@ -496,8 +496,9 @@ export default {
                 this.errorMess(errorTitle);
               }
             }
-            isLoadingFun(false);
+
             queCount--;
+            isLoadingFun(false);
             if(!queCount){
               this.ajaxCreateLoading(false);
             }
@@ -511,20 +512,56 @@ export default {
          * */
         ajaxError(isLoadingFun) {
           if (!isLoadingFun) isLoadingFun = function () {};
-          return (response) => {
-            if (response instanceof Error) {
-              this.errorMess(response.message);
-              isLoadingFun(false)
+          return (error) => {
+            if (error.response) {
+              isLoadingFun(false);
+              queCount--;
               if(!queCount){
                 this.ajaxCreateLoading(false);
               }
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+             util.handleAjaxError(this,error.response.status+'');
+
+              // console.log(error.response.status);
+              // console.log(error.response.headers);
+            } else if (error.request) {
+              isLoadingFun(false);
+              queCount--;
+              if(!queCount){
+                this.ajaxCreateLoading(false);
+              }
+              // The request was made but no response was received
+              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in node.js
+              this.errorMess(error.request);
             } else {
-              this.errorMess(response.status + "错误!");
               isLoadingFun(false)
+              queCount--;
               if(!queCount){
                 this.ajaxCreateLoading(false);
               }
+              // Something happened in setting up the request that triggered an Error
+              this.errorMess(error.message);
             }
+            // this.errorMess(error.config);
+
+            /*if (response instanceof Error) {
+              isLoadingFun(false)
+              queCount--;
+              console.log("----",response.data);
+              if(!queCount){
+                this.ajaxCreateLoading(false);
+              }
+              this.errorMess(response.message+"6666");
+            } else {
+              isLoadingFun(false)
+              queCount--;
+              if(!queCount){
+                this.ajaxCreateLoading(false);
+              }
+              this.errorMess(response.status + "错误7777!");
+            }*/
           };
         },
 
