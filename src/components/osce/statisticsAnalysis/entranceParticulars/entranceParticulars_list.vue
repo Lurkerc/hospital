@@ -3,7 +3,7 @@
   <div id="content" ref="content" style="height:100%;">
     <el-form ref="formValidate" label-width="100px">
       <el-row>
-        <el-col :span="5" :offset="19">
+        <el-col :span="5" :offset="19" align="right">
           <el-button type="primary" @click="goBack">返回</el-button>
         </el-col>
       </el-row>
