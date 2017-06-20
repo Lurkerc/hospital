@@ -1,31 +1,34 @@
 <template>
+  <!-- 修改报废记录 -->
   <div class="editForm">
     <el-form :model="formValidate" ref="formValidate" label-width="124px" :rules="rules">
       <el-row>
 
         <el-col :span="8" :offset="2">
-          <el-form-item label="设备名称：" prop="deviceTypeId" required>
-            <el-select v-model="selectIndex" filterable placeholder="请选择" @change="selectDeviceTypeId">
+          <el-form-item label="设备名称：" required>
+            <!--<el-select v-model="selectIndex" filterable placeholder="请选择" @change="selectDeviceTypeId">
               <el-option v-for="(item,index) in selectObj" :key="index" :label="item.deviceTypeName" :value="index">
               </el-option>
-            </el-select>
+            </el-select>-->
+            {{ formValidate.deviceTypeName }}
           </el-form-item>
         </el-col>
         <el-col :span="8" :offset="2">
-          <el-form-item label="设备编号：" prop="deviceId" required>
-            <template v-if="selectObj[selectIndex]">
+          <el-form-item label="设备编号：" required>
+            <!--<template v-if="selectObj[selectIndex]">
               <el-select v-model="selectTypeIndex" filterable placeholder="请选择" @change="selectDeviceId">
                 <el-option v-for="(item,cIndex) in selectObj[selectIndex].deviceList" :key="item.value" :label="item.deviceIdentifier" :value="cIndex">
                 </el-option>
               </el-select>
             </template>
-            <p v-else style="line-height:40px;">请先选择设备</p>
+            <p v-else style="line-height:40px;">请先选择设备</p>-->
+            {{ formValidate.deviceIdentifier }}
           </el-form-item>
         </el-col>
 
         <el-col :span="8" :offset="2">
           <el-form-item label="报废时间：" prop="scrapTime" required>
-            <el-date-picker v-model="formValidate.scrapTime" type="datetime" placeholder="选择报废日期">
+            <el-date-picker v-model="formValidate.scrapTime" :editable="false" type="datetime" placeholder="选择报废日期">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -132,17 +135,18 @@
       listenSubEvent(isLoadingFun) {
         let isSubmit = this.submitForm("formValidate");
         if (isSubmit) {
-          if (!(this.selectObj[this.selectIndex].deviceList && this.selectObj[this.selectIndex].deviceList[this.selectTypeIndex])) {
-            this.errorMess('所选的设备编号与设备不对应，请重新选择');
-            return
-          }
+          // if (!(this.selectObj[this.selectIndex].deviceList && this.selectObj[this.selectIndex].deviceList[this.selectTypeIndex])) {
+          //   this.errorMess('所选的设备编号与设备不对应，请重新选择');
+          //   return
+          // }
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
           this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
-          // let data = this.editMessTitle.ajaxParams.data;
+          let data = this.editMessTitle.ajaxParams.data;
           // let selectData = this.selectObj[this.selectIndex].deviceList[this.selectTypeIndex];
           // data.deviceId = selectData.id;
-          data.deviceTypeId = selectData.deviceTypeId;
+          data.scrapTime = this.conductDate(data.scrapTime, 'yyyy-MM-dd HH:mm:ss');
+          // data.deviceTypeId = selectData.deviceTypeId;
           this.ajax(this.editMessTitle, isLoadingFun)
         }
       },
@@ -187,7 +191,7 @@
       },
       getDataSuccess(res) {
         this.formValidate = res.data // 初始化编辑数据
-        this.getSelectDataIndex();
+        // this.getSelectDataIndex();
       },
       /**
        * 获取选择设备列表
@@ -255,7 +259,8 @@
        * 组件初始化入口
        * */
       init() {
-        this.getSelectData()
+        this.getDataForServer()
+        // this.getSelectData()
       }
     }
   }

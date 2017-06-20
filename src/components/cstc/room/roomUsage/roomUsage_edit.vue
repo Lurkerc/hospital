@@ -5,10 +5,11 @@
       <el-row>
         <el-col :span="8" :offset="2">
           <el-form-item label="房间：" prop="roomId" required>
-            <el-select v-model="formValidate.roomId" placeholder="请选择">
+            <!--<el-select v-model="formValidate.roomId" placeholder="请选择">
               <el-option v-for="item in roomIdOption" :key="item.id" :label="item.roomNum" :value="item.id">
               </el-option>
-            </el-select>
+            </el-select>-->
+            {{ formValidate.roomNum }}
           </el-form-item>
         </el-col>
 
@@ -145,8 +146,8 @@
           isLoadingFun(true);
           this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
           let data = this.editMessTitle.ajaxParams.data;
-          data.startTime = this.conductDate(data.startTime, 'yyyy-MM-dd HH:mm:ss') || '';
-          data.endTime = this.conductDate(data.endTime, 'yyyy-MM-dd HH:mm:ss') || '';
+          data.startTime = this.conductDate(data.startTime, 'yyyy-MM-dd HH:mm:ss');
+          data.endTime = this.conductDate(data.endTime, 'yyyy-MM-dd HH:mm:ss');
           this.ajax(this.editMessTitle, isLoadingFun)
         }
       },
@@ -224,7 +225,8 @@
       init() {
         Util = this.$util;
         this.staticPath = this.$store.getters.getEnvPath.http;
-        this.getSelectData()
+        // this.getSelectData()
+        this.getDataForServer()
       },
     },
     created() {
