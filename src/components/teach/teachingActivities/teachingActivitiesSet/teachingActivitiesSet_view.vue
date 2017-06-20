@@ -1,0 +1,148 @@
+<template>
+  <div>
+    <el-form :model="data" ref="data" :rules="this.$store.state.rules.authority" label-width="100px">
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="科室" prop="name1">
+            {{data.depName}}
+          </el-form-item>
+          <el-form-item label="活动名称" prop="name1">
+            {{data.activityName}}
+          </el-form-item>
+          <el-form-item label="活动时间" prop="activityTime">
+            {{data.activityTime}}
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="类型" prop="name4">
+            {{data.activityType}}
+          </el-form-item>
+          <el-form-item label="主持人" prop="name5">
+            {{data.hostUserId}}
+          </el-form-item>
+          <el-form-item label="活动地点" prop="name6">
+            {{data.activitySite}}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="时间段" prop="name7">
+            {{data.recordTimes}}
+            <!--<span v-for="item in data.recordTimes" :key="item" >{{item+'  '}}</span>-->
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="病例" prop="whetherNeedCases">
+            {{data.whetherNeedCases=='YES'?'需要':data.whetherNeedCases=='NO'?'不需要':data.whetherNeedCases}}
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="病例名称" prop="name7" v-if="data.whetherNeedCases=='YES'">
+            {{data.casesName}}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="活动内容" prop="name8">
+            <div class="grid-content">
+              <el-input type="textarea" :rows="6" readonly resize="none" v-model="data.activityContent"></el-input>
+            </div>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="参加人" prop="name9">
+            {{data.activityUserTypeValueName}}
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+    </el-form>
+    <!--选择人员-->
+
+  </div>
+</template>
+<script>
+  export default{
+    //props接收父组件传递过来的数据
+    props: ['operailityData','url'],
+
+    data(){
+        return{
+
+          //获取的数据
+          "data":{
+            "id":1,
+            "depId":2,
+            "depName":"内科",
+            "activityName":"教学查房",
+            "activityType":"理论",
+            "hostUserId":2,
+            "hostUserName":"张三",
+            "activityTime":"2017-03-31",
+            "activitySite":"教学楼三楼301室",
+            "activityUser":"呼吸科-住院医师",
+            "whetherNeedCases":"YES",
+            "casesName":"穿刺术",
+            "activityContent":"活动内容",
+            "activityUserType":"rotarydep",
+            "activityUserTypeValue":"2,3, 4",
+            "activityUserTypeValueName":"呼吸内科,消化内科, 血液内科",
+            "activityDepUserType":"",
+            "shouldUserCount":30,
+            "actuallyUserCount":10,
+            "timeIds":"1,2,3",
+            "recordTimes":"8:00-9:00,10:00-11:00，11:10-12:00",
+            "activityState":"nosubmit",
+            "fileList":[
+              {
+                "fileId":"2",
+                "fileName":"文件名称",
+                "fileUrl":"www.baidu.com",
+                "fileType":"txt"
+              }
+            ]
+          },
+
+          //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
+          listMessTitle: {
+            ajaxSuccess: 'oneDataSuccess',
+            ajaxParams: {
+              url: this.url.teachctivityGet+'/'+this.operailityData.id,
+              params: {},
+            }
+          },
+        }
+      },
+    mounted(){
+      //暂时没有初始化,预留初始化入口
+      this.init();
+    },
+    methods:{
+      /*
+       * 组件初始化入口
+       * */
+      init(){
+        this.ajax(this.listMessTitle)
+      },
+
+
+      /*
+       * 默认组件第一次请求数据
+       * @param res JSON  数据请求成功后返回的数据
+       * 注:当前为添加页面暂时未用到,属于预留
+       * */
+      oneDataSuccess(responseData){
+        let data = responseData.data;
+        this.data = data;
+      },
+
+
+    }
+  }
+</script>

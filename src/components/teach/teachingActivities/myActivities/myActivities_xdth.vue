@@ -1,0 +1,249 @@
+<!--档案查看-->
+<template>
+  <div>
+    <el-form  ref="formValidate"  label-width="100px">
+      <fieldset class="layui-elem-field ">
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="课程名称:" prop="name1">
+              {{data.activityName}}
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="授课地点:" prop="name4">
+              {{data.activitySite}}
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="授课对象:" prop="name4">
+              {{data.activitySite}}
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="课程类型:" prop="name1">
+              {{data.activityType}}
+            </el-form-item>
+
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="课程时间:" prop="name4">
+              {{data.activityTime}}
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="授课老师:" prop="name4">
+              {{data.hostUserName}}
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="课程内容:" prop="name1">
+              {{data.activityContent}}
+            </el-form-item>
+
+          </el-col>
+        </el-row>
+      </fieldset>
+      </br>
+      <fieldset class="layui-elem-field">
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="心得体会:" prop="name1">
+            <el-input type="textarea" :rows="6"  resize="none" v-model="formValidate.activityTips"></el-input>
+          </el-form-item>
+
+        </el-col>
+      </el-row>
+
+
+
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="相关资料:" prop="name7">
+            <upload-file  :type="'picture'" :uploadFiles="data.fileList" @setUploadFiles="setUploadFiles"></upload-file>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      </fieldset>
+
+      <el-form-item>
+        <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+        <el-button  @click="cancel">取消</el-button>
+      </el-form-item>
+
+    </el-form>
+  </div>
+</template>
+<script>
+  export default {
+      props:['operailityData','url'],
+    data() {
+      return {
+        //保存按钮基本信息
+        loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
+        //获取到的数据
+        "data":{
+          "id":1,
+          "activityName":"教学查房",
+          "activityType":"理论",
+          "hostUserId":2,
+          "hostUserName":"张三",
+          "activityTime":"2017-03-31",
+          "activitySite":"教学楼三楼301室",
+          "activityContent":"活动内容",
+          "activityTips":"心得体会",
+          "activityTipsId":1,
+          "fileList":[
+            {
+              "fileId":"2",
+              "fileName":"文件名称",
+              "fileType":"txt"
+            }
+          ],
+          "activityTipsFileList":[
+            {
+              "fileId":"5",
+              "fileName":"心得体会照片",
+              "fileType":"jpg"
+            }
+          ]
+        },
+
+        formValidate:{
+          activityId:this.operailityData.id,      //教学活动ID
+          activityTips:'',      //心得体会
+          fileIds:'',
+        },
+
+        //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
+        listMessTitle:{
+          ajaxSuccess:'updateListData',
+          ajaxParams:{
+            url:this.url.teachActivityTips+'/'+this.operailityData.id,
+            params:{}
+          }
+        },
+        isAdd:true,
+        //当前组件提交(add)数据时,ajax处理的 基础信息设置
+        editMessTitle:{
+          type:'xdth',
+          successTitle:'修改成功!',
+          errorTitle:'修改失败!',
+          ajaxSuccess:'ajaxSuccess',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url:this.url.teachActivityModify+'/',
+            method:'put'
+          }
+        },
+        //当前组件提交(add)数据时,ajax处理的 基础信息设置
+        addMessTitle:{
+          type:'xdth',
+          successTitle:'修改成功!',
+          errorTitle:'修改失败!',
+          ajaxSuccess:'ajaxSuccess',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url:this.url.teachActivityAdd,
+            method:'post'
+          }
+        },
+      };
+
+    },
+
+    created(){
+      this.init();
+    },
+
+    methods: {
+
+      init(){
+        this.ajax(this.listMessTitle)
+      },
+
+      /*
+       * 点击提交按钮 监听是否提交数据
+       * @param isLoadingFun boolean  form表单验证是否通过
+       * */
+      listenSubEvent(isLoadingFun){
+        let isSubmit = this.submitForm("formValidate");
+
+        if(isSubmit){
+          if(!isLoadingFun) isLoadingFun=function(){};
+          isLoadingFun(true);
+          let formValidate;
+          if (!this.isAdd){
+            formValidate = this.editMessTitle;
+          }else {
+            formValidate = this.addMessTitle;
+          }
+          formValidate.ajaxParams.data=this.getFormData(this.formValidate);
+          this.ajax(formValidate,isLoadingFun)
+        }
+      },
+
+
+      handleClick(tab, event) {
+        //console.log(tab, event);
+      },
+
+      //通过get请求列表数据
+      updateListData(responseData){
+        this.data = responseData.data;
+        if(responseData.data.activityTipsId){
+          this.isAdd=false;
+          this.editMessTitle.ajaxParams.url = this.editMessTitle.ajaxParams.url+responseData.data.activityTipsId;
+          this.formValidate.activityTips = responseData.data.activityTips;
+        }
+
+      },
+
+
+      setUploadFiles(ids){
+          this.formValidate.fileIds = ids;
+      },
+
+
+      /*
+       * 点击提交按钮 监听是否验证通过
+       * @param formName string  form表单v-model数据对象名称
+       * @return flag boolean   form表单验证是否通过
+       * */
+      submitForm(formName){
+        let flag = false;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            flag= true;
+          }
+        });
+        return flag;
+      },
+
+
+      /*
+       * 当前组件发送事件给父组件
+       * 发送关闭(cancel)模态事件给父组件,请求关闭当前模态窗
+       * */
+      cancel(){
+        this.$emit('cancel','xdth');
+      },
+
+
+      /*
+       * 获取表单数据
+       * @return string  格式:id=0&name=aa
+       * */
+      getFormData(data){
+        let myData = this.$util._.defaultsDeep({},data);
+        return myData;
+      },
+    }
+  };
+</script>

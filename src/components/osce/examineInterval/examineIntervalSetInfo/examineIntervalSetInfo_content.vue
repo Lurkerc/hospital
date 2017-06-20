@@ -1,0 +1,292 @@
+<template>
+  <div>
+    <el-row style="margin:20px 0;">
+      <el-col align="right">
+        <el-button type="primary" @click="addContent">添加考核内容</el-button>
+      </el-col>
+    </el-row>
+    <el-table align="center" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo spSelectTime" style="width: 100%;">
+      <el-table-column label="考核内容名称" width="180" prop="contentName" show-overflow-tooltip>
+        <template scope="scope">
+          <el-input v-model="scope.row.contentName"></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column label="评分表" prop="scoreTableName" show-overflow-tooltip>
+        <template scope="scope">
+          {{ scope.row.scoreTableName || '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="病例" prop="caseName" show-overflow-tooltip>
+        <template scope="scope">
+          {{ scope.row.caseName || '-' }}
+        </template>
+      </el-table-column>
+      <template v-if="stationType === 'SP'">
+        <el-table-column label="剧本" prop="scriptName" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.scriptName || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="SP评分表" prop="spScoreTableName" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.spScoreTableName || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="考核时间" prop="timeCount" width="110">
+          <template scope="scope">
+            <!--<el-input v-model="scope.row.timeCount"></el-input>-->
+            <el-select v-model="scope.row.timeCount" placeholder="请选择">
+              <el-option v-for="item in 10" :key="item" :label="item * basicsTime" :value="item">
+              </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+      </template>
+      <el-table-column label="操作" width="180">
+        <template scope="scope">
+          <el-button size="mini" type="success" style="margin-left:0;margin-right:10px;" @click="openSelectScore(scope.$index)">评分表</el-button>
+          <el-button size="mini" type="warning" style="margin-left:0;margin-right:10px;" @click="openSelectCase(scope.$index)">病例</el-button>
+          <el-button size="mini" type="danger" style="margin-left:0;" @click="removeContent(scope.$index)">删除</el-button>
+          <template v-if="stationType === 'SP'">
+            <el-button size="mini" type="info" style="margin-left:0;margin-right:10px;" @click="openSelectSPScore(scope.$index)">SP评分表</el-button>
+            <el-button size="mini" style="margin-left:0;" @click="openSelectScript(scope.$index)">剧本</el-button>
+          </template>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- 底部按钮 -->
+    <el-row>
+      <el-col :span="8" :offset="4" align="center" style="margin-top:20px;">
+        <el-button type="warning" @click="pre">上一步</el-button>
+      </el-col>
+      <el-col :span="8" align="center" style="margin-top:20px;">
+        <el-button type="success" @click="next">下一步</el-button>
+      </el-col>
+    </el-row>
+
+    <!-- 模态框 选择评分表（select） -->
+    <Modal :mask-closable="false" v-model="scoreSelectModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="840">
+      <modal-header slot="header" :content="headerContent.scoreSelectId"></modal-header>
+      <score-select v-if="scoreSelectModal" @cancel="cancel" @select="selectScore"></score-select>
+      <div slot="footer"></div>
+    </Modal>
+    <!-- 模态框 选择SP评分表（select） -->
+    <Modal :mask-closable="false" v-model="spScoreSelectModal" height="200" title="对话框标题" class-name="vertical-center-modal"
+      :width="840">
+      <modal-header slot="header" :content="headerContent.spScoreSelectId"></modal-header>
+      <score-select v-if="spScoreSelectModal" @cancel="cancel" @select="selectSPScore"></score-select>
+      <div slot="footer"></div>
+    </Modal>
+    <!-- 模态框 选择病例表（select） -->
+    <Modal :mask-closable="false" v-model="caseSelectModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="840">
+      <modal-header slot="header" :content="headerContent.caseSelectId"></modal-header>
+      <case-select v-if="caseSelectModal" @cancel="cancel" @select="selectCase"></case-select>
+      <div slot="footer"></div>
+    </Modal>
+    <!-- 模态框 选择剧本（select） -->
+    <Modal :mask-closable="false" v-model="scriptSelectModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="840">
+      <modal-header slot="header" :content="headerContent.scriptSelectId"></modal-header>
+      <script-select v-if="scriptSelectModal" @cancel="cancel" @select="selectScript" :caseId="caseId"></script-select>
+      <div slot="footer"></div>
+    </Modal>
+  </div>
+</template>
+
+<script>
+  import scoreSelect from '../../assessmentContent/assessmentContentScore/assessmentContentScore_select'; // 评分表
+  import caseSelect from '../../assessmentContent/assessmentContentCase/assessmentContentCase_select'; // 病例表
+  import scriptSelect from '../../assessmentContent/assessmentContentScript/assessmentContentScript_select'; // 剧本选择
+
+  export default {
+    data() {
+      return {
+        self: this,
+        stationType: '', // 当前考站类型
+        basicsTime: 1, // 考试时间基数
+        caseId: 0, // 病例id
+        tableData: [],
+
+        scoreSelectModal: false,
+        spScoreSelectModal: false,
+        caseSelectModal: false,
+        scriptSelectModal: false,
+        row: 0, // 当前操作第几行
+        // 模态框顶部标识
+        headerContent: {
+          scoreSelectId: {
+            id: 'scoreSelectId',
+            title: '选择评分表'
+          },
+          spScoreSelectId: {
+            id: 'spScoreSelectId',
+            title: '选择SP评分表'
+          },
+          caseSelectId: {
+            id: 'caseSelectId',
+            title: '选择病例表'
+          },
+          scriptSelectId: {
+            id: 'scriptSelectId',
+            title: '选择剧本'
+          }
+        },
+      }
+    },
+    methods: {
+      // 上一步
+      pre() {
+        this.$emit('goStep', 1)
+      },
+      // 下一步
+      next() {
+        if (!this.checkData()) return;
+        this.$emit('goStep', 3);
+      },
+      /********************** 数据校验 **********************/
+      checkData() {
+        // 是否有考核内容
+        if (this.tableData.length < 1) {
+          this.errorMess('至少添加一条考核内容！')
+          return false
+        }
+        // 首行考核内容名称必须填写
+        if (!this.tableData[0].contentName) {
+          this.errorMess('首行考核内容名称必须填写！')
+          return false
+        }
+
+        for (let i = 0, list = this.tableData, l = list.length; i < l; i++) {
+          // 评分表必须选择
+          if (!list[i].scoreTableId) {
+            this.errorMess(`第 ${i+1} 行评分表没有选择！`)
+            return false
+          }
+          // 病例必须选择
+          if (!list[i].caseId) {
+            this.errorMess(`第 ${i+1} 行病例没有选择！`)
+            return false
+          }
+          // SP考站必须选择SP评分表
+          if (this.stationType == 'SP' && !list[i].spScoreTableId) {
+            this.errorMess(`第 ${i+1} 行SP评分表没有选择！`)
+            return false
+          }
+          // SP考站必须选择剧本
+          if (this.stationType == 'SP' && !list[i].scriptId) {
+            this.errorMess(`第 ${i+1} 行剧本没有选择！`)
+            return false
+          }
+          return true
+        }
+      },
+      /********************** 考核内容 **********************/
+      // 添加
+      addContent() {
+        this.$store.commit('examineInterval/temp/addStationContentList')
+      },
+      // 删除
+      removeContent(index) {
+        this.$store.commit('examineInterval/temp/removeStationContents', index)
+      },
+      // 设置教师评分表
+      selectScore(res) {
+        this.$store.commit('examineInterval/temp/updateStationContentList', {
+          index: this.row, // 需要设置评分表的索引
+          value: { // 更新键值对
+            scoreTableId: res.id, // 教室评分表id
+            scoreTableName: res.scoreTableName // 教师评分表名称
+          }
+        })
+      },
+      // 设置SP评分表
+      selectSPScore(res) {
+        this.$store.commit('examineInterval/temp/updateStationContentList', {
+          index: this.row, // 需要设置sp评分表的索引
+          value: { // 更新键值对
+            spScoreTableId: res.id, // 教室评分表id
+            spScoreTableName: res.scoreTableName // SP评分表名称
+          }
+        });
+        this.cancel('spScoreSelect')
+      },
+      // 设置病例表
+      selectCase(res) {
+        this.$store.commit('examineInterval/temp/updateStationContentList', {
+          index: this.row, // 需要设置病例的索引
+          value: { // 更新键值对
+            caseId: res.id, // 病例id
+            caseName: res.caseName // 病例名称
+          }
+        })
+      },
+      // 设置剧本
+      selectScript(res) {
+        this.$store.commit('examineInterval/temp/updateStationContentList', {
+          index: this.row, // 需要设置剧本的索引
+          value: { // 更新键值对
+            scriptId: res.id, // 病例id
+            scriptName: res.scriptName // 病例名称
+          }
+        })
+      },
+
+      /********************* 弹窗 *****************************/
+      // 打开教师评分表
+      openSelectScore(index) {
+        this.row = index;
+        this.openModel('scoreSelect')
+      },
+      // 打开SP评分表
+      openSelectSPScore(index) {
+        this.row = index;
+        this.openModel('spScoreSelect')
+      },
+      // 打开病例表
+      openSelectCase(index) {
+        this.row = index;
+        this.openModel('caseSelect')
+      },
+      // 打开剧本
+      openSelectScript(index) {
+        let thisRow = this.tableData[index];
+        this.row = index;
+        if (!thisRow.caseId) {
+          this.showMess("请先选择病例!");
+          return;
+        }
+        this.caseId = thisRow.caseId;
+
+        this.openModel('scriptSelect')
+      },
+      // 取消
+      cancel(targer) {
+        this[targer + 'Modal'] = false;
+      },
+      /*
+       * 打开指定的模态窗体
+       * @param options string 当前指定的模态:"add"、"edit"
+       * */
+      openModel(options) {
+        this[options + 'Modal'] = true;
+      },
+    },
+    components: {
+      scoreSelect,
+      caseSelect,
+      scriptSelect
+    },
+    created() {
+      this.tableData = this.$store.state.examineInterval.temp.info.stationContentList;
+      this.stationType = this.$store.state.examineInterval.temp.info.stationType; // 当前考站类型
+      this.basicsTime = this.$store.state.examineInterval.station.info.basicsTime; // 考试时间基数
+    }
+  }
+
+</script>
+
+<style>
+  .spSelectTime .el-select .el-input {
+    width: 100%;
+  }
+
+</style>

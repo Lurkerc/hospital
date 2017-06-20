@@ -1,0 +1,118 @@
+<!----------------------------------
+****--照片墙(uploadPhotoWall)
+****--@date     2017/5/26
+****--@author   zyc<332533011@qq.com
+----------------------------------->
+<template>
+  <div>
+    <el-upload
+      :action="action"
+      list-type="picture-card"
+      :file-list="fileLists"
+      :on-preview="handlePictureCardPreview"
+      :on-success="handleAvatarSuccess"
+      :before-upload="beforeAvatarUpload"
+      :on-remove="handleRemove">
+      <i class="el-icon-plus"></i>
+    </el-upload>
+    <el-dialog v-model="dialogVisible" size="tiny" :modal="false">
+      <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
+  </div>
+</template>
+<script>
+  import config from '../../config/config.js';
+  export default {
+    props:["actionUrl","imgFile","index","fileList","onlyOnePic"],
+    data() {
+      return {
+        action:"/file/upload",
+        loading:false,
+        dialogImageUrl: '',
+        dialogVisible:false,
+        idx:0,
+        fileLists:[]
+      };
+    },
+    watch:{
+      fileList:function (val,oldVl) {
+        this.fileLists = val || [];
+      }
+    },
+    created(){
+
+      if(typeof this.actionUrl!="undefined"){
+        this.action = this.actionUrl;
+      }
+      if(typeof this.index!="undefined"){
+        this.idx = this.index;
+      }
+      if(typeof this.fileList!="undefined"){
+        this.fileLists = this.fileList;
+      }
+      this.action = config.ajaxUrl+this.action;
+    },
+    methods: {
+      /*
+       * 上传成功后处理
+       * */
+      handleAvatarSuccess(res, file, fileList) {
+        if(this.onlyOnePic){
+          if(fileList.length>1){
+            fileList.shift();
+          }
+        }
+        this.$emit("upladSuccess",this.handleResData(fileList),this.idx,fileList);
+      },
+      handleRemove(file, fileList) {
+        this.$emit("upladSuccess",this.handleResData(fileList),this.idx,fileList);
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },
+
+      //处理server返回的数据
+
+      handleResData(fileList){
+          let tempArr = [];
+          for(var i=0,item,obj;i<fileList.length;i++){
+            item = fileList[i];
+            let imgSrc = item.url;
+            let staticUrl = item.url;
+            if(typeof item.response!="undefined"){
+              imgSrc = item.response.data.relativePathFile;
+              staticUrl = item.response.data.staticUrl;
+            }
+            obj = {
+              src:imgSrc,
+              staticUrl:staticUrl
+            }
+            tempArr.push(obj);
+          }
+          return tempArr;
+      },
+      /*
+       * 上传前校验
+       * */
+      beforeAvatarUpload(file) {
+        const isJPG = (file.type === 'image/jpeg') || (file.type === 'image/jpg') || (file.type === 'image/png') || (file.type === 'image/gif');
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$Notice.warning({
+            title: '只能上传图片',
+            desc: '格式为: JPG、png、gif 格式!'
+          });
+        }
+        if (!isLt2M) {
+          this.$Notice.warning({
+            title: '超出文件大小限制',
+            desc: '文件 ' + file.name + ' 太大，不能超过 2MB!'
+          });
+        }
+        return isJPG && isLt2M;
+      },
+    }
+  }
+</script>

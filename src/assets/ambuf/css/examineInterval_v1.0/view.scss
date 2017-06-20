@@ -1,0 +1,14 @@
+// 考核场次 -- 查看
+$boderColor:#dfe6ec; // 边框颜色
+.examineInterval {
+    .eiTitle {
+        text-align: center;
+        line-height: 36px;
+    }
+    .viewChangeButtonList {
+        margin: 20px 0;
+        padding: 10px 0;
+        border-top: 1px solid $boderColor;
+        border-bottom: 1px solid $boderColor;
+    }
+}

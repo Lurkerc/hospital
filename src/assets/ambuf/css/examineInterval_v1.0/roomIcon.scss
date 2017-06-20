@@ -1,0 +1,74 @@
+.examineRoom {
+    position: relative;
+    margin-bottom: 20px;
+    &.hasMore {
+        &::before {
+            content: ' ';
+            width: 15%;
+            height: 10%;
+            display: block;
+            position: absolute;
+            top: 35%;
+            left: -35%;
+            background: url('~@/assets/ambuf/images/equally.png') no-repeat;
+            background-size: 100%;
+        }
+    }
+    .roomButtonList {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 2;
+    }
+    .roomInfo {
+        position: relative;
+        cursor: pointer;
+        z-index: 1;
+        background-image: url('~@/assets/ambuf/images/room.png');
+        background-size: 100%;
+        &.ERROR {
+            background-image: url('~@/assets/ambuf/images/room_ERROR.png'); // 异常
+        }
+        &.FINISH {
+            background-image: url('~@/assets/ambuf/images/room_FINISH.png'); // 完成
+        }
+        &.ONGOING {
+            background-image: url('~@/assets/ambuf/images/room_ONGOING.png'); // 考核中
+        }
+        p,
+        .carouselContent {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+        }
+        .roomNum {
+            top: 10px;
+        }
+        .roomType {
+            bottom: 10px;
+        }
+        .carouselContent {
+            height: 20px;
+            top: 50%;
+            margin-top: -10px;
+        }
+    }
+    .name {
+        height: 20px;
+        line-height: 20px;
+        margin-top: 10px;
+        font-size: 18px;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+    }
+    img {
+        width: 100%;
+    }
+}

@@ -1,0 +1,168 @@
+<template>
+  <div>
+    <el-row>
+      <el-col :span="8" :offset="14">
+        <el-input placeholder="请输入房间号" v-model="roomNum">
+          <el-button slot="append" icon="search" @click="search"></el-button>
+        </el-input>
+      </el-col>
+      <el-col :span="20" :offset="2">
+        <div style="padding-top:20px;">
+          <el-table align="center" :context="self" :data="tableData" tooltip-effect="dark" :height="dynamicHt" style="width: 100%"
+            @selection-change="handleSelectionChange">
+            <el-table-column type="selection" :selectable="selectable" width="55"></el-table-column>
+            <el-table-column label="房间号" prop="roomNum" align="center"></el-table-column>
+            <el-table-column label="房间名称" prop="roomName" show-overflow-tooltip></el-table-column>
+            <el-table-column label="简介" prop="summary" show-overflow-tooltip></el-table-column>
+          </el-table>
+        </div>
+        <!-- 分页按钮 -->
+        <div style="float: right;margin-top:10px;">
+          <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
+            :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="myPages.listTotal"></el-pagination>
+        </div>
+      </el-col>
+      <div style="clear:both;padding-top:20px;">
+        <el-col :span="6" :offset="6" align="center">
+          <el-button type="primary" @click="selectRoom">确定</el-button>
+        </el-col>
+        <el-col :span="6" align="center">
+          <el-button @click="cancel">取消</el-button>
+        </el-col>
+      </div>
+    </el-row>
+  </div>
+</template>
+
+<script>
+  // 使用组件需在父组件data中定义：selectRoomModal:false
+  // 需要传递请求相关参数：urlParams:{path:api路径，method:请求方法}
+  // 点击确定将触发‘select’自定义方法返回选中的数据对象集：[{}]
+  let Util = null;
+  export default {
+    props: {
+      urlParams: {
+        type: Object,
+        default: () => ({
+          path: 'scene/station/room/all/list', // api路径
+          method: 'get', // 请求方法
+        })
+      },
+      selectOne: { // 是否只选一个
+        type: Boolean,
+        default: false
+      },
+      disSelect: { // 不允许选择房间(需要配合状态使用)
+        type: Boolean,
+        default: false
+      },
+      disSelectRoom: { // 禁选房间 
+        type: Array,
+        default: () => []
+      }
+    },
+    data() {
+      return {
+        self: this,
+        roomNum: '', // 搜索房间号
+        dynamicHt: 300,
+        selectData: [], // 已选择的数据
+        tableData: []
+      }
+    },
+    methods: {
+      init: function () {
+        Util = this.$util;
+        //ajax请求参数设置
+        this.myPages = Util.pageInitPrams;
+
+        this.queryQptions = {
+          url: this.urlParams.path,
+          params: {
+            curPage: 1,
+            pageSize: Util.pageInitPrams.pageSize
+          }
+        }
+
+        this.setTableData()
+      },
+      //*----------- 表格 ------------*//
+      /*
+       * checkbox 选择后触发事件
+       * @param val Array 存在所有的选择每一个行数据
+       */
+      handleSelectionChange(val) {
+        this.selectData = val;
+      },
+      /*
+       * 表格是否可选
+       **/
+      selectable(row) {
+        let tag = true;
+        // // 表格开启了是否选择
+        if (this.disSelect && (this.disSelectRoom.indexOf(+row.id) > -1)) {
+          tag = false;
+        }
+        return tag
+      },
+      /*
+       * 设置表格数据
+       * @param isLoading Boolean 是否加载
+       */
+      setTableData(isLoading) {
+        this.ajax({
+          ajaxSuccess: 'listDataSuccess',
+          ajaxParams: this.queryQptions
+        }, isLoading)
+      },
+      // 数据请求成功回调
+      listDataSuccess(res, m, loading) {
+        this.listTotal = res.totalCount || 0;
+        this.tableData = res.data;
+      },
+      /*
+       * 列表数据只能选择一个
+       * @param isOnly true  是否只选择一个
+       */
+      isSelected(isOnly) {
+        let len = this.selectData.length;
+        let flag = true;
+        if (len == 0) {
+          this.showMess("请选择房间！");
+          flag = false;
+        }
+        if (len > 1 && isOnly) {
+          this.showMess("只能选择一个房间!")
+          flag = false;
+        }
+        return flag;
+      },
+      /**************** 按钮交互 ***************/
+      // 取消
+      cancel() {
+        this.$emit('cancel', 'selectRoom')
+      },
+      // 确定
+      selectRoom() {
+        if (this.isSelected(this.selectOne)) {
+          this.$emit('select', this.selectData)
+        }
+      },
+      search() {
+        Object.assign(this.queryQptions.params, {
+          roomNum: this.roomNum
+        });
+        this.setTableData();
+      }
+    },
+    created() {
+      this.init()
+    }
+  }
+
+</script>
+
+<style>
+
+
+</style>

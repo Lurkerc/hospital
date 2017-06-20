@@ -1,0 +1,522 @@
+<template>
+  <div>
+  <el-form  ref="formValidate"  label-width="100px">
+    <el-row>
+      <el-col :span="12">
+          <el-form-item label="活动名称" prop="name1">
+            <el-input v-model="formValidate.activityName"></el-input>
+          </el-form-item>
+          <el-form-item label="主持人" prop="name5">
+            <el-input @focus="openAndColseHost('host')" v-model="formValidate.hostUserName" ></el-input>
+          </el-form-item>
+          <el-form-item label="活动时间" prop="activityTime">
+            <el-date-picker type="date" placeholder="选择日期"  v-model="formValidate.activityTime" style="width: 100%;"></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="类型" prop="name4">
+            <el-select v-model="formValidate.activityType"  placeholder="请选择" >
+              <select-option :type="'teachActivityType'"></select-option>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="科室" prop="name1">
+            <el-select  v-model="formValidate.depId" placeholder="请选择">
+              <select-option :unAll="true"></select-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="活动地点" prop="name6">
+            <el-input v-model="formValidate.activitySite"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="时间段" prop="name7">
+            <el-checkbox-group v-model="formValidate.recordTimes">
+              <el-checkbox :label="'8:00-8:50/1'" >8:00-8:50</el-checkbox>
+              <el-checkbox :label="'9:00-9:50/2'" >9:00-9:50</el-checkbox>
+              <el-checkbox :label="'10:00-10:50/3'" >10:00-10:50</el-checkbox>
+              <el-checkbox :label="'11:00-11:50/4'">11:00-11:50</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="病例" prop="whetherNeedCases">
+            <el-radio-group v-model="formValidate.whetherNeedCases">
+              <el-radio :label="'YES'">需要</el-radio>
+              <el-radio :label="'NO'">不需要</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="病例名称" prop="name7">
+            <el-input v-model="formValidate.casesName" :disabled="formValidate.whetherNeedCases=='NO'"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="活动内容" prop="name8">
+            <div class="grid-content">
+              <el-input type="textarea" :rows="6" resize="none" v-model="formValidate.activityContent"></el-input>
+            </div>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="参加人" prop="name9">
+            <el-radio-group v-model="formValidate.activityUserType" >
+              <el-row>
+                <el-col :span="24">
+                  <div class="grid-content-ptop">
+                    <el-radio :label="'ROTARYDEP'">轮转科室</el-radio>
+                    <el-select v-show="formValidate.activityUserType=='ROTARYDEP'" v-model="rotarydep.activityUserTypeValue" multiple placeholder="请选择" >
+                      <select-option :unAll="true"></select-option>
+                    </el-select>
+                    <div v-show="formValidate.activityUserType=='ROTARYDEP'" style="display:inline-block;width: 100px;font-size:14px;text-align: right">人员类型:</div>
+                    <el-select v-show="formValidate.activityUserType=='ROTARYDEP'" v-model="formValidate.activityDepUserType" clearable placeholder="请选择">
+                      <select-option :type="'aysUserType'" :unAll="true"></select-option>
+                    </el-select>
+                  </div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24">
+                  <div class="grid-content-ptop">
+                    <el-radio :label="'PARTUSER'">部分人员</el-radio>
+                    <el-select style="margin-left: 10px" v-show="formValidate.activityUserType == 'PARTUSER'" placeholder multiple v-model="partuser.activityUserTypeValue" filterable placeholder="请选择">
+                      <el-option
+                        v-for="item in options"
+                        :key="item.id"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                    <el-button v-show="formValidate.activityUserType=='PARTUSER'" @click="openAndColseUser('selectUser')">选择人员</el-button>
+                  </div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24">
+                  <div class="grid-content-ptop">
+                    <el-radio :label="'PARTROLE'">指定角色</el-radio>
+                    <template>
+                      <el-select style="margin-left: 10px" v-show="formValidate.activityUserType=='PARTROLE'" v-model="partrole.activityUserTypeValue" multiple filterable placeholder="请选择">
+                        <select-option :type="'role'" :unAll="true"></select-option>
+                      </el-select>
+                    </template>
+                  </div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24">
+                  <div class="grid-content-ptop"><el-radio :label="'ALLUSER'">所有人</el-radio></div>
+                </el-col>
+              </el-row>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-form-item>
+        <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+        <el-button  @click="cancel">取消</el-button>
+      </el-form-item>
+    </el-form>
+    <!--选择人员-->
+    <Modal
+      width="890"
+      v-model="selectUserModal"
+      title="新建教学活动"
+      class-name="vertical-center-modal"
+      :loading="loading">
+      <modal-header slot="header" :content="selectUserId"></modal-header>
+      <select-user v-if="selectUserModal" @cancel="openAndColseHost('selectUser',false)" @setUsers="selectUserCallback" :initUser="selectUser"></select-user>
+      <div slot="footer"></div>
+    </Modal>
+    <!--选择主持人-->
+    <Modal
+      width="890"
+      v-model="hostModal"
+      title="新建教学活动"
+      class-name="vertical-center-modal"
+      :loading="loading">
+      <modal-header slot="header" :content="hostId"></modal-header>
+      <select-user v-if="hostModal" @cancel="openAndColseHost('host',false)"  @setUsers="selectHostCallback" :isOnlyOne="true" :initUser="selectHost"></select-user>
+      <div slot="footer"></div>
+    </Modal>
+  </div>
+</template>
+<style>
+
+</style>
+<script>
+  //当前组件引入全局的util
+  let Util=null;
+  export default {
+      props:['url','operailityData'],
+    data() {
+      return {
+        selectHost:[],
+        selectUser:[],
+        //保存按钮基本信息
+        loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
+        countDate:0,
+        options: [{
+          id:0,
+          value: '选项1',
+          label: '暂无'
+        }],
+
+
+
+
+        "formValidate":{
+          "depId":2,
+          "activityName":"教学查房",
+          "activityType":"理论",
+          "hostUserId":2,
+          "hostUserName":"张三",
+          "activityTime":"2017-03-31",
+          "activitySite":"教学楼三楼301室",
+          "activityUser":"呼吸科-住院医师",
+          "whetherNeedCases":"YES",
+          "casesName":"穿刺术",
+          "activityContent":"活动内容",
+          "activityUserType":"rotarydep",
+          "activityUserTypeValue":"2,3, 4",
+          "activityDepUserType":"",
+          "shouldUserCount":30,
+          "actuallyUserCount":10,
+          "timeIds":"1,2,3",
+          "recordTimes":[],
+          "activityState":"NO_RELEASE",
+        },
+
+        "data":{
+          "id":'',
+          "depId":'',
+          "depName":"",
+          "activityName":"",
+          "activityType":"",
+          "hostUserId":'',
+          "hostUserName":"",
+          "activityTime":"",
+          "activitySite":"",
+          "activityUser":"",
+          "whetherNeedCases":"",
+          "casesName":"",
+          "activityContent":"",
+          "activityUserType":"",
+          "activityUserTypeValue":" ",
+          "activityUserTypeValueName":" ",
+          "activityDepUserType":"",
+          "shouldUserCount":30,
+          "actuallyUserCount":10,
+          "timeIds":"",
+          "recordTimes":"",
+          "activityState":"",
+          "fileList":[
+            {
+              "fileId":"2",
+              "fileName":"文件名称",
+              "fileUrl":"www.baidu.com",
+              "fileType":"txt"
+            }
+          ]
+        },
+
+        //轮转科室
+        rotarydep:{
+          activityUserTypeValue:'',
+        },
+        //部分人员
+        partuser:{
+          activityUserTypeValue:'',
+        },
+        //部分角色
+        partrole:{
+          activityUserTypeValue:'',
+        },
+
+        //查看
+        addmodal: false,
+        hostModal:false,
+        //轮转科室
+        lzDep:true,
+        //部分人员控制
+        partPer:true,
+        //指定人员控制
+        designatedPer:false,
+        //当前组件提交(add)数据时,ajax处理的 基础信息设置
+        addMessTitle:{
+          type:'add',
+          successTitle:'添加成功!',
+          errorTitle:'添加失败!',
+          ajaxSuccess:'ajaxSuccess',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url:this.url.teachctivityAdd,
+            method:'post'
+          }
+        },
+        //选择人员
+        selectUserModal:false,
+        selectUserId:{
+          id:"selectUserId",
+          title:"选择人员",
+          usersData:''
+        },
+        hostId:{
+          id:"hostId",
+          title:"选择主持人",
+          usersData:''
+        },
+        //当前组件提交(add)数据时,ajax处理的 基础信息设置
+        editMessTitle:{
+          type:'edit',
+          successTitle:'修改成功!',
+          errorTitle:'修改失败!',
+          ajaxSuccess:'ajaxSuccess',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url:this.url.teachctivityModify+'/'+this.operailityData.id,
+            method:'put'
+          }
+        },
+        loading :false,
+
+
+        //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
+        listMessTitle: {
+          ajaxSuccess: 'oneDataSuccess',
+          ajaxParams: {
+            url: this.url.teachctivityGet+'/'+this.operailityData.id,
+            params: {},
+          }
+        },
+      }
+    },
+    created(){
+      //给当前组件注入全局util
+      Util = this.$util;
+    },
+    mounted(){
+      //暂时没有初始化,预留初始化入口
+      this.init();
+
+
+    },
+    methods: {
+
+      //点击选择人员按钮触发
+      openAndColseUser(targer,flag){
+        if(typeof flag == "undefined") flag = true;
+        this[targer+'Modal'] = flag;
+      },
+
+
+      //点击选择人员按钮触发
+      openAndColseHost(targer,flag){
+        if(typeof flag == "undefined") flag = true;
+        this[targer+'Modal'] = flag;
+      },
+
+
+      /*
+       * 点击提交按钮 监听是否提交数据
+       * @param isLoadingFun boolean  form表单验证是否通过
+       * */
+      listenSubEvent(isLoadingFun){
+        let isSubmit = this.submitForm("formValidate");
+
+        if(isSubmit){
+          if(!isLoadingFun) isLoadingFun=function(){};
+          isLoadingFun(true);
+          this.editMessTitle.ajaxParams.data=this.disposeData(this.getFormData(this.formValidate));
+          this.ajax(this.editMessTitle,isLoadingFun)
+        }
+      },
+
+      //处理提交的数据
+      disposeData(data){
+        //activityUserType
+        let activityUserType = data.activityUserType.toLowerCase();
+        if(activityUserType=='alluser'){
+          data.activityUserTypeValue = '';
+          data.activityDepUserType =''
+        }else {
+          if(activityUserType!='rotarydep') data.activityDepUserType ='';
+          let Value;
+          if(typeof this[activityUserType].activityUserTypeValue=='object'){
+            Value =this[activityUserType].activityUserTypeValue.join(',');
+          }
+          data.activityUserTypeValue =Value|| this[activityUserType].activityUserTypeValue;
+        }
+        //处理whetherNeedCases
+        if(data.whetherNeedCases=='NO'){
+          data.casesName='';
+        }
+
+        //处理recordTimes，timeIds
+        let times=[];
+        let ids = [];
+        for (let i=0;i<data.recordTimes.length;i++){
+          let val = data.recordTimes[i].split('/');
+          ids.push(val[1]);
+          times.push(val[0]);
+        }
+        data.recordTimes = times.join(',');
+        data.timeIds = ids.join(',');
+        this.formDate(data,['activityTime'])
+        return data
+      },
+
+
+
+
+      /*
+       * 点击提交按钮 监听是否验证通过
+       * @param formName string  form表单v-model数据对象名称
+       * @return flag boolean   form表单验证是否通过
+       * */
+      submitForm(formName){
+        let flag = false;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            flag= true;
+          }
+        });
+        return flag;
+      },
+
+      /*
+       * 默认组件第一次请求数据
+       * @param res JSON  数据请求成功后返回的数据
+       * 注:当前为添加页面暂时未用到,属于预留
+       * */
+      oneDataSuccess(responseData){
+        let data = responseData.data;
+
+
+        //根据参加人不同来做不同出来
+        let activityUserType = data.activityUserType.toLowerCase();
+        if(activityUserType!='alluser'){
+          if(activityUserType=='rotarydep'){
+            data.activityDepUserType =data.activityDepUserType && data.activityDepUserType.split(',');
+            data.activityUserTypeValue = data.activityUserTypeValue.split(',');
+            this[activityUserType].activityUserTypeValue =  data.activityUserTypeValue ;
+          }else if(activityUserType == 'partuser'){
+              let value = []
+            for(let i=0;i<data.activityUserTypeValue.length;i++){
+              value.push({
+                label:data.activityUserTypeValueName[0],
+                key:data.activityUserTypeValue[0],
+                description: '',
+                disabled: false
+              })
+
+            }
+            this[activityUserType].activityUserTypeValue = data.activityUserTypeValueName.split(',');
+            this.selectUser=value;
+
+          }else {
+            data.activityUserTypeValue = data.activityUserTypeValue.split(',');
+            this[activityUserType].activityUserTypeValue =  data.activityUserTypeValue ;
+          }
+
+        }
+
+        let host=[];
+
+        this.selectHost.push(
+          {
+            key:data.hostUserId,
+            label:data.hostUserName,
+            description: '',
+            disabled: false
+          }
+        )
+
+        this.formValidate =  this.disposeGetData(this.getFormValidate(this.formValidate,data));
+        this.data = data;
+      },
+
+
+      //处理获取到的数据
+      disposeGetData(data){
+        let  recordTimes=  data.recordTimes.split(',');
+        let timeIds =  data.timeIds.split(',');
+        let times=[];
+        for (let i=0;i<recordTimes.length;i++){
+          times.push(recordTimes[i]+'/'+timeIds[i]);
+        }
+        data.recordTimes = times;
+        return data
+      },
+
+
+      /*
+       * 当前组件发送事件给父组件
+       * 发送关闭(cancel)模态事件给父组件,请求关闭当前模态窗
+       * */
+      cancel(){
+        this.$emit('cancel','edit');
+      },
+
+
+      /*
+      * 选择人员回调*/
+      selectUserCallback(data){
+        this.selectUser = data;
+        let users=[];
+        let userIds=[];
+        for(let i=0;i<data.length;i++){
+          userIds.push(data[i].key) ;
+          users.push(data[i].label) ;
+        }
+        this.formValidate.activityUserTypeValue = userIds;
+        this.partuser.activityUserTypeValue =users;
+        this.openAndColseHost('selectUser',false)
+
+      },
+
+
+      /*
+       * 选择主持人回调*/
+      selectHostCallback(data){
+        this.selectHost = data;
+        this.formValidate.hostUserId = data[0].key;
+        this.formValidate.hostUserName = data[0].label;
+        this.openAndColseHost('host',false)
+
+      },
+
+
+      /*
+       * 获取表单数据
+       * @return string  格式:id=0&name=aa
+       * */
+      getFormData(data){
+        let myData = Util._.defaultsDeep({},data);
+        return myData;
+      },
+      /*
+       * 组件初始化入口
+       * */
+      init(){
+        this.ajax(this.listMessTitle)
+      },
+
+      //选择科室
+      selectDpeID(val){
+        this.formValidate.depId= val;
+
+      }
+    }
+  }
+</script>

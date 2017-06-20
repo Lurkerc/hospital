@@ -1,0 +1,44 @@
+/**
+ * 系统设置
+ * 作者:gx
+ * 日期:2017-4-11
+ */
+const systemSettingsRouters = {
+  path: 'systemSettings',
+  name: 'systemSettings',
+  meta: {
+    requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+  },
+  component:resolve=> {
+    require.ensure([], () => {
+      resolve(require('@/components/common/rightMain'));
+    }, 'systemSetting');
+  },
+  redirect: to => {
+    return '/manage/systemSettings/holidays'
+  },
+  children:[{
+    //节假日
+    path:'holidays',
+    name:'holidays',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/base/systemSettings/holidays/holidays_list.vue'));
+      }, 'systemSetting');
+    }
+  },
+    {
+      //考勤位置
+      path:'checkLocation',
+      name:'checkLocation',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/base/systemSettings/checkLocation/checkLocation_list.vue'));
+        }, 'systemSetting');
+      }
+    }
+
+  ]
+}
+
+export default systemSettingsRouters;
