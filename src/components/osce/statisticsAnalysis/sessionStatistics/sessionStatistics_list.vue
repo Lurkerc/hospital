@@ -247,7 +247,7 @@
       /*--点击--添加--按钮--*/
       add() {
         if (this.multipleSelection.length < 2) {
-          this.showMess("至少选择两条条数据!")
+          this.showMess("至少选择两条数据!")
           return;
         }
         this.operailityData = this.multipleSelection;
