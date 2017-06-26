@@ -69,6 +69,7 @@
           this.showMess("该考站的考试时间与当前抽签组中的考站的考试时间不一致，请重新选择！");
           return;
         }
+
         // 不重复添加
         if (tab.room.indexOf(index) > -1) {
           return;

@@ -15,9 +15,9 @@
         <el-input v-model="searchObj.inventoryMan"></el-input>
       </el-form-item>
       <el-form-item label="盘点时间：">
-        <el-date-picker v-model="searchObj.inventoryStartTime" type="datetime" :editable="false" placeholder="选择开始日期"></el-date-picker>
+        <el-date-picker v-model="searchObj.inventoryStartTime" type="date" :editable="false" placeholder="选择日期"></el-date-picker>
         <span>-</span>
-        <el-date-picker v-model="searchObj.inventoryEndTime" type="datetime" :editable="false" placeholder="选择结束日期"></el-date-picker>
+        <el-date-picker v-model="searchObj.inventoryEndTime" type="date" :editable="false" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="search">搜索</el-button>
@@ -40,7 +40,7 @@
         <el-table-column label="实际数量" prop="actualNum" show-overflow-tooltip></el-table-column>
         <el-table-column label="相差数量" prop="differenceNum" show-overflow-tooltip></el-table-column>
         <el-table-column label="盘点时间" prop="inventoryTime" show-overflow-tooltip></el-table-column>
-        <el-table-column label="盘点人" prop="createrName" show-overflow-tooltip></el-table-column>
+        <el-table-column label="盘点人" prop="inventoryMan" show-overflow-tooltip></el-table-column>
       </el-table>
     </div>
 
@@ -171,8 +171,8 @@
       setTableData(isLoading) {
         Object.assign(this.queryQptions.params, this.searchObj);
         let params = this.queryQptions.params;
-        params.inventoryStartTime = this.conductDate(params.inventoryStartTime, 'yyyy-MM-dd hh:mm:ss') || '';
-        params.inventoryEndTime = this.conductDate(params.inventoryEndTime, 'yyyy-MM-dd hh:mm:ss') || '';
+        params.inventoryStartTime = this.conductDate(params.inventoryStartTime, 'yyyy-MM-dd') || '';
+        params.inventoryEndTime = this.conductDate(params.inventoryEndTime, 'yyyy-MM-dd') || '';
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions

@@ -7,20 +7,10 @@ import baseRules from '../../../formRules/base'; // 公共规则
 /**
  * 添加评分
  */
-
 let addScore = {
-
-  mark:baseRules.numRequired
-
+  mark: baseRules.numRequired
 }
 
-
-
-
-
-
-
-export default {
-  addScore:addScore,
-
+export {
+  addScore,
 }

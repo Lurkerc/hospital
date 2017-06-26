@@ -59,6 +59,13 @@ const getVueObj = function (vue) {
     "cm": "cm",
     "kg": "kg"
   };
+
+  const qualificationLevel = { // 医师执业资格级别
+    "0": "职业",
+    "1": "助理",
+    "2": "无"
+  };
+
   const filters = [ // 声明全局过滤器及回调函数
     { // 货币格式化
       name: "money",
@@ -114,6 +121,16 @@ const getVueObj = function (vue) {
        */
       call(value, format) {
         return typeof date == 'string' ? parseDate(value, format) : formatDate(value, format)
+      }
+    },
+    { // 医师资格级别
+      name: "qfcLevel",
+      call(value) {
+        if (value) {
+          // 如果描述文本中没有匹配的则返回原字符
+          return qualificationLevel[value.toString().toUpperCase()] || value
+        }
+        return value;
       }
     }
   ];

@@ -17,12 +17,12 @@
           </el-table-column>
           <el-table-column label="评分标准及要求" prop="content" show-overflow-tooltip>
             <template scope="scope">
-              <el-input type="textarea" :autosize="{maxRows:5}" :maxlength="480" v-model="scope.row.content"></el-input>
+              <el-input type="textarea" :autosize="{maxRows:5}" :maxlength="500" v-model="scope.row.content"></el-input>
             </template>
           </el-table-column>
           <el-table-column label="描述" prop="remark" show-overflow-tooltip>
             <template scope="scope">
-              <el-input type="textarea" :autosize="{maxRows:5}" :maxlength="480" v-model="scope.row.remark"></el-input>
+              <el-input type="textarea" :autosize="{maxRows:5}" :maxlength="500" v-model="scope.row.remark"></el-input>
             </template>
           </el-table-column>
           <el-table-column label="标准分" width="80px" prop="score" show-overflow-tooltip>

@@ -20,10 +20,14 @@
         <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
           style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="40"></el-table-column>
-          <el-table-column label="病例名称" prop="caseName" show-overflow-tooltip></el-table-column>
-          <el-table-column label="剧本数量" prop="isScript" show-overflow-tooltip width="100">
+          <el-table-column label="病例名称" prop="caseName" show-overflow-tooltip>
             <template scope="scope">
-              {{ scope.row.isScript | typeText }}
+              {{ scope.row.caseName + (scope.row.scoreTableId ? ' （评分表：' + scope.row.scoreTableName + '）' : '') }}
+            </template>
+          </el-table-column>
+          <el-table-column label="是否有剧本" prop="isScript" show-overflow-tooltip width="110" align="center">
+            <template scope="scope">
+              {{ (scope.row.isScript || '0') | typeText }}
             </template>
           </el-table-column>
         </el-table>

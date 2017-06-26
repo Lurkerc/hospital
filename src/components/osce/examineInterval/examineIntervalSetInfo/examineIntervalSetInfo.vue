@@ -61,7 +61,8 @@
         let teacher = this.$util._.defaultsDeep([], temp.teacher);
         let station = exm.room;
         let roomInfo = station.roomInfo;
-        let disSelectRoom = this.$util._.defaultsDeep([], temp.disSelectRoom);
+        let unSelectRoom = this.$util._.defaultsDeep([], temp.unSelectRoom);
+        let unSelectUser = this.$util._.defaultsDeep({}, temp.unSelectUser);
 
         // SP考站重新计算时间
         let stationType = info.stationType;
@@ -76,7 +77,8 @@
         station.roomInfo[this.index] = info;
         station.roomList[this.index].room[this.cIndex] = room;
         station.roomList[this.index].teacher[this.cIndex] = teacher;
-        station.disSelectRoom = disSelectRoom;
+        station.unSelectRoom = unSelectRoom;
+        station.unSelectUser = unSelectUser;
 
         // 获取当前已有考站的考站信息
         let scriptList = {};
@@ -102,13 +104,15 @@
       let info = this.$store.state.examineInterval.room.roomInfo[todoIndex.index]; // 考站共用信息
       let room = thisStation.room[todoIndex.cIndex]; // 考站所在房间
       let teacher = thisStation.teacher[todoIndex.cIndex]; // 考站的监考老师
-      let disSelectRoom = this.$store.state.examineInterval.room.disSelectRoom;
+      let unSelectRoom = this.$store.state.examineInterval.room.unSelectRoom;
+      let unSelectUser = this.$store.state.examineInterval.room.unSelectUser;
       // 缓存当前操作的考站的信息
       this.$store.commit('examineInterval/temp/initData', {
         info,
         room,
         teacher,
-        disSelectRoom,
+        unSelectRoom,
+        unSelectUser,
       });
       let tempData = this.$store.state.examineInterval.temp;
       this.info = tempData.info;

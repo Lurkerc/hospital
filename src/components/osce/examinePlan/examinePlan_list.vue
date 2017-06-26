@@ -4,7 +4,7 @@
     <keep-alive>
       <plan-index v-if="examinePlanActive === 'index'" @show="show"></plan-index>
     </keep-alive>
-    <plan-view v-if="examinePlanActive === 'view'" :stitle="title" :id="id" @show="show"></plan-view>
+    <plan-view v-if="examinePlanActive === 'view'" :stitle="title" :id="id" :sceneType="sceneType" @show="show"></plan-view>
   </div>
 </template>
 
@@ -16,6 +16,7 @@
       return {
         id: 0, // 查看的场次id
         title: '-', // 场次标题 
+        sceneType: '',
         examinePlanActive: 'index', // 视图切换
       }
     },
@@ -23,6 +24,7 @@
       show(res) {
         this.id = res.id || 0;
         this.title = res.title || '';
+        this.sceneType = res.sceneType || '';
         this.examinePlanActive = res.view;
       }
     },

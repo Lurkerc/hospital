@@ -50,7 +50,9 @@
         <el-col :span="5" :offset="1">
           <strong>上级科室：</strong><span>{{depDetails.parentName}}</span>
         </el-col>
-        <el-col :span="5" :offset="2"><strong> 最大承载量：</strong><span>{{depDetails.capacity}}</span></el-col>
+        <el-col :span="5" :offset="2"><strong> 最大承载量：</strong><span>
+          {{depDetails.zyyCapacity+depDetails.ssyCapacity+depDetails.yjsCapacity+depDetails.jxsCapacity}}
+        </span></el-col>
       </el-row>
       <el-row class="lose-margin2">
         <el-col :span="5" :offset="1">

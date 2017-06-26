@@ -40,7 +40,7 @@
           this[key] = args[key]
         }
         // 每次增加都初始化状态
-        if (args.look === 'add') {
+        if (args.look !== 'index') {
           this.initState()
         }
       },
@@ -55,7 +55,9 @@
         initInfo: 'examineInterval/station/initInfo', // 初始化考核场次信息
         initIndex: 'examineInterval/roomIndex/init', // 初始化操作索引
         initScriptList: 'examineInterval/room/initScriptList', // 初始化SP人员病例
-        initDisSelectRoom: 'examineInterval/room/initDisSelectRoom', // 初始化禁选房间
+        initUnSelectRoom: 'examineInterval/room/initUnSelectRoom', // 初始化禁选房间
+        initUnSelectUser: 'examineInterval/room/initUnSelectUser', // 初始化禁选人员
+        initSpecialtyList: 'examineInterval/room/initSpecialtyList', // 初始化可选专业
         initEdit: 'examineInterval/station/initEdit', // 初始化是否可编辑
         initTemp: 'examineInterval/temp/initData', // 初始化中转状态
       }),
@@ -65,7 +67,9 @@
         this.initInfo();
         this.initIndex();
         this.initScriptList();
-        this.initDisSelectRoom();
+        this.initUnSelectRoom();
+        this.initUnSelectUser();
+        this.initSpecialtyList();
         this.initEdit();
         this.initTemp();
       },

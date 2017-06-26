@@ -14,7 +14,7 @@
       <div>
         <!--表格数据-->
         <div id="myTable" ref="myTable">
-          <el-table border align="center" :height="dynamicHt" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%;height: 100%">
+          <el-table :row-class-name="tableRowClassName" border align="center" :height="dynamicHt" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%;height: 100%">
 
             <el-table-column align="center" prop="classify" label="项目" width="150">
             </el-table-column>
@@ -254,6 +254,14 @@
         this.operailityListData = row;
         this.setTeachData(row);
       },
+
+      //高亮最后一行
+      tableRowClassName(row, index) {
+        if (index === this.tableData.length-1) {
+          return 'info-row';
+        }
+        return '';
+      }
 
     },
     created() {

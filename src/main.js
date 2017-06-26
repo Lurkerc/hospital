@@ -3,11 +3,13 @@
 import 'babel-polyfill';
 import Vue from 'vue';
 import store from './vuex/store';
-import router,{menus} from './router';
+import router, {
+  menus
+} from './router';
 import App from './App';
 import iView from 'iview';
 import VueCookie from 'vue-cookie';
-import VueQuillEditor from 'vue-quill-editor'
+// import VueQuillEditor from 'vue-quill-editor'
 //import $ from 'jquery'
 
 import 'iview/dist/styles/iview.css';
@@ -26,11 +28,13 @@ Vue.use(Util);
 Vue.use(iView);
 Vue.use(ElementUI);
 Vue.use(VueCookie);
-Vue.use(VueQuillEditor)
+// Vue.use(VueQuillEditor)
 
 Vue.config.productionTip = false;
 
-import {utils} from './libs/util';
+import {
+  utils
+} from './libs/util';
 
 //路由拦截配置
 router.beforeEach((to, from, next) => {
@@ -61,9 +65,9 @@ router.beforeEach((to, from, next) => {
   // }
 
   if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
-    if(to.fullPath=='/login'){
+    if (to.fullPath == '/login') {
       next();
-    }else if (utils.getCookie("Token")) { // 通过vuex state获取当前的token是否存在
+    } else if (utils.getCookie("Token")) { // 通过vuex state获取当前的token是否存在
       //store.dispatch("onLoading",true);
       next({
         path: from.query.redirect || to.query.redirect,
@@ -71,7 +75,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     if (utils.getCookie("Token")) { // 通过vuex state获取当前的token是否存在
-      store.dispatch("onLoading",true);
+      store.dispatch("onLoading", true);
       iView.LoadingBar.start();
       next();
     } else {
@@ -85,7 +89,7 @@ router.beforeEach((to, from, next) => {
 
 // 这里为了让效果明显一些加了延时
 router.afterEach((to, from) => {
-  store.dispatch("onLoading",false);
+  store.dispatch("onLoading", false);
   iView.LoadingBar.finish();
 })
 
@@ -96,7 +100,9 @@ new Vue({
   store,
   router,
   template: '<App />',
-  components: { App },
+  components: {
+    App
+  },
   created() {
     let userInfo = this.$store.getters.getUserInfo;
     //console.log(userInfo);

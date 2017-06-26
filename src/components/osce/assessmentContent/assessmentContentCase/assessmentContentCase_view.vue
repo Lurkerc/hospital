@@ -105,8 +105,8 @@
 
         <el-col :span="20" :offset="2">
           <el-form-item label="问题：">
-            <template v-if="formValidate.questionList.length" v-for="(item,index) in formValidate.questionList">
-              <div style="padding-bottom:10px;overflow:hidden;">
+            <template v-if="formValidate.questionList.length">
+              <div style="padding-bottom:10px;overflow:hidden;" v-for="(item,index) in formValidate.questionList">
                 <el-col :span="1">{{ index + 1 }}.</el-col>
                 <el-col :span="21">
                   <el-form-item>
@@ -121,9 +121,12 @@
 
         <el-col :span="20" :offset="2">
           <el-form-item label="剧本：">
-            <template v-if="formValidate.scriptList.length > 0" v-for="(item,index) in formValidate.scriptList">
-              <div class="scriptIdListItemText">
-                <span @click="showScript(item.id)">{{ index + 1 }}. {{ item.scriptName }}</span>
+            <template v-if="formValidate.scriptList.length">
+              <div>
+                <template v-for="(item,index) in formValidate.scriptList">
+                  <span>{{ index + 1 }}.</span>
+                  <span class="scriptIdListItemText" @click="showScript(item.id)">{{ item.scriptName }}</span>
+                </template>
               </div>
             </template>
             <p v-else style="line-height:36px;">暂无剧本</p>
@@ -206,6 +209,7 @@
           physicalExamination: "-",
           specialCircumstances: "-",
           supplementaryExamination: "-",
+          scriptList: [],
           scriptIdList: [], // 剧本
           // scriptIds: "1,2,3",
           scoreTableId: "", // 评分表

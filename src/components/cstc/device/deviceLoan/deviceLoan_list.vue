@@ -27,9 +27,9 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="借用时间：" prop="borrowStartTime">
-            <el-date-picker v-model="searchObj.borrowStartTime" :editable="false" type="datetime" placeholder="选择日期时间"></el-date-picker>
+            <el-date-picker v-model="searchObj.borrowStartTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
             <span>-</span>
-            <el-date-picker v-model="searchObj.borrowEndTime" :editable="false" type="datetime" placeholder="选择日期时间"></el-date-picker>
+            <el-date-picker v-model="searchObj.borrowEndTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="2">
@@ -205,8 +205,8 @@
           depId: this.depId
         });
         let params = this.queryQptions.params;
-        params.borrowStartTime = this.conductDate(params.borrowStartTime, 'yyyy-MM-dd HH:mm:ss') || '';
-        params.borrowEndTime = this.conductDate(params.borrowEndTime, 'yyyy-MM-dd HH:mm:ss') || '';
+        params.borrowStartTime = this.conductDate(params.borrowStartTime, 'yyyy-MM-dd');
+        params.borrowEndTime = this.conductDate(params.borrowEndTime, 'yyyy-MM-dd');
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions

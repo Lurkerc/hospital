@@ -6,12 +6,13 @@
       <el-col :span="8" :offset="8" align="center">
         <el-form-item>{{ formValidate.scriptName }}</el-form-item>
       </el-col>
+
       <el-col>
         <el-form-item label="剧本附件：">
-          <template v-if="formValidate.filelist.length > 0" v-for="item in formValidate.filelist">
-            {{ item.name }}
-          </template>
-          <p v-else>暂无剧本附件</p>
+          <div style="overflow:hidden">
+            <upload-file @setUploadFiles="setUploadFiles" :uploadFiles="filelist" class="viewUploadFile"></upload-file>
+          </div>
+          <!--<p v-else style="line-height:36px;">暂无剧本附件</p>-->
         </el-form-item>
       </el-col>
 
@@ -32,6 +33,7 @@
 </template>
 
 <script>
+  import uploadFile from '../../../common/uploadFile'; // 上传
   export default {
     props: {
       urlParams: { // api对象
@@ -45,6 +47,7 @@
     },
     data() {
       return {
+        filelist: [],
         formValidate: {
           scriptName: "-",
           scriptContent: "-",
@@ -58,16 +61,26 @@
       /**************************** 从服务器获取编辑的数据 *****************************************/
       getDataForServer() {
         this.ajax({
-          ajaxSuccess: 'ajaxSuccess',
+          ajaxSuccess: 'getDataSuccess',
           ajaxParams: {
             url: `${this.urlParams.path}/${this.id}`,
             method: this.urlParams.method
           }
         })
       },
-      ajaxSuccess(res) {
-        this.formValidate = res.data // 初始化编辑数据
+      getDataSuccess(res) {
+        this.formValidate = res.data; // 初始化编辑数据
+        this.filelist = [];
+
+        for (let i = 0, list = res.data.fileList, l = list.length; i < l; i++) {
+          this.filelist.push({
+            fileId: list[i].id,
+            fileName: list[i].oldName,
+            filePath: list[i].path + list[i].name
+          })
+        }
       },
+      setUploadFiles(list) {},
       /*
        * 组件初始化入口
        * */
@@ -79,7 +92,28 @@
     created() {
       this.init();
       // console.log(this.id);
-    }
+    },
+    components: {
+      uploadFile
+    },
   }
 
 </script>
+
+<style lang="scss">
+  .viewUploadFile {
+    .el-upload__tip,
+    .el-upload {
+      display: none
+    }
+    .el-upload-list__item:hover {
+      .el-icon-close {
+        display: none
+      }
+      .el-upload-list__item-status-label {
+        display: inline-block;
+      }
+    }
+  }
+
+</style>

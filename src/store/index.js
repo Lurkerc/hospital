@@ -47,7 +47,7 @@ const mutations = {
       state["userInfo"] = null;
     }
   },
-  setFullLoading(state,flag) {
+  setFullLoading(state, flag) {
     state.isLoading = flag;
   },
 
@@ -90,8 +90,19 @@ const mutations = {
   },
 
   // 设置系统变量（登录成功后获取）
-  setEnvPath(state, path) {
-    state.envPath = path
+  setEnvPath(state, $vue) {
+    // state.envPath = path
+    let options = {
+      ajaxSuccess: (res) => {
+        state.envPath = res.data;
+      },
+      errorTitle: '获取系统常量失败!',
+      ajaxParams: {
+        url: '/envs'
+      }
+    };
+    //todo 因为接口还未写完，先用假数据
+    $vue.ajax(options);
   }
 };
 
@@ -122,9 +133,9 @@ const getters = {
   },
 }
 
-const actions={
-  onLoading(context,flag){
-    context.commit("setFullLoading",flag);
+const actions = {
+  onLoading(context, flag) {
+    context.commit("setFullLoading", flag);
   }
 }
 

@@ -100,7 +100,7 @@
         currSltUserName:"",
         course:[
           {
-            "courseArrangeId":1,
+            /*"courseArrangeId":1,
             "room":"内科",
             "timeStr":"08:00-09:00",
             "courseContent":"课程内容",
@@ -113,15 +113,15 @@
             "timeId":2,
             "whetherArrangedCourse":1,
             "weekSetId":this.operailityData.weekSetId,
-            "recordId":1
+            "recordId":1*/
           }
         ],
 
         //请求科室列表
         getDepTitle:{
-          ajaxSuccess:'getDepData',
+          ajaxSuccess:'CourseType',
           ajaxParams:{
-            url: api.depOption.path,
+            url: api.getCourseTypeByCode.path,
             params:{}
           }
         },
@@ -200,9 +200,11 @@
 
 
       //获取server端返回的科室
-      getDepData(responseData){
+      CourseType(responseData){
         let data = responseData.data;
-        this.optionData = data;
+        if(!Util.isEmptyObject(data)){
+          this.optionData = data.child;
+        }
         this.ajax(this.getMyTeachRoomCourseTitle);
       },
 

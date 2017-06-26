@@ -15,7 +15,7 @@
     <div class="treeContent" :style="defaults.selectUser?'top:36px':''">
       <el-tree :style="style" highlight-current node-key="id" class="filter-tree" :data="defaults.treeData " :props="defaultProps"
         @node-click="treeClick" :current-node-key="currentNodeKey" :default-expanded-keys="expandedKeys" :expand-on-click-node="false"
-        :filter-node-method="filterNode" :lazy="defaults.asyn" :render-content="renderContent" :load="loadNode" ref="treeId">
+        :filter-node-method="filterNode" :empty-text="defaults.emptyText" :lazy="defaults.asyn" :render-content="renderContent" :load="loadNode" ref="treeId">
         <i class="el-icon-delete"></i>
       </el-tree>
     </div>
@@ -109,6 +109,7 @@
           treeData: [],
           isInitSltedNode: true, //是否需要默认选中tree节点
           selectUser:false,  // 选择弹窗与有目录树页面
+          emptyText:"暂无数据"
 
         },
         loadNodeInit: true,
@@ -210,7 +211,13 @@
       //从server端获取tree数据
       getTreeData(responseData) {
         let defaults = this.defaults;
-        if (!this.valDataType(responseData.data, "Array") || responseData.data.length == 0) return;
+        if (!this.valDataType(responseData.data, "Array") || responseData.data.length == 0){
+          if (this.fromWhereTree == "user") {
+            this.showMess("还没有给您分配部门管理员!暂无部门可管理!");
+            this.defaults.emptyText = "您未分配管理的部门";
+            return;
+          }
+        }
         defaults.treeData = responseData.data;
         if (this.operailityType == "remove") {
           //删除成功后情况所有的选中状态
@@ -525,6 +532,12 @@
 
       //新建部门、修改部门、删除部门
       operationTreeData(type) {
+        if (this.fromWhereTree == "user") {
+          if(this.defaults.treeData.length==0){
+            this.showMess("还没有给您分配部门管理员!暂无部门可管理!");
+            return;
+          }
+        }
         let isSltNode = this.isSltedTreeNode();
         if (isSltNode) {
           this.operailityData = Object.assign({}, this.sltedTreeData, this.baseUrl, {

@@ -9,12 +9,10 @@
             <el-input v-model="formValidate.scriptName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8" :offset="8">
+
+        <el-col>
           <el-form-item label="上传剧本：">
-            <template v-for="item in filelist">
-              {{ item.name }}
-            </template>
-            <el-button @click="upland">上传剧本</el-button>
+            <upload-file @cancel="cancel" @setUploadFiles="setUploadFiles" :url="urlParams.save.path"></upload-file>
           </el-form-item>
         </el-col>
 
@@ -45,12 +43,6 @@
 
       </el-row>
     </el-form>
-
-    <!-- 模态框 增加剧本（add） -->
-    <Modal :mask-closable="false" v-model="uploadFileModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="840">
-      <modal-header slot="header" :content="headerContent.uploadFileId"></modal-header>
-      <upload-file v-if="uploadFileModal" @cancel="cancel" @setUploadFiles="setUploadFiles" :operaility-data="filelist" :url="urlParams.save.path"></upload-file>
-    </Modal>
   </div>
 </template>
 
@@ -83,7 +75,6 @@
           illnessPoints: '',
           performPoints: ''
         },
-        filelist: [], // 上传附件列表
         //保存按钮基本信息
         loadBtn: {
           title: '保存',
@@ -102,13 +93,6 @@
             method: this.urlParams.add.method
           }
         },
-        uploadFileModal: false, // 上传剧本附件
-        headerContent: { // 模态框提示信息
-          uploadFileId: {
-            id: 'uploadFileId',
-            title: '上传剧本附件'
-          }
-        }
       }
     },
     methods: {
@@ -148,7 +132,7 @@
         this.$emit('upDataScript', res);
       },
       /***************************************** 上传附件回调 ***********************************************/
-      setUploadFiles(id) {
+      setUploadFiles(id, list) {
         this.formValidate.fileIds = id;
       },
       /***************************************** 模态框 *****************************************************/

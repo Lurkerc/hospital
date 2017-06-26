@@ -3,75 +3,20 @@ import _ from "lodash";
  * 考核场次 --- 考站信息
  */
 const state = {
-  roomList: [],
+  roomList: [], // 考站列表
   roomInfo: [], // 考站房间信息
   scriptList: {}, // 可选剧本列表
-  disSelectRoom: [], // 不允许选择的房间id
+  specialtyList: [], // 专业列表
+  unSelectRoom: [], // 不允许选择的房间id
+  unSelectUser: {}, // 不允许选择的人员
 }
 
 const mutations = {
-  /******************* 修改考站信息初始化数据 ********************************/
-  setInitData: (state, infoData) => {
-    let originData = _.defaultsDeep({}, infoData)
-    let stationList = originData.stationList;
-    let roomList = [];
-    state.roomList = [];
-    state.roomInfo = [];
-
-    for (var j = 0; j < stationList.length; j++) {
-      roomList = stationList[j].roomList;
-      let roomListTempObj = {}
-
-      let children = [],
-        room = [],
-        teacher = [],
-        disSelRoom = [];
-      for (var i = 0, item; i < roomList.length; i++) {
-        item = roomList[i];
-
-        if (typeof roomListTempObj[stationList[j]["id"]] == "undefined") {
-          roomListTempObj[stationList[j]["id"]] = {}
-          roomListTempObj[stationList[j]["id"]].children = [];
-          roomListTempObj[stationList[j]["id"]].room = [];
-          roomListTempObj[stationList[j]["id"]].teacher = [];
-          roomListTempObj[stationList[j]["id"]].stationName = "";
-        }
-        children = roomListTempObj[stationList[j]["id"]].children;
-        room = roomListTempObj[stationList[j]["id"]].room;
-        teacher = roomListTempObj[stationList[j]["id"]].teacher;
-        roomListTempObj[stationList[j]["id"]].stationName = stationList[j]["stationName"];
-
-        children.push(children.length + 1);
-        room.push({
-          roomId: item["roomId"],
-          roomNum: item["roomNum"],
-          roomName: stationList[j]["stationName"],
-        });
-
-        disSelRoom.push(item["roomId"]); // 禁选房间初始化
-
-        for (var k = 0, roomTeacher = []; k < item.teacherList.length; k++) {
-          roomTeacher.push({
-            teacherId: item.teacherList[k]["teacherId"], // 监考老师id
-            teacherName: item.teacherList[k]["teacherName"], // 监考老师姓名
-            weight: item.teacherList[k]["weight"] * 100, // 监考老师权重
-          });
-        }
-        teacher.push(roomTeacher)
-      }
-      let tempArr = _.values(roomListTempObj);
-      state.roomList = state.roomList.concat(tempArr);
-      delete stationList[j].roomList;
-      state.roomInfo.push(stationList[j]);
-      state.disSelectRoom = _.uniq(disSelRoom) // 去重处理
-    }
-  },
-
   /******************* 初始化 ********************************/
   /**
    * 初始化考站列表
    */
-  initRoomList: (state) => state.roomList = [ // 监考考站
+  initRoomList: state => state.roomList = [ // 监考考站
     {
       stationName: '',
       children: [1],
@@ -80,6 +25,7 @@ const mutations = {
           roomId: '',
           roomNum: '',
           roomName: '',
+          specialty: 0, // 专业
         }
       ],
       teacher: [ // 监考老师
@@ -96,7 +42,7 @@ const mutations = {
   /**
    * 初始化考站信息
    */
-  initRoomInfo: (state) => state.roomInfo = [{ // 站点集合
+  initRoomInfo: state => state.roomInfo = [{ // 站点集合
     stationName: "", // 考站名
     stationType: "ORDINARY", // 站点类型 ORDINARY | SP
     timeCount: 1, // 站内考核时间基数倍数 如果是SP考站，则为站点考核内容的考核时间基础相加的和
@@ -109,6 +55,7 @@ const mutations = {
     isDraw: "NO", // 是否抽签
     drawNum: "", // 抽签编号
     roomIds: "", // 平行考站房间id集合
+    roomSpecialtyList: [], // 可选专业
     stationContentList: [ // 站点考核内容列表
       {
         contentName: "",
@@ -136,10 +83,19 @@ const mutations = {
    * 初始化隐藏考站
    * @param state
    */
-  initDisSelectRoom: (state) => state.disSelectRoom = [],
+  initUnSelectRoom: state => state.unSelectRoom = [],
+  // 初始化不可选择人员
+  initUnSelectUser: state => state.unSelectUser = {
+    manager: [], // 考场管理员
+    sp: [], // SP 人员
+    user: [], // 参考人员 
+    teacher: [] // 监考老师
+  },
+  // 初始化专业列表
+  initSpecialtyList: (state, specialtyArr) => state.specialtyList = specialtyArr || [],
   /******************* 添加 **********************************/
   // 添加考站
-  addRoom: (state) => {
+  addRoom: state => {
     state.roomList.push({ // 考站
       stationName: '',
       children: [1],
@@ -148,6 +104,7 @@ const mutations = {
           roomId: '',
           roomNum: '',
           roomName: '',
+          specialty: 0, // 专业
         }
       ],
       teacher: [ // 监考老师
@@ -163,7 +120,7 @@ const mutations = {
     state.roomInfo.push({ // 考站信息
       stationName: "", // 站点名称
       stationType: "ORDINARY", // 站点类型SP
-      timeCount: "1", // 站内考核时间基数倍数
+      timeCount: 1, // 站内考核时间基数倍数
       number: 1, // 单次考核人数
       randomType: "SYSTEM", // 抽题类型
       randomNum: 1, // 抽题数量 1
@@ -173,6 +130,7 @@ const mutations = {
       isDraw: "NO", // 是否抽签
       drawNum: "", // 抽签编号 2
       roomIds: "", // 平行考站房间id集合
+      roomSpecialtyList: [], // 可选专业
       stationContentList: [ // 站点考核内容列表
         {
           // 站点考核内容列表
@@ -237,10 +195,30 @@ const mutations = {
    * @param  {[type]} roomId [description]
    * @return {[type]}        [description]
    */
-  addDisSelectRoom: (state, roomId) => {
-    if (!state.disSelectRoom.indexOf(+roomId) > -1) {
-      state.disSelectRoom.push(+roomId)
+  addUnSelectRoom: (state, roomId) => {
+    if (!state.unSelectRoom.indexOf(+roomId) > -1) {
+      state.unSelectRoom.push(+roomId)
     }
+  },
+  /**
+   * 删除不可选择人员 
+   * userObj { type:sp, id:1000 } 追加一个人员到sp不可选择队列中
+   */
+  addUnSelectUser: (state, userObj) => {
+    if (userObj.id instanceof Array) {
+      state.unSelectUser[userObj.type] = state.unSelectUser[userObj.type].concat(userObj.id)
+    } else {
+      state.unSelectUser[userObj.type].add(userObj.id)
+    }
+  },
+  // 增加专业列表
+  addSpecialtyList: (state, specialtyArr) => {
+    if (specialtyArr instanceof Array) {
+      state.specialtyList = state.specialtyList.concat(specialtyArr)
+    } else {
+      state.specialtyList.push(specialtyArr);
+    }
+    state.specialtyList = _.uniq(state.specialtyList);
   },
   /******************** 更新 **********************************/
   /**
@@ -276,6 +254,80 @@ const mutations = {
       state.roomInfo[data.index][key] = data.value[key]
     })
   },
+  /**
+   * 更新不可选择人员
+   * userArrObj { manager:[] }
+   */
+  updateUnSelectUser: (state, userArrObj) => {
+    Object.keys(userArrObj).map(key => {
+      state.unSelectUser[key] = userArrObj[key]
+    })
+  },
+  /******************* 设置考站信息初始化数据 ********************************/
+  setInitData: (state, infoData) => {
+    let originData = _.defaultsDeep({}, infoData)
+    let stationList = originData.stationList;
+    let roomList = [];
+    let disSelRoom = [];
+    let specialtyList = [];
+    state.roomList = [];
+    state.roomInfo = [];
+
+    for (var j = 0; j < stationList.length; j++) {
+      roomList = stationList[j].roomList;
+      let roomListTempObj = {}
+
+      let children = [],
+        room = [],
+        teacher = [];
+      for (var i = 0, item; i < roomList.length; i++) {
+        item = roomList[i];
+
+        if (typeof roomListTempObj[stationList[j]["id"]] == "undefined") {
+          roomListTempObj[stationList[j]["id"]] = {}
+          roomListTempObj[stationList[j]["id"]].children = [];
+          roomListTempObj[stationList[j]["id"]].room = [];
+          roomListTempObj[stationList[j]["id"]].teacher = [];
+          roomListTempObj[stationList[j]["id"]].stationName = "";
+        }
+
+        children = roomListTempObj[stationList[j]["id"]].children;
+        room = roomListTempObj[stationList[j]["id"]].room;
+        teacher = roomListTempObj[stationList[j]["id"]].teacher;
+        roomListTempObj[stationList[j]["id"]].stationName = stationList[j]["stationName"];
+
+        children.push(children.length + 1);
+        room.push({
+          roomId: item["roomId"],
+          roomNum: item["roomNum"],
+          roomName: stationList[j]["stationName"],
+          specialty: item["specialty"] || 0 // 默认为0表示全部，但是提交的时候会置为空
+        });
+
+        if (item["specialty"] && specialtyList.indexOf(item["specialty"]) < 0) {
+          specialtyList.push(item["specialty"]); // 专业
+        }
+
+        disSelRoom.push(item["roomId"]); // 禁选房间初始化
+
+        for (var k = 0, roomTeacher = []; k < item.teacherList.length; k++) {
+          roomTeacher.push({
+            teacherId: item.teacherList[k]["teacherId"], // 监考老师id
+            teacherName: item.teacherList[k]["teacherName"], // 监考老师姓名
+            weight: item.teacherList[k]["weight"] * 100, // 监考老师权重
+          });
+        }
+        teacher.push(roomTeacher)
+      }
+
+      let tempArr = _.values(roomListTempObj);
+      state.roomList = state.roomList.concat(tempArr);
+      delete stationList[j].roomList;
+      state.roomInfo.push(stationList[j]);
+      state.unSelectRoom = disSelRoom;
+      state.specialtyList = specialtyList;
+    }
+  },
   /********************* 删除 **********************************/
   /**
    * [删除考站附带删除对应的数据信息]
@@ -308,10 +360,10 @@ const mutations = {
    * @param  {[type]} roomId [description]
    * @return {[type]}        [description]
    */
-  removeDisSelectRoom: (state, roomId) => {
-    let index = state.disSelectRoom.indexOf(+roomId);
+  removeUnSelectRoom: (state, roomId) => {
+    let index = state.unSelectRoom.indexOf(+roomId);
     if (index > -1) {
-      state.disSelectRoom.splice(index, 1)
+      state.unSelectRoom.splice(index, 1)
     }
   },
   /**
@@ -321,7 +373,7 @@ const mutations = {
    * @return {[type]}       [description]
    */
   removeStationContent: (state, data) => {
-    if (typeof data.index !== 'object' && Object.prototype.toString.call(data.remove) === '[object Array]') { // 未传索引对象则不做任何修改操作
+    if (data.index instanceof Array) { // 未传索引对象则不做任何修改操作
       return
     }
     data.remove.map(key => {
@@ -334,6 +386,18 @@ const mutations = {
    * @param {any} indexObj
    */
   removeStationContents: (state, indexObj) => state.roomInfo[indexObj.index].stationContentList.splice(indexObj.cIndex, 1),
+  /**
+   * 删除不可选择人员 
+   * userObj { type:sp, index:1 } 从sp人员中删除第2个
+   */
+  removeUnSelectUser: (state, userObj) => {
+    state.unSelectUser[userObj.type].splice(userObj.index, 1)
+  },
+  /**
+   * 删除考站专业
+   * { index:考站索引，cIndex: 平行站索引 }
+   */
+  removeRoomSpecialty: (state, indexObj) => state.roomList[indexObj.index].room[indexObj.cIndex].specialty = '',
 };
 
 export {

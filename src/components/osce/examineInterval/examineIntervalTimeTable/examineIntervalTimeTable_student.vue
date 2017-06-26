@@ -3,6 +3,7 @@
     style="width: 100%">
     {{this.sceneType=='FREE'}}
   </my-table>
+  <span v-else></span>
 </template>
 <script>
   import myTable from '../../../common/myTable.vue';
@@ -49,6 +50,7 @@
       }
     },
     created() {
+      // alert(this.height)
       if (this.headerList) {
         this.headersLen = this.headerList.length + 1;
         for (var i = 0; i < this.headerList.length; i++) {
@@ -68,7 +70,7 @@
           keys: ['stationName', 'roomNum', 'teacherNames'], //头部排列顺序
           headLeft: ['站点名称', '房间号', '监考老师'], //左侧第一列显示的信息
           headLeftKey: 'time', //左侧第一列匹配的key
-          width: '50', //单元格的宽度
+          width: '150', //单元格的宽度
           key: 'roomNum', //主题内容拼配的名，通过名来获取值当匹配项
           rowSpanKey: 'timeCount', // 合并单元格的key
           cellKey: 'userName', // cell的key
@@ -85,7 +87,7 @@
           headerList[i].push({
             title: headLeft[i],
             key: headLeftKey,
-            width: width || 50
+            width: width || 150
           })
           for (let k = 0; k < data.length; k++) {
             headerList[i].push({
@@ -134,9 +136,9 @@
           }
           for (let k = 0; k < arrangementList.length; k++) {
             delete(tempObj[arrangementList[k][key]]);
-            if(list[i][arrangementList[k][key]]){
-              list[i][arrangementList[k][key]]+=' , '+arrangementList[k][cellKey]
-            }else {
+            if (list[i][arrangementList[k][key]]) {
+              list[i][arrangementList[k][key]] += ' , ' + arrangementList[k][cellKey]
+            } else {
               if (typeof prevTrRowSpan[arrangementList[k][key]] == "undefined") {
                 list[i][arrangementList[k][key]] = arrangementList[k][cellKey];
                 list[i][arrangementList[k][key] + 'Row'] = arrangementList[k][rowSpanKey];

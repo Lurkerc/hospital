@@ -2,6 +2,7 @@
   <my-table :height="height" v-if="headers[0]" border :columns="headers" :data="list"></my-table>
 </template>
 <script>
+  let Util = null;
   import myTable from '../../../common/myTable.vue';
   export default {
     props: ['height', 'tableList', 'width'],
@@ -18,6 +19,12 @@
         this.defaultParams = Object.assign(this.defaultParams, this.config)
       }
     },
+    created(){
+      Util = this.$util;
+      if (Util.isEmptyObject(this.tableList)) return;
+      this.headers = this.conductHead(this.tableList);
+      this.list = this.conductList(this.tableList.stationRoomList);
+    },
     methods: {
 
       conductHead(data) {
@@ -29,7 +36,7 @@
           headerList[0].push({
             title: val[i],
             key: keys[i],
-            width: this.width || 50
+            width: 150 || 50
           })
         }
         return headerList;

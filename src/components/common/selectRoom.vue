@@ -56,7 +56,7 @@
         type: Boolean,
         default: false
       },
-      disSelectRoom: { // 禁选房间 
+      unSelectRoom: { // 禁选房间 
         type: Array,
         default: () => []
       }
@@ -100,7 +100,7 @@
       selectable(row) {
         let tag = true;
         // // 表格开启了是否选择
-        if (this.disSelect && (this.disSelectRoom.indexOf(+row.id) > -1)) {
+        if (this.disSelect && (this.unSelectRoom.indexOf(+row.id) > -1)) {
           tag = false;
         }
         return tag

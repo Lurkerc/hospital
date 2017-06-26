@@ -42,15 +42,14 @@
     <!-- 模态框 编辑（edit） -->
     <Modal :mask-closable="false" v-model="editModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="1100">
       <modal-header slot="header" :content="button.editId"></modal-header>
-      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :id="todoId" :url-params="api.modify"
-        :get-url-params="api.get"></edit>
+      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :id="todoId"></edit>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 查看（view） -->
     <Modal :mask-closable="false" v-model="showModal" height="200" title="对话框标题" class-name="vertical-center-modal" :loading="true"
       :width="800">
       <modal-header slot="header" :parent="self" :content="button.showId"></modal-header>
-      <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData" :id="todoId" :url-params="api.get"></show>
+      <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData" :id="todoId"></show>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 删除（del） -->

@@ -75,7 +75,7 @@
             width="200">
           </el-table-column>
           <el-table-column
-            prop="identify"
+            prop="identity"
             label="菜单代码"
             show-overflow-tooltip>
           </el-table-column>

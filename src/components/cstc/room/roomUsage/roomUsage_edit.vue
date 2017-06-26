@@ -71,6 +71,7 @@
     roomUsage as rules
   } from '../../rules'; // 表单验证规则
   import selectApi from '../roomManage/api';
+  import api from './api';
   // 使用类型
   import typeOption from './typeOption';
   import uploadFile from '../uploadFile';
@@ -78,14 +79,6 @@
     props: {
       id: {
         type: [Number, String],
-        required: true
-      },
-      urlParams: { // 编辑
-        type: Object,
-        required: true
-      },
-      getUrlParams: { // 获取房间信息
-        type: Object,
         required: true
       },
     },
@@ -123,8 +116,8 @@
           ajaxSuccess: 'ajaxSuccess',
           ajaxError: 'ajaxError',
           ajaxParams: {
-            url: this.urlParams.path + '/' + this.id,
-            method: this.urlParams.method
+            url: api.modify.path + '/' + this.id,
+            method: api.modify.method
           }
         },
         // 图片上传
@@ -178,13 +171,12 @@
         this.formValidate.imageIds = ids
       },
       // 获取已上传图片的数据
-      getUploadFiles() {
-        this.uploadFiles = [];
-        let files = this.formValidate.imageList;
-        for (let item in files) {
+      getUploadFiles(res) {
+        this.fileList = [];
+        for (let i = 0, list = res.data.fileList, l = list.length; i < l; i++) {
           this.fileList.push({
-            name: item.imageId,
-            url: this.staticPath + item.imagePath,
+            name: list[i].id,
+            url: api.down.path + list[i].id,
           })
         }
       },
@@ -192,15 +184,14 @@
       getDataForServer() {
         console.log(this.id);
         let roomId = this.id;
-        let urlParams = this.getUrlParams; // props
         this.ajax({
           ajaxSuccess: res => {
             this.formValidate = res.data;
-            this.getUploadFiles()
+            this.getUploadFiles(res)
           },
           ajaxParams: {
-            url: `${urlParams.path}/${roomId}`,
-            method: urlParams.method
+            url: api.get.path + roomId,
+            method: api.get.method
           }
         })
       },

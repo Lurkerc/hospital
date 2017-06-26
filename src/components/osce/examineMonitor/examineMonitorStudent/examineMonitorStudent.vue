@@ -21,7 +21,7 @@
       </div>
       <!-- 其他内容 -->
       <p class="otherInfo">考核内容：{{ studentInfo.contentName }}</p>
-      <p class="otherInfo">分站时间：{{ studentInfo.timeLength }}分钟</p>
+      <p class="otherInfo">分站时间：{{ teacherInfo.timeLength }}分钟</p>
       <p class="otherInfo">房间号：{{ exmContent.roomNum || '-'}}</p>
     </div>
     <!-- 考核信息 -->
@@ -62,6 +62,7 @@
 
 <script>
   let sd = null; // 倒计时
+  let studentTime = null;
   import api from '../api';
   export default {
     props: ['nowIndex', 'index', 'sceneId', 'stationId', 'roomId', 'userSum'],
@@ -139,12 +140,12 @@
       /*********************** 初始化数据 ****************************/
       // 结束倒计时
       getCountDown() {
-        // clearInterval(sd);
-        let endTime = this.studentInfo.endTime;
+        clearInterval(sd);
+        let endTime = new Date(this.studentInfo.endTime || new Date()).getTime();
         let _this = this;
         sd = setInterval(() => {
-          let nowTime = new Date();
-          let t = endTime - nowTime.getTime();
+          let nowTime = new Date().getTime();
+          let t = endTime - nowTime;
           let h = 0;
           let m = 0;
           let s = 0;
@@ -157,7 +158,8 @@
             s = _this.getCpl(s);
             _this.countDown = h + '：' + m + '：' + s;
           } else {
-            clearInterval(sd)
+            clearInterval(sd);
+            _this.countDown = "00：00：00"
           }
         }, 1000)
       },
@@ -178,7 +180,8 @@
           id: this.teacherId,
           sceneId: this.sceneId,
           stationId: this.stationId,
-          arrangementId: this.arrangementId
+          arrangementId: this.arrangementId,
+          reqTime: new Date().getTime(),
         });
         this.ajax({
           ajaxSuccess: 'updateExmContent',
@@ -191,6 +194,7 @@
       },
       // 考生切换
       changeStudent(type) {
+        clearTimeout(studentTime);
         if (type) {
           type === 'n' ? ++this.nowId : --this.nowId;
         }
@@ -234,6 +238,7 @@
       },
       // 更新考核内容数据
       updateExmContent(res) {
+        studentTime = setTimeout(() => this.getContentByTeacher(), 5000)
         if (res.data) {
           this.exmContent = res.data;
         } else {
@@ -244,7 +249,7 @@
       updateStudentInfo(res) {
         this.studentInfo = res.data;
         this.arrangementId = res.data.arrangementId;
-        clearInterval(sd);
+        // clearInterval(sd);
         this.getCountDown();
         this.getTeacherInfo();
         if (typeof res.data != 'object') {
@@ -259,6 +264,9 @@
       this.teacherUserId = this.stationRoom.teacherList[0].userId;
       this.getNowTime();
       this.changeStudent()
+    },
+    destroyed() {
+      clearTimeout(studentTime);
     }
   }
 

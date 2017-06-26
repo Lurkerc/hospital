@@ -106,6 +106,11 @@ const api = {
     path: thisFile + "/teacherCourse/list",
     method: 'get'
   },
+  getCourseTypeByCode:{  //获取课程类型
+    path: "/dictionary/getByCode/TEACH_COURSE_TYPE",
+    method: 'get'
+  },
+
 
   /*----- 课程表预览 --------------------------------------------------------------------------------*/
 //教学活动安排表

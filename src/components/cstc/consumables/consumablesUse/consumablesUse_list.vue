@@ -11,13 +11,13 @@
       <el-form-item label="耗材名称：" prop="consumablesName">
         <el-input v-model="searchObj.consumablesName" />
       </el-form-item>
-      <el-form-item label="借用人：" prop="borrower">
+      <el-form-item label="使用人：" prop="borrower">
         <el-input v-model="searchObj.borrower"></el-input>
       </el-form-item>
       <el-form-item label="使用时间：">
-        <el-date-picker v-model="searchObj.borrowerStartTime" :editable="false" type="datetime" placeholder="选择日期时间"></el-date-picker>
+        <el-date-picker v-model="searchObj.borrowerStartTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
         <span>-</span>
-        <el-date-picker v-model="searchObj.borrowerEndTime" :editable="false" type="datetime" placeholder="选择日期时间"></el-date-picker>
+        <el-date-picker v-model="searchObj.borrowerEndTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="search">搜索</el-button>
@@ -37,9 +37,9 @@
         </el-table-column>
         <el-table-column label="耗材名称" prop="consumablesName" align="center"></el-table-column>
         <el-table-column label="数量" prop="borrowerNum" show-overflow-tooltip></el-table-column>
-        <el-table-column label="借用人" prop="borrower" show-overflow-tooltip></el-table-column>
+        <el-table-column label="使用人" prop="borrower" show-overflow-tooltip></el-table-column>
         <el-table-column label="用途" prop="purpose" show-overflow-tooltip></el-table-column>
-        <el-table-column label="借用时间" prop="borrowerTime" show-overflow-tooltip></el-table-column>
+        <el-table-column label="使用时间" prop="borrowerTime" show-overflow-tooltip></el-table-column>
         <el-table-column label="创建人" prop="createrName" show-overflow-tooltip></el-table-column>
       </el-table>
     </div>
@@ -103,8 +103,8 @@
         // 搜索
         searchObj: {
           consumablesName: '', // 耗材名称
-          borrower: '', // 借用人
-          borrowerStartTime: '', // 借用时间
+          borrower: '', // 使用人
+          borrowerStartTime: '', // 使用时间
           borrowerEndTime: '', // 结束时间
         },
         multipleSelection: [], // 选项
@@ -170,8 +170,8 @@
       setTableData(isLoading) {
         Object.assign(this.queryQptions.params, this.searchObj);
         let params = this.queryQptions.params;
-        params.borrowerStartTime = this.conductDate(params.borrowerStartTime, 'yyyy-MM-dd HH:mm:ss') || '';
-        params.borrowerEndTime = this.conductDate(params.borrowerEndTime, 'yyyy-MM-dd HH:mm:ss') || '';
+        params.borrowerStartTime = this.conductDate(params.borrowerStartTime, 'yyyy-MM-dd');
+        params.borrowerEndTime = this.conductDate(params.borrowerEndTime, 'yyyy-MM-dd');
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions

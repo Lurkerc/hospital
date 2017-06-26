@@ -65,19 +65,11 @@
     roomManage as rules
   } from '../../rules'; // 表单验证规则
   import uploadFile from '../uploadFile';
-
+  import api from './api';
   export default {
     props: {
       id: { // 操作房间id
         type: [Number, String],
-        required: true
-      },
-      urlParams: { // 编辑
-        type: Object,
-        required: true
-      },
-      getUrlParams: { // 获取房间信息
-        type: Object,
         required: true
       },
     },
@@ -98,7 +90,7 @@
           summary: '', // 简介
           address: '', // 房间位置
           imgIds: '', // 房间图片 | 多个id以逗号分隔 ---> 1,2         
-          fileList: []
+          imageList: []
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         editMessTitle: {
@@ -108,8 +100,8 @@
           ajaxSuccess: 'ajaxSuccess',
           ajaxError: 'ajaxError',
           ajaxParams: {
-            url: this.urlParams.path + '/' + this.id,
-            method: this.urlParams.method
+            url: api.modify.path + this.id,
+            method: api.modify.method
           }
         },
         fileList: [],
@@ -169,25 +161,25 @@
         this.ajax({
           ajaxSuccess: 'getDataSuccess',
           ajaxParams: {
-            url: `${urlParams.path}/${roomId}`,
-            method: urlParams.method
+            url: api.get.path + roomId,
+            method: api.get.method
           }
         })
       },
       getDataSuccess(res) {
         this.formValidate = res.data; // 初始化编辑数据
         this.fileList = [];
-        for (let item in res.data.fileList) {
+        for (let i = 0, list = res.data.imageList, l = list.length; i < l; i++) {
           this.fileList.push({
-            name: item.id,
-            url: this.staticPath + item.path,
+            name: list[i].id,
+            url: api.down.path + list[i].id,
           })
         }
       }
     },
     created() {
       Util = this.$util;
-      this.staticPath = this.$store.getters.getEnvPath.http;
+      this.staticPath = this.$store.getters.getEnvPath.http || '';
       this.getDataForServer();
     },
     components: {

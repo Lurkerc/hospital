@@ -13,7 +13,7 @@
       </div>
       <!-- 其他内容 -->
       <p class="otherInfo "> 考核内容 : {{examUserData.contentName}}</p>
-      <p class="otherInfo "> &nbsp;&nbsp; 姓名 : {{examUserData.teacher.userName}}</p>
+      <p class="otherInfo "> &nbsp;&nbsp; 姓名 : {{examUserData.teacher.teacherUserName}}</p>
       <p class="otherInfo ">房间号 : {{examUserData.roomNum}}</p>
     </div>
     <!-- 考核信息 -->
@@ -31,9 +31,9 @@
           </el-table-column>
           <el-table-column prop="mark" label="得分" align="center" width="100">
             <template scope="scope">
-              <el-form :model="scope.row"  :rules="rules.addScore" :ref="'formValidate'+[scope.$index+'scope']" label-width="80px">
+              <el-form :model="scope.row" :rules="rules.addScore" :ref="'formValidate'+[scope.$index+'scope']" label-width="80px">
                 <el-form-item prop="mark" error="cuo" label-width="0px">
-                  <el-input  @blur="markChange(scope.row)" type="number" min="0" :max="scope.row.score" v-model.number="scope.row.mark"></el-input>
+                  <el-input @blur="markChange(scope.row)" type="number" min="0" :max="scope.row.score" v-model.number="scope.row.mark"></el-input>
                 </el-form-item>
               </el-form>
             </template>
@@ -78,7 +78,7 @@
     data() {
       return {
         //保存按钮基本信息
-        rules:rules,
+        rules: rules,
         loadBtn: {
           title: '提交',
           callParEvent: 'listenSubEvent'
@@ -157,16 +157,16 @@
        * */
       submitForm(formName) {
         let flag = false;
-        let isBlack=false;
-        for (let key in  this.$refs){
+        let isBlack = false;
+        for (let key in this.$refs) {
           this.$refs[key].validate((valid) => {
             if (valid) {
               flag = true;
-            }else {
+            } else {
               isBlack = true;
             }
           });
-          if(isBlack){
+          if (isBlack) {
             return false;
           }
         }
@@ -262,11 +262,11 @@
 
       markChange(row) {
         //mark 得分验证
-          if(row.mark > row.score){
-            row.mark = row.score;
-          }else if(row.mark<0||!row.mark){
-            row.mark = 0;
-          }
+        if (row.mark > row.score) {
+          row.mark = row.score;
+        } else if (row.mark < 0 || !row.mark) {
+          row.mark = 0;
+        }
       }
     },
     created() {

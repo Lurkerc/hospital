@@ -7,7 +7,7 @@
           <el-form-item label="评分指标名称：">{{ formValidate.scoreTableName }}</el-form-item>
         </el-col>
         <el-table :data="formValidate.detailsList" align="center" border :context="self" tooltip-effect="dark" class="asmContable"
-          style="width: 100%">
+          style="width: 100%" show-summary :summary-method="getSummaries">
           <el-table-column label="项目" width="200px" prop="classify" show-overflow-tooltip>
             <template scope="scope">
               {{ scope.row.classify }}
@@ -54,6 +54,33 @@
       },
       ajaxSuccess(res) {
         this.formValidate = res.data // 初始化编辑数据
+      },
+      // 统计分数
+      getSummaries(param) {
+        const {
+          columns,
+          data
+        } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '总分';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value)) && index === 3) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+          }
+        });
+        this.formValidate.totalScore = sums[3];
+        return sums;
       },
       /*
        * 组件初始化入口

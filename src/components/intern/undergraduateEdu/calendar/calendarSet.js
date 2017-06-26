@@ -8,9 +8,9 @@
  */
 const calendar = {
   fcEvents : [],
-  tpl:0,
-  itemLimit:7,
-  lang:"zh",
+  tpl:0,           //0为分两列显示数据  1为单行显示
+  itemLimit:7,     //显示几个后显示更多
+  lang:"zh",       //语言包使用
   setCalData(data){
     this.fcEvents = data;
     /*for(var i in data){

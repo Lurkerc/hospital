@@ -70,6 +70,7 @@
       //通过get请求列表数据
       updateListData(responseData) {
         let data = responseData.data;
+        let oldKey = 1;
         this.data = data;
         this.option = {
           title: {
@@ -99,7 +100,7 @@
             name: '得分',
             type: 'category',
             boundaryGap: false,
-            data: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] // 分数
+            data: [] // 分数区间
           },
           yAxis: {
             name: '人数',
@@ -116,8 +117,10 @@
             // stack: '总量',
             data: []
           })
-          this.$util._.mapKeys(item.data, dItem => {
-            this.option.series[index].data.push(dItem)
+          this.$util._.map(item.data, (val, key) => {
+            this.option.xAxis.data.push(+key ? (+oldKey + 1) + '-' + key : key);
+            this.option.series[index].data.push(val);
+            oldKey = key;
           })
         })
       },

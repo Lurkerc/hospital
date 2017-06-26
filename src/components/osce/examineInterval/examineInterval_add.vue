@@ -8,7 +8,7 @@
           <!-- 自由考核 -->
           <el-col :span="5">
             <el-form-item label="考核名称：" prop="sceneName" :required="false">
-              <el-input v-model="info.sceneName"></el-input>
+              <el-input v-model="info.sceneName" :maxlength="20"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6" :offset="1">
@@ -141,9 +141,9 @@
     <!-- 考站相关按钮 -->
     <div style="margin-top:20px;">
       <el-button size="small" type="success" @click="addRoom">添加考站</el-button>
+      <el-button size="small" type="primary" @click="openModel('setDraw')">抽签设置</el-button>
       <!-- 规范化考核 -->
       <template v-if="addType === 'STANDARD'">
-        <el-button size="small" type="primary" @click="openModel('setDraw')">抽签设置</el-button>
         <el-button size="small" type="warning" @click="openModel('setQueue')">队列设置</el-button>
       </template>
     </div>
@@ -154,9 +154,9 @@
           <template v-for="(cItem,cIndex) in item.children">
             <el-tooltip placement="right-start" :open-delay="1500" effect="light">
               <room-info slot="content" :basicsTime="info.basicsTime" :info="roomData[index]" :room="roomList[index].room[cIndex]" :teacher="roomList[index].teacher[cIndex]"
-                :key="index+'-'+cIndex" style="max-width:400px;"></room-info>
+                :key="index+'_'+cIndex" style="max-width:400px;"></room-info>
               <room :option="{hasMore: cIndex > 0,type:'edit'}" :initData="{index: index,cIndex:cIndex,name:roomData[index].stationName,roomNum:item.room[cIndex].roomNum,roomType:roomData[index].stationType === 'SP' ? 'SP' : ''}"
-                :key="index+'-'+cIndex" @roomClick="roomClick" @iconAdd="addRoomChildren(index)" @iconRemove="removeRoomChildren(index,cIndex)"
+                :key="index+'_'+cIndex" @roomClick="roomClick" @iconAdd="addRoomChildren(index)" @iconRemove="removeRoomChildren(index,cIndex)"
                 style="width:80px;margin-left:40px;"></room>
             </el-tooltip>
           </template>
@@ -167,14 +167,14 @@
     <Modal :mask-closable="false" width="890" v-model="selectUserModal" title="添加人员" class-name="vertical-center-modal">
       <modal-header slot="header" :content="contentHeader.selectUserId"></modal-header>
       <!-- 此处人员还未对应 -->
-      <select-user v-if="selectUserModal" @cancel="closeSltUser" @setUsers="setUsers" :initUser="initUser"></select-user>
+      <select-user v-if="selectUserModal" @cancel="closeSltUser" @setUsers="setUsers" :unSelect="unSelectUser" :initUser="initUser"></select-user>
       <div slot="footer"></div>
     </Modal>
     <!--选择考场管理员-->
     <Modal :mask-closable="false" width="890" v-model="selectManagerModal" title="添加考场管理员" class-name="vertical-center-modal">
       <modal-header slot="header" :content="contentHeader.selectManagerId"></modal-header>
       <!-- 此处人员还未对应 -->
-      <select-user v-if="selectManagerModal" @cancel="closeSltMUser" @setUsers="setMUsers" :initUser="initUser"></select-user>
+      <select-user v-if="selectManagerModal" @cancel="closeSltMUser" @setUsers="setMUsers" :unSelect="unSelectUser" :initUser="initUser"></select-user>
       <div slot="footer"></div>
     </Modal>
     <!--设置考站信息-->
@@ -186,7 +186,7 @@
     <!--设置考站SP信息-->
     <Modal :mask-closable="false" width="890" v-model="setSPModal" title="考站信息SP设置" class-name="vertical-center-modal">
       <modal-header slot="header" :content="contentHeader.setSPId"></modal-header>
-      <select-user v-if="setSPModal" @cancel="closeSPUser" @setUsers="setSP" :initUser="initUser"></select-user>
+      <select-user v-if="setSPModal" @cancel="closeSPUser" @setUsers="setSP" :unSelect="unSelectUser" :initUser="initUser"></select-user>
       <div slot="footer"></div>
     </Modal>
     <!--设置考站抽签信息-->
@@ -252,6 +252,9 @@
         api,
         self: this,
         rules: {}, // 验证规则
+
+        unSelectUser: [], // 禁选人员
+
         info: {}, // 场次信息
         roomList: {}, // 考站
         roomData: {}, // 考站信息
@@ -382,15 +385,11 @@
           return;
         }
 
-        // if(isSubmit) {
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true)
-        // this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
-        // this.ajax(this.addMessTitle, isLoadingFun)
 
         this.addMessTitle.ajaxParams.data = this.getAjaxParamsData();
         this.ajax(this.addMessTitle, isLoadingFun);
-        // }
       },
       /*
        * 点击提交按钮 监听是否验证通过
@@ -422,9 +421,6 @@
         setTimeout(function () {
           this.saved = false
         }, 1000)
-
-        // this.saveSuccess(); // 测试时使用，调用接口后删除
-        // console.log(this.addMessTitle.ajaxParams.data)
       },
       // 检测填写数据
       checkData() {
@@ -502,24 +498,47 @@
       /**************************** 人员相关 ********************************/
       // 删除已选择的参考人员
       handleClose(index) {
-        this.userList.splice(index, 1)
+        this.userList.splice(index, 1);
+        this.$store.commit('examineInterval/room/removeUnSelectUser', {
+          type: 'user',
+          index
+        })
+        // 参考人员专业
+        let specialtyList = [];
+        for (let i = 0, list = this.userList, len = list.length; i < len; i++) {
+          if (!(specialtyList.indexOf(list[i].specialty) > -1)) {
+            specialtyList.push(list[i].specialty);
+          }
+        }
+        this.$store.commit('examineInterval/room/initSpecialtyList', specialtyList);
+        // 参考人员删除同步删除对应房间的专业
+        for (let i = 0, roomList = this.roomList, leng = roomList.length; i < leng; i++) {
+          for (let j = 0, roomItem = roomList[i].room, roomItemLen = roomItem.length; j < roomItemLen; j++) {
+            if (!(specialtyList.indexOf(roomItem[j].specialty) > -1)) {
+              this.$store.commit('examineInterval/room/removeRoomSpecialty', {
+                index: i,
+                cIndex: j
+              });
+            }
+          }
+        }
       },
       //添加人员
       addUser() {
         let userList = this.userList;
         this.initUser = [];
         if (userList.length > 0) {
-
           for (var i = 0, item; i < userList.length; i++) {
             item = userList[i];
             this.initUser.push({
-              key: item["userId"],
-              label: item["userName"],
-              description: '人员id---' + item["userId"] + '的描述信息',
+              key: item.userId,
+              label: item.userName,
+              description: '人员id---' + item.userId + '的描述信息',
               disabled: false
             })
           }
         }
+        this.unSelectUser = this.getUnSelectUser('user');
         this.openModel('selectUser');
       },
       /*
@@ -527,14 +546,27 @@
        * @param users [{id:'',name:''},{}]  已选人员信息
        * */
       setUsers(users) {
+        // 初始化禁选人员
+        let unSelUser = [];
+        // 专业
+        let specialtyList = [];
         this.userList = [];
         Util._.forEach(users, (val, k) => {
           this.userList.push({
-            "userId": val["key"],
-            "userName": val["label"]
+            userId: val.key,
+            userName: val.label,
+            specialty: val.specialty
           })
+          unSelUser.push(val.key);
+          specialtyList.push(val.specialty)
         })
         this.closeSltUser();
+        // 加入禁选
+        this.$store.commit('examineInterval/room/updateUnSelectUser', {
+          user: unSelUser
+        });
+        // 参考人员专业
+        this.$store.commit('examineInterval/room/addSpecialtyList', specialtyList);
       },
       //关闭选择人员弹窗
       closeSltUser() {
@@ -543,7 +575,11 @@
       /*************************** 考场管理员 *********************************/
       // 删除已选择的参考人员
       handleMClose(index) {
-        this.managerList.splice(index, 1)
+        this.managerList.splice(index, 1);
+        this.$store.commit('examineInterval/room/removeUnSelectUser', {
+          type: 'manager',
+          index
+        })
       },
       //添加人员
       addManager() {
@@ -554,13 +590,14 @@
           for (var i = 0, item; i < managerList.length; i++) {
             item = managerList[i];
             this.initUser.push({
-              key: item["userId"],
-              label: item["userName"],
-              description: '人员id---' + item["userId"] + '的描述信息',
+              key: item.userId,
+              label: item.userName,
+              description: '人员id---' + item.userId + '的描述信息',
               disabled: false
             })
           }
         }
+        this.unSelectUser = this.getUnSelectUser('manager');
         this.openModel('selectManager');
       },
       /*
@@ -568,12 +605,18 @@
        * @param users [{id:'',name:''},{}]  已选人员信息
        * */
       setMUsers(users) {
+        let unMUser = [];
         this.managerList = [];
         Util._.forEach(users, (val, k) => {
           this.managerList.push({
-            "userId": val["key"],
-            "userName": val["label"]
+            userId: val.key,
+            userName: val.label,
+            specialty: val.specialty
           })
+          unMUser.push(val["key"])
+        })
+        this.$store.commit('examineInterval/room/updateUnSelectUser', {
+          manager: unMUser
         })
         this.closeSltMUser()
       },
@@ -593,24 +636,31 @@
           for (var i = 0, item; i < spList.length; i++) {
             item = spList[i];
             this.initUser.push({
-              key: item["userId"],
-              label: item["userName"],
-              description: '人员id---' + item["userId"] + '的描述信息',
+              key: item.userId,
+              label: item.userName,
+              description: '人员id---' + item.userId + '的描述信息',
               disabled: false
             })
           }
         }
+        this.unSelectUser = this.getUnSelectUser('sp');
         this.openModel('setSP');
       },
       // sp设置
       setSP(users) {
         this.spList = [];
+        let unSpUser = [];
         Util._.forEach(users, (val, k) => {
           this.spList.push({
-            userId: val["key"],
-            userName: val["label"],
+            userId: val.key,
+            userName: val.label,
+            specialty: val.specialty,
             scriptIds: []
           })
+          unSpUser.push(val["key"]);
+        })
+        this.$store.commit('examineInterval/room/updateUnSelectUser', {
+          sp: unSpUser
         })
         this.closeSPUser()
       },
@@ -634,6 +684,20 @@
 
       },
 
+      /************************** 排除禁选人员 *********************************/
+      // 获取禁选人员
+      getUnSelectUser(type) {
+        let temp = this.$store.state.examineInterval.room.unSelectUser;
+        let unSelArr = [];
+        Util._.map(temp, (arr, key) => {
+          if (key !== type) {
+            unSelArr = unSelArr.concat(arr)
+          }
+        })
+        console.log(type, unSelArr)
+        return unSelArr
+      },
+
       /************************** 抽签设置 *************************************/
       // 操作已保存到状态
       setDraw() {
@@ -655,7 +719,6 @@
           }
         };
         this.ajax(ajaxObj);
-        // this.viewTableData(); // 联调接口后删除
       },
       // 排考预览数据请求回调，加载预览表
       viewTableData(res) {
@@ -704,7 +767,6 @@
       roomInfo,
       selectUser,
       setInfo,
-      // setSp,
       setDraw,
       setQueue,
       preview
@@ -721,6 +783,7 @@
         sceneType: this.addType
       });
       this.rules = this.addType === 'FREE' ? examineIntervalFREE : examineIntervalSTANDARD;
+      this.unSelectUser = this.$store.getters['examineInterval/room/unSelectUser'];
     },
     mounted() {
       //页面dom稳定后调用

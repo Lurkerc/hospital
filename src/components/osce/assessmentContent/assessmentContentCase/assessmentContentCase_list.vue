@@ -2,7 +2,7 @@
   <!-- 病例 -->
   <div>
     <el-row>
-      <el-col :span="14">
+      <el-col>
         <!-- 操作按钮 -->
         <div class="buttonList">
           <el-button size="small" type="success" @click="add">新建病例</el-button>
@@ -17,7 +17,7 @@
         </div>
       </el-col>
       <!-- 搜索 -->
-      <el-col :span="10">
+      <el-col>
         <el-form :inline="true" class="el-form-item-search" ref="searchObj" :model="searchObj">
           <el-form-item label="病例名称：" prop="caseName">
             <el-input size="small" v-model="searchObj.caseName"></el-input>
@@ -28,6 +28,7 @@
       </el-form-item>-->
           <el-form-item label="是否有病例：" prop="isScript">
             <el-radio-group v-model="searchObj.isScript">
+              <el-radio label="">全部</el-radio>
               <el-radio label="1">是</el-radio>
               <el-radio label="0">否</el-radio>
             </el-radio-group>

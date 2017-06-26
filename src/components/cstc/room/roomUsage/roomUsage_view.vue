@@ -23,9 +23,10 @@
     <el-row class="roomViewItem">
       <el-col :span="2" :offset="2" align="right">房间图片：</el-col>
       <el-col :span="16">
-        <template v-if="viewData.imageList && viewData.imageList.length > 0">
-          <img v-for="item in viewData.imageList" :src="item.imagePath" class="classViewImg" />
-        </template>
+        <!--<template v-if="viewData.fileList.length">
+          <img v-for="item in viewData.fileList" :src="staticPath + item.path + item.name" class="classViewImg" />
+        </template>-->
+        <upload-file v-if="fileList.length" :fileList="fileList" class="onlyShowUploadPic"></upload-file>
         <template v-else>暂无图片</template>
       </el-col>
     </el-row>
@@ -33,19 +34,19 @@
 </template>
 
 <script>
+  import api from './api';
+  import uploadFile from '../uploadFile';
   export default {
     props: {
       id: {
         type: [String, Number],
         required: true
       },
-      urlParams: { // 获取房间信息url
-        type: Object,
-        required: true
-      }
     },
     data() {
       return {
+        staticPath: '',
+        fileList: [],
         viewData: {
           // "id": "1",
           roomNum: "-",
@@ -66,23 +67,33 @@
         this.ajax({
           ajaxSuccess: 'getDataSuccess',
           ajaxParams: {
-            url: `${urlParams.path}/${roomId}`,
-            method: urlParams.method
+            url: api.get.path + roomId,
+            method: api.get.method
           }
         })
       },
       getDataSuccess(res) {
-        this.viewData = res.data // 初始化编辑数据
+        this.viewData = res.data; // 初始化编辑数据
+        for (let i = 0, list = res.data.fileList, l = list.length; i < l; i++) {
+          this.fileList.push({
+            name: list[i].id,
+            url: api.down.path + list[i].id,
+          })
+        }
       }
     },
     created() {
+      this.staticPath = this.$store.getters.getEnvPath.http;
       this.getDataForServer()
-    }
+    },
+    components: {
+      uploadFile
+    },
   }
 
 </script>
 
-<style>
+<style lang="scss">
   .roomViewItem {
     padding: 10px 0;
   }
@@ -94,6 +105,13 @@
     border-radius: 6px;
     overflow: hidden;
     margin: 0 22px 22px 0;
+  }
+
+  .onlyShowUploadPic {
+    .el-upload,
+    .el-upload-list__item-actions span.el-upload-list__item-delete {
+      display: none;
+    }
   }
 
 </style>

@@ -7,7 +7,8 @@ let state = {
   info: {}, // 基本共用信息
   room: {}, // 该站房间信息
   teacher: [], // 监考老师信息
-  disSelectRoom: [], // 禁选房间id集合
+  unSelectRoom: [], // 禁选房间id集合
+  unSelectUser: {}, // 不允许选择的人员
 };
 
 let mutations = {
@@ -17,7 +18,8 @@ let mutations = {
     state.info = infoData.info;
     state.room = infoData.room;
     state.teacher = infoData.teacher;
-    state.disSelectRoom = infoData.disSelectRoom;
+    state.unSelectRoom = infoData.unSelectRoom;
+    state.unSelectUser = infoData.unSelectUser;
   },
   // 初始化老师
   initTeacher: (state, teacherArr) => state.teacher = teacherArr || [],
@@ -25,7 +27,7 @@ let mutations = {
    * 初始化隐藏考站
    * @param state
    */
-  initDisSelectRoom: (state) => state.disSelectRoom = [],
+  initUnSelectRoom: (state) => state.unSelectRoom = [],
   // 添加老师
   addTeacher: (state, teacherObj) => state.teacher.push(teacherObj),
   /**
@@ -51,10 +53,23 @@ let mutations = {
    * @param  {[type]} roomId [description]
    * @return {[type]}        [description]
    */
-  addDisSelectRoom: (state, roomId) => {
-    if (!state.disSelectRoom.indexOf(+roomId) > -1) {
-      state.disSelectRoom.push(+roomId)
+  addUnSelectRoom: (state, roomId) => {
+    if (!state.unSelectRoom.indexOf(+roomId) > -1) {
+      state.unSelectRoom.push(+roomId)
     }
+  },
+  /**
+   * 增加不可选择人员
+   * userArrObj { manager:[] } || { sp: 1,user: [1,2] }
+   */
+  addUnSelectUser: (state, userArrObj) => {
+    Object.keys(userArrObj).map(key => {
+      if (state.unSelectUser[key] instanceof Array) {
+        state.unSelectUser[key] = state.unSelectUser[key].concat(userArrObj[key])
+      } else {
+        state.unSelectUser[key].push(userArrObj[key]);
+      }
+    })
   },
   /**
    * [更新考核指定内容]
@@ -83,6 +98,15 @@ let mutations = {
     })
   },
   /**
+   * 更新不可选择人员
+   * userArrObj { manager:[] }
+   */
+  updateUnSelectUser: (state, userArrObj) => {
+    Object.keys(userArrObj).map(key => {
+      state.unSelectUser[key] = userArrObj[key]
+    })
+  },
+  /**
    * 删除考站考核内容
    * @param {any} state 
    * @param {any} index
@@ -94,11 +118,27 @@ let mutations = {
    * @param  {[type]} roomId [description]
    * @return {[type]}        [description]
    */
-  removeDisSelectRoom: (state, roomId) => {
-    let index = state.disSelectRoom.indexOf(+roomId);
+  removeUnSelectRoom: (state, roomId) => {
+    let index = state.unSelectRoom.indexOf(+roomId);
     if (index > -1) {
-      state.disSelectRoom.splice(index, 1)
+      state.unSelectRoom.splice(index, 1)
     }
+  },
+  /**
+   * 删除不可选择人员 
+   * userObj { type:sp, index:1 } 从sp人员中删除第2个
+   */
+  removeUnSelectUser: (state, userObj) => {
+    state.unSelectUser[userObj.type].splice(userObj.index, 1)
+  },
+  /**
+   * 删除不可选择人员 
+   * userObj { type:sp, id:1 } 从sp人员中删除指定id
+   */
+  removeUnSelectUserById: (state, userObj) => {
+    let theUserIdArr = state.unSelectUser[userObj.type];
+    let index = theUserIdArr.indexOf(userObj.id);
+    theUserIdArr.splice(index, 1);
   },
 }
 

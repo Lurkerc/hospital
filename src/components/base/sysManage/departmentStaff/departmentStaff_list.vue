@@ -38,6 +38,7 @@
       <br />
       <div id="myTable" ref="myTable">
         <el-table
+          ref="multipleTable"
           align="center"
           :height="dynamicHt"
           :context="self"
@@ -227,7 +228,7 @@
           class-name="vertical-center-modal"
           :width="800">
           <modal-header slot="header" :content="shortNoteId"></modal-header>
-          <shortNote v-if="shortNoteModal"  @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></shortNote>
+          <shortNote v-if="shortNoteModal"  @shortNote="subCallback" @cancel="cancel" :operaility-data="operailityData"></shortNote>
           <div slot="footer"></div>
         </Modal>
         <!---->
@@ -330,6 +331,7 @@
         shortNoteModal:false,
         deriveModal:false,
         toChannelModal:false,
+        shortNoteModal:false,
         operailityData:'',
         multipleSelection: [],
         dynamicHt: 100,
@@ -407,9 +409,9 @@
       updateListData(responseData){
         let data = responseData.data;
         this.tableData1=[];
-        this.listTotal = responseData.totalCount||1;
         data = this.addIndex(data);
         this.tableData1= data;
+        this.listTotal = responseData.totalCount||1;
       },
 
 
@@ -449,7 +451,23 @@
         this.clickAddChange = !this.clickAddChange
       },
 
+
+      /*
+      * 未分配可管理的部门
+      * @return flag blooean
+      * */
+      undistributedDep(){
+        let flag = true;
+        if(this.deptId==""){
+          this.showMess("还没有给您分配部门管理员!暂无部门可管理!");
+          flag = false;
+        }
+        return flag
+      },
+
+
       handleAdd(isSltedTreeNode){
+        if(!this.undistributedDep()) return;
         let isSltedTree = this.isSltedTree(isSltedTreeNode);
         if(isSltedTree){
           this.operailityData = {deptId:this.deptId};
@@ -577,6 +595,7 @@
 
       //重置
       reset(){
+        if(!this.undistributedDep()) return;
         if(!this.isSelected()) return;
         this.$Modal.confirm({
           title: '重置密码',
@@ -596,6 +615,7 @@
                 this.$Modal.remove();
                 this.successMess('重置成功!密码为:666666');
                 this.isUsing = true;
+                this.$refs.multipleTable.clearSelection();
               },
               errorTitle:'重置失败!',
                 ajaxParams:{
@@ -611,18 +631,21 @@
 
       //导入
       toChannel(){
+        if(!this.undistributedDep()) return;
         this.openModel('toChannel')
       },
 
 
       //导出
       derive(){
+        if(!this.undistributedDep()) return;
         this.openModel('derive')
       },
 
 
       //短信通知
       shortNote(){
+        if(!this.undistributedDep()) return;
         this.openModel('shortNote')
       },
 
@@ -714,7 +737,7 @@
       * */
       showTreeList(id){
         //初始化加载页面信息
-        this.postParamToServer();
+//        this.postParamToServer();
       },
 
 
@@ -749,11 +772,9 @@
       * 设置当前部门Id
       * */
       setTreeDepId(id){
-        if(this.deptId==""){
+        if(id!=""){
           this.deptId = id;
           this.setTableData();
-        }else{
-          this.deptId = id;
         }
       }
     },

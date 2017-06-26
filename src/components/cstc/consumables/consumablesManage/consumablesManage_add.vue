@@ -77,10 +77,10 @@
           stock: '', // 库存
           price: '', // 单价
           imgList: [ // 图片列表
-            {
-              originalPath: '', // 原图地址
-              thumbnailPath: '', // 缩略图地址
-            }
+            // {
+            //   originalPath: '', // 原图地址
+            //   thumbnailPath: '', // 缩略图地址
+            // }
           ]
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置

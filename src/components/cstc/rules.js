@@ -113,7 +113,7 @@ let consumablesCount = {
   consumablesId: baseRules.selectId, // 设备名称 - 必选
   expectNum: baseRules.numberMust, // 预期数量 - 必须为数字
   actualNum: baseRules.numberMust, // 实际数量 - 必须为数字
-  inventoryMan: baseRules.required, // 盘点人 - 必填
+  // inventoryMan: baseRules.required, // 盘点人 - 必填
   inventoryTime: baseRules.isDate, // 盘点时间 - 必须为日期时间
 };
 

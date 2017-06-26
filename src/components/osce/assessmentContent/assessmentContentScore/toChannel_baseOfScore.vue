@@ -14,6 +14,7 @@
             type="index"
             label="序号"
             align="center"
+            fixed
             width="80">
           </el-table-column>
           <!--<el-table-column-->
@@ -155,6 +156,7 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       confirm(isLoadingFun){
+        isLoadingFun(true)
           //处理将要提交的数据
         let queryData = this.conductQueryData(this.body==0?this.tempArr:this.body)
 
@@ -180,14 +182,22 @@
             that.errorMess('系统错误')
           }
           isLoadingFun(false);
-        }).catch(function(response){
-          if (response instanceof Error) {
-            // 意外发生在设置要求引发一个错误
-            that.errorMess(response.message);
+        }).catch(function(error){
+          if (error.response) {
             isLoadingFun(false);
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            util.handleAjaxError(that,error.response.status+'');
+          } else if (error.request) {
+            isLoadingFun(false);
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            that.errorMess(error.request);
           } else {
-            that.errorMess(response.status+"错误!");
             isLoadingFun(false);
+            // Something happened in setting up the request that triggered an Error
+            that.errorMess(error.message);
           }
         })
       },
@@ -196,19 +206,26 @@
       conductQueryData(data){
        let  queryData = this.$util._.defaultsDeep([], data);
 
-       let index = 0;
-        let tempArr  =[{
-            scoreTableName:queryData[index].scoreTableName,
-          totalScore:queryData[index].totalScore,
-          detailsList:[],
-          treeId:queryData[index].treeId,
-          treeRoad:queryData[index].treeRoad
-        }
+       let index = -1;
+        let tempArr  =[
+//            {
+//            scoreTableName:queryData[index].scoreTableName,
+//          totalScore:queryData[index].totalScore,
+//          detailsList:[],
+//          treeId:queryData[index].treeId,
+//          treeRoad:queryData[index].treeRoad
+//        }
           ];
         for(let i=0;i<queryData.length;i++){
-              if(queryData[i].scoreTableName && i != 0){
+              if(queryData[i].scoreTableName ){
                 index++;
-                tempArr[index].push({scoreTableName:queryData[index].scoreTableName,totalScore:queryData[index].totalScore,detailsList:[]});
+                tempArr.push({
+                  scoreTableName:queryData[i].scoreTableName,
+                  totalScore:queryData[i].totalScore,
+                  detailsList:[],
+                  treeId:queryData[i].treeId,
+                  treeRoad:queryData[i].treeRoad
+                });
               }
             tempArr[index].detailsList.push(queryData[i])
           }
@@ -221,6 +238,9 @@
           let index = 0;
           let countArr = []
           for (let i=0;i<data.length;i++){
+              if(data[i].errorMsgList == null){
+                data[i].errorMsgList=[];
+              }
                tempArr.push(data[i]);
               index = tempArr.length-1;
             countArr.push(index);
@@ -228,9 +248,10 @@
                   let detailsList = data[i].detailsList;
 
                 for(let k=0;k<detailsList.length;k++){
-
+                  if(detailsList[k].seq==null)continue;
+                  if(detailsList[k].errorMsgList==null)continue;
                   if(detailsList[k].seq == data[i].seq ){
-                      tempArr[index].errorMsgList = tempArr[index].errorMsgList.concat(detailsList[k].errorMsgList).join(' , ');
+                      tempArr[index].errorMsgList = tempArr[index].errorMsgList.concat(detailsList[k].errorMsgList)
                     }else {
                       tempArr.push(detailsList[k])
                     }
@@ -239,7 +260,7 @@
 
           }
           for (let i=0;i<countArr.length;i++){
-            if(tempArr[i].errorMsgList == 0){
+            if(tempArr[i].errorMsgList == null ||tempArr[i].errorMsgList == 0){
               tempArr.splice(i,1)
               i--;
             }
@@ -248,7 +269,6 @@
       },
       //处理错误
       conductError(data){
-
           //处理传过来的数据 变成数组包含对象，对象不会包含其他引用
          data =  this.analysisErrorData(data);
 
@@ -264,7 +284,7 @@
 //        this.error = [];
         let error =[];
 
-        if(~oldErrorList[0]){//上一次错误的列表
+        if(oldErrorList[0]){//上一次错误的列表
           for (let i=0;i<oldErrorList.length;i++){
             bodyData[oldErrorList[i]].error = false;
           }
@@ -272,7 +292,6 @@
 
 
         this.oldErrorList=[];
-
 
         for(let i=0;i<data.length;i++){
           this.oldErrorList.push(data[i].seq); //添加上错误行号；

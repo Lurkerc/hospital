@@ -14,7 +14,7 @@
     <p class="title"><b>监考老师：</b></p>
     <ul class="teacher">
       <template v-if="teacher.length > 0">
-        <li class="tList" v-for="item in teacher"><span>{{ item.teacherName }}</span><span>{{ item.weight }}%</span></li>
+        <li class="tList" v-for="(item,index) in teacher" :key="index"><span>{{ item.teacherName }}</span><span>{{ item.weight }}%</span></li>
       </template>
       <template v-else>
         <li class="noData">还未选择监考老师</li>

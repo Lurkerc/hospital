@@ -51,26 +51,25 @@
     </div>
     <div>
       <!--新建-->
-      <Modal close-on-click-modal="false" width="1100" v-model="addModal" title="对话框标题" class-name="vertical-center-modal">
+      <Modal close-on-click-modal="false" width="1100" v-model="addModal" class-name="vertical-center-modal" @on-cancel="cancel">
         <modal-header slot="header" :content="addId"></modal-header>
         <addScore v-if="addModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :url="url"></addScore>
         <div slot="footer"></div>
       </Modal>
       <!--修改-->
-      <Modal close-on-click-modal="false" width="1100" v-model="editModal" title="对话框标题" class-name="vertical-center-modal">
+      <Modal close-on-click-modal="false" width="1100" v-model="editModal" class-name="vertical-center-modal" @on-cancel="cancel">
         <modal-header slot="header" :content="editId"></modal-header>
         <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :url="url"></edit>
         <div slot="footer"></div>
       </Modal>
       <!--删除弹窗-->
-      <Modal close-on-click-modal="false" height="200" v-model="removeModal" title="对话框标题" class-name="vertical-center-modal" :width="500">
+      <Modal close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal" :width="500" @on-cancel="cancel">
         <modal-header slot="header" :content="removeId"></modal-header>
         <remove v-if="removeModal" :delete-url="url.examUserRemove.path" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
-
         <div slot="footer"></div>
       </Modal>
       <!--查看弹窗-->
-      <Modal width="1100" v-model="showModal" title="查看档案管理弹窗" class-name="vertical-center-modal">
+      <Modal width="1100" v-model="showModal" title="查看档案管理弹窗" class-name="vertical-center-modal" @on-cancel="cancel">
         <modal-header slot="header" :content="viewId"></modal-header>
         <show v-if="showModal" @cancel="cancel" @show="subCallback" :operaility-data="operailityData" :url="url"></show>
         <div slot="footer"></div>
@@ -81,6 +80,7 @@
 
 <script>
   let Util;
+  let atmTime = null;
   //引入组件--添加评分
   import addScore from './info/info_addScore.vue'
   //修改
@@ -200,12 +200,17 @@
       scheduleListData(responseData) {
         let data = responseData.data;
         this.scheduleData = data;
+        // 间隔连接 30s
+        atmTime = setTimeout(() => this.selectTeacher(this.selectTeaData), 30000)
       },
       //获取右侧列表 选择老师的时候调用
       selectTeacher(data) {
+        clearTimeout(atmTime);
         this.selectTeaData = data
         this.scheduleForm.teacherId = data.teacherId;
-        this.scheduleList.ajaxParams.params = Object.assign(this.scheduleList.ajaxParams.params, this.scheduleForm);
+        this.scheduleList.ajaxParams.params = Object.assign(this.scheduleList.ajaxParams.params, this.scheduleForm, {
+          reqTime: new Date().getTime()
+        });
         this.ajax(this.scheduleList);
       },
       //搜索监听回调
@@ -237,16 +242,19 @@
 
       /*--点击--添加--按钮--*/
       addScore(data) {
+        clearTimeout(atmTime);
         this.operailityData = data;
         this.openModel("add");
       },
       /*--点击--修改--按钮--*/
       edit(data) {
+        clearTimeout(atmTime);
         this.operailityData = data;
         this.openModel("edit");
       },
       /*--点击--删除--按钮--*/
       remove(data) {
+        clearTimeout(atmTime);
         data.id = data.scheduleId;
         this.operailityData = [data];
         this.openModel('remove');
@@ -265,7 +273,10 @@
        * @param targer string example:"add"、"edit"
        * */
       cancel(targer) {
+        clearTimeout(atmTime);
         this[targer + 'Modal'] = false;
+        // this.selectTeacher(this.selectTeaData)
+        this.setTableData();
       },
       /*
        * 监听子组件通讯的方法
@@ -287,6 +298,7 @@
        * @param udata boolean 默认false  是否不需要刷新当前表格数据
        * */
       subCallback(target, title, updata) {
+        clearTimeout(atmTime);
         this.cancel(target);
         if (title) {
           this.successMess(title);
@@ -305,6 +317,9 @@
     },
     created() {
       this.init();
+    },
+    destroyed() {
+      clearTimeout(atmTime);
     },
     components: {
       //当前组件引入的子组件

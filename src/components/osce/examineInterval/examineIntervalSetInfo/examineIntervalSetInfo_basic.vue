@@ -9,9 +9,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="SP考站：" prop="stationType">
-            <template v-for="item in typeOption">
-              <el-radio class="radio" v-model="info.stationType" v-if="item.value" :label="item.value">{{ item.label }}</el-radio>
-            </template>
+            <el-radio class="radio" v-for="(item,index) in typeOption" :key="index" v-model="info.stationType" v-if="item.value" :label="item.value">{{ item.label }}</el-radio>
           </el-form-item>
         </el-col>
 
@@ -35,7 +33,7 @@
           </el-col>
 
           <el-col :span="8" :offset="2">
-            <el-form-item label="抽题类型" prop="randomType">
+            <el-form-item label="抽题类型：" prop="randomType">
               <el-select v-model="info.randomType" filterable placeholder="请选择">
                 <el-option v-for="item in randomTypeOption" v-if="item.value !== ''" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
@@ -50,10 +48,23 @@
           </el-col>-->
         </template>
 
-        <el-col :span="22" :offset="2">
+
+
+        <el-col :span="8" :offset="2">
           <el-form-item label="房间：" prop="roomId">
             <span class="roomNumber">{{ room.roomNum }}</span>
             <el-button type="info" @click="openSelectRoom">选择房间</el-button>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="8" :offset="2">
+          <el-form-item label="专业：" prop="randomType">
+            <el-select v-model="room.specialty" placeholder="请选择">
+              <el-option label="全部" :value="0"></el-option>
+              <template v-if="specialtyList.length">
+                <el-option v-for="item in specialtyList" :key="item" :label="item" :value="item"></el-option>
+              </template>
+            </el-select>
           </el-form-item>
         </el-col>
 
@@ -86,7 +97,7 @@
     <!-- 模态框 选择房间（selectRoom） -->
     <Modal :mask-closable="false" v-model="selectRoomModal" height="200" class-name="vertical-center-modal" :width="800">
       <modal-header slot="header" :content="contentHeader.selectRoomId"></modal-header>
-      <select-room v-if="selectRoomModal" :disSelectRoom="disSelectRoom" @cancel="cancel" @select="selectRoom" :selectOne="true"
+      <select-room v-if="selectRoomModal" :unSelectRoom="unSelectRoom" @cancel="cancel" @select="selectRoom" :selectOne="true"
         :disSelect="true"></select-room>
       <div slot="footer"></div>
     </Modal>
@@ -96,7 +107,7 @@
       <!--<select-teacher v-if="selectTeacherModal" :initData="selectTeacherId" :search="[{label: '姓名',keys: 'test'}, {label: '工号',keys: 'name'}]"
         @cancel="cancel('selectTeacher')" @setData="setData" :readerList="readerList"></select-teacher>-->
       <!--<select-teacher v-if="selectTeacherModal" @cancel="closeUser" @setUsers="setUsers" :initUser="initUser"></select-teacher>-->
-      <select-user v-if="selectTeacherModal" @cancel="closeUser" @setUsers="setUsers" :initUser="initUser"></select-user>
+      <select-user v-if="selectTeacherModal" @cancel="closeUser" @setUsers="setUsers" :unSelect="unSelectUser" :initUser="initUser"></select-user>
       <div slot="footer"></div>
       <div slot="footer"></div>
     </Modal>
@@ -119,7 +130,9 @@
         basicsTime: '', // 当前考核场次的考试基础时间
         typeOption,
         randomTypeOption,
-        disSelectRoom: [],
+        specialtyList: [], // 专业
+        unSelectRoom: [],
+        unSelectUser: [],
         selectRoomModal: false,
         selectTeacherModal: false,
         info: {}, // 考站信息
@@ -144,7 +157,14 @@
       next() {
         if (!this.checkData()) return;
         this.$store.commit('examineInterval/temp/initTeacher', this.teacher);
-        this.$emit('goStep', 2)
+        let teacherArr = [];
+        for (let i = 0, item = this.teacher, l = item.length; i < l; i++) {
+          teacherArr.push(item[i].teacherId)
+        }
+        this.$store.commit('examineInterval/temp/addUnSelectUser', {
+          teacher: teacherArr
+        })
+        this.$emit('goStep', 2);
       },
       /**************** 数据检测 ********************/
       checkData() {
@@ -182,13 +202,13 @@
         // 缓存操作不进行禁止选择，因为不点击完成是不会记录该数据的
         if (room.roomId !== roomVal.id) { // 当前房间更换
           //   // 从禁止选择房间数组中删除该房间
-          this.$store.commit('examineInterval/temp/removeDisSelectRoom', room.roomId)
+          this.$store.commit('examineInterval/temp/removeUnSelectRoom', room.roomId)
         }
         room.roomId = roomVal.id;
         room.roomNum = roomVal.roomNum;
         room.roomName = roomVal.roomName;
         // 把选中的房间加入到不可再次选择的数据中
-        this.$store.commit('examineInterval/temp/addDisSelectRoom', room.roomId)
+        this.$store.commit('examineInterval/temp/addUnSelectRoom', room.roomId)
         this.cancel('selectRoom');
       },
       /************* 选择监考老师 *********/
@@ -197,7 +217,6 @@
        * @param users [{id:'',name:''},{}]  已选人员信息
        * */
       setUsers(users) {
-        // let teacherArr = [];
         this.teacher.length = 0;
         Util._.forEach(users, (val, k) => {
           this.teacher.push({
@@ -212,7 +231,12 @@
       },
       // 删除老师
       removeTeacher(index) {
+        let delId = this.teacher[index].teacherId;
         this.teacher.splice(index, 1);
+        this.$store.commit('examineInterval/temp/removeUnSelectUserById', {
+          type: 'teacher',
+          id: delId
+        })
         this.updataWeight()
       },
       // 更新权重
@@ -274,6 +298,7 @@
       // 选择老师
       openSelectTeacher() {
         let userList = this.teacher;
+        let selTeacher = [];
         this.initUser = [];
         if (userList.length > 0) {
           for (var i = 0, item; i < userList.length; i++) {
@@ -284,8 +309,10 @@
               description: '',
               disabled: false
             })
+            selTeacher.push(item["teacherId"])
           }
         }
+        this.unSelectUser = this.getUnSelectUser(selTeacher);
         this.openModel('selectTeacher')
       },
       //关闭选择老师弹窗
@@ -303,6 +330,16 @@
       openModel(options) {
         this[options + 'Modal'] = true;
       },
+      /************************** 排除禁选人员 *********************************/
+      // 获取禁选人员
+      getUnSelectUser(selTeacher) {
+        let temp = this.$store.state.examineInterval.temp.unSelectUser;
+        let unSelArr = []; // 所有禁选
+        Util._.map(temp, (arr, key) => {
+          unSelArr = unSelArr.concat(arr)
+        })
+        return Util._.difference(unSelArr, selTeacher)
+      },
     },
     components: {
       selectRoom,
@@ -318,7 +355,8 @@
       this.teacher = temp.teacher; // 当前考站对应的监考老师
       this.basicsTime = info.basicsTime; // 考核时间基础
       this.sceneType = info.sceneType; // 考核场次类型
-      this.disSelectRoom = this.$store.state.examineInterval.temp.disSelectRoom;
+      this.unSelectRoom = temp.unSelectRoom;
+      this.specialtyList = this.$store.state.examineInterval.room.specialtyList; // 专业
     }
   }
 

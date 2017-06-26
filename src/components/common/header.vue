@@ -28,7 +28,7 @@
                             <li><a href="#">您是否需要自己做一款后台、会员中心等等的</a></li>
                             <li class="topbar-remind-more"><a href="#">查看全部</a></li>
                         </ul>
-                        <a href="#/" @click="showLoginMess" class="topbar-user-box">
+                        <a href="#/" ref="showLoginMessId" class="topbar-user-box">
                             <span class="topbar-user-name" v-if="typeof userInfo.name!='undefined'">{{userInfo.name}}({{userInfo.roleList[0].name}})</span>
                             <span class="topbar-user-arrow icon-arrow-down2"></span>
                             <span class="topbar-user-logout">
@@ -57,7 +57,7 @@
     methods:{
       showLoginMess(){
           this.expendLogin = !this.expendLogin;
-          this.showLogin = this.viewLogin;
+          this.$emit("setZindex",this.expendLogin);
       },
       loginOut(){
         //退出登陆
@@ -68,6 +68,19 @@
       userInfo(){
         return this.$store.getters.getUserInfo;
       }
+    },
+    mounted(){
+      let that = this;
+      this.$nextTick(() => {
+        Util.events.addHandler(this.$refs.showLoginMessId, "click", function (e) {
+          e.stopPropagation();
+          that.showLoginMess();
+        });
+        Util.events.addHandler(document, "click", function () {
+          that.expendLogin = false;
+          that.$emit("setZindex", false);
+        });
+      })
     }
   }
 </script>

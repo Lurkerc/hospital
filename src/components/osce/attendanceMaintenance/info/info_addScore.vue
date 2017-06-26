@@ -300,8 +300,6 @@
         } else if (row.mark < 0 || !row.mark) {
           row.mark = 0;
         }
-
-
       },
     },
     created() {

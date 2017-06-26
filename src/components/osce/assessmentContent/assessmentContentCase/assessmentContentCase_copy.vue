@@ -136,8 +136,9 @@
         <el-col :span="20" :offset="2">
           <el-form-item label="剧本：">
             <template v-for="(item,index) in formValidate.scriptList">
-              <div class="scriptIdListItemText" v-if="item.id">
-                <span @click="showScript(item.id)">{{ index + 1 }}. {{ item.scriptName }}</span>
+              <div v-if="item.id">
+                <span>{{ index + 1 }}.</span>
+                <span class="scriptIdListItemText" @click="showScript(item.id)">{{ item.scriptName }}</span>
                 <el-button size="small" type="success" @click="editScript(item.id,index)" style="margin-left:20px;">修改</el-button>
                 <el-button size="small" type="danger" @click="delScript(index,item.id)">删除</el-button>
               </div>

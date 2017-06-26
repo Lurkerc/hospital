@@ -39,9 +39,10 @@
     <div id="tableView" ref="tableView" style="padding-top:10px;">
       <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
         style="width: 100%;">
-        <el-table-column label="操作" width="140">
+        <el-table-column label="操作" width="200">
           <template scope="scope">
-            <el-button size="small" type="success" @click="show(scope.row)">查看</el-button>
+            <el-button size="small" type="success" @click="show(scope.row)" :disabled="scope.row.status === 'NOARRANGED'">查看</el-button>
+            <el-button size="small" type="danger" @click="planLogin(scope.row)">签到</el-button>
             <el-button size="small" type="info" @click="openPlanQueue(scope.row.id)" v-if="scope.row.sceneType === 'STANDARD'">抽签</el-button>
             <!--<el-button size="small" type="warning" @click="openPlanFix(scope.row.id)" v-else>安排</el-button>-->
           </template>
@@ -69,15 +70,21 @@
         :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
     </div>
     <!-- 抽签 -->
-    <Modal :mask-closable="false" width="890" v-model="planQueueModal" title="考站队列设置" class-name="vertical-center-modal">
+    <Modal :mask-closable="false" width="890" v-model="planQueueModal" class-name="vertical-center-modal">
       <modal-header slot="header" :content="contentHeader.planQueueId"></modal-header>
-      <plan-queue v-if="planQueueModal" @planQueue="subCallback" @cancel="cancel" :sceneId="sceneId"></plan-queue>
+      <plan-queue v-if="planQueueModal" @cancel="cancel" :sceneId="sceneId"></plan-queue>
       <div slot="footer"></div>
     </Modal>
     <!-- 安排 -->
-    <Modal :mask-closable="false" width="890" v-model="planFixModal" title="考站队列设置" class-name="vertical-center-modal">
+    <Modal :mask-closable="false" width="890" v-model="planFixModal" class-name="vertical-center-modal">
       <modal-header slot="header" :content="contentHeader.planFixId"></modal-header>
       <plan-fix v-if="planFixModal" @cancel="cancel" @setFix="subCallback" :sceneId="sceneId"></plan-fix>
+      <div slot="footer"></div>
+    </Modal>
+    <!-- 签到 -->
+    <Modal :mask-closable="false" width="920" v-model="planLoginModal" class-name="vertical-center-modal">
+      <modal-header slot="header" :content="contentHeader.planLoginId"></modal-header>
+      <plan-login v-if="planLoginModal" @cancel="cancel" @setFix="subCallback" :sceneId="sceneId"></plan-login>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -92,17 +99,20 @@
   import examineStatuOption from '../examineInterval/examineStatuOption'; // 状态选择
 
   import planFix from './examinePlan_fix'; // 安排
+  import planLogin from './examinePlanLogin/examinePlanLogin'; // 签到
   import planQueue from './examinePlan_queue'; // 抽签
   export default {
     data() {
       return {
         sceneId: '',
+        sceneType: '',
         self: this,
         dynamicHt: 100,
         examineTypeOption,
         examineStatuOption,
         showMoreSearch: false, // 更多筛选
         planQueueModal: false,
+        planLoginModal: false,
         planFixModal: false,
         searchObj: { // 搜索
           sceneName: '', // 场次名称
@@ -116,6 +126,10 @@
           planQueueId: {
             id: 'planQueueId',
             title: '考核抽签'
+          },
+          planLoginId: {
+            id: 'planLoginId',
+            title: '考核签到',
           },
           planFixId: {
             id: 'planFixId',
@@ -190,7 +204,8 @@
         this.$emit('show', {
           view: 'view',
           title: row.sceneName,
-          id: row.id
+          id: row.id,
+          sceneType: row.sceneType
         })
       },
       // 抽签
@@ -198,9 +213,14 @@
         this.sceneId = id;
         this.openModel('planQueue')
       },
-      // 安排
-      openPlanFix(id) {
+      // 签到
+      planLogin(id) {
         this.sceneId = id;
+        this.openModel('planLogin')
+      },
+      // 安排
+      openPlanFix(row) {
+        this.sceneId = row.id;
         this.openModel('planFix')
       },
       // 取消
@@ -237,6 +257,7 @@
     },
     components: {
       planFix,
+      planLogin,
       planQueue
     },
     created() {

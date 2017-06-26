@@ -42,9 +42,19 @@ function getSaveData(args) {
         roomTeacherList.push(tcIntem);
       })
     })
+
+    let specialtyList = []; // 考站专业
+
     _.mapKeys(room, (rItem, rIndex) => {
-      roomIdArr.push(rItem.roomId)
+      roomIdArr.push(rItem.roomId);
+      specialtyList.push({
+        roomId: rItem.roomId,
+        specialty: rItem.specialty === 0 ? '' : rItem.specialty
+      })
     });
+
+    roomData[index].roomSpecialtyList = specialtyList; // 当前考站下的房间对应的专业
+
     station.roomIds = roomIdArr.join(',');
     stationList.push(station);
   })
@@ -110,9 +120,18 @@ function getModifyStationInfoData(args) {
         roomTeacherList.push(tcIntem);
       })
     })
+
+    let specialtyList = []; // 考站专业
     _.mapKeys(room, (rItem, rIndex) => {
-      roomIdArr.push(rItem.roomId)
+      roomIdArr.push(rItem.roomId);
+      specialtyList.push({
+        roomId: rItem.roomId,
+        specialty: rItem.specialty === 0 ? '' : rItem.specialty
+      })
     });
+
+    roomData[index].roomSpecialtyList = specialtyList; // 当前考站下的房间对应的专业
+
     station.roomIds = roomIdArr.join(',');
     stationList.push(station);
   })

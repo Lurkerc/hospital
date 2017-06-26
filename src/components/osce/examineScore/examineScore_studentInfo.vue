@@ -15,16 +15,16 @@
           </el-table-column>
           <el-table-column prop="mark" label="得分" align="center" width="100">
             <template scope="scope">
-              <el-form :model="scope.row"  :rules="rules.addScore" :ref="'formValidate'+[scope.$index+'scope']" label-width="80px">
+              <el-form :model="scope.row" :rules="rules.addScore" :ref="'formValidate'+[scope.$index+'scope']" label-width="80px">
                 <el-form-item prop="mark" error="cuo" label-width="0px">
-                  <el-input  @blur="markChange(scope.row)" type="number" min="0" :max="scope.row.score" v-model.number="scope.row.mark"></el-input>
+                  <el-input @blur="markChange(scope.row)" type="number" @change="scoreInputChange" :min="0" :max="scope.row.score" v-model.number="scope.row.mark"></el-input>
                 </el-form-item>
               </el-form>
             </template>
           </el-table-column>
         </el-table>
         </br>
-        <el-form-item label="点评" >
+        <el-form-item label="点评">
           <el-row>
             <el-col :span="20">
               <el-input type="textarea" resize="none" v-model="contentDataList.evaluate" :rows="3"></el-input>
@@ -46,15 +46,15 @@
         <!-- 基本信息 -->
         <p class="otherInfo">姓名：{{ studentInfo.userName }}</p>
         <p class="otherInfo">性别：{{ studentInfo.userSex | typeText }}</p>
-        <p class="otherInfo">结束倒计时：00：00：00</p>
+        <p class="otherInfo">结束倒计时：{{ countDown }}</p>
         <p class="otherInfo">当前考生得分：{{ studentInfo.totalMark || 0 }}</p>
       </div>
       <!-- 操作按钮 -->
       <p align="center" style="margin-top:20px;">
-        <el-button v-if="studentInfo.examStatus === 'NOTEXAM'" type="danger" @click="idVerification('ONGOING')">身份确认并开始考核</el-button>
-        <el-button v-if="studentInfo.examStatus === 'ONGOING' && !studentInfo.markId" type="danger" @click="idVerification('FINISH')">考核结束提交分数</el-button>
-        <el-button v-if="studentInfo.markId && !chgScore" type="danger" @click="changeScore">修改分数</el-button>
-        <!--<el-button v-if="chgScore" type="danger" @click="listenSubEvent">提交分数</el-button>-->
+        <el-button v-if="studentInfo.examStatus === 'NOTEXAM' && studentInfo.contentId" type="danger" @click="idVerification">身份确认并开始考核</el-button>
+        <el-button v-if="studentInfo.examStatus === 'ONGOING'" type="danger" @click="finishAndSub">考核结束提交分数</el-button>
+        <el-button v-if="!chgScore && studentInfo.examStatus === 'FINISH'" type="danger" @click="changeScore">修改分数</el-button>
+
         <load-btn @listenSubEvent="listenSubEvent" type="success" v-if="chgScore" :btnData="loadBtn"></load-btn>
         <el-button v-if="!studentInfo.contentId" type="warning" @click="sample">抽题</el-button>
       </p>
@@ -70,20 +70,25 @@
 </template>
 
 <script>
-  import rules from './rules'
+  let sd = null; // 倒计时
+  let studentInfoTime = null;
+  import {
+    addScore as rules
+  } from './rules'
   import api from './api';
   export default {
     // props: ['nowIndex', 'index', 'sceneId', 'stationId', 'roomId', 'userSum'],
     props: ['sceneId', 'stationId', 'roomId', 'userSum', "teacherId"],
     data() {
       return {
-        rules:rules,
+        rules,
         isError: false,
         dynamicHt: 600,
         chgScore: false,
         userSums: this.userSum || 0,
         self: this,
         nowTime: '-', // 当前时间
+        countDown: '00：00：00', // 结束倒计时
 
         loadBtn: {
           title: '提交分数',
@@ -105,7 +110,7 @@
           mark: "-",
           nowIndex: "1",
           startTime: "-",
-          endTime: "-",
+          endTime: "",
           examStatus: "-",
           arrangementId: "1",
           markId: ""
@@ -147,6 +152,7 @@
       },
       // 考生切换
       changeStudent(type) {
+        clearTimeout(studentInfoTime);
         if (type) {
           type === 'n' ? ++this.nowId : --this.nowId;
         }
@@ -154,7 +160,8 @@
           nowIndex: this.nowId,
           sceneId: this.sceneId,
           stationId: this.stationId,
-          roomId: this.roomId
+          roomId: this.roomId,
+          reqTime: new Date().getTime(),
         });
         this.ajax({
           ajaxSuccess: 'updateStudentInfo',
@@ -168,55 +175,50 @@
       },
       // 抽题
       sample() {
-        let data = this.$util._.defaultsDeep({}, {
+        let params = this.$util._.defaultsDeep({}, {
           sceneId: this.sceneId,
           stationId: this.stationId,
           arrangementId: this.arrangementId
         });
         this.ajax({
           ajaxSuccess: (res) => {
-            this.successMess('抽题成功');
             // 抽题返回contentId 才能进行获取考核内容
-            this.setContentList();
+            if (res.data) {
+              this.studentInfo.contentId = res.data;
+              this.successMess('抽题成功');
+              this.setContentList();
+            } else {
+              this.errorMess('抽题失败，请重试！');
+            }
           },
           ajaxError: () => {
             this.isError = true;
-            this.errorMess('抽题失败');
+            this.errorMess('抽题失败，请重试！');
           },
           ajaxParams: {
             url: api.random.path,
             method: api.random.method,
-            data
+            params
           }
         });
       },
       // 身份确认
-      idVerification(status) {
+      idVerification() {
         let data = this.$util._.defaultsDeep({}, {
-          // examStatus: status,
           id: this.arrangementId,
           userId: this.userId,
           sceneId: this.sceneId,
           stationId: this.stationId,
           roomId: this.roomId
         });
-        if(status == 'FINISH'){
-          let isSubmit = this.submitForm("formValidate");
-          if(!isSubmit){
-            return;
-          }
-        }
         this.ajax({
           ajaxSuccess: (res) => {
-            this.successMess('操作成功');
+            this.successMess('身份确认操作成功');
             this.studentInfo.examStatus = 'ONGOING';
-            if (status === 'FINISH') {
-              this.listenSubEvent(); // 提交评分
-            }
           },
           ajaxError: () => {
             this.isError = true;
-            this.errorMess('操作失败');
+            this.errorMess('身份确认操作失败');
           },
           ajaxParams: {
             url: api.modiryStatus.path,
@@ -225,10 +227,20 @@
           }
         });
       },
+      // 考核结束提交分数
+      finishAndSub() {
+        this.studentInfo.examStatus = 'FINISH';
+        this.contentDataList.examStatus = 'FINISH';
+        this.addMessTitle.ajaxParams.url = api.submitFinish.path;
+        this.listenSubEvent(); // 提交评分
+      },
       // 修改评分
       changeScore() {
         // 改变一个状态让提交评分按钮出现
         this.chgScore = true;
+        this.addMessTitle.ajaxParams.url = api.submit.path;
+        // 修改评分状态不再请求数据
+        clearTimeout(studentInfoTime);
       },
       /************************* 更新数据 *********************************/
       // 保存评分成功
@@ -249,7 +261,6 @@
           isLoadingFun(true);
           this.addMessTitle.ajaxParams.data = this.contentDataList;
           this.ajax(this.addMessTitle, isLoadingFun)
-          // console.log(this.addMessTitle.ajaxParams.data)
         }
       },
       /*
@@ -259,20 +270,53 @@
        * */
       submitForm(formName) {
         let flag = false;
-        let isBlack=false;
-        for (let key in  this.$refs){
+        let isBlack = false;
+        for (let key in this.$refs) {
           this.$refs[key].validate((valid) => {
             if (valid) {
               flag = true;
-            }else {
+            } else {
               isBlack = true;
-        }
-        });
-          if(isBlack){
+            }
+          });
+          if (isBlack) {
             return false;
           }
         }
         return flag;
+      },
+      // 结束倒计时
+      getCountDown() {
+        clearInterval(sd);
+        let endTime = new Date(this.studentInfo.endTime || new Date()).getTime();
+        let _this = this;
+        sd = setInterval(() => {
+          let nowTime = new Date().getTime();
+          let t = endTime - nowTime;
+          let h = 0;
+          let m = 0;
+          let s = 0;
+          if (t >= 0) {
+            h = Math.floor(t / 1000 / 60 / 60 % 24);
+            m = Math.floor(t / 1000 / 60 % 60);
+            s = Math.floor(t / 1000 % 60);
+            h = _this.getCpl(h);
+            m = _this.getCpl(m);
+            s = _this.getCpl(s);
+            _this.countDown = h + '：' + m + '：' + s;
+          } else {
+            clearInterval(sd);
+            _this.countDown = "00：00：00";
+            // 如果当前考生倒计时结束还没有确认考核结束（包括未开始考核），则自动提交考生状态为已结束考核并提交分数（0分）
+            // if (this.studentInfo.examStatus !== 'FINISH') {
+            // this.finishAndSub()
+            // }
+          }
+        }, 1000)
+      },
+      // 补全时间
+      getCpl(s) {
+        return s < 10 ? '0' + s : s
       },
       //获取内容请求
       setContentList() {
@@ -284,11 +328,20 @@
               id: this.teacherId,
               sceneId: this.sceneId,
               stationId: this.stationId,
-              arrangementId: this.arrangementId
+              arrangementId: this.arrangementId,
+              reqTime: new Date().getTime(),
             }
           }
         };
         this.ajax(opt);
+      },
+      // 评分输入框的值改变
+      scoreInputChange() {
+        if (this.studentInfo.examStatus === 'FINISH') {
+          this.chgScore = true;
+        }
+        // 不再请求数据
+        clearTimeout(studentInfoTime);
       },
       // 更新考核内容数据
       updateExmContent(res) {
@@ -300,15 +353,24 @@
       },
       // 更新考生信息
       updateStudentInfo(res) {
-        for (let key in  this.$refs){
-          this.$refs[key].resetFields();
+        if (this.contentDataList.detailsList.length) {
+          for (let key in this.$refs) {
+            this.$refs[key].resetFields();
+          }
         }
         this.studentInfo = res.data;
         this.arrangementId = res.data.arrangementId;
         this.userId = res.data.userId;
         this.chgScore = false;
+        // if (this.studentInfo.examStatus == 'NOTEXAM') { // 只有在未确认身份的时候才获取状态数据
+        // 间隔连接 30s
+        studentInfoTime = setTimeout(() => this.changeStudent(), 30000)
+        // }
+        this.getCountDown();
         if (res.data.contentId) {
           this.setContentList();
+        } else {
+          this.contentDataList.detailsList = []
         }
         if (typeof res.data != 'object') {
           this.isError = true
@@ -316,6 +378,7 @@
           this.isError = false
         }
       },
+
       //获取内容列表数据
       contentData(responseData) {
         let data = responseData.data;
@@ -394,9 +457,9 @@
 
       markChange(row) {
         //mark 得分验证
-        if(row.mark > row.score){
+        if (row.mark > row.score) {
           row.mark = row.score
-        }else if(row.mark<0||!row.mark){
+        } else if (row.mark < 0 || !row.mark) {
           row.mark = 0
         }
       },
@@ -404,10 +467,12 @@
 
     },
     created() {
-      // this.stationRoom = this.$store.state.examineMonitor.index.stationRoom;
       this.teacherUserId = this.$store.getters.getUserInfo.id;
-      // this.getNowTime();
       this.changeStudent();
+    },
+
+    destroyed() {
+      clearTimeout(studentInfoTime);
     }
   }
 

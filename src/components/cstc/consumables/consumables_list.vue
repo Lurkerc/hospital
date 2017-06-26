@@ -2,19 +2,19 @@
   <div id="content" ref="content">
     <el-tabs v-model="activeName">
       <el-tab-pane label="易耗品管理" name="manage">
-        <keep-alive>
-          <consumables-manage v-if="activeName == 'manage'" :contenHeight="contenHeight" @show="show"></consumables-manage>
-        </keep-alive>
+        <!--<keep-alive>-->
+        <consumables-manage v-if="activeName == 'manage'" :contenHeight="contenHeight" @show="show"></consumables-manage>
+        <!--</keep-alive>-->
       </el-tab-pane>
       <el-tab-pane label="使用记录" name="use">
-        <keep-alive>
-          <consumables-use v-if="activeName == 'use'" :contentHeight="contenHeight"></consumables-use>
-        </keep-alive>
+        <!--<keep-alive>-->
+        <consumables-use v-if="activeName == 'use'" :contentHeight="contenHeight"></consumables-use>
+        <!--</keep-alive>-->
       </el-tab-pane>
       <el-tab-pane label="盘点记录" name="count">
-        <keep-alive>
-          <consumables-count v-if="activeName == 'count'" :contentHeight="contenHeight"></consumables-count>
-        </keep-alive>
+        <!--<keep-alive>-->
+        <consumables-count v-if="activeName == 'count'" :contentHeight="contenHeight"></consumables-count>
+        <!--</keep-alive>-->
       </el-tab-pane>
     </el-tabs>
   </div>

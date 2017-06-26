@@ -16,7 +16,8 @@
           :key="index" @roomClick="showStationInfo" style="width:80px;margin-right:30px;"></station-room>
       </div>
     </div>
-    <Modal :mask-closable="false" width="1100" v-model="queryStudentModal" title="考站队列设置" class-name="vertical-center-modal">
+    <Modal :mask-closable="false" width="1100" v-model="queryStudentModal" title="考站队列设置" class-name="vertical-center-modal"
+      @on-cancel="cancel">
       <modal-header slot="header" :content="contentHeader.queryStudentId"></modal-header>
       <query-student v-if="queryStudentModal" @cancel="cancel" :url="url" :stationData="stationData"></query-student>
       <div slot="footer"></div>
@@ -108,6 +109,7 @@
       // 取消
       cancel(targer) {
         this[targer + 'Modal'] = false;
+        this.setTableData();
       },
       /*
        * 打开指定的模态窗体

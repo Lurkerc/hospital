@@ -11,7 +11,7 @@
         <div style="margin-bottom: 20px;">
             <el-button type="primary" @click="add">新建角色</el-button>
             <el-button type="primary" @click="edit">修改角色</el-button>
-            <el-button type="danger" @click="remove">删除角色</el-button>
+          <el-button :disabled="rolesItem.type==0?true:false" type="danger" @click="remove">删除角色</el-button><span v-if="rolesItem.type==0" style="margin-left: 10px;color: #f00;">注:该角色为系统默认角色不允许删除!</span>
         </div>
         <!--角色信息-->
         <div class="row-layout" style="width: 500px">
@@ -335,6 +335,7 @@
 
       //点击左侧菜单
       showLeftMenu(name){
+        this.active = name;
         this.setDefaultSltLab();
         this.setCurrRoleId(this.roles[name-1].id);
         this.queryRoleAndTreeData(this.currRoleId);
@@ -439,6 +440,13 @@
           this.successMess(title);
         }
         if(!updata){
+          if(target=="add"){
+              this.active+=1;
+          }
+          if(target=="remove"){
+            this.active=1;
+          }
+
           this.setLeftRoleList();
         }
       },

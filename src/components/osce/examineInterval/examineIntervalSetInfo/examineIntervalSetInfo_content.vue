@@ -8,7 +8,7 @@
     <el-table align="center" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo spSelectTime" style="width: 100%;">
       <el-table-column label="考核内容名称" width="180" prop="contentName" show-overflow-tooltip>
         <template scope="scope">
-          <el-input v-model="scope.row.contentName"></el-input>
+          <el-input v-model="scope.row.contentName" :maxlength="20"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="评分表" prop="scoreTableName" show-overflow-tooltip>
@@ -34,22 +34,22 @@
         </el-table-column>
         <el-table-column label="考核时间" prop="timeCount" width="110">
           <template scope="scope">
-            <!--<el-input v-model="scope.row.timeCount"></el-input>-->
-            <el-select v-model="scope.row.timeCount" placeholder="请选择">
+            <el-select v-if="sceneType === 'STANDARD'" v-model="scope.row.timeCount" placeholder="请选择">
               <el-option v-for="item in 10" :key="item" :label="item * basicsTime" :value="item">
               </el-option>
             </el-select>
+            <el-input v-else v-model="scope.row.timeCount" :maxlength="3"></el-input>
           </template>
         </el-table-column>
       </template>
       <el-table-column label="操作" width="180">
         <template scope="scope">
-          <el-button size="mini" type="success" style="margin-left:0;margin-right:10px;" @click="openSelectScore(scope.$index)">评分表</el-button>
-          <el-button size="mini" type="warning" style="margin-left:0;margin-right:10px;" @click="openSelectCase(scope.$index)">病例</el-button>
+          <el-button size="mini" type="success" style="margin-left:0;margin-right:10px;" @click="openSelectCase(scope.$index)">病例</el-button>
+          <el-button size="mini" type="warning" style="margin-left:0;margin-right:10px;" @click="openSelectScore(scope.$index)">评分表</el-button>
           <el-button size="mini" type="danger" style="margin-left:0;" @click="removeContent(scope.$index)">删除</el-button>
           <template v-if="stationType === 'SP'">
+            <el-button size="mini" style="margin-left:0;margin-right:10px;" @click="openSelectScript(scope.$index)">剧本</el-button>
             <el-button size="mini" type="info" style="margin-left:0;margin-right:10px;" @click="openSelectSPScore(scope.$index)">SP评分表</el-button>
-            <el-button size="mini" style="margin-left:0;" @click="openSelectScript(scope.$index)">剧本</el-button>
           </template>
         </template>
       </el-table-column>
@@ -65,26 +65,25 @@
     </el-row>
 
     <!-- 模态框 选择评分表（select） -->
-    <Modal :mask-closable="false" v-model="scoreSelectModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="840">
+    <Modal :mask-closable="false" v-model="scoreSelectModal" height="200" class-name="vertical-center-modal" :width="840">
       <modal-header slot="header" :content="headerContent.scoreSelectId"></modal-header>
       <score-select v-if="scoreSelectModal" @cancel="cancel" @select="selectScore"></score-select>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 选择SP评分表（select） -->
-    <Modal :mask-closable="false" v-model="spScoreSelectModal" height="200" title="对话框标题" class-name="vertical-center-modal"
-      :width="840">
+    <Modal :mask-closable="false" v-model="spScoreSelectModal" height="200" class-name="vertical-center-modal" :width="840">
       <modal-header slot="header" :content="headerContent.spScoreSelectId"></modal-header>
-      <score-select v-if="spScoreSelectModal" @cancel="cancel" @select="selectSPScore"></score-select>
+      <score-select v-if="spScoreSelectModal" @cancel="spScoreSelectModal = false" @select="selectSPScore"></score-select>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 选择病例表（select） -->
-    <Modal :mask-closable="false" v-model="caseSelectModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="840">
+    <Modal :mask-closable="false" v-model="caseSelectModal" height="200" class-name="vertical-center-modal" :width="840">
       <modal-header slot="header" :content="headerContent.caseSelectId"></modal-header>
       <case-select v-if="caseSelectModal" @cancel="cancel" @select="selectCase"></case-select>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 选择剧本（select） -->
-    <Modal :mask-closable="false" v-model="scriptSelectModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="840">
+    <Modal :mask-closable="false" v-model="scriptSelectModal" height="200" class-name="vertical-center-modal" :width="840">
       <modal-header slot="header" :content="headerContent.scriptSelectId"></modal-header>
       <script-select v-if="scriptSelectModal" @cancel="cancel" @select="selectScript" :caseId="caseId"></script-select>
       <div slot="footer"></div>
@@ -101,6 +100,7 @@
     data() {
       return {
         self: this,
+        sceneType: '', // 考站
         stationType: '', // 当前考站类型
         basicsTime: 1, // 考试时间基数
         caseId: 0, // 病例id
@@ -149,10 +149,12 @@
           this.errorMess('至少添加一条考核内容！')
           return false
         }
-        // 首行考核内容名称必须填写
-        if (!this.tableData[0].contentName) {
-          this.errorMess('首行考核内容名称必须填写！')
-          return false
+        // 考核内容名称必须填写
+        for (let i = 0, d = this.tableData, l = d.length; i < l; i++) {
+          if (!d[i].contentName) {
+            this.errorMess(`第 ${i+1} 行考核内容名称必须填写！`)
+            return false
+          }
         }
 
         for (let i = 0, list = this.tableData, l = list.length; i < l; i++) {
@@ -162,10 +164,10 @@
             return false
           }
           // 病例必须选择
-          if (!list[i].caseId) {
-            this.errorMess(`第 ${i+1} 行病例没有选择！`)
-            return false
-          }
+          // if (!list[i].caseId) {
+          //   this.errorMess(`第 ${i+1} 行病例没有选择！`)
+          //   return false
+          // }
           // SP考站必须选择SP评分表
           if (this.stationType == 'SP' && !list[i].spScoreTableId) {
             this.errorMess(`第 ${i+1} 行SP评分表没有选择！`)
@@ -211,12 +213,17 @@
       },
       // 设置病例表
       selectCase(res) {
+        let value = {
+          caseId: res.id, // 病例id
+          caseName: res.caseName // 病例名称
+        };
+        if (res.scoreTableId) { // 病例关联的评分表
+          value.scoreTableId = res.scoreTableId;
+          value.scoreTableName = res.scoreTableName;
+        }
         this.$store.commit('examineInterval/temp/updateStationContentList', {
           index: this.row, // 需要设置病例的索引
-          value: { // 更新键值对
-            caseId: res.id, // 病例id
-            caseName: res.caseName // 病例名称
-          }
+          value
         })
       },
       // 设置剧本
@@ -277,6 +284,7 @@
     },
     created() {
       this.tableData = this.$store.state.examineInterval.temp.info.stationContentList;
+      this.sceneType = this.$store.state.examineInterval.station.info.sceneType; // 当前考站类型
       this.stationType = this.$store.state.examineInterval.temp.info.stationType; // 当前考站类型
       this.basicsTime = this.$store.state.examineInterval.station.info.basicsTime; // 考试时间基数
     }

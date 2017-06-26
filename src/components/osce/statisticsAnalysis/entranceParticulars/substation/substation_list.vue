@@ -126,10 +126,8 @@
 
       //获取左侧内容
       setTableData() {
-        this.leftListMessTitle.ajaxParams.params = Object.assign(this.leftListMessTitle.ajaxParams.params, this.formValidate
-          .scoreValidate);
+        this.leftListMessTitle.ajaxParams.params = Object.assign(this.leftListMessTitle.ajaxParams.params, this.formValidate);
         this.ajax(this.leftListMessTitle);
-
       },
 
       //获取评分表数据

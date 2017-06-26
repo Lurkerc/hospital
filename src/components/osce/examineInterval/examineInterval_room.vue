@@ -39,7 +39,7 @@
     <!-- 查看 -->
     <p class="name" v-if="options.type === 'view' || options.type === 'monitor'">{{ roomInfo.name || '未命名' }}</p>
     <!-- 编辑 -->
-    <el-input placeholder="请输入考站名称" style="margin-top:10px;" size="small" v-else-if="options.type === 'edit'" @input="inputRoomName"
+    <el-input placeholder="请输入考站名称" style="margin-top:10px;" :maxlength="20" size="small" v-else-if="options.type === 'edit'" @input="inputRoomName"
       v-model="roomInfo.name"></el-input>
   </el-col>
 </template>

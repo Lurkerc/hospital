@@ -259,7 +259,11 @@
       /*************************** 考场管理员 *********************************/
       // 删除已选择的参考人员
       handleMClose(index) {
-        this.managerList.splice(index, 1)
+        this.managerList.splice(index, 1);
+        this.$store.commit('examineInterval/room/removeUnSelectUser', {
+          type: 'manager',
+          index
+        })
       },
       //添加人员
       addManager() {

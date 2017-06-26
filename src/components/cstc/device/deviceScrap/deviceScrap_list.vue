@@ -16,9 +16,9 @@
         <el-input v-model="searchObj.deviceIdentifier"></el-input>
       </el-form-item>
       <el-form-item label="报废时间：" prop="scrapStartTime">
-        <el-date-picker v-model="searchObj.scrapStartTime" :editable="false" type="datetime" placeholder="选择日期时间"></el-date-picker>
+        <el-date-picker v-model="searchObj.scrapStartTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
         <span>-</span>
-        <el-date-picker v-model="searchObj.scrapEndTime" :editable="false" type="datetime" placeholder="选择日期时间"></el-date-picker>
+        <el-date-picker v-model="searchObj.scrapEndTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="search">搜索</el-button>
@@ -182,8 +182,8 @@
           depId: this.depId
         });
         let params = this.queryQptions.params;
-        params.scrapStartTime = this.conductDate(params.scrapStartTime, 'yyyy-MM-dd HH:mm:ss') || '';
-        params.scrapEndTime = this.conductDate(params.scrapEndTime, 'yyyy-MM-dd HH:mm:ss') || '';
+        params.scrapStartTime = this.conductDate(params.scrapStartTime, 'yyyy-MM-dd');
+        params.scrapEndTime = this.conductDate(params.scrapEndTime, 'yyyy-MM-dd');
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions

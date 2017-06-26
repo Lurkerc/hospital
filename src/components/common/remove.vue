@@ -57,17 +57,28 @@
           if(_.isObject(responseData["status"])&&responseData["status"]["code"]==0){
             that.$emit('remove','remove','删除成功');
           }else {
-            that.errorMess('删除失败');
             isLoadingFun(false);
+            let flag = Util.handleAjaxError(that, responseData["status"]["code"], responseData["status"]["msg"]);
+            if (!flag) {
+              that.errorMess(errorTitle);
+            }
           }
-        }).catch(function(response){
-          if (response instanceof Error) {
-            // 意外发生在设置要求引发一个错误
-            that.errorMess(response.message);
+        }).catch(function(error){
+          if (error.response) {
             isLoadingFun(false);
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            util.handleAjaxError(that,error.response.status+'');
+          } else if (error.request) {
+            isLoadingFun(false);
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            that.errorMess(error.request);
           } else {
-            that.errorMess(response.status+"错误!");
             isLoadingFun(false);
+            // Something happened in setting up the request that triggered an Error
+            that.errorMess(error.message);
           }
         })
       },

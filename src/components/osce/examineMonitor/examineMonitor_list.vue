@@ -14,7 +14,7 @@
           <el-button type="info" @click="setDefault">设置为默认考场</el-button>
         </div>
       </div>
-      <station :sceneId="emTabHeader" :sceneName="sceneName"></station>
+      <station :sceneId="emTabHeader"></station>
     </template>
     <p v-else style="position: absolute;top: 50%;text-align: center;width: 100%;">暂无可监控的考核场次</p>
   </div>
@@ -27,7 +27,6 @@
     data() {
       return {
         emTabHeader: '',
-        sceneName: '',
         tabList: [],
       }
     },
@@ -48,7 +47,6 @@
           this.emTabHeader = (res.data[0].id).toString();
           this.tabList = res.data;
           this.activeName = res.data[0].id;
-          this.sceneName = res.data[0].sceneName;
         }
       },
       // 设置为默认setDefault

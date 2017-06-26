@@ -27,9 +27,9 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="维修时间：" prop="statrBeginTime">
-            <el-date-picker v-model="searchObj.statrBeginTime" :editable="false" type="datetime" placeholder="选择日期时间"></el-date-picker>
+            <el-date-picker v-model="searchObj.statrBeginTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
             <span>-</span>
-            <el-date-picker v-model="searchObj.statrEndTime" :editable="false" type="datetime" placeholder="选择日期时间"></el-date-picker>
+            <el-date-picker v-model="searchObj.statrEndTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="2">
@@ -214,8 +214,8 @@
           depId: this.depId
         });
         let params = this.queryQptions.params;
-        params.statrBeginTime = this.conductDate(params.statrBeginTime, 'yyyy-MM-dd HH:mm:ss') || '';
-        params.statrEndTime = this.conductDate(params.statrEndTime, 'yyyy-MM-dd HH:mm:ss') || '';
+        params.statrBeginTime = this.conductDate(params.statrBeginTime, 'yyyy-MM-dd');
+        params.statrEndTime = this.conductDate(params.statrEndTime, 'yyyy-MM-dd');
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions

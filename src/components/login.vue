@@ -65,14 +65,6 @@
             params: {}
           }
         },
-        // 获取系统变量
-        getStaticPath: {
-          ajaxSuccess: 'setStaticPathData',
-          ajaxParams: {
-            url: '/envs',
-            params: {}
-          }
-        }
       }
     },
     created() {
@@ -113,9 +105,6 @@
         this.$store.commit('setIndexUrl', index);
         this.$store.commit('setRouterPath', this.routerPath);
         this.$router.push(index);
-
-        // 请求系统变量
-        this.ajax(this.getStaticPath);
       },
       loginSuccess(responseData) {
         let token = responseData.data;
@@ -125,6 +114,8 @@
 
         setTimeout(() => {
           this.$store.commit("setUserInfo", this);
+          // 系统常量
+          this.$store.commit("setEnvPath", this);
         }, 100)
 
         setTimeout(() => {
@@ -157,6 +148,7 @@
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
+          let userName = Util._.trim(this.ruleForm.name);
           if (valid) {
             let options = {
               paramsData: 'listUrl',
@@ -165,7 +157,7 @@
                 url: '/login',
                 method: "post",
                 data: {
-                  username: this.ruleForm.name,
+                  username: userName,
                   password: this.ruleForm.password
                 }
               }
@@ -202,11 +194,6 @@
             this.setRouterPath(item.children, false, item);
           }
         }
-      },
-
-      // 获取系统变量存储到状态
-      setStaticPathData(res) {
-        this.$store.commit('setEnvPath', res.data)
       },
     }
   }

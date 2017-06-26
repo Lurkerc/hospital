@@ -11,7 +11,7 @@
 <script>
   let Util=null;
   export default {
-    props:['type','url',"selectOptions",'unAll',"setSltOptionValue"],
+    props:['type','url',"selectOptions",'unAll',"setSltOptionValue",'currSelectOne'],
     data() {
 
         //条件过滤，如果没有url 由type决定url 如果没有type默认科室url

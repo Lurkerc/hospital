@@ -1,8 +1,8 @@
   <template>
   <div>
-    <div class="viewFramework-topbar">
+    <div class="viewFramework-topbar" :class="maxIndx?'viewFramework-topbar-zindex':''">
         <div class="ambuf-console-topbar">
-            <Headers></Headers>
+            <Headers @setZindex="setZindex"></Headers>
         </div>
     </div>
     <div class="viewFramework-body" :class="{'viewFramework-sidebar-full':isViewSubNav,'viewFramework-sidebar-mini':!isViewSubNav}">
@@ -97,7 +97,8 @@ export default {
             url: '/menu/query-tree-by-user',
             params: {}
           }
-        }
+        },
+        maxIndx:false,
       }
     },
     created(){
@@ -152,6 +153,16 @@ export default {
       handleViewSubNav(){
         this.isViewSubNav = !this.isViewSubNav;
       },
+
+
+      /*
+      * 设置头部导航的z-index
+      * @param flag blooean  是否需要设置index
+      * */
+      setZindex(flag){
+        this.maxIndx = flag
+      },
+
 
       /**
        * 获取所有后台配置的路由地址

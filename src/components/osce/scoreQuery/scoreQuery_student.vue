@@ -56,7 +56,7 @@
     <!-- 考生信息 -->
     <!-- 模态框 查看（view） -->
     <Modal :mask-closable="false" v-model="studentInfoModal" height="200" title="对话框标题" class-name="vertical-center-modal" :loading="true"
-      :width="1200">
+      :width="1200" @on-cancel="cancel">
       <modal-header slot="header" :parent="self" :content="contentHeader.studentInfoId"></modal-header>
       <student-info v-if="studentInfoModal" @cancel="cancel" @edit="subCallback" :sceneId="sceneId" :studentId="userId" :markId="markId"
         :stationId="stationId" :arrangementId="arrangementId"></student-info>
@@ -140,8 +140,9 @@
         } else {
           let markList = this.studentData.markList;
           markList && markList.map(item => {
-            if ((item.stationName.indexOf(this.listFilterData.stationName) > -1) && (item.contentName.indexOf(this.listFilterData
-                .contentName) > -1)) {
+            if ((item.stationName.indexOf(this.listFilterData.stationName) > -1) && (item.contentName && item.contentName
+                .indexOf(this.listFilterData
+                  .contentName) > -1)) {
               arr.push(item)
             }
           })
@@ -158,6 +159,7 @@
       // 取消
       cancel(targer) {
         this[targer + 'Modal'] = false;
+        this.setTableData()
       },
       /*
        * 打开指定的模态窗体

@@ -272,7 +272,6 @@
         })
       },
       show(row) {
-        console.log(row)
         this.$emit('show', { // 打开查看（view）视图并传参id
           look: 'view',
           id: row.id,

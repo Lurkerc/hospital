@@ -89,11 +89,12 @@
       <modal-header slot="header" :content="button.deriveId"></modal-header>
       <div>
         <div class="remove">确认导出吗</div>
-
         <el-row>
           <el-col :span="10" :offset="14">
-            <a :href="derUrl"><el-button @click="affirmDerive"  type="primary">确定</el-button></a>
-            <el-button class="but-col" @click=" deriveModal=false" >取消</el-button>
+            <a :href="derUrl">
+              <el-button @click="affirmDerive" type="primary">确定</el-button>
+            </a>
+            <el-button class="but-col" @click=" deriveModal=false">取消</el-button>
           </el-col>
           </el-col>
         </el-row>
@@ -141,8 +142,8 @@
         default: 860
       },
       depId: { // 部门id
-        type: [Number, String],
-        default: ''
+        type: [Number],
+        default: -1
       }
     },
     data() {
@@ -192,7 +193,7 @@
         todoId: '',
         // 设备入库的部门id的
         addDepId: '',
-        derUrl:''
+        derUrl: ''
       }
     },
     methods: {
@@ -210,7 +211,7 @@
             pageSize: Util.pageInitPrams.pageSize
           }
         }
-        // this.setTableData();
+        this.setTableData();
       },
       //*--------------------------- 表格 -----------------------*//
       /*
@@ -303,12 +304,12 @@
         if (this.isSelected()) {
           this.openModel('derive')
           let deviceTypeIds = [];
-          for(let i=0;i<this.multipleSelection.length;i++){
+          for (let i = 0; i < this.multipleSelection.length; i++) {
             deviceTypeIds.push(this.multipleSelection[i].id);
           }
           deviceTypeIds = deviceTypeIds.join(',');
           // let http = this.$store.getters.getEnvPath.http;
-          this.derUrl = '/api/device/excelExport' + '?depId=' + this.depId + '&deviceTypeIds='+deviceTypeIds
+          this.derUrl = '/api/device/excelExport' + '?depId=' + this.depId + '&deviceTypeIds=' + deviceTypeIds
         }
       },
       // 导入设备
@@ -341,7 +342,7 @@
       //确定导出
       affirmDerive() {
 
-          this.cancel('derive')
+        this.cancel('derive')
       },
     },
     components: {
@@ -369,9 +370,9 @@
         this.setTableDynHeight()
       },
       depId(val) {
-        this.depId = val;
+        //   this.depId = val;
         this.deviceTypeName = '';
-        this.setTableData();
+        //   // this.setTableData();
       }
     },
   }

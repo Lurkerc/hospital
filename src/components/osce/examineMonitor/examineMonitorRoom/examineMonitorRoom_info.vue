@@ -26,7 +26,7 @@
     <!-- 考生信息 -->
     <!-- 模态框 查看（view） -->
     <Modal :mask-closable="false" v-model="studentInfoModal" height="200" title="对话框标题" class-name="vertical-center-modal" :loading="true"
-      :width="1200">
+      :width="1200" @on-cancel="cancel">
       <modal-header slot="header" :parent="self" :content="contentHeader.studentInfoId"></modal-header>
       <student-info v-if="studentInfoModal" @cancel="cancel" :nowIndex="nowIndex" :stationId="stationId" :roomId="roomId" :sceneId="sceneId"
         :index="index" :userSum="userSum"></student-info>
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+  let infoTime = null;
   import api from '../api'; // api
   import roomList from './examineMonitorRoom_list'; // 列表
   import roomTab from './examineMonitorRoom_tab'; // 表格
@@ -88,6 +89,7 @@
             url: api.examUserList.path,
             method: api.examUserList.method,
             params: {
+              reqTime: new Date().getTime(),
               roomId,
               sceneId,
               stationId
@@ -100,17 +102,21 @@
         if (!res.data) return;
         this.stationStudentList = res.data;
         this.userSum = res.data.length;
+        // 间隔连接 30s
+        infoTime = setTimeout(() => this.getStudentList(), 30000)
       },
       /******************** 模态框 *******************/
       // 取消
       cancel(targer) {
         this[targer + 'Modal'] = false;
+        this.getStudentList();
       },
       /*
        * 打开指定的模态窗体
        * @param options string 当前指定的模态:"add"、"edit"
        * */
       openModel(options) {
+        clearTimeout(infoTime);
         this[options + 'Modal'] = true;
       },
     },
@@ -118,6 +124,9 @@
       this.getStudentList()
       // 场次id，考站id，房间id，监控数据中的考站列表索引
       // console.log(this.sceneId, this.stationId, this.roomId, this.index);
+    },
+    destroyed() {
+      clearTimeout(infoTime);
     },
     components: {
       roomList,

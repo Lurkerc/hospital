@@ -1,5 +1,10 @@
 const thisFile = 'scene/teacher';
 const api = {
+  submitFinish: { // 教师结束考核提交评分信息（教师结束考核提交时调用）
+    path: thisFile + '/submit/finish',
+    method: 'post'
+  },
+
   submit: { // 教师提交评分信息（自动提交，定时提交，手动提交，修改评分提交时调用）
     path: thisFile + '/submit',
     method: 'post'
@@ -32,7 +37,7 @@ const api = {
 
   random: { // 抽取试题（教师抽题，学生抽题时调用）
     path: '/scene/content/random',
-    method: 'post'
+    method: 'get'
   },
 
   station: { // 抽取试题（教师抽题，学生抽题时调用）

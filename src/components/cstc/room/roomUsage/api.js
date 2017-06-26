@@ -5,7 +5,7 @@ const api = {
     method: 'get'
   },
   get: { // 获取
-    path: thisFile + '/get',
+    path: thisFile + '/get/',
     method: 'get'
   },
   modify: { // 修改
@@ -15,6 +15,10 @@ const api = {
   add: { // 增加
     path: thisFile + '/add',
     method: 'post'
+  },
+  down: { // 资源下载
+    path: '/api/file/download/', // { fileId }
+    method: 'get'
   },
   delete: thisFile + '/remove', // 删除
 };

@@ -43,7 +43,7 @@
     <Modal :mask-closable="false" width="890" v-model="selectUserModal" title="添加人员" class-name="vertical-center-modal">
       <modal-header slot="header" :content="contentHeader.selectUserId"></modal-header>
       <!-- 此处人员还未对应 -->
-      <select-user v-if="selectUserModal" @cancel="closeSltUser" @setUsers="setUsers" :initUser="initUser"></select-user>
+      <select-user v-if="selectUserModal" @cancel="closeSltUser" @setUsers="setUsers" :unSelect="unSelect"></select-user>
       <div slot="footer"></div>
     </Modal>
     <!--删除弹窗-->
@@ -92,7 +92,7 @@
         loading: false,
         tableData: [],
         //给选择人员框传递的已选人员信息
-        initUser: [],
+        unSelect: [],
         operailityData: '',
         multipleSelection: [],
         /*-- 模态框提示 --*/
@@ -178,7 +178,7 @@
         this.tableData = [];
         data = that.addIndex(data);
         this.tableData = data;
-        that.listTotal = responseData.totalCount || 1;
+        that.listTotal = responseData.totalCount || 0;
       },
       setTableData() {
         this.listMessTitle.ajaxParams = Object.assign(this.listMessTitle.ajaxParams, this.queryQptions);
@@ -206,34 +206,37 @@
       // 更新本地状态
       updateStatus() {
         this.$store.commit('examineInterval/station/setInfo', {
-          status: this.status
+          status: this.status,
         })
       },
       /**************************** 模态窗 ****************************/
       // 删除已选择的参考人员
       removeUser() {
+        if (this.multipleSelection.length >= this.listTotal) {
+          this.errorMess('参考人员不能全部删除！')
+          return;
+        }
         if (!this.isSelected()) return;
         this.operailityData = this.multipleSelection;
         this.openModel('remove');
       },
       //添加人员
       addUser() {
-        // 此处添加人员去重，需要把已经选择的人员id提交给后台用于去重处理，当前未实现
-        this.initUser = [];
-        // let managerList = this.initUser;
-        // if (this.tableData.length > 0) {
-
-        //   for (var i = 0, item; i < this.tableData.length; i++) {
-        //     item = this.tableData[i];
-        //     this.initUser.push({
-        //       key: item["userId"],
-        //       label: item["userName"],
-        //       description: '',
-        //       disabled: false
-        //     })
-        //   }
-        // }
-        this.openModel('selectUser');
+        let allUser = {
+          paramsData: 'add',
+          ajaxSuccess: res => {
+            this.unSelect = res.data || [];
+            this.openModel('selectUser');
+          },
+          ajaxParams: {
+            url: this.api.allUserId.path + this.id,
+            method: this.api.allUserId.method,
+            data: {
+              id: this.id, // 场次id
+            }
+          }
+        };
+        this.ajax(allUser);
       },
       /*
        * 获取选择人员的人员信息并赋值

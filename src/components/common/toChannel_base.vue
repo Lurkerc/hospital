@@ -13,6 +13,7 @@
             type="index"
             label="序号"
             align="center"
+            fixed
             width="80">
           </el-table-column>
           <!--<el-table-column-->
@@ -156,6 +157,7 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       confirm(isLoadingFun){
+        isLoadingFun(true);
 //        this.$emit('toChannel',this.body);   //发送body
 //        this.tableModal = false;
         let that = this;

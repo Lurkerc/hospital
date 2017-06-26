@@ -12,6 +12,7 @@
           <el-table-column
             type="index"
             label="序号"
+            fixed
             align="center"
             width="80">
           </el-table-column>
@@ -155,6 +156,7 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       confirm(isLoadingFun){
+        isLoadingFun(true);
        let  queryData = this.conductQueryData(this.body==0?this.tempArr:this.body)
 
         let that = this;

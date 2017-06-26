@@ -6,24 +6,25 @@
         <img src="http://iph.href.lu/120x120" alt="">
       </el-col>
       <el-col :span="18">
-        <el-form labelWidth="86px">
+        <el-form labelWidth="86px" :model="queryData" ref="queryData">
           <el-col :span="10">
-            <el-form-item label="考生姓名：">
+            <el-form-item label="考生姓名：" prop="userName">
               <el-input v-model="queryData.userName"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="10" :offset="4">
-            <el-form-item label="考生编号：">
+            <el-form-item label="考生编号：" prop="userNum">
               <el-input v-model="queryData.userNum"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="10">
-            <el-form-item label="身份证号：">
+            <el-form-item label="身份证号：" prop="idCard">
               <el-input v-model="queryData.idCard"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="10" :offset="4">
             <el-button type="info" @click="queryStudent">查询</el-button>
+            <el-button type="danger" @click="resetInput">重置</el-button>
           </el-col>
         </el-form>
       </el-col>
@@ -31,15 +32,17 @@
     <!-- 抽签列表 -->
     <template v-if="!hasSrawList()">
       <el-tabs v-model="queueActive" type="card" style="height:300px;">
-        <el-tab-pane :label="'抽签组' + index" :name="index.toString()" v-for="(item,index) in queueData.drawList" :key="index" style="overflow:auto;">
+        <el-tab-pane :label="'抽签组' + index" :name="index.toString()" v-for="(item,index) in drawList" :key="index" style="overflow:auto;">
           <queue-room v-for="(cItem,cIndex) in item" :option="{hasAdd:false,hasRemove:false}" :initData="{index:index,cIndex:cIndex,name:cItem.stationName}"
             :key="index+'-'+cIndex" style="width:80px;margin-right:20px;"></queue-room>
         </el-tab-pane>
       </el-tabs>
     </template>
-    <p v-else style="line-height:300px;text-align:center;">暂无数据</p>
+    <p v-else-if="queueData.userId" style="line-height:300px;text-align:center;">暂无可抽签的考站</p>
+    <p v-else style="line-height:300px;text-align:center;">请先查询</p>
     <p align="center">
-      <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+      <load-btn v-if="!drawSuccess" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+      <el-button v-else type="info" @click="close">关闭</el-button>
     </p>
   </div>
 </template>
@@ -51,13 +54,15 @@
     props: ['sceneId'],
     data() {
       return {
+        drawSuccess: false,
         queueActive: '',
+        drawList: [],
         queueData: {
           userId: "",
           userName: "",
           userNum: "",
           idCard: "",
-          drawList: {}
+          drawList: []
         },
         queryData: { // 查询信息
           sceneId: this.sceneId,
@@ -126,10 +131,15 @@
           errorTitle: '查询失败!',
           ajaxError: 'ajaxError',
           ajaxSuccess: res => {
+            let query = this.queryData;
             this.queueSubData.userId = res.data.userId || -1;
             this.queueActive = '';
             this.queueData = res.data;
-            for (let item in res.data.drawList) {
+            query.userName = res.data.userName;
+            query.userNum = res.data.userNum;
+            query.idCard = res.data.idCard;
+            this.drawList = res.data.drawList || [];
+            for (let item in this.drawList) {
               if (!this.queueActive) {
                 this.queueActive = item;
               } else {
@@ -147,16 +157,38 @@
       },
       // 查询
       queryStudent() {
+        let query = this.queryData;
+        if (!(query.userName || query.userNum || query.idCard)) {
+          this.errorMess('至少输入一个查询项！')
+          return;
+        }
         this.getQueueData()
       },
       // 是否有值
       hasSrawList() {
         var t;
-        for (t in this.queueData.drawList) return !1;
+        for (t in this.drawList) return !1;
         return !0
       },
+      // 重置
+      resetInput() {
+        this.drawList = [];
+        this.queueSubData.userId = -1;
+        this.$refs['queryData'].resetFields();
+      },
       // 抽签成功
-      planQueueSuccess() {
+      planQueueSuccess(res) {
+        if (res.data) {
+          this.drawList = {};
+          this.drawSuccess = true;
+          this.successMess('抽签成功！');
+          this.drawList[res.data.drawNum] = [res.data]
+        } else {
+          this.showMess('该考生之前已抽过签！');
+        }
+      },
+      // 关闭抽签
+      close() {
         this.$emit('planQueue', this.addMessTitle.type, this.addMessTitle.successTitle)
       }
     },

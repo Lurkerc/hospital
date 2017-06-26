@@ -116,7 +116,7 @@
           >
             <template scope="scope">
               <span v-if="scope.row.effectiveType=='ALL'">所有时间可用</span>
-              <span v-else>{{scope.row.startDate}}</span>
+              <span v-else>{{scope.row.endDate}}</span>
             </template>
           </el-table-column>
           <el-table-column

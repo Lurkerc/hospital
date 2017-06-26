@@ -10,8 +10,8 @@
       </template>
     </div>
     <div class="monitoStationInfo">
-      <h4>开始时间：<br/>{{ monitorData.startTime | formatDate('yyyy-MM-dd HH:mm:ss') || '-' }}</h4>
-      <h4>结束时间：<br/>{{ monitorData.endTime | formatDate('yyyy-MM-dd HH:mm:ss') || '-' }}</h4>
+      <h4>开始时间：<br/>{{ monitorData.startTime | formatDate('yyyy-MM-dd HH:mm') || '-' }}</h4>
+      <h4>结束时间：<br/>{{ monitorData.endTime | formatDate('yyyy-MM-dd HH:mm') || '-' }}</h4>
       <h4>当前时间：{{ nowTime }}</h4>
       <el-collapse-transition>
         <p>
@@ -44,10 +44,11 @@
 </template>
 
 <script>
+  let listTime = null;
   import api from '../api'; // api
   import stationRoom from '../../examineInterval/examineInterval_room'; // 考站
   export default {
-    props: ['sceneId', 'sceneName'],
+    props: ['sceneId'],
     data() {
       return {
         nowTime: '-', // 当前时间
@@ -65,7 +66,8 @@
           room: {
             index: res.stationId,
             cIndex: index,
-          }
+          },
+          listReq: false
         });
         this.$store.commit('examineMonitor/index/intStationRoom', res);
       },
@@ -79,7 +81,7 @@
               method: api.monitorGet.method,
               params: {
                 id: this.sceneId,
-                sceneName: this.sceneName,
+                reqTime: new Date().getTime()
               }
             }
           });
@@ -89,6 +91,8 @@
       updateStationData(res) {
         this.$store.commit('examineMonitor/index/intData', res.data);
         this.monitorData = this.$store.state.examineMonitor.index.data;
+        // 间隔连接 30s
+        listTime = setTimeout(() => this.getStationData(), 30000)
       },
       // 修改此场次考核状态（暂停及恢复）
       modifyStatusSS(status) {
@@ -122,7 +126,6 @@
             }
           }
         });
-        // this.updateStatus(); // 联调后删除
       },
       // 更新状态
       updateStatus(res) {
@@ -147,8 +150,12 @@
     },
     watch: {
       sceneId(val) {
-        this.getStationData()
+        clearTimeout(listTime);
+        this.getStationData();
       }
+    },
+    destroyed() {
+      clearTimeout(listTime);
     }
   }
 

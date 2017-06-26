@@ -79,6 +79,12 @@
   .newCalendar .full-calendar-body .dates .dates-events .events-week .events-day {
     min-height: 90px;
   }
+  .newCalendar .full-calendar-body .dates .dates-events .events-week .events-day .event-box {
+    overflow: hidden;
+    width: 95%;
+    position: relative;
+    top: -18px;
+  }
 </style>
 <script>
   /*当前组件必要引入*/
@@ -187,8 +193,9 @@
         Util._.forEach(data,function (v,k) {
           let contentArr = v;
           for(var i=0;i<contentArr.length;i++){
+            let num = (i+1);
             myData.unshift({
-              title: currFormate[contentArr[i]["timeType"]]+":"+contentArr[i]["depName"]+"   "+contentArr[i]["timeStr"],
+              title: currFormate[contentArr[i]["timeType"]]+num+":"+contentArr[i]["depName"]+"   "+contentArr[i]["timeStr"],
               start: k,
               end: k,
             })

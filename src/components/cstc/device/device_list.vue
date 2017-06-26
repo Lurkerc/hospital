@@ -7,24 +7,16 @@
     <div slot="right" id="content" ref="content" class="modal" style="padding:0;">
       <el-tabs v-model="deActiveName">
         <el-tab-pane label="设备入库" name="storage">
-          <keep-alive>
-            <device-storage v-if="deActiveName == 'storage'" :contenHeight="contenHeight" :depId="deptId"></device-storage>
-          </keep-alive>
+          <device-storage v-if="deActiveName == 'storage'" :contenHeight="contenHeight" :depId="deptId"></device-storage>
         </el-tab-pane>
         <el-tab-pane label="借用记录" name="loan">
-          <keep-alive>
-            <device-loan v-if="deActiveName == 'loan'" :contenHeight="contenHeight" :depId="deptId"></device-loan>
-          </keep-alive>
+          <device-loan v-if="deActiveName == 'loan'" :contenHeight="contenHeight" :depId="deptId"></device-loan>
         </el-tab-pane>
         <el-tab-pane label="维修记录" name="servicing">
-          <keep-alive>
-            <device-servicing v-if="deActiveName == 'servicing'" :contenHeight="contenHeight" :depId="deptId"></device-servicing>
-          </keep-alive>
+          <device-servicing v-if="deActiveName == 'servicing'" :contenHeight="contenHeight" :depId="deptId"></device-servicing>
         </el-tab-pane>
         <el-tab-pane label="报废记录" name="Scrap">
-          <keep-alive>
-            <device-scrap v-if="deActiveName == 'Scrap'" :contenHeight="contenHeight" :depId="deptId"></device-scrap>
-          </keep-alive>
+          <device-scrap v-if="deActiveName == 'Scrap'" :contenHeight="contenHeight" :depId="deptId"></device-scrap>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -54,7 +46,7 @@
         // 内容高度
         contenHeight: 100,
         // 默认激活视图
-        deActiveName: 'storage',
+        deActiveName: '', // storage
         // 左侧菜单
         leftTreeOpt: {
           //tree默认项设置
@@ -79,6 +71,7 @@
         } else {
           this.deptId = id;
         }
+        this.deActiveName = 'storage'
       },
       /*
        * 左侧目录树节点click调用父组件方法

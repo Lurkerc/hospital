@@ -123,12 +123,12 @@
               <el-row :gutter="10" class="table-back-one">
                 <el-col :span="11" >
                   <el-form-item label="是否职业医师：" prop="doctor" >
-                    {{formValidate.doctor}}
+                    {{formValidate.doctor | typeText}}
                   </el-form-item>
                 </el-col>
                 <el-col :span="11" >
                   <el-form-item label="医师资格级别：" prop="doctorLevel" >
-                    {{formValidate.doctorLevel}}
+                    {{formValidate.doctorLevel | qfcLevel}}
                   </el-form-item>
                 </el-col>
               </el-row >

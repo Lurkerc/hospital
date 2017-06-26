@@ -159,7 +159,7 @@
                     v-for="item in options"
                     :label="item.label"
                     :value="item.value"
-                    :key="item"
+                    :key="item.value"
                   >
                   </el-option>
                 </el-select>

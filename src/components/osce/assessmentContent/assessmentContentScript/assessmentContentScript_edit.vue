@@ -9,12 +9,10 @@
             <el-input v-model="formValidate.scriptName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8" :offset="8">
+
+        <el-col>
           <el-form-item label="上传剧本：">
-            <template v-for="item in filelist">
-              {{ item.name }}
-            </template>
-            <el-button @click="upland">上传剧本</el-button>
+            <upload-file @setUploadFiles="setUploadFiles" :uploadFiles="filelist" :url="urlParams.save.path"></upload-file>
           </el-form-item>
         </el-col>
 
@@ -46,11 +44,6 @@
       </el-row>
     </el-form>
 
-    <!-- 模态框 编辑剧本（edit） -->
-    <Modal :mask-closable="false" v-model="uploadFileModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="840">
-      <modal-header slot="header" :content="headerContent.uploadFileId"></modal-header>
-      <upload-file v-if="uploadFileModal" @cancel="cancel" @setUploadFiles="setUploadFiles" :operaility-data="filelist" :url="urlParams.save.path"></upload-file>
-    </Modal>
   </div>
 </template>
 
@@ -84,6 +77,7 @@
           illnessPoints: '',
           performPoints: ''
         },
+        staticPath: '', // 静态资源
         filelist: [], // 上传附件列表
         //保存按钮基本信息
         loadBtn: {
@@ -103,13 +97,6 @@
             method: this.urlParams.modify.method
           }
         },
-        uploadFileModal: false, // 上传剧本附件
-        headerContent: { // 模态框提示信息
-          uploadFileId: {
-            id: 'uploadFileId',
-            title: '上传剧本附件'
-          }
-        }
       }
     },
     methods: {
@@ -123,9 +110,7 @@
         if (isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
-          this.addMessTitle.ajaxParams.data = this.$util.getFormData(this.formValidate, this.todoId, {
-            fileIds: (this.filelist.map(item => item.id)).join(',')
-          });
+          this.addMessTitle.ajaxParams.data = this.$util.getFormData(this.formValidate);
           this.ajax(this.addMessTitle, isLoadingFun)
         }
       },
@@ -150,20 +135,8 @@
         this.$emit('upDataScript', this.formValidate.scriptName); // 返回名称
       },
       /***************************************** 上传附件回调 ***********************************************/
-      setUploadFiles(filelist) {
-        this.filelist = filelist;
-        // console.log(filelist)
-      },
-      /***************************************** 模态框 *****************************************************/
-      upland() {
-        this.openModel('uploadFile')
-      },
-      /*
-       * 打开指定的模态窗体
-       * @param options string 当前指定的模态:"add"、"edit"
-       * */
-      openModel(options) {
-        this[options + 'Modal'] = true;
+      setUploadFiles(ids) {
+        this.formValidate.fileIds = ids;
       },
       /*
        * 当前组件发送事件给父组件
@@ -175,15 +148,24 @@
       /**************************** 从服务器获取编辑的数据 *****************************************/
       getDataForServer() {
         this.ajax({
-          ajaxSuccess: 'ajaxSuccess',
+          ajaxSuccess: 'getDataSuccess',
           ajaxParams: {
             url: `${this.urlParams.get.path}/${this.todoId.id}`,
             method: this.urlParams.get.method
           }
         })
       },
-      ajaxSuccess(res) {
-        this.formValidate = res.data // 初始化编辑数据
+      getDataSuccess(res) {
+        this.formValidate = res.data; // 初始化编辑数据
+        this.filelist = [];
+
+        for (let i = 0, list = res.data.fileList, l = list.length; i < l; i++) {
+          this.filelist.push({
+            fileId: list[i].id,
+            fileName: list[i].oldName,
+            filePath: list[i].path + list[i].name
+          })
+        }
       },
       /*
        * 组件初始化入口
@@ -197,6 +179,7 @@
       uploadFile
     },
     created() {
+      this.staticPath = this.$store.getters.getEnvPath.http;
       this.init()
     }
   }

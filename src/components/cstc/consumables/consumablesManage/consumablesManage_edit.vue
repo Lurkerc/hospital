@@ -83,6 +83,7 @@
           consumablesName: '', // 耗材名称
           describes: '' // 描述
         },
+        staticPath: '',
         //从服务器端获取的已上传的图片存储
         fileList: [ //
           // {
@@ -171,7 +172,7 @@
             item = this.formValidate.imgList[i];
             this.fileList.push({
               name: "",
-              url: item.originalPath
+              url: this.staticPath + item.originalPath
             });
           }
         }
@@ -191,6 +192,7 @@
        * 组件初始化入口
        * */
       init() {
+        this.staticPath = this.$store.getters.getEnvPath.http;
         this.getDataForServer()
       }
     },

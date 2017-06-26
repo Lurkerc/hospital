@@ -5,11 +5,11 @@ const api = {
     method: 'get'
   },
   get: { // 获取
-    path: thisFile + '/get',
+    path: thisFile + '/get/',
     method: 'get'
   },
   modify: { // 修改
-    path: thisFile + '/modify',
+    path: thisFile + '/modify/',
     method: 'put'
   },
   add: { // 增加
@@ -22,6 +22,10 @@ const api = {
   },
   all: { // 获取所有房间列表
     path: thisFile + '/all/list',
+    method: 'get'
+  },
+  down: { // 资源下载
+    path: '/api/file/download/', // { fileId }
     method: 'get'
   },
   delete: thisFile + '/remove', // 删除

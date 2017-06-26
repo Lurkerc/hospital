@@ -31,7 +31,7 @@
         <el-button size="small" type="warning" :disabled="!canEdit" @click="openModel('setQueue')">队列设置</el-button>
       </template>
       <!--<el-button :disabled="!canEdit" size="small" type="success" @click="save" style="float:right;">保存</el-button>-->
-      <load-btn :disabled="!canEdit" size="small" type="success" style="float:right;" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+      <load-btn v-if="canEdit" size="small" type="success" style="float:right;" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
     </div>
     <!-- 考站 -->
     <div ref="stationRoomBox" id="stationRoomBox" :style="stationRoomStyle">
@@ -66,7 +66,7 @@
     </Modal>-->
     <Modal :mask-closable="false" width="890" v-model="setSPModal" title="考站信息SP设置" class-name="vertical-center-modal">
       <modal-header slot="header" :content="contentHeader.setSPId"></modal-header>
-      <select-sp-user v-if="setSPModal" @cancel="closeSPUser" @setUsers="setSP" :initUser="initUser"></select-sp-user>
+      <select-sp-user v-if="setSPModal" @cancel="closeSPUser" @setUsers="setSP" :unSelect="unSelectUser" :initUser="initUser"></select-sp-user>
       <div slot="footer"></div>
     </Modal>
     <!--设置考站抽签信息-->
@@ -122,6 +122,7 @@
         api,
         self: this,
         addType: '',
+        unSelectUser: '',
         info: {}, // 场次信息
         roomList: {}, // 考站
         roomData: {}, // 考站信息
@@ -227,9 +228,6 @@
 
         // 更新SP人员的可选择剧本
         this.$store.commit('examineInterval/room/initScriptList', scriptList);
-        // 当前站点是否可编辑
-        this.$store.commit('examineInterval/station/setEdit', !(res.data.status === 'ONGOING' || res.data.status ===
-          'FINISH'));
         // 初始化临时状态
         this.$store.commit('examineInterval/temp/initData');
         this.updateScripts();
@@ -376,6 +374,7 @@
             })
           }
         }
+        this.unSelectUser = this.getUnSelectUser('sp');
         this.openModel('setSP');
       },
       // sp设置
@@ -405,6 +404,18 @@
       // 更新SP可选剧本列表
       updateScripts() {
         this.scriptList = this.$store.state.examineInterval.room.scriptList; // 剧本列表
+      },
+      /************************** 排除禁选人员 *********************************/
+      // 获取禁选人员
+      getUnSelectUser(type) {
+        let temp = this.$store.state.examineInterval.room.unSelectUser;
+        let unSelArr = [];
+        Util._.map(temp, (arr, key) => {
+          if (key !== type) {
+            unSelArr = unSelArr.concat(arr)
+          }
+        })
+        return unSelArr
       },
       /************************** 抽签设置 *************************************/
       // 操作已保存到状态

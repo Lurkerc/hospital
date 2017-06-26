@@ -20,23 +20,18 @@
       </div>
     </div>
     <!-- 时间表 -->
-    <div style="position:absolute;top:100px;buttom:0;left:12px;right:12px;bottom:12px;">
+    <div id="content" ref="content" style="position:absolute;top:100px;buttom:0;left:12px;right:12px;bottom:12px;">
       <!--<keep-alive>-->
-      <student-time v-if="headerList[0]" v-show="timeActive === 'student'" :headerList="headerList" :tableList="tableList"></student-time>
-      <sp-time v-if="timeActive === 'sp'" :headerList="spHeaderList" :tableList="spTableList"></sp-time>
-      <teacher-time v-if="timeActive === 'teacher'" :tableList="teacherTableList"></teacher-time>
+      <student-time v-if="headerList[0]" :height="dynamicHt" :sceneTypes="sceneType" v-show="timeActive === 'student'" :headerList="headerList"
+        :tableList="tableList"></student-time>
+      <sp-time v-if="timeActive === 'sp'" :height="dynamicHt" :headerList="spHeaderList" :tableList="spTableList"></sp-time>
+      <teacher-time v-if="timeActive === 'teacher'" :height="dynamicHt" :tableList="teacherTableList"></teacher-time>
       <!--</keep-alive>-->
     </div>
     <!--导出弹窗-->
-    <Modal
-      :mask-closable="false"
-      close-on-click-modal="false"
-      height="200"
-      v-model="deriveModal"
-      title="对话框标题"
-      class-name="vertical-center-modal"
+    <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="deriveModal" title="对话框标题" class-name="vertical-center-modal"
       :width="500">
-      <modal-header slot="header"  :content="button[timeActive]"></modal-header>
+      <modal-header slot="header" :content="button[timeActive]"></modal-header>
       <derive v-if="deriveModal" :type="timeActive" :url="deriveData.url" @cancel="deriveModal = false"></derive>
       <div slot="footer"></div>
     </Modal>
@@ -44,12 +39,13 @@
 </template>
 
 <script>
+  let Util = null;
   import timeApi from '../api'; // 时间表api
   import studentTime from '../../examineInterval/examineIntervalTimeTable/examineIntervalTimeTable_student';
   import spTime from '../../examineInterval/examineIntervalTimeTable/examineIntervalTimeTable_student';
   import teacherTime from '../../examineInterval/examineIntervalTimeTable/examineIntervalTimeTable_teacher';
   export default {
-    props: ['id', 'stitle'],
+    props: ['id', 'stitle', 'sceneType'],
     data() {
       return {
         timeActive: 'student',
@@ -58,22 +54,23 @@
         spHeaderList: [],
         spTableList: [],
         teacherTableList: {},
+        dynamicHt: 0,
         //导出
-        deriveData:{
-          url:'',
-          type:''
+        deriveData: {
+          url: '',
+          type: ''
         },
-        deriveModal:false,
-        button:{
-          student:{
+        deriveModal: false,
+        button: {
+          student: {
             id: 'studentId',
             title: '导出考生时间表'
           },
-          teacher:{
+          teacher: {
             id: 'teacherId',
             title: '导出监考老师时间表'
           },
-          sp:{
+          sp: {
             id: 'spId',
             title: '导出sp时间表'
           },
@@ -96,29 +93,33 @@
           'teacher': 'teacherExcelExport',
           'sp': 'spExcelExport',
         };
+        if (this.timeActive == 'sp' && !(this.spHeaderList.length && this.spTableList.length)) {
+          this.errorMess('该表没有数据可导出')
+          return
+        }
         this.deriveData = {
-          url:'/api/'+timeApi[viewApiKeys[this.timeActive]].path+'?id='+this.id,
-          type:this.active
+          url: '/api/' + timeApi[viewApiKeys[this.timeActive]].path + '?id=' + this.id,
+          type: this.timeActive
         };
-        this.deriveModal=true;
-//        let viewApiKeys = {
-//          'student': 'examUserExcelExport',
-//          'teacher': 'teacherExcelExport',
-//          'sp': 'spExcelExport',
-//        };
-//        this.ajax({
-//          successTitle: '导出成功!',
-//          errorTitle: '导出失败!',
-//          ajaxError: 'ajaxError',
-//          ajaxSuccess: 'ajaxError',
-//          ajaxParams: {
-//            url: timeApi[viewApiKeys[this.timeActive]].path,
-//            method: timeApi[viewApiKeys[this.timeActive]].method,
-//            params: {
-//              id: this.id
-//            }
-//          }
-//        })
+        this.deriveModal = true;
+        //        let viewApiKeys = {
+        //          'student': 'examUserExcelExport',
+        //          'teacher': 'teacherExcelExport',
+        //          'sp': 'spExcelExport',
+        //        };
+        //        this.ajax({
+        //          successTitle: '导出成功!',
+        //          errorTitle: '导出失败!',
+        //          ajaxError: 'ajaxError',
+        //          ajaxSuccess: 'ajaxError',
+        //          ajaxParams: {
+        //            url: timeApi[viewApiKeys[this.timeActive]].path,
+        //            method: timeApi[viewApiKeys[this.timeActive]].method,
+        //            params: {
+        //              id: this.id
+        //            }
+        //          }
+        //        })
       },
       // 查看对应角色的时间表
       loadTimeData(view) {
@@ -165,13 +166,30 @@
         this.spHeaderList = res.data.stationRoomList;
         this.spTableList = res.data.timeList;
       },
+      //设置表格及分页的位置
+      setTableDynHeight() {
+        let content = this.$refs.content;
+        let parHt = content.offsetHeight;
+        this.dynamicHt = parHt;
+      },
     },
     components: {
       studentTime,
       teacherTime,
       spTime
     },
+    mounted() {
+      //页面dom稳定后调用
+      this.$nextTick(function () {
+        //初始表格高度及分页位置
+        this.setTableDynHeight();
+        //为窗体绑定改变大小事件
+        let Event = Util.events;
+        Event.addHandler(window, "resize", this.setTableDynHeight);
+      })
+    },
     created() {
+      Util = this.$util;
       this.sceneName = this.stitle;
       this.loadTimeData();
     },

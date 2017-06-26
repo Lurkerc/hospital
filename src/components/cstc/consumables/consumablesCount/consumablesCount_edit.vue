@@ -25,8 +25,8 @@
         </el-col>
 
         <el-col :span="8" :offset="2">
-          <el-form-item label="盘点人：" prop="inventoryMan" required>
-            <el-input v-model="formValidate.inventoryMan"></el-input>
+          <el-form-item label="盘点人：" required>
+            <el-input v-model="formValidate.inventoryMan" :disabled="true"></el-input>
           </el-form-item>
         </el-col>
 

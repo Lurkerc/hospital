@@ -17,9 +17,9 @@
         </el-select>
       </el-form-item>
       <el-form-item label="使用时间：">
-        <el-date-picker v-model="searchObj.startBeginTime" :editable="false" type="datetime" placeholder="选择日期时间"></el-date-picker>
+        <el-date-picker v-model="searchObj.startBeginTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
         <span>-</span>
-        <el-date-picker v-model="searchObj.startEndTime" :editable="false" type="datetime" placeholder="选择日期时间"></el-date-picker>
+        <el-date-picker v-model="searchObj.startEndTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="search">搜索</el-button>
@@ -76,15 +76,14 @@
     <!-- 模态框 编辑（edit） -->
     <Modal :mask-closable="false" v-model="editModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="1100">
       <modal-header slot="header" :content="button.editId"></modal-header>
-      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :id="todoId" :url-params="api.modify"
-        :get-url-params="api.get"></edit>
+      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :id="todoId"></edit>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 查看（view） -->
     <Modal :mask-closable="false" v-model="showModal" height="200" title="对话框标题" class-name="vertical-center-modal" :loading="true"
       :width="800">
       <modal-header slot="header" :parent="self" :content="button.showId"></modal-header>
-      <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData" :id="todoId" :url-params="api.get"></show>
+      <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData" :id="todoId"></show>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 删除（del） -->
@@ -197,8 +196,8 @@
       setTableData(isLoading) {
         Object.assign(this.queryQptions.params, this.searchObj);
         let params = this.queryQptions.params;
-        params.startBeginTime = this.conductDate(params.startBeginTime, 'yyyy-MM-dd hh:mm:ss') || '';
-        params.startEndTime = this.conductDate(params.startEndTime, 'yyyy-MM-dd hh:mm:ss') || '';
+        params.startBeginTime = this.conductDate(params.startBeginTime, 'yyyy-MM-dd');
+        params.startEndTime = this.conductDate(params.startEndTime, 'yyyy-MM-dd');
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions
