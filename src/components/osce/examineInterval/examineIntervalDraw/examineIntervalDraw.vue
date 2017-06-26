@@ -47,6 +47,7 @@
         editableTabsValue: '1', // 标签激活
         editableTabs: [], // 标签组
         roomInfo: [], // 考站信息
+        roomList: [], // 考站
       }
     },
     methods: {
@@ -70,10 +71,21 @@
           return;
         }
 
+        let addSpecialty = this.roomList[index].room[0].specialty; // 增加的考站的专业
+        for (let i = 0, list = tab.room, len = list.length, item; i < len; i++) {
+          item = this.roomList[i].room[0].specialty;
+          if (item != addSpecialty) { // 如果该抽签组已有考站则进行专业比较，只有同一专业的才能加入同一个抽签组
+            this.showMess("该考站的专业与当前抽签组中的考站的专业不一致，请重新选择！");
+            return;
+          }
+        }
+
+
         // 不重复添加
         if (tab.room.indexOf(index) > -1) {
           return;
         }
+
         // 把点击的考站加入到该标签中
         tab.room.push(index);
         this.disShowRoom.push(index); // 隐藏该考站
@@ -214,6 +226,7 @@
     },
     created() {
       this.roomInfo = this.$store.state.examineInterval.room.roomInfo;
+      this.roomList = this.$store.state.examineInterval.room.roomList;
       this.initEditableTabs();
     },
     components: {

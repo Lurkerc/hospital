@@ -5,7 +5,7 @@
 
         <el-col :span="8" :offset="8" align="center">
           <el-form-item label="病例名称：" prop="caseName" required>
-            <el-input v-model="formValidate.caseName" placeholder="请输入"></el-input>
+            <el-input v-model.trim="formValidate.caseName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
 

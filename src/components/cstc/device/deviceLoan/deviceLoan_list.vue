@@ -27,7 +27,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="借用时间：" prop="borrowStartTime">
-            <el-date-picker v-model="searchObj.borrowStartTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
+            <el-date-picker v-model="searchObj.borrowStartTime" :editable="false" type="date" :picker-options="startPickerOptions" placeholder="选择日期"></el-date-picker>
             <span>-</span>
             <el-date-picker v-model="searchObj.borrowEndTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
@@ -136,6 +136,14 @@
           borrowStartTime: '', // 借用开始时间
           borrowEndTime: '', // 借用结束时间
         },
+        // 
+        startPickerOptions: {
+          disabledDate(time) {
+            // console.log(this)
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+        },
+
         multipleSelection: [], // 选项
         operailityData: '', // 操作的数据
         self: this,
@@ -240,6 +248,8 @@
           }
         })
       },
+      /*----------- 时间相关 -----------*/
+
       /*----------- 模态框 -------------*/
       // 增加
       add() {

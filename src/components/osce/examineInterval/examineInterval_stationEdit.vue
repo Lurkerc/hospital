@@ -25,9 +25,9 @@
     <!-- 考站相关按钮 -->
     <div style="margin-top:20px;">
       <el-button size="small" type="success" :disabled="!canEdit" @click="addRoom">添加考站</el-button>
+      <el-button size="small" type="primary" :disabled="!canEdit" @click="openModel('setDraw')">抽签设置</el-button>
       <!-- 规范化考核 -->
       <template v-if="addType === 'STANDARD'">
-        <el-button size="small" type="primary" :disabled="!canEdit" @click="openModel('setDraw')">抽签设置</el-button>
         <el-button size="small" type="warning" :disabled="!canEdit" @click="openModel('setQueue')">队列设置</el-button>
       </template>
       <!--<el-button :disabled="!canEdit" size="small" type="success" @click="save" style="float:right;">保存</el-button>-->

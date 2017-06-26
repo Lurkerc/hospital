@@ -6,7 +6,7 @@
 
         <el-col :span="8" :offset="8" align="center">
           <el-form-item label="剧本名称：" prop="scriptName" required>
-            <el-input v-model="formValidate.scriptName" placeholder="请输入"></el-input>
+            <el-input v-model.trim="formValidate.scriptName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
 

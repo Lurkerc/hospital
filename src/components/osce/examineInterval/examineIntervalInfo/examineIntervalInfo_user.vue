@@ -243,23 +243,30 @@
        * @param users [{id:'',name:''},{}]  已选人员信息
        * */
       setUsers(users) {
-        let userId = [];
+        let userList = [];
         users.map(item => {
-          userId.push(item.key)
+          userList.push({
+            userId: item.key,
+            userName: item.label,
+            specialty: item.specialty
+          })
         })
         let addMessTitle = {
           paramsData: 'add',
           ajaxSuccess: () => {
             this.successMess('添加人员成功');
+            this.updateStatus();
             this.closeSltUser();
             this.setTableData();
           },
           ajaxParams: {
             url: this.api.userAdd.path,
             method: this.api.userAdd.method,
+            jsonString: true,
             data: {
               id: this.id, // 场次id
-              userIds: userId.join(',') || '', // 参考人员id
+              // userIds: userId.join(',') || '', // 参考人员id
+              userList
             }
           }
         };

@@ -5,7 +5,7 @@
         <!-- 指标名称 -->
         <el-col align="center">
           <el-form-item label="评分指标名称：" prop="scoreTableName">
-            <el-input v-model="formValidate.scoreTableName"></el-input>
+            <el-input v-model.trim="formValidate.scoreTableName"></el-input>
           </el-form-item>
         </el-col>
         <el-table align="center" border :context="self" :data="formValidate.detailsList" tooltip-effect="dark" show-summary :summary-method="getSummaries"

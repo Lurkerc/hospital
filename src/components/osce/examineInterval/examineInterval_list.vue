@@ -1,9 +1,7 @@
 <template>
   <!-- 考核场次 -->
   <div id="interval" ref="interval">
-    <keep-alive>
-      <index-interval v-if="look == 'index'" :contenHeight="contenHeight" :update="update" @show="show"></index-interval>
-    </keep-alive>
+    <index-interval v-if="look == 'index'" :contenHeight="contenHeight" :update="update" @show="show"></index-interval>
     <add-interval v-if="look == 'add'" :contenHeight="contenHeight" :add-type="type" @show="show"></add-interval>
     <view-interval v-if="look == 'view'" :contenHeight="contenHeight" :sceneType="sceneType" :sceneName="name" :id="id" @show="show"></view-interval>
   </div>
