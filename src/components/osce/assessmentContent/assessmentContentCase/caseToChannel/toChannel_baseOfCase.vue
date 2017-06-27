@@ -91,7 +91,7 @@
      * width :  单元格宽度
      * height :  最小高度
      * */
-    props:['format','height','url','data','extra','id'],
+    props:['format','height','url','data','extra','id','date','treeRoad'],
     data(){
 
       return{
@@ -196,6 +196,7 @@
       conductQueryData(data){
         let format= this.formats;
         let treeId = this.id;
+        let treeRoad = this.treeRoad
 
         let  queryData = this.$util._.defaultsDeep([], data); //copy
 
@@ -205,6 +206,7 @@
           tempArr.push({questionList:[]})
             let tempObj = tempArr[i]
           if(treeId)  tempObj.treeId=treeId;
+          if(treeRoad)  tempObj.treeRoad=treeRoad;
           for (let key in format) {
               if(key>17) {
                 tempObj['questionList'].push({ question:data[i][key]})
@@ -309,14 +311,22 @@
         for(let i=0;i<data.length;i++){
           let tempObj={};
           for( let key in format){
+//            tempObj[key]  = data[i][key].replace(/(^\s*)|(\s*$)/g, "");
             tempObj[key]  = data[i][key];
             tempObj[key+'edit']  = false;
-            if(this.extra){
-                for (let k=0;k<this.extra.length;k++){
-                  tempObj[this.extra[i].key] = this.extra[i].label
-                }
-            }
 
+          }
+          if(this.extra){
+            for (let k=0;k<this.extra.length;k++){
+              tempObj[this.extra[i].key] = this.extra[i].label
+            }
+          }
+          if(this.date){
+            for(let l=0;l<this.date.length;l++){
+              if(tempObj[this.date[l]]){
+                tempObj[this.date[l]] = tempObj[this.date[l]].replace(/\//g,"-");
+              }
+            }
           }
           tempObj.error=false;
           tempArr.push(tempObj);

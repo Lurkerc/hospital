@@ -40,8 +40,6 @@ const getVueObj = function (vue) {
     "FREE": "自由考核",
     // 考生考核状态
     "NOTEXAM": "未考核",
-
-
     // 设备品牌
     "HIKVISION": "海康威视",
     "DAHUA": "大华",
@@ -53,6 +51,9 @@ const getVueObj = function (vue) {
     // 任务执行状态
     "EXECUTING": "执行中",
     "UNEXECUTED": "未执行",
+    // 预约开放时间类型
+    "ALL": "全天候",
+    "SPECIFIC": "特定时间",
   };
   const unitText = { // 单位
     "m": "m",
@@ -64,6 +65,11 @@ const getVueObj = function (vue) {
     "0": "职业",
     "1": "助理",
     "2": "无"
+  };
+
+  const bespeakSetRoomStatus = { // 预约房间设置开放状态
+    "NO": "关闭预约",
+    "YES": "开放预约"
   };
 
   const filters = [ // 声明全局过滤器及回调函数
@@ -108,7 +114,6 @@ const getVueObj = function (vue) {
       name: "isDefImg",
       call(value) {
         if (value) return value;
-        console.log('11', value);
         return '/static/img/physician.ec4c75d.png'
       }
     },
@@ -129,6 +134,16 @@ const getVueObj = function (vue) {
         if (value) {
           // 如果描述文本中没有匹配的则返回原字符
           return qualificationLevel[value.toString().toUpperCase()] || value
+        }
+        return value;
+      }
+    },
+    { // 预约房间设置开放状态
+      name: "bespeakSetRoomStatus",
+      call(value) {
+        if (value) {
+          // 如果描述文本中没有匹配的则返回原字符
+          return bespeakSetRoomStatus[value.toString().toUpperCase()] || value
         }
         return value;
       }

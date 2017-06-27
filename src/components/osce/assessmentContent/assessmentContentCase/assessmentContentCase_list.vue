@@ -99,7 +99,7 @@
     <!-- 模态框 导入剧本（script） -->
     <Modal :mask-closable="false" v-model="scriptsModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="840">
       <modal-header slot="header" :content="button.scriptId"></modal-header>
-      <scripts v-if="scriptsModal" :url="api" @cancel="cancel" @scripts="subCallback" :operaility-data="operailityData" :url-params="api.save"></scripts>
+      <scripts v-if="scriptsModal" :id="treeId" :treeRoad="treeRoad" :url="api" @cancel="cancel" @scripts="subCallback" :operaility-data="operailityData" :url-params="api.save"></scripts>
       <div slot="footer"></div>
     </Modal>
     <!--导出剧本弹窗-->
@@ -122,7 +122,7 @@
     <!-- 模态框 导入病例（case） -->
     <Modal :mask-closable="false" v-model="casesModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="840">
       <modal-header slot="header" :content="button.casesId"></modal-header>
-      <cases v-if="casesModal" :id="treeId" :url="api" @cancel="cancel" @cases="subCallback" :operaility-data="operailityData"
+      <cases v-if="casesModal" :id="treeId" :treeRoad="treeRoad"  :url="api" @cancel="cancel" @cases="subCallback" :operaility-data="operailityData"
         :url-params="api.save"></cases>
       <div slot="footer"></div>
     </Modal>

@@ -43,6 +43,7 @@
 
           </el-tab-pane>
           <el-tab-pane label="查看人员" name="second">
+            <div class="showTabContent">
             <div class="row-layout">
               <el-row>
                 <el-col :span="12">&nbsp;</el-col>
@@ -104,6 +105,7 @@
                   :total="listTotal">
                 </el-pagination>
               </div>
+            </div>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -345,25 +347,31 @@
       //切换查看权限、查看人员
       handleClick(tab){
         if(tab["index"]==1){
-          let params =  Util._.defaultsDeep({roleId:this.rolesItem.id,name:this.formValidate.name,sortby:'',order:'DESC',},this.queryQptions);
-          let postAjax = {
-            ajaxSuccess:(res)=>{
-              let responseData = res.data;
-              for(var i=0;i<responseData.length;i++){
-                responseData[i]["depName"] = responseData[i].dept.name;
-                responseData[i]["rolesName"] = this.rolesItem.name;
-              }
-              responseData = this.addIndex(responseData);
-              this.tableData = responseData;
-              this.listTotal = res.totalCount||1;
-            },
-            ajaxParams:{
-              url:'/user/search-by-role',
-              params:params
-            }
-          }
-          this.ajax(postAjax);
+          this.setTableData()
         }
+      },
+
+
+      //查询角色下相关人员
+      setTableData(){
+        let params =  Util._.defaultsDeep({roleId:this.rolesItem.id,name:this.formValidate.name,sortby:'',order:'DESC',},this.queryQptions);
+        let postAjax = {
+          ajaxSuccess:(res)=>{
+            let responseData = res.data;
+            for(var i=0;i<responseData.length;i++){
+              responseData[i]["depName"] = responseData[i].dept.name;
+              responseData[i]["rolesName"] = this.rolesItem.name;
+            }
+            responseData = this.addIndex(responseData);
+            this.tableData = responseData;
+            this.listTotal = res.totalCount||1;
+          },
+          ajaxParams:{
+            url:'/user/search-by-role',
+            params:params
+          }
+        }
+        this.ajax(postAjax);
       },
 
 

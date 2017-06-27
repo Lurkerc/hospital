@@ -265,7 +265,7 @@
           ajaxSuccess:'ajaxSuccess',
           ajaxParams:{
             jsonString:true,
-            url:this.url.templateTypeAdd,
+            url:this.url.templateAdd,
             method:'post',
             data:{},
           }
@@ -297,8 +297,20 @@
           isLoadingFun(true);
 
           //处理提交的参数
-          this.addMessTitle.ajaxParams.data = this.conductParams(Util._.defaultsDeep([],this.body));
+          let _scoreLevel = this.formValidate._scoreLevel;
+          let tempArr = [];
 
+          this.formValidate.templateItemList = this.conductParams(Util._.defaultsDeep([],this.body));
+          if(this.formValidate.scoreType == 'SELECT'){
+            for(let i=0;i<_scoreLevel.length;i++ ){
+              tempArr.push(_scoreLevel[i].label)
+            }
+            this.formValidate.scoreLevel =tempArr.join('|');
+          }else {
+            this.formValidate.scoreLevel =[];
+          }
+
+          this.addMessTitle.ajaxParams.data  =  this.formValidate;
           this.ajax(this.addMessTitle, isLoadingFun)
         }
       },

@@ -165,6 +165,34 @@
       <add v-if="addModal"  @cancel="cancel" :url="url" :operaility-data="treeOperailityData"   @add="subCallback" ></add>
       <div slot="footer"></div>
     </Modal>
+    <!--修改右侧评分模板弹窗-->
+    <Modal
+      :mask-closable="false"
+      v-model="editModal"
+      height="200"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :width="1000">
+      <!--<div slot="header"> -->
+      <!--</div>-->
+      <modal-header slot="header" :content="editId"></modal-header>
+      <edit v-if="editModal"  @cancel="cancel" :url="url" :operaility-data="operailityData"   @add="subCallback" ></edit>
+      <div slot="footer"></div>
+    </Modal>
+    <!--查看右侧评分模板弹窗-->
+    <Modal
+      :mask-closable="false"
+      v-model="showModal"
+      height="200"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :width="1000">
+      <!--<div slot="header"> -->
+      <!--</div>-->
+      <modal-header slot="header" :content="viewId"></modal-header>
+      <show v-if="showModal"  @cancel="cancel" :url="url" :operaility-data="operailityData"   @add="subCallback" ></show>
+      <div slot="footer"></div>
+    </Modal>
     <!--删除右侧弹窗-->
     <Modal
       close-on-click-modal="false"
@@ -189,8 +217,12 @@
   /*引入 --新建类型*/
   import editType from './evaluationManagement_editType.vue'
 
-  /*引入 --新建类型*/
+  /*引入 --新建*/
   import add from './evaluationManagement_add.vue'
+  /*引入 --修改*/
+  import edit from './evaluationManagement_edit.vue'
+  /*引入 --查看*/
+  import show from './evaluationManagement_view.vue'
 
 
 
@@ -572,7 +604,7 @@
       })
     },
     components:{
-      addType,editType,add
+      addType,editType,add,edit,show
     }
   };
 </script>

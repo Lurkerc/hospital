@@ -25,7 +25,7 @@ config.ajaxconfig = {
 
 
   //设置超时时间
-  timeout: 3000,
+  timeout: 30000,
   //返回数据类型
   responseType: 'json', // default
   //请求的接口，在请求的时候，如axios.get(url,config);这里的url会覆盖掉config中的url
@@ -45,7 +45,7 @@ config.ajaxconfig = {
 
   transformResponse: [function (data) {
     // 这里提前处理返回的数据
-    if(typeof data=="string"){
+    if (typeof data == "string") {
       data = JSON.parse(data);
     }
     return data;

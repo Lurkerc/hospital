@@ -139,6 +139,7 @@
             query.userNum = res.data.userNum;
             query.idCard = res.data.idCard;
             this.drawList = res.data.drawList || [];
+            this.drawSuccess = true;
             for (let item in this.drawList) {
               if (!this.queueActive) {
                 this.queueActive = item;

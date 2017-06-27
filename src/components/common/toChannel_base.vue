@@ -91,7 +91,7 @@
      * width :  单元格宽度
      * height :  最小高度
      * */
-    props:['format','height','url','data','extra','id'],
+    props:['format','height','url','data','extra','id','date','deptId','treeRoad'],
     data(){
 
 
@@ -280,24 +280,39 @@
       formatBody(data){
         let format= this.formats;
         let treeId = this.id;
+        let deptId = this.deptId;
+        let treeRoad = this.treeRoad;
         if(!format) return  data;
 
         let tempArr=[];
         for(let i=0;i<data.length;i++){
           let tempObj={};
           for( let key in format){
+//            tempObj[format[key]]  = data[i][key].replace(/(^\s*)|(\s*$)/g, "");
             tempObj[format[key]]  = data[i][key];
             tempObj[format[key]+'edit']  = false;
-            if(this.extra){
-                for (let k=0;k<this.extra.length;k++){
-                  tempObj[this.extra[i].key] = this.extra[i].label
-                }
+
+
+          }
+          if(this.extra){
+            for (let k=0;k<this.extra.length;k++){
+              tempObj[this.extra[i].key] = this.extra[i].label
+            }
+          }
+          if(this.date){
+            for(let l=0;l<this.date.length;l++){
+              if(tempObj[this.date[l]]){
+                tempObj[this.date[l]] = tempObj[this.date[l]].replace(/\//g,"-");
+              }
             }
 
           }
 
+
 //          tempObj.status='';
           if(treeId)  tempObj.treeId=treeId;
+          if(deptId)  tempObj.deptId=deptId;
+          if(treeRoad)  tempObj.treeRoad=treeRoad;
           tempObj.error=false;
           tempArr.push(tempObj);
         }

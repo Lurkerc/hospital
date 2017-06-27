@@ -370,9 +370,9 @@
         this.setTableDynHeight()
       },
       depId(val) {
-        //   this.depId = val;
+        this.depId = val;
         this.deviceTypeName = '';
-        //   // this.setTableData();
+        this.setTableData();
       }
     },
   }

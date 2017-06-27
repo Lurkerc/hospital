@@ -44,7 +44,7 @@
       title="对话框标题"
       class-name="vertical-center-modal">
       <modal-header slot="header" :content="toChannelId" ></modal-header>
-      <to-channel v-if="toChannelModal" @cancel="closeChannel"  :url="url.scriptSave.path"  @success="subHandelEvent" :data="convertedData" :format="format"></to-channel>
+      <to-channel v-if="toChannelModal" @cancel="closeChannel" :id="id" :treeRoad="treeRoad"   :url="url.scriptSave.path"  @success="subHandelEvent" :data="convertedData" :format="format"></to-channel>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -55,7 +55,7 @@
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['operailityData','url'],
+    props: ['operailityData','url','id','treeRoad'],
     data (){
       return{
         active:0,

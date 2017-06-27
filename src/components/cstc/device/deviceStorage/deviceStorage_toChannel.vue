@@ -42,7 +42,7 @@
       title="对话框标题"
       class-name="vertical-center-modal">
       <modal-header slot="header" :content="toChannelId" ></modal-header>
-      <to-channel v-if="toChannelModal" :id="id" @cancel="closeChannel"  :url="url.excelImportSave.path"  @success="subHandelEvent" :data="convertedData" :format="format"></to-channel>
+      <to-channel v-if="toChannelModal" :deptId="id" :date="date" @cancel="closeChannel"  :url="url.excelImportSave.path"  @success="subHandelEvent" :data="convertedData" :format="format"></to-channel>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -78,6 +78,7 @@
           "设备状态":"status",
           "设备描述":"describes"
       },
+        date:['purchaseTime','manufactureDate','guaranteeDate'],
 //        extra:[   //额外的，不在列表里的数据
 //          {
 //              status:'NORMAL'

@@ -1,6 +1,14 @@
 /**
  * Created by Administrator on 2017/6/8.
  */
+
+/**
+ * 我的评价表
+ * 单表分析统计
+ * 综合分析统计
+ * 评价表管理
+ * 评价活动设置
+ * */
 export default {
   /*
   *我的评价表
@@ -73,7 +81,7 @@ export default {
   templateRemove:'/template/remove',//{ids}
 
   //添加（右侧添加评分表）
-  templateAdd:'/template/add',
+    templateAdd:'/template/add',
 
   //修改（右侧修改评分表）
   templateModify:'/template/modify/',//{id}

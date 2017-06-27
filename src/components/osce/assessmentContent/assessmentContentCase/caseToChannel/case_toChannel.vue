@@ -42,7 +42,7 @@
       title="对话框标题"
       class-name="vertical-center-modal">
       <modal-header slot="header" :content="toChannelId" ></modal-header>
-      <to-channel v-if="toChannelModal" @cancel="closeChannel" :id="id"  :url="url.save.path"  @success="subHandelEvent" :data="convertedData" :format="format"></to-channel>
+      <to-channel v-if="toChannelModal" @cancel="closeChannel" :date="date" :id="id" :treeRoad="treeRoad"   :url="url.save.path"  @success="subHandelEvent" :data="convertedData" :format="format"></to-channel>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -53,7 +53,7 @@
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['operailityData','url','id'],
+    props: ['operailityData','url','id','treeRoad'],
     data (){
       return{
         active:0,
@@ -85,6 +85,8 @@
           "专科情况":"supplementaryExamination",
           "问题":"question",
       },
+        date:['hospitalTime','caseDate'],
+
 //        extra:[   //额外的，不在列表里的数据
 //          {
 //              status:'NORMAL'

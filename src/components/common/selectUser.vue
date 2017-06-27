@@ -6,13 +6,24 @@
       <div slot="right" id="content" ref="content" class="modal">
         <!--查询-->
         <div>
-          <el-input placeholder="请选输入相关查询信息" icon="search" v-model="searchUserInfo" :on-icon-click="handleIconClick">
+        <el-input
+          placeholder="请选输入相关查询信息"
+          icon="search"
+          v-model="searchUserInfo"
+          :on-icon-click="handleIconClick">
           </el-input>
         </div>
         <br />
         <div style="margin: 0 auto;width: 630px;">
-          <Transfer :data="leftListData" :target-keys="rightTargetKeys" :list-style="listStyle" :render-format="render3" :operations="['向左移动','向右移动']"
-            not-found-text="无信息,请选择左侧菜单!" filterable @on-change="handleChange3">
+    <Transfer
+      :data="leftListData"
+      :target-keys="rightTargetKeys"
+      :list-style="listStyle"
+      :render-format="render3"
+      :operations="['向左移动','向右移动']"
+      not-found-text="无信息,请选择左侧菜单!"
+      filterable
+      @on-change="handleChange3">
           </Transfer>
         </div>
         <br />
@@ -52,10 +63,7 @@
           width: '260px',
           height: '400px'
         },
-        loadBtn: {
-          title: '提交',
-          callParEvent: "listenSubEvent"
-        },
+        loadBtn:{title:'提交',callParEvent:"listenSubEvent"},
       }
     },
     created() {
@@ -63,8 +71,7 @@
       this.init();
     },
     components: {
-      layoutTree,
-      leftTree
+      layoutTree,leftTree
     },
     methods: {
 
@@ -221,8 +228,7 @@
                 }
                 tempArr.push({
                   key: item.key,
-                  label: '<i dep="dep" class="ivu-icon ivu-icon-android-folder ambuf-tree-icon" style="margin-left:0;font-size:16px;"></i>' +
-                    item.label,
+                    label: '<i dep="dep" class="ivu-icon ivu-icon-android-folder ambuf-tree-icon" style="margin-left:0;font-size:16px;"></i>' + item.label,
                   specialty: item.specialty,
                   description: '内容---' + item.key + '的描述信息',
                   disabled: false
@@ -406,5 +412,4 @@
 
     }
   }
-
 </script>

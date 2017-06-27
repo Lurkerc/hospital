@@ -42,7 +42,7 @@
       title="对话框标题"
       class-name="vertical-center-modal">
       <modal-header slot="header" :content="toChannelId" ></modal-header>
-      <to-channel v-if="toChannelModal" @cancel="closeChannel"  :url="url.excelImport.path"  @success="subHandelEvent" :data="convertedData" :format="format"></to-channel>
+      <to-channel v-if="toChannelModal" @cancel="closeChannel" :date="date"  :url="url.excelImport.path"  @success="subHandelEvent" :data="convertedData" :format="format"></to-channel>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -73,6 +73,7 @@
           "存放地点":"storageLocation",
           "购买地址":"buyAdderss",
       },
+        date:['buyDate'],
 //        extra:[   //额外的，不在列表里的数据
 //          {
 //              status:'NORMAL'
