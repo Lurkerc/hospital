@@ -38,7 +38,7 @@
               <el-option v-for="item in 10" :key="item" :label="item * basicsTime" :value="item">
               </el-option>
             </el-select>
-            <el-input v-else v-model="scope.row.timeCount" :maxlength="3"></el-input>
+            <el-input v-else v-model.number="scope.row.timeCount" :maxlength="3"></el-input>
           </template>
         </el-table-column>
       </template>
@@ -104,6 +104,7 @@
         stationType: '', // 当前考站类型
         basicsTime: 1, // 考试时间基数
         caseId: 0, // 病例id
+        roomInfo: {},
         tableData: [],
 
         scoreSelectModal: false,
@@ -140,6 +141,14 @@
       // 下一步
       next() {
         if (!this.checkData()) return;
+        if (this.stationType === 'SP') {
+          // 计算时间
+          let count = 0;
+          for (let i = 0, d = this.tableData, l = d.length; i < l; i++) {
+            count += d[i].timeCount;
+          }
+          this.roomInfo.timeCount = count;
+        }
         this.$emit('goStep', 3);
       },
       /********************** 数据校验 **********************/
@@ -283,6 +292,7 @@
       scriptSelect
     },
     created() {
+      this.roomInfo = this.$store.state.examineInterval.temp.info;
       this.tableData = this.$store.state.examineInterval.temp.info.stationContentList;
       this.sceneType = this.$store.state.examineInterval.station.info.sceneType; // 当前考站类型
       this.stationType = this.$store.state.examineInterval.temp.info.stationType; // 当前考站类型

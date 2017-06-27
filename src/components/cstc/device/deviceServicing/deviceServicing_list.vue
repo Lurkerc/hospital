@@ -12,7 +12,7 @@
       <el-form :inline="true" :model="searchObj" ref="searchObj" label-width="86px" class="el-form-item-search">
         <el-col :span="4">
           <el-form-item label="设备名称：" prop="deviceTypeName">
-            <el-input v-model="searchObj.deviceTypeName" />
+            <el-input v-model="searchObj.deviceTypeName"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="4">
@@ -27,9 +27,13 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="维修时间：" prop="statrBeginTime">
-            <el-date-picker v-model="searchObj.statrBeginTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
-            <span>-</span>
-            <el-date-picker v-model="searchObj.statrEndTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
+            <date-group :dateGroup="{text:'',startDate:searchObj.statrBeginTime,endDate:searchObj.statrEndTime}">
+              <el-date-picker name="start" v-model="searchObj.statrBeginTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
+                @change="handleStartTime"></el-date-picker>
+              <span>-</span>
+              <el-date-picker name="end" v-model="searchObj.statrEndTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
+                @change="handleEndTime"></el-date-picker>
+            </date-group>
           </el-form-item>
         </el-col>
         <el-col :span="2">

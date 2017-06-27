@@ -39,18 +39,24 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="8" :offset="2">
-          <el-form-item label="维修开始时间：" prop="startTime" required>
-            <el-date-picker v-model="formValidate.startTime" :editable="false" type="datetime" placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8" :offset="2">
-          <el-form-item label="维修结束时间：" prop="endTime">
-            <el-date-picker v-model="formValidate.endTime" :editable="false" type="datetime" placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
+        <date-group :dateGroup="{text:'',startDate:formValidate.startTime,endDate:formValidate.endTime}">
+
+          <el-col :span="8" :offset="2" name="start">
+            <el-form-item label="维修开始时间：" prop="startTime" required>
+              <el-date-picker v-model="formValidate.startTime" :editable="false" type="datetime" placeholder="选择日期" :picker-options="pickerOptions0"
+                @change="handleStartTime">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8" :offset="2" name="end">
+            <el-form-item label="维修结束时间：" prop="endTime">
+              <el-date-picker v-model="formValidate.endTime" :editable="false" type="datetime" placeholder="选择日期" :picker-options="pickerOptions1"
+                @change="handleEndTime">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+
+        </date-group>
 
       </el-row>
     </el-form>

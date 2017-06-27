@@ -465,7 +465,7 @@
         let hasRoomId = moreRules.stationHasRoom(this.roomList);
         if (hasRoomId.index > -1) {
           let stationName = this.roomData[hasRoomId.index].stationName; // 考站名称
-          let hasMore = hasRoomId.cIndex > 0 ? '平行站的第' + (hasRoomId.cIndex + 1) + '个房间' : '';
+          let hasMore = hasRoomId.cIndex > 0 ? '平行站的第' + (hasRoomId.cIndex + 1) + '个考站' : '';
           this.errorMess(`“${stationName + hasMore}”没有选择房间！`);
           return false;
         }
@@ -784,6 +784,17 @@
       });
       this.rules = this.addType === 'FREE' ? examineIntervalFREE : examineIntervalSTANDARD;
       this.unSelectUser = this.$store.getters['examineInterval/room/unSelectUser'];
+
+      // 获取专业列表
+      // this.ajax({
+      //   ajaxSuccess: (res) => {
+      //     this.$store.commit('examineInterval/room/initSpecialtyList', res.data || []);
+      //   },
+      //   ajaxParams: {
+      //     url: api.specialtyList.path,
+      //     method: api.specialtyList.method,
+      //   }
+      // });
     },
     mounted() {
       //页面dom稳定后调用

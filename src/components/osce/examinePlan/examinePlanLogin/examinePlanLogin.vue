@@ -11,13 +11,13 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="学生姓名" prop="userName">
-                <el-input v-model="loginValidate.userName"></el-input>
+                <el-input v-model="loginValidate.userName" :maxlength="10"></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="12">
               <el-form-item label="身份证号" prop="idCard">
-                <el-input v-model="loginValidate.idCard"></el-input>
+                <el-input v-model="loginValidate.idCard" :maxlength="18"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24" style="text-align: center">
@@ -57,7 +57,7 @@
         <div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox" style="height:auto;">
           <el-form :model="formValidate" ref="formValidate" :inline="true">
             <el-form-item label="考生姓名" prop="userName">
-              <el-input v-model="formValidate.userName" :maxlength="20"></el-input>
+              <el-input v-model="formValidate.userName" :maxlength="10"></el-input>
             </el-form-item>
             <el-form-item label="考号" prop="userNum">
               <el-input v-model="formValidate.userNum" :maxlength="30"></el-input>
@@ -75,9 +75,9 @@
             </el-table-column>-->
           <el-table-column type="index" label="序号" width="80">
           </el-table-column>
-          <el-table-column prop="userNum" label="考号">
+          <el-table-column prop="userNum" label="考号" width="180">
           </el-table-column>
-          <el-table-column prop="isSign" label="是否签到">
+          <el-table-column prop="isSign" label="是否签到" width="100">
             <template scope="scope">
               {{(scope.row.isSign || '0') | typeText}}
             </template>

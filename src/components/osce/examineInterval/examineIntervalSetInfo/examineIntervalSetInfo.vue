@@ -66,7 +66,7 @@
 
         // SP考站重新计算时间
         let stationType = info.stationType;
-        if (stationType == 'SP') {
+        if (stationType === 'SP') {
           info.timeCount = 0; // 重置时间
           info.stationContentList.map(item => {
             info.timeCount += item.timeCount;

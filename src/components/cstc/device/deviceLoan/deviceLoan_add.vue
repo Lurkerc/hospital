@@ -36,18 +36,22 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="8" :offset="2">
-          <el-form-item label="借出日期：" prop="borrowTime" required>
-            <el-date-picker v-model="formValidate.borrowTime" :editable="false" type="datetime" placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8" :offset="2">
-          <el-form-item label="归还日期：" prop="returnTime">
-            <el-date-picker v-model="formValidate.returnTime" :editable="false" type="datetime" placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
+        <date-group :dateGroup="{text:'',startDate:formValidate.borrowTime,endDate:formValidate.returnTime}">
+          <el-col :span="8" :offset="2" name="start">
+            <el-form-item label="借出日期：" prop="borrowTime" required>
+              <el-date-picker v-model="formValidate.borrowTime" :editable="false" type="datetime" placeholder="选择日期" :picker-options="pickerOptions0"
+                @change="handleStartTime">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8" :offset="2" name="end">
+            <el-form-item label="归还日期：" prop="returnTime">
+              <el-date-picker v-model="formValidate.returnTime" :editable="false" type="datetime" placeholder="选择日期" :picker-options="pickerOptions1"
+                @change="handleEndTime">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </date-group>
 
         <el-col :span="18" :offset="2">
           <el-form-item label="备注：" prop="remark">

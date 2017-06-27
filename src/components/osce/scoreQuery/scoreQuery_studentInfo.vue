@@ -21,7 +21,7 @@
       <el-table align="center" :height="dynamicHt" :context="self" :data="scheduleData.detailsList" :summary-method="getSummaries"
         show-summary tooltip-effect="dark" class="tableShowMoreInfo" style="width: 100%;">
         <el-table-column label="项目" prop="classify" show-overflow-tooltip></el-table-column>
-        <el-table-column label="评分标准及要求" prop="content" show-overflow-tooltip></el-table-column>
+        <el-table-column label="评分标准及要求" prop="content" align="left" show-overflow-tooltip></el-table-column>
         <el-table-column label="标准分" width="120" prop="score" show-overflow-tooltip></el-table-column>
         <el-table-column label="得分" prop="mark" show-overflow-tooltip>
           <template scope="scope">

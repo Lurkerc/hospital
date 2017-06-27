@@ -28,7 +28,7 @@
                   </el-option>
                 </el-select>
               </template>
-              <el-input v-model="info.timeCount" :maxlength="3" v-else></el-input>
+              <el-input v-model.number="info.timeCount" :maxlength="3" v-else></el-input>
             </el-form-item>
           </el-col>
 
@@ -59,7 +59,7 @@
 
         <el-col :span="8" :offset="2">
           <el-form-item label="专业：" prop="randomType">
-            <el-select v-model="room.specialty" placeholder="请选择">
+            <el-select v-model="room.specialty" filterable placeholder="请选择">
               <el-option label="全部" :value="0"></el-option>
               <template v-if="specialtyList.length">
                 <el-option v-for="item in specialtyList" :key="item" :label="item" :value="item"></el-option>

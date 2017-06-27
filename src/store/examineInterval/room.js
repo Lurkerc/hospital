@@ -162,6 +162,7 @@ const mutations = {
       roomId: '',
       roomNum: '',
       roomName: '',
+      specialty: 0, // 专业
     });
     station.teacher.push([ // 该考站对应的监考老师集
       // { // 监考老师信息

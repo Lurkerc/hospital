@@ -231,6 +231,20 @@
         // 初始化临时状态
         this.$store.commit('examineInterval/temp/initData');
         this.updateScripts();
+
+        // 获取专业列表
+        this.ajax({
+          ajaxSuccess: (res) => {
+            this.$store.commit('examineInterval/room/initSpecialtyList', res.data || []);
+          },
+          ajaxParams: {
+            url: api.specialtyList.path,
+            method: api.specialtyList.method,
+            params: {
+              id: this.id
+            }
+          },
+        });
       },
       /************************** ajax回调 *********************************/
       // 保存成功

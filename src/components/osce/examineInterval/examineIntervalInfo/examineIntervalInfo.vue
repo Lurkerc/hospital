@@ -48,7 +48,11 @@
             {{ scope.row.spScoreTableName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column label="考核时间" prop="timeCount" show-overflow-tooltip></el-table-column>
+        <el-table-column label="考核时间" prop="timeCount" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.timeCount * basicsTime }}
+          </template>
+        </el-table-column>
       </template>
     </el-table>
     <slot name="footer"></slot>

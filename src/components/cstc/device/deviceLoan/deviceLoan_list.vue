@@ -12,7 +12,7 @@
       <el-form :inline="true" :model="searchObj" ref="searchObj" label-width="86px" class="el-form-item-search">
         <el-col :span="4">
           <el-form-item label="设备名称：" prop="deviceTypeName">
-            <el-input v-model="searchObj.deviceTypeName" />
+            <el-input v-model="searchObj.deviceTypeName"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="4">
@@ -25,11 +25,16 @@
             <el-input v-model="searchObj.borrower"></el-input>
           </el-form-item>
         </el-col>
+
         <el-col :span="8">
           <el-form-item label="借用时间：" prop="borrowStartTime">
-            <el-date-picker v-model="searchObj.borrowStartTime" :editable="false" type="date" :picker-options="startPickerOptions" placeholder="选择日期"></el-date-picker>
-            <span>-</span>
-            <el-date-picker v-model="searchObj.borrowEndTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
+            <date-group :dateGroup="{text:'',startDate:searchObj.borrowStartTime,endDate:searchObj.borrowEndTime}">
+              <el-date-picker name="start" v-model="searchObj.borrowStartTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
+                @change="handleStartTime"></el-date-picker>
+              <span>-</span>
+              <el-date-picker name="end" v-model="searchObj.borrowEndTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
+                @change="handleEndTime"></el-date-picker>
+            </date-group>
           </el-form-item>
         </el-col>
         <el-col :span="2">
@@ -140,7 +145,7 @@
         startPickerOptions: {
           disabledDate(time) {
             // console.log(this)
-            return time.getTime() < Date.now() - 8.64e7;
+            // return time.getTime();
           }
         },
 

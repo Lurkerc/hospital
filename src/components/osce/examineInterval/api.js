@@ -48,6 +48,11 @@ const api = {
     path: thisFile + '/user/allId/', // {id}
     method: 'get'
   },
+  /* 获取专业列表 */
+  specialtyList: {
+    path: thisFile + '/specialtyList',
+    method: 'get'
+  },
   /* 删除 */
   delete: thisFile + '/remove', // 删除一条或多条场次记录（删除场次信息时调用）
   userDelete: thisFile + '/user/remove', // 删除一条或多条参考人员（删除参考人员时调用）

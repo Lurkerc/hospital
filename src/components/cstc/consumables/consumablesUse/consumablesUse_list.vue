@@ -9,15 +9,19 @@
     <!-- 数据搜索 -->
     <el-form :inline="true" :model="searchObj" ref="searchObj" label-width="86px" class="el-form-item-search" style="margin-top:10px">
       <el-form-item label="耗材名称：" prop="consumablesName">
-        <el-input v-model="searchObj.consumablesName" />
+        <el-input v-model="searchObj.consumablesName"></el-input>
       </el-form-item>
       <el-form-item label="使用人：" prop="borrower">
         <el-input v-model="searchObj.borrower"></el-input>
       </el-form-item>
       <el-form-item label="使用时间：">
-        <el-date-picker v-model="searchObj.borrowerStartTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
-        <span>-</span>
-        <el-date-picker v-model="searchObj.borrowerEndTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
+        <date-group :dateGroup="{text:'',startDate:searchObj.borrowerStartTime,endDate:searchObj.borrowerEndTime}">
+          <el-date-picker name="start" v-model="searchObj.borrowerStartTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
+            @change="handleStartTime"></el-date-picker>
+          <span>-</span>
+          <el-date-picker name="end" v-model="searchObj.borrowerEndTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
+            @change="handleEndTime"></el-date-picker>
+        </date-group>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="search">搜索</el-button>

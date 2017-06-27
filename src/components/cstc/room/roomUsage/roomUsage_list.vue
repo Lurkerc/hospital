@@ -9,7 +9,7 @@
     <!-- 数据搜索 -->
     <el-form :inline="true" :model="searchObj" ref="searchForm" class="el-form-item-search">
       <el-form-item label="房间号：">
-        <el-input v-model="searchObj.roomNum" :maxlength="8" />
+        <el-input v-model="searchObj.roomNum" :maxlength="8"></el-input>
       </el-form-item>
       <el-form-item label="使用类型：">
         <el-select v-model="searchObj.employType" placeholder="请选择">
@@ -17,9 +17,13 @@
         </el-select>
       </el-form-item>
       <el-form-item label="使用时间：">
-        <el-date-picker v-model="searchObj.startBeginTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
-        <span>-</span>
-        <el-date-picker v-model="searchObj.startEndTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
+        <date-group :dateGroup="{text:'',startDate:searchObj.startBeginTime,endDate:searchObj.startEndTime}">
+          <el-date-picker name="start" v-model="searchObj.startBeginTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
+            @change="handleStartTime"></el-date-picker>
+          <span>-</span>
+          <el-date-picker name="end" v-model="searchObj.startEndTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
+            @change="handleEndTime"></el-date-picker>
+        </date-group>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="search">搜索</el-button>

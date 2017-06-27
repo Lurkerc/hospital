@@ -10,15 +10,19 @@
     <!-- 数据搜索 -->
     <el-form :inline="true" :model="searchObj" ref="searchObj" label-width="86px" class="el-form-item-search" style="margin-top:10px">
       <el-form-item label="设备名称：" prop="deviceTypeName">
-        <el-input v-model="searchObj.deviceTypeName" />
+        <el-input v-model="searchObj.deviceTypeName"></el-input>
       </el-form-item>
       <el-form-item label="设备编号：" prop="deviceIdentifier">
         <el-input v-model="searchObj.deviceIdentifier"></el-input>
       </el-form-item>
       <el-form-item label="报废时间：" prop="scrapStartTime">
-        <el-date-picker v-model="searchObj.scrapStartTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
-        <span>-</span>
-        <el-date-picker v-model="searchObj.scrapEndTime" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
+        <date-group :dateGroup="{text:'',startDate:searchObj.scrapStartTime,endDate:searchObj.scrapEndTime}">
+          <el-date-picker name="start" v-model="searchObj.scrapStartTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
+            @change="handleStartTime"></el-date-picker>
+          <span>-</span>
+          <el-date-picker name="end" v-model="searchObj.scrapEndTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
+            @change="handleEndTime"></el-date-picker>
+        </date-group>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="search">搜索</el-button>
