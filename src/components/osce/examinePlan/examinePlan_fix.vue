@@ -148,6 +148,10 @@
       openModel(options) {
         this[options + 'Modal'] = true;
       },
+      // 获取头像地址
+      getPhotoPath(path) {
+        return path && this.$store.getters.getEnvPath.http + path || ''
+      },
     },
     components: {
       fixRoom,

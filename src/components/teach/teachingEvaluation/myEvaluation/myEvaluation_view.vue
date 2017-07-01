@@ -32,7 +32,7 @@
     <!--选择人员-->
     <!--新建教学活动-->
     <Modal
-      width="800"
+      width="1000"
       v-model="addModal"
       title="新建教学活动"
       class-name="vertical-center-modal"

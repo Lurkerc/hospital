@@ -23,15 +23,16 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 8082,
+    port: 8084,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        // target: 'http://192.168.1.186:3000', // 本地API API目标服务器地址 /api/* ---> http://192.168.1.116:8000/api/*
+        target: 'http://192.168.1.116:3000', // 测试API 8084 API目标服务器地址 /api/* ---> http://192.168.1.116:8000/api/*
         // target: 'http://192.168.1.166:9000', // 邢杰 8081
-        target: 'http://192.168.1.14:9000', // 王静 8082
+        // target: 'http://192.168.1.14:9000', // 王静 8082
+        //target: 'http://192.168.1.169:9000', // 关燊 8083
         changeOrigin: true
       },
     },

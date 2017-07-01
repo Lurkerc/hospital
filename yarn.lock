@@ -150,13 +150,9 @@ async-foreach@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/async-foreach/-/async-foreach-0.1.3.tgz#36121f845c0578172de419a97dbeb1d16ec34542"
 
-async-validator@1.6.9:
+async-validator@1.6.9, async-validator@^1.6.7:
   version "1.6.9"
   resolved "https://registry.yarnpkg.com/async-validator/-/async-validator-1.6.9.tgz#a8309daa8b83421cdbd4628e026d6abb25192d34"
-
-async-validator@^1.6.7:
-  version "1.6.8"
-  resolved "https://registry.yarnpkg.com/async-validator/-/async-validator-1.6.8.tgz#fbaaa9002b41066fdf3ba21d8a4ca8b1179ad36b"
 
 async@^2.1.2, async@^2.1.5:
   version "2.2.0"
@@ -4439,9 +4435,9 @@ voc@:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/voc/-/voc-0.5.0.tgz#be6ca7c76e4a57d930cc80f6b31fbd80ca86045c"
 
-vue-ambuf-fullcalendar@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/vue-ambuf-fullcalendar/-/vue-ambuf-fullcalendar-1.0.2.tgz#51dad79a9e541f2bc345a005e184ac331e2e5158"
+vue-ambuf-fullcalendar@^1.0.21:
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/vue-ambuf-fullcalendar/-/vue-ambuf-fullcalendar-1.0.21.tgz#5715ea273f6b50ee239b942c59809c030cc0a8c9"
   dependencies:
     es6-promise "^4.0.5"
     vue "^2.1.8"
@@ -4509,6 +4505,10 @@ vue-template-compiler@^2.2.4:
 vue-template-es2015-compiler@^1.2.2:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.5.1.tgz#0c36cc57aa3a9ec13e846342cb14a72fcac8bd93"
+
+vue-ueditor@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/vue-ueditor/-/vue-ueditor-0.1.3.tgz#dcccb6ea83a1570b663a4a6a03ab2ee2acc4c471"
 
 vue@^2.1.8, vue@^2.2.2:
   version "2.2.6"

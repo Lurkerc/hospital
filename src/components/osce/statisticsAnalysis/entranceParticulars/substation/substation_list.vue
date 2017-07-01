@@ -19,7 +19,7 @@
             <el-table-column align="center" label="编号" type="index" width="100">
             </el-table-column>
 
-            <el-table-column align="center" prop="content" label="评分项目">
+            <el-table-column align="center" prop="content" label="评分项目" show-overflow-tooltip>
             </el-table-column>
             <el-table-column prop="score" label="分值" align="center" width="100">
             </el-table-column>

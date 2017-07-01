@@ -22,7 +22,9 @@
             </el-col>
             <el-col :span="24" style="text-align: center">
               <div style="height: 50px"></div>
+              <el-button type="info" @click="isResult">读卡</el-button>
               <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+              <el-button type="warning" @click="reset">重置</el-button>
             </el-col>
           </el-row>
         </el-col>
@@ -75,23 +77,25 @@
             </el-table-column>-->
           <el-table-column type="index" label="序号" width="80">
           </el-table-column>
-          <el-table-column prop="userNum" label="考号" width="180">
-          </el-table-column>
-          <el-table-column prop="isSign" label="是否签到" width="100">
-            <template scope="scope">
-              {{(scope.row.isSign || '0') | typeText}}
-            </template>
-          </el-table-column>
-          <el-table-column prop="userName" label="姓名">
+
+
+          <el-table-column prop="userName"  label="姓名">
           </el-table-column>
           <el-table-column prop="userSex" label="性别" width="80">
             <template scope="scope">
               {{ scope.row.userSex | typeText}}
             </template>
           </el-table-column>
-          <el-table-column prop="deptName" label="所在部门">
+          <el-table-column prop="idCard" label="身份证号" width="200">
+          </el-table-column>
+          <el-table-column prop="userNum" label="准考证号" width="200">
           </el-table-column>
 
+          <el-table-column prop="isSign" label="是否签到" width="100">
+            <template scope="scope">
+              {{(scope.row.isSign || '0') | typeText}}
+            </template>
+          </el-table-column>
         </el-table>
         </br>
         <div style="float: right;">
@@ -176,7 +180,17 @@
       //初始化
       this.init();
     },
+    beforeDestroy(){
+      clearInterval(this.timeOut);
+    },
     methods: {
+      reset(){
+        clearInterval(this.timeOut);
+        this.loginValidate.userName = '';
+        this.loginValidate.idCard = '';
+        this.loginValidate.pic = '';
+//        this.timeOut = setInterval(this.isResult, 100);
+      },
       /*
        * 列表查询方法
        * @param string 查询from的id
@@ -235,13 +249,14 @@
       },
 
       loginSuccess(res) {
+        clearInterval(this.timeOut);
         this.successMess('签到成功');
         this.setTableData();
         let that = this;
         this.loginValidate.userName = '';
         this.loginValidate.idCard = '';
         this.loginValidate.pic = '';
-        this.timeOut = setInterval(that.isResult, 100);
+//        this.timeOut = setInterval(that.isResult, 100);
       },
       listenSubEvent(isLoadingFun) {
         let isSubmit = this.submitForm("loginValidate");
@@ -332,14 +347,10 @@
           }
         }
         let that = this;
-
-        this.timeOut = setInterval(this.isResult, 100)
+        clearInterval(this.timeOut);
+//        this.timeOut = setInterval(this.isResult, 100)
       })
     },
-
-    beforeDestroy() {
-      clearInterval(this.timeOut);
-    }
 
   }
 

@@ -71,6 +71,7 @@ dl,dd{margin:0;}
 
 /*elment ui reset*/
 .el-form-item-search .el-form-item{margin-bottom: 10px;}
+.el-tooltip__popper {max-width: 50%;}
 
 /* 树异步加载动画 */
 .el-tree-node__loading-icon.el-icon-loading{position: relative;left: -30px;}

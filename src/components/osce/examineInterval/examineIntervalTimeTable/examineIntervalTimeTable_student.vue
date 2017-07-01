@@ -90,8 +90,12 @@
             width: width || 150
           })
           for (let k = 0; k < data.length; k++) {
+            // 房间号对应专业
+            let title = data[k][keys[i]];
+            let specialty = data[k].specialty ? `（${data[k].specialty}）` : '';
+            title = keys[i] === 'roomNum' ? data[k][keys[i]] + specialty : data[k][keys[i]];
             headerList[i].push({
-              title: data[k][keys[i]],
+              title,
               key: data[k][key],
               width: width || 50
             })
@@ -135,12 +139,13 @@
             arrangementList = data[i][tableBodyKey] == "" ? [] : data[i][tableBodyKey]; //提取data里的每一个arrangementList，最终生成一个对象，房间号+'Row'为合并的数值
           }
           for (let k = 0; k < arrangementList.length; k++) {
+            let specialty = arrangementList[k]['specialty'] ? `（${arrangementList[k]['specialty']}）` : '';
             delete(tempObj[arrangementList[k][key]]);
             if (list[i][arrangementList[k][key]]) {
-              list[i][arrangementList[k][key]] += ' , ' + arrangementList[k][cellKey]
+              list[i][arrangementList[k][key]] += ' , ' + arrangementList[k][cellKey] + specialty //为单元格复制
             } else {
               if (typeof prevTrRowSpan[arrangementList[k][key]] == "undefined") {
-                list[i][arrangementList[k][key]] = arrangementList[k][cellKey];
+                list[i][arrangementList[k][key]] = arrangementList[k][cellKey] + specialty; //为单元格复制
                 list[i][arrangementList[k][key] + 'Row'] = arrangementList[k][rowSpanKey];
                 let rowSpanNum = parseInt(arrangementList[k][rowSpanKey]);
                 if (arrangementList[k][rowSpanKey] > 1) {

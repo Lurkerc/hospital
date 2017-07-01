@@ -85,7 +85,7 @@ const mutations = {
    */
   initUnSelectRoom: state => state.unSelectRoom = [],
   // 初始化不可选择人员
-  initUnSelectUser: state => state.unSelectUser = {
+  initUnSelectUser: (state, unSelObj) => state.unSelectUser = unSelObj || {
     manager: [], // 考场管理员
     sp: [], // SP 人员
     user: [], // 参考人员 

@@ -5,13 +5,13 @@
     <div class="teacherInfo">
       <el-row class="border">
         <el-col :span="6" class="teacherInfoItem" v-for="(item,index) in teacherinfo" :key="index" @click.native="selectTeacher(item)">
-          <img :src="item.teacherUserPhotoPath || 'http://iph.href.lu/60x60'" class="min-img" />
+          <img :src="getPhotoPath(item.teacherUserPhotoPath) || 'http://iph.href.lu/60x60'" class="min-img">
           <p> {{item.userName}}</p>
         </el-col>
       </el-row>
       <!-- 教师头像 -->
       <div class="phontoContent">
-        <img :src="selectTeaData.teacherUserPhotoPath || 'http://iph.href.lu/120x180'" alt="">
+        <img :src="getPhotoPath(selectTeaData.teacherUserPhotoPath) || 'http://iph.href.lu/120x180'" alt="">
       </div>
       <!-- 其他内容 -->
       <p class="otherInfo">考官姓名：{{ selectTeaData.userName || '-' }}</p>
@@ -34,7 +34,7 @@
     <div class="studentInfo">
       <p class="studentInfoNum">考生</p>
       <div class="studentPhoto">
-        <img :src="studentInfo.userPhotoPath || 'http://iph.href.lu/120x180'" alt="">
+        <img :src="getPhotoPath(studentInfo.userPhotoPath) || 'http://iph.href.lu/120x180'" alt="">
       </div>
       <!-- 基本信息 -->
       <p class="otherInfo">姓名：{{ studentInfo.userName }}</p>
@@ -122,6 +122,10 @@
           arrangementId: this.arrangementId
         });
         this.ajax(this.scheduleList);
+      },
+      // 获取头像地址
+      getPhotoPath(path) {
+        return path && this.$store.getters.getEnvPath.http + path || ''
       },
     },
     created() {

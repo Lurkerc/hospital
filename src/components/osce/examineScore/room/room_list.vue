@@ -1,12 +1,14 @@
 <template>
   <!-- 列表数据 -->
   <div class="msiListContent">
-    <div class="msiListContentItem" v-for="item in list" @click="show(item.nowIndex)" v-if="!hasList()">
-      <img :src="item.userPhotoPath">
-      <p>{{ item.userName }}</p>
-      <p>{{ getTimeText(item) }}</p>
-      <p>得分：{{ item.mark || 0}}</p>
-    </div>
+    <template v-if="!hasList()">
+      <div class="msiListContentItem" v-for="(item,index) in list" @click="show(item.nowIndex)" :key="index">
+        <img :src="getPhotoPath(item.userPhotoPath)">
+        <p>{{ item.userName }}</p>
+        <p>{{ getTimeText(item) }}</p>
+        <p>得分：{{ item.mark || 0}}</p>
+      </div>
+    </template>
     <p v-else>暂无数据</p>
   </div>
 </template>
@@ -26,7 +28,11 @@
       // 时间转换
       getTimeText(row) {
         return this.conductDate(row.startTime, 'HH:mm') + ' - ' + this.conductDate(row.endTime, 'HH:mm')
-      }
+      },
+      // 获取头像地址
+      getPhotoPath(path) {
+        return path && this.$store.getters.getEnvPath.http + path || ''
+      },
     }
   }
 

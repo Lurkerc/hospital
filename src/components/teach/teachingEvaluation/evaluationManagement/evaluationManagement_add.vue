@@ -114,7 +114,7 @@
       </fieldset>
 
       </br>
-      <fieldset class="layui-elem-field" style="width: 100%">
+      <fieldset class="layui-elem-field selfBody" style="width: 100%">
         <legend>评分表内容设置</legend>
         <div style="width: 900px;overflow: auto;margin: 0 auto" class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition">
 
@@ -141,7 +141,7 @@
 
             <tbody  class="add-scope">
               <tr v-for="(item,index) in body">
-                  <td v-if="isShow(item,head['key'])" :rowspan="item[head['key']+'Row']" v-for="(head,i) in header" :key="i">
+                  <td v-if="isShow(item,head['key'])" @blur="ceelClick(head['key'])" :rowspan="item[head['key']+'Row']" v-for="(head,i) in header" :key="i">
 
                     <div v-if="head['key']== 'operateSub'" style="text-align: center">
                       <el-button size="mini" type="primary" icon="plus" @click="operateSubAdd(item,head['key'],index)"></el-button>
@@ -151,11 +151,20 @@
                       <el-button  type="primary" icon="plus" @click="operateParentAdd(item,head['key'],index)"></el-button>
                       <el-button   type="warning" icon="minus" @click="operateParentRemove(item,head['key'],index)"></el-button>
                     </div>
-                    <el-form-item  v-else  prop="title" label-width="0">
-                      <el-input   v-model="item[head.key]" />
+                    <el-form-item v-else  prop="title" label-width="0">
+                      <el-input  @blur = "ceelClick(head['key'])"  v-model="item[head.key]" />
                     </el-form-item>
                   </td>
               </tr>
+            <tr>
+              <td style="text-align: center;color: #000;font-size: 18px" :colspan="scoreCol()">
+                <span>总分</span>
+              </td >
+
+              <td style="text-align: center;color: #000;font-size: 18px" :colspan="formValidate.hasScoreLevel=='Y'?select.length:1">
+                {{formValidate.score}}
+              </td>
+            </tr>
             </tbody>
           </table>
           </div>
@@ -190,7 +199,7 @@
           name:"",   //类型名称
           "typeId":this.operailityData.id,               //所属类型ID
           "remark":"住院医用的",                           //评分表用途、描述
-          "score":"100",                                  //评分表总分 int
+          "score":"0",                                  //评分表总分 int
           "hasGroup":"Y",                                 //是否包含分类 取值范围：是（Y），否（N） 。
           "hasGroupScore":"Y",                            //是否按照分类评分 取值范围：是（Y），否（N）。
           "hasRemark":"Y",                                //是否有备注 取值范围：是（Y），否（N）。
@@ -285,6 +294,7 @@
 //        this.init();
     },
     methods:{
+        /**---------------------请求 ---------------------------*/
       /*  确定
        * 点击提交按钮 监听是否提交数据
        * @param isLoadingFun boolean  form表单验证是否通过
@@ -393,6 +403,7 @@
         return tempArr;
       },
 
+      //处理分值类型的
       conductScoreType(data){
           let score = []
           let _scoreLevel = []
@@ -495,6 +506,39 @@
       addFileEvent(ids){
         this.formValidate.fileIds = ids;
       },
+      /**---------------------操作 ---------------------------*/
+      //总分占多少单元格
+      scoreCol(){
+          let scoreCol = this.formValidate.hasScoreLevel=='Y'?this.select.length:1;
+          if(this.formValidate.hasGroup=='Y'){
+            return this.header.length-(2+scoreCol)
+          }else {
+            return this.header.length-(1+scoreCol)
+
+          }
+      },
+      ceelClick(key,val){
+          if(val)this.formValidate.hasGroupScore =val;
+          let bodyData =  Util._.defaultsDeep([],this.body);
+          let maxScore = 0 ;
+        if(key=='score' || key.includes('select') ){
+          //计算总分数
+          for(let i=0;i<bodyData.length;i++){
+              if(this.formValidate.hasGroupScore=='Y'){
+                if(bodyData[i]._id){
+                  let item = this.conductScoreType(bodyData[i])
+                  maxScore += + item.maxScore||0
+                }
+              }else {
+                let item = this.conductScoreType(bodyData[i])
+                maxScore += + item.maxScore||0
+              }
+
+          }
+          this.formValidate.score = maxScore
+        }
+
+      },
 
       //添加候选项
       addLevel(index){
@@ -543,6 +587,7 @@
           }else {
               this.showMess('无法移除')
           }
+        this.ceelClick('score')
       },
 
 
@@ -597,6 +642,8 @@
                 }
             }
           }
+          this.ceelClick('score',val)
+
         }else {
           for(let i=0;i<this.body.length;i++){
             if(this.body[i]._id){//存在id为父元素 评分项不合并单元格
@@ -606,6 +653,8 @@
               }
             }
           }
+          this.ceelClick('score',val)
+
         }
 
       },
@@ -635,7 +684,8 @@
 
       //评分方式
       scoreTypeChange(val){
-
+          this.formValidate.scoreType =val;
+        this.ceelClick('score')
         if(val=='INPUT'){
           this.formValidate.hasScoreLevel ='N';
           for(let i=0;i<this.header.length;i++){

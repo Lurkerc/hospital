@@ -35,9 +35,9 @@
               <el-button size="small" type="success" @click="entrance(scope.row)">进入</el-button>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="sceneName" label="考试名称">
+          <el-table-column align="center" prop="sceneName" label="考试名称" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="statrTime" label="考试时间">
+          <el-table-column prop="statrTime" label="考试时间" show-overflow-tooltip>
           </el-table-column>
           <el-table-column prop="stationNum" label="站数" align="center">
           </el-table-column>

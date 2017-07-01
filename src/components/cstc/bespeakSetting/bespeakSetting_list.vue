@@ -31,7 +31,7 @@
     methods: {
       // 获取内容部分高度
       getContentHeight() {
-        this.contenHeight = this.$refs.bespeakSetting.parentNode.offsetHeight;
+        this.contenHeight = this.$refs.bespeakSetting.parentNode.offsetHeight - 80;
       },
       // 视图切换
       show(view) {
@@ -57,7 +57,7 @@
 
 </script>
 
-<style>
+<style lang="scss">
   /* 预约设置 */
 
 </style>

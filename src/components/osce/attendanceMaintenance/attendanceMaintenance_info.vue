@@ -5,13 +5,13 @@
     <div class="teacherInfo leftCon">
       <el-row class="border" style="height:85px">
         <el-col :span="6" class="teacherInfoItem" v-for="(item,index) in teacherData" :key="index" @click.native="selectTeacher(item)">
-          <img :src="item.userPhotoPath || '//iph.href.lu/60x60'" />
+          <img :src="getPhotoPath(item.userPhotoPath) || '//iph.href.lu/60x60'" />
           <p> {{item.userName}}</p>
         </el-col>
       </el-row>
       <!-- 教师头像 -->
       <div class="phontoContent">
-        <img :src="stationData.userPhotoPath || '//iph.href.lu/120x180'" class="user-img" alt="" style="margin:0;">
+        <img :src="getPhotoPath(stationData.userPhotoPath) || '//iph.href.lu/120x180'" class="user-img" alt="" style="margin:0;">
       </div>
       <!-- 其他内容 -->
       <p class="otherInfo">考站名称：{{stationData.stationName}}</p>
@@ -313,6 +313,10 @@
        * */
       openModel(options) {
         this[options + 'Modal'] = true;
+      },
+      // 获取头像地址
+      getPhotoPath(path) {
+        return path && this.$store.getters.getEnvPath.http + path || ''
       },
     },
     created() {

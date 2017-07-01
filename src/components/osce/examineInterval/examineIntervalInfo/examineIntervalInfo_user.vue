@@ -222,21 +222,23 @@
       },
       //添加人员
       addUser() {
-        let allUser = {
-          paramsData: 'add',
-          ajaxSuccess: res => {
-            this.unSelect = res.data || [];
-            this.openModel('selectUser');
-          },
-          ajaxParams: {
-            url: this.api.allUserId.path + this.id,
-            method: this.api.allUserId.method,
-            data: {
-              id: this.id, // 场次id
-            }
-          }
-        };
-        this.ajax(allUser);
+        // let allUser = {
+        //   paramsData: 'add',
+        //   ajaxSuccess: res => {
+        //     this.unSelect = res.data || [];
+        //     this.openModel('selectUser');
+        //   },
+        //   ajaxParams: {
+        //     url: this.api.allUserId.path + this.id,
+        //     method: this.api.allUserId.method,
+        //     data: {
+        //       id: this.id, // 场次id
+        //     }
+        //   }
+        // };
+        // this.ajax(allUser);
+        this.getUnSelectUser();
+        this.openModel('selectUser');
       },
       /*
        * 获取选择人员的人员信息并赋值
@@ -270,12 +272,20 @@
             }
           }
         };
-
         this.ajax(addMessTitle);
       },
       //关闭选择人员弹窗
       closeSltUser() {
         this.cancel('selectUser')
+      },
+      // 获取禁选人员
+      getUnSelectUser() {
+        let temp = this.$store.state.examineInterval.room.unSelectUser;
+        let unSelArr = [];
+        Util._.map(temp, (arr, key) => {
+          unSelArr = unSelArr.concat(arr)
+        })
+        this.unSelect = unSelArr;
       },
       /************************** 模态框逻辑 *************************************/
       // 查看

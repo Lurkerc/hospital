@@ -6,72 +6,147 @@ import Index from '../components/Index'
 
 //引入各个业务模块的二级路由
 
-//import jxhd from './jcjwgl/jxhdRouter'
-/*基础教务管理*/
-  import rcgl from './subRouter/dailyManagement'
+/**
+ * 日常管理
+ * */
+  //评优管理
+  import pygl from './subRouter/dailyManagement'
+  //津贴管理
+  import jtgl from './subRouter/benefitsManagement'
+  //志愿者活动
+  import zyzhd from './subRouter/voluntaryAction'
+  //考勤管理
+  import kqgl from './subRouter/attendanceManagement'
+  //职业暴露
+  import zybl from './subRouter/occupationalExposure'
+  //奖惩记录
+  import jcjl from './subRouter/practiceRecords'
+
+/**
+ *
+ * 在线学习
+ *
+ * */
+
+/**
+ *
+ * 教学评价
+ *
+ * */
+  //我的评价
+  import evaluations from './subRouter/evaluations'
+
+  //评价设置
+  import evaluationSetting from './subRouter/evaluationSetting'
+
+  //统计分析
+  import jxpjStatistic from './subRouter/jxpjStatistic'
+
+/**
+ *
+ * 宿舍管理
+ *
+ * */
+  //基础设置
+  import dormitory from './subRouter/dormitoryManagement'
+  //住宿管理
+  import zsgl from './subRouter/stayManagement'
+  //查询统计
+  import cxtj from './subRouter/dorQueryStatistic'
+
+/**
+ *
+ * 理论考核
+ *
+ * */
+
+/**
+ * 基础教务
+ * */
   //教学活动
   import jxhd from './subRouter/teachingActivities'
   //师资库
-import szk from './subRouter/teacherResources'
-//档案管理
-import dagl from './subRouter/archivesManagement'
-//咨询管理
-import consultive from './subRouter/consultiveManagement'
-//宿舍管理
-import dormitory from './subRouter/dormitoryManagement'
-/**
- * 教学评价
- * */
-//我的评价
-import evaluations from './subRouter/evaluations'
-
-//评价设置
-import evaluationSetting from './subRouter/evaluationSetting'
-
-//统计分析
-import jxpjStatistic from './subRouter/jxpjStatistic'
+  import szk from './subRouter/teacherResources'
+  //档案管理
+  import dagl from './subRouter/archivesManagement'
+  //咨询管理
+  import consultive from './subRouter/consultiveManagement'
 
 /**
- * 技能中心管理
+ *
+ * 技能中心
+ *
  * */
   //中心管理
   import cstc from './subRouter/cstc'
   //技能考核
   import osce from './subRouter/osce'
-/**/
 
-/*实习生*/
+/**
+ *
+ * 轮转管理
+ *
+ * */
+
+/**
+ *
+ * 实习生
+ *
+ * */
   //本科教育
   import undergraduate from './subRouter/undergraduate'
-
   //实习生基础数据
   import internBasis from './subRouter/internBasisData'
-
   //实习生招生
   import recruitStudent from './subRouter/recruitStudent'
-
   //实习生轮转
   import internRotate from './subRouter/internRotate'
-
   //轮转管理
   import rotateManagement from './subRouter/rotateManagement'
-
   //实习手册
   import internHandbook from './subRouter/internHandbook'
 
-/**/
+/**
+ *
+ * 研究生
+ *
+ * */
 
-/*系统管理*/
+/**
+ *
+ * 住院医
+ *
+ * */
 
+/**
+ *
+ * 进修管理
+ *
+ * */
+
+/**
+ *
+ * 经费管理
+ *
+ * */
+
+/**
+ *
+ * 系统管理
+ *
+ * */
   //系统管理
   import sysManage from './subRouter/sysManage'
   //系统设置
   import systemSettings from './subRouter/systemSettings'
 
-/*
-* 登录
-* */
-import Login from '../components/login'
+
+/**
+ *
+ * 登录
+ *
+ * */
+  import Login from '../components/login'
 /*
 * 404页面配置
 * */
@@ -902,15 +977,39 @@ const routes = [
     name: 'manage',
     component: Index,
     children:[
-      //基础教务管理
-      rcgl,jxhd,consultive,szk,dagl,dormitory,
+      //日常管理
+      pygl,jtgl,zyzhd,kqgl,zybl,jcjl,
+
+      //在线学习
 
       //教学评价
       evaluations,evaluationSetting,jxpjStatistic,
-      //技能中心管理
+
+      //宿舍管理
+      dormitory,zsgl,cxtj,
+
+      //理论考核
+
+
+      //基础教务
+      jxhd,consultive,szk,dagl,
+
+      //技能中心
       cstc,osce,
+
+      //轮转管理
+
       //实习生
       undergraduate,internBasis,recruitStudent,internRotate,rotateManagement,internHandbook,
+
+      //研究生
+
+      //住院医
+
+      //进修管理
+
+      //经费管理
+
       //系统设置
       sysManage,systemSettings,
     ]
@@ -934,27 +1033,5 @@ let router = new Router({
 
 
 export default router;
-
-export let menus = {}//{navs:navs,dataStructure:dataStructure};
-//
-// export let routingIntercept = function(store){
-//   //路由拦截配置
-//   router.beforeEach((to, from, next) => {
-//     if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
-//       if (store.state.token) {  // 通过vuex state获取当前的token是否存在
-//         next();
-//       }
-//       else {
-//         next({
-//           path: '/login',
-//           query: {redirect: to.path}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
-//         })
-//       }
-//     }
-//     else {
-//       next();
-//     }
-//   })
-// }
 
 

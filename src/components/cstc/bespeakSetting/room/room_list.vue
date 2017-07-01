@@ -129,15 +129,7 @@
           sortby: '', // 排序字段
           order: '', // 排序方式
         },
-        tableData: [{
-          "id": "1",
-          "roomNum": "101",
-          "roomName": "临床思维训练室一",
-          "address": "东楼1层",
-          "reserveRoomSetId": "1",
-          "isOpen": "NO",
-          "timeModel": "ALL"
-        }],
+        tableData: [],
         // 模态框提示
         contentHeader: {
           setId: {
@@ -214,7 +206,7 @@
       //设置表格及分页的位置
       setTableDynHeight(otherHeight = 0) {
         let tableView = this.$refs.tableView;
-        let paginationHt = 50 + 70 + otherHeight;
+        let paginationHt = 50 + otherHeight;
         this.dynamicHt = this.contenHeight - tableView.offsetTop - paginationHt;
       },
       /*

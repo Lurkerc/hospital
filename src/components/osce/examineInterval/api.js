@@ -53,6 +53,10 @@ const api = {
     path: thisFile + '/specialtyList',
     method: 'get'
   },
+  queryAllUserList: { // 获取所有参考人员（分角色）
+    path: thisFile + '/queryAllUserList',
+    method: 'get'
+  },
   /* 删除 */
   delete: thisFile + '/remove', // 删除一条或多条场次记录（删除场次信息时调用）
   userDelete: thisFile + '/user/remove', // 删除一条或多条参考人员（删除参考人员时调用）

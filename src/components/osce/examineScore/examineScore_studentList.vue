@@ -20,7 +20,7 @@
             <p class="teacherInfoText">教官：{{ stationTeacher.userName || '-'}}</p>
           </div>
           <div class="teacherInfoPic">
-            <img :src="stationTeacher.userPhotoPath || '//iph.href.lu/120x180'" alt="">
+            <img :src="getPhotoPath(stationTeacher.userPhotoPath) || '//iph.href.lu/120x180'" alt="">
           </div>
         </div>
         <div class="videBox" id="videoBox">
@@ -210,6 +210,10 @@
       openModel(options) {
         this[options + 'Modal'] = true;
       },
+      // 获取头像地址
+      getPhotoPath(path) {
+        return path && this.$store.getters.getEnvPath.http + path || ''
+      },
     },
     created() {
       this.teacherUserId = this.$store.getters.getUserInfo.id;
@@ -270,6 +274,12 @@
       position: absolute;
       top: 40px;
       right: 10px;
+      width: 120px;
+      height: 180px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
     .loginBtn {
       text-align: center;

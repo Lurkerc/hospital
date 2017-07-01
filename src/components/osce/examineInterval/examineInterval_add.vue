@@ -8,7 +8,7 @@
           <!-- 自由考核 -->
           <el-col :span="5">
             <el-form-item label="考核名称：" prop="sceneName" :required="false">
-              <el-input v-model="info.sceneName" :maxlength="20"></el-input>
+              <el-input v-model="info.sceneName" :maxlength="50"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6" :offset="1">
@@ -155,7 +155,7 @@
             <el-tooltip placement="right-start" :open-delay="1500" effect="light">
               <room-info slot="content" :basicsTime="info.basicsTime" :info="roomData[index]" :room="roomList[index].room[cIndex]" :teacher="roomList[index].teacher[cIndex]"
                 :key="index+'_'+cIndex" style="max-width:400px;"></room-info>
-              <room :option="{hasMore: cIndex > 0,type:'edit'}" :initData="{index: index,cIndex:cIndex,name:roomData[index].stationName,roomNum:item.room[cIndex].roomNum,roomType:roomData[index].stationType === 'SP' ? 'SP' : ''}"
+              <room :option="{hasMore: cIndex > 0,type:'edit'}" :initData="{index: index,cIndex:cIndex,name:roomData[index].stationName,roomNum:item.room[cIndex].roomNum,roomSpecialty:item.room[cIndex].specialty,roomType:roomData[index].stationType === 'SP' ? 'SP' : ''}"
                 :key="index+'_'+cIndex" @roomClick="roomClick" @iconAdd="addRoomChildren(index)" @iconRemove="removeRoomChildren(index,cIndex)"
                 style="width:80px;margin-left:40px;"></room>
             </el-tooltip>

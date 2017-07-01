@@ -13,6 +13,7 @@
     mapMutations
   } from 'vuex';
 
+  import api from './api';
   import indexInterval from './examineInterval_index'; // 默认列表视图
   import addInterval from './examineInterval_add'; // 新增考核
   import viewInterval from './examineInterval_view'; // 查看考核
@@ -40,6 +41,20 @@
         // 每次增加都初始化状态
         if (args.look !== 'index') {
           this.initState()
+        }
+        // 获取所有参考人员
+        if (args.look === 'view') {
+          this.ajax({
+            ajaxSuccess: res => {
+              this.$store.commit('examineInterval/room/initUnSelectUser', res.data)
+            },
+            ajaxParams: {
+              url: api.queryAllUserList.path,
+              params: {
+                sceneId: this.id,
+              }
+            }
+          })
         }
       },
       /************************** 基本逻辑 ******************************/

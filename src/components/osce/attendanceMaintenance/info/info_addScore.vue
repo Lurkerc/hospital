@@ -9,7 +9,7 @@
       <!-- 教师头像 -->
       <p class="teacher-header">考官</p>
       <div class="phontoContent">
-        <img :src="examUserData.teacher.teacherUserPhotoPath || '//iph.href.lu/120x180'" alt="" class="user-img">
+        <img :src="getPhotoPath(examUserData.teacher.teacherUserPhotoPath) || '//iph.href.lu/120x180'" alt="" class="user-img">
       </div>
       <!-- 其他内容 -->
       <p class="otherInfo "> &nbsp;&nbsp; 姓名 : {{examUserData.teacher.teacherUserName}}</p>
@@ -66,7 +66,7 @@
     <div class="studentInfo" style="top: 31px;">
       <p class="studentInfoNum">考生</p>
       <div class="studentPhoto">
-        <img :src="examUserData.examUser.userPhotoPath || '//iph.href.lu/120x180'" alt="" class="user-img">
+        <img :src="getPhotoPath(examUserData.examUser.userPhotoPath) || '//iph.href.lu/120x180'" alt="" class="user-img">
       </div>
       <p class="otherInfo ">姓名 : {{examUserData.examUser.userName}}</p>
       <p class="otherInfo">性别 : {{examUserData.examUser.userSex | typeText}}</p>
@@ -300,6 +300,11 @@
         } else if (row.mark < 0 || !row.mark) {
           row.mark = 0;
         }
+      },
+
+      // 获取头像地址
+      getPhotoPath(path) {
+        return path && this.$store.getters.getEnvPath.http + path || ''
       },
     },
     created() {

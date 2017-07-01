@@ -35,9 +35,9 @@
               <el-button size="small" type="info" @click="entrance(scope.row)">进入</el-button>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="statisticsName" label="统计名称" width="200">
+          <el-table-column align="center" prop="statisticsName" label="统计名称" show-overflow-tooltip width="200">
           </el-table-column>
-          <el-table-column prop="sceneNames" align="center" label="统计场次名称" width="400">
+          <el-table-column prop="sceneNames" align="center" label="统计场次名称" show-overflow-tooltip width="400">
           </el-table-column>
           <el-table-column prop="createrName" label="创建人" align="center">
           </el-table-column>

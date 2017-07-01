@@ -22,16 +22,17 @@
     <div class="roomInfo" @click="eDo('roomClick')" :class="options.icon">
       <img src="../../../assets/ambuf/images/roomBG.png">
       <p class="roomNum" v-if="roomInfo.roomNum">{{ roomInfo.roomNum }}</p>
+      <p class="roomSpecialty" v-if="roomInfo.roomSpecialty">{{ roomInfo.roomSpecialty }}</p>
       <div class="carouselContent" v-if="roomInfo.carousel.length">
         <template v-if="roomInfo.carousel.length > 1">
           <el-carousel height="20px" arrow="never" indicator-position="none">
             <el-carousel-item v-for="item in roomInfo.carousel" :key="item">
-              <h3 style="color:red;">{{ item[roomInfo.carouselKey] || '' }}</h3>
+              <h3>{{ item[roomInfo.carouselKey] || '' }}</h3>
             </el-carousel-item>
           </el-carousel>
         </template>
         <template v-else>
-          <h3 style="color:red;">{{ roomInfo.carousel[0][roomInfo.carouselKey] || '' }}</h3>
+          <h3>{{ roomInfo.carousel[0][roomInfo.carouselKey] || '' }}</h3>
         </template>
       </div>
       <p class="roomType" v-if="roomInfo.roomType">{{ roomInfo.roomType }}</p>
@@ -39,8 +40,8 @@
     <!-- 查看 -->
     <p class="name" v-if="options.type === 'view' || options.type === 'monitor'">{{ roomInfo.name || '未命名' }}</p>
     <!-- 编辑 -->
-    <el-input placeholder="请输入考站名称" style="margin-top:10px;" :maxlength="20" size="small" v-else-if="options.type === 'edit'" @input="inputRoomName"
-      v-model="roomInfo.name"></el-input>
+    <el-input placeholder="请输入考站名称" style="margin-top:10px;" :maxlength="20" size="small" v-else-if="options.type === 'edit'"
+      @input="inputRoomName" v-model="roomInfo.name"></el-input>
   </el-col>
 </template>
 
@@ -113,6 +114,7 @@
           name: '', // 房间名称
           percentage: 0, // 进度条
           roomNum: 0, // 房间号
+          roomSpecialty: '', // 考站专业
           roomType: '', // 考站类型
           carousel: [], // 滚动数据
           carouselKey: '', // 滚动显示的键

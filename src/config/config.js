@@ -45,7 +45,7 @@ config.ajaxconfig = {
 
   transformResponse: [function (data) {
     // 这里提前处理返回的数据
-    if (typeof data == "string") {
+    if(typeof data=="string"){
       data = JSON.parse(data);
     }
     return data;

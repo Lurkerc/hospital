@@ -156,6 +156,7 @@
       // 下一步
       next() {
         if (!this.checkData()) return;
+        // 保存老师信息到状态中
         this.$store.commit('examineInterval/temp/initTeacher', this.teacher);
         let teacherArr = [];
         for (let i = 0, item = this.teacher, l = item.length; i < l; i++) {

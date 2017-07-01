@@ -1,21 +1,21 @@
 /**
- * 宿舍管理
+ * 宿舍管理 - 基础设置
  * 作者:zyc
  * 日期:2017-5-18
  */
 const dormitoryRouters = {
-  path: 'dormitory',
-  name: 'dormitory',
+  path: 'baseSetting',
+  name: 'baseSetting',
   meta: {
     requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
   },
   component:resolve=> {
     require.ensure([], () => {
       resolve(require('@/components/common/rightMain'));
-    }, 'dormitory');
+    }, 'baseSetting');
   },
   redirect: to => {
-    return '/manage/dormitory/buildingMess'
+    return '/manage/baseSetting/dormitoryMess'
   },
   children:[{
     //宿舍管理
@@ -24,7 +24,7 @@ const dormitoryRouters = {
     component:resolve=> {
       require.ensure([], () => {
         resolve(require('../../components/dormitory/dormitoryMess.vue'));
-      }, 'dormitory');
+      }, 'baseSetting');
     }
   },{
     //楼房信息管理
@@ -33,7 +33,7 @@ const dormitoryRouters = {
     component:resolve=> {
       require.ensure([], () => {
         resolve(require('../../components/dormitory/buildingMess/buildingMess_list.vue'));
-      }, 'dormitory');
+      }, 'baseSetting');
     }
   },
     {
@@ -43,37 +43,7 @@ const dormitoryRouters = {
       component:resolve=> {
         require.ensure([], () => {
           resolve(require('../../components/dormitory/roomMess/roomMess_list.vue'));
-        }, 'dormitory');
-      }
-    },
-    {
-      //迁入迁出
-      path:'inAndOut',
-      name:'inAndOut',
-      component:resolve=> {
-        require.ensure([], () => {
-          resolve(require('../../components/dormitory/inAndOut/inAndOut_list.vue'));
-        }, 'dormitory');
-      }
-    },
-    {
-      //房间使用情况
-      path:'roomUseing',
-      name:'roomUseing',
-      component:resolve=> {
-        require.ensure([], () => {
-          resolve(require('../../components/dormitory/roomUseing/roomUseing_list.vue'));
-        }, 'dormitory');
-      }
-    },
-    {
-      //人员入住情况
-      path:'occupancy',
-      name:'occupancy',
-      component:resolve=> {
-        require.ensure([], () => {
-          resolve(require('../../components/dormitory/occupancy/occupancy_list.vue'));
-        }, 'dormitory');
+        }, 'baseSetting');
       }
     },
   ]

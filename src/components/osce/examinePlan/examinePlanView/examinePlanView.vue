@@ -16,6 +16,7 @@
         <el-button type="warning" size="small" @click="show('teacher')">监考老师安排</el-button>
       </div>
       <div style="float:right;">
+        <el-button type="info" size="small" @click="viewTableTimeOpen">全屏预览</el-button>
         <el-button type="success" size="small" @click="excelExport">导出Excel</el-button>
       </div>
     </div>
@@ -35,6 +36,16 @@
       <derive v-if="deriveModal" :type="timeActive" :url="deriveData.url" @cancel="deriveModal = false"></derive>
       <div slot="footer"></div>
     </Modal>
+
+    <!--全屏弹窗-->
+    <el-dialog :title="button.viewTableTime.title" size="full" :modal="false" :visible.sync="viewTableTimeModal" :before-close="closeViewTable">
+      <template>
+        <student-time v-if="timeActive === 'student' && viewTableTimeModal" :height="dialogContHt" :sceneTypes="sceneType" :headerList="headerList"
+          :tableList="tableList"></student-time>
+        <student-time v-if="timeActive === 'sp' && viewTableTimeModal" :height="dialogContHt" :headerList="spHeaderList" :tableList="spTableList"></student-time>
+        <teacher-time v-if="timeActive === 'teacher' && viewTableTimeModal" :height="dialogContHt" :tableList="teacherTableList"></teacher-time>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -60,7 +71,9 @@
           url: '',
           type: ''
         },
+        dialogContHt: 0,
         deriveModal: false,
+        viewTableTimeModal: false,
         button: {
           student: {
             id: 'studentId',
@@ -74,6 +87,10 @@
             id: 'spId',
             title: '导出sp时间表'
           },
+          viewTableTime: {
+            id: 'viewTableTimeId',
+            title: '全屏查看时间表'
+          }
         }
       }
     },
@@ -171,7 +188,17 @@
         let content = this.$refs.content;
         let parHt = content.offsetHeight;
         this.dynamicHt = parHt;
+        let windowHeight = document.all ? document.getElementsByTagName("html")[0].offsetHeight : window.innerHeight;
+        let bdHt = Math.max(windowHeight, document.getElementsByTagName("body")[0].scrollHeight);
+        this.dialogContHt = bdHt - 100;
       },
+      // 全屏查看时间表
+      viewTableTimeOpen() {
+        this.viewTableTimeModal = true
+      },
+      closeViewTable(done) {
+        this.viewTableTimeModal = false
+      }
     },
     components: {
       studentTime,

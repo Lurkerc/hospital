@@ -41,7 +41,7 @@
       </div>
       <div class="studentInfoBox">
         <div class="studentPhotoPos">
-          <img src="http://iph.href.lu/120x160" alt="">
+          <img :src="getPhotoPath(studentInfo.userPhotoPath) || '//iph.href.lu/120x160'" alt="">
         </div>
         <!-- 基本信息 -->
         <p class="otherInfo">姓名：{{ studentInfo.userName }}</p>
@@ -204,6 +204,9 @@
       },
       // 身份确认
       idVerification() {
+        if (!this.checkSceneStatus()) {
+          return;
+        }
         let data = this.$util._.defaultsDeep({}, {
           id: this.arrangementId,
           userId: this.userId,
@@ -229,6 +232,9 @@
       },
       // 考核结束提交分数
       finishAndSub() {
+        if (!this.checkSceneStatus()) {
+          return;
+        }
         this.studentInfo.examStatus = 'FINISH';
         this.contentDataList.examStatus = 'FINISH';
         this.addMessTitle.ajaxParams.url = api.submitFinish.path;
@@ -464,7 +470,19 @@
         }
       },
 
+      // 检测当前考站是否是考核中
+      checkSceneStatus() {
+        let tag = (this.studentInfo.sceneStatus === 'ONGOING');
+        if (!tag) {
+          this.errorMess('考站还未开始考核！')
+        }
+        return tag;
+      },
 
+      // 获取头像地址
+      getPhotoPath(path) {
+        return path && this.$store.getters.getEnvPath.http + path || ''
+      },
     },
     created() {
       this.teacherUserId = this.$store.getters.getUserInfo.id;
@@ -487,6 +505,10 @@
         position: absolute;
         right: 10px;
         top: 0;
+        width: 120px;
+        img {
+          width: 100%;
+        }
       }
     }
     .studentVideoBox {

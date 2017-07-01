@@ -15,16 +15,16 @@
               <span>{{scope.row.index}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="160">
+          <el-table-column label="操作" width="80">
             <template scope="scope">
               <el-button size="small" type="success" @click="show(scope.row)">查看</el-button>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="userName" label="姓名" width="200">
+          <el-table-column align="center" prop="userName" label="姓名" width="200" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="depName" label="部门">
+          <el-table-column prop="depName" label="部门" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="sceneNames" label="场次" align="center" width="300">
+          <el-table-column prop="sceneNames" label="场次" align="center" width="300" show-overflow-tooltip>
           </el-table-column>
           <el-table-column prop="totalMark" label="总体得分">
           </el-table-column>

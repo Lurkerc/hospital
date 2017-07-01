@@ -19,7 +19,7 @@
       <div ref="content" slot="right">
         <el-row >
           <el-col :span="20"  :offset="1">
-            <el-form  ref="formValidate" inline label-width="100px" class="demo-ruleForm">
+            <el-form ref="formValidate" inline label-width="100px" class="demo-ruleForm">
               <el-form-item  prop="title">
                 <el-input   v-model="formValidate.name" placeholder="输入姓名搜索">
                 </el-input>
@@ -108,104 +108,106 @@
       </div>
     </layout-tree>
     <!--修改类型弹窗-->
-    <Modal
-      :mask-closable="false"
-      v-model="editTypeModal"
-      height="200"
-      title="对话框标题"
-      class-name="vertical-center-modal"
-      :width="1100">
-      <!--<div slot="header"> -->
-      <!--</div>-->
-      <modal-header slot="header" :content="editTypeId"></modal-header>
-      <edit-type v-if="editTypeModal"   @cancel="cancel" :url="url"  @editType="treeSubCallback" :operaility-data="treeOperailityData"></edit-type>
-      <div slot="footer"></div>
-    </Modal>
-    <!---->
-    <!--新建类型弹窗-->
-    <Modal
-      :mask-closable="false"
-      v-model="addTypeModal"
-      height="200"
-      title="对话框标题"
-      class-name="vertical-center-modal"
-      :width="1000">
-      <!--<div slot="header"> -->
-      <!--</div>-->
-      <modal-header slot="header" :content="addTypeId"></modal-header>
-      <add-type v-if="addTypeModal"  @cancel="cancel" :url="url" @addType="treeSubCallback" ></add-type>
-      <div slot="footer"></div>
-    </Modal>
-    <!--删除类型弹窗-->
-    <Modal
-      close-on-click-modal="false"
-      height="200"
-      v-model="removeTypeModal"
-      title="对话框标题"
-      class-name="vertical-center-modal"
-      :loading="loading"
-      :width="500">
-      <modal-header slot="header" :content="removeTypeId"></modal-header>
-      <remove v-if="removeTypeModal" :delete-url="url.templateTypeRemove" @remove="removeTypeCallback" @cancel="cancel('removeType');" :operaility-data="[treeOperailityData]"></remove>
+    <div>
+      <Modal
+        :mask-closable="false"
+        v-model="editTypeModal"
+        height="200"
+        title="对话框标题"
+        class-name="vertical-center-modal"
+        :width="1100">
+        <!--<div slot="header"> -->
+        <!--</div>-->
+        <modal-header slot="header" :content="editTypeId"></modal-header>
+        <edit-type v-if="editTypeModal"   @cancel="cancel" :url="url"  @editType="treeSubCallback" :operaility-data="treeOperailityData"></edit-type>
+        <div slot="footer"></div>
+      </Modal>
+      <!---->
+      <!--新建类型弹窗-->
+      <Modal
+        :mask-closable="false"
+        v-model="addTypeModal"
+        height="200"
+        title="对话框标题"
+        class-name="vertical-center-modal"
+        :width="1000">
+        <!--<div slot="header"> -->
+        <!--</div>-->
+        <modal-header slot="header" :content="addTypeId"></modal-header>
+        <add-type v-if="addTypeModal"  @cancel="cancel" :url="url" @addType="treeSubCallback" ></add-type>
+        <div slot="footer"></div>
+      </Modal>
+      <!--删除类型弹窗-->
+      <Modal
+        close-on-click-modal="false"
+        height="200"
+        v-model="removeTypeModal"
+        title="对话框标题"
+        class-name="vertical-center-modal"
+        :loading="loading"
+        :width="500">
+        <modal-header slot="header" :content="removeTypeId"></modal-header>
+        <remove v-if="removeTypeModal" :delete-url="url.templateTypeRemove" @remove="removeTypeCallback" @cancel="cancel('removeType');" :operaility-data="[treeOperailityData]"></remove>
 
-      <div slot="footer"></div>
-    </Modal>
+        <div slot="footer"></div>
+      </Modal>
 
-    <!--新建右侧评分模板弹窗-->
-    <Modal
-      :mask-closable="false"
-      v-model="addModal"
-      height="200"
-      title="对话框标题"
-      class-name="vertical-center-modal"
-      :width="1000">
-      <!--<div slot="header"> -->
-      <!--</div>-->
-      <modal-header slot="header" :content="addId"></modal-header>
-      <add v-if="addModal"  @cancel="cancel" :url="url" :operaility-data="treeOperailityData"   @add="subCallback" ></add>
-      <div slot="footer"></div>
-    </Modal>
-    <!--修改右侧评分模板弹窗-->
-    <Modal
-      :mask-closable="false"
-      v-model="editModal"
-      height="200"
-      title="对话框标题"
-      class-name="vertical-center-modal"
-      :width="1000">
-      <!--<div slot="header"> -->
-      <!--</div>-->
-      <modal-header slot="header" :content="editId"></modal-header>
-      <edit v-if="editModal"  @cancel="cancel" :url="url" :operaility-data="operailityData"   @add="subCallback" ></edit>
-      <div slot="footer"></div>
-    </Modal>
-    <!--查看右侧评分模板弹窗-->
-    <Modal
-      :mask-closable="false"
-      v-model="showModal"
-      height="200"
-      title="对话框标题"
-      class-name="vertical-center-modal"
-      :width="1000">
-      <!--<div slot="header"> -->
-      <!--</div>-->
-      <modal-header slot="header" :content="viewId"></modal-header>
-      <show v-if="showModal"  @cancel="cancel" :url="url" :operaility-data="operailityData"   @add="subCallback" ></show>
-      <div slot="footer"></div>
-    </Modal>
-    <!--删除右侧弹窗-->
-    <Modal
-      close-on-click-modal="false"
-      height="200"
-      v-model="removeModal"
-      title="对话框标题"
-      class-name="vertical-center-modal"
-      :loading="loading"
-      :width="500">
-      <modal-header slot="header" :content="removeId"></modal-header>
-      <remove v-if="removeModal" :delete-url="url.templateRemove" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
-      <div slot="footer"></div>
-    </Modal>
+      <!--新建右侧评分模板弹窗-->
+      <Modal
+        :mask-closable="false"
+        v-model="addModal"
+        height="200"
+        title="对话框标题"
+        class-name="vertical-center-modal"
+        :width="1000">
+        <!--<div slot="header"> -->
+        <!--</div>-->
+        <modal-header slot="header" :content="addId"></modal-header>
+        <add v-if="addModal"  @cancel="cancel" :url="url" :operaility-data="treeOperailityData"   @add="subCallback" ></add>
+        <div slot="footer"></div>
+      </Modal>
+      <!--修改右侧评分模板弹窗-->
+      <Modal
+        :mask-closable="false"
+        v-model="editModal"
+        height="200"
+        title="对话框标题"
+        class-name="vertical-center-modal"
+        :width="1000">
+        <!--<div slot="header"> -->
+        <!--</div>-->
+        <modal-header slot="header" :content="editId"></modal-header>
+        <edit v-if="editModal"  @cancel="cancel" :url="url" :operaility-data="operailityData"   @add="subCallback" ></edit>
+        <div slot="footer"></div>
+      </Modal>
+      <!--查看右侧评分模板弹窗-->
+      <Modal
+        :mask-closable="false"
+        v-model="showModal"
+        height="200"
+        title="对话框标题"
+        class-name="vertical-center-modal"
+        :width="1000">
+        <!--<div slot="header"> -->
+        <!--</div>-->
+        <modal-header slot="header" :content="viewId"></modal-header>
+        <show v-if="showModal"  @cancel="cancel" :url="url" :operaility-data="operailityData"   @add="subCallback" ></show>
+        <div slot="footer"></div>
+      </Modal>
+      <!--删除右侧弹窗-->
+      <Modal
+        close-on-click-modal="false"
+        height="200"
+        v-model="removeModal"
+        title="对话框标题"
+        class-name="vertical-center-modal"
+        :loading="loading"
+        :width="500">
+        <modal-header slot="header" :content="removeId"></modal-header>
+        <remove v-if="removeModal" :delete-url="url.templateRemove" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
+        <div slot="footer"></div>
+      </Modal>
+    </div>
   </div>
 </template>
 <script>

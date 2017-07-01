@@ -5,13 +5,13 @@
     <div class="teacherInfo">
       <el-row class="border">
         <el-col :span="6" class="teacherInfoItem" v-for="(item,tIndex) in stationRoom.teacherList" :key="tIndex" @click.native="selectTeacher(item.userId)">
-          <img src="http://iph.href.lu/60x60" />
+          <img src="http://iph.href.lu/60x60">
           <p>{{ item.teacherName }}</p>
         </el-col>
       </el-row>
       <!-- 教师头像 -->
       <div class="phontoContent">
-        <img :src="teacherInfo.userPhotoPath || 'http://iph.href.lu/120x160'" alt="">
+        <img :src="getPhotoPath(teacherInfo.userPhotoPath) || 'http://iph.href.lu/120x160'" alt="">
         <p class="teacherName">{{ teacherInfo.userName }}</p>
       </div>
       <!-- 当前时间 -->
@@ -42,7 +42,7 @@
     <div class="studentInfo">
       <p class="studentInfoNum">当前考核人员（{{ nowId }}/{{ userSums }}）</p>
       <div class="studentPhoto">
-        <img :src="studentInfo.userPhotoPath || 'http://iph.href.lu/120x160'" alt="">
+        <img :src="getPhotoPath(studentInfo.userPhotoPath) || 'http://iph.href.lu/120x160'" alt="">
       </div>
       <!-- 基本信息 -->
       <p class="otherInfo">姓名：{{ studentInfo.userName }}</p>
@@ -238,7 +238,7 @@
       },
       // 更新考核内容数据
       updateExmContent(res) {
-        studentTime = setTimeout(() => this.getContentByTeacher(), 5000)
+        studentTime = setTimeout(() => this.getContentByTeacher(), 30000)
         if (res.data) {
           this.exmContent = res.data;
         } else {
@@ -257,6 +257,10 @@
         } else {
           this.isError = false
         }
+      },
+      // 获取头像地址
+      getPhotoPath(path) {
+        return path && this.$store.getters.getEnvPath.http + path || ''
       },
     },
     created() {

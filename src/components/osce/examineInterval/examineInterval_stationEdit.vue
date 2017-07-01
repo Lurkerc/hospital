@@ -41,11 +41,11 @@
             <el-tooltip placement="right-start" :open-delay="1500" effect="light">
               <room-info slot="content" :basicsTime="info.basicsTime" :info="roomData[index]" :room="roomList[index].room[cIndex]" :teacher="roomList[index].teacher[cIndex]"
                 :key="index+'-'+cIndex" style="max-width:400px;"></room-info>
-              <room v-if="canEdit" :option="{hasMore: cIndex > 0,type:'edit'}" :initData="{index: index,cIndex:cIndex,name:roomData[index].stationName,roomNum:item.room[cIndex].roomNum,roomType:roomData[index].stationType === 'SP' ? 'SP' : ''}"
+              <room v-if="canEdit" :option="{hasMore: cIndex > 0,type:'edit'}" :initData="{index: index,cIndex:cIndex,name:roomData[index].stationName,roomNum:item.room[cIndex].roomNum,roomSpecialty:item.room[cIndex].specialty,roomType:roomData[index].stationType === 'SP' ? 'SP' : ''}"
                 :key="index+'-'+cIndex" @roomClick="roomClick" @iconAdd="addRoomChildren(index)" @iconRemove="removeRoomChildren(index,cIndex)"
                 style="width:80px;margin-left:40px;"></room>
 
-              <room v-else :option="{hasMore: cIndex > 0,hasAdd:false,hasRemove:false,}" :initData="{index: index,cIndex:cIndex,name:roomData[index].stationName,roomNum:item.room[cIndex].roomNum,roomType:roomData[index].stationType === 'SP' ? 'SP' : ''}"
+              <room v-else :option="{hasMore: cIndex > 0,hasAdd:false,hasRemove:false,}" :initData="{index: index,cIndex:cIndex,name:roomData[index].stationName,roomNum:item.room[cIndex].roomNum,roomSpecialty:item.room[cIndex].specialty,roomType:roomData[index].stationType === 'SP' ? 'SP' : ''}"
                 :key="index+'-'+cIndex" style="width:80px;margin-left:40px;"></room>
             </el-tooltip>
           </template>
@@ -122,7 +122,7 @@
         api,
         self: this,
         addType: '',
-        unSelectUser: '',
+        unSelectUser: [],
         info: {}, // 场次信息
         roomList: {}, // 考站
         roomData: {}, // 考站信息
@@ -258,7 +258,8 @@
         this.$store.commit('examineInterval/station/setInfo', {
           status: 'NOARRANGED'
         });
-        this.getStationData()
+        this.getStationData();
+        this.getUnSelUserByServer();
       },
       /************************** 数据处理 ********************************/
       // 格式化提交数据
@@ -394,12 +395,17 @@
       // sp设置
       setSP(users) {
         this.spList = [];
+        let unSpUser = [];
         Util._.forEach(users, (val, k) => {
           this.spList.push({
             userId: val["key"],
             userName: val["label"],
-            scriptIds: [0, 1]
+            scriptIds: []
           })
+          unSpUser.push(val["key"]);
+        })
+        this.$store.commit('examineInterval/room/updateUnSelectUser', {
+          sp: unSpUser
         })
         this.closeSPUser()
       },
@@ -430,6 +436,20 @@
           }
         })
         return unSelArr
+      },
+      // 获取禁选人员(服务器)
+      getUnSelUserByServer() {
+        this.ajax({
+          ajaxSuccess: res => {
+            this.$store.commit('examineInterval/room/initUnSelectUser', res.data)
+          },
+          ajaxParams: {
+            url: api.queryAllUserList.path,
+            params: {
+              sceneId: this.id,
+            }
+          }
+        })
       },
       /************************** 抽签设置 *************************************/
       // 操作已保存到状态

@@ -5,71 +5,87 @@ import {
 
 const getVueObj = function (vue) {
   const typeNames = { // 声明全局类型描述文本
-    // 是否
-    "1": "是",
-    "0": "否",
-    "Y": "是",
-    "N": "否",
-    "YES": "是",
-    "NO": "否",
-    // 用户性别
-    "BOY": "男",
-    "GIRL": "女",
-    // 房间使用类型
-    "PRACTISE": "练习",
-    "EXAM": "考核",
-    "OTHER": "其他",
-    // 设备状态
-    "NORMAL": "正常",
-    "DEFECT": "缺损",
-    "DAMAGE": "损坏",
-    "SERVICING": "维修中",
-    "INUSE": "使用中",
-    //导师类别
-    "SD": "硕导",
-    "BD": "博导",
-    // 考核状态
-    "NOARRANGED": "未生成轮转表",
-    "UNPUBLISH": "未发布",
-    "PUBLISH": "已发布",
-    "ONGOING": "考核中",
-    "FINISH": "考核结束",
-    "SUSPEND": "暂停中",
-    // 考核类型
-    "STANDARD": "规范考核",
-    "FREE": "自由考核",
-    // 考生考核状态
-    "NOTEXAM": "未考核",
-    // 设备品牌
-    "HIKVISION": "海康威视",
-    "DAHUA": "大华",
-    // 设备位置
-    "ROOM": "房间内",
-    // 设备状态
-    "OFFLINE": "离线",
-    "ONLINE": "在线",
-    // 任务执行状态
-    "EXECUTING": "执行中",
-    "UNEXECUTED": "未执行",
-    // 预约开放时间类型
-    "ALL": "全天候",
-    "SPECIFIC": "特定时间",
-  };
-  const unitText = { // 单位
-    "m": "m",
-    "cm": "cm",
-    "kg": "kg"
-  };
-
-  const qualificationLevel = { // 医师执业资格级别
-    "0": "职业",
-    "1": "助理",
-    "2": "无"
-  };
-
-  const bespeakSetRoomStatus = { // 预约房间设置开放状态
-    "NO": "关闭预约",
-    "YES": "开放预约"
+    typeText: { // 公共类型描述文本
+      // 是否
+      "1": "是",
+      "0": "否",
+      "Y": "是",
+      "N": "否",
+      "YES": "是",
+      "NO": "否",
+      // 用户性别
+      "BOY": "男",
+      "GIRL": "女",
+      // 房间使用类型
+      "PRACTISE": "练习",
+      "EXAM": "考核",
+      "OTHER": "其他",
+      // 设备状态
+      "NORMAL": "正常",
+      "DEFECT": "缺损",
+      "DAMAGE": "损坏",
+      "SERVICING": "维修中",
+      "INUSE": "使用中",
+      //导师类别
+      "SD": "硕导",
+      "BD": "博导",
+      // 考核状态
+      "NOARRANGED": "未生成轮转表",
+      "UNPUBLISH": "未发布",
+      "PUBLISH": "已发布",
+      "ONGOING": "考核中",
+      "FINISH": "考核结束",
+      "SUSPEND": "暂停中",
+      // 考核类型
+      "STANDARD": "规范考核",
+      "FREE": "自由考核",
+      // 考生考核状态
+      "NOTEXAM": "未考核",
+      "DRAW": "待抽签",
+      // 设备品牌
+      "HIKVISION": "海康威视",
+      "DAHUA": "大华",
+      // 设备位置
+      "ROOM": "房间内",
+      // 设备状态
+      "OFFLINE": "离线",
+      "ONLINE": "在线",
+      // 任务执行状态
+      "EXECUTING": "执行中",
+      "UNEXECUTED": "未执行",
+      // 预约开放时间类型
+      "ALL": "全天候",
+      "SPECIFIC": "特定时间",
+      //评价表设置活动状态
+      "NO_PUBLISH":'未发布',
+      "PROGRESS":'进行中',
+      "END":'结束',
+    },
+    /* 特殊描述文本（与公共部分冲突的可以作为特殊处理） */
+    unit: { // 单位
+      "m": " m",
+      "cm": " cm",
+      "kg": " kg"
+    },
+    roomSex: { // 宿舍
+      "BOY": '男宿舍',
+      "GIRL": '女宿舍',
+    },
+    qfcLevel: { // 医师执业资格级别
+      "0": "职业",
+      "1": "助理",
+      "2": "无"
+    },
+    bespeakSetRoomStatus: { // 预约房间设置开放状态
+      "NO": "关闭预约",
+      "YES": "开放预约"
+    },
+    synthesizeStatistics: { // 教学评价 - 综合分析统计 - 分析对象
+      "ALL": "全部",
+      "PART": "部分人",
+      "RLOE": "角色",
+      "DEPT": "科室",
+    }
   };
 
   const filters = [ // 声明全局过滤器及回调函数
@@ -78,36 +94,6 @@ const getVueObj = function (vue) {
       call(value, n, str) { // n 保留小数点位数 | str 货币前缀 | 使用： 10 | money(3,'$') ===> $ 10.000
         // 如果是非Number类型的直接返回源字符串，否则按照过滤器格式处理
         return !isNaN(value) ? (str || '￥') + " " + (+value).toFixed(typeof n === 'number' ? n : 2) : value;
-      }
-    },
-    { // 通过类型获取对应的描述文本
-      name: "typeText",
-      call(value) {
-        if (value) {
-          // 如果描述文本中没有匹配的则返回原字符
-          return typeNames[value.toString().toUpperCase()] || value
-        }
-        return value;
-      }
-    },
-    { // 通过类型获取对应的描述文本
-      name: "roomSex",
-      call(value) {
-        let typeNames = {
-          "BOY": '男宿舍',
-          "GIRL": '女宿舍',
-        };
-        if (!value) return value
-        let val = value.toUpperCase();
-        // 如果描述文本中没有匹配的则返回原字符
-        return typeNames[val] || value
-      }
-    },
-    { // 单位
-      name: "unit",
-      call(value, key) {
-        let val = unitText[key];
-        return value + " " + val;
       }
     },
     { // 默认图片
@@ -128,32 +114,17 @@ const getVueObj = function (vue) {
         return typeof date == 'string' ? parseDate(value, format) : formatDate(value, format)
       }
     },
-    { // 医师资格级别
-      name: "qfcLevel",
-      call(value) {
-        if (value) {
-          // 如果描述文本中没有匹配的则返回原字符
-          return qualificationLevel[value.toString().toUpperCase()] || value
-        }
-        return value;
-      }
-    },
-    { // 预约房间设置开放状态
-      name: "bespeakSetRoomStatus",
-      call(value) {
-        if (value) {
-          // 如果描述文本中没有匹配的则返回原字符
-          return bespeakSetRoomStatus[value.toString().toUpperCase()] || value
-        }
-        return value;
-      }
-    }
   ];
 
-  // 全局注册自定义过滤器，在应用中直接通过name使用
-  filters.map(item => {
-    vue.filter(item.name, item.call)
-  })
+  // 全局注册自定义过滤器
+  filters.map(item => vue.filter(item.name, item.call)); // 在应用中直接通过name使用
+  Object.keys(typeNames).map(item => vue.filter(item, function (value) { // 在应用中直接通过typeNames中的对象名使用
+    if (value) {
+      // 如果描述文本中没有匹配的则返回原字符
+      return typeNames[item][value.toString().toUpperCase()] || value
+    }
+    return value;
+  }))
 }
 
 export default getVueObj;

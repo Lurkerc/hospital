@@ -4,7 +4,7 @@
     <div v-show="isShowList" class="text-headline ">分站得分总览</div>
 
     <div v-show="isShowList" class="leftCon" style="top: 50px;border-top: 1px solid #dfe6ec;">
-      <img class="user-img" :src="data.userPhoto" alt="">
+      <img class="user-img" :src="getPhotoPath(data.userPhoto)" alt="">
       <p class="infoItem bottom">考生姓名：{{data.userName}}</p>
       <p class="infoItem bottom">总分：{{data.sceneTotalMark}}</p>
       <p class="infoItem bottom">排名：{{data.ranking}}</p>
@@ -18,13 +18,13 @@
             <el-table-column align="center" label="序号" type="index" width="100">
             </el-table-column>
 
-            <el-table-column align="center" prop="stationName" label="分站名称" width="200">
+            <el-table-column align="center" prop="stationName" label="分站名称" width="200" show-overflow-tooltip>
             </el-table-column>
             <el-table-column prop="totalMark" label="得分" align="center">
             </el-table-column>
-            <el-table-column prop="timeLength" label="考核时间" align="center" width="200">
+            <el-table-column prop="timeLength" label="考核时间" align="center" width="200" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column label="操作" align="center" width="130">
+            <el-table-column label="操作" align="center" width="80">
               <template scope="scope">
                 <el-button size="small" @click="show(scope.row)">查看</el-button>
               </template>
@@ -177,6 +177,10 @@
        * */
       openModel(options) {
         this[options + 'Modal'] = true;
+      },
+      // 获取头像地址
+      getPhotoPath(path) {
+        return path && this.$store.getters.getEnvPath.http + path || ''
       },
     },
     created() {

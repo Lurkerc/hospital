@@ -14,11 +14,12 @@
       <div>
         <!--表格数据-->
         <div id="myTable" ref="myTable">
-          <el-table :row-class-name="tableRowClassName" border align="center" :height="dynamicHt" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%;height: 100%">
+          <el-table :row-class-name="tableRowClassName" border align="center" :height="dynamicHt" :data="tableData" tooltip-effect="dark"
+            highlight-current-row style="width: 100%;height: 100%">
 
-            <el-table-column align="center" prop="classify" label="项目" width="150">
+            <el-table-column align="center" prop="classify" label="项目" width="150" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column align="center" prop="content" label="评分标准及要求">
+            <el-table-column align="center" prop="content" label="评分标准及要求" show-overflow-tooltip>
             </el-table-column>
             <el-table-column prop="score" label="标准分" align="center" width="100">
             </el-table-column>
@@ -30,7 +31,7 @@
     </div>
     <!--左侧-->
     <div class=" leftSched" style="top: 50px;">
-      <img class="user-img" :src="operailityData.userPhoto" alt="">
+      <img class="user-img" :src="getPhotoPath(operailityData.userPhoto)" alt="">
       <p class="infoItem bottom">考生姓名：{{data.userName}}</p>
       <p class="infoItem bottom">总分：{{data.sceneTotalMark}}</p>
       <p class="infoItem bottom">总排名：{{data.ranking}}</p>
@@ -47,7 +48,7 @@
         </el-table-column>
         <el-table-column prop="mark" label="分数" align="center">
         </el-table-column>
-        <el-table-column prop="evaluate" label="评语" width="200">
+        <el-table-column prop="evaluate" label="评语" width="200" show-overflow-tooltip>
         </el-table-column>
       </el-table>
     </div>
@@ -257,11 +258,16 @@
 
       //高亮最后一行
       tableRowClassName(row, index) {
-        if (index === this.tableData.length-1) {
+        if (index === this.tableData.length - 1) {
           return 'info-row';
         }
         return '';
-      }
+      },
+
+      // 获取头像地址
+      getPhotoPath(path) {
+        return path && this.$store.getters.getEnvPath.http + path || ''
+      },
 
     },
     created() {

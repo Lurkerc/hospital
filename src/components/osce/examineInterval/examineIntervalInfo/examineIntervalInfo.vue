@@ -9,6 +9,7 @@
       <span>抽题类型：{{ info.randomType | typeTexts }}</span>
       <!--<span :class="{'noData':!info.number}">单次考核人数：{{ info.number || '未填写' }}</span>-->
       <span :class="{'noData':!room.roomNum}">房间信息：{{ room.roomNum || '未选择房间' }}</span>
+      <span>专业：{{ info.specialty || room.specialty || '全部' }}</span>
       <span>是否是SP考站：{{ info.stationType == 'SP' ? '是' : '否' }}</span>
     </div>
     <p class="title"><b>监考老师：</b></p>

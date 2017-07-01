@@ -5,7 +5,7 @@
       <el-row class="stationInfo">
         <el-col :span="8">
           <el-form-item label="考核名称：" prop="sceneName">
-            <el-input v-model="info.sceneName" placeholder="请输入考核名称" :disabled="!canEdit"></el-input>
+            <el-input v-model="info.sceneName" placeholder="请输入考核名称" :maxlength="50" :disabled="!canEdit"></el-input>
           </el-form-item>
         </el-col>
 
@@ -91,7 +91,7 @@
     <Modal :mask-closable="false" width="890" v-model="selectManagerModal" title="添加考场管理员" class-name="vertical-center-modal">
       <modal-header slot="header" :content="contentHeader.selectManagerId"></modal-header>
       <!-- 此处人员还未对应 -->
-      <select-user v-if="selectManagerModal" @cancel="closeSltMUser" @setUsers="setMUsers" :initUser="initUser"></select-user>
+      <select-user v-if="selectManagerModal" @cancel="closeSltMUser" @setUsers="setMUsers" :unSelect="unSelectUser" :initUser="initUser"></select-user>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -125,6 +125,7 @@
           title: '提交',
           callParEvent: 'listenSubEvent'
         },
+        unSelectUser: [],
         selectManagerModal: false,
         rules: {}, // 验证规则
         info: {
@@ -163,6 +164,20 @@
             method: api.getBasic.method,
           }
         });
+      },
+      // 获取禁选人员
+      getUnSelUser() {
+        this.ajax({
+          ajaxSuccess: res => {
+            this.$store.commit('examineInterval/room/initUnSelectUser', res.data)
+          },
+          ajaxParams: {
+            url: api.queryAllUserList.path,
+            params: {
+              sceneId: this.id,
+            }
+          }
+        })
       },
       // 初始化数据
       initInfoData(res) {
@@ -227,6 +242,7 @@
           ajaxSuccess: () => {
             this.$message.success('保存成功');
             this.getInfo();
+            this.getUnSelUser();
           },
           ajaxError: 'ajaxError',
           ajaxParams: {
@@ -260,10 +276,6 @@
       // 删除已选择的参考人员
       handleMClose(index) {
         this.managerList.splice(index, 1);
-        this.$store.commit('examineInterval/room/removeUnSelectUser', {
-          type: 'manager',
-          index
-        })
       },
       //添加人员
       addManager() {
@@ -281,6 +293,7 @@
             })
           }
         }
+        this.getUnSelectUser();
         this.openModel('selectManager');
       },
       /*
@@ -301,6 +314,17 @@
       //关闭选择管理人员弹窗
       closeSltMUser() {
         this.cancel('selectManager')
+      },
+      // 获取禁选人员
+      getUnSelectUser() {
+        let temp = this.$store.state.examineInterval.room.unSelectUser;
+        let unSelArr = [];
+        Util._.map(temp, (arr, key) => {
+          if (key !== 'manager') {
+            unSelArr = unSelArr.concat(arr)
+          }
+        })
+        this.unSelectUser = unSelArr;
       },
       /************************** 模态框逻辑 *************************************/
       /*

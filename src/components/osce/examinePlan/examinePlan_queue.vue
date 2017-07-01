@@ -191,7 +191,11 @@
       // 关闭抽签
       close() {
         this.$emit('planQueue', this.addMessTitle.type, this.addMessTitle.successTitle)
-      }
+      },
+      // 获取头像地址
+      getPhotoPath(path) {
+        return path && this.$store.getters.getEnvPath.http + path || ''
+      },
     },
     components: {
       queueRoom

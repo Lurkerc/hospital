@@ -75,6 +75,9 @@ $bgColor:#f3f3f3; // 背景颜色
             width: 120px;
             margin: 10px auto;
             border: 1px solid $boderColor;
+            img {
+                width: 100%;
+            }
         }
         .changeStudent,
         .serverStatus {
