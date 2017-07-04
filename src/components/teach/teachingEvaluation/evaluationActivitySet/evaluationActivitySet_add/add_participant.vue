@@ -49,9 +49,16 @@
                    multiple
                    style="width: 100%"
                    allow-create
-                   v-model="formValidate.appraiserRole"
+                   @change="setAppraiserRole"
+
+                   v-model="appraiserRole"
                    placeholder="请选择角色">
-                   <selectOption :type="'role'"></selectOption>
+                   <el-option
+                     v-for="item in optionData"
+                     :key="item.id"
+                     :label="item.name"
+                     :value="item.id">
+                   </el-option>
                  </el-select>
               </div>
           </div>
@@ -85,8 +92,7 @@
                     :close-transition="false"
                     type="success"
                     @close="evaluatedPartClose(index)"
-                    style="margin: 0 5px;"
-                  >
+                    style="margin: 0 5px;">
                     {{item.label}}
                   </el-tag>
                 </div>
@@ -95,16 +101,21 @@
               <!--被评价人选择角色-->
               <div v-if="formValidate.evaluatedType=='ROLE'">
                 <el-select
-                  style="width: 100%"
                   multiple
+                  style="width: 100%"
                   allow-create
-                  v-model="formValidate.evaluatedRole"
+                  v-model="evaluatedRole"
+                  @change="setEvaluatedRole"
                   placeholder="请选择角色">
-                  <selectOption :type="'role'"></selectOption>
+                  <el-option
+                    v-for="item in optionData"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                  </el-option>
                 </el-select>
               </div>
-
-          </div>
+            </div>
           </fieldset>
         </el-col>
       </el-row>
@@ -124,15 +135,16 @@
           <fieldset class="layui-elem-field">
             <legend>评价人</legend>
 
-            <div class="layui-field-box">
-
+            <div class="layui-field-box" style="height: 300px">
+              <left-tree @tree-click="appraiserTree" @setCurrSltNodeId="appraiserCurrSltNodeId" :treeOptions="treeOptions"> </left-tree>
             </div>
+            <!--<el-input v-model=""></el-input>-->
           </fieldset>
           </br>
           <fieldset class="layui-elem-field">
             <legend>被评价对象</legend>
-            <div class="layui-field-box">
-
+            <div class="layui-field-box" style="height: 300px">
+              <left-tree @tree-click="evaluatedTree" @setCurrSltNodeId="evaluatedCurrSltNodeId" :treeOptions="treeOptions"> </left-tree>
             </div>
           </fieldset>
         </el-col>
@@ -141,7 +153,7 @@
       <el-row >
         <el-col :span="20"  :offset="3">
           <el-button  @click="participant">确认并继续</el-button>
-          <el-button  @click="$emit('lost') ">上一步</el-button>
+          <el-button  @click="$emit('last') ">上一步</el-button>
         </el-col>
 
       </el-row>
@@ -187,6 +199,9 @@
     props:['url','operailityData'],
     data() {
       return {
+        treeOptions:{
+            url:'/hospital/dept/list'
+        },
         treeData: [],
         defaultProps: {
           children: 'children',
@@ -196,21 +211,23 @@
           appraiserPart:[],   //
           evaluatedPart:[],   //
         },
+        appraiserRole:[],
+        evaluatedRole:[],
         formValidate:{
-          loopType:'',        //轮转相关LOOP 值为：1学生评价老师,2学生评价科室,3老师评价学生
-          appraiserType:'',   //评价对象类型 值为：所有人ALL、部分人PART、指定角色ROLE、科室DEPT
-          appraiser:'',       //评价对象 根据 评价对象类型 所选不同，该项取值不同.
-          appraiserPart:[],   //部分人PART评价对象 ，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
-          appraiserRole:[],   //指定角色ROLE评价对象 ，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
-          appraiserDept:[],   //科室DEPT评价对象(本部门或本科室) ，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
-          evaluatedType:'',   //被评价对象类型 ，值为：所有人ALL、部分人PART、指定角色ROLE、科室DEPT
-          appraiserCount:'',  //评价人总数
-          evaluated:'',       //被评对象 根据 被评对象类型 所选不同，该项取值不同.
-          evaluatedPart:[],   //部分人PART被评对象 ，，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
-          evaluatedRole:[],   //指定角色ROLE被评对象 ，，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
-          evaluatedDept:[],   //科室DEPT被评对象(本部门或本科室) ，，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
-          evaluatedCount:"",  //被评价人总数
-          counts:"",          //已评价人总数
+          loopType:this.operailityData.loopType,                                       //轮转相关LOOP 值为：1学生评价老师,2学生评价科室,3老师评价学生
+          appraiserType:this.operailityData.appraiserType,   //评价对象类型 值为：所有人ALL、部分人PART、指定角色ROLE、科室DEPT
+          appraiser:'',                                      //评价对象 根据 评价对象类型 所选不同，该项取值不同.
+          appraiserPart:[],                                  //部分人PART评价对象 ，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
+          appraiserRole:[],                                  //指定角色ROLE评价对象 ，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
+          appraiserDept:[],                                  //科室DEPT评价对象(本部门或本科室) ，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
+          evaluatedType:this.operailityData.evaluatedType,   //被评价对象类型 ，值为：所有人ALL、部分人PART、指定角色ROLE、科室DEPT
+          appraiserCount:'',                                 //评价人总数
+          evaluated:'',                                      //被评对象 根据 被评对象类型 所选不同，该项取值不同.
+          evaluatedPart:[],                                  //部分人PART被评对象 ，，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
+          evaluatedRole:[],                                  //指定角色ROLE被评对象 ，，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
+          evaluatedDept:[],                                  //科室DEPT被评对象(本部门或本科室) ，，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
+          evaluatedCount:"",                                 //被评价人总数
+          counts:"",                                         //已评价人总数
         },
         //查询项
         /*--按钮button--*/
@@ -226,6 +243,7 @@
         appraiserPartModal:false,
         evaluatedPartModal:false,
         /*--按钮button--*/
+        optionData:[],
         addId:{id:'add',title:'添加'},
         editId:{id:'edit',title:'修改'},
         viewId:{id:'view',title:'查看'},
@@ -235,7 +253,7 @@
         listMessTitle: {
           ajaxSuccess: 'updateList',
           ajaxParams: {
-            url: this.url.activityQuery,
+            url: '/role/list?name=&identify=&type=',
             params: {},
           }
         },
@@ -244,6 +262,7 @@
 
     },
     created(){
+        this.ajax(this.listMessTitle)
     },
     methods:{
       //初始化请求列表数据
@@ -251,10 +270,6 @@
         Util = this.$util;
         //ajax请求参数设置
         this.myPages =  Util.pageInitPrams;
-
-        this.queryQptions = {
-          curPage: 1,pageSize: Util.pageInitPrams.pageSize
-        }
 
       },
 
@@ -278,7 +293,7 @@
         //        isLoading(true);
         let isSubmit = this.handleSubmit('formValidate');
         if(isSubmit){
-          this.setTableData()
+//          this.setTableData()
         }
       },
 
@@ -329,9 +344,7 @@
       updateList(responseData){
 
         let data = responseData.data;
-        if(!data) return;
-        this.tableData = data;
-        this.totalCount = responseData.totalCount
+        this.optionData = data;
       },
 
       /*
@@ -382,7 +395,7 @@
           this.successMess(title);
         }
         if(!updata){
-          this.setTableData();
+//          this.setTableData();
         }
       },
       /*
@@ -465,13 +478,66 @@
 
       //设置选中被评价人员
       setEvaluatedPart(userList){
+
         this.formValidate.evaluatedPart = userList;
         this.cancel('evaluatedPart')
       },
 
+      //评价人默认选中的节点node
+      appraiserCurrSltNodeId(id,sltedTreeData){
+          this.formValidate.appraiserDept= [{key:id,label:sltedTreeData.name}];
+      },
 
+      //评价人点击选择的树节点
+      appraiserTree(obj, node, self, isLeaf){
+        this.formValidate.evaluatedDept=[obj];
+
+      },
+      //被评价人点击选择的树节点
+      evaluatedTree(obj, node, self, isLeaf){
+          this.formValidate.evaluatedDept=[obj];
+
+      },
+
+      //被评价人默认选中的节点node
+      evaluatedCurrSltNodeId(id,sltedTreeData){
+        this.formValidate.appraiserDept= [{key:id,label:sltedTreeData.name}];
+
+      },
+
+      //设置被评价人角色
+      setEvaluatedRole(val){
+          let tempArr=[];
+          for(let i=0;i<this.optionData.length;i++){
+              if(val.includes(this.optionData[i].id)){
+                  tempArr.push({
+                    key:this.optionData[i].id,
+                    label:this.optionData[i].name
+                  })
+              }
+          }
+        this.formValidate.evaluatedRole=tempArr;
+
+      },
+
+      //设置评价人角色
+      setAppraiserRole(val){
+        let tempArr=[];
+        for(let i=0;i<this.optionData.length;i++){
+            console.log(111);
+          if(val.includes(this.optionData[i].id)){
+            tempArr.push({
+              key:this.optionData[i].id,
+              label:this.optionData[i].name
+            })
+          }
+        }
+
+        this.formValidate.appraiserRole=tempArr;
+      }
     },
     mounted(){
+
     },
     components:{
     },

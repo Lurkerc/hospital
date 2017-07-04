@@ -57,9 +57,14 @@ const getVueObj = function (vue) {
       "ALL": "全天候",
       "SPECIFIC": "特定时间",
       //评价表设置活动状态
-      "NO_PUBLISH":'未发布',
-      "PROGRESS":'进行中',
-      "END":'结束',
+      "NO_PUBLISH": '未发布',
+      "PROGRESS": '进行中',
+      "END": '结束',
+      // 实习生报名审核状态
+      "NOT_SUBMIT": "未上报",
+      "NOT_AUDIT": "待审核",
+      "AUDIT_FAILURE": "未通过",
+      "AUDIT_SUCCESS": "审核通过",
     },
     /* 特殊描述文本（与公共部分冲突的可以作为特殊处理） */
     unit: { // 单位
@@ -76,6 +81,11 @@ const getVueObj = function (vue) {
       "1": "助理",
       "2": "无"
     },
+    relation: {
+      'NO': '无直接关系',
+      'LOOP': '轮转关系',
+      'DEPT': '本部门或本科室',
+    },
     bespeakSetRoomStatus: { // 预约房间设置开放状态
       "NO": "关闭预约",
       "YES": "开放预约"
@@ -85,6 +95,14 @@ const getVueObj = function (vue) {
       "PART": "部分人",
       "RLOE": "角色",
       "DEPT": "科室",
+    },
+    print: { // 打印
+      "0": '未打印',
+      "1": '已打印',
+    },
+    isPay: { // 缴费
+      "0": "未缴费",
+      "1": "已缴费",
     }
   };
 
@@ -119,7 +137,7 @@ const getVueObj = function (vue) {
   // 全局注册自定义过滤器
   filters.map(item => vue.filter(item.name, item.call)); // 在应用中直接通过name使用
   Object.keys(typeNames).map(item => vue.filter(item, function (value) { // 在应用中直接通过typeNames中的对象名使用
-    if (value) {
+    if (typeof value === 'number' || typeof value === 'string') {
       // 如果描述文本中没有匹配的则返回原字符
       return typeNames[item][value.toString().toUpperCase()] || value
     }

@@ -87,6 +87,11 @@ import Index from '../components/Index'
  * 轮转管理
  *
  * */
+ import rotateRecordWrite from './subRouter/rotateRecordWrite.js'
+ import rotateRecordAudit from './subRouter/rotateRecordAudit.js'
+ import rotateQuery from './subRouter/rotateQuery.js'
+ import appraisalManagement from './subRouter/appraisalManagement.js'
+ import reportsManagement from './subRouter/reportsManagement.js'
 
 /**
  *
@@ -998,7 +1003,7 @@ const routes = [
       cstc,osce,
 
       //轮转管理
-
+      rotateRecordWrite,rotateRecordAudit,rotateQuery,appraisalManagement,reportsManagement,
       //实习生
       undergraduate,internBasis,recruitStudent,internRotate,rotateManagement,internHandbook,
 

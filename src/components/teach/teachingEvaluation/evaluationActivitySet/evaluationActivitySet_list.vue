@@ -155,6 +155,35 @@
         <add v-if="addModal"  @cancel="cancel" :url="url" @add="subCallback" ></add>
         <div slot="footer"></div>
       </Modal>
+      <!--修改弹窗-->
+      <Modal
+        :mask-closable="false"
+        v-model="editModal"
+        height="200"
+        title="对话框标题"
+        class-name="vertical-center-modal"
+        :width="1000">
+        <!--<div slot="header"> -->
+        <!--</div>-->
+        <modal-header slot="header" :content="editId"></modal-header>
+        <edit v-if="editModal"  @cancel="cancel" :url="url" @edit="subCallback" :operaility-data="operailityData"></edit>
+        <div slot="footer"></div>
+      </Modal>
+
+      <!--查看弹窗-->
+      <Modal
+        :mask-closable="false"
+        v-model="showModal"
+        height="200"
+        title="对话框标题"
+        class-name="vertical-center-modal"
+        :width="1000">
+        <!--<div slot="header"> -->
+        <!--</div>-->
+        <modal-header slot="header" :content="viewId"></modal-header>
+        <show v-if="showModal"  @cancel="cancel" :url="url" @showModal="subCallback" :operaility-data="operailityData"></show>
+        <div slot="footer"></div>
+      </Modal>
 
       <!--删除弹窗-->
       <Modal
@@ -193,6 +222,10 @@
   import url from '../app'
   /*---引入--新建-- */
   import  add from './evaluationActivitySet_add.vue'
+  /*---引入--新建-- */
+  import  edit from './evaluationActivitySet_edit.vue'
+  /*---引入--新建-- */
+  import  show from './evaluationActivitySet_view.vue'
   let Util=null;
   export default {
     data() {
@@ -548,7 +581,7 @@
       })
     },
     components:{
-      add
+      add,edit,show
     }
   };
 </script>

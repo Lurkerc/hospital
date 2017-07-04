@@ -23,10 +23,16 @@
     <base-info  v-show="active==0" :url="url" @next="next" :operaility-data="formValidate"> </base-info>
 
     <!--第二步：设置评价关系-->
-    <relation  v-show="active==1" :url="url" @next="next" @last="last" :operaility-data="formValidate"></relation>
+    <relation v-if="count>=1"  v-show="active==1" :url="url" @next="next" @last="last" :operaility-data="formValidate"></relation>
 
     <!--第三步选择参与人-->
-    <participant  v-show="active==2" :url="url" @next="next" @last="last" :operaility-data="formValidate"></participant>
+    <participant v-if="count>=2"   v-show="active==2" :url="url" @next="next" @last="last" :operaility-data="formValidate"></participant>
+
+    <!--第四步设置评价时间-->
+    <date  v-if="count>=3" v-show="active==3" :url="url" @next="next" @last="last" :operaility-data="formValidate"></date>
+
+    <!--第五步预览-->
+    <show  v-if="count>=4"  v-show="active==4" :url="url" @next="next" @last="last" :operaility-data="formValidate"></show>
 
 
 
@@ -42,6 +48,10 @@
   import relation from  './evaluationActivitySet_add/add_relation.vue'
   /*---引入选择参与人-----*/
   import participant from  './evaluationActivitySet_add/add_participant.vue'
+  /*---引入设置时间-----*/
+  import date from  './evaluationActivitySet_add/add_date.vue'
+  /*---引入预览-----*/
+  import show from  './evaluationActivitySet_add/add_view.vue'
   let Util=null;
   export default {
     data() {
@@ -56,13 +66,13 @@
           tempId:'',              //评价表ID
           remark:'',              //用途
           relationship:'NO',      //评价人与被评价对象关系
-          loopType:'',            //轮转关系   当 评价人与被评价对象关系 选择 轮转关系(LOOP)时，该项必填。
-          appraiserType:'',       //评价对象类型 当 评价人与被评价对象关系 选择 无直接关系(NO) 或者 本部门或本科室(DEPT) 时，该项必填。
+          loopType:'1',            //轮转关系   当 评价人与被评价对象关系 选择 轮转关系(LOOP)时，该项必填。
+          appraiserType:'ALL',       //评价对象类型 当 评价人与被评价对象关系 选择 无直接关系(NO) 或者 本部门或本科室(DEPT) 时，该项必填。
           appraiser:'',           //评价对象 根据 评价对象类型 所选不同，该项取值不同.
           appraiserPart:[],       //部分人PART评价对象 ，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
           appraiserRole:[],       //指定角色ROLE评价对象 ，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
           appraiserDept:[],       //科室DEPT评价对象(本部门或本科室) ，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
-          evaluatedType:'',       //被评对象类型 当 评价人与被评价对象关系 选择 无直接关系(NO) 或者 本部门或本科室(DEPT) 时，该项必填。
+          evaluatedType:'ALL',       //被评对象类型 当 评价人与被评价对象关系 选择 无直接关系(NO) 或者 本部门或本科室(DEPT) 时，该项必填。
           evaluated:'',           //被评对象 根据 被评对象类型 所选不同，该项取值不同.
           evaluatedPart:[],       //部分人PART被评对象 ，，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
           evaluatedRole:[],       //指定角色ROLE被评对象 ，，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
@@ -251,7 +261,7 @@
     mounted(){
     },
     components:{
-      baseInfo,relation,participant
+      baseInfo,relation,participant,date,show
     }
   };
 </script>

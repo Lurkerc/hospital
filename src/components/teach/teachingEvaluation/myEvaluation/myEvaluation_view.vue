@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="24">
           <div style="width: 120px;margin: 10px 15px;display: inline-block" :key="index" v-for="(item,index) in data.haveScoreList">
-           <div @click="add({id:1})" >
+           <div @click="add(item)" >
              <img style="width: 120px;height: 120px;" :src="item.headPhoto" src="../../../../assets/ambuf/images/physician.png" alt="">
            </div>
             <p style="text-align: center">{{item.userName }}</p>
@@ -20,7 +20,7 @@
           <el-col :span="24">
 
             <div style="width: 120px;margin: 10px 15px;display: inline-block" :key="index" v-for="(item,index) in data.noScoreList">
-             <div  @click="add({id:1})" style="width: 120px;height: 120px;background: #000">
+             <div  @click="add(item)" style="width: 120px;height: 120px;background: #000">
                <img style="width: 120px;height: 120px;" :src="item.headPhoto | isDefImg"   alt="">
              </div>
               <p style="text-align: center">{{item.userName }}</p>
@@ -38,7 +38,7 @@
       class-name="vertical-center-modal"
       >
       <modal-header slot="header" :content="addId"></modal-header>
-      <add v-if="addModal"  @cancel="cancel" :url="url" @add="subCallback" :operailityData="operailityAdd"></add>
+      <add v-if="addModal"  @cancel="cancel" :url="url" @add="subCallback" :activityId="operailityData.id" :operailityData="operailityAdd"></add>
       <div slot="footer"></div>
     </Modal>
   </div>

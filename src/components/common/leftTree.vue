@@ -94,7 +94,7 @@
   let store = null;
   export default {
     name: "leftTree",
-    props: ['treeOptions', "fromWhereTreeType", 'clickAddChange', 'initSltedNode'],
+    props: ['treeOptions', "fromWhereTreeType", 'clickAddChange', 'initSltedNode','currentKey'],
     data() {
       return {
         //tree
@@ -200,6 +200,9 @@
         //设置树的默认列表
         if (this.treeOptions.defaultProps) {
           this.defaultProps = Object.assign(this.defaultProps, this.treeOptions.defaultProps);
+        }
+        if(this.currentNodeKey){
+          this.currentNodeKey = this.currentKey
         }
 
         if (!this.defaults.asyn) {

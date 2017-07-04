@@ -1,0 +1,53 @@
+/**
+ * 轮转查询
+ * 作者:gx
+ * 日期:2017-7-3
+ */
+const rotateRouters = {
+  path: 'rotateQuery',
+  name: 'rotateQuery',
+  meta: {
+    requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+  },
+  component:resolve=> {
+    require.ensure([], () => {
+      resolve(require('@/components/common/rightMain'));
+    }, 'rotateQuery');
+  },
+  redirect: to => {
+    return '/manage/rotateQuery/entityAudit'
+  },
+  children:[{
+    //轮转表
+    path:'rotateTables',
+    name:'rotateTables',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/rotateManagement/rotateQuery/rotateTables/rotateTables_list.vue'));
+      }, 'rotateQuery');
+    }
+   },
+    {
+      //培训档案
+      path:'trainingArchives',
+      name:'trainingArchives',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateQuery/trainingArchives/trainingArchives_list.vue'));
+        }, 'rotateQuery');
+      }
+    },
+    {
+      //补轮转
+      path:'makeUpRotate',
+      name:'makeUpRotate',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateQuery/makeUpRotate/makeUpRotate_list.vue'));
+        }, 'rotateQuery');
+      }
+    },
+  ]
+}
+
+export default rotateRouters;

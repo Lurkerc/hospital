@@ -413,7 +413,7 @@
           this.conductDataHasGroup(data,scoreTypeArr)
 
         }else {
-          this.conductDataHasGroup(data,scoreTypeArr)
+          this.conductDataNoGroup(data,scoreTypeArr)
 
         }
         return data
@@ -538,7 +538,7 @@
             parentTitle:'',
             parentTitleRow:1,
             titleSub:templateItemList[i].title||'',
-            _isParent:false,
+            _isParent:true,
             _id:++this.idCount,
             score:templateItemList[i].score||'',
             scoreRow:1,
@@ -550,7 +550,7 @@
             select1Row:1,
           }
           for(let l=0;l<this.select.length;l++){
-            obj[this.select[l]] = child[k].templateItemOptionList[l].val
+            obj[this.select[l]] =  templateItemList[i].templateItemOptionList[l].val
           }
           body.push(obj)
         }

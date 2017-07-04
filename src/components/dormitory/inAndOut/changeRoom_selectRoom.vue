@@ -1,77 +1,49 @@
 <!--选择房间-->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  ref="formValidate" label-width="100px">
-      <el-row >
-        <el-col :span="10"  >
+    <el-form ref="formValidate" label-width="100px">
+      <el-row>
+        <el-col :span="10">
           <el-form-item label="大楼信息" prop="buildingName">
             <el-select v-model="buildId" placeholder="请选择">
-              <el-option
-                v-for="item in optionData"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
+              <el-option v-for="item in optionData" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
-      <!--表格数据-->
-        <el-table
-          align="center"
-          :height="400"
-          :data="tableData"
-          tooltip-effect="dark"
-          highlight-current-row
-          style="width: 100%;height: 100%"
-          >
-          <el-table-column
-            width="40">
-            <template scope="scope">
-              <el-radio :disabled="scope.row.buildId==build.id && scope.row.id==selectRoom.id" v-model="selectRoomOne" :label="scope.$index"> {{' '}}</el-radio>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            label="序号"
-            type="index"
-            width="75">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="no"
-            label="房间号">
-          </el-table-column>
-          <el-table-column
-            prop="bedNum"
-            label="床位数">
-          </el-table-column>
-          <el-table-column
-            prop="yetBedNum"
-            label="已入住人数">
-          </el-table-column>
-          <el-table-column
-            prop="bedCount"
-            label="空床数">
-          </el-table-column>
-          <el-table-column
-            prop="sex"
-            label="房间类型">
-            <template scope="scope">
-              {{scope.row.sex | roomSex}}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="status"
-            label="状态">
-          </el-table-column>
+    <!--表格数据-->
+    <el-table align="center" :height="400" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%;height: 100%">
+      <el-table-column width="40">
+        <template scope="scope">
+          <el-radio :disabled="scope.row.buildId==build.id && scope.row.id==selectRoom.id" v-model="selectRoomOne" :label="scope.$index">
+          {{' '}}</el-radio>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="序号" type="index" width="75">
+      </el-table-column>
+      <el-table-column align="center" prop="no" label="房间号">
+      </el-table-column>
+      <el-table-column prop="bedNum" label="床位数">
+      </el-table-column>
+      <el-table-column prop="yetBedNum" label="已入住人数">
+      </el-table-column>
+      <el-table-column prop="bedCount" label="空床数">
+      </el-table-column>
+      <el-table-column prop="sex" label="房间类型">
+        <template scope="scope">
+          {{scope.row.sex | roomSex}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="status" label="状态">
+      </el-table-column>
 
-        </el-table>
-          <div style="margin-left: 100px">
-            <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
-            <el-button  @click="cancel">取消</el-button>
-          </div>
+    </el-table>
+    <div style="margin-left: 100px">
+      <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+      <el-button @click="cancel">取消</el-button>
+    </div>
   </div>
 </template>
 <script>
@@ -79,36 +51,39 @@
   //引入--新建--组件
 
   //当前组件引入全局的util
-  let Util=null;
-  export default{
-    props: ['operailityData','selectRoom','url','build'],
+  let Util = null;
+  export default {
+    props: ['operailityData', 'selectRoom', 'url', 'build'],
     data() {
       return {
-        selectRoomOne:'',
-        optionData:[],
+        selectRoomOne: '',
+        optionData: [],
         //保存按钮基本信息
-        loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
+        loadBtn: {
+          title: '提交',
+          callParEvent: 'listenSubEvent'
+        },
         //查询表单
-        buildId:'',
+        buildId: '',
         multipleSelection: [],
-        tableData:[],
-        loading:false,
-        totalCount:0,
+        tableData: [],
+        loading: false,
+        totalCount: 0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
-        listMessTitle:{
-          paramsData:'listUrl',
-          ajaxSuccess:'updateListData',
-          ajaxParams:{
-            url:this.url.queryChangeRoom,
-            params:{}
+        listMessTitle: {
+          paramsData: 'listUrl',
+          ajaxSuccess: 'updateListData',
+          ajaxParams: {
+            url: this.url.queryChangeRoom,
+            params: {}
           }
         },
 
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
-        buildMessTitle:{
-          ajaxSuccess:'getBuildData',
-          ajaxParams:{
-            url:this.url.allBuild,  //向后台请求数据的地址
+        buildMessTitle: {
+          ajaxSuccess: 'getBuildData',
+          ajaxParams: {
+            url: this.url.allBuild, //向后台请求数据的地址
 
           }
         }
@@ -117,7 +92,7 @@
     },
     methods: {
       //初始化请求列表数据
-      init(){
+      init() {
         Util = this.$util;
         //ajax请求参数设置
         this.ajax(this.buildMessTitle)
@@ -127,33 +102,35 @@
        * 点击提交按钮 监听是否提交数据
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
-      listenSubEvent(isLoadingFun){
-          this.$emit('selectRoom',this.tableData[this.selectRoomOne])
+      listenSubEvent(isLoadingFun) {
+        this.$emit('selectRoom', this.tableData[this.selectRoomOne])
       },
 
       //初始化请求大楼数据
-      getBuildData(responseData){
+      getBuildData(responseData) {
         let data = responseData.data;
-          this.buildId = data[0].id;
+        this.buildId = data[0].id;
         this.optionData = data;
 
       },
       //通过get请求列表数据
-      updateListData(responseData){
+      updateListData(responseData) {
         this.radio = ''; //重置单选选中项
-        this.tableData =responseData.data
+        this.tableData = responseData.data
       },
-      setTableData(){
+      setTableData() {
 
-        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions,{buildId:this.buildId});
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params, this.queryQptions, {
+          buildId: this.buildId
+        });
         this.ajax(this.listMessTitle);
       },
 
       //搜索监听回调
-      searchEvent(isLoading){
+      searchEvent(isLoading) {
         //        isLoading(true);
         let isSubmit = this.handleSubmit('formValidate');
-        if(isSubmit){
+        if (isSubmit) {
           this.setTableData()
         }
       },
@@ -163,11 +140,11 @@
        * 列表查询方法
        * @param string 查询from的id
        * */
-      handleSubmit(name){
-        let flag =false
+      handleSubmit(name) {
+        let flag = false
         this.$refs[name].validate((valid) => {
           if (valid) {
-            flag =true;
+            flag = true;
           } else {
             this.$Message.error('表单验证失败!');
           }
@@ -177,32 +154,32 @@
 
 
       /*--点击--添加--按钮--*/
-      add(){
+      add() {
         this.openModel("add");
       },
 
       /*--点击--批量添加--按钮--*/
-      batchAdd(){
+      batchAdd() {
         this.openModel("batchAdd");
       },
 
 
       /*--点击--修改--按钮--*/
-      edit(data){
+      edit(data) {
         this.operailityData = data;
         this.openModel("edit");
       },
       /*--点击--删除--按钮--*/
-      remove(){
-        if(!this.isSelected()) return;
+      remove() {
+        if (!this.isSelected()) return;
         this.operailityData = this.multipleSelection;
-        this.openModel('remove') ;
+        this.openModel('remove');
       },
       /*
        * 点击--查看--按钮
        * @param index string|number  当前行索引
        * */
-      show(data){
+      show(data) {
         this.operailityData = data;
         this.openModel("show");
       },
@@ -211,8 +188,8 @@
        * 作用:根据不同的参数关闭对应的模态
        * @param targer string example:"add"、"edit"
        * */
-      cancel(targer){
-        this.$emit('cancel','selectRoom')
+      cancel(targer) {
+        this.$emit('cancel', 'selectRoom')
       },
       /*
        * 监听子组件通讯的方法
@@ -233,12 +210,12 @@
        *    }
        * @param udata boolean 默认false  是否不需要刷新当前表格数据
        * */
-      subCallback(target,title,updata){
+      subCallback(target, title, updata) {
         this.cancel(target);
-        if(title){
+        if (title) {
           this.successMess(title);
         }
-        if(!updata){
+        if (!updata) {
           this.setTableData();
         }
       },
@@ -246,22 +223,24 @@
        * 打开指定的模态窗体
        * @param options string 当前指定的模态:"add"、"edit"
        * */
-      openModel(options){
-        this[options+'Modal'] = true;
+      openModel(options) {
+        this[options + 'Modal'] = true;
       },
 
     },
-    created(){
+    created() {
       this.init();
+      console.log(this.operailityData, this.selectRoom, this.url, this.build)
     },
-    components:{
+    components: {
       //当前组件引入的子组件
     },
-    watch:{
-      buildId(val){
+    watch: {
+      buildId(val) {
         this.setTableData();
       }
     }
 
   }
+
 </script>

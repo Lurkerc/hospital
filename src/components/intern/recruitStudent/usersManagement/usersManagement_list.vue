@@ -140,7 +140,7 @@
   //引入--修改--组件
   import edit from "./usersManagement_edit";
   //引入--查看--组件
-  import show from "./usersManagement_view";
+  import show from "../../../base/sysManage/departmentStaff/departmentStaff_view";
   //引入--添加--组件
   import add from "./usersManagement_add";
   //引入--导入--组件
