@@ -26,7 +26,7 @@ const getVueObj = function (vue) {
       "DAMAGE": "损坏",
       "SERVICING": "维修中",
       "INUSE": "使用中",
-      //导师类别
+      // 导师类别
       "SD": "硕导",
       "BD": "博导",
       // 考核状态
@@ -56,7 +56,7 @@ const getVueObj = function (vue) {
       // 预约开放时间类型
       "ALL": "全天候",
       "SPECIFIC": "特定时间",
-      //评价表设置活动状态
+      // 评价表设置活动状态
       "NO_PUBLISH": '未发布',
       "PROGRESS": '进行中',
       "END": '结束',
@@ -70,11 +70,14 @@ const getVueObj = function (vue) {
       "NO_QUALIFIED": "不合格",
       "USER_NOT_REPORT": "未上报",
       "EDU_NOT_REPORT": "单位意见未填写",
-      //病种填写
+      // 病种填写
       'NO_SUBMIT': '未上报',
       'REJECT': '驳回',
       'NO_PASS': '未审核',
       'PASS': '通过',
+      // 报到
+      "REGISTER": "报到",
+      "NO_REGISTER": "未报到",
     },
     /* 特殊描述文本（与公共部分冲突的可以作为特殊处理） */
     unit: { // 单位

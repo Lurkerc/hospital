@@ -31,12 +31,12 @@
         <el-table-column type="index" width="55"></el-table-column>
         <el-table-column label="操作" align="center" width="80">
           <template scope="scope">
-            <!--<template v-if="scope.row.depExaminationId">
+            <template v-if="scope.row.depExaminationId">
               <el-button size="small" type="success" @click="rotary(scope.row)" v-if="!isManage && scope.row.depQualified === 'QUALIFIED'">出科</el-button>
               <el-button size="small" type="warning" @click="show(scope.row)" v-else>查看</el-button>
             </template>
-            <span v-else>---</span>-->
-            <el-button size="small" type="warning" @click="rotary(scope.row)">查看</el-button>
+            <span v-else>---</span>
+            <!--<el-button size="small" type="warning" @click="rotary(scope.row)">查看</el-button>-->
           </template>
         </el-table-column>
         <el-table-column label="姓名" prop="userName"></el-table-column>
@@ -233,7 +233,7 @@
       setTableDynHeight() {
         let contentHeight = this.$refs.givenTheApplication.parentNode.parentNode.offsetHeight;
         let tableData = this.$refs.tableData;
-        let paginationHt = 50;
+        let paginationHt = 80;
         this.dynamicHt = contentHeight - tableData.offsetTop - paginationHt;
       },
       /*************************************** 按钮事件 **********************************/
