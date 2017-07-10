@@ -1,0 +1,35 @@
+<!----------------------------------
+****--管床纪录
+****--@role     实习生、研究生、住院医、进修生
+****--@date     2017/7/9
+****--@author   gx
+----------------------------------->
+<template>
+    <div>
+
+    </div>
+</template>
+<script>
+    /*当前组件必要引入*/
+
+    //当前组件引入全局的util
+    let Util = null;
+    export default{
+        data() {
+            return {}
+        },
+        methods: {
+            //初始化请求列表数据
+            init(){
+
+            },
+
+        },
+        created(){
+            this.init();
+        },
+        mounted(){
+        },
+        components: {}
+    }
+</script>

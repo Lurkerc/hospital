@@ -846,3 +846,42 @@ $boderColor:#dfe6ec;
 .selfBody .el-table::after{
   content: none;
 }
+//实习生  基础设置
+.form-fieldset-wrapper{
+  position: relative;
+}
+.form-fieldset-del{
+  position: absolute;
+  top: 0;
+  right: -5px;
+}
+.font14{
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+//实习生  分组设置
+.myCard .el-card__header{
+  padding: 0 5px;
+}
+.myCard .headerBox{
+  position: relative;
+}
+.myCard .headerRemove{
+  position: absolute;
+  top: 8px;
+  right: 0;
+}
+
+
+// 查看 隐藏删除图标
+.onlyUploadShow {
+  li.el-upload-list__item:hover {
+    .el-icon-close {
+      display: none;
+    }
+    .el-upload-list__item-status-label {
+      display: inline-block;
+    }
+  }
+}

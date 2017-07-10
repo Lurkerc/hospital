@@ -26,18 +26,49 @@
                 </el-input>
               </div>
               <div class="listUpArea-moreSearch">
-                <el-button @click="showMoreSearch" type="text">高级查询</el-button>
+                <el-button @click="showSearchMore" type="text">高级查询</el-button>
               </div>
             </el-form>
           </div>
         </div>
       </div>
-      <div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox">
-
+      <div v-if="searchMore" class="listUpAreaMoreSearchBox" ref="searchMore">
+        <el-form :inline="true">
+          <el-form-item label="姓名：">
+            <el-input v-model="formValidate.name"></el-input>
+          </el-form-item>
+          <el-form-item label="性别：">
+            <el-select v-model="formValidate.sex" filterable clearable placeholder="请选择" style="width:175px;" class="nation">
+              <el-option v-for="(item,index) in sexOption" :key="index" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="手机号：">
+            <el-input v-model="formValidate.mobile"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱：">
+            <el-input v-model="formValidate.email"></el-input>
+          </el-form-item>
+          <el-form-item label="身份证：">
+            <el-input v-model="formValidate.idNumber"></el-input>
+          </el-form-item>
+          <el-form-item label="年级：">
+            <el-input v-model="formValidate.grade"></el-input>
+          </el-form-item>
+          <el-form-item label="班级：">
+            <el-input v-model="formValidate.classNum"></el-input>
+          </el-form-item>
+          <el-form-item label="审核状态：">
+            <el-select v-model="formValidate.auditStatus" filterable clearable placeholder="请选择" style="width:175px;" class="nation">
+              <el-option v-for="(item,index) in auditStatusOption" :key="index" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-button type="info" @click="search">查询</el-button>
+        </el-form>
       </div>
-      <br>
-      <div id="myTable" ref="myTable">
-        <el-table ref="multipleTable" align="center" :height="dynamicHt" :context="self" :data="tableData1" tooltip-effect="dark"
+      <div id="myTable" ref="myTable" class="userDataTable">
+        <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData1" tooltip-effect="dark"
           style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55">
           </el-table-column>
@@ -151,12 +182,17 @@
   import layoutTree from "../../../common/layoutTree";
   import leftTree from "../../../common/leftTree";
 
+  import sexOption from './sexOption'; // 性别
+  import auditStatusOption from './auditStatusOption'; // 审核状态
+
   //当前组件引入全局的util
   let Util = null;
   let store = null;
   export default {
     data() {
       return {
+        sexOption,
+        auditStatusOption,
         //tree默认项设置
         treeDefaults: {
           getTreeUrl: "/dept/tree-by-manager",
@@ -172,7 +208,14 @@
         forbiddenUrl: '/account/disEnable',
         usingUrl: '/account/enable',
         formValidate: {
-          name: '',
+          name: '', // 按照姓名模糊查询
+          sex: '', // 性别
+          mobile: '', // 手机号
+          email: '', // 邮箱
+          idNumber: '', // 身份号
+          grade: '', // 年级
+          classNum: '', // 班级
+          auditStatus: '', // 审核状态
         },
         gender: [{
           value: '0',
@@ -223,6 +266,7 @@
         //当前tree选中的node id
         deptId: '',
 
+        searchMore: false,
         shortNoteModal: false,
         deriveModal: false,
         toChannelModal: false,
@@ -230,6 +274,7 @@
         operailityData: '',
         multipleSelection: [],
         dynamicHt: 100,
+        tabHeight: 100,
         self: this,
         tableData1: [],
         loading: false,
@@ -269,6 +314,7 @@
         let myTable = this.$refs.myTable;
         let paginationHt = 50;
         this.dynamicHt = parHt - myTable.offsetTop - paginationHt;
+        this.tabHeight = parHt - myTable.offsetTop - paginationHt;
       },
 
       /*
@@ -345,6 +391,22 @@
         this.clickAddChange = !this.clickAddChange
       },
 
+      // 搜索
+      search() {
+        this.setTableData();
+      },
+
+      // 高级搜索按钮
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          if (this.searchMore) {
+            this.tabHeight = this.dynamicHt - this.$refs.searchMore.offsetHeight;
+          } else {
+            this.tabHeight = this.dynamicHt
+          }
+        })
+      },
 
       /*
        * 未分配可管理的部门
@@ -709,7 +771,7 @@
   }
 
 </script>
-<style>
+<style lang="scss">
   .add-remove {
     margin-bottom: 20px;
   }
@@ -718,6 +780,20 @@
     height: 30px;
     font-size: 18px;
     color: #ffffff;
+  }
+
+  .userDataTable {
+    margin-top: 20px;
+  }
+
+  .listUpAreaMoreSearchBox {
+    margin-top: 20px;
+    .el-select .el-input {
+      width: 100%;
+    }
+    &~.userDataTable {
+      margin-top: 0;
+    }
   }
 
 </style>

@@ -24,7 +24,7 @@
         <!--<template v-if="viewData.imageList && viewData.imageList.length > 0">
           <img v-for="item in viewData.imageList" :src="staticPath + item.path + item.name" class="classViewImg" />
         </template>-->
-        <upload-file v-if="fileList.length" :fileList="fileList" class="onlyShowUploadPic"></upload-file>
+        <upload-file v-if="fileList.length" :fileList="fileList" :show="true"></upload-file>
         <template v-else>暂无图片</template>
       </el-col>
     </el-row>
@@ -39,7 +39,7 @@
       id: { // 房间id
         type: [String, Number],
         required: true
-      },
+      }
     },
     data() {
       return {
@@ -65,17 +65,18 @@
     methods: {
       getDataForServer() {
         console.log(this.id);
-        let roomId = this.id,
-          urlParams = this.urlParams; // props
+        // return
+        let roomId = this.id; // props
         this.ajax({
-          ajaxSuccess: 'ajaxSuccess',
+          ajaxSuccess: 'getDataSuccess',
           ajaxParams: {
             url: api.get.path + roomId,
             method: api.get.method
           }
         })
       },
-      ajaxSuccess(res) {
+      getDataSuccess(res) {
+        this.staticPath = this.$store.getters.getEnvPath.http;
         this.viewData = res.data; // 初始化编辑数据
         this.fileList = [];
         for (let i = 0, list = res.data.imageList, l = list.length; i < l; i++) {
@@ -87,7 +88,7 @@
       }
     },
     created() {
-      this.staticPath = this.$store.getters.getEnvPath.http;
+      // this.staticPath = this.$store.getters.getEnvPath.http;
       this.getDataForServer()
     },
     components: {
@@ -110,11 +111,11 @@
     margin: 0 22px 22px 0;
   }*/
 
-  .onlyShowUploadPic {
-    .el-upload,
-    .el-upload-list__item-actions span.el-upload-list__item-delete {
-      display: none;
-    }
-  }
+  // .onlyShowUploadPic {
+  //   .el-upload,
+  //   .el-upload-list__item-actions span.el-upload-list__item-delete {
+  //     display: none;
+  //   }
+  // }
 
 </style>

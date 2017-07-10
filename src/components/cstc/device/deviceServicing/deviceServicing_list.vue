@@ -51,7 +51,7 @@
         <el-table-column label="操作" width="140" align="left">
           <template scope="scope">
             <el-button size="small" type="success" @click="show(scope.row)">查看</el-button>
-            <el-button size="small" type="warning" @click="borrowThis(scope.$index,scope.row)" v-if="!scope.row.endTime">归还</el-button>
+            <el-button size="small" type="warning" @click="borrowThis(scope.row)" v-if="!scope.row.endTime">归还</el-button>
           </template>
         </el-table-column>
         <el-table-column label="设备名称" prop="deviceTypeName" align="center"></el-table-column>
@@ -241,7 +241,7 @@
         this.$refs[formName].resetFields();
       },
       // 归还
-      borrowThis(index, row) {
+      borrowThis(row) {
         this.ajax({
           ajaxSuccess: (res) => {
             this.successMess("归还成功!");

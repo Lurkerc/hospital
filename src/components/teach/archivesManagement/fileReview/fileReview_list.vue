@@ -153,7 +153,7 @@
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:'/archives/list',
+            url:'/archives/list-by-not-audit',
             params:{}
           }
         },

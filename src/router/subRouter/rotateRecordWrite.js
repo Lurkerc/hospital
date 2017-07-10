@@ -46,6 +46,58 @@ const rotateRouters = {
         }, 'rotateRecordWrite');
       }
     },
+    /*可能有变动*/
+    {
+      //临床操作记录
+      path:'clinicalOperationWrite',
+      name:'clinicalOperationWrite',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateRecordWrite/clinicalOperationWrite/clinicalOperationWrite_list.vue'));
+        }, 'rotateRecordWrite');
+      }
+    },
+    {
+      //抢救记录
+      path:'SaveRecordWrite',
+      name:'SaveRecordWrite',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateRecordWrite/SaveRecordWrite/SaveRecordWrite_list.vue'));
+        }, 'rotateRecordWrite');
+      }
+    },
+    {
+      //管床纪录
+      path:'TubeBedRecordWrite',
+      name:'TubeBedRecordWrite',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateRecordWrite/TubeBedRecordWrite/TubeBedRecordWrite_list.vue'));
+        }, 'rotateRecordWrite');
+      }
+    },
+    {
+      //专题综述
+      path:'MonographReviewWrite',
+      name:'MonographReviewWrite',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateRecordWrite/MonographReviewWrite/MonographReviewWrite_list.vue'));
+        }, 'rotateRecordWrite');
+      }
+    },
+    {
+      //调查报告
+      path:'surveyReportWrite',
+      name:'surveyReportWrite',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateRecordWrite/surveyReportWrite/surveyReportWrite_list.vue'));
+        }, 'rotateRecordWrite');
+      }
+    },
+    /* ----*/
     {
       //科研日志填写
       path:'scientificResearchLog',

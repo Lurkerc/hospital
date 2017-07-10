@@ -274,7 +274,7 @@ let rules={
     specialty:[baseRules.required],   //专业
     grade:[baseRules.required],   //年级
     group:[baseRules.required],   //班级
-    idNumber:[baseRules.required,baseRules.idNumber],   //身份证号码
+    //idNumber:[baseRules.required,baseRules.idNumber],   //身份证号码
     mobile:[baseRules.required,baseRules.mobile],    //手机号
     email:[baseRules.required,baseRules.email,],//邮箱
   },

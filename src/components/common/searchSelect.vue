@@ -8,7 +8,7 @@
     @change="change">
     <el-option
       v-for="item in optionData"
-      :key="item.id"
+      :key="item.name"
       :label="item.name"
       :value="item.id">
     </el-option>
@@ -73,7 +73,16 @@
 
       //选中值发生变化时触发
       change(val){
-        this.$emit("setSltOptionValue",val,this.value);
+        let name = "";
+        if(this.optionData.length>0){
+           for(var i=0,item;i<this.optionData.length;i++){
+               item = this.optionData[i];
+               if(item.id==val){
+                 name = item.name;
+               }
+           }
+        }
+        this.$emit("setSltOptionValue",name,this.value);
       }
     }
   }

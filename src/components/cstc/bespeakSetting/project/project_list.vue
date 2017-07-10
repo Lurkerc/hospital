@@ -27,7 +27,7 @@
         <el-table-column label="预约项目名称" prop="name" show-overflow-tooltip></el-table-column>
         <el-table-column label="创建人" prop="creater" show-overflow-tooltip></el-table-column>
         <el-table-column label="创建时间" prop="createTime" show-overflow-tooltip>
-          <template scope="createTime">
+          <template scope="scope">
             {{ scope.row.createTime | formatDate('yyyy-MM-dd HH:mm:ss') }}
           </template>
         </el-table-column>

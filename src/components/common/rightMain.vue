@@ -9,7 +9,7 @@
                     <ul id="subMeunwrapperid" ref="subMeunwrapperid">
                         <li :class="{active:item.index==selected}" @click="selectedMenus(item.index)" v-for="item in router.children">
                             <div v-if="!item.children" class="ng-isolate-scope">
-                                <router-link v-show="!item.unShow" :to="item.modName">
+                                <router-link v-show="!item.unShow" v-if="currentRoute!=''" :to="dataStructure[currentRoute].path+'/'+item.modName">
                                     <div class="nav-icon"></div>
                                     <div ng-bind="item.name" class="nav-title ng-binding" v-text="item.name"></div>
                                 </router-link>
@@ -41,12 +41,11 @@
         </div>
     </div>
     <div class="viewFramework-main-navbar-collapse">
-        <span class="icon-collapse-left" @click="handleViewSubNav"></span>
+        <span v-show="!isWork" class="icon-collapse-left" @click="handleViewSubNav"></span>
     </div>
     <div class="viewFramework-main-content" id="zyyMain">
         <div class="layout-content">
-            <!--<work></work>-->
-            <router-view v-if="subNavs[0]"></router-view>
+            <router-view></router-view>
         </div>
     </div>
 </div>
@@ -56,11 +55,15 @@
   let Util = null;
   import work from "./workbench.vue"
     export default{
-        props: ["subNavs","dataStructure"],
+        props: ["subNavs","subIndex","dataStructure"],
         data(){
             return{
-                selected:0,
-                isViewSubNav:true
+                selected:-1,
+                isViewSubNav:true,
+                //当为工作台是否隐藏三级菜单
+                isWork:true,
+                //当前的父级路由
+                currentRoute:"",
             }
         },
       created(){
@@ -70,6 +73,19 @@
             getSubMenusData(){
               let data = [];
               let currentRoute = this.getRouterName(2);
+              if(this.subIndex!=""&&currentRoute=="workbench"){
+                currentRoute = this.subIndex;
+                this.isWork = true;
+              }
+              if(this.subIndex==""&&currentRoute=="workbench"){
+                this.isViewSubNav = false;
+                this.isWork = true;
+              }
+              if(currentRoute!="workbench"){
+                this.isViewSubNav = true;
+                this.isWork = false;
+              }
+              this.currentRoute = currentRoute;
               data = this.dataStructure[currentRoute];
               return data;
             },
@@ -92,8 +108,10 @@
         computed:{
             router(){
               let currentRoute = this.getRouterName(1);
-              let n = this.dataStructure["structureIndex"][currentRoute].index;
-              this.selectedMenus(n);
+              if(currentRoute!="workbench"){
+                let n = this.dataStructure["structureIndex"][currentRoute].index;
+                this.selectedMenus(n);
+              }
               return this.getSubMenusData(2);
             }
         },

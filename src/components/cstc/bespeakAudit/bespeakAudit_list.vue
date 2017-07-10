@@ -14,12 +14,12 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template scope="scope">
-            <el-button size="small" type="info" @click="show(scope.$index,scope.row)">查看</el-button>
+            <el-button size="small" type="info" @click="show(scope.row)">查看</el-button>
           </template>
         </el-table-column>
         <el-table-column label="预约房间号" show-overflow-tooltip></el-table-column>
         <el-table-column label="申请使用时间" show-overflow-tooltip></el-table-column>
-        <el-table-column label="事项类型" show-overflow-tooltip></el-table-column>
+        <!--<el-table-column label="事项类型" show-overflow-tooltip></el-table-column>-->
         <el-table-column label="申请人" show-overflow-tooltip></el-table-column>
         <el-table-column label="申请时间" show-overflow-tooltip></el-table-column>
         <el-table-column label="预约状态" show-overflow-tooltip></el-table-column>
@@ -62,6 +62,7 @@
   let store = null;
 
   // 引入操作模态组件
+  import api from './api';
   import add from './bespeakAudit_add'; // 查看
   import show from './bespeakAudit_view'; // 查看评价
 
@@ -79,13 +80,6 @@
         totalCount: 0,
         dynamicHt: 100,
         multipleSelection: '',
-        listMessTitle: {
-          ajaxSuccess: 'listDataSuccess',
-          ajaxParams: {
-            url: '',
-            params: this.queryQptions
-          }
-        },
         // 按钮
         button: {
           addId: {
@@ -115,10 +109,12 @@
         this.myPages = Util.pageInitPrams;
 
         this.queryQptions = {
-          url: this.listUrl,
+          url: api.list.path,
           params: {
             curPage: 1,
-            pageSize: Util.pageInitPrams.pageSize
+            pageSize: Util.pageInitPrams.pageSize,
+            sortby: 'RESERVE_APPLICANTDATE',
+            order: 'DESC'
           }
         }
         this.setTableData();
@@ -180,7 +176,10 @@
         }
       },
       setTableData(isLoading) {
-        this.ajax(this.listMessTitle, isLoading)
+        this.ajax({
+          ajaxSuccess: 'listDataSuccess',
+          ajaxParams: this.queryQptions
+        }, isLoading)
       },
       //搜索监听回调
       searchEvent(isLoading) {
@@ -199,6 +198,12 @@
             this.$Message.error('表单验证失败!');
           }
         })
+      },
+
+      /********* 按钮 *************/
+      // 查看
+      show(row) {
+        this.operailityData = row;
       },
 
       //-------- 模态框 -----------//

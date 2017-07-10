@@ -39,7 +39,8 @@ let baseRules = {
   },
 
   // 身份证
-  idNumber: checkCard,
+  //idNumber: checkCard,
+  idNumber: {},
 
   // 下拉框选择id
   selectId: {

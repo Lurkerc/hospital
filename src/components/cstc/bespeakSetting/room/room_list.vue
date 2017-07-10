@@ -4,7 +4,7 @@
     <el-row>
       <el-col :span="14">
         <!-- 操作按钮 -->
-        <el-button size="small" type="success" @click="set">预约设置</el-button>
+        <el-button size="small" type="success" @click="set(false)">预约设置</el-button>
       </el-col>
       <!-- 搜索框 -->
       <el-col :span="10" align="right">
@@ -19,7 +19,7 @@
       </el-col>
     </el-row>
     <!-- 多条件 -->
-    <div class="noMarginBottom" style="overflow:hidden;" v-show="showMoreSearch">
+    <div class="noMarginBottom" style="overflow:hidden;" v-show="showMoreSearch" ref="showMoreSearch">
       <el-form :inline="true" style="margin-top:10px;float:right;" label-width="74px">
         <el-form-item label="房间名称:">
           <el-input v-model="searchObj.roomName"></el-input>
@@ -42,7 +42,7 @@
 
     <!-- 表格数据 -->
     <div id="tableView" ref="tableView" style="padding-top:10px;">
-      <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
+      <el-table align="center" :height="tableHeight" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
         style="width: 100%;" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="操作" width="140" align="center">
@@ -75,7 +75,7 @@
     <!-- 模态框 设置（set） -->
     <Modal :mask-closable="false" v-model="setModal" height="200" class-name="vertical-center-modal" :width="900">
       <modal-header slot="header" :content="contentHeader.setId"></modal-header>
-      <room-set v-if="setModal" @cancel="cancel" @edit="subCallback" :op-data="operailityData"></room-set>
+      <room-set v-if="setModal" @cancel="cancel" @set="subCallback" :op-data="operailityData"></room-set>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 查看（show） -->
@@ -113,6 +113,7 @@
         totalCount: 0,
         self: this,
         selectType,
+        tableHeight: 0,
         dynamicHt: 100, // 表格高度
         loading: false,
         showMoreSearch: false, // 更多筛选
@@ -172,12 +173,14 @@
       },
       // 显示更多筛选
       openMoreSearch() {
-        this.showMoreSearch = !this.showMoreSearch
-        if (this.showMoreSearch) {
-          this.dynamicHt = this.dynamicHt - 47;
-        } else {
-          this.dynamicHt = this.dynamicHt + 47;
-        }
+        this.showMoreSearch = !this.showMoreSearch;
+        this.$nextTick(() => {
+          if (this.showMoreSearch) {
+            this.tableHeight = this.dynamicHt - this.$refs.showMoreSearch.offsetHeight;
+          } else {
+            this.tableHeight = this.dynamicHt;
+          }
+        })
       },
       /************************* 表格逻辑 *********************************/
       /*
@@ -208,6 +211,7 @@
         let tableView = this.$refs.tableView;
         let paginationHt = 50 + otherHeight;
         this.dynamicHt = this.contenHeight - tableView.offsetTop - paginationHt;
+        this.tableHeight = this.dynamicHt;
       },
       /*
        * 列表数据只能选择一个
@@ -234,7 +238,11 @@
       },
       // 设置
       set(row) {
-        this.operailityData = row || this.multipleSelection;
+        this.operailityData = row && [row] || this.multipleSelection;
+        if (!this.operailityData.length) {
+          this.errorMess('请选择需要设置的房间')
+          return
+        }
         this.openModel('set')
       },
       // 取消

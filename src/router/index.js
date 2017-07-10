@@ -5,6 +5,10 @@ import config from '../config/config';
 import Index from '../components/Index'
 
 //引入各个业务模块的二级路由
+/**
+ * 工作台
+ * */
+  import work from './subRouter/workbench'
 
 /**
  * 日常管理
@@ -982,6 +986,8 @@ const routes = [
     name: 'manage',
     component: Index,
     children:[
+      //工作台
+      work,
       //日常管理
       pygl,jtgl,zyzhd,kqgl,zybl,jcjl,
 

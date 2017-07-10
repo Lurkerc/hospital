@@ -47,6 +47,62 @@ const rotateRouters = {
         }, 'rotateRecordAudit');
       }
     },
+
+    /** 可能有变动
+     * */
+
+    {
+      //临床操作审核
+      path:'clinicalOperationAudit',
+      name:'clinicalOperationAudit',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateRecordAudit/clinicalOperationAudit/clinicalOperationAudit_list.vue'));
+        }, 'rotateRecordAudit');
+      }
+    },
+    {
+      //抢救记录审核
+      path:'SaveRecordAudit',
+      name:'SaveRecordAudit',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateRecordAudit/SaveRecordAudit/SaveRecordAudit_list.vue'));
+        }, 'rotateRecordAudit');
+      }
+    },
+    {
+      //管床纪录审核
+      path:'TubeBedRecordAudit',
+      name:'TubeBedRecordAudit',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateRecordAudit/TubeBedRecordAudit/TubeBedRecordAudit_list.vue'));
+        }, 'rotateRecordAudit');
+      }
+    },
+    {
+      //专题综述审核
+      path:'MonographReviewAudit',
+      name:'MonographReviewAudit',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateRecordAudit/MonographReviewAudit/MonographReviewAudit_list.vue'));
+        }, 'rotateRecordAudit');
+      }
+    },
+    {
+      //专题综述审核
+      path:'surveyReportAudit',
+      name:'surveyReportAudit',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateRecordAudit/surveyReportAudit/surveyReportAudit_list.vue'));
+        }, 'rotateRecordAudit');
+      }
+    },
+    /*---*/
+
     {
       //科研日志审核
       path:'scientificResearchLogAudit',

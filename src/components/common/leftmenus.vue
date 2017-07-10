@@ -24,11 +24,11 @@
 <script>
   import $ from 'jquery';
     export default{
-        props: ["leftNavData","dataStructure"],
+        props: ["leftNavData","subIndex","dataStructure"],
         data(){
             return{
                 parIdx:0,
-                selected:0,
+                selected:-1,
                 onlyOnce:true,
                 menusData:[{
                     children:[],
@@ -51,6 +51,10 @@
         },
         methods:{
             init(){
+              if(this.leftNavData.length>1){
+                this.leftNavData.splice(0,1);
+              }
+
               this.getMenusData();
               let getStrIndex = this.getStructureIndex(2);
               let parIdx = getStrIndex.parIdx;
@@ -64,6 +68,9 @@
               let currentRoute = this.getRouterName(n);
               let currSubIdx = this.dataStructure["structureIndex"][currentRoute].index;
               let parIdx = this.dataStructure["structureIndex"][currentRoute].parIdx;
+              if(currentRoute!="workbench"){
+                parIdx--;
+              }
               return {currSubIdx:currSubIdx,parIdx:parIdx};
             },
             getMenusData(){

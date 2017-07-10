@@ -86,8 +86,39 @@
     },
     methods: {
       setMeusData(responseData) {
-        let data = responseData.data;
-        data = data[0].children;
+        let data = responseData.data||[];
+          if(data.length>0){
+            data = data[0].children;
+          }
+
+        data.unshift({
+          expand:true,
+          icon:"",
+          id:-100,
+          leaf:true,
+          modName:"work",
+          name:"工作台",
+          url:"",
+          children:[{
+            expand:true,
+            icon:"",
+            id:-101,
+            leaf:true,
+            modName:"workbench",
+            name:"工作台",
+            url:"",
+            children:[{
+              expand:true,
+              icon:"",
+              id:-102,
+              leaf:true,
+              modName:"work",
+              name:"工作台",
+              url:"",
+            }]
+          }]
+        })
+
         //将设置完成的structureIndex赋值给 navs
         let index = "/manage",
           myData = data[0].children || [];

@@ -8,8 +8,8 @@
       </el-col>
       <el-col :span="20" :offset="2">
         <div style="padding-top:20px;">
-          <el-table align="center" :context="self" :data="tableData" tooltip-effect="dark" :height="dynamicHt" style="width: 100%"
-            @selection-change="handleSelectionChange">
+          <el-table ref="multipleTable" align="center" :context="self" :data="tableData" tooltip-effect="dark" :height="dynamicHt"
+            style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="selection" :selectable="selectable" width="55"></el-table-column>
             <el-table-column label="房间号" prop="roomNum" align="center"></el-table-column>
             <el-table-column label="房间名称" prop="roomName" show-overflow-tooltip></el-table-column>
@@ -17,10 +17,10 @@
           </el-table>
         </div>
         <!-- 分页按钮 -->
-        <div style="float: right;margin-top:10px;">
+        <!--<div style="float: right;margin-top:10px;">
           <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
             :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="myPages.listTotal"></el-pagination>
-        </div>
+        </div>-->
       </el-col>
       <div style="clear:both;padding-top:20px;">
         <el-col :span="6" :offset="6" align="center">
@@ -44,9 +44,13 @@
       urlParams: {
         type: Object,
         default: () => ({
-          path: 'scene/station/room/all/list', // api路径
+          path: 'room/select/list', // api路径
           method: 'get', // 请求方法
         })
+      },
+      select: { // 已经选中的id集合（数组）
+        type: Array,
+        default: () => []
       },
       selectOne: { // 是否只选一个
         type: Boolean,
@@ -119,6 +123,19 @@
       listDataSuccess(res, m, loading) {
         this.listTotal = res.totalCount || 0;
         this.tableData = res.data;
+        this.$nextTick(() => {
+          if (this.select.length) {
+            let thisPageIds = [];
+            let rowIndex;
+            res.data.map(item => thisPageIds.push(item.id));
+            this.select.map(id => {
+              rowIndex = thisPageIds.indexOf(id);
+              if (rowIndex > -1) {
+                this.$refs.multipleTable.toggleRowSelection(this.tableData[rowIndex]); // 选中数据
+              }
+            })
+          }
+        })
       },
       /*
        * 列表数据只能选择一个

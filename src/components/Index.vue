@@ -11,13 +11,13 @@
                 <div class="sidebar-inner">
                     <div class="sidebar-fold" @click="handleViewSubNav"></div>
                     <div v-if="!gotoRouter" style="text-align: center;margin-top: 100px;">数据请求失败!</div>
-                    <Left v-if="gotoRouter" :leftNavData="Nav" :dataStructure="dataStructures"></Left>
+                    <Left v-if="gotoRouter" :leftNavData="Nav" :subIndex="subIndex" :dataStructure="dataStructures"></Left>
                 </div>
             </div>
         </div>
         <div class="viewFramework-main">
             <div v-if="!gotoRouter" style="text-align: center;margin-top: 100px;">数据请求失败!</div>
-            <router-view v-if="gotoRouter" :subNavs="subNavs" :dataStructure="dataStructures"></router-view>
+            <router-view v-if="gotoRouter" :subNavs="subNavs" :subIndex="subIndex" :dataStructure="dataStructures"></router-view>
         </div>
     </div>
   </div>
@@ -89,6 +89,7 @@ export default {
         homeRouterPath:{},
         Nav: [{}],
         subNavs: [{}],
+        subIndex:"",
         dataStructures: [{}],
         isViewSubNav: true,
         getMenusData: {
@@ -108,8 +109,55 @@ export default {
     },
     methods:{
       setMeusData(responseData){
-        let data = responseData.data;
-        data = data[0].children;
+        let data = responseData.data||[];
+        if(data.length>0){
+          data = data[0].children;
+          this.subIndex = data[0].children[0]["modName"];
+        }else{
+          data = [{
+            expand:true,
+            icon:"",
+            id:-100,
+            leaf:true,
+            modName:"work",
+            name:"南京鼓楼",
+            path:"/work",
+            url:"",
+            children:[],
+          }]
+        }
+
+        data.unshift({
+          expand:true,
+          icon:"",
+          id:-100,
+          leaf:true,
+          modName:"work",
+          name:"工作台",
+          path:"/work",
+          url:"",
+          children:[{
+            expand:true,
+            icon:"",
+            id:-101,
+            leaf:true,
+            modName:"workbench",
+            name:"工作台",
+            path:"/workbench",
+            url:"",
+            children:[{
+              expand:true,
+              icon:"",
+              id:-102,
+              leaf:true,
+              modName:"work",
+              name:"工作台",
+              path:"/work",
+              url:"",
+            }]
+          }]
+        })
+
         setStructureIndex(data);
         let dataStructure  = getSubData(data);
 

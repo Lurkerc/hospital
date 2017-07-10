@@ -112,10 +112,9 @@
           paramsData:'listUrl',
           ajaxSuccess:'SuccessGetCurrData',
           ajaxParams:{
-            url:'/occupationalExposure/reimbursement/get/'+this.operailityData.id,
+            url:'/occupationalExposure/reimbursement/get/'+this.operailityData.reimbursementId,
           }
         },
-
       }
     },
     created(){

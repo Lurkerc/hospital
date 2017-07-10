@@ -16,6 +16,7 @@ import selectUser from '../components/common/selectUser.vue';
 import dateGroup from '../components/common/dateGroup.vue';
 import searchSelect from '../components/common/searchSelect.vue';
 import selectOption from '../components/common/selectOption.vue';
+import dictionarySelect from '../components/common/dictionarySelect.vue';
 import xlsx from '../components/common/vue-xlsx-table.vue';
 import derive from '../components/common/derive.vue';
 
@@ -87,6 +88,7 @@ util.queryData = function (options, fun) {
   } else {
     //GET提交数据时必选参数
     let myParams = options.params || {}; //{params: {ID: 12345}} || '/user?ID=12345'
+    myParams = Object.assign({},myParams,{mathRand:Math.random() * 100000000000000000})
     config.params = myParams;
     // if(method=="delete"){
     //   instance.defaults.headers.post['Content-Type'] = 'multipart/form-data';
@@ -158,6 +160,10 @@ util.handleAjaxError = function ($vue, status, mess) {
     case "500":
       flag = true;
       $vue.errorMess("服务器异常")
+      break;
+    case "504":
+      flag = true;
+      $vue.errorMess("服务器网络异常(网关超时）!");
       break;
     default:
       if(mess!=""){
@@ -816,7 +822,8 @@ export default {
         searchSelect,
         selectOption,
         xlsx,
-        derive
+        derive,
+        dictionarySelect
       }
     })
   },

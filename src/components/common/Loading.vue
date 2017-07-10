@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
   <div class="loading">
-    <p><i class="el-icon-loading"></i> 拼命加载中...</p>
+    <p><i class="el-icon-loading"></i> 加载中...</p>
   </div>
 </template>
 <style>

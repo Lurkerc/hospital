@@ -276,8 +276,8 @@
 
 
       //监听子组件选择--指定角色--已选中值的变化,并设置此值
-      setSltRoles(val){
-        this.formValidate.roleIds=val.join(",");
+      setSltRoles(val,id){
+        this.formValidate.roleIds=id.join(",");
       },
 
 

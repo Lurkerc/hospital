@@ -44,7 +44,7 @@ const mutations = {
   setToken(state, token) {
     state.token = token;
     if (!state.token) {
-      state["userInfo"] = null;
+      state["userInfo"] = {};
     }
   },
   setFullLoading(state, flag) {

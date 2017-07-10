@@ -65,6 +65,16 @@ const getVueObj = function (vue) {
       "NOT_AUDIT": "待审核",
       "AUDIT_FAILURE": "未通过",
       "AUDIT_SUCCESS": "审核通过",
+      // 是否合格
+      "QUALIFIED": "合格",
+      "NO_QUALIFIED": "不合格",
+      "USER_NOT_REPORT": "未上报",
+      "EDU_NOT_REPORT": "单位意见未填写",
+      //病种填写
+      'NO_SUBMIT': '未上报',
+      'REJECT': '驳回',
+      'NO_PASS': '未审核',
+      'PASS': '通过',
     },
     /* 特殊描述文本（与公共部分冲突的可以作为特殊处理） */
     unit: { // 单位
@@ -103,7 +113,11 @@ const getVueObj = function (vue) {
     isPay: { // 缴费
       "0": "未缴费",
       "1": "已缴费",
-    }
+    },
+    isNeed: { // 是否需要
+      "0": "不需要",
+      "1": "需要"
+    },
   };
 
   const filters = [ // 声明全局过滤器及回调函数

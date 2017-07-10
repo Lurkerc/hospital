@@ -16,8 +16,8 @@
               <el-row :gutter="10" class="table-back-one">
                 <el-col :span="8" >
                   <el-form-item label="姓名：" prop="name" >
-                    {{formValidate.name}}
-                    <!--<el-input v-model="" placeholder="请输入"></el-input>-->
+                    <!--{{formValidate.name}}-->
+                    <el-input v-model="formValidate.name" placeholder="请输入"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8" >

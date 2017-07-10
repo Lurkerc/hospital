@@ -10,6 +10,14 @@ let internAudit = {
   sxEndTime: baseRules.isDate, // 实习结束时间 - 必须为日期时间
 };
 
+
+/**
+ * 收费标准
+ */
+let chargingStandard = {
+  configValue: [baseRules.required,baseRules.numberMust], // 实习费 - 必填\数字
+};
+
 export {
-  internAudit,
+  internAudit,chargingStandard,
 };

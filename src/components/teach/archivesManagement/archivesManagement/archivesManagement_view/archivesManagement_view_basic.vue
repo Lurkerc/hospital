@@ -24,7 +24,7 @@
                 </el-col>
                 <el-col :span="8" >
                   <el-form-item label="性别：" prop="sex" >
-                    {{formValidate.sex}}
+                    {{formValidate.sex | typeText}}
                   </el-form-item>
                 </el-col>
                 <el-col :span="8" >
