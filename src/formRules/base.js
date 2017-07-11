@@ -20,6 +20,8 @@ let changeEvent = 'change';
  * sectionVal     字符串区间
  * asyncVal       异步服务器验证
  * isDate         date检测
+ * inputLen       字符串区间
+ * illegalChar    非法字符串
  */
 
 /************************* 常规规则 ****************************/
@@ -69,6 +71,46 @@ let baseRules = {
       min: min,
       max: max,
       message: '长度在 ' + min + ' 到 ' + max + ' 个字符'
+    }
+  },
+
+  /**
+   * 输入字符长度检测
+   * @min number 范围最小值
+   * @max number 范围最大值
+   *
+   * 参数：null -> 不做任何检测 inputLen()
+   *      min -> 最少输入多少个字符 inputLen(2)
+   *      0,max -> 最多输入多少个字符 inputLen(0,5)
+   *      min,max -> 只能输入min-max个字符 inputLen(1,10)
+   */
+  inputLen: (min, max) => {
+    // 长度检测
+    return (rule, value = '', callback) => {
+      let msg;
+      if (min === 0 && max && value.length > max) {
+        msg = `最多输入${max}个字符`;
+      } else {
+        if (max && (value.length > max || value.length < min)) {
+          msg = `只能输入${min}-${max}个字符`
+        }
+        if (value.length < min) {
+          msg = `最少输入${min}个字符`;
+        }
+      }
+      msg && callback(new Error(msg));
+      callback();
+    }
+  },
+
+  /**
+   * 非法字符串检测
+   * @reg 非法字符正则表达式 默认@|#|$|%|^|&|* 都属于非法字符
+   */
+  illegalChar: (reg = /[@#\$%\^&\*]+/) => {
+    return (rule, value = '', callback) => {
+      value && reg.test(value) && callback(new Error('存在非法字符！'))
+      callback()
     }
   },
 

@@ -40,7 +40,7 @@ let assessmentContentScript = {
  * 场次管理 - 自由考核
  */
 let examineIntervalFREE = {
-  sceneName: baseRules.required, // 场次名称 - 必填
+  sceneName: [baseRules.required, baseRules.inputLen(1, 50)], // 场次名称 - 必填、只能输入1-50个字符
   startTime: baseRules.isDate, // 开始时间 - 必须为日期时间
   endTime: baseRules.isDate, // 开始时间 - 必须为日期时间
 };
@@ -49,7 +49,7 @@ let examineIntervalFREE = {
  * 场次管理 - 规范考核
  */
 let examineIntervalSTANDARD = {
-  sceneName: baseRules.required, // 场次名称 - 必填
+  sceneName: [baseRules.required, baseRules.inputLen(1, 50)], // 场次名称 - 必填、只能输入1-50个字符
   startTime: baseRules.isDate, // 开始时间 - 必须为日期时间
   restNum: baseRules.numberMust, // 休息次数 - 必须为数字
   restTime: baseRules.numberMust, // 休息时间 - 必须为数字
