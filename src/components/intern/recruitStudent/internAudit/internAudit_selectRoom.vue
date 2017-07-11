@@ -56,7 +56,7 @@
     },
     data() {
       return {
-        buildIndex: 0,
+        buildIndex: '',
         selectRoomIndex: '',
         buildData: [], // 大楼id
         tableData: [], // 宿舍id
@@ -131,7 +131,9 @@
 
 </script>
 
-<style>
+<style lang="scss">
   /* 选择宿舍 */
+
+  @import'../../../../assets/ambuf/css/manage_v1.0/editForm';
 
 </style>

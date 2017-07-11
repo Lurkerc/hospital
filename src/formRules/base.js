@@ -105,9 +105,10 @@ let baseRules = {
 
   /**
    * 非法字符串检测
-   * @reg 非法字符正则表达式 默认@|#|$|%|^|&|* 都属于非法字符
+   * @reg 非法字符正则表达式 默认只能输入中文、数字、英文（不含标点符号）
+   *  /[@#\$%\^&\*]+/ ----> @|#|$|%|^|&|* 都属于非法字符
    */
-  illegalChar: (reg = /[@#\$%\^&\*]+/) => {
+  illegalChar: (reg = /[^\u4e00-\u9fa5\w\s，。、；‘’“”《》——+-、~·！]/m) => {
     return (rule, value = '', callback) => {
       value && reg.test(value) && callback(new Error('存在非法字符！'))
       callback()

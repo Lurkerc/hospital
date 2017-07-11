@@ -1,14 +1,11 @@
 <!--
-****--结业鉴定(dd)
+****--结业审核
 ****--@date     2017/7/3
 ****--@author   gx
 -->
 <template>
-  <div class="graduationAppraisal">
-    <h2 class="graduationAppraisalTitle">毕业实习总鉴定</h2>
-    <div class="gaMain">
-      做到此处
-    </div>
+  <div>
+    结业审核
   </div>
 </template>
 <script>
@@ -37,6 +34,6 @@
 </script>
 
 <style lang="scss">
-  @import'../../../../assets/ambuf/css/graduationAppraisal_v1.0/content';
+
 
 </style>
