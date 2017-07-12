@@ -29,6 +29,17 @@ const attendanceRouters = {
         }, 'attendanceManagement');
       }
     },{
+      //我的考勤
+      path:'myAttendance',
+      name:'myAttendance',
+      component:resolve=> {
+        require.ensure([], () => {
+          // resolve(require('../../components/daily/dailyManagement/dailyAttendance/dailyAttendance_list.vue'));
+          resolve(require('../../components/daily/dailyManagement/dailyAttendance/myAttendance_list.vue'));
+        }, 'attendanceManagement');
+      }
+    },
+    {
       //日常考勤统计
       path:'dailyAttendanceStatistics',
       name:'dailyAttendanceStatistics',

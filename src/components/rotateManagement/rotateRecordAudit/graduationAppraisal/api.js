@@ -12,6 +12,14 @@ const api = {
     path: thisFile + '/manageAdd/', // {appraisalId}
     method: 'post'
   },
+  exportQualifiedUser: { // 导出合格人员
+    path: thisFile + '/exportQualifiedUser',
+    method: 'get'
+  },
+  exportNoQualifiedUser: { // 导出不合格人员
+    path: thisFile + '/exportNoQualifiedUser',
+    method: 'get'
+  }
 };
 
 export default api

@@ -897,8 +897,7 @@
         let date = new Date();
         date = this.yearMonth(+this.yearMonth(date));
 
-        this.formValidate.month = date;
-        let ts  = new Date(date);
+        this.formValidate.month = date
         this.setTableData();
       },
       //设置表格及分页的位置

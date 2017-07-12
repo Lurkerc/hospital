@@ -59,6 +59,7 @@
               @click="edit(scope.row)">修改</el-button>
             <el-button
               size="small"
+              v-if="scope.row.status == 'DSH'"
               @click="audit(scope.row)">审核</el-button>
             <el-button
               size="small"
@@ -246,16 +247,7 @@
         },
         options:{},
         "tableData":[
-          {
-            "leaveType":"请假事由",
-            "createTime":"2016-04-25",
-            "id":1,
-            "beginDate":"2016-05-01",
-            "endDate":"2016-05-03",
-            "userName":"蒋国华",
-            "depName":"呼吸科",
-            "status":"WSB"
-          }
+
         ],
         statusData:{
           url:'leave/modifyLeaveStatus/approval/batch',

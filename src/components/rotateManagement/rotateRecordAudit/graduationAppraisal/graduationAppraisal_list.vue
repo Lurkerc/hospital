@@ -9,8 +9,8 @@
       <el-row>
         <el-col :span="14">
           <el-button type="success">导入成绩</el-button>
-          <el-button type="info">导出合格名单</el-button>
-          <el-button type="danger">导出不合格名单</el-button>
+          <el-button type="info" @click="derive('exportQualifiedUser')">导出合格名单</el-button>
+          <el-button type="danger" @click="derive('exportNoQualifiedUser')">导出不合格名单</el-button>
           <el-button type="primary">转为研究生</el-button>
         </el-col>
         <el-col :span="10" align="right" style="padding-bottom:20px;">
@@ -87,6 +87,23 @@
       <given-view v-if="givenViewModal" @cancel="cancel" :operaility-data="operailityData"></given-view>
       <div slot="footer"></div>
     </Modal>
+    <!--导出弹窗-->
+    <Modal :mask-closable="false" height="200" v-model="deriveModal" class-name="vertical-center-modal" :width="500">
+      <modal-header slot="header" :content="contenHeader.deriveId"></modal-header>
+      <div>
+        <div class="remove">确认导出吗</div>
+        <el-row>
+          <el-col :span="10" :offset="14">
+            <a :href="deriveUrl">
+              <el-button @click="deriveModal=false" type="primary">确定</el-button>
+            </a>
+            <el-button class="but-col" @click="deriveModal=false">取消</el-button>
+          </el-col>
+          </el-col>
+        </el-row>
+      </div>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -100,6 +117,9 @@
   export default {
     data() {
       return {
+        deriveUrl: '',
+        deriveModal: false,
+        qualifiedActive: '',
         searchMore: false,
         searchObj: {
           userName: '', // 姓名
@@ -127,6 +147,10 @@
           givenViewId: {
             id: 'givenViewId',
             title: '查看出科详情'
+          },
+          deriveId: {
+            id: "deriveId",
+            title: "导出名单"
           }
         },
       }
@@ -178,6 +202,15 @@
       showGiven(row) {
         this.operailityData = row;
         this.openModel('givenView')
+      },
+      // 导出
+      derive(type) {
+        let params = [];
+        Util._.map(this.searchObj, (key, val) => {
+          params.push(key + '=' + val)
+        })
+        this.deriveUrl = api[type].path + '?' + params.join('&');
+        this.openModel('derive');
       },
       /********************************* 表格相关 *****************************/
       /*

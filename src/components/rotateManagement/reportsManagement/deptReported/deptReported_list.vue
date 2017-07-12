@@ -36,7 +36,7 @@
     <div id="tableView" ref="tableView" style="padding-top:10px;">
       <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
         style="width: 100%;" @selection-change="handleSelectionChange">
-        <el-table-column type="index" width="55"></el-table-column>
+        <el-table-column label="序号" type="index" width="80"></el-table-column>
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="操作" width="140">
           <template scope="scope">

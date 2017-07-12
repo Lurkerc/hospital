@@ -201,7 +201,8 @@
       },
       // 检测自由选择时是否选择了宿舍
       checkRoomHasSelect() {
-        let tag = ((this.formValidate.isDormitory && this.formValidate.isFreeSelect) && !this.formValidate.roomId);
+        let tag = ((this.formValidate.isDormitory === '1' && this.formValidate.isFreeSelect === '1') && !this.formValidate
+          .roomId);
         if (tag) {
           this.errorMess('请选择宿舍！')
         }

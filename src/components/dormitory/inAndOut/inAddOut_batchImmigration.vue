@@ -281,6 +281,11 @@
           ajaxSuccess:'SuccessQueryDormitory',
           ajaxParams:{
             url:this.url.queryCormitory,
+            params:{
+                roomId:this.selectRoom.id,
+                sex:this.selectRoom.sex
+            },
+
           }
         }
         this.ajax(queryDormitory)
@@ -290,7 +295,7 @@
       //获取自动安排人员成功
       SuccessQueryDormitory(responseData){
         let data = responseData.data;
-        if(!data)this.showMess('无人员可被安排');
+        if(!data||data==0)this.showMess('无人员可被安排');
         let userIds = [];
         let userNames =[];
         for(let i =0;i<data.length;i++){
