@@ -46,7 +46,6 @@ const rotateRouters = {
         }, 'rotateRecordWrite');
       }
     },
-    /*可能有变动*/
     {
       //临床操作记录
       path:'clinicalOperationWrite',

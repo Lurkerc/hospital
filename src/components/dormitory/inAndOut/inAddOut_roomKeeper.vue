@@ -2,45 +2,45 @@
 <template>
 
   <div>
-    <el-form  ref="formValidate"  class="demo-form-inline" label-width="90px" >
+      <el-form class="demo-form-inline" label-width="100px">
+        <el-row >
+          <el-col :span="8" :offset="2">
+            <el-form-item label="大楼名称:" class="feildFontweight">
+              {{roomData.buildingName}}
+            </el-form-item>
+          </el-col>
+          <el-col :span="8" :offset="2">
+            <el-form-item label="房间类别:" class="feildFontweight">
+              {{roomData.sex | roomSex}}
+            </el-form-item>
+          </el-col>
+        </el-row >
+        <el-row >
+          <el-col :span="8" :offset="2">
+            <el-form-item label="房间号:" class="feildFontweight">
+              {{roomData.no}}
+            </el-form-item>
+          </el-col>
+          <el-col :span="8" :offset="2">
+            <el-form-item label="床位数:" class="feildFontweight">
+              {{roomData.bedNum}}
+            </el-form-item>
+          </el-col>
+        </el-row >
 
-      <el-row >
-        <el-col :span="8" :offset="2">
-          <el-form-item label="迁入时间:" prop="inDateString" >
-            {{selectRoom.dateString}}
-          </el-form-item>
-        </el-col>
-        <el-col :span="8" :offset="2">
-          <el-form-item label="房间号:" prop="phone" >
-            {{roomData.no}}
-          </el-form-item>
-        </el-col>
-        </el-col >
-      </el-row >
-
-      <el-row >
-        <el-col :span="8" :offset="2">
-          <el-form-item label="房间类别:" prop="inDateString" >
-            {{roomData.sex | roomSex}}
-
-          </el-form-item>
-        </el-col>
-        <el-col :span="8" :offset="2">
-          <el-form-item label="床位数:" prop="phone" >
-            {{roomData.bedNum}}
-          </el-form-item>
-        </el-col>
-        </el-col >
-      </el-row >
-
-      <el-row >
-        <el-col :span="16" :offset="2">
-          <el-form-item label="备注:" prop="remark">
-            <el-input v-model="roomData.remark" type="textarea" readonly resize="none" :rows="8"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row >
-
+        <el-row >
+          <el-col :span="16" :offset="2">
+            <el-form-item label="备注:" class="feildFontweight" >
+              <el-input
+                type="textarea"
+                :rows="5"
+                readonly
+                resize="none"
+                v-model="roomData.remark">
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row >
     </el-form>
   </div>
 </template>

@@ -2,10 +2,15 @@
 <template>
   <div id="content" ref="content" class="modal in-and-out-content"  >
     <steps  v-if="isShowBuild"></steps>
-    <el-form  v-if="isShowBuild" ref="formValidate" label-width="100px">
+    <el-form  v-if="isShowBuild" :model="formValidate" ref="formValidate" :rules="rules.buildingMessList" label-width="100px">
       <el-row >
-        <el-col :span="10" :offset="12" >
+        <el-col :span="2"  >
           <el-form-item  prop="title">
+            <el-button @click="addAutoList" type="primary">自动安排</el-button>
+          </el-form-item>
+        </el-col>
+        <el-col :span="10" :offset="12" >
+          <el-form-item  prop="name">
             <input class="hidden">
             <el-input   v-model="formValidate.name" placeholder="输入大楼名称搜索">
               <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
@@ -21,7 +26,7 @@
       <div v-if="isShowBuild">
         <ul :style="{height:dynamicHt+'px'}">
           <li v-for="(item,index) in tableData" :key="index" class="build-list"><img src="../../../assets/ambuf/images/build.png" alt="大楼">
-            <span class="pointer" v-text="item.name" @click="buildClick(item)"></span> </li>
+            <span class="pointer" style="width:166px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;" v-text="item.name" @click="buildClick(item)"></span> </li>
         </ul>
         <div v-if="!tableData[0]">暂无数据</div>
       </div>
@@ -29,14 +34,15 @@
 
     </div>
     <div v-if="!isShowBuild" >
-      <room-list :parentDara="operailityData" @cancel="goBack"></room-list>
+      <room-list :rules="rules" :parentDara="operailityData" @cancel="goBack"></room-list>
     </div>
   </div>
 </template>
 <script>
   /*当前组件必要引入*/
-  import url from '../app'
-
+  import url from '../app';
+  //引入--验证--组件
+  import rules from "../rules.js";
   /*引入房间列表*/
   import steps from '../dormitory_common/steps.vue'
 
@@ -46,6 +52,7 @@
   export default{
     data() {
       return {
+        rules:rules,
         url:url,
         //查询表单
         formValidate: {
@@ -82,6 +89,28 @@
         //ajax请求参数设置
 
         this.setTableData();
+      },
+
+
+      //所有房间自动安排
+      addAutoList(){
+        //当前组件提交(add)数据时,ajax处理的 基础信息设置
+        let addAutoList={
+          type:'add',
+            successTitle(){
+              this.successMess('自动安排成功');
+            },
+            errorTitle:'自动安排失败!',
+            ajaxSuccess:'ajaxSuccess',
+            ajaxError:'ajaxError',
+            ajaxParams:{
+            url:this.url.bedPersonAddAutoList,
+              method:'post',
+              data:{},
+          }
+        };
+        this.ajax(addAutoList);
+
       },
       //设置表格及分页的位置
       setTableDynHeight(){

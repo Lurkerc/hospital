@@ -74,7 +74,7 @@
         class-name="vertical-center-modal"
         :loading="loading">
         <modal-header slot="header" :content="batchImmigrationId"></modal-header>
-        <batchImmigration v-if="batchImmigrationModal" @cancel="cancel" :build="parentDara" @batchImmigration="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></batchImmigration>
+        <batchImmigration v-if="batchImmigrationModal" :rules="rules" @cancel="cancel" :build="parentDara" @batchImmigration="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></batchImmigration>
         <div slot="footer"></div>
       </Modal>
       <!---->
@@ -87,7 +87,7 @@
         class-name="vertical-center-modal"
         :loading="loading">
         <modal-header slot="header" :content="batchMigrationId"></modal-header>
-        <batchMigration v-if="batchMigrationModal" @cancel="cancel" :build="parentDara" @batchMigration="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></batchMigration>
+        <batchMigration v-if="batchMigrationModal" :rules="rules" @cancel="cancel" :build="parentDara" @batchMigration="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></batchMigration>
         <div slot="footer"></div>
       </Modal>
       <!---->
@@ -100,7 +100,7 @@
         class-name="vertical-center-modal"
         :loading="loading">
         <modal-header slot="header" :content="roomKeeperId"></modal-header>
-        <roomKeeper v-if="roomKeeperModal" @cancel="cancel" :build="parentDara" @roomKeeper="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></roomKeeper>
+        <roomKeeper v-if="roomKeeperModal" :rules="rules" @cancel="cancel" :build="parentDara" @roomKeeper="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></roomKeeper>
         <div slot="footer"></div>
       </Modal>
       <!---->
@@ -113,7 +113,7 @@
         class-name="vertical-center-modal"
         :loading="loading">
         <modal-header slot="header" :content="checkInId"></modal-header>
-        <checkIn v-if="checkInModal" @cancel="cancel" :build="parentDara" @checkIn="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></checkIn>
+        <checkIn v-if="checkInModal" :rules="rules" @cancel="cancel" :build="parentDara" @checkIn="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></checkIn>
         <div slot="footer"></div>
       </Modal>
       <!---->
@@ -126,7 +126,7 @@
         class-name="vertical-center-modal"
         :loading="loading">
         <modal-header slot="header" :content="immigrationId"></modal-header>
-        <immigration v-if="immigrationModal" @cancel="cancel" :build="parentDara" @immigration="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></immigration>
+        <immigration v-if="immigrationModal" :rules="rules" @cancel="cancel" :build="parentDara" @immigration="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></immigration>
         <div slot="footer"></div>
       </Modal>
       <!---->
@@ -139,7 +139,7 @@
         class-name="vertical-center-modal"
         :loading="loading">
         <modal-header slot="header" :content="migrationId"></modal-header>
-        <migration v-if="migrationModal" @cancel="cancel" :build="parentDara" @migration="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></migration>
+        <migration v-if="migrationModal" :rules="rules" @cancel="cancel" :build="parentDara" @migration="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></migration>
         <div slot="footer"></div>
       </Modal>
       <!---->
@@ -152,7 +152,7 @@
         class-name="vertical-center-modal"
         :loading="loading">
         <modal-header slot="header" :content="InDataId"></modal-header>
-        <InData v-if="InDataModal" @cancel="cancel" :build="parentDara" @InData="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></InData>
+        <InData v-if="InDataModal" :rules="rules" @cancel="cancel" :build="parentDara" @InData="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></InData>
         <div slot="footer"></div>
       </Modal>
       <!---->
@@ -165,7 +165,7 @@
         class-name="vertical-center-modal"
         :loading="loading">
         <modal-header slot="header" :content="changeRoomId"></modal-header>
-        <change-room v-if="changeRoomModal" @cancel="cancel" :build="parentDara" @changeRoom="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></change-room>
+        <change-room :rules="rules" v-if="changeRoomModal" @cancel="cancel" :build="parentDara" @changeRoom="subCallback" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></change-room>
         <div slot="footer"></div>
       </Modal>
       <!---->
@@ -197,7 +197,7 @@
   //当前组件引入全局的util
   let Util=null;
   export default{
-      props:['parentDara'],
+      props:['parentDara','rules'],
     data() {
       return {
         showImgIndex:0,

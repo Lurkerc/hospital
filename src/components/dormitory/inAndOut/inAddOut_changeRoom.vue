@@ -1,18 +1,19 @@
 <!--更换房间-->
 <template>
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="rules.inAndOut"   class="demo-form-inline" label-width="90px" >
       <el-row >
         <el-col :span="10" :offset="2">
-          <el-form-item label="姓名:" prop="remark">
+          <el-form-item label="姓名:" >
             {{operailityData.userName}}
           </el-form-item>
         </el-col>
         <el-col :span="1" :offset="2">
-          <el-form-item label="迁出时间:" prop="phone" >
+          <el-form-item label="迁出时间:" >
             <el-date-picker
               v-model="formValidate.outDateString"
               type="date"
+              :editable="false"
               placeholder="选择日期"
             >
             </el-date-picker>
@@ -25,13 +26,13 @@
             <fieldset class="layui-elem-field">
               <legend>调出房间信息</legend>
               <div class="layui-field-box">
-                <el-form-item label="房间号:" prop="remark">
+                <el-form-item label="房间号:" >
                   {{roomData.no}}
                 </el-form-item>
-                <el-form-item label="房间类别:" prop="remark">
+                <el-form-item label="房间类别:" >
                   {{roomData.sex | roomSex}}
                 </el-form-item>
-                <el-form-item label="床位数:" prop="remark">
+                <el-form-item label="床位数:" >
                   {{roomData.bedNum}}
                 </el-form-item>
               </div>
@@ -41,13 +42,13 @@
           <fieldset class="layui-elem-field">
             <legend>调入房间信息</legend>
             <div class="layui-field-box">
-              <el-form-item label="房间号:" prop="remark">
-                <el-input v-model="selectRoomData.no" @focus="openSelectRoom"></el-input>
+              <el-form-item label="房间号:" prop="no">
+                <el-input readonly v-model="selectRoomData.no" @focus="openSelectRoom"></el-input>
               </el-form-item>
-              <el-form-item label="房间类别:" prop="remark">
+              <el-form-item label="房间类别:" >
                 {{selectRoomData.sex | roomSex}}
               </el-form-item>
-              <el-form-item label="床位数:" prop="remark">
+              <el-form-item label="床位数:" >
                 {{selectRoomData.bedNum}}
               </el-form-item>
             </div>
@@ -92,7 +93,7 @@
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['operailityData','selectRoom','url','build'],
+    props: ['operailityData','selectRoom','url','build','rules'],
     data (){
       return{
         //保存按钮基本信息

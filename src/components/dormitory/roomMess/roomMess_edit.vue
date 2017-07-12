@@ -2,11 +2,11 @@
 
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="rules.roomMess"  class="demo-form-inline" label-width="90px" >
 
       <el-row >
         <el-col :span="8" :offset="2">
-          <el-form-item label="大楼名称:" prop="name" >
+          <el-form-item label="大楼名称:" prop="buildId" >
             <el-select
               v-model.number="formValidate.buildId"
               placeholder="选择或输入匹配搜索">
@@ -15,7 +15,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8" :offset="2">
-          <el-form-item label="房间类别:" prop="phone" >
+          <el-form-item label="房间类别:" prop="sex" >
             <el-select v-model="formValidate.sex" placeholder="请选择活动区域">
               <el-option label="男宿舍" value="BOY"></el-option>
               <el-option label="女宿舍" value="GIRL"></el-option>
@@ -26,12 +26,12 @@
       </el-row >
       <el-row >
         <el-col :span="8" :offset="2">
-          <el-form-item label="房间号:" prop="name" >
+          <el-form-item label="房间号:" prop="no" >
             <el-input v-model.number="formValidate.no" type="number" placeholder="请输入" @blur="no"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8" :offset="2">
-          <el-form-item label="床位数:" prop="phone" >
+          <el-form-item label="床位数:" prop="bedNum" >
             <el-input v-model.number="formValidate.bedNum" type="number" placeholder="请输入" @blur="bedNum"></el-input>
           </el-form-item>
         </el-col>
@@ -62,7 +62,7 @@
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['operailityData','url'],
+    props: ['operailityData','url','rules'],
     data (){
       return{
         //保存按钮基本信息

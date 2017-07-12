@@ -28,7 +28,7 @@
     <div id="tableData" ref="tableData" class="givenTheAppTable">
       <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%"
         @selection-change="handleSelectionChange">
-        <el-table-column type="index" width="55"></el-table-column>
+        <el-table-column label="序号" type="index" width="80"></el-table-column>
         <el-table-column label="操作" align="center" width="80">
           <template scope="scope">
             <template v-if="scope.row.depExaminationId">

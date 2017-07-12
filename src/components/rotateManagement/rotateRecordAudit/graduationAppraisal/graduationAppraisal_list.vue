@@ -7,14 +7,14 @@
   <div ref="graduationAppraisal">
     <el-form :inline="true">
       <el-row>
-        <el-col :span="10">
+        <el-col :span="14">
           <el-button type="success">导入成绩</el-button>
           <el-button type="info">导出合格名单</el-button>
-          <el-button type="danger">导入不合格名单</el-button>
-          <el-button type="danger">转为研究生</el-button>
+          <el-button type="danger">导出不合格名单</el-button>
+          <el-button type="primary">转为研究生</el-button>
         </el-col>
-        <el-col :span="14" align="right" style="padding-bottom:20px;">
-          <el-input :maxlength="20" placeholder="请输入姓名" icon="search" v-model="searchObj.userName" :on-icon-click="search" style="width:300px;"></el-input>
+        <el-col :span="10" align="right" style="padding-bottom:20px;">
+          <el-input :maxlength="20" placeholder="请输入姓名" icon="search" v-model="searchObj.userName" :on-icon-click="search" style="width:260px;"></el-input>
           <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
         </el-col>
         <div v-show="searchMore" style="clear:both;" align="right" ref="searchMore">

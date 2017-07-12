@@ -3,7 +3,7 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="rules.inAndOut" class="demo-form-inline" label-width="90px" >
 
       <el-row >
 
@@ -26,6 +26,7 @@
             <el-date-picker
               v-model="formValidate.outDateString"
               type="date"
+              :editable="false"
               placeholder="选择日期"
             >
             </el-date-picker>
@@ -58,7 +59,7 @@
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['operailityData','selectRoom','url','build'],
+    props: ['operailityData','selectRoom','url','build','rules'],
     data (){
       return{
         //保存按钮基本信息

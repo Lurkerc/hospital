@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form :model="formValidate" ref="formValidate"  :rules="rules.buildingMess" class="demo-form-inline" label-width="90px" >
 
       <el-row >
         <el-col :span="8" :offset="2">
@@ -46,7 +46,7 @@
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['operailityData','url'],
+    props: ['operailityData','url','rules'],
     data (){
       return{
         //保存按钮基本信息

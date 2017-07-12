@@ -2,7 +2,7 @@
 <template>
   <div id="content" ref="content" class="modal">
     <steps></steps>
-    <el-form  ref="formValidate" label-width="100px">
+    <el-form  :model="formValidate" ref="formValidate" :rules="rules.roomMessList" label-width="100px">
     <el-row >
       <el-col :span="10" :offset="12" >
         <el-form-item  prop="buildingName">
@@ -116,7 +116,7 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="addId"></modal-header>
-      <add v-if="addModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :url="url"></add>
+      <add v-if="addModal" @cancel="cancel" :rules="rules" @add="subCallback" :operaility-data="operailityData" :url="url"></add>
       <div slot="footer"></div>
     </Modal>
     <!--批量新建-->
@@ -128,7 +128,7 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="batchAddId"></modal-header>
-      <batch-add v-if="batchAddModal" @cancel="cancel" @batchAdd="subCallback" :operaility-data="operailityData" :url="url"></batch-add>
+      <batch-add v-if="batchAddModal" @cancel="cancel" :rules="rules" @batchAdd="subCallback" :operaility-data="operailityData" :url="url"></batch-add>
       <div slot="footer"></div>
     </Modal>
     <!--修改-->
@@ -140,7 +140,7 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="editId"></modal-header>
-      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :url="url"></edit>
+      <edit v-if="editModal" @cancel="cancel" :rules="rules" @edit="subCallback" :operaility-data="operailityData" :url="url"></edit>
       <div slot="footer"></div>
     </Modal>
     <!--删除弹窗-->
@@ -181,13 +181,15 @@
   import edit from "./roomMess_edit.vue";
   //引入--查看--组件
   import show from "./roomMess_view.vue";
-
-  import steps from '../dormitory_common/steps.vue'
+  //引入--验证--组件
+  import rules from "../rules.js";
+  import steps from '../dormitory_common/steps.vue';
   //当前组件引入全局的util
   let Util=null;
   export default{
     data() {
       return {
+        rules:rules,
         url:url,
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',

@@ -85,16 +85,24 @@
             prop="inDate"
             label="迁入时间"
           >
+            <template scope="scope">
+              {{conductDate(scope.row.inDate,'yyyy-MM-dd')}}
+            </template>
           </el-table-column>
           <el-table-column
             prop="outDate"
-            label="迁出时间"
-          >
+            label="迁出时间">
+            <template scope="scope">
+              {{conductDate(scope.row.outDate,'yyyy-MM-dd')}}
+            </template>
           </el-table-column>
           <el-table-column
             prop="status"
             label="动作"
           >
+            <template scope="scope">
+              {{scope.row.status?'迁出':'迁入'}}
+            </template>
           </el-table-column>
 
         </el-table>

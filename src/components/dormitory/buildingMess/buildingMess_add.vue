@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="rules.buildingMess"  class="demo-form-inline" label-width="90px" >
 
       <el-row >
         <el-col :span="8" :offset="2">
@@ -46,7 +46,7 @@
   //当前组件引入全局的util
   let Util=null;
   export default {
-      props:['operailityData','url'],
+      props:['operailityData','url','rules'],
     data (){
       return{
         //保存按钮基本信息
@@ -134,9 +134,7 @@
       phone(){
         let val =this.formValidate.phone;
         val = (val+'').replace(/^-|[^(0-9\-)]/gi,'');
-
         this.formValidate.phone = val;
-        console.log(this.formValidate.phone);
       }
     }
   }

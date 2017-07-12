@@ -2,14 +2,15 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="rules.inAndOut" class="demo-form-inline" label-width="90px" >
 
       <el-row >
         <el-col :span="8" :offset="2">
-          <el-form-item label="迁入时间:" prop="inDateString" >
+          <el-form-item label="迁入时间:"  >
             <el-date-picker
               v-model="formValidate.inDateString"
               type="date"
+              :editable="false"
               placeholder="选择日期"
               >
             </el-date-picker>
@@ -25,13 +26,13 @@
 
       <el-row >
         <el-col :span="8" :offset="2">
-          <el-form-item label="房间类别:" prop="inDateString" >
+          <el-form-item label="房间类别:">
             {{roomData.sex | roomSex}}
 
           </el-form-item>
         </el-col>
         <el-col :span="8" :offset="2">
-          <el-form-item label="床位数:" prop="phone" >
+          <el-form-item label="床位数:" >
             {{roomData.bedNum}}
           </el-form-item>
         </el-col>
@@ -40,18 +41,27 @@
 
       <el-row >
         <el-col :span="16" :offset="2">
-          <el-form-item label="安排方式:" prop="remark">
-            <el-radio-group v-model="fs">
-            <el-radio :label="1">手动安排</el-radio>
-          </el-radio-group>
+          <el-form-item label="安排方式:"  >
+            <el-radio-group v-model="fs" @change="fsChange">
+              <el-radio :label="2">自动安排</el-radio>
+              <el-radio :label="1">手动安排</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-col>
       </el-row >
 
-      <el-row >
+      <el-row v-if="fs==1">
         <el-col :span="16" :offset="2">
-          <el-form-item label="选择人员:" prop="remark">
-            <el-input v-model="formValidate.userNames" @focus="openSelectUser"></el-input>
+          <el-form-item label="选择人员:" prop="userNames">
+            <el-input readonly v-model="formValidate.userNames" @focus="openSelectUser"></el-input>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row >
+      <el-row v-if="fs==2">
+        <el-col :span="16" :offset="2">
+          <el-form-item label="人员:" prop="userNames">
+            <el-input readonly v-model="formValidate.userNames" ></el-input>
             </el-select>
           </el-form-item>
         </el-col>
@@ -93,7 +103,7 @@
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['operailityData','selectRoom','url','build'],
+    props: ['operailityData','selectRoom','url','build','rules'],
     data (){
       return{
         //保存按钮基本信息
@@ -258,6 +268,38 @@
           flag = true;
         }
         return flag
+      },
+
+      //选择方式改变
+      fsChange(val){
+        if(val ==1){
+          this.formValidate.userIds = '';
+          this.formValidate.userNames = '';
+          return;
+        }
+        let queryDormitory ={
+          ajaxSuccess:'SuccessQueryDormitory',
+          ajaxParams:{
+            url:this.url.queryCormitory,
+          }
+        }
+        this.ajax(queryDormitory)
+
+      },
+
+      //获取自动安排人员成功
+      SuccessQueryDormitory(responseData){
+        let data = responseData.data;
+        if(!data)this.showMess('无人员可被安排');
+        let userIds = [];
+        let userNames =[];
+        for(let i =0;i<data.length;i++){
+          userIds.push(data[i].id);
+          userNames.push(data[i].name);
+        }
+        this.formValidate.userIds = userIds.join(',');
+        this.formValidate.userNames = userNames.join(',');
+
       },
     }
   }

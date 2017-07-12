@@ -2,10 +2,10 @@
 <template>
   <div id="content" ref="content" class="modal">
     <steps></steps>
-    <el-form  ref="formValidate" label-width="100px">
+    <el-form :model="formValidate" ref="formValidate" :rules="rules.buildingMessList" label-width="100px">
       <el-row >
         <el-col :span="10" :offset="12" >
-          <el-form-item  prop="title">
+          <el-form-item  prop="name">
             <input class="hidden">
             <el-input   v-model="formValidate.name" placeholder="输入大楼名称搜索">
               <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
@@ -109,7 +109,7 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="addId"></modal-header>
-      <add v-if="addModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :url="url"></add>
+      <add v-if="addModal" @cancel="cancel" @add="subCallback" :rules="rules" :operaility-data="operailityData" :url="url"></add>
       <div slot="footer"></div>
     </Modal>
     <!--修改-->
@@ -121,7 +121,7 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="editId"></modal-header>
-      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :url="url"></edit>
+      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :rules="rules" :operaility-data="operailityData" :url="url"></edit>
       <div slot="footer"></div>
     </Modal>
     <!--删除弹窗-->
@@ -161,13 +161,15 @@
   //引入--查看--组件
   import show from "./buildingMess_view.vue";
   import steps from '../dormitory_common/steps.vue'
-
+  //引入--验证--组件
+  import rules from "../rules.js";
 
   //当前组件引入全局的util
   let Util=null;
   export default{
     data() {
       return {
+        rules:rules,
           url:url,
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',

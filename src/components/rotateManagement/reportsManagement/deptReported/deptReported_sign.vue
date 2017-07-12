@@ -98,6 +98,10 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun) {
+        if (!this.teacherIds.length) {
+          this.errorMess('请选择带教老师！')
+          return
+        }
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true);
         let teacherIds = this.teacherIds.join(',');

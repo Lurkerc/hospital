@@ -48,8 +48,6 @@ const rotateRouters = {
       }
     },
 
-    /** 可能有变动
-     * */
 
     {
       //临床操作审核
@@ -144,7 +142,7 @@ const rotateRouters = {
       }
     },
     {
-      //结业鉴定
+      //结业审核
       path:'graduationAppraisal',
       name:'graduationAppraisal',
       component:resolve=> {

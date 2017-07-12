@@ -76,6 +76,9 @@ export default {
   /*
   * 宿舍管理-迁入迁出
   * */
+  //所有房间自动安排 post
+  bedPersonAddAutoList :'/dormitory/bedPerson/addAutoList',
+
   //批量迁出 PUT
   bedPersonModifyList :'/dormitory/bedPerson/modifyList',
 
@@ -90,6 +93,9 @@ export default {
 
   //迁入迁出详情（点击大楼图标后进入的房间展示页面） GET
   bedPersonList :'/dormitory/bedPerson/list/roomBedInfo',
+
+  //查询实习生中可自动分配宿舍的人员） GET
+  queryCormitory :'/user/query/dormitory',
 
 
   //房间历史入住情况 GET
