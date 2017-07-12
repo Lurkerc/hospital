@@ -1,10 +1,10 @@
 <!--
-****--结业申请
+****--结业审核 - 添加
 ****--@date     2017/7/3
 ****--@author   gx
 -->
 <template>
-  <div class="graduationAppraisalBox">
+  <div class="graduationAppraisalBox noPosition">
     <div class="graduationAppraisal">
       <h2 class="graduationAppraisalTitle">毕业实习总鉴定</h2>
       <div class="gaMain">
@@ -21,8 +21,18 @@
         </div>
         <div class="gaContent">
           <p class="gacTitle">自我鉴定：</p>
-          <el-input type="textarea" :autosize="{ minRows: 4}" v-model="showData.selfComment"></el-input>
+          <p class="gacText">{{ showData.selfComment }}</p>
           <p class="gacSignature">本人签名：</p>
+          <p class="gacDay">
+            <span>年</span>
+            <span>月</span>
+            <span>日</span>
+          </p>
+        </div>
+        <div class="gaContent">
+          <p class="gacTitle">实习单位意见：</p>
+          <el-input type="textarea" :autosize="{ minRows: 4}" v-model="showData.unitComment"></el-input>
+          <p class="gacSignature">单位盖章</p>
           <p class="gacDay">
             <span>年</span>
             <span>月</span>
@@ -37,7 +47,7 @@
         <!--<el-button type="success" @click="save">保存</el-button>-->
       </el-col>
       <el-col :span="6" align="center">
-        <el-button type="info" @click="report">上报</el-button>
+        <el-button type="info" @click="cancel">取消</el-button>
       </el-col>
     </el-row>
   </div>
@@ -49,6 +59,7 @@
   let Util = null;
   import api from './api';
   export default {
+    props: ['operailityData'],
     data() {
       return {
         loadBtn: {
@@ -62,6 +73,7 @@
           "personalDays": '-',
           "minerDays": '-',
           "selfComment": "",
+          "unitComment": ""
         }
       }
     },
@@ -92,7 +104,7 @@
             this.showData = res.data;
           },
           ajaxParams: {
-            url: api.userGet.path
+            url: api.get.path + this.operailityData.appraisalId
           }
         })
       },
@@ -103,22 +115,23 @@
         }
         isLoadingFun(true);
         this.ajax({
+          type: 'add',
           successTitle: '保存成功!',
           errorTitle: '保存失败!',
-          ajaxSuccess: () => this.getInfo(),
+          ajaxSuccess: 'ajaxSuccess',
           ajaxError: 'ajaxError',
           ajaxParams: {
-            url: api.userAdd.path + this.showData.appraisalId,
-            method: api.userAdd.method,
+            url: api.manageAdd.path + this.showData.appraisalId,
+            method: api.manageAdd.method,
             data: {
-              comment: this.showData.selfComment
+              comment: this.showData.unitComment
             }
           }
         }, isLoadingFun)
       },
-      // 上报
-      report() {
-
+      // 取消
+      cancel() {
+        this.$emit('cancel', 'add')
       },
     },
     created() {

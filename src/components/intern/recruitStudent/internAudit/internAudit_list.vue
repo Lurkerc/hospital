@@ -98,15 +98,7 @@
         tabHeight: 0,
         self: this,
         operailityData: [],
-        tableData: [{
-          "userId": 10160,
-          "userName": "张三",
-          "schoolName": "学校名称",
-          "mobile": "手机号",
-          "major": "专业",
-          "idNumber": "身份证号",
-          "state": "NOT_SUBMIT"
-        }],
+        tableData: [],
         listTotal: 0,
         examineModal: false,
         headerContent: {

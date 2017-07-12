@@ -1,11 +1,15 @@
 const thisFile = '/rotationProcess/graduationAppraise';
 const api = {
-  userGet: { // 登录用户获取自己的结业数据
-    path: thisFile + '/userGet',
+  list: { // 管理员查看结业鉴定列表
+    path: thisFile + '/pagelist',
     method: 'get'
   },
-  userAdd: { // 学员添加结业鉴定个人小结
-    path: thisFile + '/userAdd/', // {appraisalId}
+  get: { // 管理员查看个人结业鉴定
+    path: thisFile + '/get/', // {appraisalId}
+    method: 'get'
+  },
+  manageAdd: { // 实习单位添加意见 
+    path: thisFile + '/manageAdd/', // {appraisalId}
     method: 'post'
   },
 };

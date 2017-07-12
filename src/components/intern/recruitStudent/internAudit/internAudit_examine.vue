@@ -17,18 +17,18 @@
       <el-form class="editForm internAuditExamine" ref="formValidate" :model="formValidate" :rules="rules" label-width="120px">
         <el-col :span="11" :offset="1">
           <el-form-item label="是否需要住宿：">
-            <el-radio class="radio" v-model="formValidate.isDormitory" :label="1">需要</el-radio>
-            <el-radio class="radio" v-model="formValidate.isDormitory" :label="0">不需要</el-radio>
+            <el-radio class="radio" v-model="formValidate.isDormitory" label="1">需要</el-radio>
+            <el-radio class="radio" v-model="formValidate.isDormitory" label="0">不需要</el-radio>
           </el-form-item>
         </el-col>
-        <template v-if="formValidate.isDormitory === 1">
+        <template v-if="formValidate.isDormitory === '1'">
           <el-col :span="11" :offset="1">
             <el-form-item label="选择宿舍：">
-              <el-radio class="radio" v-model="formValidate.isFreeSelect" :label="0">服从安排</el-radio>
-              <el-radio class="radio" v-model="formValidate.isFreeSelect" :label="1">自由选择</el-radio>
+              <el-radio class="radio" v-model="formValidate.isFreeSelect" label="0">服从安排</el-radio>
+              <el-radio class="radio" v-model="formValidate.isFreeSelect" label="1">自由选择</el-radio>
             </el-form-item>
           </el-col>
-          <el-col :span="22" :offset="1" v-show="formValidate.isFreeSelect === 1">
+          <el-col :span="22" :offset="1" v-show="formValidate.isFreeSelect === '1'">
             <el-form-item label="已选宿舍："><span>{{ selectRoomText || '-' }}</span>
               <el-button type="info" size="small" @click="selectRoomEvn">选择宿舍</el-button>
             </el-form-item>
@@ -92,7 +92,9 @@
 <script>
   let Util;
   import api from './api';
-  import {internAudit as rules} from '../../rules';
+  import {
+    internAudit as rules
+  } from '../../rules';
   import basic from '../../../teach/archivesManagement/archivesManagement/archivesManagement_view/archivesManagement_view_basic';
   import selectRoom from './internAudit_selectRoom';
   export default {
@@ -117,8 +119,8 @@
           buildId: 0, // 大楼ID
           roomId: 0, // 房间ID
           objectName: this.operailityData.userName, // 被审核名称
-          isFreeSelect: 1, // 是否自由选择(1自由 0 服从安排)
-          isDormitory: 1, // 是否需要住宿(1是 0否),
+          isFreeSelect: '1', // 是否自由选择(1自由 0 服从安排)
+          isDormitory: '1', // 是否需要住宿(1是 0否),
           sxBeginTime: '', // 实习开始时间(yyyy-MM-dd)
           sxEndTime: '', // 实习结束时间(yyyy-MM-dd)
         },

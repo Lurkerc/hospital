@@ -8,6 +8,9 @@ $padding: 30px;
     bottom: 16px;
     overflow: auto;
     padding: 16px;
+    &.noPosition {
+        position: initial;
+    }
 }
 
 .graduationAppraisal {
@@ -62,7 +65,7 @@ $padding: 30px;
         margin-bottom: 20px;
     }
     .gacText {
-        min-height: 200px;
+        min-height: 100px;
     }
     .gacSignature,
     .gacDay {
