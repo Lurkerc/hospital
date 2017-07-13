@@ -56,7 +56,7 @@
    */
   let Util=null;
   export default {
-    props:["selectOptions"],
+    props:["selectOptions",'isClear'],
     data() {
       return {
         optionData: [],
@@ -119,6 +119,11 @@
       //选中值发生变化时触发
       change(val){
         this.$emit("setSltOptionValue",val,this.value);
+      }
+    },
+    watch:{
+      isClear(){
+          this.value = [];
       }
     }
   }

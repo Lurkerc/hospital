@@ -4,14 +4,14 @@
       v-for="item in optionData"
       :key="item.id"
       :label="item.name"
-      :value="item.id">
+      :value="item[id||'id']">
     </el-option>
 </div>
 </template>
 <script>
   let Util=null;
   export default {
-    props:['type','url',"selectOptions",'unAll',"setSltOptionValue",'currSelectOne'],
+    props:['type','url',"selectOptions",'unAll',"setSltOptionValue",'currSelectOne','id'],
     data() {
 
         //条件过滤，如果没有url 由type决定url 如果没有type默认科室url

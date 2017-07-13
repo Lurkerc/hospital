@@ -90,7 +90,8 @@
 
             <el-col :span="5" class="table-back-header">
               <div style="text-align: center">
-                <img class="headerUrl" :src="formValidate.headPhotoHttp" style="width: 100%" />
+                <span v-if="formValidate.headPhotoHttp==''">您还没有上传头像!</span>
+                <img v-if="formValidate.headPhotoHttp!=''" class="headerUrl" :src="formValidate.headPhotoHttp" style="width: 100%" />
               </div>
             </el-col>
 
@@ -206,6 +207,7 @@
         formValidate: {
           deptId:'',  //部门id
           name:'',  //姓名
+          auditStatus:'',  //审核通过判断
           sex:'',   //性别
           nation:'',  //民族
           birth:'',  //出生日期
@@ -267,6 +269,12 @@
        * */
       SuccessGetCurrData(responseData){
         let data = responseData.data;
+        let env = this.$store.getters.getEnvPath;
+        if(data.headPhoto===null){
+          data.headPhotoHttp = "";
+        }else{
+          data.headPhotoHttp = env["http"]+data.headPhoto;
+        }
         this.formValidate = data;
       },
 

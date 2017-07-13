@@ -135,19 +135,19 @@
         button: {
           addId: {
             id: 'addId',
-            title: '新增维修记录'
+            title: '新增报废记录'
           },
           showId: {
             id: 'showId',
-            title: '查看维修记录'
+            title: '查看报废记录'
           },
           editId: {
             id: 'editId',
-            title: '修改维修记录'
+            title: '修改报废记录'
           },
           removeId: {
             id: 'removeId',
-            title: '删除维修记录'
+            title: '删除报废记录'
           }
         }
       }

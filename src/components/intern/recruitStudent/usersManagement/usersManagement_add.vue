@@ -71,7 +71,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="毕业学校：" prop="schoolId">
+                  <el-form-item label="毕业学校：" prop="school">
                     <search-select @setSltOptionValue="setSltOptionValue" :selectOptions="selectOptions"></search-select>
                   </el-form-item>
                 </el-col>

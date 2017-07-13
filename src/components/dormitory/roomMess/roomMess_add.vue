@@ -7,7 +7,7 @@
         <el-col :span="8" :offset="2">
           <el-form-item label="大楼名称:" prop="buildId" >
             <el-select
-              v-model.number="formValidate.buildId"
+              v-model="formValidate.buildId"
               placeholder="选择或输入匹配搜索">
               <select-option :unAll="true" :type="'allBuild'"></select-option>
             </el-select>

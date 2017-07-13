@@ -185,7 +185,7 @@
                     let responseData = res.data;
                     if(_.isObject(responseData["status"])&&responseData["status"]["code"]==0){
                         that.tableData1 = responseData.data;
-                        that.myPages.listTotal = responseData.totalCount;
+                        that.myPages.listTotal = responseData.totalCount || 0;
                     }
                 })
                 .catch(function (err) {

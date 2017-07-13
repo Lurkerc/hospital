@@ -13,8 +13,8 @@
 
         <el-col :span="8">
           <el-form-item label="科室"   prop="school">
-            <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
-              <select-option ></select-option>
+            <el-select filterable   v-model="formValidate.depId" placeholder="请选择">
+              <select-option :unAll="true"></select-option>
             </el-select>
           </el-form-item>
         </el-col >

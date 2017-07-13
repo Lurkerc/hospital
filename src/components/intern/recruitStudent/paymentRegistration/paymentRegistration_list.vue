@@ -19,7 +19,7 @@
             <el-input v-model="searchObj.schoolName"></el-input>
           </el-form-item>
           <el-form-item label="年份：">
-            <el-date-picker v-model="searchObj.year" align="right" type="year" placeholder="选择年">
+            <el-date-picker v-model="searchObj.year" align="right" :editable="false" type="year" placeholder="选择年">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="手机号：">
@@ -52,14 +52,14 @@
         <el-table-column prop="mobile" label="手机号" show-overflow-tooltip></el-table-column>
         <el-table-column prop="totalCost" label="费用" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.totalCost / 100 }}
+            {{ scope.row.totalCost }}
           </template>
         </el-table-column>
         <el-table-column prop="operator" label="操作人" show-overflow-tooltip></el-table-column>
         <el-table-column prop="payTime" label="操作时间" show-overflow-tooltip></el-table-column>
         <el-table-column prop="isPay" label="缴费状态" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.isPay | isPay }}
+            {{ (scope.row.isPay || 0) | isPay }}
           </template>
         </el-table-column>
       </el-table>
@@ -67,7 +67,7 @@
     <div style="margin: 10px;">
       <div style="float: right;">
         <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
+          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </div>
     </div>
@@ -100,7 +100,7 @@
       :width="500">
       <modal-header slot="header" :content="headerContent.payCnfId"></modal-header>
       <div>
-        <div class="remove">确认“{{ payCnfTips.userNames.join('，') }}”等{{ payCnfTips.userNames.length }}人已经缴费吗</div>
+        <div class="remove">确认“{{ payCnfTips.userNames.join('，') }}”等{{ payCnfTips.userNames.length }}人已经缴费吗？</div>
         <el-row>
           <el-col :span="10" :offset="14">
             <el-button @click="payCnfSub" type="primary">确定</el-button>
@@ -142,7 +142,7 @@
         operailityData: [],
         multipleSelection: [],
         tableData: [],
-        listTotal: 0,
+        totalCount: 0,
         headerContent: {
           showId: {
             id: "showId",

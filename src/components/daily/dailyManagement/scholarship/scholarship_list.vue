@@ -230,7 +230,7 @@
 
               if(_.isObject(responseData["status"])&&responseData["status"]["code"]==0){
                 that.tableData1 = that.addIndex(responseData.data);
-                that.listTotal = responseData.totalCount||that.listTotal;
+                that.listTotal = responseData.totalCount || 0;
               }
             }).catch(function(response){
                 if (response instanceof Error) {

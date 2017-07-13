@@ -97,7 +97,7 @@
       visibility: hidden;
     }
     #printContentBox {
-      width: 1000px;
+      /* width: 1000px; */
       display: block;
       z-index: -9999;
     }

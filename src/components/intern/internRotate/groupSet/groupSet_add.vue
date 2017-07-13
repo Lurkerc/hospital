@@ -61,11 +61,11 @@
     <!--- 第三步：添加分组 --->
     <div v-if="active==2" style="margin: 20px;">
       <el-checkbox v-model="jumpThirdStep">跳过顺序设置(勾选后跳过设置顺序步骤)</el-checkbox>
-      <three-step :school-data="schoolData" @isHashGroup="threeStepIsHashGroup"></three-step>
+      <three-step :school-data="saveSchoolData" :initData="threeGroupData" @setGroupData="setThreeGroupData" @isHashGroup="threeStepIsHashGroup"></three-step>
     </div>
     <!--- 第四步：设置顺序 --->
     <div v-if="active==3" style="margin: 20px;">
-      4
+      <four-step :params="ajaxParams" :groupData="threeGroupData" @setGroupData="setFourGroupData"></four-step>
     </div>
     <!--- 第五步：完成 --->
     <div v-if="active==5" style="margin: 20px;text-align: center;">
@@ -75,14 +75,17 @@
       <el-col :span="24" style="text-align: center;">
         <el-button v-if="active>0&&active<4" style="margin-top: 12px;" @click="up">上一步</el-button>
         <el-button v-if="active<3" style="margin-top: 12px;" @click="next" :loading="isLoading">下一步</el-button>
-        <el-button v-if="active>2" style="margin-top: 12px;" @click="success">完成</el-button>
+        <load-btn v-if="active>2" style="margin-top: 12px;"  @listenSubEvent="success" :btnData="loadBtn"></load-btn>
       </el-col>
     </el-row>
   </div>
 </template>
 <script>
   /*当前组件必要引入*/
+  //第三步
   import threeStep from "./groupSet_addThree.vue";
+  //第四步
+  import fourStep from "./groupSet_addFour.vue";
   //引入当前组件字典api
   import api from "../api.js";
   //当前组件引入全局的util
@@ -90,6 +93,9 @@
   export default{
     data() {
       return {
+        //保存按钮基本信息
+        loadBtn:{title:'完成',callParEvent:'listenSubEvent'},
+
         //当前步骤索引
         active: 0,
 
@@ -112,14 +118,21 @@
         },
 
         //存储一、二步的数据
-        schoolData:{
-          "schoolId":1,
-          "outlineId":11,
-          "schoolName":"学校1",
+        saveSchoolData:{
+          "schoolId":"",
+          "outlineId":"",
+          "schoolName":"",
         },
+
+        //第四步ajax请求需要的参数
+        ajaxParams:{},
 
         //存储第三步是否设置小组
         isHashGroup:"",
+        threeGroupData:[],
+
+        //第四步最终保存的数据
+        fourGroupData:[],
 
         //当前步骤
         currStep:0,
@@ -146,6 +159,20 @@
             params:{}
           }
         },
+
+        //当前组件提交(add)数据时,ajax处理的 基础信息设置
+        addMessTitle:{
+          type:'add',
+          successTitle:'添加成功!',
+          errorTitle:'添加失败!',
+          ajaxSuccess:'ajaxSuccess',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url: api.groupAdd.path,
+            method:'post',
+            jsonString:true,
+          }
+        },
       }
     },
     methods: {
@@ -167,6 +194,8 @@
         this.schoolData=data;
         if(this.sltedSchool.length>0){
           this.schoolData[this.sltedSchool[0]].checked = true;
+          this.saveSchoolData["schoolId"] = this.schoolData[this.sltedSchool[0]].id;
+          this.saveSchoolData["schoolName"] = this.schoolData[this.sltedSchool[0]].name;
         }
       },
 
@@ -193,6 +222,35 @@
 
 
       /**
+       * 设置第三步的分组数据
+       * */
+      setThreeGroupData(data){
+        let myData = Util._.defaultsDeep([],data);
+        this.threeGroupData = [];
+        this.threeGroupData = myData;
+      },
+
+
+      /**
+       * 设置第四步的分组数据
+       * */
+      setFourGroupData(data){
+        let myData = Util._.defaultsDeep([],data);
+        let tempArr = [];
+        this.fourGroupData = [];
+        for(var i=0,item;i<myData.length;i++){
+          item = myData[i];
+          for(var k=0,subItem;k<item["subGroup"].length;k++){
+            subItem = item["subGroup"][k];
+            subItem["groupIndexId"] = item["groupIndexId"];
+          }
+          tempArr = tempArr.concat(item["subGroup"]);
+        }
+        this.fourGroupData = tempArr;
+      },
+
+
+      /**
        * 选择学校
        * @param {number} idx 当前选择的学校的索引
        */
@@ -203,6 +261,9 @@
         }
         item.checked = !item.checked;
         this.sltedSchool.push(idx);
+
+        this.saveSchoolData["schoolId"] = item.id;
+        this.saveSchoolData["schoolName"] = item.name;
         //清空已经设置的值
         this.clearAllVal();
       },
@@ -216,6 +277,7 @@
         //this.formValidate.schoolId = id;
         //this.formValidate.specialty = val;
         if(val!=""){
+            this.sltedSpecialtyId = id;
             this.sltedSpecialty = val;
             this.specialtyOptions.value = val;
             this.getDgBySpecialty=[];
@@ -250,16 +312,21 @@
             this.errorMess("请选择学校!");
             return;
         }
+        //查询当前选择学校的大纲
+        if(this.active==0){
+          let option = Util._.defaultsDeep({},this.getDgBySchoolId);
+          option.ajaxParams.url+="/"+this.saveSchoolData["schoolId"]
+          this.ajax(option);
+        }
+
         if(this.sltedSpecialty==""&&this.active==1){
           this.errorMess("请选择专业!");
           return;
         }
         if(this.sltedDg==""&&this.active==1){
           this.errorMess("请选专业对应的大纲!");
-          //return;
+          return;
         }
-
-
 
         if(this.isHashGroup==""&&this.active==2){
           this.errorMess("请选添加小组!");
@@ -267,7 +334,22 @@
         }
 
         if(this.active==2){
+          let tempArr = [];
+          for(var i=0,item;i<this.threeGroupData.length;i++){
+            item = this.threeGroupData[i];
+            if(item["groupUserIds"].length==0){
+              tempArr.push(item["groupName"])
+            }
+          }
+          if(tempArr.length>0){
+            this.errorMess(tempArr.join(",")+"组还没有选择人员!");
+            return;
+          }
           this.isLoading = true;
+          this.ajaxParams["schoolId"] = this.saveSchoolData["schoolId"];
+          this.ajaxParams["specialty"] = this.sltedSpecialty;
+          this.ajaxParams["schoolName"] = this.saveSchoolData["schoolName"];
+          this.ajaxParams["depOutlineId"] = this.saveSchoolData["outlineId"];
           this.saveThreeData();
           return;
         }
@@ -293,25 +375,45 @@
       },
 
       //完成
-      success(){
+      success(isLoadingFun){
         this.active = 5;
-        setTimeout(()=>{
-          this.$emit("cancel","add")
-        },500)
+        if (!isLoadingFun) isLoadingFun = function () {};
+        isLoadingFun(true);
+        if(this.jumpThirdStep){  //调过第四步直接保存
+          this.addMessTitle.ajaxParams.data = this.getFormData(this.threeGroupData);
+        }else{  //第四步保存
+          this.addMessTitle.ajaxParams.data = this.getFormData(this.fourGroupData);
+        }
+        this.ajax(this.addMessTitle);
       },
 
       //保存第三步的数据
       saveThreeData(){
         setTimeout(()=>{
           if(!this.jumpThirdStep){
-            this.errorMess("保存成功!");
+            //this.errorMess("保存成功!");
             this.isLoading = false;
             this.active++;
           }else{
             this.success();
           }
-        },1000)
+        },100)
 
+      },
+
+
+      /*
+       * 获取表单数据
+       * @return []
+       * */
+      getFormData(data){
+        let myData = Util._.defaultsDeep([],data);
+        for(var i=0,item;i<myData.length;i++){
+          item = myData[i];
+          item["groupUserIds"] = item["groupUserIds"].join(",");
+          item["groupUserNames"] = item["groupUserNames"].join(",");
+        }
+        return myData;
       },
 
     },
@@ -319,10 +421,15 @@
       Util = this.$util;
       this.init();
     },
+    watch:{
+      sltedDg(val){
+        this.saveSchoolData["outlineId"] = val;
+      }
+    },
     mounted(){
     },
     components: {
-      threeStep
+      threeStep,fourStep
     }
   }
 </script>

@@ -1,5 +1,5 @@
 <!----------------------------------
-****--分组设置(groupSet_add)
+****--分组设置(groupSet_addThree)
 ****--@date     2017/7/3
 ****--@author   zyc<332533011@qq.com
 ----------------------------------->
@@ -18,13 +18,13 @@
     </el-row>
     <br />
     <el-row :gutter="10" class="myCard">
-      <el-col style="margin: 10px 0;" :span="12" v-for="(o, index) in groupData" :key="o">
+      <el-col style="margin: 10px 0; overflow: hidden; float: left" :span="12" v-for="(o, index) in groupData" :key="o">
         <el-card :body-style="{ padding: '0px', margin:'0 auto' }">
           <div slot="header" class="clearfix">
             <div class="headerBox">
-              <span style="line-height: 36px;">{{o.groupName}}</span>
+              <span style="line-height: 36px;font-size: 14px;font-weight: 700;">{{o.groupName}}</span>
               <div class="headerRemove">
-                <el-button type="danger" size="mini" icon="close" @click="removeGroup"></el-button>
+                <el-button type="danger" size="mini" icon="close" @click="removeGroup(index)"></el-button>
               </div>
             </div>
           </div>
@@ -41,7 +41,7 @@
             </el-row>
 
             <div class="el-form selectUserBox">
-              <fieldset style="height:90px;">
+              <fieldset style="min-height:90px;">
                 <legend style="font-size:16px">&nbsp;&nbsp;已选人员&nbsp;</legend>
                 <div style="height:40px;overflow:auto;" v-if="o.groupUserNames.length>0">
                   <el-tag style="margin: 2px;" v-for="(item,idx) in o.groupUserNames" :key="idx" :closable="true" type="success" @close="handleMClose(index,idx)">
@@ -62,7 +62,7 @@
       title="新建教学活动"
       class-name="vertical-center-modal">
       <modal-header slot="header" :content="selectUserId"></modal-header>
-      <select-user v-if="selectUserModal" @cancel="closeUserModal"  @setUsers="setUsers" :initUser="users"></select-user>
+      <select-user v-if="selectUserModal" @cancel="closeUserModal"  @setUsers="setUsers" :initUser="users" :unSelect="unSelect"></select-user>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -74,11 +74,12 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
-    props:["schoolData"],
+    props:["schoolData","initData"],
     data() {
       return {
         //当前操作的选择人员的已选人员
         users:[],
+        unSelect:[],
         selectUserModal:false,
         //选择人员
         selectUserId:{
@@ -86,6 +87,8 @@
           title:"选择人员",
           usersData:''
         },
+        //用于人员去重人员信息存储 {id:[],……}
+        userUnique:{},
 
         //当前添加组的名称
         currGroupName:"",
@@ -95,7 +98,7 @@
         isShowGroup:false,
 
         //组的数据
-        groupData:[],
+        groupData:this.initData,
       }
     },
     methods: {
@@ -118,11 +121,23 @@
        */
       addUser(index){
         this.currGropuIdx = index;
+        this.users = [];
         for(var i=0,item,idItem;i<this.groupData[index]["groupUserNames"].length;i++){
           item = this.groupData[index]["groupUserNames"][i];
           idItem = this.groupData[index]["groupUserIds"][i];
-
+          this.users.push({
+            description:"人员id---"+idItem+"的描述信息",
+            disabled:false,
+            key:idItem,
+            label:item,
+          })
         }
+        this.unSelect = [];
+        Util._.forEach(this.userUnique, (v,k)=> {
+          if(k!=index){
+            this.unSelect = this.unSelect.concat(v);
+          }
+        })
         this.openModel('selectUser');
       },
 
@@ -150,6 +165,8 @@
           this.groupData[index]["groupUserIds"].push(users[i]["key"]);
           this.groupData[index]["groupUserNames"].push(users[i]["label"]);
         }
+        this.userUnique[index]=this.groupData[index]["groupUserIds"];
+        this.$emit("setGroupData",this.groupData);
       },
 
 
@@ -170,8 +187,14 @@
 
       //添加分组
       addGroup(){
+        if(this.currGroupName==""){
+            this.errorMess("请填写组名!");
+            return;
+        }
         let template = this.addDataTemplate();
+
         this.groupData.push(template);
+        this.currGroupName="";
         this.isAddGroup();
       },
 
@@ -192,6 +215,7 @@
        */
       removeGroup(idx){
         this.groupData.splice(idx,1);
+        delete this.userUnique[idx];
         this.isAddGroup();
       },
 
@@ -217,12 +241,16 @@
             "groupUserIds":[],   //后台需要数据 "1,2,3"
             "groupUserNames":[],  //后台需要数据 "张三,李四,王五"
           }
-          template = Object.assign(template,this.schoolData)
+          template = Object.assign(template,this.schoolData);
           return template;
       }
-
-
-
+    },
+    watch:{
+      groupData(val,oldVal){
+        if(val.length>0){
+           this.$emit("setGroupData",val);
+        }
+      }
     },
     created(){
       this.init();

@@ -8,7 +8,7 @@
         <div>{{ item.schoolName }}</div>学校
         <div>{{ item.majors || item.major }}</div>专业
         <div>{{ item.userName }}</div>实习费/住宿费
-        <div>{{ item.totalCost / 100 }}</div>元。
+        <div>{{ item.totalCost }}</div>元。
       </div>
       <div class="signature">
         <p>教育处</p>

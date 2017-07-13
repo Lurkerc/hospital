@@ -195,7 +195,7 @@
         auditStatusOption,
         //tree默认项设置
         treeDefaults: {
-          getTreeUrl: "/dept/tree-by-manager",
+          getTreeUrl: "/dept/tree-by-SXS",
           getDataUrl: '',
           isShowMenus: true,
         },
@@ -350,7 +350,7 @@
         this.tableData1 = [];
         data = this.addIndex(data);
         this.tableData1 = data;
-        this.listTotal = responseData.totalCount || 1;
+        this.listTotal = responseData.totalCount || 0;
       },
 
 

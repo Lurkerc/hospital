@@ -137,7 +137,7 @@
             this.tableData1=[];
             data = this.addIndex(data);
             this.tableData1= data;
-            this.listTotal = responseData.totalCount || 1;
+            this.listTotal = responseData.totalCount || 0;
           },
 
 

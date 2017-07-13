@@ -469,6 +469,9 @@
               this.sltParentId = obj.id;
             }
           }
+          if(obj.id<0){
+              this.sltParentId = 0;
+          }
         }, 10)
 
 

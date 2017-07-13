@@ -362,7 +362,7 @@
       //通过get请求列表数据
       updateListData(responseData){
        this.tableData1 = responseData.data
-        this.totalCount = responseData.totalCount;
+        this.totalCount = responseData.totalCount || 0;
       },
       setTableData(){
         this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions,this.formValidate);

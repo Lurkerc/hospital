@@ -10,7 +10,7 @@
           <div class="cal-schoolTit" style="text-align: right;">科室：</div>
         </el-col>
         <el-col :span="8">
-          <el-input placeholder="请输入内容" v-model="formValidate.depName"></el-input>
+          <el-input placeholder="请输入内容" v-model="formValidate.name"></el-input>
         </el-col>
         <!--<el-col :span="3">
           <div class="cal-schoolTit" style="text-align: right;">专科：</div>
@@ -83,7 +83,7 @@
             return {
               //查询表单
               formValidate: {
-                "depName":"",
+                "name":"",
                 "specialty":""
               },
 
@@ -117,7 +117,9 @@
            * @param string 查询from的id
            * */
           handleSubmit(name){
-
+            let option = Util._.defaultsDeep({},this.listMessTitle);
+            option.ajaxParams.params = Object.assign(option.ajaxParams.params,this.formValidate);
+            this.ajax(option);
           },
 
 

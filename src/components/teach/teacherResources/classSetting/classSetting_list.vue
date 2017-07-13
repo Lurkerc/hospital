@@ -379,7 +379,7 @@
         this.tableData1=[];
         data = this.addIndex(data);
         this.tableData1 = data;
-        this.listTotal = responseData.totalCount || 1;
+        this.listTotal = responseData.totalCount || 0;
       },
       setTableData(){
         this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params,this.formValidate);

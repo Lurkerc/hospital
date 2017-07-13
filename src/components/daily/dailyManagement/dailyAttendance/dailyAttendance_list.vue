@@ -26,7 +26,10 @@
         <el-col :span="5">
           <el-form-item label="生源" prop="userType">
             <el-select  v-model="formValidate.userType" placeholder="全部">
-              <select-option :type="'role'"></select-option>
+              <el-option label="实习生" value="SXS"></el-option>
+              <el-option label="研究生" value="YJS"></el-option>
+              <el-option label="住院医" value="ZYY"></el-option>
+              <el-option label="进修生" value="JXS"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -57,6 +60,7 @@
         :context="self"
         :data="data"
         border
+        v-if="isShow"
         highlight-current-row
         @cell-click="cell"
         tooltip-effect="dark"
@@ -88,150 +92,135 @@
             <el-table-column
               label="1"
               width="60"
-              v-if="data[0].clockList.length>1"
               show-overflow-tooltip>
               <template  scope="scope">
-                {{commutator(scope.row.clockList[0] && scope.row.clockList[0].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[0] && scope.row.clockList[0].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="2"
               width="60"
-              v-if="data[0].clockList.length>2"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[1] && scope.row.clockList[1].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[1] && scope.row.clockList[1].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="3"
               width="60"
-              v-if="data[0].clockList.length>3"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[2] && scope.row.clockList[2].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[2] && scope.row.clockList[2].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="4"
               width="60"
-              v-if="data[0].clockList.length>4"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[3] && scope.row.clockList[3].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[3] && scope.row.clockList[3].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="5"
               width="60"
-              v-if="data[0].clockList.length>5"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[4] && scope.row.clockList[4].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[4] && scope.row.clockList[4].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="6"
               width="60"
-              v-if="data[0].clockList.length>6"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[5] && scope.row.clockList[5].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[5] && scope.row.clockList[5].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="7"
               width="60"
-              v-if="data[0].clockList.length>7"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[6] && scope.row.clockList[6].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[6] && scope.row.clockList[6].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="8"
               width="60"
-              v-if="data[0].clockList.length>8"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[7] && scope.row.clockList[7].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[7] && scope.row.clockList[7].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="9"
               width="60"
-              v-if="data[0].clockList.length>9"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[8] && scope.row.clockList[8].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[8] && scope.row.clockList[8].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="10"
               width="60"
-              v-if="data[0].clockList.length>10"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[9] && scope.row.clockList[9].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[9] && scope.row.clockList[9].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="11"
               width="60"
-              v-if="data[0].clockList.length>11"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[10] && scope.row.clockList[10].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[10] && scope.row.clockList[10].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="12"
               width="60"
-              v-if="data[0].clockList.length>12"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[11] && scope.row.clockList[11].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[11] && scope.row.clockList[11].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="13"
               width="60"
-              v-if="data[0].clockList.length>13"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[12] && scope.row.clockList[12].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[12] && scope.row.clockList[12].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="14"
               width="60"
-              v-if="data[0].clockList.length>14"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[13] && scope.row.clockList[13].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[13] && scope.row.clockList[13].type)}}
               </template>
             </el-table-column>
 
             <el-table-column
               label="15"
               width="60"
-              v-if="data[0].clockList.length>15"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[14] && scope.row.clockList[14].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[14] && scope.row.clockList[14].type)}}
               </template>
             </el-table-column>
 
@@ -240,21 +229,18 @@
         <el-table-column
           prop="depName"
           label="下半月"
-          v-if="data[0].clockList.length>16"
           show-overflow-tooltip>
           <el-table-column
             prop="leaveType"
             label="16————————31"
-            v-if="data[0].clockList.length>16"
             show-overflow-tooltip>
 
             <el-table-column
               label="16"
               width="60"
-              v-if="data[0].clockList.length>16"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[15] && scope.row.clockList[15].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[15] && scope.row.clockList[15].type)}}
               </template>
             </el-table-column>
 
@@ -262,10 +248,9 @@
             <el-table-column
               label="17"
               width="60"
-              v-if="data[0].clockList.length>17"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[16] && scope.row.clockList[16].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[16] && scope.row.clockList[16].type)}}
               </template>
             </el-table-column>
 
@@ -273,10 +258,9 @@
             <el-table-column
               label="18"
               width="60"
-              v-if="data[0].clockList.length>18"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[17] && scope.row.clockList[17].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[17] && scope.row.clockList[17].type)}}
               </template>
             </el-table-column>
 
@@ -284,10 +268,9 @@
             <el-table-column
               label="19"
               width="60"
-              v-if="data[0].clockList.length>19"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[18] && scope.row.clockList[18].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[18] && scope.row.clockList[18].type)}}
               </template>
             </el-table-column>
 
@@ -295,10 +278,9 @@
             <el-table-column
               label="20"
               width="60"
-              v-if="data[0].clockList.length>20"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[19] && scope.row.clockList[19].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[19] && scope.row.clockList[19].type)}}
               </template>
             </el-table-column>
 
@@ -306,10 +288,9 @@
             <el-table-column
               label="21"
               width="60"
-              v-if="data[0].clockList.length>21"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[20] && scope.row.clockList[20].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[20] && scope.row.clockList[20].type)}}
               </template>
             </el-table-column>
 
@@ -317,10 +298,9 @@
             <el-table-column
               label="22"
               width="60"
-              v-if="data[0].clockList.length>22"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[21] && scope.row.clockList[21].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[21] && scope.row.clockList[21].type)}}
               </template>
             </el-table-column>
 
@@ -328,10 +308,9 @@
             <el-table-column
               label="23"
               width="60"
-              v-if="data[0].clockList.length>23"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[22] && scope.row.clockList[22].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[22] && scope.row.clockList[22].type)}}
               </template>
             </el-table-column>
 
@@ -339,10 +318,9 @@
             <el-table-column
               label="24"
               width="60"
-              v-if="data[0].clockList.length>24"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[23] && scope.row.clockList[23].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[23] && scope.row.clockList[23].type)}}
               </template>
             </el-table-column>
 
@@ -350,10 +328,9 @@
             <el-table-column
               label="25"
               width="60"
-              v-if="data[0].clockList.length>25"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[24] && scope.row.clockList[24].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[24] && scope.row.clockList[24].type)}}
               </template>
             </el-table-column>
 
@@ -361,10 +338,9 @@
             <el-table-column
               label="26"
               width="60"
-              v-if="data[0].clockList.length>26"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[25] && scope.row.clockList[25].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[25] && scope.row.clockList[25].type)}}
               </template>
             </el-table-column>
 
@@ -372,10 +348,9 @@
             <el-table-column
               label="27"
               width="60"
-              v-if="data[0].clockList.length>27"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[26] && scope.row.clockList[26].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[26] && scope.row.clockList[26].type)}}
               </template>
             </el-table-column>
 
@@ -383,10 +358,10 @@
             <el-table-column
               label="28"
               width="60"
-              v-if="data[0].clockList.length>28"
+              v-if="headerLength>=28"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[27] && scope.row.clockList[27].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[27] && scope.row.clockList[27].type)}}
               </template>
             </el-table-column>
 
@@ -394,10 +369,10 @@
             <el-table-column
               label="29"
               width="60"
-              v-if="data[0].clockList.length>29"
+              v-if="headerLength>=29"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[28] && scope.row.clockList[28].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[28] && scope.row.clockList[28].type)}}
               </template>
             </el-table-column>
 
@@ -405,10 +380,10 @@
             <el-table-column
               label="30"
               width="60"
-              v-if="data[0].clockList.length>30"
+              v-if="headerLength>=30"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[29] && scope.row.clockList[29].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[29] && scope.row.clockList[29].type)}}
               </template>
             </el-table-column>
 
@@ -416,16 +391,15 @@
             <el-table-column
               label="31"
               width="60"
-              v-if="data[0].clockList.length>31"
+              v-if="headerLength>=31"
               show-overflow-tooltip>
               <template scope="scope">
-                {{commutator(scope.row.clockList[30] && scope.row.clockList[30].type)}}
+                {{commutator(scope.row.clockList && scope.row.clockList[30] && scope.row.clockList[30].type)}}
               </template>
             </el-table-column>
-
           </el-table-column>
         </el-table-column>
-        <el-table-column
+       <!-- <el-table-column
           prop="workAttendance"
           label="实际出勤"
           width="75"
@@ -466,9 +440,8 @@
           label="备注"
           width="150"
           show-overflow-tooltip>
-        </el-table-column>
+        </el-table-column>-->
       </el-table>
-
 
 
       <div class="daily el-select-dropdown " :style="{top:row.top,left:row.left}" v-show="row.isSelect" style="position:fixed; top: 603px; left: 706px; transform-origin: center top 0px; z-index: 2019;" x-placement="bottom-start">
@@ -524,319 +497,14 @@
   export default{
     data() {
       return {
-
-        "data":[
-          {
-            "id":"",
-            "userId":"",
-            "userName":"",
-            "userType":"",
-            "month":"",
-            "workAttendance":"",
-            "compassionateLeave":"",
-            "sickLeave":"0",
-            "marriageLeave":"",
-            "maternityLeave":"",
-            "familyLeave":"",
-            "funeralLeave":"",
-            "otherLeave":"",
-            "absenteeism":"",
-            "notes":"",
-            "clockList":[
-              {
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },
-
-            ]
-          },  {
-            "id":"",
-            "userId":"",
-            "userName":"",
-            "userType":"",
-            "month":"",
-            "workAttendance":"",
-            "compassionateLeave":"",
-            "sickLeave":"0",
-            "marriageLeave":"",
-            "maternityLeave":"",
-            "familyLeave":"",
-            "funeralLeave":"",
-            "otherLeave":"",
-            "absenteeism":"",
-            "notes":"",
-            "clockList":[
-              {
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },{
-                "id":"",
-                "clockDate":"",
-                "type":""
-              },
-
-            ]
-          }
+        isShow:true,
+        data:[
         ],
 
 
         formValidate: {
           depId:'',  //科室id
-          userType:'',  //生源类型
+          userType:'SXS',  //生源类型
           month:'',  //考勤时间
           userName:'',  //学员姓名
         },
@@ -861,7 +529,7 @@
         dynamicHt: 100,
         self: this,
         loading: false,
-        tableData1: [{l: '111'}],
+        tableData1: [],
         reportedModal:false,
         addId: {id: 'addId', title: '新建'},
         editId: {id: 'editId', title: '修改'},
@@ -871,17 +539,16 @@
         reportedId: {id: 'reportedId', title: '上报'},
 
 
-        //点击单元格的key
-
         //当前点击行数据
-
         row:{
           key:'',
           row:'',
           top:1000,
           left:-1000,
           isSelect:false,
-        }
+        },
+        headerLength:31,
+        oldDate:'',
       }
 
     },
@@ -896,9 +563,12 @@
         //初始化月份
         let date = new Date();
         date = this.yearMonth(+this.yearMonth(date));
-
         this.formValidate.month = date;
-        let ts  = new Date(date);
+        this.oldDate = date;
+        //获取当月有多少天,data是
+        let newDate = date.split('-');
+        let ts = new Date(newDate[0],newDate[1],0);//天数
+        this.headerLength = ts;
         this.setTableData();
       },
       //设置表格及分页的位置
@@ -954,7 +624,16 @@
                   that.errorMess('数据为空');
                   return;
               }
-            that.data = responseData.data
+            let date = that.yearMonth(+that.yearMonth(that.formValidate.month));
+            //获取当月有多少天,判断是否需要跟新头部，更新则隐藏头部
+            let newDate = date.split('-');
+            let ts = new Date(newDate[0],newDate[1],0);//天数
+            if(ts!=that.headerLength){
+              that.isShow = false;
+              that.headerLength = ts;
+            }
+            that.data = responseData.data;
+            that.isShow = true;
           }else {
             if(row){
               row['clockList'][key].type = val;
@@ -982,12 +661,13 @@
         let that = this;
         //处理服务数据
         let  date = key+1>9?key:'0'+(key+1);
-        let month = this.yearMonth(this.formValidate.month);
+        let month = this.yearMonth(this.formValidate.month)+'';
+
         let clockDate = month.split('');
         clockDate.splice(4,0,"-");
         clockDate.push('-');
         clockDate.push(date);
-        clockDate = clockDate.join('')
+        clockDate = clockDate.join('');
         let myPromise = Util.queryData({
           url:'attendance/clock/add',
           method:'post',
@@ -996,7 +676,8 @@
             depId:row.depId,   //科室Id
             type:row['clockList'][key].type,   //签到类型
             clockDate:clockDate,   //yyyy-MM-dd
-            month: month //yyyymm
+            month: month ,//yyyymm
+            userType:this.formValidate.userType,
           }
         })();
         myPromise.then(function (res) {
@@ -1037,7 +718,7 @@
         clockDate.splice(4,0,"-");
         clockDate.push('-');
         clockDate.push(date);
-        clockDate = clockDate.join('')
+        clockDate = clockDate.join('');
 
         let myPromise = Util.queryData({
           url:'attendance/clock/modify/'+dateData.id,
@@ -1049,6 +730,7 @@
             type:dateData.type,   //签到类型
             clockDate:clockDate,   //yyyy-MM-dd
             month:row.month,   //yyyymm
+            userType:this.formValidate.userType,
           }
         })();
         myPromise.then(function (res) {
@@ -1079,7 +761,7 @@
         //        isLoading(true);
         let isSubmit = this.handleSubmit('formValidate');
         if(isSubmit){
-          this.setTableData()
+          this.setTableData();
         }
       },
 
@@ -1222,7 +904,11 @@
         if(column.level!=3) return;  //不是1-31天的返回
         this.row.key = column.label-1;
         this.row.row = row;
-        this.row.top = event.pageY+14+'px';
+        if(event.pageY>this.dynamicHt/2+120){
+          this.row.top = event.pageY-276+'px';
+        }else{
+          this.row.top = event.pageY+14+'px';
+        }
         this.row.left = event.pageX-30+'px';
         this.row.isSelect = true;
         event.stopPropagation();
@@ -1286,7 +972,8 @@
           month = "0" + month;
         }
         return year+'-'+month+'-'+D;
-      }
+      },
+
 
     },
     created(){

@@ -861,8 +861,12 @@ $boderColor:#dfe6ec;
 }
 
 //实习生  分组设置
+.myCard{
+  overflow: hidden;
+}
 .myCard .el-card__header{
-  padding: 0 5px;
+  padding: 3px 5px;
+  background:#F9FAFC;
 }
 .myCard .headerBox{
   position: relative;

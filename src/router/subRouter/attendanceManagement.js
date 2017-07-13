@@ -40,17 +40,6 @@ const attendanceRouters = {
       }
     },
     {
-      //日常考勤统计
-      path:'dailyAttendanceStatistics',
-      name:'dailyAttendanceStatistics',
-      component:resolve=> {
-        require.ensure([], () => {
-          // resolve(require('../../components/daily/dailyManagement/dailyAttendance/dailyAttendance_list.vue'));
-          resolve(require('../../components/daily/dailyManagement/dailyAttendance/dailyAttendanceStatistics_list.vue'));
-        }, 'attendanceManagement');
-      }
-    }
-    ,{
       //请假管理
       path:'leaveManagement',
       name:'leaveManagement',
@@ -59,6 +48,16 @@ const attendanceRouters = {
           resolve(require('../../components/daily/dailyManagement/leaveManagement/leaveManagement_list.vue'));
         }, 'attendanceManagement');
       }
+    },
+    {
+      //日常考勤统计
+      path:'myLeave',
+        name:'myLeave',
+      component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/daily/dailyManagement/myLeave/myLeave_list.vue'));
+      }, 'attendanceManagement');
+    }
     }
   ]
 }

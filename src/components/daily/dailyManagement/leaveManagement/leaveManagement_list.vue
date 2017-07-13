@@ -17,8 +17,8 @@
     </el-form>
 
     <div class="add-remove">
-      <el-button  class="but-col" @click="add" type="primary">添加</el-button>
-      <el-button class="but-col" @click="remove" type="danger">删除</el-button>
+      <!--<el-button  class="but-col" @click="add" type="primary">添加</el-button>-->
+      <!--<el-button class="but-col" @click="remove" type="danger">删除</el-button>-->
       <el-button  class="but-col"  @click="pass" type="primary">批量通过</el-button>
       <el-button class="but-col" @click="reject" type="danger">批量驳回</el-button>
 
@@ -56,15 +56,8 @@
               @click="show(scope.row)">查看</el-button>
             <el-button
               size="small"
-              @click="edit(scope.row)">修改</el-button>
-            <el-button
-              size="small"
               v-if="scope.row.status == 'DSH'"
               @click="audit(scope.row)">审核</el-button>
-            <el-button
-              size="small"
-              @click="reported(scope.row)">上报</el-button>
-
           </template>
         </el-table-column>
         <el-table-column
@@ -304,7 +297,6 @@
         Util = this.$util;
         //ajax请求参数设置
         this.myPages =  Util.pageInitPrams;
-
         this.queryQptions = {
         curPage: 1,
           pageSize: Util.pageInitPrams.pageSize,
@@ -347,8 +339,10 @@
 
       //通过get请求列表数据
       updateListData(responseData){
+          let data = responseData.data;
+          if (!data)return;
           this.tableData = responseData.data;
-      this.totalCount = responseData.totalCount;
+      this.totalCount = responseData.totalCount || 0;
       },
       setTableData(){
         let formValidate =  this.formDate(this.getFormData(this.formValidate),['beginDate','endDate'],this.yearMonthData);

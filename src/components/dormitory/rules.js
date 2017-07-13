@@ -26,7 +26,7 @@ let roomMess = {
   no: [{ required: true, message: '此项不能为空'},baseRules.inputLen(0,20),baseRules.illegalChar()], //
   bedNum: [{ required: true, message: '此项不能为空'},baseRules.inputLen(0,20),baseRules.illegalChar()] ,//
   remark: [baseRules.inputLen(0,500),baseRules.illegalChar()], //
-  buildId:[baseRules.required] , //大楼名称
+  buildId:[{ required: true, message: '此项不能为空'}] , //大楼名称
   sex:[baseRules.required],  //类别
 };
 

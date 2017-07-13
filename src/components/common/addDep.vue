@@ -71,6 +71,8 @@
           name:'',
           parentId:this.operailityData.id,
           remark:'',
+          types:this.operailityData["types"],
+          path:this.operailityData["path"]+this.operailityData["id"]+"/",
           managerList:[
             /*{
               "id":1000,
@@ -108,7 +110,6 @@
        * */
       init(){
         //默认请求加载数据
-
       },
 
 
@@ -167,7 +168,6 @@
        * */
       setUsers(users){
         this.users = users;
-        console.log(this.users);
         this.formValidate.managerList = [];
         let tempArr = [];
         for(var i=0,item;i<this.users.length;i++){

@@ -18,7 +18,7 @@
           <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px" >
             <div class="listUpArea-searchLeft">
               <input class="hidden">
-              <el-input placeholder="请输入内容" v-model="formValidate.name">
+              <el-input placeholder="请输入内容" v-model="formValidate.groupName">
                 <div slot="prepend">小组名</div>
                 <el-button slot="append" @click="handleSubmit('formValidate')" icon="search"></el-button>
               </el-input>
@@ -69,8 +69,8 @@
             align="center"
             width="160">
             <template scope="scope">
-              <el-button size="small" @click="show(scope.row.index)">查看</el-button>
-              <el-button size="small" @click="edit(scope.row.index)">修改</el-button>
+              <el-button size="small" @click="show(scope.$index)">查看</el-button>
+              <el-button size="small" @click="edit(scope.$index)">修改</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -127,7 +127,7 @@
     <!--修改-->
     <Modal
       close-on-click-modal="false"
-      width="1000"
+      width="800"
       v-model="editModal"
       title="对话框标题"
       class-name="vertical-center-modal"
@@ -179,7 +179,7 @@
     data() {
       return {
         //查询表单
-        deleteUrl:'/role/remove',
+        deleteUrl: api.groupDelete.path,
         formValidate: {
           groupName: '',
         },
@@ -261,20 +261,14 @@
 
       //通过get请求列表数据
       updateListData(responseData){
-        let len = responseData.data.length;
-        let data = responseData.data.splice(0,150);
-        let that = this;
-        that.tableData1=[];
-        data = that.addIndex(data);
-        for(var i=0,n=0;i<data.length;i+=100,n++){
-          setTimeout(()=>{
-            that.tableData1= that.tableData1.concat(data.splice(0,100));
-          },n*10)
-        }
-        that.listTotal = 1;
+        let data = responseData.data;
+        this.tableData1=[];
+        this.tableData1=data;
+        this.listTotal = responseData.totalCount || 0;
       },
       setTableData(){
-        this.listMessTitle.ajaxParams = Object.assign(this.listMessTitle.ajaxParams,this.queryQptions);
+        this.formValidate.name="";
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params);
         this.ajax(this.listMessTitle);
       },
       /*
@@ -282,8 +276,9 @@
        * @param string 查询from的id
        * */
       handleSubmit(name){
-        let formData = Util._.defaultsDeep({},this.formValidate);
-        console.log(formData)
+        let option = Util._.defaultsDeep({},this.listMessTitle)
+        option.ajaxParams.params = Object.assign(option.ajaxParams.params,this.queryQptions.params,this.formValidate);
+        this.ajax(option);
       },
       /*--点击--添加--按钮--*/
       add(){
@@ -291,12 +286,15 @@
       },
       /*--点击--修改--按钮--*/
       edit(index){
-        this.operailityData = this.tableData1[index-1];
+        this.operailityData = this.tableData1[index];
         this.openModel("edit");
       },
       /*--点击--删除--按钮--*/
       remove(){
         if(!this.isSelected()) return;
+        for(var i=0;i<this.multipleSelection.length;i++){
+          this.multipleSelection[i]["id"]=this.multipleSelection[i]["groupId"]
+        }
         this.operailityData = this.multipleSelection;
         this.openModel('remove') ;
       },
@@ -305,7 +303,7 @@
        * @param index string|number  当前行索引
        * */
       show(index){
-        this.operailityData = this.tableData1[index-1];
+        this.operailityData = this.tableData1[index];
         this.openModel("show");
       },
       /*

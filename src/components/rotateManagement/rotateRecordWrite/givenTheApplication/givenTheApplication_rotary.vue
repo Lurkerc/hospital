@@ -128,7 +128,7 @@
     data() {
       return {
         self: this,
-        viewData: [],
+        viewData: {},
         summaryFileList: {
           fileIds: '',
           comment: '',
@@ -144,7 +144,11 @@
     methods: {
       // 初始化
       init() {
-        this.getViewData()
+        if (this.operailityData.depExaminationId) {
+          this.getViewData()
+        } else {
+          this.getViewDataForPodId()
+        }
       },
 
       // 获取预览数据
@@ -172,7 +176,26 @@
             filePath: '/api/file/download/' + item.id
           })
         });
-        this.summaryFileList.fileIds = fileIds.join(',')
+        this.summaryFileList.fileIds = fileIds.join(',');
+        this.getViewDataForPodId()
+      },
+
+      // 通过轮转id获取预览数据
+      getViewDataForPodId() {
+        this.ajax({
+          ajaxSuccess: 'getDataForPodIdSuccess',
+          ajaxParams: {
+            url: api.getUserRotaryInfo.path + this.operailityData.podId,
+            method: api.getUserRotaryInfo.method
+          }
+        })
+      },
+
+      // 获取数据成功
+      getDataForPodIdSuccess(res) {
+        this.$util._.map(res.data, (val, key) => {
+          this.viewData[key] = val
+        })
       },
 
       // 上传附件
@@ -185,7 +208,7 @@
         this.ajax({
           ajaxSuccess: () => this.$emit('rotary', 'rotary', '保存成功'),
           ajaxParams: {
-            url: api.userAddComment.path + this.operailityData.depExaminationId,
+            url: api.userAddComment.path + this.viewData.podId,
             method: api.userAddComment.method,
             data: this.summaryFileList,
           }

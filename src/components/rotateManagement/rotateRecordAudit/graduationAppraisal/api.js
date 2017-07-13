@@ -19,6 +19,10 @@ const api = {
   exportNoQualifiedUser: { // 导出不合格人员
     path: thisFile + '/exportNoQualifiedUser',
     method: 'get'
+  },
+  uploadMark: { // 管理员导入成绩
+    path: thisFile + 'uploadMark',
+    method: 'post'
   }
 };
 

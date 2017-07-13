@@ -20,7 +20,7 @@
             <el-input v-model="searchObj.schoolName"></el-input>
           </el-form-item>
           <el-form-item label="年份：">
-            <el-date-picker v-model="searchObj.year" align="right" type="year" placeholder="选择年">
+            <el-date-picker v-model="searchObj.year" align="right" :editable="false" type="year" placeholder="选择年">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="手机号：">
@@ -53,12 +53,12 @@
         <el-table-column prop="mobile" label="手机号" show-overflow-tooltip></el-table-column>
         <el-table-column prop="totalCost" label="费用" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.totalCost / 100 }}
+            {{ scope.row.totalCost }}
           </template>
         </el-table-column>
         <el-table-column prop="isPrint" label="状态" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.isPrint | print }}
+            {{ (scope.row.isPrint || 0) | print }}
           </template>
         </el-table-column>
       </el-table>
@@ -66,7 +66,7 @@
     <div style="margin: 10px;">
       <div style="float: right;">
         <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
+          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </div>
     </div>
@@ -86,9 +86,9 @@
             </template>
             <template v-else>
               <!-- 学校/专业 -->
-              <div>{{ item.userNames.replace(/,/,'，') }}</div>等{{ item.userNames.split(',').length }}人实习费/住宿费
+              <div>{{ item.userNames.replace(/,/g,'，') }}</div>等{{ item.userNames.split(',').length }}人实习费/住宿费
             </template>
-            <div>{{ item.totalCost / 100 }}</div>元。
+            <div>{{ item.totalCost }}</div>元。
           </div>
           <div class="signature">
             <p>教育处</p>
@@ -127,7 +127,7 @@
         operailityData: [],
         multipleSelection: [],
         tableData: [],
-        listTotal: 0,
+        totalCount: 0,
         printType: '',
         printDataModal: false,
         headerContent: {

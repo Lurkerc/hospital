@@ -8,7 +8,7 @@
     <el-form :inline="true">
       <el-row>
         <el-col :span="14">
-          <el-button type="success">导入成绩</el-button>
+          <el-button type="success" @click="leadin">导入成绩</el-button>
           <el-button type="info" @click="derive('exportQualifiedUser')">导出合格名单</el-button>
           <el-button type="danger" @click="derive('exportNoQualifiedUser')">导出不合格名单</el-button>
           <el-button type="primary">转为研究生</el-button>
@@ -104,6 +104,12 @@
       </div>
       <div slot="footer"></div>
     </Modal>
+    <!-- 模态框 导入成绩（leadin） -->
+    <Modal :mask-closable="false" v-model="leadinModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="800">
+      <modal-header slot="header" :content="contenHeader.leadinId"></modal-header>
+      <leadin v-if="leadinModal" :url="api" @cancel="cancel" @toChannel="subCallback"></leadin>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -112,12 +118,15 @@
   import add from './graduationAppraisal_add';
   import show from './graduationAppraisal_view';
   import givenView from '../../rotateRecordWrite/givenTheApplicationOfLarge/givenTheApplicationOfLarge_view';
+  import leadin from './graduationAppraisal_toChannel'; // 导入
   //当前组件引入全局的util
   let Util = null;
   export default {
     data() {
       return {
+        api,
         deriveUrl: '',
+        leadinModal: false,
         deriveModal: false,
         qualifiedActive: '',
         searchMore: false,
@@ -151,7 +160,11 @@
           deriveId: {
             id: "deriveId",
             title: "导出名单"
-          }
+          },
+          leadinId: {
+            id: 'leadinId',
+            title: "导入成绩"
+          },
         },
       }
     },
@@ -200,6 +213,7 @@
       },
       // 考核成绩
       showGiven(row) {
+        return
         this.operailityData = row;
         this.openModel('givenView')
       },
@@ -209,8 +223,12 @@
         Util._.map(this.searchObj, (key, val) => {
           params.push(key + '=' + val)
         })
-        this.deriveUrl = api[type].path + '?' + params.join('&');
+        this.deriveUrl = '/api' + api[type].path + '?' + params.join('&');
         this.openModel('derive');
+      },
+      // 导入
+      leadin() {
+        this.openModel('leadin')
       },
       /********************************* 表格相关 *****************************/
       /*
@@ -292,7 +310,8 @@
     components: {
       add,
       show,
-      givenView
+      givenView,
+      leadin
     }
   }
 

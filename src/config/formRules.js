@@ -271,10 +271,12 @@ let rules={
   //人员账户
   suers:{
     name:[baseRules.required],  //姓名
+    sex:[baseRules.required],  //性别
     specialty:[baseRules.required],   //专业
+    school:[baseRules.required],//学校
     grade:[baseRules.required],   //年级
     group:[baseRules.required],   //班级
-    //idNumber:[baseRules.required,baseRules.idNumber],   //身份证号码
+    idNumber:[baseRules.required],   //身份证号码
     mobile:[baseRules.required,baseRules.mobile],    //手机号
     email:[baseRules.required,baseRules.email,],//邮箱
   },

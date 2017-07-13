@@ -25,7 +25,12 @@ const api = {
   roomList: { // 宿舍大楼对应的宿舍
     path: '/dormitory/room/query/changeRoom',
     method: 'get'
-  }
+  },
+  /************************* 收费标准 *********************************/
+  getByKey: {
+    path: '/rotaryConfig/getByKey/rotary_charging_standard-SXS',
+    method: 'get'
+  },
 };
 
 export default api

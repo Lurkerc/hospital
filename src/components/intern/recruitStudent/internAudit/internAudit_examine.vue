@@ -47,23 +47,27 @@
                 </el-radio-group>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item label="收费标准：" prop="chargeStandard">
-                <el-input v-model="formValidate.chargeStandard" :maxlength="5"></el-input>
-              </el-form-item>
-            </el-col>
-            <date-group :dateGroup="{text:'',startDate:formValidate.sxBeginTime,endDate:formValidate.sxEndTime}">
+            <template v-if="formValidate.spState === 'PASS'">
               <el-col :span="12">
-                <el-form-item label="实习开始时间：" prop="sxBeginTime">
-                  <el-date-picker v-model="formValidate.sxBeginTime" type="date" placeholder="选择日期" :picker-options="pickerOptions0" @change="handleStartTime"></el-date-picker>
+                <el-form-item label="收费标准：" prop="chargeStandard">
+                  <el-input v-model="formValidate.chargeStandard" :maxlength="5"></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item label="实习结束时间：" prop="sxEndTime">
-                  <el-date-picker v-model="formValidate.sxEndTime" type="date" placeholder="选择日期" :picker-options="pickerOptions1" @change="handleEndTime"></el-date-picker>
-                </el-form-item>
-              </el-col>
-            </date-group>
+              <date-group :dateGroup="{text:'',startDate:formValidate.sxBeginTime,endDate:formValidate.sxEndTime}">
+                <el-col :span="12">
+                  <el-form-item label="实习开始时间：" prop="sxBeginTime">
+                    <el-date-picker v-model="formValidate.sxBeginTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
+                      @change="handleStartTime"></el-date-picker>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="实习结束时间：" prop="sxEndTime">
+                    <el-date-picker v-model="formValidate.sxEndTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
+                      @change="handleEndTime"></el-date-picker>
+                  </el-form-item>
+                </el-col>
+              </date-group>
+            </template>
             <el-form-item label="审核意见：" style="margin-bottom:0;clear:both;">
               <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}" :maxlength="200" placeholder="请输入审核意见" v-model="formValidate.reviewMess"></el-input>
             </el-form-item>
@@ -112,6 +116,7 @@
           '4': [],
           '5': [], // 身份证
         },
+        chargeStandard: {}, // 费用
         formValidate: {
           spState: 'PASS',
           chargeStandard: '',
@@ -159,6 +164,7 @@
       init() {
         Util = this.$util;
         this.getPhoto();
+        this.getChargeStandard();
       },
       /*
        * 点击提交按钮 监听是否提交数据
@@ -189,6 +195,16 @@
             flag = true;
           }
         });
+        if (this.formValidate.spState === 'PASS') {
+          if (!this.formValidate.sxBeginTime) {
+            this.errorMess('请选择开始时间');
+            flag = false
+          }
+          if (!this.formValidate.sxEndTime) {
+            this.errorMess('请选择结束时间');
+            flag = false
+          }
+        }
         return flag;
       },
       /*
@@ -218,6 +234,7 @@
           }
         })
       },
+
       // 处理附件集
       setPhotos(data) {
         for (var i = 0, item, obj; i < data.length; i++) {
@@ -227,6 +244,19 @@
           }
           this.photoData[item.cerType].push(item);
         }
+      },
+
+      // 获取收费标准
+      getChargeStandard() {
+        this.ajax({
+          ajaxSuccess: res => {
+            this.chargeStandard = res.data;
+            this.formValidate.chargeStandard = res.data.configValue
+          },
+          ajaxParams: {
+            url: api.getByKey.path
+          }
+        })
       },
 
       // 取消

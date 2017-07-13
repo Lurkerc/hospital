@@ -16,8 +16,8 @@
               <el-row :gutter="10" class="table-back-one">
                 <el-col :span="8" >
                   <el-form-item label="姓名：" prop="name" >
-                    <!--{{formValidate.name}}-->
-                    <el-input v-model="formValidate.name" placeholder="请输入"></el-input>
+                    <span v-if="formValidate.auditStatus=='AUDIT_SUCCESS'">{{formValidate.name}}</span>
+                    <el-input v-else v-model="formValidate.name" placeholder="请输入"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8" >
@@ -117,7 +117,7 @@
 
             <el-col :span="5" class="table-back-header" >
               <div style="text-align: center">
-                <up-header v-if="imgSrc" @upladSuccess="setUploadHeaderSuccessUrl" :imgFile="imgSrc" :actionUrl="uploadHeaderUrl"></up-header>
+                <up-header @upladSuccess="setUploadHeaderSuccessUrl" :imgFile="imgSrc" :actionUrl="uploadHeaderUrl"></up-header>
               </div>
             </el-col>
 
@@ -292,6 +292,7 @@
         formValidate: {
           deptId:'',  //部门id
           name:'',  //姓名
+          auditStatus:'',  //审核通过判断
           sex:'',   //性别
           nation:'',  //民族
           birth:'',  //出生日期
@@ -403,7 +404,12 @@
       SuccessGetCurrData(responseData){
         let data = responseData.data;
         this.formValidate = this.formDate(data,['birth','jobTime'],this.yearMonth);
-        this.imgSrc = data.headPhotoHttp;
+        let env = this.$store.getters.getEnvPath;
+        if(data.headPhoto===null){
+          this.imgSrc = "";
+        }else{
+          this.imgSrc = env["http"]+data.headPhoto;
+        }
         this.selectOptions.value = this.formValidate.schoolId;
         this.isShowSlt = true;
       },

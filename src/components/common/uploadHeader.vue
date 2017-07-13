@@ -9,7 +9,7 @@
     :on-change="changeHeader"
     :on-progress="uploadProgress"
     :on-error="uploadError">
-    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+    <img v-if="imageUrl!=''" :src="imageUrl" class="avatar">
     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
   </el-upload>
 </template>
@@ -58,6 +58,11 @@
         this.action = config.ajaxUrl+this.action;
       if(typeof this.imgFile!="undefined"){
         this.imageUrl = this.imgFile;
+      }
+    },
+    watch:{
+      imgFile(val){
+        this.imageUrl = val;
       }
     },
     methods: {

@@ -352,8 +352,7 @@
       updateListData(responseData){
         if(!responseData.data)return;
         this.tableData = this.addIndex(responseData.data);
-        if(!responseData.totalCount) return;
-        this.totalCount = responseData.totalCount;
+        this.totalCount = responseData.totalCount || 0;
       },
       setTableData(){
 

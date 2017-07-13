@@ -15,7 +15,7 @@
             <el-input v-model="searchObj.schoolName"></el-input>
           </el-form-item>
           <el-form-item label="年份：">
-            <el-date-picker v-model="searchObj.year" align="right" type="year" placeholder="选择年">
+            <el-date-picker v-model="searchObj.year" align="right" :editable="false" type="year" placeholder="选择年">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="手机号：">
@@ -56,7 +56,7 @@
     <div style="margin: 10px;">
       <div style="float: right;">
         <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
+          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </div>
     </div>
@@ -99,7 +99,7 @@
         self: this,
         operailityData: [],
         tableData: [],
-        listTotal: 0,
+        totalCount: 0,
         examineModal: false,
         headerContent: {
           showId: {

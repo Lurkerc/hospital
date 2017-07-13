@@ -428,7 +428,7 @@
         data = that.addIndex(data);
         that.tableData1= data;
 
-        this.listTotal = responseData.totalCount;
+        this.listTotal = responseData.totalCount || 0;
       },
 
 

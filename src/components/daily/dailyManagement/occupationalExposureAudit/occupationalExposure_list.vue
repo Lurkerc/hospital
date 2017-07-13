@@ -473,7 +473,7 @@
       //通过get请求列表数据
       updateListData(responseData){
         this.tableData = this.addIndex(responseData.data);
-        this.totalCount = responseData.totalCount;
+        this.totalCount = responseData.totalCount || 0;
       },
 
 

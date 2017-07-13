@@ -181,7 +181,7 @@
         let data = responseData.data;
         if(!data) return;
         this.tableData = data;
-        this.totalCount = responseData.totalCount
+        this.totalCount = responseData.totalCount || 0;
       },
 
       /*

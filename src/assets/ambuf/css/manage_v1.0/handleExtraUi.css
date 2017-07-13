@@ -194,3 +194,15 @@ echarts
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+
+
+/*
+elementUI table 表头修改
+*/
+table thead .tabBiasLine{
+  background-image: url("images/biasLine.png");
+  background-repeat: no-repeat;
+}
+table thead .tabBiasLine div{
+  background: none;
+}
