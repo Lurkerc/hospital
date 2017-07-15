@@ -20,12 +20,12 @@
             <img src="../../../assets/ambuf/images/checkIn.png" class="room-image" @click="checkIn(room)" title="房间历史入住情况"  alt="房间历史入住情况"><!--迁入-->
           </div>
           <div class="room-content">
-            <div class="room-no" v-for="(item,i) in room.userList"> <span class="room-user" @click="userClick(item,room,index)">{{item.userName}}</span></div>
+            <div class="room-no" v-for="(item,i) in room.userList"> <span class="room-user" @click="userClick(item,room,index,0)">{{item.userName}}</span></div>
             <div class="room-img" v-show="showImgIndex == index && operailityData">
-              <img src="../../../assets/ambuf/images/immigration.png"  class="room-image" @click="immigration(room)" title="入住" alt="入住"><!---->
-              <img src="../../../assets/ambuf/images/migration.png" v-show="operailityData.id" class="room-image" @click="migration()" title="迁出" alt="迁出"><!--迁出-->
-              <img src="../../../assets/ambuf/images/InData.png" v-show="operailityData.id" class="room-image" @click="InData()" title="入住者资料" alt="入住者资料"><!--迁出-->
-              <img src="../../../assets/ambuf/images/changeRoom.png" v-show="operailityData.id" class="room-image" @click="changeRoom()" title="更换房间" alt="更换房间"><!--迁出-->
+              <img src="../../../assets/ambuf/images/immigration.png"  v-show="!clickSex" class="room-image" @click="immigration(room)" title="入住" alt="入住"><!---->
+              <img src="../../../assets/ambuf/images/migration.png" v-show="!clickSex && operailityData.id" class="room-image" @click="migration()" title="迁出" alt="迁出"><!--迁出-->
+              <img src="../../../assets/ambuf/images/InData.png" v-show="!clickSex &&operailityData.id" class="room-image" @click="InData()" title="入住者资料" alt="入住者资料"><!--迁出-->
+              <img src="../../../assets/ambuf/images/changeRoom.png" v-show="!clickSex &&operailityData.id" class="room-image" @click="changeRoom()" title="更换房间" alt="更换房间"><!--迁出-->
             </div>
           </div>
         </div>
@@ -47,14 +47,14 @@
           </div>
           <div class="room-content">
             <div>
-              <div class="room-no" v-for="(item,i) in room.userList"> <span class="room-user" @click="userClick(item,room,index)">{{item.userName}}</span></div>
+              <div class="room-no" v-for="(item,i) in room.userList"> <span class="room-user" @click="userClick(item,room,index,1)">{{item.userName}}</span></div>
 
             </div>
-            <div class="room-img" v-show="showImgIndex == index && operailityData">
-              <img src="../../../assets/ambuf/images/immigration.png"  class="room-image" @click="immigration(room)" title="入住" alt="入住"><!---->
-              <img src="../../../assets/ambuf/images/migration.png" v-show="operailityData.id" class="room-image" @click="migration()" title="迁出" alt="迁出"><!--迁出-->
-              <img src="../../../assets/ambuf/images/InData.png" v-show="operailityData.id" class="room-image" @click="InData()" title="入住者资料" alt="入住者资料"><!--迁出-->
-              <img src="../../../assets/ambuf/images/changeRoom.png" v-show="operailityData.id" class="room-image" @click="changeRoom()" title="更换房间" alt="更换房间"><!--迁出-->
+            <div class="room-img" v-show="girlImgIndex == index && operailityData">
+              <img src="../../../assets/ambuf/images/immigration.png" v-show="clickSex"  class="room-image" @click="immigration(room)" title="入住" alt="入住"><!---->
+              <img src="../../../assets/ambuf/images/migration.png" v-show="clickSex&&operailityData.id" class="room-image" @click="migration()" title="迁出" alt="迁出"><!--迁出-->
+              <img src="../../../assets/ambuf/images/InData.png" v-show="clickSex&&operailityData.id" class="room-image" @click="InData()" title="入住者资料" alt="入住者资料"><!--迁出-->
+              <img src="../../../assets/ambuf/images/changeRoom.png" v-show="clickSex&&operailityData.id" class="room-image" @click="changeRoom()" title="更换房间" alt="更换房间"><!--迁出-->
             </div>
           </div>
         </div>
@@ -200,7 +200,9 @@
       props:['parentDara','rules'],
     data() {
       return {
-        showImgIndex:0,
+        showImgIndex:-1,
+        girlImgIndex:-1,
+        clickSex:'',
         url:url,
         //查询表单
         batchOperailityData:'',
@@ -429,11 +431,15 @@
 
 
       //点击人员
-      userClick(data,room,index){
-          this.showImgIndex = index;
-          this.operailityData = data;
+      userClick(data,room,index,sex){
+          if(sex){
+            this.girlImgIndex = index;
+          }else {
+            this.showImgIndex = index;
+          }
+        this.clickSex = sex;
+        this.operailityData = data;
         this.selectRoom = room;
-
       },
 
       //批量迁入
@@ -479,8 +485,8 @@
         if(!data.yetBedNum){
           this.showMess('入住人员已满');
           return;
-
         }
+        this.selectRoom = data;
         this.openModel("immigration");
       },
 

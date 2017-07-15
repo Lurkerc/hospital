@@ -3,31 +3,35 @@
 <template>
   <div id="content"  ref="content">
     <!--查询-->
-    <el-form :inline="true" :model="formSearch">
-      <el-form-item label="活动名称" prop="user">
-        <el-input v-model="formSearch.user" placeholder="活动名称"></el-input>
+    <el-form :inline="true" :model="formSearch" ref="formValidate" :rules="rules.teachingActivitiesSetList" >
+      <el-form-item label="活动名称" prop="activityName">
+        <el-input v-model="formSearch.activityName" placeholder="活动名称"></el-input>
       </el-form-item>
-      <el-form-item label="活动区域" prop="user">
-        <el-select v-model="formSearch.area" placeholder="活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+      <el-form-item label="活动类型" prop="user">
+        <el-select v-model="formSearch.activityType" label="活动状态" placeholder="请选择活动类型">
+          <select-option  :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
         </el-select>
       </el-form-item>
+      <el-select  v-model="formSearch.activityState" clearable placeholder="请选择">
+        <el-option label='全部' value=""></el-option>
+        <el-option label='未发布' value="NO_RELEASE"></el-option>
+        <el-option label="已发布" value="RELEASE"></el-option>
+        <el-option label="结束" value="STOP"></el-option>
+      </el-select>
       <el-form-item label="时间" prop="beginTime">
         <el-date-picker
-          v-model="formSearch.beginTime"
+          v-model="formSearch.activityBeginTime"
           type="date"
           placeholder="选择日期"
           :picker-options="pickerOptions0"
           @change="handleStartTime"
         >
         </el-date-picker>
-        &nbsp;
         至
       </el-form-item>
-      <el-form-item prop="endTime">
+      <el-form-item prop="activityEndTime">
         <el-date-picker
-          v-model="formSearch.endTime"
+          v-model="formSearch.activityEndTime"
           align="right"
           type="date"
           placeholder="选择日期"
@@ -36,7 +40,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-      <el-button type="primary" @click="onSubmitSearch">查询</el-button>
+      <el-button type="primary" @click="searchEvent">查询</el-button>
     </el-form-item>
     </el-form>
 
@@ -71,13 +75,14 @@
       </el-table-column>
       <el-table-column
         label="操作"
-        width="160">
+        width="200">
         <template scope="scope">
           <el-button
             size="small"
             @click="show(scope.row)">查-看</el-button>
           <el-button
             size="small"
+            v-if="scope.row.activityState=='NO_RELEASE'"
             @click="publish(scope.row)">发-布</el-button>
           <el-button
             size="small"
@@ -119,7 +124,7 @@
         label="状态"
         width="120">
         <template scope="scope">
-         {{ scope.row.activityState == 'NO_RELEASE'?'未上报':scope.row.activityState =='RELEASE'?'已上报':'结束'}}
+         {{ scope.row.activityState == 'NO_RELEASE'?'未发布':scope.row.activityState =='RELEASE'?'已发布':'结束'}}
         </template>
       </el-table-column>
     </el-table>
@@ -146,7 +151,7 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="addId"></modal-header>
-      <add v-if="addModal"  @cancel="cancel" :url="url" @add="subCallback"></add>
+      <add v-if="addModal" :rules="rules"  @cancel="cancel" :url="url" @add="subCallback"></add>
       <div slot="footer"></div>
     </Modal>
     <!--修改角色弹窗-->
@@ -160,7 +165,7 @@
       <!--<div slot="header"> -->
       <!--</div>-->
       <modal-header slot="header" :content="editId"></modal-header>
-      <edit v-if="editModal" @cancel="cancel" :url="url" @edit="subCallback" :operaility-data="operailityData"></edit>
+      <edit v-if="editModal" :rules="rules" @cancel="cancel" :url="url" @edit="subCallback" :operaility-data="operailityData"></edit>
       <div slot="footer"></div>
     </Modal>
     <!--查看教学活动-->
@@ -212,7 +217,7 @@
 </style>
 <script>
   /*当前组件必要引入*/
-
+  import rules from '../../rules.js'
   import url from '../app'
   //引入--新建教学活动--组件
   import add from './teachingActivitiesSet_add';
@@ -224,6 +229,7 @@
   export default {
     data() {
       return {
+        rules:rules,
         //查询项
         starTimes:'',
         endTimes:'',
@@ -283,7 +289,7 @@
       }
     },
     created(){
-      this.init()
+      this.init();
     },
     components:{
       add,edit,show
@@ -300,6 +306,30 @@
         }
 
         this.setTableData();
+      },
+      searchEvent(isLoading){
+        //        isLoading(true);
+        let isSubmit = this.handleSubmit('formValidate');
+        if(isSubmit){
+          this.setTableData(isLoading)
+        }
+      },
+
+
+      /*
+       * 列表查询方法
+       * @param string 查询from的id
+       * */
+      handleSubmit(name){
+        let flag =false
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            flag =true;
+          } else {
+            this.$Message.error('表单验证失败!');
+          }
+        })
+        return flag
       },
       //查询
       deformatterDate(d){

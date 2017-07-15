@@ -6,7 +6,7 @@
       <el-row >
         <el-col :span="8" :offset="2">
           <el-form-item label="姓名" prop="name" >
-            {{operailityData.userNmae}}
+            {{formValidate.userName}}
           </el-form-item>
         </el-col>
         </el-col >

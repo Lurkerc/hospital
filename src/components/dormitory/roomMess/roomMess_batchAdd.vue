@@ -26,13 +26,13 @@
       <el-row >
         <el-col :span="9" :offset="2">
           <el-form-item label="房间号:"  >
-            <el-input v-model.number="formValidate.noBegin" type="number" placeholder="0" style="width: 120px;" @blur="noBegin"></el-input>到
-            <el-input v-model.number="formValidate.noEnd" type="number" placeholder="0"  style="width: 120px;" @blur="noEnd"></el-input>
+            <el-input v-model.number="formValidate.noBegin"  min="0" type="number" placeholder="0" style="width: 120px;" @blur="noBegin"></el-input>到
+            <el-input v-model.number="formValidate.noEnd"  min="0" type="number" placeholder="0"  style="width: 120px;" @blur="noEnd"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8" :offset="1">
           <el-form-item label="床位数:" prop="bedNum" >
-            <el-input v-model.number="formValidate.bedNum" type="number" placeholder="请输入" @blur="bedNum"></el-input>
+            <el-input v-model.number="formValidate.bedNum"  min="0" type="number" placeholder="请输入" @blur="bedNum"></el-input>
           </el-form-item>
         </el-col>
         </el-col >
@@ -105,6 +105,10 @@
       listenSubEvent(isLoadingFun){
         let isSubmit = this.submitForm("formValidate");
         if(isSubmit){
+            if(this.formValidate.noEnd<this.formValidate.noBegin) {
+                this.errorMess('起始房间号不能大于终止房间号');
+                return;
+            }
           if(!isLoadingFun) isLoadingFun=function(){};
           isLoadingFun(true);
           this.addMessTitle.ajaxParams.data=this.getFormData(this.formValidate);
@@ -152,24 +156,12 @@
 
       noBegin(){
         let val;
-        let noEnd = this.formValidate.noEnd
+        let noEnd = this.formValidate.noEnd;
         val =Math.abs(Number.parseInt(this.formValidate.noBegin)) ;
-
         if(typeof val !='number'||val!=val ||!val){
-
             this.formValidate.noBegin=1;
           return
         }
-          if(!noEnd){
-
-            this.formValidate.noEnd = val
-             val =  val>1?val:1
-          }else {
-            if(val>noEnd){
-              val = noEnd
-            }
-          }
-
         this.formValidate.noBegin = val
 
       },
@@ -181,11 +173,7 @@
         let noBegin = this.formValidate.noBegin;
         if(typeof val !='number'||val!=val ||!val){
           this.formValidate.noEnd=noBegin+1;
-          return
-        }
-
-        if(val<noBegin){
-          this.formValidate.noEnd = noBegin
+          return;
         }
       },
 

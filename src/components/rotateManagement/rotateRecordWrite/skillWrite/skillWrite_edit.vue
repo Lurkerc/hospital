@@ -163,6 +163,7 @@
       //给当前组件注入全局util
       Util = this.$util;
       let userInfo = this.$store.getters.getUserInfo;
+      let userType = userInfo.studentTypes;
       this.ajax(this.getMessTitle);
     },
     mounted(){

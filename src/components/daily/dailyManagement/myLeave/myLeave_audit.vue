@@ -103,7 +103,7 @@
 <script>
   let Util=null;
   export default {
-    props: ['operailityData'],
+    props: ['operailityData','rules'],
     data (){
       return{
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},

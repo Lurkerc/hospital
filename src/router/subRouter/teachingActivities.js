@@ -42,6 +42,16 @@ const jxhdRouters = {
       }, 'jxhd');
     }
   },{
+      //科内教学
+      path:'conezTeaching',
+      name:'conezTeaching',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/teach/teachingActivities/teachingActivitiesSet/teachingActivitiesSet_list.vue'));
+        }, 'jxhd');
+      }
+    },
+    {
     //我的活动
     path:'myActivities',
     name:'myActivities',

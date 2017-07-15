@@ -45,7 +45,6 @@
           <el-col :span="24"  >
           <el-form-item label="生源类型:" prop="title">
             <el-select v-model="formValidate.userType" placeholder="请选择生源类型">
-              <el-option label="全部" value=""></el-option>
               <el-option label="实习生" value="SXS"></el-option>
               <el-option label="进修生" value="JXS"></el-option>
               <el-option label="住院医" value="ZYY"></el-option>
@@ -265,7 +264,7 @@
           depId: '',                //科室
           createBeginTime: '',      //创建开始时间
           createEndTime: '',        //创建结束时间
-          userType: '',             //生源类型
+          userType:'SXS',             //生源类型
           state: '',                //状态
           patienNo: '',             //病历号
           sortby: '',               //排序列

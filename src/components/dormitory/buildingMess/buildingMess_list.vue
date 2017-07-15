@@ -20,6 +20,7 @@
       <el-button type="primary" @click="add">添加</el-button>
       <el-button type="danger" @click="remove">删除</el-button>
       <el-button  type="info" >导入</el-button>
+      <!--<el-button @click="derive" type="info">导出</el-button>-->
       <el-button  type="info">导出</el-button>
     </div>
     <!--列表数据-->
@@ -149,6 +150,30 @@
       <show v-if="showModal" @cancel="cancel" @show="subCallback" :operaility-data="operailityData" :url="url"></show>
       <div slot="footer"></div>
     </Modal>
+
+    <!--导出弹窗-->
+    <Modal
+      :mask-closable="false"
+      close-on-click-modal="false"
+      height="200"
+      v-model="deriveModal"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :width="500">
+      <modal-header slot="header"  :content="deriveId"></modal-header>
+      <div>
+        <div class="remove">确认导出吗</div>
+
+        <el-row>
+          <el-col :span="10" :offset="14">
+            <a :href="'/api/user/export/'+deptId"><el-button @click="buildDerive"  type="primary">确定</el-button></a>
+            <el-button class="but-col" @click=" deriveModal=false" >取消</el-button>
+          </el-col>
+          </el-col>
+        </el-row>
+      </div>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -163,6 +188,8 @@
   import steps from '../dormitory_common/steps.vue'
   //引入--验证--组件
   import rules from "../rules.js";
+  //引入--导入--组件
+  import toChannel from "../rules.js";
 
   //当前组件引入全局的util
   let Util=null;
@@ -186,6 +213,7 @@
         self: this,
         tableData: [],
         loading:false,
+        deriveModal:false,
         totalCount:0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle:{
@@ -200,6 +228,7 @@
         editId:{id:'editId',title:'修改'},
         removeId:{id:'removeId',title:'删除'},
         viewId:{id:'viewId',title:'查看'},
+        deriveId:{id:'deriveId',title:'导出'},
 
       }
     },
@@ -353,6 +382,13 @@
       openModel(options){
         this[options+'Modal'] = true;
       },
+
+      //确定导出
+      buildDerive(){
+//        let http = this.$store.getters.getEnvPath.http;
+//        window.open() ;
+        this.cancel('derive')
+      },
     },
     created(){
       this.init();
@@ -369,7 +405,7 @@
     },
     components:{
       //当前组件引入的子组件
-      add,edit,show,steps
+      add,edit,show,steps,toChannel
     }
   }
 </script>

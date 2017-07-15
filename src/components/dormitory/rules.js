@@ -27,7 +27,7 @@ let roomMess = {
   bedNum: [{ required: true, message: '此项不能为空'},baseRules.inputLen(0,20),baseRules.illegalChar()] ,//
   remark: [baseRules.inputLen(0,500),baseRules.illegalChar()], //
   buildId:[{ required: true, message: '此项不能为空'}] , //大楼名称
-  sex:[baseRules.required],  //类别
+  sex:[{ required: true, message: '此项不能为空'}],  //类别
 };
 
 /**
@@ -39,8 +39,14 @@ let inAndOutList = {
 let inAndOut = {
   userNames: [baseRules.required,baseRules.illegalChar()], //
   remark: [baseRules.inputLen(0,500),baseRules.illegalChar()],//
-  no:[baseRules.required,baseRules.illegalChar()],
-  userName:[baseRules.required,baseRules.illegalChar()],
+  no:[{ required: true, message: '此项不能为空'},baseRules.illegalChar()],
+  userName:[{ required: true, message: '此项不能为空'},baseRules.illegalChar()],
+};
+/**
+ * 迁入迁出
+ */
+let occupancyList = {
+  userName: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 名称 - 必填
 };
 
 
@@ -54,5 +60,6 @@ export default {
   roomMessList,
   roomMess,
   inAndOutList,
-  inAndOut
+  inAndOut,
+  occupancyList
 };

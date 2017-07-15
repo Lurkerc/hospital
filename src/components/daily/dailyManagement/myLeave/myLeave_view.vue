@@ -1,10 +1,10 @@
 <template>
 
   <div class="leaveManagement-show" >
-    <div class="qjxx">
+    <div >
     <el-row >
       <el-col :span="9" :offset="2">
-        <p class="center"><span class="name">姓名</span><span>{{data.applicantName}}</span></p>
+        <p class="center"><span class="name">姓名</span><span>{{data.userName}}</span></p>
       </el-col >
 
       <el-col :span="9">
@@ -37,7 +37,7 @@
     </el-row >
     </div>
 
-    <div class="shxx">
+   <!-- <div class="shxx">
     <el-row class="step">
       <el-col :span="20" :offset="2">
         <el-steps :space="350" :active="2">
@@ -46,10 +46,10 @@
           <el-step title="教育处" description="待审批"></el-step>
         </el-steps>
       </el-col >
-    </el-row >
+    </el-row >-->
 
 
-    <el-row >
+   <!-- <el-row >
       <el-col :span="8" :offset="2">
         <p class="center"><span class="name">审核人</span><span>张三</span></p>
       </el-col >
@@ -59,7 +59,7 @@
       <el-col :span="18" :offset="2">
         <p class="center"><span class="name">审核时间</span><span>2017/12/29   12：00</span></p>
       </el-col >
-    </el-row >
+    </el-row >-->
 
     <el-row >
       <el-col :span="18" :offset="2">
@@ -89,26 +89,7 @@
       return{
 
         "data": {
-            "explains":"有事",
-            "applicantName":"蒋国华",
-            "applicantId":"2",
-            "depName":"呼吸科",
-            "timeLength":"1",
-            "leaveType":"事假",
-            "createTime":"2016-04-25",
-            "depId":"2",
-            "id":1,
-            "beginTime":"2016-05-01",
-            "endTime":"2016-05-03",
-            "fileList":[
-              {
-                "fileName":"文件名称",
-                "id":"1",
-                "fileType":"text"
-              }
-            ],
-            "status":"WSB",
-          tasks:[],
+
           }
         ,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
@@ -118,13 +99,13 @@
             url:'leave/get/'+this.operailityData.id,
           }
         },
-        //当前组件默认请求(Task)数据时,ajax处理的 基础信息设置(已办理事项）
-        taskMessTitle:{
-          ajaxSuccess:'SuccessGetTask',
-          ajaxParams:{
-            url:'workflow/gethistoryTask/'+this.operailityData.id,
-          }
-        },
+//        //当前组件默认请求(Task)数据时,ajax处理的 基础信息设置(已办理事项）
+//        taskMessTitle:{
+//          ajaxSuccess:'SuccessGetTask',
+//          ajaxParams:{
+//            url:'workflow/gethistoryTask/'+this.operailityData.id,
+//          }
+//        },
 
       }
     },
@@ -164,7 +145,7 @@
       init(){
         //默认请求加载数据
         this.ajax(this.listMessTitle);
-        this.ajax(this.taskMessTitle);
+//        this.ajax(this.taskMessTitle);
       },
 
   //转换

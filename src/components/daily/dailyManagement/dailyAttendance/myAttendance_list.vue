@@ -15,13 +15,13 @@
         <el-col :span="5">
           <el-form-item label="考勤时间" prop="month">
             <el-date-picker
+              :clearable="false"
               v-model="formValidate.month"
               type="month"
               :editable="false"
               placeholder="选择月">
             </el-date-picker>
           </el-form-item>
-
         </el-col >
 
         <el-col :span="4">
@@ -587,6 +587,7 @@
       //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
       setTableData(row,key,val){
         let that = this;
+        that.ajaxCreateLoading(true);
         //处理服务数据
         let params = this.formDate(this.getFormData(this.formValidate),['month'],this.yearMonth);
         let myPromise = Util.queryData({
@@ -596,6 +597,7 @@
         })();
         let arr = [{clockList:[]}];
         myPromise.then(function (res) {
+          that.ajaxCreateLoading(false);
           let responseData = res.data;
           if(Util._.isObject(responseData["status"])&&responseData["status"]["code"]==0){
             if(responseData.data==0){
@@ -624,9 +626,11 @@
           }
         }).catch(function(response){
           if (response instanceof Error) {
+            that.ajaxCreateLoading(false);
             // 意外发生在设置要求引发一个错误
             that.errorMess(response.message);
           } else {
+            that.ajaxCreateLoading(false);
             that.errorMess(response.status+"错误!");
           }
         })
@@ -639,6 +643,7 @@
           that.errorMess('操作错误');
         }
         let that = this;
+        that.ajaxCreateLoading(true);
         //处理服务数据
         let  date = key+1>9?key:'0'+(key+1);
         let month = this.yearMonth(this.formValidate.month)+'';
@@ -660,6 +665,7 @@
           }
         })();
         myPromise.then(function (res) {
+          that.ajaxCreateLoading(false);
           let responseData = res.data;
           if(Util._.isObject(responseData["status"])&&responseData["status"]["code"]==0){
             that.setTableData(row,key,val)
@@ -674,9 +680,11 @@
         }).catch(function(response){
           row['clockList'][key].type = val;
           if (response instanceof Error) {
+            that.ajaxCreateLoading(false);
             // 意外发生在设置要求引发一个错误
             that.errorMess(response.message);
           } else {
+            that.ajaxCreateLoading(false);
             that.errorMess(response.status+"错误!");
           }
         })
@@ -712,8 +720,10 @@
             userType:this.formValidate.userType,
           }
         })();
+        that.ajaxCreateLoading(true);
         myPromise.then(function (res) {
           let responseData = res.data;
+          that.ajaxCreateLoading(false);
           if(Util._.isObject(responseData["status"])&&responseData["status"]["code"]==0){
             //修改成功目前未刷新列表， 保留
             //that.setTableData(row,key,val)
@@ -729,8 +739,10 @@
           if (response instanceof Error) {
             // 意外发生在设置要求引发一个错误
             that.errorMess(response.message);
+            that.ajaxCreateLoading(false);
           } else {
             that.errorMess(response.status+"错误!");
+            that.ajaxCreateLoading(false);
           }
         })
       },

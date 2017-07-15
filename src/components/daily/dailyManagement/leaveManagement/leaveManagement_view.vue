@@ -1,10 +1,10 @@
 <template>
 
   <div class="leaveManagement-show" >
-    <div class="qjxx">
+    <div >
     <el-row >
       <el-col :span="9" :offset="2">
-        <p class="center"><span class="name">姓名</span><span>{{data.applicantName}}</span></p>
+        <p class="center"><span class="name">姓名</span><span>{{data.userName}}</span></p>
       </el-col >
 
       <el-col :span="9">
@@ -36,7 +36,7 @@
       </el-col >
     </el-row >
     </div>
-
+<!--
     <div class="shxx">
     <el-row class="step">
       <el-col :span="20" :offset="2">
@@ -59,7 +59,7 @@
       <el-col :span="18" :offset="2">
         <p class="center"><span class="name">审核时间</span><span>2017/12/29   12：00</span></p>
       </el-col >
-    </el-row >
+    </el-row >-->
 
     <el-row >
       <el-col :span="18" :offset="2">
@@ -119,12 +119,12 @@
           }
         },
         //当前组件默认请求(Task)数据时,ajax处理的 基础信息设置(已办理事项）
-        taskMessTitle:{
+      /*  taskMessTitle:{
           ajaxSuccess:'SuccessGetTask',
           ajaxParams:{
             url:'workflow/gethistoryTask/'+this.operailityData.id,
           }
-        },
+        },*/
 
       }
     },
@@ -164,7 +164,7 @@
       init(){
         //默认请求加载数据
         this.ajax(this.listMessTitle);
-        this.ajax(this.taskMessTitle);
+        /*this.ajax(this.taskMessTitle);*/
       },
 
   //转换

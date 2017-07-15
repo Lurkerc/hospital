@@ -2,7 +2,7 @@
 <template>
   <div id="content" ref="content" class="modal">
     <steps></steps>
-    <el-form  ref="formValidate" label-width="100px">
+    <el-form  :model="formValidate" ref="formValidate" :rules="rules.occupancyList" label-width="100px">
       <el-row >
         <el-col :span="10" :offset="12" >
           <el-form-item  prop="title">
@@ -138,6 +138,7 @@
 <script>
   /*当前组件必要引入*/
   import url from '../app'
+  import rules from '../rules.js'
   //引入--查看--组件
   import show from "./occupancy_view.vue";
 
@@ -149,6 +150,7 @@
     data() {
       return {
         url:url,
+        rules:rules,
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',
         deleteUrl:'/role/remove',

@@ -96,12 +96,8 @@
       addAutoList(){
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         let addAutoList={
-          type:'add',
-            successTitle(){
-              this.successMess('自动安排成功');
-            },
             errorTitle:'自动安排失败!',
-            ajaxSuccess:'ajaxSuccess',
+            ajaxSuccess:'addAutoListSuccess',
             ajaxError:'ajaxError',
             ajaxParams:{
             url:this.url.bedPersonAddAutoList,
@@ -112,6 +108,11 @@
         this.ajax(addAutoList);
 
       },
+      addAutoListSuccess(){
+        this.successMess('自动安排成功')
+      },
+
+
       //设置表格及分页的位置
       setTableDynHeight(){
         let content = this.$refs.content;

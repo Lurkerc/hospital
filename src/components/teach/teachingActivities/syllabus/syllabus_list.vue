@@ -1,12 +1,56 @@
 <template>
-  <listHeaders
-    :headList="tableHeader"
-    @mouseEnter="mouseEnter"
-    @mouseLeave="mouseLeave"
-    :url="url"
-    :tableDataList="tableData">
-  </listHeaders>
+  <div>
+
+
+  <div>
+    <el-form  label-width="80px" inline class="demo-ruleForm">
+      <el-row style="margin-top: 10px">
+        <el-col  :span="24" >
+          <el-form-item label="开始时间" prop="activityBeginTime" >
+            <el-date-picker
+              v-model="formValidate.activityBeginTime"
+              type="date"
+              :clearable="false"
+              :editable="false"
+              placeholder="选择日期"
+              :picker-options="pickerOptions0"
+              @change="handleStartTime"
+            >
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="结束时间" prop="activityEndTime" >
+            <el-date-picker
+              v-model="formValidate.activityEndTime"
+              align="right"
+              type="date"
+              :clearable="false"
+              :editable="false"
+              placeholder="选择日期"
+              :picker-options="pickerOptions1"
+              @change="handleEndTime">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="科室" prop="name" >
+            <el-select v-model="formValidate.depId" placeholder="科室">
+              <select-option  :type="'dep'"></select-option>
+            </el-select>
+          </el-form-item>
+          <el-button  @click="searchEvent">搜索</el-button>
+        </el-col>
+      </el-row>
+    </el-form></div>
+    <div id="content" ref="content" style="position: absolute;left:0;top: 85px;bottom: 0;right:6px;">
+      <listHeaders
+        :headList="tableHeader"
+        @mouseEnter="mouseEnter"
+        @mouseLeave="mouseLeave"
+        :url="url"
+        :tableDataList="tableData">
+      </listHeaders>
+    </div>
+  </div>
 </template>
+
 
 <script>
   import listHeaders from './listHeaders.vue';
@@ -18,36 +62,7 @@
         //查询表单
         listUrl: '',
         url:url,
-        tableData: [{
-          "activityId":33,
-          "activityName":"活动名称",
-          "activityType":"活动类型",
-          "hostUserId":"主讲人id",
-          "hostUserName":"张老师",
-          "activityTime":"2017-04-12",
-          "activitySite":"活动地点",
-          "activityUserCounts":"签到人员数量",
-          "recordTimes":"8:00-9:00,9:00-10:00",
-          "recordTimeIds":"1,2",
-          "week":"星期一",
-          "weekIndex":1,
-          "activityTipsCounts":"总结份数"
-        },
-          {
-            "activityId":33,
-            "activityName":"活动名称",
-            "activityType":"活动类型",
-            "hostUserId":"主讲人id",
-            "hostUserName":"张老师",
-            "activityTime":"2017-04-13",
-            "activitySite":"活动地点",
-            "activityUserCounts":"签到人员数量",
-            "recordTimes":"9:00-10:00",
-            "recordTimeIds":"3",
-            "week":"星期一",
-            "weekIndex":1,
-            "activityTipsCounts":"总结份数"
-          }],
+        tableData: [],
         tableHeader: [
 
         ],
@@ -82,7 +97,7 @@
         tableListMessTitle: {
           ajaxSuccess: 'updateTableList',
           ajaxParams: {
-            url: url.teachctivityListType+'/'+'ALLUSER',  //todo 需要角色类型,根据当前登录的角色
+            url: url.teachctivityListType+'/'+'ALLUSER',
             params: {},
           }
         },
@@ -92,11 +107,15 @@
       //初始化请求列表数据
       init(){
         Util = this.$util;
+        let userInfo = this.$store.getters.getUserInfo;
+        this.tableListMessTitle.ajaxParams.url=url.teachctivityListType+'/'+userInfo.studentTypes;// 需要角色类型,根据当前登录的角色
         //ajax请求参数设置
-        this.calculate();  //初始化时间戳
-        this.formValidate.activityBeginTime = this.getDate(this.date.startStamp); //获得格式化的时间
-        this.formValidate.activityEndTime = this.getDate(this.date.endStamp);
-        this.date.weekCount = this.getWeek(this.formValidate.activityBeginTime); //开始时间所在的星期
+        let myDate=new Date();
+        let year = myDate.getFullYear();
+        let start=year+"-01-01";
+        let end = this.getFirstAndLastMonthDay(year,12);
+        this.formValidate.activityBeginTime = start; //获得格式化的时间
+        this.formValidate.activityEndTime = end;
 
         this.queryQptions = {
           url: this.listUrl
@@ -106,10 +125,31 @@
       },
 
 
+//获取当前月的第一天和最后一天:
+      getFirstAndLastMonthDay( year, month){
+        var   firstdate = year + '-' + month + '-01';
+        var  day = new Date(year,month,0);
+        var lastdate = year + '-' + month + '-' + day.getDate();//获取当月最后一天日期
+        //给文本控件赋值。同下
+        return lastdate;
+      },
+
       //通过get请求列表数据
       setTableData(){
+        this.date= {
+          startStamp: '', //开始时间
+          endStamp: '', //结束时间
+          weekCount: '', //一周的累计
+          index: 0,    //索引
+          mistiming: 150, // 时间差  初始化的时候开始和结束时间未定
+          timeOut:'',//定时
+          time:1000,//定时时间
+        };
+        this.date.weekCount = this.getWeek(this.formValidate.activityBeginTime); //开始时间所在的星期
+        this.calculate(this.formValidate.courseBeginTime,this.formValidate.activityEndTime);
+
         let formValidate = this.formDate(this.getFormData(this.formValidate),['activityBeginTime','activityEndTime'],this.yearMonthData);
-        this.tableListMessTitle.ajaxParams.params = Object.assign( this.tableListMessTitle.ajaxParams.params,formValidate)
+        this.tableListMessTitle.ajaxParams.params = Object.assign( this.tableListMessTitle.ajaxParams.params,formValidate);
         this.ajax(this.headerListMessTitle);  //请求头部
         this.ajax(this.tableListMessTitle);     //请求列表数据
       },
@@ -126,11 +166,8 @@
       },
 
 
-
       //处理表单数据
       disposeTableData(data){
-
-
         let tableData = [{BeginTime:'',EndTime:'',}]
         let ascending =this.date.startStamp ;
         let end = this.date.endStamp;
@@ -283,7 +320,6 @@
           case 6 :
             week = 6;
             break;
-
         }
         return week;
       },
@@ -293,10 +329,10 @@
       theWeek(date) {
         let totalDays = 0;
         let now = new Date(date);
-        let years = now.getYear()
+        let years = now.getYear();
         if (years < 1000)
           years += 1900
-            let days = new Array(12);
+        let days = new Array(12);
         days[0] = 31;
         days[2] = 31;
         days[3] = 30;
@@ -316,9 +352,23 @@
           days[1] = 28
         }
 
+        let y = now.getFullYear();
+        let dt = new Date(y+"-01-01");
+        let weekNum = dt.getDay();
+        let d = 0
+        if(weekNum==0){
+          d = 6
+        }else{
+          if(week!=1){
+            d = weekNum-1;
+          }
+        }
+        totalDays = d;
         if (now.getMonth() == 0) {
           totalDays = totalDays + now.getDate();
-        } else {
+        }else {
+          /*let curMonth = now.getMonth();
+           totalDays = totalDays + days[curMonth-1] + now.getDate();*/
           let curMonth = now.getMonth();
           for (let count = 1; count <= curMonth; count++) {
             totalDays = totalDays + days[count - 1];
@@ -326,9 +376,11 @@
           totalDays = totalDays + now.getDate();
         }
         //得到第几周
-            let week = Math.round(totalDays / 7);
+        let week = Math.ceil(totalDays / 7);
+//        week=week+1;
         return week;
       },
+
 
 
       //把获取的头部信息分为上午 下午 以courseType划分  并排序
@@ -365,10 +417,17 @@
         if (month < 10) {
           month = "0" + month;
         }
+        if (D < 10) {
+          D = "0" + D;
+        }
         return year + '-' + month + '-' + D;
       },
 
 
+      searchEvent(isLoading){
+        //        isLoading(true);
+        this.setTableData()
+      },
 
     },
     created(){

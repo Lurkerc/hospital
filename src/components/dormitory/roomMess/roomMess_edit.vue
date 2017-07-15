@@ -27,12 +27,12 @@
       <el-row >
         <el-col :span="8" :offset="2">
           <el-form-item label="房间号:" prop="no" >
-            <el-input v-model.number="formValidate.no" type="number" placeholder="请输入" @blur="no"></el-input>
+            <el-input v-model.number="formValidate.no"  min="0" type="number" placeholder="请输入" @blur="no"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="床位数:" prop="bedNum" >
-            <el-input v-model.number="formValidate.bedNum" type="number" placeholder="请输入" @blur="bedNum"></el-input>
+            <el-input v-model.number="formValidate.bedNum"  min="0" type="number" placeholder="请输入" @blur="bedNum"></el-input>
           </el-form-item>
         </el-col>
         </el-col >

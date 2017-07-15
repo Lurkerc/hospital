@@ -180,7 +180,7 @@
   import shortNote from "./usersManagement_shortNote";
 
   import layoutTree from "../../../common/layoutTree";
-  import leftTree from "../../../common/leftTree";
+  import leftTree from "./tree/leftTree";
 
   import sexOption from './sexOption'; // 性别
   import auditStatusOption from './auditStatusOption'; // 审核状态
@@ -413,6 +413,7 @@
        * @return flag blooean
        * */
       undistributedDep() {
+        return true
         let flag = true;
         if (this.deptId == "") {
           this.showMess("还没有给您分配部门管理员!暂无部门可管理!");

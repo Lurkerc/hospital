@@ -1,12 +1,12 @@
 <template>
   <div>
-  <el-form  ref="formValidate"  label-width="100px">
+  <el-form  :model="formValidate" ref="formValidate" :rules="rules.teachingActivitiesSet"  label-width="100px">
     <el-row>
       <el-col :span="12">
-          <el-form-item label="活动名称" prop="name1">
+          <el-form-item label="活动名称" prop="activityName">
             <el-input v-model="formValidate.activityName"></el-input>
           </el-form-item>
-          <el-form-item label="主持人" prop="name5">
+          <el-form-item label="主持人" prop="hostUserName">
             <el-input @focus="openAndColseHost('host')" v-model="formValidate.hostUserName" ></el-input>
           </el-form-item>
           <el-form-item label="活动时间" prop="activityTime">
@@ -16,7 +16,7 @@
         <el-col :span="12">
           <el-form-item label="类型" prop="name4">
             <el-select v-model="formValidate.activityType"  placeholder="请选择" >
-              <select-option :type="'teachActivityType'"></select-option>
+              <select-option :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
               </el-option>
             </el-select>
           </el-form-item>
@@ -26,7 +26,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="活动地点" prop="name6">
+          <el-form-item label="活动地点" prop="activitySite">
             <el-input v-model="formValidate.activitySite"></el-input>
           </el-form-item>
         </el-col>
@@ -35,8 +35,8 @@
         <el-col :span="24">
           <el-form-item label="时间段" prop="name7">
             <el-checkbox-group v-model="formValidate.recordTimes">
-              <el-checkbox :label="'8:00-8:50/1'" >8:00-8:50</el-checkbox>
-              <el-checkbox :label="'9:00-9:50/2'" >9:00-9:50</el-checkbox>
+              <el-checkbox :label="'08:00-08:50/1'" >8:00-8:50</el-checkbox>
+              <el-checkbox :label="'09:00-09:50/2'" >9:00-9:50</el-checkbox>
               <el-checkbox :label="'10:00-10:50/3'" >10:00-10:50</el-checkbox>
               <el-checkbox :label="'11:00-11:50/4'">11:00-11:50</el-checkbox>
             </el-checkbox-group>
@@ -53,7 +53,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="病例名称" prop="name7">
+          <el-form-item label="病例名称" prop="casesName">
             <el-input v-model="formValidate.casesName" :disabled="formValidate.whetherNeedCases=='NO'"></el-input>
           </el-form-item>
         </el-col>
@@ -75,13 +75,16 @@
                 <el-col :span="24">
                   <div class="grid-content-ptop">
                     <el-radio :label="'ROTARYDEP'">轮转科室</el-radio>
-                    <el-select v-show="formValidate.activityUserType=='ROTARYDEP'" v-model="rotarydep.activityUserTypeValue" multiple placeholder="请选择" >
+                    <el-select v-show="formValidate.activityUserType=='ROTARYDEP'" v-model="rotarydep.activityUserTypeValue" multiple placeholder="请选择" >-->
                       <select-option :unAll="true"></select-option>
                     </el-select>
                     <div v-show="formValidate.activityUserType=='ROTARYDEP'" style="display:inline-block;width: 100px;font-size:14px;text-align: right">人员类型:</div>
-                    <el-select v-show="formValidate.activityUserType=='ROTARYDEP'" v-model="formValidate.activityDepUserType" clearable placeholder="请选择">
-                      <select-option :type="'aysUserType'" :unAll="true"></select-option>
-                    </el-select>
+                      <el-select v-show="formValidate.activityUserType=='ROTARYDEP'" v-model="formValidate.activityDepUserType" clearable placeholder="请选择">
+                        <el-option label="实习生" value="SXS"></el-option>
+                        <el-option label="进修生" value="JXS"></el-option>
+                        <el-option label="住院医" value="ZYY"></el-option>
+                        <el-option label="研究生" value="YJS"></el-option>
+                      </el-select>
                   </div>
                 </el-col>
               </el-row>
@@ -89,14 +92,14 @@
                 <el-col :span="24">
                   <div class="grid-content-ptop">
                     <el-radio :label="'PARTUSER'">部分人员</el-radio>
-                    <el-select style="margin-left: 10px" v-show="formValidate.activityUserType == 'PARTUSER'" placeholder multiple v-model="partuser.activityUserTypeValue" filterable placeholder="请选择">
-                      <el-option
-                        v-for="item in options"
-                        :key="item.id"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
+                      <el-select style="margin-left: 10px" v-show="formValidate.activityUserType == 'PARTUSER'" placeholder multiple v-model="partuser.activityUserTypeValue" filterable placeholder="请选择">
+                        <el-option
+                          v-for="item in options"
+                          :key="item.id"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
                     <el-button v-show="formValidate.activityUserType=='PARTUSER'" @click="openAndColseUser('selectUser')">选择人员</el-button>
                   </div>
                 </el-col>
@@ -106,9 +109,9 @@
                   <div class="grid-content-ptop">
                     <el-radio :label="'PARTROLE'">指定角色</el-radio>
                     <template>
-                      <el-select style="margin-left: 10px" v-show="formValidate.activityUserType=='PARTROLE'" v-model="partrole.activityUserTypeValue" multiple filterable placeholder="请选择">
-                        <select-option :type="'role'" :unAll="true"></select-option>
-                      </el-select>
+                        <el-select style="margin-left: 10px" v-show="formValidate.activityUserType=='PARTROLE'" v-model="partrole.activityUserTypeValue" multiple filterable placeholder="请选择">
+                          <select-option :type="'role'" :unAll="true"></select-option>
+                        </el-select>
                     </template>
                   </div>
                 </el-col>
@@ -122,11 +125,10 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item>
+  </el-form>
         <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
         <el-button  @click="cancel">取消</el-button>
-      </el-form-item>
-    </el-form>
+
     <!--选择人员-->
     <Modal
       width="890"
@@ -158,7 +160,7 @@
   //当前组件引入全局的util
   let Util=null;
   export default {
-      props:['url','operailityData'],
+      props:['url','operailityData','rules'],
     data() {
       return {
         selectHost:[],
@@ -176,25 +178,25 @@
 
 
         "formValidate":{
-          "depId":2,
-          "activityName":"教学查房",
-          "activityType":"理论",
-          "hostUserId":2,
-          "hostUserName":"张三",
-          "activityTime":"2017-03-31",
-          "activitySite":"教学楼三楼301室",
-          "activityUser":"呼吸科-住院医师",
-          "whetherNeedCases":"YES",
-          "casesName":"穿刺术",
-          "activityContent":"活动内容",
-          "activityUserType":"rotarydep",
-          "activityUserTypeValue":"2,3, 4",
+          "depId":'',
+          "activityName":"",
+          "activityType":"",
+          "hostUserId":'',
+          "hostUserName":"",
+          "activityTime":"",
+          "activitySite":"",
+          "activityUser":"",
+          "whetherNeedCases":"",
+          "casesName":"",
+          "activityContent":"",
+          "activityUserType":"",
+          "activityUserTypeValue":"",
           "activityDepUserType":"",
-          "shouldUserCount":30,
-          "actuallyUserCount":10,
-          "timeIds":"1,2,3",
+          "shouldUserCount":'',
+          "actuallyUserCount":'',
+          "timeIds":"",
           "recordTimes":[],
-          "activityState":"NO_RELEASE",
+          "activityState":"",
         },
 
         "data":{
@@ -215,32 +217,27 @@
           "activityUserTypeValue":" ",
           "activityUserTypeValueName":" ",
           "activityDepUserType":"",
-          "shouldUserCount":30,
-          "actuallyUserCount":10,
+          "shouldUserCount":'',
+          "actuallyUserCount":'',
           "timeIds":"",
           "recordTimes":"",
           "activityState":"",
           "fileList":[
-            {
-              "fileId":"2",
-              "fileName":"文件名称",
-              "fileUrl":"www.baidu.com",
-              "fileType":"txt"
-            }
           ]
         },
 
         //轮转科室
         rotarydep:{
-          activityUserTypeValue:'',
+          activityUserTypeValue:[],
         },
         //部分人员
         partuser:{
-          activityUserTypeValue:'',
+          activityUserTypeValue:[],
+          activityUserTypeValueId:[],
         },
         //部分角色
         partrole:{
-          activityUserTypeValue:'',
+          activityUserTypeValue:[],
         },
 
         //查看
@@ -349,7 +346,13 @@
         if(activityUserType=='alluser'){
           data.activityUserTypeValue = '';
           data.activityDepUserType =''
-        }else {
+        }else if(activityUserType == 'partuser'){
+          let Value;
+          if(typeof this[activityUserType].activityUserTypeValueId=='object'){
+            Value =this[activityUserType].activityUserTypeValueId.join(',');
+          }
+          data.activityUserTypeValue =Value|| this[activityUserType].activityUserTypeValueId;
+        }else{
           if(activityUserType!='rotarydep') data.activityDepUserType ='';
           let Value;
           if(typeof this[activityUserType].activityUserTypeValue=='object'){
@@ -372,7 +375,8 @@
         }
         data.recordTimes = times.join(',');
         data.timeIds = ids.join(',');
-        this.formDate(data,['activityTime'])
+        this.formDate(data,['activityTime']);
+
         return data
       },
 
@@ -401,35 +405,48 @@
        * */
       oneDataSuccess(responseData){
         let data = responseData.data;
-
-
+        if(!data)return;
         //根据参加人不同来做不同出来
         let activityUserType = data.activityUserType.toLowerCase();
-        if(activityUserType!='alluser'){
-          if(activityUserType=='rotarydep'){
-            data.activityDepUserType =data.activityDepUserType && data.activityDepUserType.split(',');
-            data.activityUserTypeValue = data.activityUserTypeValue.split(',');
-            this[activityUserType].activityUserTypeValue =  data.activityUserTypeValue ;
-          }else if(activityUserType == 'partuser'){
-              let value = []
-            for(let i=0;i<data.activityUserTypeValue.length;i++){
-              value.push({
-                label:data.activityUserTypeValueName[0],
-                key:data.activityUserTypeValue[0],
-                description: '',
-                disabled: false
-              })
 
+        if(activityUserType){
+          if(activityUserType!='alluser'){
+            if(activityUserType=='rotarydep'){
+
+              data.activityUserTypeValue = data.activityUserTypeValue&& data.activityUserTypeValue.split(',');
+              let tempArr = [];
+              for (let i=0;i<data.activityUserTypeValue.length;i++){
+                tempArr.push(+data.activityUserTypeValue[i])
+              }
+              data.activityUserTypeValue = tempArr;
+              this[activityUserType].activityUserTypeValue =  data.activityUserTypeValue ||[];
+            }else if(activityUserType == 'partuser'){
+              let value = [];
+              if(data.activityUserTypeValue){
+                for(let i=0;i<data.activityUserTypeValue.length;i++){
+                  value.push({
+                    label:data.activityUserTypeValueName[0],
+                    key:+data.activityUserTypeValue[0],
+                    description: '',
+                    disabled: false
+                  })
+               }
+              }
+              this[activityUserType].activityUserTypeValue  = data.activityUserTypeValueName&& data.activityUserTypeValueName.split(',')||[];
+              this[activityUserType].activityUserTypeValueId  = data.activityUserTypeValue&& data.activityUserTypeValue.split(',')||[];
+              this.selectUser=value;
+            }else {
+              data.activityUserTypeValue = data.activityUserTypeValue&& data.activityUserTypeValue.split(',');
+              let tempArr = []
+              for (let i=0;i<data.activityUserTypeValue.length;i++){
+                tempArr.push(+data.activityUserTypeValue[i])
+              }
+              data.activityUserTypeValue = tempArr;
+              this[activityUserType].activityUserTypeValue =  data.activityUserTypeValue||[] ;
             }
-            this[activityUserType].activityUserTypeValue = data.activityUserTypeValueName.split(',');
-            this.selectUser=value;
-
-          }else {
-            data.activityUserTypeValue = data.activityUserTypeValue.split(',');
-            this[activityUserType].activityUserTypeValue =  data.activityUserTypeValue ;
           }
-
         }
+
 
         let host=[];
 
@@ -441,21 +458,22 @@
             disabled: false
           }
         )
-
-        this.formValidate =  this.disposeGetData(this.getFormValidate(this.formValidate,data));
+        this.formValidate =  this.disposeGetData(data);
         this.data = data;
       },
 
 
       //处理获取到的数据
       disposeGetData(data){
-        let  recordTimes=  data.recordTimes.split(',');
-        let timeIds =  data.timeIds.split(',');
         let times=[];
-        for (let i=0;i<recordTimes.length;i++){
-          times.push(recordTimes[i]+'/'+timeIds[i]);
-        }
-        data.recordTimes = times;
+          if(data.recordTimes&&data.timeIds){
+            let  recordTimes=  data.recordTimes.split(',');
+            let timeIds =  data.timeIds.split(',');
+            for (let i=0;i<recordTimes.length;i++){
+              times.push(recordTimes[i]+'/'+timeIds[i]);
+            }
+          }
+        data.recordTimes = times||[];
         return data
       },
 

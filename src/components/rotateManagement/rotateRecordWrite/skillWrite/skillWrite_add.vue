@@ -157,7 +157,8 @@
       //给当前组件注入全局util
       Util = this.$util;
       let userInfo = this.$store.getters.getUserInfo;
-      this.listMessTitle.ajaxParams.url = this.url.userRotaryDeptlist+'SXS-'+userInfo.id;
+      let userType = userInfo.studentTypes;
+      this.listMessTitle.ajaxParams.url = this.url.userRotaryDeptlist+userType+'-'+userInfo.id;
       this.ajax(this.listMessTitle)
     },
     mounted(){

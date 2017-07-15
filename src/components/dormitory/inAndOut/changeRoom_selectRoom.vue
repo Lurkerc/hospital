@@ -15,10 +15,10 @@
     </el-form>
     <!--表格数据-->
     <el-table align="center" :height="400" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%;height: 100%">
-      <el-table-column width="40">
+      <el-table-column width="100">
         <template scope="scope">
           <el-radio :disabled="scope.row.buildId==build.id && scope.row.id==selectRoom.id" v-model="selectRoomOne" :label="scope.$index">
-          {{' '}}</el-radio>
+          {{ ' '}}</el-radio>
         </template>
       </el-table-column>
       <el-table-column align="center" label="序号" type="index" width="75">
@@ -53,10 +53,10 @@
   //当前组件引入全局的util
   let Util = null;
   export default {
-    props: ['operailityData', 'selectRoom', 'url', 'build'],
+    props: ['operailityData', 'selectRoom', 'url', 'build','selectRoomData'],
     data() {
       return {
-        selectRoomOne: '',
+        selectRoomOne:'',
         optionData: [],
         //保存按钮基本信息
         loadBtn: {
@@ -93,6 +93,7 @@
     methods: {
       //初始化请求列表数据
       init() {
+          console.log(this.selectRoomData);
         Util = this.$util;
         //ajax请求参数设置
         this.ajax(this.buildMessTitle)
@@ -115,7 +116,16 @@
       },
       //通过get请求列表数据
       updateListData(responseData) {
-        this.radio = ''; //重置单选选中项
+        let data = responseData.data;
+        if(!data) return;
+        let flag = true;
+        for(let i=0;i<data.length;i++){
+            if(data[i].id == this.selectRoomData.id){
+              this.selectRoomOne = i;
+              flag = false;
+            }
+        }
+        if(flag)this.selectRoomOne = '';
         this.tableData = responseData.data
       },
       setTableData() {
@@ -230,7 +240,6 @@
     },
     created() {
       this.init();
-      console.log(this.operailityData, this.selectRoom, this.url, this.build)
     },
     components: {
       //当前组件引入的子组件

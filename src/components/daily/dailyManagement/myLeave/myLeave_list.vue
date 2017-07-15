@@ -10,30 +10,67 @@
           <el-button class="but-col" @click="remove" type="danger">删除</el-button>
         </el-col>
         <el-col :span="14"  align="right">
-          <el-form-item  prop="title">
-            <input class="hidden">
-            <el-input style="width: 200px"  v-model="formValidate.userName" placeholder="输入姓名搜索">
-              <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
-            </el-input>
-          </el-form-item>
+            <el-form-item label="科室" prop="depId" >
+              <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
+                <select-option :type="'userRotaryDeptlist'"  :userType="userType" :name="'depName'" :id="'depId'" :userId="userId"></select-option>
+              </el-select>
+            </el-form-item>
           <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
         </el-col>
       </el-row>
-    </el-form>
+
 
     <div v-if="searchMore" ref="searchMore">
-      <el-form :inline="true">
-        <el-form-item label="姓名：">
-          <el-input v-model="formValidate.name"></el-input>
-        </el-form-item><el-button type="info" @click="searchEvent">查询</el-button>
-      </el-form>
-    </div>
+        <el-form-item label="请假时间" prop="name" >
+          <el-date-picker
+            v-model="formValidate.beginDate"
+            type="date"
+            :editable="false"
+            placeholder="选择日期"
+            :picker-options="pickerOptions0"
+            @change="handleStartTime"
+          >
+          </el-date-picker>
+          到
+          <el-date-picker
+            v-model="formValidate.endDate"
+            align="right"
+            type="date"
+            :editable="false"
+            placeholder="选择日期"
+            :picker-options="pickerOptions1"
+            @change="handleEndTime">
+          </el-date-picker>
+        </el-form-item>
 
+      <el-form-item label="状态" prop="status" >
+        <el-select filterable  v-model="formValidate.status" placeholder="请选择">
+          <el-option label="全部" value=""></el-option>
+          <el-option label="未上报" value="WSB"></el-option>
+          <el-option label="审核中(待审)" value="DSH"></el-option>
+          <el-option label="通过" value="TG"></el-option>
+          <el-option label="不通过" value="BTG"></el-option>
+          <el-option label="驳回修改" value="BH"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="生源类型" prop="userType" >
+        <el-select filterable  v-model="formValidate.userType" placeholder="请选择">
+          <el-option label="全部" value=""></el-option>
+          <el-option label="实习生" value="SXS"></el-option>
+          <el-option label="研究生" value="YJS"></el-option>
+          <el-option label="住院医" value="ZYY"></el-option>
+          <el-option label="进修生" value="JXS"></el-option>
+        </el-select>
+      </el-form-item>
+       <el-button type="info" @click="searchEvent">查询</el-button>
+
+    </div>
+    </el-form>
     <!--表格数据-->
     <div
       id="myTable"
-      ref="myTable"
-    >
+      ref="myTable">
       <el-table
         align="center"
         :height="dynamicHt"
@@ -49,25 +86,24 @@
         </el-table-column>
         <el-table-column
           label="序号"
-          prop="index"
+          type="index"
           width="100">
-          <template scope="scope">
-            <span>{{scope.row.index}}</span>
-          </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center"
+                         width="220"
+        >
           <template scope="scope">
             <el-button
               size="small"
               @click="show(scope.row)">查看</el-button>
             <el-button
               size="small"
+              v-if="scope.row.status == 'WSB'||scope.row.status == 'BH'"
               @click="edit(scope.row)">修改</el-button>
             <el-button
               size="small"
-
+              v-if="scope.row.status == 'WSB' || scope.row.status == 'BH'"
               @click="reported(scope.row)">上报</el-button>
-
           </template>
         </el-table-column>
         <el-table-column
@@ -143,7 +179,7 @@
             class-name="vertical-center-modal"
             :loading="loading">
             <modal-header slot="header" :content="addId"></modal-header>
-            <add v-if="addModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></add>
+            <add v-if="addModal" :rules="rules" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></add>
             <div slot="footer"></div>
           </Modal>
           <!--修改-->
@@ -155,7 +191,7 @@
             class-name="vertical-center-modal"
             :loading="loading">
             <modal-header slot="header" :content="editId"></modal-header>
-            <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
+            <edit v-if="editModal" :rules="rules" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
             <div slot="footer"></div>
           </Modal>
           <!--删除弹窗-->
@@ -168,7 +204,7 @@
             :loading="loading"
             :width="500">
             <modal-header slot="header" :content="removeId"></modal-header>
-            <remove v-if="removeModal" :delete-url="deleteUrl" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
+            <remove v-if="removeModal" :rules="rules" :delete-url="deleteUrl" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
 
             <div slot="footer"></div>
           </Modal>
@@ -180,7 +216,7 @@
             class-name="vertical-center-modal"
             :loading="loading">
             <modal-header slot="header" :content="viewId"></modal-header>
-            <show v-if="showModal" @cancel="cancel" @show="subCallback" :operaility-data="operailityData"></show>
+            <show v-if="showModal"  @cancel="cancel" @show="subCallback" :operaility-data="operailityData"></show>
             <div slot="footer"></div>
           </Modal>
           <!--审核弹窗-->
@@ -191,7 +227,7 @@
             class-name="vertical-center-modal"
             :loading="loading">
             <modal-header slot="header" :content="auditId"></modal-header>
-            <audit v-if="auditModal" @cancel="cancel" @audit="subCallback" :operaility-data="operailityData"></audit>
+            <audit v-if="auditModal" :rules="rules" @cancel="cancel" @audit="subCallback" :operaility-data="operailityData"></audit>
             <div slot="footer"></div>
           </Modal>
 
@@ -243,6 +279,7 @@
 </template>
 <script >
 
+  import rules from '../rules.js'
   import edit from "./myLeave_edit.vue";
   import show from "./myLeave_view.vue";
   import add from "./myLeave_add.vue";
@@ -251,6 +288,7 @@
   export default{
     data() {
       return {
+        rules:rules,
         //查询表单
         deleteUrl:'leave/remove',
         formValidate: {
@@ -259,7 +297,6 @@
           depId: '',
           status: '',
           userType: '',
-          userName: ''
         },
         searchMore: false,
         options:{},
@@ -318,6 +355,9 @@
     methods: {
       //初始化请求列表数据
       init(){
+        let userInfo = this.$store.getters.getUserInfo;
+        this.userId=userInfo.id;
+        this.userType=userInfo.studentTypes;
         Util = this.$util;
         //ajax请求参数设置
         this.myPages =  Util.pageInitPrams;
@@ -446,6 +486,12 @@
       /*--点击--删除--按钮--*/
       remove(){
         if(!this.isSelected()) return;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].status != 'WSB' || this.multipleSelection[i].status != 'BH') {
+              this.showMess('只能删除未上报或已驳回的数据');
+              return;
+          }
+         }
         this.operailityData = this.multipleSelection;
         this.openModel('remove') ;
       },

@@ -1,7 +1,7 @@
 <!--更换房间-->
 <template>
   <div>
-    <el-form :model="formValidate" ref="formValidate" :rules="rules.inAndOut"   class="demo-form-inline" label-width="90px" >
+    <el-form :model="selectRoomData" ref="formValidate" :rules="rules.inAndOut"   class="demo-form-inline" label-width="90px" >
       <el-row >
         <el-col :span="10" :offset="2">
           <el-form-item label="姓名:" >
@@ -82,7 +82,7 @@
       title="对话框标题"
       class-name="vertical-center-modal">
       <modal-header slot="header" :content="selectRoomId"></modal-header>
-      <select-room v-if="selectRoomModal" @cancel="close" :build="build"  @selectRoom="setSelectRoom" :initUser="userList" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></select-room>
+      <select-room v-if="selectRoomModal" @cancel="close" :selectRoomData="selectRoomData" :build="build"  @selectRoom="setSelectRoom" :initUser="userList" :selectRoom="selectRoom" :operaility-data="operailityData" :url="url"></select-room>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -110,7 +110,7 @@
           remark:'',        //备注
           outDateString:'',        //迁入时间
         },
-        selectRoomData:{},  //已选择将要迁入的房间信息
+        selectRoomData:{no:''},  //已选择将要迁入的房间信息
         roomData:{}, //获取到的房间信息
         //当前组件提交(edit)数据时,ajax处理的 基础信息设置
         editMessTitle:{

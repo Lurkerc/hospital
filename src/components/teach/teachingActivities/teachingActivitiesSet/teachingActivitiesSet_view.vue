@@ -57,7 +57,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="参加人" prop="name9">
-            {{data.activityUserTypeValueName}}
+            {{data.activityUser}}
           </el-form-item>
         </el-col>
       </el-row>
@@ -76,38 +76,7 @@
         return{
 
           //获取的数据
-          "data":{
-            "id":1,
-            "depId":2,
-            "depName":"内科",
-            "activityName":"教学查房",
-            "activityType":"理论",
-            "hostUserId":2,
-            "hostUserName":"张三",
-            "activityTime":"2017-03-31",
-            "activitySite":"教学楼三楼301室",
-            "activityUser":"呼吸科-住院医师",
-            "whetherNeedCases":"YES",
-            "casesName":"穿刺术",
-            "activityContent":"活动内容",
-            "activityUserType":"rotarydep",
-            "activityUserTypeValue":"2,3, 4",
-            "activityUserTypeValueName":"呼吸内科,消化内科, 血液内科",
-            "activityDepUserType":"",
-            "shouldUserCount":30,
-            "actuallyUserCount":10,
-            "timeIds":"1,2,3",
-            "recordTimes":"8:00-9:00,10:00-11:00，11:10-12:00",
-            "activityState":"nosubmit",
-            "fileList":[
-              {
-                "fileId":"2",
-                "fileName":"文件名称",
-                "fileUrl":"www.baidu.com",
-                "fileType":"txt"
-              }
-            ]
-          },
+          "data":{},
 
           //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
           listMessTitle: {
@@ -139,6 +108,17 @@
        * */
       oneDataSuccess(responseData){
         let data = responseData.data;
+        if(data.activityUser){
+            let tempUserTypeValueName = [];
+          let activityUserTypeValueName =  data.activityUser.split(',');
+          for(let i=0;i<activityUserTypeValueName.length;i++){
+           if(activityUserTypeValueName[i]!='null') {
+             tempUserTypeValueName.push(activityUserTypeValueName[i])
+           }
+          }
+          data.activityUser=tempUserTypeValueName.join(',')
+        }
+
         this.data = data;
       },
 

@@ -1,46 +1,36 @@
 <!--奖惩记录-->
 <template>
   <div id="content" ref="content" @click="selectHide" class="modal">
-    <el-form ref="formValidate" :inline="true"  class="form-inline lose-margin" label-width="90px" >
+    <el-form  :model="formValidate" ref="formValidate" :rules="rules.leaveManagementList"  :inline="true"  class="form-inline lose-margin" label-width="90px" >
       <el-row >
-        <el-col :span="5">
+        <el-col :span="24">
           <el-form-item label="科室" prop="depId" >
             <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
               <select-option ></select-option>
             </el-select>
           </el-form-item>
-        </el-col>
-        </el-col >
-
-        <el-col :span="5">
           <el-form-item label="考勤时间" prop="month">
             <el-date-picker
+              :clearable="false"
               v-model="formValidate.month"
               type="month"
               :editable="false"
               placeholder="选择月">
             </el-date-picker>
           </el-form-item>
-
-        </el-col >
-        <el-col :span="5">
           <el-form-item label="生源" prop="userType">
             <el-select  v-model="formValidate.userType" placeholder="全部">
+              <el-option label="全部" value=""></el-option>
               <el-option label="实习生" value="SXS"></el-option>
               <el-option label="研究生" value="YJS"></el-option>
               <el-option label="住院医" value="ZYY"></el-option>
               <el-option label="进修生" value="JXS"></el-option>
             </el-select>
           </el-form-item>
-        </el-col>
-        <el-col :span="5">
           <el-form-item label="姓名" prop="userType">
             <el-input  v-model="formValidate.userName" placeholder="输入姓名搜索">
             </el-input>
           </el-form-item>
-        </el-col>
-
-        <el-col :span="4">
           <el-button type="primary"  @click="searchEvent">&nbsp; 搜索 &nbsp;</el-button>
         </el-col >
       </el-row >
@@ -68,12 +58,9 @@
         @selection-change="handleSelectionChange">
         <el-table-column
           label="序号"
-          prop="index"
+          type="index"
           fixed
           width="75">
-          <template scope="scope">
-            <span>{{scope.row.index}}</span>
-          </template>
         </el-table-column>
 
         <el-table-column
@@ -491,20 +478,19 @@
 </template>
 <script >
 
-
+  import rules from '../rules'
   let Util=null;
 
   export default{
     data() {
       return {
+        rules:rules,
         isShow:true,
         data:[
         ],
-
-
         formValidate: {
           depId:'',  //科室id
-          userType:'SXS',  //生源类型
+          userType:'',  //生源类型
           month:'',  //考勤时间
           userName:'',  //学员姓名
         },
@@ -598,7 +584,7 @@
           flag = false;
         }
         if(len>1 && isOnly){
-          this.showMess("只能修改一条数据!")
+          this.showMess("只能修改一条数据!");
           flag = false;
         }
         return flag;
@@ -607,6 +593,7 @@
 
       //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
       setTableData(row,key,val){
+        this.ajaxCreateLoading(true);
         let that = this;
         //处理服务数据
         let params = this.formDate(this.getFormData(this.formValidate),['month'],this.yearMonth);
@@ -618,6 +605,7 @@
         let arr = [{clockList:[]}];
         myPromise.then(function (res) {
           let responseData = res.data;
+          that.ajaxCreateLoading(false);
           if(Util._.isObject(responseData["status"])&&responseData["status"]["code"]==0){
               if(responseData.data==0){
                 that.data = responseData.data;
@@ -644,10 +632,12 @@
           }
         }).catch(function(response){
           if (response instanceof Error) {
+            that.ajaxCreateLoading(false);
             // 意外发生在设置要求引发一个错误
             that.errorMess(response.message);
           } else {
             that.errorMess(response.status+"错误!");
+            that.ajaxCreateLoading(false);
           }
         })
       },
@@ -659,6 +649,7 @@
           that.errorMess('操作错误');
         }
         let that = this;
+        that.ajaxCreateLoading(true);
         //处理服务数据
         let  date = key+1>9?key:'0'+(key+1);
         let month = this.yearMonth(this.formValidate.month)+'';
@@ -681,6 +672,7 @@
           }
         })();
         myPromise.then(function (res) {
+          that.ajaxCreateLoading(false);
           let responseData = res.data;
           if(Util._.isObject(responseData["status"])&&responseData["status"]["code"]==0){
             that.setTableData(row,key,val)
@@ -695,9 +687,11 @@
         }).catch(function(response){
           row['clockList'][key].type = val;
           if (response instanceof Error) {
+            that.ajaxCreateLoading(false);
             // 意外发生在设置要求引发一个错误
             that.errorMess(response.message);
           } else {
+            that.ajaxCreateLoading(false);
             that.errorMess(response.status+"错误!");
           }
         })
@@ -710,6 +704,7 @@
           that.errorMess('操作错误');
         }
         let that = this;
+        that.ajaxCreateLoading(true);
         let dateData = row['clockList'][key];
         //处理服务数据
         let  date = key+1>9?key:'0'+(key+1);
@@ -734,6 +729,7 @@
           }
         })();
         myPromise.then(function (res) {
+          that.ajaxCreateLoading(false);
           let responseData = res.data;
           if(Util._.isObject(responseData["status"])&&responseData["status"]["code"]==0){
             //修改成功目前未刷新列表， 保留
@@ -748,17 +744,18 @@
           }
         }).catch(function(response){
           if (response instanceof Error) {
+            that.ajaxCreateLoading(false);
             // 意外发生在设置要求引发一个错误
             that.errorMess(response.message);
           } else {
+            that.ajaxCreateLoading(false);
             that.errorMess(response.status+"错误!");
           }
         })
       },
 
       //搜索监听回调
-      searchEvent(isLoading){
-        //        isLoading(true);
+      searchEvent(){
         let isSubmit = this.handleSubmit('formValidate');
         if(isSubmit){
           this.setTableData();

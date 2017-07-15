@@ -1,12 +1,12 @@
 <template>
   <div>
-  <el-form  ref="formValidate"  label-width="100px">
+  <el-form :model="formValidate" ref="formValidate" :rules="rules.teachingActivitiesSet"  label-width="100px">
     <el-row>
       <el-col :span="12">
-          <el-form-item label="活动名称" prop="name1">
+          <el-form-item label="活动名称" prop="activityName">
             <el-input v-model="formValidate.activityName"></el-input>
           </el-form-item>
-          <el-form-item label="主持人" prop="name5">
+          <el-form-item label="主持人" prop="hostUserName">
             <el-input @focus="openAndColseHost('host')" v-model="formValidate.hostUserName" ></el-input>
           </el-form-item>
           <el-form-item label="活动时间" prop="activityTime">
@@ -16,7 +16,7 @@
       <el-col :span="12">
           <el-form-item label="类型" prop="name4">
             <el-select v-model="formValidate.activityType"  placeholder="请选择" >
-              <select-option :type="'teachActivityType'"></select-option>
+              <select-option :unAll="true" :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
               </el-option>
             </el-select>
           </el-form-item>
@@ -26,7 +26,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="活动地点" prop="name6">
+          <el-form-item label="活动地点" prop="activitySite">
             <el-input v-model="formValidate.activitySite"></el-input>
           </el-form-item>
       </el-col>
@@ -80,7 +80,10 @@
                   </el-select>
                 <div v-show="formValidate.activityUserType=='ROTARYDEP'" style="display:inline-block;width: 100px;font-size:14px;text-align: right">人员类型:</div>
                   <el-select v-show="formValidate.activityUserType=='ROTARYDEP'" v-model="formValidate.activityDepUserType" clearable placeholder="请选择">
-                    <select-option :type="'aysUserType'" :unAll="true"></select-option>
+                    <el-option label="实习生" value="SXS"></el-option>
+                    <el-option label="进修生" value="JXS"></el-option>
+                    <el-option label="住院医" value="ZYY"></el-option>
+                    <el-option label="研究生" value="YJS"></el-option>
                   </el-select>
                 </div>
               </el-col>
@@ -159,7 +162,7 @@
   //当前组件引入全局的util
   let Util=null;
   export default {
-      props:['url'],
+      props:['url','rules'],
     data() {
       return {
         selectHost:[],
@@ -174,9 +177,6 @@
           label: '暂无'
         }],
 
-
-
-
         "formValidate":{
           "depId":'',
           "activityName":"",
@@ -189,11 +189,11 @@
           "whetherNeedCases":"",
           "casesName":"",
           "activityContent":"",
-          "activityUserType":"",
+          "activityUserType":"ALLUSER",
           "activityUserTypeValue":",",
           "activityDepUserType":"",
-          "shouldUserCount":30,
-          "actuallyUserCount":10,
+          "shouldUserCount":'',
+          "actuallyUserCount":'',
           "timeIds":"",
           "recordTimes":[],
           "activityState":"",
@@ -292,8 +292,14 @@
         if(activityUserType=='alluser'){
           data.activityUserTypeValue = '';
           data.activityDepUserType =''
-        }else {
-            if(activityUserType!='rotarydep') data.activityDepUserType ='';
+        }else if(activityUserType == 'partuser'){
+          let Value;
+          if(typeof this[activityUserType].activityUserTypeValueId=='object'){
+            Value =this[activityUserType].activityUserTypeValueId.join(',');
+          }
+          data.activityUserTypeValue =Value|| this[activityUserType].activityUserTypeValueId;
+        }else{
+          if(activityUserType!='rotarydep') data.activityDepUserType ='';
           let Value;
           if(typeof this[activityUserType].activityUserTypeValue=='object'){
             Value =this[activityUserType].activityUserTypeValue.join(',');
@@ -409,7 +415,6 @@
       //选择科室
       selectDpeID(val){
           this.formValidate.depId= val;
-
       }
     },
     components:{

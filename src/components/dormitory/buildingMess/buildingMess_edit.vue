@@ -151,7 +151,7 @@
 
       phone(){
         let val =this.formValidate.phone;
-        val = (val+'').replace(/^-|[^(0-9\-)]/gi,'');
+        val = (val+'').replace(/^-*|[^(0-9\-)]/gi,'');
 
         this.formValidate.phone = val;
         console.log(this.formValidate.phone);

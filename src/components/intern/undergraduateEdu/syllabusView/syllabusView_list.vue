@@ -182,7 +182,7 @@
         this.calculate(this.formValidate.courseBeginTime,this.formValidate.courseEndTime);
 //        this.date.startStamp = this.formValidate.courseBeginTime;
 //        this.date.endStamp =this.formValidate.courseEndTime;
-        let formValidate = this.formDate(this.getFormData(this.formValidate),['activityBeginTime','activityEndTime'],this.yearMonthData);
+        let formValidate = this.formDate(this.getFormData(this.formValidate),['courseBeginTime','courseEndTime'],this.yearMonthData);
         this.tableListMessTitle.ajaxParams.params = Object.assign( this.tableListMessTitle.ajaxParams.params,formValidate);
         this.ajax(this.headerListMessTitle);  //请求头部
         this.ajax(this.tableListMessTitle);     //请求列表数据

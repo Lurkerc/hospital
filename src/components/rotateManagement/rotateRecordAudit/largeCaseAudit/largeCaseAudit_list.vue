@@ -26,7 +26,6 @@
           </el-form-item>-->
           <el-form-item label="状态:"  prop="title">
             <el-select v-model="formValidate.cstate" placeholder="请选择状态">
-              <el-option label="全部" value=""></el-option>
               <el-option label="待审核" value="NO_PASS"></el-option>
               <el-option label="通过" value="PASS"></el-option>
             </el-select>
@@ -213,7 +212,7 @@
           cname:'',       //姓名
           czyNo: '',      //住院号
           depId:'',       //科室ID(下拉选择)
-          cstate:'',      //状态
+          cstate:'NO_PASS',      //状态
           sortby: '',     //排序列
           order: ''       //升序、降序
         },

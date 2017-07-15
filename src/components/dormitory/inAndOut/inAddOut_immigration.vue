@@ -122,7 +122,7 @@
         listMessTitle:{
           ajaxSuccess:'SuccessGetCurrData',
           ajaxParams:{
-            url:this.url.roomGet+this.selectRoom.id,
+            url:this.url.roomGet + this.selectRoom.id,
           }
         }
       }
@@ -173,7 +173,7 @@
       SuccessGetCurrData(responseData){
         let data = responseData.data;
         this.roomData = data;
-        this.formValidate.remark = data.remark
+        this.formValidate.remark = data.remark || '';
       },
       /*
        * 当前组件发送事件给父组件
@@ -209,7 +209,8 @@
       //设置选择人员
       setUsers(users){
         const Residue = this.roomData.bedNum  - this.roomData.yetBedNum;
-        let length = users.length;
+        let length = users&&users.length||0;
+
         if(Residue==0){
           this.showMess('入住人数已满')
           return

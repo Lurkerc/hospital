@@ -1,12 +1,12 @@
 <template>
 
   <div >
-    <el-form ref="formValidate"   class="demo-form-inline" label-width="80px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="rules.myLeave"  class="demo-form-inline" label-width="80px" >
 
       <el-row >
         <el-col :span="8" :offset="2">
           <el-form-item label="姓名" prop="name" >
-            {{operailityData.userNmae}}
+            {{formValidate.userName}}
           </el-form-item>
         </el-col>
         </el-col >
@@ -15,7 +15,7 @@
         <el-col :span="8">
           <el-form-item label="科室"   prop="school">
             <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
-              <select-option ></select-option>
+              <select-option :type="'userRotaryDeptlist'"  :unAll="true" :userType="userType" :name="'depName'" :id="'depId'" :userId="userId"></select-option>
             </el-select>
           </el-form-item>
         </el-col >
@@ -23,7 +23,7 @@
 
       <el-row >
         <el-col :span="16" :offset="2">
-          <el-form-item label="请假事由" prop="name" >
+          <el-form-item label="请假事由"  >
             <el-radio-group v-model="formValidate.leaveType">
               <el-radio :label="'SHI'">事假</el-radio>
               <el-radio :label="'BING'">病假</el-radio>
@@ -40,7 +40,7 @@
 
       <el-row >
         <el-col :span="13" :offset="2">
-          <el-form-item label="请假时间" prop="name" >
+          <el-form-item style="display: inline-block;" label="请假时间" prop="beginDate" >
             <el-date-picker
               v-model="formValidate.beginDate"
               type="date"
@@ -50,7 +50,9 @@
               @change="handleStartTime"
             >
             </el-date-picker>
-            到
+          </el-form-item>
+          到
+          <el-form-item style="display: inline-block;" label-width="0" prop="endDate" >
             <el-date-picker
               v-model="formValidate.endDate"
               align="right"
@@ -86,7 +88,7 @@
 <script>
   let Util=null;
   export default {
-    props: ['operailityData'],
+    props: ['operailityData','rules'],
     data (){
         return{
           loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
@@ -137,6 +139,9 @@
     created(){
       //给当前组件注入全局util
       Util = this.$util;
+      let userInfo = this.$store.getters.getUserInfo;
+      this.userId=userInfo.id;
+      this.userType=userInfo.studentTypes;
     },
     mounted(){
       //初始化

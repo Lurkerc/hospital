@@ -3,7 +3,7 @@
     <el-option
       v-for="item in optionData"
       :key="item.id"
-      :label="item.name"
+      :label="item[name||'name']"
       :value="item[id||'id']">
     </el-option>
 </div>
@@ -11,7 +11,8 @@
 <script>
   let Util=null;
   export default {
-    props:['type','url',"selectOptions",'unAll',"setSltOptionValue",'currSelectOne','id'],
+
+    props:['type','url',"selectOptions",'unAll',"setSltOptionValue",'currSelectOne','id','isCode','userType','userId','name'],
     data() {
 
         //条件过滤，如果没有url 由type决定url 如果没有type默认科室url
@@ -37,8 +38,9 @@
           role:'/role/list?name=&identify=&type=',
           school:'/schools/queryList',
           allBuild:'/dormitory/build/query/allBuild',   //添加-查询所有大楼(用于添加房间时，选择大楼的下拉框)
-          teachActivityType:'/dictionary/getItemByCode/TEACH_ACTIVITY_TYPE',   //获取教学活动类型
-          aysUserType:'/dictionary/getItemByCode/SYS_USER_TYPE',                //生源类型
+          teachActivityType:'/dictionary/getByCode/TEACH_ACTIVITY_TYPE',   //获取教学活动类型
+          aysUserType:'/dictionary/getByCode/SYS_USER_TYPE',                //生源类型
+          userRotaryDeptlist:'/traineeRotary/arrangeRotary/userRotaryDeptlist/'+(this.userType)+'-'+this.userId,      //轮转科室用
         };
         url = typeUrl[type];
         if(this.url)url = this.url;
@@ -87,10 +89,13 @@
       //通过get请求列表数据
       updateListData(responseData){
         let data = responseData.data;
+        if(this.isCode){
+            data = data.child;
+        }
         if(!this.unAll){
           data.unshift({
-            id: '',
-            name:'全部'
+            [this.userId||'id']: '',
+            [this.name||'name']:'全部'
           },)
         }
         this.optionData = data;

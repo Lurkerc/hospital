@@ -1,28 +1,77 @@
 <template>
   <div id="content" ref="content" class="modal">
 
-
-    <el-form  ref="formValidate" label-width="100px" class="demo-ruleForm">
-      <el-row>
-        <el-col :span="10" :offset="12">
-          <el-form-item  prop="title">
-            <input class="hidden">
-            <el-input   v-model="formValidate.userName" placeholder="输入姓名搜索">
-              <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
-            </el-input>
-          </el-form-item>
+    <el-form  :model="formValidate" ref="formValidate" :rules="rules.leaveManagementList" inline label-width="90px" class="demo-ruleForm">
+      <el-row >
+        <el-col :span="10" >
+          <el-button  class="but-col"  @click="pass" type="primary">批量通过</el-button>
+          <el-button class="but-col" @click="reject" type="danger">批量驳回</el-button>
         </el-col>
-
+        <el-col :span="14"  align="right">
+          <input class="hidden">
+          <el-input style="width:300px;"   v-model="formValidate.userName" placeholder="输入姓名搜索">
+            <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
+          </el-input>
+          <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+        </el-col>
       </el-row>
+      </br>
+      <div v-if="searchMore" ref="searchMore">
+        <el-form-item label="请假时间" prop="name" >
+          <el-date-picker
+            v-model="formValidate.beginDate"
+            type="date"
+            :editable="false"
+            placeholder="选择日期"
+            :picker-options="pickerOptions0"
+            @change="handleStartTime"
+          >
+          </el-date-picker>
+          到
+          <el-date-picker
+            v-model="formValidate.endDate"
+            align="right"
+            type="date"
+            :editable="false"
+            placeholder="选择日期"
+            :picker-options="pickerOptions1"
+            @change="handleEndTime">
+          </el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="科室" prop="depId" >
+          <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
+            <select-option ></select-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="状态" prop="status" >
+          <el-select filterable  v-model="formValidate.status" placeholder="请选择">
+            <el-option label="审核中(待审)" value="DSH"></el-option>
+            <el-option label="通过" value="TG"></el-option>
+            <el-option label="不通过" value="BTG"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="生源类型" prop="userType" >
+          <el-select filterable  v-model="formValidate.userType" placeholder="请选择">
+            <el-option label="全部" value=""></el-option>
+            <el-option label="实习生" value="SXS"></el-option>
+            <el-option label="研究生" value="YJS"></el-option>
+            <el-option label="住院医" value="ZYY"></el-option>
+            <el-option label="进修生" value="JXS"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-button type="info" @click="searchEvent">查询</el-button>
+
+      </div>
     </el-form>
 
-    <div class="add-remove">
       <!--<el-button  class="but-col" @click="add" type="primary">添加</el-button>-->
       <!--<el-button class="but-col" @click="remove" type="danger">删除</el-button>-->
-      <el-button  class="but-col"  @click="pass" type="primary">批量通过</el-button>
-      <el-button class="but-col" @click="reject" type="danger">批量驳回</el-button>
 
-    </div>
+
     <!--表格数据-->
     <div
       id="myTable"
@@ -43,11 +92,8 @@
         </el-table-column>
         <el-table-column
           label="序号"
-          prop="index"
+          type="index"
           width="100">
-          <template scope="scope">
-            <span>{{scope.row.index}}</span>
-          </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template scope="scope">
@@ -168,7 +214,7 @@
             class-name="vertical-center-modal"
             :loading="loading">
             <modal-header slot="header" :content="auditId"></modal-header>
-            <audit v-if="auditModal" @cancel="cancel" @audit="subCallback" :operaility-data="operailityData"></audit>
+            <audit v-if="auditModal" :rules="rules" @cancel="cancel" @audit="subCallback" :operaility-data="operailityData"></audit>
             <div slot="footer"></div>
           </Modal>
 
@@ -219,7 +265,7 @@
   </div>
 </template>
 <script >
-
+  import rules from '../rules.js';
   import edit from "./leaveManagement_edit.vue";
   import show from "./leaveManagement_view.vue";
   import add from "./leaveManagement_add.vue";
@@ -228,13 +274,14 @@
   export default{
     data() {
       return {
+        rules:rules,
         //查询表单
         deleteUrl:'leave/remove',
         formValidate: {
           beginDate: '',
           endDate: '',
           depId: '',
-          status: '',
+          status: 'DSH',
           userType: '',
           userName: ''
         },
@@ -242,6 +289,7 @@
         "tableData":[
 
         ],
+        searchMore: false,
         statusData:{
           url:'leave/modifyLeaveStatus/approval/batch',
           method:'put',
@@ -530,6 +578,14 @@
 
         }
         return leaveType
+      },
+
+      // 高级搜索按钮展开搜索表单并重新计算表格高度
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          this.setTableDynHeight()
+        })
       },
 
     },
