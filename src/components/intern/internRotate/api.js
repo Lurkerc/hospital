@@ -4,6 +4,9 @@ const groupFile = 'traineeRotary/userGroup';
 const depReFile = 'deprequirement';
 /*----- 轮转安排__自动排班 --------------------------------------------------------------------------------*/
 const rotateSet ="/traineeRotary/arrangeRotary";
+/*----- 轮转安排__手工调整 --------------------------------------------------------------------------------*/
+const handWork ="/traineeRotary/arrangeRotary";
+
 const api = {
   /*----- 分组设置 --------------------------------------------------------------------------------*/
 
@@ -116,12 +119,35 @@ const api = {
   },
 
   /*----- 手工调整 --------------------------------------------------------------------------------*/
-  // 实习费收费标准、大病历填写设置
-  modifyConfigId:{ // 实习费收费标准  黏贴比例修改  {configId}
-    path: '/rotaryConfig/modify/',
-    method: 'put'
-  },
 
+  restoreRotary:{ // 恢复轮转  {userId}
+    path: handWork + '/restoreRotary',
+    method: 'post'
+  },
+  pauseRotary:{ // 暂停轮转  {userId}
+    path: handWork + '/pauseRotary',
+    method: 'post'
+  },
+  deleteRotary:{ // 删除轮转
+    path: handWork + '/deleteRotary',
+    method: 'delete'
+  },
+  getRotaryDepIndo:{  //微调-查看用户轮转表  {userId}
+    path: handWork + '/getRotaryDepIndo',
+    method: 'get'
+  },
+  regUserMicrCtrol:{  //手工调整--轮转微调  保存微调的数据
+    path: handWork + '/regUserMicrCtrol',
+    method: 'post'
+  },
+  rtuserPagelist:{  //手工调整--轮转微调人员列表
+    path: handWork + '/rtuserPagelist',
+    method: 'get'
+  },
+  getDepPagelist:{  //手工调整--获取微调的科室
+    path: '/internship/outline/get/',
+    method: 'get'
+  },
   /*----- 自选科室 --------------------------------------------------------------------------------*/
   depReList: { // 实习医院各个专业下科室轮转要求列表
     path: depReFile + '/pagelist',

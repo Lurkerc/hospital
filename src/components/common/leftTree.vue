@@ -219,6 +219,9 @@
             this.showMess("还没有给您分配部门管理员!暂无部门可管理!");
             this.defaults.emptyText = "您未分配管理的部门";
             return;
+          }else{
+            this.defaults.emptyText = "没有可选择部门";
+            return;
           }
         }
         defaults.treeData = responseData.data;

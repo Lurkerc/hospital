@@ -25,7 +25,7 @@ config.ajaxconfig = {
 
 
   //设置超时时间
-  timeout: 30000,
+  timeout: 300000,
   //返回数据类型
   responseType: 'json', // default
   //请求的接口，在请求的时候，如axios.get(url,config);这里的url会覆盖掉config中的url

@@ -41,7 +41,6 @@
       //初始化请求列表数据
       init(){
         this.tableData1 = this.tableData["tbody"];
-        console.log(this.tableData1.tbody.length*this.otherWdt,this.dynamicWt);
         if(this.tableData1.tbody.length*this.otherWdt<this.dynamicWt){
           this.otherWdt='';
         }

@@ -279,7 +279,8 @@
         editOperailityData:"",
         multipleSelection: [],
         dynamicHt: 100,
-        tableData1: [{
+        tableData1: [
+            /*{
           "outlineId":1,
           "schoolName":"南京大学",
           "gradeNum":2017,
@@ -293,7 +294,8 @@
           "specialty":"专业",
           "state":"ENABLE",
           "createTime":""
-        }],
+        }*/
+        ],
         loading:false,
         listTotal:0,
         listMessTitle:{

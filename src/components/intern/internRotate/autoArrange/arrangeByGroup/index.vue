@@ -83,7 +83,8 @@
           <el-date-picker
             v-model="startRotateTime"
             type="date"
-            placeholder="选择开始乱转开始时间">
+            placeholder="选择开始乱转开始时间"
+            :picker-options="pickerOptions0">
           </el-date-picker>
           <span v-if="startRotateTime==''" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;您还没有选择开始轮转时间!</span>
         </el-col>
@@ -145,30 +146,34 @@
     //当前组件引入全局的util
     let Util = null;
     export default{
+        props:["isInit"],
         data() {
             return {
               //生成轮转表提交时post用的data
               postData:{
-                "rotaryTime":"2017-05-07",
-                "outlineId":1,
+                "rotaryTime":"",
+                "outlineId":"",
                 "depOutlineId":"",
                 "groups":[
                   {
-                    "groupId":1,
-                    "groupName":"123123",
-                    "groupUserIds":"1,23,4"
+                    "groupId":"",
+                    "groupName":"",
+                    "groupUserIds":""
                   },
-                  {
-                    "groupId":2,
-                    "groupName":"123123",
-                    "groupUserIds":"12,33,14"
-                  }
                 ]
               },
               tableData:{
                 thead:[],
                 tbody:[],
               },
+
+              //只选选周一
+              pickerOptions0: {
+                disabledDate(time) {
+                  return time.getDay() !=1;
+                }
+              },
+
               //保存按钮基本信息
               loadBtn:{title:'完成',callParEvent:'listenSubEvent'},
 
@@ -274,6 +279,21 @@
                   jsonString:true,
                 }
               },
+
+
+              //保存轮转表
+              saveRotaryDataTitle:{
+                type:'add',
+                successTitle:'轮转表安排成功!',
+                errorTitle:'轮转表安排失败!',
+                ajaxSuccess:'ajaxSuccess',
+                ajaxError:'ajaxError',
+                ajaxParams:{
+                  url: api.regrotaryDept.path,
+                  method:api.regrotaryDept.method,
+                  jsonString:true
+                }
+              },
             }
         },
         methods: {
@@ -356,7 +376,7 @@
               }
             }
             tbody = data["userInfo"];
-
+            console.log(this.tableData);
             this.tableData.thead = thead;
             this.tableData.tbody = tbody;
 
@@ -595,10 +615,10 @@
 
           //完成
           success(isLoadingFun){
-            this.active = 5;
             if (!isLoadingFun) isLoadingFun = function () {};
             isLoadingFun(true);
-            //this.ajax(this.addMessTitle);
+            this.active = 5;
+            this.ajax(this.saveRotaryDataTitle);
           },
 
 
@@ -628,7 +648,11 @@
             if(val!=""){
               this.postData.outlineId = val;
             }
-          }
+          },
+          isInit(val){
+            this.active = 0;
+            this.isLoading = false;
+          },
 
         },
         created(){

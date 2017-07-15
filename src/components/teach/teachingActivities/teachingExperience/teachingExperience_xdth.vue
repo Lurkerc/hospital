@@ -19,7 +19,7 @@
         <el-row>
           <el-col :span="20" :offset="2">
             <el-form-item label="相关资料:" prop="name7">
-              <upload-file  :type="'picture-card'" :show="true" :uploadFiles="item.fileList" @setUploadFiles="updateListData"></upload-file>
+              <upload-file   :show="true" :uploadFiles="item.fileList"></upload-file>
             </el-form-item>
           </el-col>
         </el-row>

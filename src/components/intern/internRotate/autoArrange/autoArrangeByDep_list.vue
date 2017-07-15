@@ -6,6 +6,7 @@
 <template>
   <div>
     <el-table
+      v-if="tableData.tbody.length>0"
       :data="tableData.tbody"
       border
       align="center"
@@ -33,6 +34,9 @@
         </el-table-column>
       </el-table-column>
     </el-table>
+    <div v-else style="text-align: center;font-size: 20px;padding: 50px;">
+      <p>{{mess}}</p>
+    </div>
   </div>
 </template>
 <script>
@@ -44,9 +48,10 @@
     props:["params"],
     data() {
       return {
+        mess:"数据加载中!",
         wdt:[120],
         otherWdt:120,
-        tableData:[],
+        tableData:{"thead":[],"tbody":[]},
         //当前组件默认请求(list)数据时,ajax处理的 按部门展示列表
         listMessByDepTitle:{
           ajaxSuccess:'updateListDataByDep',
@@ -159,13 +164,15 @@
           }
         }
         tbody = data["deps"];
-
+        this.tableData={"thead":[],"tbody":[]};
         this.tableData.thead = thead;
         this.tableData.tbody = tbody;
-        if(this.tableData.tbody.length*this.otherWdt<this.params.dynamicWt){
+        if(this.tableData.thead.length*this.otherWdt<this.params.dynamicWt){
           this.otherWdt='';
         }
-
+        if(this.tableData.tbody.length==0){
+          this.mess = "没查到相关的轮转安排!";
+        }
       },
 
 
@@ -186,7 +193,15 @@
       },
 
     },
+    watch:{
+      params(val){
+        let option = Util._.defaultsDeep({},this.listMessByDepTitle);
+        option.ajaxParams.params = Object.assign(option.ajaxParams.params,val);
+        this.ajax(option);
+      }
+    },
     created(){
+      Util = this.$util;
       this.init();
     },
     mounted(){

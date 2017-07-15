@@ -401,7 +401,7 @@
           "depSetId":"",
           "greatName":"",   //组分类
           "groupNo":"",     //组索引
-          "isMustRotaryDep":"N",   //是否必选科室
+          "isMustRotaryDep":"Y",   //是否必选科室
           "depId":"",    //科室id
           "depName":"",  //科室名称
           "ts":"",       //周期数
@@ -421,7 +421,7 @@
           "depSetId":"",
           "greatName":"",   //组分类
           "groupNo":"",     //组索引
-          "isMustRotaryDep":"Y",   //是否必选科室
+          "isMustRotaryDep":"N",   //是否必选科室
           "depId":"",    //科室id
           "depName":"",  //科室名称
           "ts":"",       //周期数

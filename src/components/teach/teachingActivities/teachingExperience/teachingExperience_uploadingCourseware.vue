@@ -62,42 +62,11 @@
         isShowUpload:true,
 
         //获取到的数据
-        "data":{
-          "id":1,
-          "depId":2,
-          "depName":"内科",
-          "activityName":"教学查房",
-          "activityType":"理论",
-          "hostUserId":2,
-          "hostUserName":"张三",
-          "activityTime":"2017-03-31",
-          "activitySite":"教学楼三楼301室",
-          "activityUser":"呼吸科-住院医师",
-          "whetherNeedCases":"YES",
-          "casesName":"穿刺术",
-          "activityContent":"活动内容",
-          "activityUserType":"rotarydep",
-          "activityUserTypeValue":"2,3, 4",
-          "activityUserTypeValueName":"呼吸内科,消化内科, 血液内科",
-          "activityDepUserType":"",
-          "shouldUserCount":30,
-          "actuallyUserCount":10,
-          "timeIds":"1,2,3",
-          "recordTimes":"8:00-9:00,10:00-11:00，11:10-12:00",
-          "signTime":"2017-03-31 10:10:05",
-          "activityState":"nosubmit",
-          "fileList":[
-            {
-              "fileId":"2",
-              "fileName":"文件名称",
-              "fileUrl":"www.baidu.com/",
-              "fileType":"txt"
-            }
-          ]
-        },
+        "data":{},
 
         formValidate:{
           fileIds:'',
+          id:this.operailityData.id
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         editMessTitle:{
@@ -168,6 +137,8 @@
 
 
       updateListData(res){
+          let data = res.data;
+          if(!data) return;
         this.data = res.data;
 
       },

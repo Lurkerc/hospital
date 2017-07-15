@@ -15,7 +15,12 @@
             <el-col :span="19">
               <el-row :gutter="10" class="table-back-one">
                 <el-col :span="8" >
-                  <el-form-item label="姓名：" prop="name" >
+
+                  <el-form-item label="姓名：" prop="name"  v-if="fromWhere=='depUser'||fromWhere=='depUser'">
+                    <el-input v-model="formValidate.name" placeholder="请输入"></el-input>
+                  </el-form-item>
+
+                  <el-form-item label="姓名：" prop="name"  v-else>
                     <span v-if="formValidate.auditStatus=='AUDIT_SUCCESS'">{{formValidate.name}}</span>
                     <el-input v-else v-model="formValidate.name" placeholder="请输入"></el-input>
                   </el-form-item>
@@ -229,7 +234,7 @@
       </el-row>
     </el-form>
     <br />
-    <el-row v-if="!fromWhere">
+    <el-row v-if="fromWhere=='depUser'">
       <el-col :span="10" :offset="10">
         <load-btn @listenSubEvent="saveCurrData" :btnData="loadBtn"></load-btn>
         <el-button  @click="cancel">取消</el-button>
@@ -352,6 +357,9 @@
       Util = this.$util;
       //初始化
       this.init();
+      if(typeof this.fromWhere=="undefined"){
+        this.fromWhere = "depUser";
+      }
     },
     mounted(){
 

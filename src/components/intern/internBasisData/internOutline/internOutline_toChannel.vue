@@ -118,7 +118,7 @@
     mounted(){
       //初始化
       let http = this.$store.getters.getEnvPath.http;
-      this.http = http+ 'static/template/部门人员信息模板.xls';
+      this.http = http+ 'static/template/实习大纲模板.xls';
       this.init();
     },
     methods:{

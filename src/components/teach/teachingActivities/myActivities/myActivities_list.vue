@@ -1,23 +1,52 @@
-<!--档案审核-->
+<!--我的活动-->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form ref="formValidate" :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="90px" >
-      <el-form-item label="姓名">
-        <el-input v-model="formValidate.name" placeholder="姓名"></el-input>
-      </el-form-item>
-      <el-form-item label="性别">
-        <el-select v-model="formValidate.sex" placeholder="性别">
-          <el-option label="全部" value="all"></el-option>
-          <el-option label="男" value="men"></el-option>
-          <el-option label="女" value="women"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="手机号">
-        <el-input v-model="formValidate.phone" placeholder="手机号"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="handleSubmit('formValidate')">查询</el-button>
-      </el-form-item>
+    <el-form :model="formValidate" ref="formValidate" :rules="rules.teachingExperienceList" inline label-width="90px" class="demo-ruleForm">
+      <el-row >
+        <el-col :span="10" >
+        </el-col>
+        <el-col :span="14" :offset="10" align="right">
+          <el-form-item label="活动名称" prop="activityName" >
+            <el-input style="width:300px;"   v-model="formValidate.activityName" placeholder="输入活动名称搜索">
+              <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
+            </el-input>
+          </el-form-item>
+          <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+        </el-col>
+      </el-row>
+
+
+      <div v-if="searchMore" ref="searchMore">
+        <el-form-item label="活动类型" prop="user">
+          <el-select v-model="formValidate.activityType" label="活动状态" placeholder="请选择活动类型">
+            <select-option  :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="活动时间" prop="activityBeginTime" >
+          <el-date-picker
+            v-model="formValidate.activityBeginTime"
+            type="date"
+            :editable="false"
+            placeholder="选择日期"
+            :picker-options="pickerOptions0"
+            @change="handleStartTime"
+          >
+          </el-date-picker>
+          到
+          <el-date-picker
+            v-model="formValidate.activityEndTime"
+            align="right"
+            type="date"
+            :editable="false"
+            placeholder="选择日期"
+            :picker-options="pickerOptions1"
+            @change="handleEndTime">
+          </el-date-picker>
+        </el-form-item>
+
+        <el-button type="info" @click="searchEvent">查询</el-button>
+
+      </div>
     </el-form>
     <!--列表数据-->
     <div>
@@ -131,7 +160,7 @@
     </Modal>
     <!--评价弹窗-->
     <Modal
-      width="800"
+      width="1000"
       v-model="evaluateModal"
       title="查看档案管理弹窗"
       class-name="vertical-center-modal"
@@ -143,6 +172,7 @@
   </div>
 </template>
 <script>
+  import rules from '../../rules.js'
   /*当前组件必要引入*/
   import url from '../app'
   //引入--新建--组件
@@ -156,16 +186,15 @@
   export default{
     data() {
       return {
+        rules,
         url:url,
         //查询表单
+        searchMore:false,
         formValidate: {
-          userId:'',       //当前登录人
-          activityName: '',  //活动名称
-          activityType: '',    //活动类型
-          activityBeginTime:'',    //活动时间(开始)
-          activityEndTime: '',    //活动时间(结束)
-          activityState: '',    //活动状态
-          depids: '',    //科室ID
+          activityName: '', //获得名称
+          activityType: '', //活动类型
+          activityBeginTime: '', //活动时间(开始)
+          activityEndTime: '', //活动时间(开始)
         },
 
 
@@ -215,12 +244,10 @@
         Util = this.$util;
         //ajax请求参数设置
         this.myPages =  Util.pageInitPrams;
-
         this.queryQptions = {
           curPage: 1,
           pageSize: Util.pageInitPrams.pageSize
         },
-
         this.setTableData();
       },
       //设置表格及分页的位置
@@ -237,6 +264,31 @@
        */
       handleSelectionChange(val) {
         this.multipleSelection = val;
+      },
+      //搜索监听回调
+      searchEvent(isLoading){
+        //        isLoading(true);
+        let isSubmit = this.handleSubmit('formValidate');
+        if(isSubmit){
+          this.setTableData(isLoading)
+        }
+      },
+
+
+      /*
+       * 列表查询方法
+       * @param string 查询from的id
+       * */
+      handleSubmit(name){
+        let flag =false;
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            flag =true;
+          } else {
+            this.$Message.error('表单验证失败!');
+          }
+        })
+        return flag
       },
       /*
        * 列表数据只能选择一个
@@ -265,13 +317,6 @@
         formSearch = this.formDate(this.getFormData(this.formValidate),['activityBeginTime','activityEndTime'],this.yearMonthData);
         this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions,formSearch);
         this.ajax(this.listMessTitle);
-      },
-      /*
-       * 列表查询方法
-       * @param string 查询from的id
-       * */
-      handleSubmit(name){
-        let formData = Util._.defaultsDeep({},this.formValidate);
       },
       /*--点击--心得体会--按钮--*/
       xdth(data){
@@ -347,6 +392,14 @@
       getFormData(data){
         let myData = Util._.defaultsDeep({},data);
         return myData;
+      },
+
+      // 高级搜索按钮展开搜索表单并重新计算表格高度
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          this.setTableDynHeight()
+        })
       },
     },
     created(){

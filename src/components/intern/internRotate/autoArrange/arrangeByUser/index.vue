@@ -77,7 +77,7 @@
     </div>
     <!--- 第二步：选择人员 --->
     <div v-if="active==1" style="margin: 20px;">
-      <select-people :schoolId="saveSchoolData.schoolId" @setSltedPeople="setSltedPeople"></select-people>
+      <select-people :schoolId="saveSchoolData.schoolId" @setSltedPeople="setSltedPeople" :initUser="sltedPeople"></select-people>
     </div>
     <!--- 第三步：设置轮转开始时间 --->
     <div v-if="active==2" style="margin: 20px;">
@@ -88,7 +88,8 @@
           <el-date-picker
             v-model="startRotateTime"
             type="date"
-            placeholder="选择开始乱转开始时间">
+            placeholder="选择开始乱转开始时间"
+            :picker-options="pickerOptions0">
           </el-date-picker>
           <span v-if="startRotateTime==''" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;您还没有选择开始轮转时间!</span>
         </el-col>
@@ -148,14 +149,22 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
+    props:["isInit"],
     data() {
       return {
         //生成轮转表提交时post用的data
         postData:{
-          "rotaryTime":"2017-05-07",
-          "outlineId":1,
+          "rotaryTime":"",
+          "outlineId":"",
           "depOutlineId":"",
-          "userIds":"1,2,34",
+          "userIds":"",
+        },
+
+        //只选选周一
+        pickerOptions0: {
+          disabledDate(time) {
+            return time.getDay() !=1;
+          }
         },
 
         //预览轮转表的存储data
@@ -259,6 +268,21 @@
             url: api.rotaryDeptUser.path,
             method:'post',
             jsonString:true,
+          }
+        },
+
+
+        //保存轮转表
+        saveRotaryDataTitle:{
+            type:'add',
+            successTitle:'轮转表安排成功!',
+            errorTitle:'轮转表安排失败!',
+            ajaxSuccess:'ajaxSuccess',
+            ajaxError:'ajaxError',
+            ajaxParams:{
+            url: api.regrotaryDept.path,
+              method:api.regrotaryDept.method,
+              jsonString:true
           }
         },
       }
@@ -560,7 +584,7 @@
         this.active = 6;
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true);
-        //this.ajax(this.addMessTitle);
+        this.ajax(this.saveRotaryDataTitle);
       },
 
 
@@ -590,7 +614,11 @@
         if(val!=""){
           this.postData.outlineId = val;
         }
-      }
+      },
+      isInit(val){
+        this.active = 0;
+        this.isLoading = false;
+      },
 
     },
     created(){

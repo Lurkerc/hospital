@@ -104,19 +104,19 @@
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="rtStartTime"
+            prop="rotaryBeginTime"
             label="开始轮转时间"
             width="160"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="rtState"
+            prop="rotaryState"
             label="状态"
             align="center"
             width="120"
           >
             <template scope="scope">
-              {{scope.row.rtState=='RELEASE'?'已安排轮转':'未安排轮转'}}
+              {{scope.row.rotaryState | rotaryState}}
             </template>
           </el-table-column>
 
@@ -172,7 +172,18 @@
       class-name="vertical-center-modal"
       :width="500">
       <modal-header slot="header"  :content="button.deriveDepToExcelId"></modal-header>
-      <derive :type="'excel'":url="exportDepUrl"  @cancel="cancel"></derive>
+      <div>
+        <div class="remove">确认导出吗</div>
+        <el-row>
+          <el-col :span="10" :offset="14">
+            <a :href="exportDepUrl">
+              <el-button @click="exportDepModal=false" type="primary">确定</el-button>
+            </a>
+            <el-button class="but-col" @click="exportDepModal=false">取消</el-button>
+          </el-col>
+          </el-col>
+        </el-row>
+      </div>
       <div slot="footer"></div>
     </Modal>
     <!--导出到excel弹窗-->
@@ -185,7 +196,18 @@
       class-name="vertical-center-modal"
       :width="500">
       <modal-header slot="header" :content="button.deriveUserToExcelId"></modal-header>
-      <derive :type="'excel'" :url="exportUserUrl" @cancel="cancel"></derive>
+      <div>
+        <div class="remove">确认导出吗</div>
+        <el-row>
+          <el-col :span="10" :offset="14">
+            <a :href="exportUserUrl">
+              <el-button @click="exportUserModal=false" type="primary">确定</el-button>
+            </a>
+            <el-button class="but-col" @click="exportUserModal=false">取消</el-button>
+          </el-col>
+          </el-col>
+        </el-row>
+      </div>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -298,7 +320,11 @@
 
       //切换列表展示视图
       handleCommand(command) {
+        this.setObjValEmpty(this.formValidate);
         this.showView = command;
+        if(this.showView=="列表"){
+            this.setTableData();
+        }
       },
 
 
@@ -324,7 +350,7 @@
 
 
       setTableData(){
-        this.formValidate.name="";
+        this.formValidate.userName="";
         this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params);
         this.ajax(this.listMessTitle);
       },
@@ -335,9 +361,16 @@
        * @param string 查询from的id
        * */
       handleSubmit(name){
-        let option = Util._.defaultsDeep({},this.listMessTitle)
-        option.ajaxParams.params = Object.assign(option.ajaxParams.params,this.queryQptions.params,this.formValidate);
-        this.ajax(option);
+        if(this.showView=="列表"){
+          let option = Util._.defaultsDeep({},this.listMessTitle)
+          option.ajaxParams.params = Object.assign(option.ajaxParams.params,this.queryQptions.params,this.formValidate);
+          this.ajax(option);
+        }else{
+          let dynamicHt = this.changeTabViewParams["dynamicHt"];
+          this.changeTabViewParams = {};
+          this.changeTabViewParams["dynamicHt"] = dynamicHt;
+          this.changeTabViewParams = Object.assign(this.changeTabViewParams,this.formValidate);
+        }
       },
 
 
@@ -350,7 +383,7 @@
           schoolName:"",
         },this.formValidate);
         let params = Util.serializeParams(myParams,"string");
-        this.exportDepUrl= api.userRotaryDepExportExcel.path+"?"+params;
+        this.exportDepUrl= "/api"+api.userRotaryDepExportExcel.path+"?"+params;
         this.openModel("exportDep")
       },
 
@@ -364,7 +397,7 @@
           schoolName:"",
         },this.formValidate);
         let params = Util.serializeParams(myParams,"string");
-        this.exportDepUrl= api.userRotaryDepExportExcel.path+"?"+params;
+        this.exportUserUrl= "/api"+api.userRotaryExportExcel.path+"?"+params;
         this.openModel("exportUser")
       },
 

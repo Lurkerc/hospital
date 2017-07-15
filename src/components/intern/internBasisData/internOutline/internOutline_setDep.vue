@@ -126,6 +126,12 @@
           //通过get请求列表数据
           updateListData(responseData){
             let data = responseData.data;
+            for(var i=0,item;i<data.length;i++){
+                item = data[i]
+                if(item.id==-1){
+                    data.splice(i,1);
+                }
+            }
             this.tableData1 = [];
             this.tableData1= data;
             let tempArr = [];

@@ -152,10 +152,10 @@
 
         //form表单bind数据
         formValidate: {
-          "schoolId":1,
+          "schoolId":"",
           "schoolName":"",
-          "specialty":"专业",
-          "gradeNum":"2017",
+          "specialty":"",
+          "gradeNum":"",
           "outlines":[]
         },
         currGroupIndex:"",

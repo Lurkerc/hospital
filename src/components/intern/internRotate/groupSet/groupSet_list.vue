@@ -79,7 +79,7 @@
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="groupIndex"
+            prop="groupIndexName"
             label="轮转顺序"
             width="160"
             show-overflow-tooltip>

@@ -233,7 +233,8 @@
         operailityData:'',
         multipleSelection: [],
         dynamicHt: 100,
-        tableData1: [{
+        tableData1: [
+            /*{
           "depOutlineId":12,
           "name":"11",
           "specialty":"专业",
@@ -245,7 +246,8 @@
           "specialty":"专业",
           "createTime":"2017-05-08",
           "state":"DISABLE"
-        }],
+        }*/
+        ],
         loading:false,
         listTotal:0,
         listMessTitle:{

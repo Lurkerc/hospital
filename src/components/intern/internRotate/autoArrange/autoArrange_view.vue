@@ -17,7 +17,7 @@
             label="科室">
           </el-table-column>
           <el-table-column
-            prop="beginTIme"
+            prop="beginTime"
             label="入科时间"
             width="150">
           </el-table-column>
@@ -47,7 +47,7 @@
     props:["operailityData"],
     data() {
       return {
-        dynamicHt: 100,
+        dynamicHt: 500,
         self: this,
         tableData1: [],
         loading:false,
@@ -83,9 +83,7 @@
       updateListData(responseData){
         let data = responseData.data;
         this.tableData1=[];
-        data = this.addIndex(data);
         this.tableData1=data;
-        this.listTotal = responseData.totalCount || 0;
       },
       setTableData(){
         this.ajax(this.listMessTitle);

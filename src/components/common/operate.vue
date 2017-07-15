@@ -32,7 +32,9 @@ let todoType = {
   "noGrant": "不发放",
   "grant": "发放",
   "modifyStateIssued": "下发",
-  "cancelIssued": "取消下发"
+  "cancelIssued": "取消下发",
+  "recover":"恢复",
+  "pause":"暂停",
 };
 export default {
   props: ['operailityData', 'operateUrl', 'type', 'messTitle', 'methods', 'operateData'],

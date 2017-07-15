@@ -202,7 +202,19 @@ elementUI table 表头修改
 table thead .tabBiasLine{
   background-image: url("images/biasLine.png");
   background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 table thead .tabBiasLine div{
   background: none;
+}
+table thead .tabBiasLine div.cell{
+  padding: 0 8px;
+}
+
+table td.valiTableStyle .el-form-item{
+  margin-bottom: 0;
+}
+table td.valiTableStyle .el-form-item__error{
+  padding: 5px 0;
+  position: inherit;
 }

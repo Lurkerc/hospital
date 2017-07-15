@@ -17,14 +17,14 @@
       </el-col>
       <el-col :span="6">
         <el-select
-          v-model="groupData.groupIndexId"
+          v-model="groupData.depGroupIndex"
           :filterable="true"
           placeholder="选择或输入匹配搜索">
           <el-option
-            v-for="item in bigGroupData"
-            :key="item.groupIndexId"
-            :label="item.groupNoOrder"
-            :value="item.groupIndexId">
+            v-for="item in groupData.groupIndxList"
+            :key="item.depGroupIndex"
+            :label="item.depGroupIndexName"
+            :value="item.depGroupIndex">
           </el-option>
         </el-select>
       </el-col>
@@ -71,7 +71,7 @@
       title="新建教学活动"
       class-name="vertical-center-modal">
       <modal-header slot="header" :content="selectUserId"></modal-header>
-      <select-user v-if="selectUserModal" @cancel="closeUserModal"  @setUsers="setUsers" :initUser="users" :unSelect="unSelect"></select-user>
+      <select-user v-if="selectUserModal" @cancel="closeUserModal" :treeOptions="treeOptions"  @setUsers="setUsers" :initUser="users" :unSelect="unSelect"></select-user>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -87,18 +87,21 @@
     props: ['operailityData'],
     data() {
       return {
+        //选择人员目录树参数设置
+        treeOptions:{
+          getTreeUrl: '/dept/tree-by-SXS', //目录树结构请求地址
+        },
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         //查看分组
         groupData:{
-          "groupId":1,
-          "groupName":"小组名称",
-          "groupIndex":1,
-          "groupIndexId":"",
-          "groupNoOrderName":"小组顺序",
-          "outlineId":1,
-          "groupUserIds":"1,23,4,56",
-          "groupUserNames":"张三,李四,王五,赵六"
+          depGroupIndex:"",
+          groupId:"",
+          groupIndexName:"",
+          groupName:"",
+          groupUserIds:"",
+          groupUserNames:"",
+          outlineId:"",
         },
 
         //大组顺序数据
@@ -163,7 +166,7 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
-        let isSubmit = this.submitForm("formValidate");
+        //let isSubmit = this.submitForm("formValidate");
         //if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true)
@@ -219,7 +222,6 @@
          }
          ]
          }*/
-        console.log("data",data);
         if(!Util.isEmptyObject(data)){
           let groupInfo = {};
           for(var i=0,item;i<data["groupInfo"].length;i++){
@@ -230,6 +232,7 @@
           //循环大组的数量
           this.bigGroupData = [];
           for(var i=0,item,rotateOrder;i<data["outlineGroupIndex"].length;i++){
+
             rotateOrder = "";
             item = data["outlineGroupIndex"][i];
             if(item["groupNoOrder"].indexOf(",")>-1){
@@ -285,6 +288,18 @@
         this.closeUserModal();
       },
 
+      /**
+       * 当前选择人员框的已选人员给组(group)bind数据
+       * @param users [{key:'10204',label:'内科01'},{}]  已选人员信息
+       * */
+      setGroupPeople(users){
+        this.groupData["groupUserIds"] = [];
+        this.groupData["groupUserNames"] = [];
+        for(var i=0;i<users.length;i++){
+          this.groupData["groupUserIds"].push(users[i]["key"]);
+          this.groupData["groupUserNames"].push(users[i]["label"]);
+        }
+      },
 
       //获取服务端分组信息
       updateListData(responseData){
@@ -292,7 +307,7 @@
         this.groupData = this.formateQuestData(data);
 
         //查询大组的轮转顺序
-        this.ajax(this.bigGroupMessTitle);
+        //this.ajax(this.bigGroupMessTitle);
       },
 
 

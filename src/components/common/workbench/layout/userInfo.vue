@@ -3,12 +3,38 @@
   <div>
     <div class="uwUserInfo">
       <div class="userHeadPic"><img :src="userInfo.headPhoto"></div>
-      <p class="userInfoName">{{ userInfo.name }}（{{ userInfo.roleList[0].name }}）</p>
+      <p class="userInfoName" v-if="userInfo.roleList">{{ userInfo.name }}（{{ userInfo.roleList[0].name }}）</p>
       <div class="userInfoTodoBtn">
         <el-button type="text" @click="eidtArchives">个人档案</el-button>
         <el-button type="text" @click="eidtPass">修改密码</el-button>
       </div>
     </div>
+    <!--未审核提示信息-->
+    <Modal :mask-closable="false" v-model="archivesModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="460">
+      <modal-header slot="header" :content="contentHeader.archivesId"></modal-header>
+      <div>
+        <el-row>
+          <el-col :span="24">
+            <el-alert title="友情提示" type="info" :closable="false" :description="'尊敬的用户'+userInfo.name+','+currAuditStatus" show-icon>
+            </el-alert>
+
+          </el-col>
+        </el-row>
+        <br />
+        <el-row>
+          <el-col :span="4">&nbsp;</el-col>
+          <el-col :span="8" style="text-align: center;">
+            <el-button type="text" @click="eidtArchives">去完善个人档案</el-button>
+          </el-col>
+          <el-col :span="8" style="text-align: center;">
+            <el-button type="text" @click="eidtPass">去修改密码</el-button>
+          </el-col>
+          <el-col :span="4">&nbsp;</el-col>
+        </el-row>
+      </div>
+      <div slot="footer"></div>
+
+    </Modal>
     <!--修改档案-->
     <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1100">
       <modal-header slot="header" :content="contentHeader.editId"></modal-header>
@@ -26,13 +52,20 @@
 
 <script>
   /*当前组件必要引入*/
-  import edit from "../../../teach/archivesManagement/archivesManagement/archivesManagement_edit";
+  //import edit from "../../../teach/archivesManagement/archivesManagement/archivesManagement_edit";
+  import edit from "../../archivesManagement/archivesManagement_edit.vue";
   import pwd from "../../password";
+  let Util = null;
   export default {
     data() {
       return {
-        userInfo: {},
+        isOnce: true,
         operailityData: [],
+
+        //档案审核
+        archivesModal: false,
+        currAuditStatus: "",
+
         passwordModal: false,
         contentHeader: {
           editId: {
@@ -43,36 +76,26 @@
             id: 'password',
             title: '修改密码'
           },
+          archivesId: {
+            id: 'add',
+            title: '提示'
+          },
         }
       }
     },
     created() {
-      this.userInfo = this.$store.getters.getUserInfo;
-      this.operailityData = this.userInfo;
-      let info = this.userInfo;
-      // 帐号状态检测
-      if (info.auditStatus) {
-        if (info.auditStatus !== "AUDIT_SUCCESS") {
-          this.eidtArchives()
-        }
-
-        if (info.auditStatus === "NOT_SUBMIT") { //未提交
-          this.currAuditStatus = "您的档案未提交,请先完善个人档案!";
-        } else if (info.auditStatus === "NOT_AUDIT") { //未审核
-          this.currAuditStatus = "您的档案审核中,请等待!";
-        } else { //AUDIT_FAILURE  审核拒绝
-          this.currAuditStatus = "您的档案审核拒绝,请检查并重新填写!";
-        }
-      }
+      Util = this.$util;
     },
     methods: {
       //打开完善档案弹窗
       eidtPass() {
+        this.operailityData = this.userInfo;
         this.passwordModal = true;
       },
 
       //打开完善档案弹窗
       eidtArchives() {
+        this.operailityData = this.userInfo;
         this.editModal = true;
       },
 
@@ -81,9 +104,7 @@
         this.cancel(target);
         if (title) {
           this.successMess(title);
-        };
-        // 每次修改档案都获取最新的档案信息
-        this.$store.commit('setUserInfo', this)
+        }
       },
 
       /*
@@ -94,6 +115,30 @@
       cancel(targer) {
         this[targer + 'Modal'] = false;
       },
+    },
+    computed:{
+      userInfo(){
+        let info = this.$store.getters.getUserInfo || {};
+        if (!Util.isEmptyObject(info)) {
+          this.operailityData = info;
+          if (this.isOnce) {
+            if (!!info.auditStatus) {
+              if (info.auditStatus != "AUDIT_SUCCESS") {
+                this.archivesModal = true;
+              }
+
+              if (info.auditStatus == "NOT_SUBMIT") { //未提交
+                this.currAuditStatus = "您的档案未提交,请先完善个人档案!";
+              } else if (info.auditStatus == "NOT_AUDIT") { //未审核
+                this.currAuditStatus = "您的档案审核中,请等待!";
+              } else { //AUDIT_FAILURE  审核拒绝
+                this.currAuditStatus = "您的档案审核拒绝,请检查并重新填写!";
+              }
+            }
+          }
+        }
+        return info;
+      }
     },
     components: {
       edit,

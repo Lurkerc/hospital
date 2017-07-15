@@ -1,6 +1,7 @@
 <!---科室要求设置-修改--->
 <template>
 <div>
+  <el-form :model="formValidate" ref="formValidate" label-width="10px" :rules="rules">
   <el-row>
     <el-col :span="2" :push="1">
       <el-button type="primary" @click="add">添加</el-button>
@@ -9,19 +10,22 @@
       <div class="cal-schoolTit" style="text-align: right;">病种名称：</div>
     </el-col>
     <el-col :span="6">
+      <el-form-item prop="name">
       <el-input placeholder="请输入内容" v-model="formValidate.name"></el-input>
+      </el-form-item>
     </el-col>
     <el-col :span="3">
       <div class="cal-schoolTit" style="text-align: right;">专业：</div>
     </el-col>
     <el-col :span="6">
+      <el-form-item prop="specialty">
       <dictionary-select v-if="formValidate.specialty!=''" @setSltOptionValue="setSpecialtyOptionValue" :selectOptions="specialtyOptions"></dictionary-select>
+      </el-form-item>
     </el-col>
-
   </el-row>
+    </el-form-item>
   <br />
-  <el-table
-    ref="multipleTable"
+      <el-table
     align="center"
     :data="formValidate.outlineRequires"
     :height="500"
@@ -30,28 +34,35 @@
     <el-table-column
       prop="depName"
       label="科室"
+      class-name="valiTableStyle"
       show-overflow-tooltip>
       <template scope="scope">
-        <el-select
-          v-if="scope.row.depId"
-          v-model="scope.row.depId"
-          :filterable="true"
-          placeholder="选择或输入匹配搜索"
-          @change="change">
-          <el-option
-            v-for="item in depOptionData"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id+'##'+item.name">
-          </el-option>
-        </el-select>
+        <el-form :model="scope.row" :ref="'formValidate_depId'+scope.$index" label-width="10px" :rules="rules">
+          <el-form-item prop="depId">
+            <el-select
+              v-model="scope.row.depId"
+              :filterable="true"
+              placeholder="选择或输入匹配搜索"
+              @change="change">
+              <el-option
+                v-for="item in depOptionData"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id+'##'+item.name">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
       </template>
     </el-table-column>
     <el-table-column
       prop="disType"
       label="类别"
+      class-name="valiTableStyle"
       show-overflow-tooltip>
       <template scope="scope">
+        <el-form :model="scope.row" :ref="'formValidate_disType'+scope.$index" label-width="10px" :rules="rules">
+          <el-form-item prop="disType">
         <el-select
           v-if="disTypeOption.length>0"
           v-model="scope.row.disType"
@@ -64,24 +75,36 @@
             :value="item.value">
           </el-option>
         </el-select>
+          </el-form-item>
+        </el-form>
       </template>
     </el-table-column>
     <el-table-column
       prop="disTitle"
       label="名称"
       align="center"
+      class-name="valiTableStyle"
       width="180">
       <template scope="scope">
+        <el-form :model="scope.row" :ref="'formValidate_disTitle'+scope.$index" label-width="10px" :rules="rules">
+          <el-form-item prop="disTitle">
         <el-input placeholder="请输入内容" v-model="scope.row.disTitle"></el-input>
+          </el-form-item>
+        </el-form>
       </template>
     </el-table-column>
     <el-table-column
       prop="disNum"
       label="要求例数"
       align="center"
-      width="100">
+      class-name="valiTableStyle"
+      width="130">
       <template scope="scope">
+        <el-form :model="scope.row" :ref="'formValidate_disNum'+scope.$index" label-width="10px" :rules="rules">
+          <el-form-item prop="disNum">
         <el-input placeholder="请输入内容" v-model="scope.row.disNum"></el-input>
+          </el-form-item>
+        </el-form>
       </template>
     </el-table-column>
     <el-table-column
@@ -93,6 +116,7 @@
       </template>
     </el-table-column>
   </el-table>
+
   <br />
   <el-row>
     <el-col :span="8" class="textCenter">&nbsp;</el-col>
@@ -100,17 +124,24 @@
     <el-col :span="4" class="textCenter"><el-button  @click="cancel">取消</el-button></el-col>
     <el-col :span="8" class="textCenter">&nbsp;</el-col>
   </el-row>
+  </el-form>
 </div>
 </template>
 <script>
   /*当前组件必要引入*/
   import api from "../api.js";
+
+  import {
+    reqDepVal as rules
+  } from '../../rules'; // 表单验证
   //当前组件引入全局的util
   let Util = null;
   export default{
     props:["operailityData"],
     data() {
       return {
+        //表单验证
+        rules,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
 
@@ -143,6 +174,8 @@
             url: api.depReDistype.path,
           }
         },
+
+        rulesForm:{},
 
         //表单数据bind
         formValidate:{
@@ -235,6 +268,12 @@
       //通过get请求列表数据
       updateListData(responseData){
         let data = responseData.data;
+        for(var i=0,item;i<data.length;i++){
+          item = data[i]
+          if(item.id==-1){
+            data.splice(i,1);
+          }
+        }
         this.depOptionData = [];
         this.depOptionData= data;
       },
@@ -258,13 +297,38 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
-        let isSubmit = true; //this.submitForm("formValidate");
-        if(isSubmit) {
-          if (!isLoadingFun) isLoadingFun = function () {};
-          isLoadingFun(true);
-          this.saveMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
-          this.ajax(this.saveMessTitle, isLoadingFun);
-        }
+        //this.getFormData(this.formValidate);
+        //console.log(this.rulesForm);
+        this.saveMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+        setTimeout(()=>{
+          let isSubmit = this.submitForm("formValidate");
+          if(isSubmit) {
+            if (!isLoadingFun) isLoadingFun = function () {};
+            isLoadingFun(true);
+            this.ajax(this.saveMessTitle, isLoadingFun);
+          }
+        },100);
+
+      },
+
+
+      /*
+       * 点击提交按钮 监听是否验证通过
+       * @param formName string  form表单v-model数据对象名称
+       * @return flag boolean   form表单验证是否通过
+       * */
+      submitForm(formName){
+        let flag = true;
+        Util._.forEach(this.$refs, (item,k)=> {
+          if(typeof this.$refs[k]!="undefined"){
+            this.$refs[k].validate((valid) => {
+              if (!valid) {
+                flag= false;
+              }
+            });
+          }
+        })
+        return flag;
       },
 
 

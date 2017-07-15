@@ -62,7 +62,7 @@
       title="新建教学活动"
       class-name="vertical-center-modal">
       <modal-header slot="header" :content="selectUserId"></modal-header>
-      <select-user v-if="selectUserModal" @cancel="closeUserModal"  @setUsers="setUsers" :initUser="users" :unSelect="unSelect"></select-user>
+      <select-user v-if="selectUserModal" @cancel="closeUserModal" :treeOptions="treeOptions"  @setUsers="setUsers" :initUser="users" :unSelect="unSelect"></select-user>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -77,6 +77,10 @@
     props:["schoolData","initData"],
     data() {
       return {
+        //选择人员目录树参数设置
+        treeOptions:{
+          getTreeUrl: '/dept/tree-by-SXS', //目录树结构请求地址
+        },
         //当前操作的选择人员的已选人员
         users:[],
         unSelect:[],

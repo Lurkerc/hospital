@@ -223,34 +223,11 @@
 
         //form表单bind数据
         formValidate: {
-        "schoolId":1,
+        "schoolId":"",
         "schoolName":"",
-        "specialty":"专业",
-        "gradeNum":"2017",
-        "outlines":[
-        {
-          "greatName":"组分类名称",
-          "groupNo":1,
-          "isMustRotaryDep":"N",
-          "depId":1,
-          "depName":"科室1",
-          "ts":1,
-          "remark":"remark",
-          "depIndex":1,
-          "optionalNum":1
-        },
-        {
-          "greatName":"组分类名称",
-          "groupNo":1,
-          "isMustRotaryDep":"Y",
-          "depId":1,
-          "depName":"科室1",
-          "ts":1,
-          "remark":"remark",
-          "depIndex":1,
-          "optionalNum":1
-        }
-      ]
+        "specialty":"",
+        "gradeNum":"",
+        "outlines":[]
       },
         currGroupIndex:"",
         tabType:"",
@@ -382,7 +359,7 @@
         let template = {
           "greatName":"",   //组分类
           "groupNo":"",     //组索引
-          "isMustRotaryDep":"N",   //是否必选科室
+          "isMustRotaryDep":"Y",   //是否必选科室
           "depId":"",    //科室id
           "depName":"",  //科室名称
           "ts":"",       //周期数
@@ -401,7 +378,7 @@
         let template = {
           "greatName":"",   //组分类
           "groupNo":"",     //组索引
-          "isMustRotaryDep":"Y",   //是否必选科室
+          "isMustRotaryDep":"N",   //是否必选科室
           "depId":"",    //科室id
           "depName":"",  //科室名称
           "ts":"",       //周期数
@@ -474,6 +451,23 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
+        if(this.formValidate.schoolName==""){
+            this.errorMess("请选择学校!");
+            return;
+        }
+        if(this.formValidate.specialty==""){
+          this.errorMess("请选择专业!");
+          return;
+        }
+        if(this.formValidate.gradeNum==""){
+          this.errorMess("请选择年级!");
+          return;
+        }
+        if(this.outlines.length==0){
+          this.errorMess("请添加小组!");
+          return;
+        }
+
         let tempArr = [];
         for(var i=0,item;i<this.outlines.length;i++){
           item = this.outlines[i];

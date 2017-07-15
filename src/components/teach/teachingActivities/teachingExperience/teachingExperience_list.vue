@@ -1,23 +1,65 @@
 <!--档案审核-->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form ref="formValidate" :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="90px" >
-      <el-form-item label="姓名">
-        <el-input v-model="formValidate.name" placeholder="姓名"></el-input>
-      </el-form-item>
-      <el-form-item label="性别">
-        <el-select v-model="formValidate.sex" placeholder="性别">
-          <el-option label="全部" value="all"></el-option>
-          <el-option label="男" value="men"></el-option>
-          <el-option label="女" value="women"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="手机号">
-        <el-input v-model="formValidate.phone" placeholder="手机号"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="handleSubmit('formValidate')">查询</el-button>
-      </el-form-item>
+    <el-form  :model="formValidate" ref="formValidate" :rules="rules.teachingExperienceList"  inline label-width="90px" class="demo-ruleForm">
+      <el-row >
+        <el-col :span="10" >
+
+        </el-col>
+        <el-col :span="14" :offset="10" align="right">
+          <el-form-item label="活动名称" prop="activityName" >
+            <el-input style="width:300px;"   v-model="formValidate.activityName" placeholder="输入活动名称搜索">
+              <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
+            </el-input>
+          </el-form-item>
+          <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+        </el-col>
+      </el-row>
+
+      <div v-if="searchMore" ref="searchMore">
+        <el-form-item label="活动类型" prop="user">
+          <el-select v-model="formValidate.activityType" label="活动状态" placeholder="请选择活动类型">
+            <select-option  :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="活动时间" prop="activityBeginTime" >
+          <el-date-picker
+            v-model="formValidate.activityBeginTime"
+            type="date"
+            :editable="false"
+            placeholder="选择日期"
+            :picker-options="pickerOptions0"
+            @change="handleStartTime"
+          >
+          </el-date-picker>
+          到
+          <el-date-picker
+            v-model="formValidate.activityEndTime"
+            align="right"
+            type="date"
+            :editable="false"
+            placeholder="选择日期"
+            :picker-options="pickerOptions1"
+            @change="handleEndTime">
+          </el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="活动状态" prop="status" >
+          <el-select filterable  v-model="formValidate.activityState" placeholder="请选择">
+            <el-option label="全部" value=""></el-option>
+            <el-option label="未上报" value="NO_RELEASE"></el-option>
+            <el-option label="已上报" value="RELEASE"></el-option>
+            <el-option label="结束" value="STOP"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="科室" prop="depId" >
+          <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
+            <select-option ></select-option>
+          </el-select>
+        </el-form-item>
+        <el-button type="info" @click="searchEvent">查询</el-button>
+
+      </div>
     </el-form>
     <!--列表数据-->
     <div>
@@ -55,30 +97,48 @@
           </el-table-column>
           <el-table-column
             align="center"
-            prop="name"
-            label="英文名称"
+            prop="activityName"
+            label="课程名称"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="identify"
-            label="角色名称"
+            prop="activityType"
+            label="课程类型"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="remark"
-            label="角色描述"
+            prop="activitySite"
+            label="授课地点"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="type"
-            label="角色类型"
+            prop="hostUserName"
+            label="授课老师"
             width="120"
           >
           </el-table-column>
           <el-table-column
-            prop="type"
-            label="角色类型"
+            prop="shouldUserCount"
+            label="应到人数"
+            width="120"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="actuallyUserCount"
+            label="签到人数"
+            width="120"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="activityTime"
+            label="日期"
+            width="120"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="recordTimes"
+            label="时间"
             width="120"
           >
           </el-table-column>
@@ -139,6 +199,7 @@
   </div>
 </template>
 <script>
+  import rules from '../../rules.js'
   /*当前组件必要引入*/
   import url from '../app'
   //引入--新建--组件
@@ -152,14 +213,19 @@
   export default{
     data() {
       return {
+        rules,
+        searchMore:'',
         //查询表单
         url:url,
         listUrl:'/role/list?name=&identify=&type=',
         deleteUrl:'/role/remove',
         formValidate: {
-          name: '',
-          sex: '',
-          phone: ''
+          activityName: '', //获得名称
+          activityType: '', //活动类型
+          activityBeginTime: '', //活动时间(开始)
+          activityEndTime: '', //活动时间(开始)
+          activityState: '', //活动状态
+          depId: '', //科室ID
         },
 
         "tableData":[
@@ -195,7 +261,7 @@
           paramsData:'listUrl',
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:'/role/list?name=&identify=&type=',
+            url:url.userList,
           }
         },
         /*--按钮button--*/
@@ -252,30 +318,39 @@
 
       //通过get请求列表数据
       updateListData(responseData){
-        let len = responseData.data.length;
-        this.tableData1=[{}]
-        /*let data = responseData.data.splice(0,150);
-        let that = this;
-        that.tableData1=[];
-        data = that.addIndex(data);
-        for(var i=0,n=0;i<data.length;i+=100,n++){
-          setTimeout(()=>{
-            that.tableData1= that.tableData1.concat(data.splice(0,100));
-          },n*10)
-        }*/
-        this.listTotal = 1;
+        let data = responseData.data;
+        if(!data)return;
+        this.tableData = this.addIndex(data);
+        this.listTotal = data.listTotal||0;
       },
       setTableData(){
-        this.tableData1=[{}]
         this.listMessTitle.ajaxParams = Object.assign(this.listMessTitle.ajaxParams,this.queryQptions);
         this.ajax(this.listMessTitle);
       },
+      //搜索监听回调
+      searchEvent(isLoading){
+        //        isLoading(true);
+        let isSubmit = this.handleSubmit('formValidate');
+        if(isSubmit){
+          this.setTableData(isLoading)
+        }
+      },
+
+
       /*
        * 列表查询方法
        * @param string 查询from的id
        * */
       handleSubmit(name){
-        let formData = Util._.defaultsDeep({},this.formValidate);
+        let flag =false
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            flag =true;
+          } else {
+            this.$Message.error('表单验证失败!');
+        }
+        })
+        return flag
       },
       /*--点击--心得体会--按钮--*/
       xdth(data){
@@ -340,6 +415,13 @@
        * */
       openModel(options){
         this[options+'Modal'] = true;
+      },
+      // 高级搜索按钮展开搜索表单并重新计算表格高度
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          this.setTableDynHeight()
+        })
       },
     },
     created(){

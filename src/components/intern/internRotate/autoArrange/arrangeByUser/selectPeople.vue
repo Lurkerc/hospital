@@ -13,7 +13,7 @@
             <div class="listUpArea-searchLeft">
               <input class="hidden">
               <el-input placeholder="请输入内容" v-model="formValidate.userName">
-                <div slot="prepend">小组名</div>
+                <div slot="prepend">姓名</div>
                 <el-button slot="append" @click="handleSubmit('formValidate')" icon="search"></el-button>
               </el-input>
             </div>
@@ -37,8 +37,9 @@
       >
       <el-table
         stripe
+        ref="multipleTable"
         align="center"
-        :height="dynamicHt"
+        height="430"
         :context="self"
         :data="tableData1"
         tooltip-effect="dark"
@@ -90,7 +91,7 @@
       </el-table>
       </div>
       <!--分页-->
-      <div style="margin: 10px;">
+      <!--<div style="margin: 10px;">
         <div style="float: right;">
           <el-pagination
             @size-change="changePageSize"
@@ -102,7 +103,7 @@
             :total="listTotal">
           </el-pagination>
         </div>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
@@ -112,7 +113,7 @@
     //当前组件引入全局的util
     let Util = null;
     export default{
-        props:["schoolId"],
+        props:["schoolId","initUser"],
         data() {
             return {
               //查询表单
@@ -120,7 +121,7 @@
                 userName: '',
               },
 
-              multipleSelection: [],
+              multipleSelection: this.initUser,
               dynamicHt: 100,
               self: this,
               loading:false,
@@ -135,6 +136,7 @@
                   "email":"yongchao0310@163.com"
                 }
               ],
+              dataObj:{},
 
 
               //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
@@ -208,14 +210,26 @@
             let data = responseData.data;
             this.tableData1=[];
             this.tableData1=data;
-            this.listTotal = responseData.totalCount || 0;
+            for(var i=0,item;i<data.length;i++){
+              item = data[i];
+              item["index"] = i;
+              this.dataObj[item["userId"]] = item;
+            }
+            this.$nextTick(function () {
+              let tempArr = this.multipleSelection;
+              for (var i = 0,idx; i < tempArr.length; i++) {
+                idx = this.dataObj[tempArr[i]["userId"]]["index"];
+                this.$refs.multipleTable.toggleRowSelection(this.tableData1[idx], true);
+              }
+            })
+            //this.listTotal = responseData.totalCount || 0;
           },
 
 
           //设置表格数据
           setTableData(){
             this.formValidate.name="";
-            this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params);
+            this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params);
             this.ajax(this.listMessTitle);
           },
 
@@ -225,8 +239,8 @@
            * @param string 查询from的id
            * */
           handleSubmit(name){
-            let option = Util._.defaultsDeep({},this.listMessTitle)
-            option.ajaxParams.params = Object.assign(option.ajaxParams.params,this.queryQptions.params,this.formValidate);
+            let option = Util._.defaultsDeep({},this.listMessTitle);
+            option.ajaxParams.params = Object.assign(option.ajaxParams.params,this.formValidate);
             this.ajax(option);
           },
 
@@ -249,6 +263,8 @@
             //为窗体绑定改变大小事件
             let Event = Util.events;
             Event.addHandler(window, "resize", this.setTableDynHeight);
+
+
           })
         },
         components: {}

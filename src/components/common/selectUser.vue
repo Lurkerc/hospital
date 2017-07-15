@@ -41,7 +41,7 @@
   import leftTree from "./leftTree.vue";
   let Util = null;
   export default {
-    props: ["initUser", 'isOnlyOne', 'url', 'unSelect'],
+    props: ["initUser", 'isOnlyOne', 'url', 'unSelect','treeOptions'],
     data() {
       return {
         //tree默认项设置
@@ -51,7 +51,7 @@
           isShowMenus: false,
           isInitSltedNode: false, //是否需要默认选中tree节点
         },
-        fromWhereTree: "user",
+        fromWhereTree: "other",
 
         searchUserInfo: "", //全局查询人员信息
         leftListData: [], //左侧列表的数据
@@ -78,6 +78,10 @@
 
       //初始化
       init() {
+        if (typeof this.treeOptions != "undefined") {
+          this.treeDefaults = Object.assign(this.treeDefaults, this.treeOptions);
+        }
+
         if (typeof this.initUser != "undefined") {
           this.rightSltedData = this.initUser;
         }

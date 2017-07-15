@@ -11,7 +11,7 @@
         <div class="cal-schoolTit">分组名称：{{groupData.groupName}}</div>
       </el-col>
       <el-col :span="10">
-        <div class="cal-schoolTit">分组顺序：{{groupData.groupName}}</div>
+        <div class="cal-schoolTit">分组顺序：{{groupData.groupIndexName}}</div>
       </el-col>
       <el-col :span="1">&nbsp;</el-col>
     </el-row>
@@ -46,7 +46,15 @@
     data() {
       return {
         //查看分组
-        groupData:{},
+        groupData:{
+          depGroupIndex:"",
+          groupId:"",
+          groupIndexName:"",
+          groupName:"",
+          groupUserIds:"",
+          groupUserNames:"",
+          outlineId:"",
+        },
         getGroupMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
@@ -65,7 +73,6 @@
       updateListData(responseData){
         let data = responseData.data;
         this.groupData = this.formateQuestData(data);
-        console.log(this.groupData);
       },
 
 

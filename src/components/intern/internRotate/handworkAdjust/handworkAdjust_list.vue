@@ -6,7 +6,6 @@
         <!--表格数据操作按钮-->
         <div class="ivu-row">
           <div class="ivu-col ivu-col-span-24">
-            <el-button  class="but-col"  @click="add"  type="primary">新 建</el-button>
             <el-button  @click="remove" type="danger">删除</el-button>
           </div>
         </div>
@@ -17,8 +16,8 @@
           <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px" >
             <div class="listUpArea-searchLeft">
               <input class="hidden">
-              <el-input placeholder="请输入内容" v-model="formValidate.placeName">
-                <div slot="prepend">地点</div>
+              <el-input placeholder="请输入内容" v-model="formValidate.userName">
+                <div slot="prepend">姓名</div>
                 <el-button slot="append" @click="handleSubmit('formValidate')" icon="search"></el-button>
               </el-input>
             </div>
@@ -63,55 +62,37 @@
             <template scope="scope">
               <el-button
                 size="small"
-                @click="show(scope.$index,scope.row)">查看</el-button>
-              <el-button
-                size="small"
-                @click="edit(scope.$index, scope.row)">修改</el-button>
-              <el-button v-if="scope.row.status==1" size="small" class="but-col" @click="forbidden(scope.$index, scope.row)">启 用</el-button>
-              <el-button v-if="scope.row.status==0" size="small" class="but-col" @click="startUsing(scope.$index, scope.row)" type="danger">禁 用</el-button>
+                @click="edit(scope.$index, scope.row)">微 调</el-button>
+              <el-button v-if="scope.row.rotaryState==-1" size="small" class="but-col" @click="recover(scope.$index, scope.row)">恢 复</el-button>
+              <el-button v-if="scope.row.rotaryState!=-1" size="small" class="but-col" @click="pause(scope.$index, scope.row)" type="danger">暂 停</el-button>
             </template>
           </el-table-column>
           <el-table-column
-            prop="placeName"
-            label="姓名"
-
-          >
+            prop="userName"
+            label="姓名">
           </el-table-column>
           <el-table-column
-            prop="scope"
+            prop="major"
             label="专业"
             width="120">
-            <template scope="scope">
-              {{scope.row.scope | unit('m')}}
-            </template>
           </el-table-column>
           <el-table-column
-            prop="setType"
+            prop="rotaryBeginTime"
             label="轮转开始时间"
           >
-            <template scope="scope">
-              <span v-if="scope.row.setType=='ALL'">全部人员</span>
-              <span v-else style="margin-left:3px;" v-for="(item,index) in scope.row.roleList" :key="index">{{item.roleCName}}
-                <span v-if="scope.row.roleList.length>(index+1)">,</span>
-              </span>
-            </template>
           </el-table-column>
           <el-table-column
-            prop="startDate"
+            prop="rotaryEndTime"
             label="轮转结束时间"
             width="120">
-            <template scope="scope">
-              <span v-if="scope.row.effectiveType=='ALL'">所有时间可用</span>
-              <span v-else>{{scope.row.startDate}}</span>
-            </template>
           </el-table-column>
           <el-table-column
-            prop="status"
+            prop="rotaryState"
             label="轮转状态"
             width="120"
           >
             <template scope="scope">
-              {{scope.row.status==0?'启用':'禁用'}}
+              {{scope.row.rotaryState | rotaryState}}
             </template>
           </el-table-column>
 
@@ -132,25 +113,23 @@
       </div>
     </div>
     <!--微调-->
-    <div class="checkLocation">
       <Modal
         :mask-closable="false"
-        v-model="addModal"
+        v-model="editModal"
         height="200"
         title="对话框标题"
         class-name="vertical-center-modal"
         :width="960">
         <!--<div slot="header"> -->
         <!--</div>-->
-        <modal-header slot="header" :content="addId"></modal-header>
-        <trimming v-if="addModal"  @cancel="cancel" @add="subCallback" ></trimming>
+        <modal-header slot="header" :content="editId"></modal-header>
+        <trimming v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></trimming>
         <div slot="footer"></div>
       </Modal>
-    </div>
     <!---->
     <!--删除弹窗-->
     <Modal
-      close-on-click-modal="false"
+      :mask-closable="false"
       height="200"
       v-model="removeModal"
       title="对话框标题"
@@ -162,30 +141,30 @@
       <div slot="footer"></div>
     </Modal>
     <!---->
-    <!--启用弹窗-->
+    <!--恢复弹窗-->
     <Modal
-      close-on-click-modal="false"
+      :mask-closable="false"
       height="200"
-      v-model="enableModal"
+      v-model="recoverModal"
       title="对话框标题"
       class-name="vertical-center-modal"
       :loading="loading"
       :width="500">
-      <modal-header slot="header" :content="forbiddenId"></modal-header>
-      <operate v-if="enableModal" :type="'enable'" :operate-data="enableData" @operate="subCallback" @cancel="cancel" :operaility-data="operailityData"></operate>
+      <modal-header slot="header" :content="recoverId"></modal-header>
+      <recover v-if="recoverModal"@cancel="cancel" @recover="subCallback" :operaility-data="operailityData"></recover>
       <div slot="footer"></div>
     </Modal>
-    <!--禁用弹窗-->
+    <!--暂停弹窗-->
     <Modal
-      close-on-click-modal="false"
+      :mask-closable="false"
       height="200"
-      v-model="disEnableModal"
+      v-model="pauseModal"
       title="对话框标题"
       class-name="vertical-center-modal"
       :loading="loading"
       :width="500">
-      <modal-header slot="header" :content="startUsingId"></modal-header>
-      <operate v-if="disEnableModal" :type="'disEnable'" :operate-data="useingData" @operate="subCallback" @cancel="cancel" :operaility-data="operailityData"></operate>
+      <modal-header slot="header" :content="pauseId"></modal-header>
+      <pause v-if="pauseModal"@cancel="cancel" @pause="subCallback" :operaility-data="operailityData"></pause>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -195,91 +174,72 @@
   /*当前组件必要引入*/
   //引入--微调--组件
   import trimming from "./trimming.vue";
+  import recover from "./recoverRotate.vue";
+  import pause from "./pauseRotate.vue";
 
+  import api from "../api.js";
   //当前组件引入全局的util
   let Util=null;
   export default{
     data() {
       return {
         //查询表单
-        deleteUrl:'/attendance/clockSet/remove/',
+        deleteUrl: api.deleteRotary.path,
         //form表单bind数据
         formValidate: {
-          longitude: '',
-          latitude: '',
-          placeName:'',
-          scope: '',
-          setType: "",
-          roleIds: "",
-          effectiveType:"",
-          startDate:"",
-          endDate:"",
-          status:"",
+          "userName":"",
+          "schoolName":"",
+          "mobile":"",
+          "major":"",
+          "idNumber":"",
+          "rotaryBeginTime":"",
+          "rotaryEndTime":"",
+          "rotaryState":""
         },
         /*--按钮button--*/
-        addId:{
-          id:'add',
-          title:'添加'},
         removeId:{
           id:'remove',
           title:'删除'
         },
         editId:{
           id:'edit',
-          title:'修改'
+          title:'微调'
         },
-        showId:{
-          id:'auditId',
-          title:'查看'
-        },
-        forbiddenId:{
+        recoverId:{
           id:'forbidden',
-          title:'禁用'
+          title:'恢复'
         },
-        startUsingId:{
+        pauseId:{
           id:'startUsing',
-          title:'启用'
+          title:'暂停'
         },
 
 
-        //启用
-        enableModal:false,
-        enableData:{
-          url:'/attendance/clockSet/modifyStatus',
-          method:"put",
-          data:{
-            status:'0'
-          }
-        },
+        //恢复
+        recoverModal:false,
 
-        //禁用
-        disEnableModal:false,
-        useingData:{
-          url:'/attendance/clockSet/modifyStatus',
-          method:"put",
-          data:{
-            status:'1'
-          }
-        },
+        //暂停
+        pauseModal:false,
 
 
-        shortNoteModal:false,
-        toChannelModal:false,
         operailityData:'',
         multipleSelection: [],
         dynamicHt: 100,
         self: this,
-        tableData1: [],
+        tableData1: [{}],
         loading:false,
         listTotal:0,
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:'/attendance/clockSet/list',
+            url: api.rtuserPagelist.path,
             params:{
-              placeName:"",
-              roleId:"",
-              status:""
+              userName:"",
+              year:"",
+              rtState:"",
+              sortby:"",
+              order:"",
+              schoolName:"",
             }
           }
         },
@@ -354,24 +314,20 @@
       handleSubmit(name){
         this.setTableData();
       },
-      /*--点击--添加--按钮--*/
-      add(){
-        this.openModel('add');
-      },
+
       /*--点击--删除--按钮--*/
       remove(){
         if(!this.isSelected()) return;
-        this.operailityData = this.multipleSelection;
+        let tempArr = [];
+        for(var i=0,item;i<this.multipleSelection.length;i++){
+          item = this.multipleSelection[i];
+          tempArr.push(item["userId"]);
+        }
+        this.operailityData = {id:tempArr.join(",")};
         this.openModel('remove') ;
       },
-      /*
-       * 点击--查看--按钮
-       * @param index string|number  当前行索引
-       * */
-      show(index){
-        this.operailityData = this.tableData1[index];
-        this.showModal = true;
-      },
+
+
       /*
        * 点击--修改角色--按钮
        * @param index string|number  当前行索引
@@ -379,28 +335,28 @@
       edit(index){
         if(typeof index == 'undefined'){
           if(!this.isSelected(true)) return;
-          this.operailityData = this.multipleSelection[0];
+          this.operailityData = {"userId":this.tableData1[index]["userId"]};
           this.openModel('edit')
         }else {
-          this.operailityData = this.tableData1[index];
+          this.operailityData = {"userId":this.tableData1[index]["userId"]};
           this.openModel('edit')
         }
       },
       /*
-       * 点击--禁用--按钮
+       * 点击--恢复--按钮
        * @param index string|number  当前行索引
        * */
-      forbidden(index){
+      recover(index){
         this.operailityData = this.tableData1[index];
-        this.openModel("enable");
+        this.openModel("recover");
       },
       /*
-       * 点击--启用 --按钮
+       * 点击--暂停 --按钮
        * @param index string|number  当前行索引
        * */
-      startUsing(index){
+      pause(index){
         this.operailityData = this.tableData1[index];
-        this.openModel("disEnable");
+        this.openModel("pause");
       },
 
 
@@ -475,7 +431,7 @@
     },
     components:{
       //当前组件引入的子组件
-      trimming
+      trimming,recover,pause
     }
 
   }

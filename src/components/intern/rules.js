@@ -18,6 +18,26 @@ let chargingStandard = {
   configValue: [baseRules.required,baseRules.numberMust], // 实习费 - 必填\数字
 };
 
+/**
+ * 科室要求
+ */
+let reqDepVal = {
+  name:[baseRules.required],
+  "depId":baseRules.required,
+  "disType":baseRules.required,
+  "disTitle":baseRules.required,
+  "disNum":baseRules.numberMust,
+  specialty:[baseRules.required],
+};
+
+/**
+ * 手工调整
+ */
+let handWork = {
+  "depId":[baseRules.required],
+  "ts":baseRules.numberMust,
+};
+
 export {
-  internAudit,chargingStandard,
+  internAudit,chargingStandard,reqDepVal
 };
