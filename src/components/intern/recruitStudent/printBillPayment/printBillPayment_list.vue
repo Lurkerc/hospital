@@ -172,13 +172,6 @@
       },
       /********************************* 表格相关 *****************************/
       /*
-       * checkbox 选择后触发事件
-       * @param val Array 存在所有的选择每一个行数据
-       */
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      },
-      /*
        * 设置表格数据
        * @param isLoading Boolean 是否加载
        */

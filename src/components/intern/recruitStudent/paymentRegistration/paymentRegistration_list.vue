@@ -3,11 +3,15 @@
   <div ref="internAuditListMain">
     <el-form :inline="true" class="internAuditList">
       <el-row>
-        <el-col :span="10">
+        <el-col :span="6">
           <el-button type="success" @click="paymentConfirmation">缴费确认</el-button>
           <el-button type="info" @click="derive">导出Excel</el-button>
         </el-col>
-        <el-col :span="14" align="right" style="padding-bottom:20px;">
+        <el-col :span="8">
+          <el-form-item :label="'已选：' + multipleSelection.length + '人，'"></el-form-item>
+          <el-form-item :label="'合计：' + selSum + '元'"></el-form-item>
+        </el-col>
+        <el-col :span="10" align="right" style="padding-bottom:20px;">
           <el-input :maxlength="20" placeholder="请输入姓名" icon="search" v-model="searchObj.userName" :on-icon-click="search" style="width:300px;"></el-input>
           <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
         </el-col>
@@ -55,8 +59,16 @@
             {{ scope.row.totalCost }}
           </template>
         </el-table-column>
-        <el-table-column prop="operator" label="操作人" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="payTime" label="操作时间" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="operator" label="操作人" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.operator || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="payTime" label="操作时间" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.payTime || '-' }}
+          </template>
+        </el-table-column>
         <el-table-column prop="isPay" label="缴费状态" show-overflow-tooltip>
           <template scope="scope">
             {{ (scope.row.isPay || 0) | isPay }}
@@ -82,7 +94,7 @@
       :width="500">
       <modal-header slot="header" :content="headerContent.deriveId"></modal-header>
       <div>
-        <div class="remove">确认导出吗</div>
+        <div class="remove">确认导出吗？</div>
         <el-row>
           <el-col :span="10" :offset="14">
             <a :href="'/api/signupRecruit/trialSxUser/payCostExportExcel?'+deriveURL">
@@ -100,7 +112,7 @@
       :width="500">
       <modal-header slot="header" :content="headerContent.payCnfId"></modal-header>
       <div>
-        <div class="remove">确认“{{ payCnfTips.userNames.join('，') }}”等{{ payCnfTips.userNames.length }}人已经缴费吗？</div>
+        <div class="modalTips">确认“{{ payCnfTips.userNames.join('，') }}”等{{ payCnfTips.userNames.length }}人已经缴费吗？</div>
         <el-row>
           <el-col :span="10" :offset="14">
             <el-button @click="payCnfSub" type="primary">确定</el-button>
@@ -122,6 +134,7 @@
   export default {
     data() {
       return {
+        selSum: 0, // 合计多少元
         deriveURL: '',
         nationOption: dictionary.nation,
         payCnfModal: false,
@@ -238,13 +251,6 @@
       },
       /********************************* 表格相关 *****************************/
       /*
-       * checkbox 选择后触发事件
-       * @param val Array 存在所有的选择每一个行数据
-       */
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      },
-      /*
        * 设置表格数据
        * @param isLoading Boolean 是否加载
        */
@@ -276,6 +282,10 @@
        */
       handleSelectionChange(val) {
         this.multipleSelection = val;
+        this.selSum = 0;
+        val.map(item => {
+          this.selSum += (item.totalCost || 0)
+        })
       },
       /*
        * 列表数据选择
@@ -345,6 +355,13 @@
     .nation .el-input {
       width: 100%;
     }
+  }
+
+  .modalTips {
+    font-size: 16px;
+    min-height: 100px;
+    text-indent: 2em;
+    line-height: 32px;
   }
 
 </style>
