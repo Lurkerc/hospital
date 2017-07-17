@@ -43,7 +43,7 @@ let inAndOut = {
   userName:[{ required: true, message: '此项不能为空'},baseRules.illegalChar()],
 };
 /**
- * 迁入迁出
+ * 人员入住
  */
 let occupancyList = {
   userName: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 名称 - 必填

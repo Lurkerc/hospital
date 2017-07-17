@@ -6,7 +6,7 @@
         <el-col :span="24">
           <el-form-item label="科室" prop="depId" >
             <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
-              <select-option ></select-option>
+              <select-option :type="'userRotaryDeptlist'" :unAll="true"  :userType="userType" :name="'depName'" :id="'depId'" :userId="userId"></select-option>
             </el-select>
           </el-form-item>
           <el-form-item label="考勤时间" prop="month">
@@ -609,7 +609,7 @@
           if(Util._.isObject(responseData["status"])&&responseData["status"]["code"]==0){
               if(responseData.data==0){
                 that.data = responseData.data;
-                  that.errorMess('数据为空');
+                  //that.errorMess('数据为空');
                   return;
               }
             let date = that.yearMonth(+that.yearMonth(that.formValidate.month));
@@ -970,10 +970,13 @@
         }
         return year+'-'+month+'-'+D;
       },
-
-
     },
+
+
     created(){
+      let userInfo = this.$store.getters.getUserInfo;
+      this.userId=userInfo.id;
+      this.userType=userInfo.studentTypes;
       this.init();
     },
     mounted(){

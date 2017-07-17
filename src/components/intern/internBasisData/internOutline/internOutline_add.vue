@@ -43,12 +43,17 @@
             <legend style="font-size:16px">&nbsp;&nbsp;{{groupOtions[groupIndex]}}&nbsp;&nbsp;</legend>
             <div class="cal-schoolTit">
               必须轮转科室 <el-button type="primary" size="mini" @click="openSetDepWin(groupIndex,'mustRotaryDep')" icon="plus"></el-button>
-              组分类名称：<el-input v-model="groupItem.greatName" style="width: 120px;" placeholder="请输入内容"></el-input>
+              组分类名称：
+              <el-form :model="groupItem" ref="f" :rules="rules"  label-width="0" style="display: inline-block">
+                <el-form-item  prop="greatName">
+                  <el-input v-model="groupItem.greatName" style="width: 120px;" placeholder="请输入内容"></el-input>
+                </el-form-item>
+              </el-form>
+
             </div>
 
             <el-table
               border
-              ref="multipleTable"
               align="center"
               :data="groupItem.mustRotaryDep"
               tooltip-effect="dark"
@@ -63,14 +68,18 @@
                 label="实习时间"
                 align="center">
                 <template scope="scope">
-                  <el-input v-model="scope.row.ts" placeholder="请输入内容" style="width: 50px"></el-input> 周
+                  <el-form :model="scope.row" ref="f" :rules="rules"  label-width="0" class="demo-ruleForm">
+                    <el-form-item  prop="ts">
+                  <el-input  v-model="scope.row.ts" placeholder="请输入内容" style="width: 120px"> <template slot="append">周</template></el-input>
+                    </el-form-item>
+                  </el-form>
                 </template>
               </el-table-column>
               <el-table-column
                 label="备注"
                 align="center">
                 <template scope="scope">
-                  <el-input v-model="scope.row.remark" placeholder="请输入内容"></el-input>
+                  <el-input  v-model="scope.row.remark" placeholder="请输入内容"></el-input>
                 </template>
               </el-table-column>
               <el-table-column
@@ -117,6 +126,7 @@
                       <el-input placeholder="请输入内容" style="width: 90%" v-model="item.remark"></el-input>
                     </td>
                     <td v-show="index==0" :rowspan="groupItem.randomRotaryDep.length" align="center">
+
                       <el-input placeholder="请输入内容" v-model="item.ts" style="width: 50px"></el-input> 周
                     </td>
                     <td v-show="index==0" :rowspan="groupItem.randomRotaryDep.length" align="center">
@@ -181,6 +191,7 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
+      props:['rules'],
     data() {
       return {
         //保存按钮基本信息
@@ -491,14 +502,14 @@
         this.formValidate.gradeNum = this.conductDate(this.formValidate.gradeNum,"yyyy");
         this.formValidate.outlines = tempArr;
         //this.formValidate.outlines  greatName  mustRotaryDep  randomRotaryDep
-        //let isSubmit = this.submitForm("formValidate");
+        let isSubmit = this.submitForm("formValidate");
         //isSubmit = true;
-        //if(isSubmit) {
+        if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
           this.saveOutline.ajaxParams.data = this.getFormData(this.formValidate);
           this.ajax(this.saveOutline, isLoadingFun);
-        //}
+        }
       },
 
 
@@ -508,12 +519,14 @@
        * @return flag boolean   form表单验证是否通过
        * */
       submitForm(formName){
-        let flag = false;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            flag= true;
-          }
-        });
+        let flag = true;
+        for(let i =0;i< this.$refs.f.length; i++){
+          this.$refs.f[i].validate((valid) => {
+            if(!valid) {
+              flag= false;
+            }
+          });
+        }
         return flag;
       },
 

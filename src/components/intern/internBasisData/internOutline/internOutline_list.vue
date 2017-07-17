@@ -116,7 +116,7 @@
       <!--<div slot="header"> -->
       <!--</div>-->
       <modal-header slot="header" :content="editId"></modal-header>
-      <edit v-if="editModal"   @cancel="cancel"  @edit="subCallback" :editOperailityData="editOperailityData"></edit>
+      <edit v-if="editModal"   @cancel="cancel" :rules="internOutline"  @edit="subCallback" :editOperailityData="editOperailityData"></edit>
       <div slot="footer"></div>
     </Modal>
     <!---->
@@ -131,7 +131,7 @@
       <!--<div slot="header"> -->
       <!--</div>-->
       <modal-header slot="header" :content="addId"></modal-header>
-      <add v-if="addModal"  @cancel="cancel" @add="subCallback" :operaility-data="operailityData" ></add>
+      <add v-if="addModal"  @cancel="cancel" :rules="internOutline" @add="subCallback" :operaility-data="operailityData" ></add>
       <div slot="footer"></div>
     </Modal>
     <!---->
@@ -218,6 +218,9 @@
   //引入--导入--组件
   import toChannel from "./internOutline_toChannel.vue";
 
+  //引入--验证--组件
+  import {internOutline} from "../../rules";
+
   //引入--操作url的api
   import api from "../api.js";
   //当前组件引入全局的util
@@ -225,6 +228,7 @@
   export default{
     data() {
       return {
+        internOutline,
         //查询表单
         deleteUrl: api.dgList.path,
         formValidate: {

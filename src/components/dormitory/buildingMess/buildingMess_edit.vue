@@ -11,7 +11,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="办公室电话:" prop="phone" >
-            <el-input v-model="formValidate.phone"  placeholder="请输入" @blur="phone"></el-input>
+            <el-input v-model="formValidate.phone" min="0"  placeholder="请输入" @blur="phone"></el-input>
           </el-form-item>
         </el-col>
         </el-col >
@@ -124,6 +124,7 @@
        * */
       SuccessGetCurrData(responseData){
         let data = responseData.data;
+        if(!data.remark)data.remark = '';
         this.formValidate = this.getFormValidate(this.formValidate,data) ;
       },
       /*
@@ -151,10 +152,8 @@
 
       phone(){
         let val =this.formValidate.phone;
-        val = (val+'').replace(/^-*|[^(0-9\-)]/gi,'');
-
+        val = (val+'').replace(/^[-]|[^(0-9\-)]/gi,'');
         this.formValidate.phone = val;
-        console.log(this.formValidate.phone);
       }
     }
   }

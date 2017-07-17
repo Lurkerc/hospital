@@ -22,7 +22,7 @@
       <el-col :span="18" :offset="2">
         <p class="center">
           <span class="name">请假时间</span>
-          <span style="padding-right: 25px" >{{data.beginTime}}到{{data.endTime}}</span>
+          <span style="padding-right: 25px" >{{data.beginDate}}到{{data.endDate}}</span>
           共<span class="border">{{data.timeLength}}</span>天
         </p>
       </el-col >
@@ -60,6 +60,7 @@
         <p class="center"><span class="name">审核时间</span><span>2017/12/29   12：00</span></p>
       </el-col >
     </el-row >-->
+  <div v-if="data.status!='WSB'">
 
     <el-row >
       <el-col :span="18" :offset="2">
@@ -76,6 +77,7 @@
       </el-col >
     </el-row >
   </div>
+
 
   </div>
 </template>

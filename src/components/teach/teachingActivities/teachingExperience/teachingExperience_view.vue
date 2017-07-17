@@ -60,7 +60,7 @@
 
         //获取到的数据
         "data":{
-          "id":1,
+          /*"id":1,
           "depId":2,
           "depName":"内科",
           "activityName":"教学查房",
@@ -90,7 +90,7 @@
               "fileUrl":"www.baidu.com/",
               "fileType":"txt"
             }
-          ]
+          ]*/
         },
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle:{

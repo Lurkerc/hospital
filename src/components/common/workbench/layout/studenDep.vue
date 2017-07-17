@@ -60,7 +60,7 @@
     <!--病种-->
     <Modal close-on-click-modal="false" width="1000" v-model="entityModal" class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="contentHeader.entityId"></modal-header>
-      <entity v-if="entityModal" @cancel="cancel('entity')" @add="subCallback('entity')" :url="depApi"></entity>
+      <entity v-if="entityModal" :podId="studentData.rotaryIng.podId" @cancel="cancel('entity')" @add="subCallback('entity')" :url="depApi"></entity>
       <div slot="footer"></div>
     </Modal>
     <!--技能-->
@@ -72,7 +72,7 @@
     <!--病例-->
     <Modal close-on-click-modal="false" width="1400" v-model="largeCaseModal" class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="contentHeader.largeCaseId"></modal-header>
-      <large-case v-if="largeCaseModal" @cancel="cancel('largeCase')" @add="subCallback('largeCase')" :url="depApi"></large-case>
+      <large-case v-if="largeCaseModal" :initData="caseData" @cancel="cancel('largeCase')" @add="subCallback('largeCase')" :url="depApi"></large-case>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -97,36 +97,41 @@
         depApi,
         loading: false,
         operailityData: [],
+        caseData: {
+          podId: "",
+          depName: "",
+          depId: ""
+        },
         studentData: {
-          "rotaryIng": {
-            "podId": 1111,
-            "rdId": 1111,
-            "depName": "科室名称",
-            "depId": 111,
-            "ts": 1.5,
-            "rotaryBeginTime": "2017-01-01",
-            "rotaryEndTime": "2017-01-15",
-            "bz_wcqk": {
-              "allCount": 11,
-              "wcCount": 1
+          rotaryIng: {
+            podId: "",
+            rdId: "",
+            depName: "",
+            depId: "",
+            ts: "-",
+            rotaryBeginTime: "",
+            rotaryEndTime: "",
+            bz_wcqk: {
+              allCount: 0,
+              wcCount: 0
             },
-            "jn_wcqk": {
-              "allCount": 11,
-              "wcCount": 1
+            jn_wcqk: {
+              allCount: 0,
+              wcCount: 0
             },
-            "dbl_wcqk": {
-              "allCount": 11,
-              "wcCount": 1
+            dbl_wcqk: {
+              allCount: 0,
+              wcCount: 0
             }
           },
-          "rotaryNext": {
-            "podId": 1111,
-            "rdId": 1111,
-            "depName": "科室名称",
-            "depId": 111,
-            "ts": 1.5,
-            "rotaryBeginTime": "2017-01-01",
-            "rotaryEndTime": "2017-01-15"
+          rotaryNext: {
+            podId: "",
+            rdId: "",
+            depName: "",
+            depId: "",
+            ts: "-",
+            rotaryBeginTime: "",
+            rotaryEndTime: ""
           }
         }, // 学生数据
         isReport: false, // 已经报到
@@ -178,6 +183,17 @@
       },
       //  病例填写
       largeCase() {
+        let {
+          podId,
+          depName,
+          depId
+        } = this.studentData.rotaryIng;
+        this.caseData = {
+          podId,
+          depName,
+          depId
+        };
+        console.log(this.caseData)
         this.openModel('largeCase')
       },
       //  出科

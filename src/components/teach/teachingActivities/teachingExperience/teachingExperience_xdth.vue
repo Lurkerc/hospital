@@ -18,8 +18,9 @@
 
         <el-row>
           <el-col :span="20" :offset="2">
-            <el-form-item label="相关资料:" prop="name7">
-              <upload-file   :show="true" :uploadFiles="item.fileList"></upload-file>
+            <el-form-item label-width="0" prop="name7">
+              <img v-for="(img,index) in item.fileList" :key="index" :src="http+img.fileUrl" >
+              <!--<upload-file   :show="true" :uploadFiles="item.fileList"></upload-file>-->
             </el-form-item>
           </el-col>
         </el-row>
@@ -35,20 +36,8 @@
         activeName: 'first',
 
         //获取到的数据
-        "data":[{
-          "id":"",
-          "createUserId":"",
-          "createUserName":"",
-          "activityTips":"",
-          "fileList":[
-            {
-              "fileId":"",
-              "fileName":"",
-              "fileUrl":"",
-              "fileType":""
-            }
-          ]
-        }],
+        "data":[],
+        http:'',
         formValidate:{
           activityId:this.operailityData.id,      //教学活动ID
           activityTips:'',      //心得体会
@@ -69,6 +58,8 @@
 
     created(){
       this.init();
+      let env = this.$store.getters.getEnvPath;
+      this.http = env;
     },
 
     methods: {

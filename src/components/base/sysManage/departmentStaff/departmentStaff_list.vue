@@ -2,32 +2,33 @@
 <!--部门人员管理-->
 <template>
   <layout-tree>
-    <left-tree slot="left" :clickAddChange="clickAddChange" @setCurrSltNodeId="setTreeDepId" @clickAdd="handleAdd" @tree-click="treeClick" @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
+    <left-tree slot="left" :clickAddChange="clickAddChange" @setCurrSltNodeId="setTreeDepId" @clickAdd="handleAdd" @tree-click="treeClick"
+      @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
     <div slot="right" id="content" ref="content" class="modal">
       <div class="listUpAreaBox">
         <div class="listUpArea-menus">
           <div class="add-remove">
-          <el-button  class="but-col"  @click="add"  type="primary">添加</el-button>
-          <el-button class="but-col" @click="reset" type="danger">重置密码</el-button>
-          <el-button class="but-col" @click="toChannel" type="primary" >导入</el-button>
-          <el-button class="but-col" @click="derive" type="primary">导出</el-button>
-          <el-button class="but-col" @click="shortNote" type="primary">短信通知</el-button>
-        </div>
+            <el-button class="but-col" @click="add" type="primary">添加</el-button>
+            <el-button class="but-col" @click="reset" type="danger">重置密码</el-button>
+            <el-button class="but-col" @click="toChannel" type="primary">导入</el-button>
+            <el-button class="but-col" @click="derive" type="primary">导出</el-button>
+            <el-button class="but-col" @click="shortNote" type="primary">短信通知</el-button>
+          </div>
         </div>
         <div class="listUpArea-search">
           <div class="listUpArea-searchWrapper">
             <!--右侧查询-->
-            <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px" >
-            <div class="listUpArea-searchLeft">
-              <input class="hidden">
-              <el-input placeholder="请输入内容" v-model="formValidate.name">
-                <div slot="prepend">姓名</div>
-                <el-button slot="append" @click="handleSubmit('formValidate')" icon="search"></el-button>
-              </el-input>
-            </div>
-            <div class="listUpArea-moreSearch">
-              <el-button @click="showMoreSearch" type="text">高级查询</el-button>
-            </div>
+            <el-form ref="formValidate" :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px">
+              <div class="listUpArea-searchLeft">
+                <input class="hidden">
+                <el-input placeholder="请输入内容" v-model="formValidate.name">
+                  <div slot="prepend">姓名</div>
+                  <el-button slot="append" @click="handleSubmit('formValidate')" icon="search"></el-button>
+                </el-input>
+              </div>
+              <div class="listUpArea-moreSearch">
+                <el-button @click="showMoreSearch" type="text">高级查询</el-button>
+              </div>
             </el-form>
           </div>
         </div>
@@ -37,142 +38,74 @@
       </div>
       <br />
       <div id="myTable" ref="myTable">
-        <el-table
-          ref="multipleTable"
-          align="center"
-          :height="dynamicHt"
-          :context="self"
-          :data="tableData1"
-          tooltip-effect="dark"
-          style="width: 100%"
-          @selection-change="handleSelectionChange">
-          <el-table-column
-            type="selection"
-            width="55">
+        <el-table ref="multipleTable" align="center" :height="dynamicHt" :context="self" :data="tableData1" tooltip-effect="dark"
+          style="width: 100%" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55">
           </el-table-column>
-          <el-table-column
-            label="序号"
-            prop="index"
-            width="70">
+          <el-table-column label="序号" prop="index" width="70">
             <!--<template scope="scope">-->
             <!--<span>{{scope.row.index}}</span>-->
             <!--</template>-->
           </el-table-column>
-          <el-table-column
-            label="操作"
-            align="center"
-            width="200"
-          >
+          <el-table-column label="操作" align="center" width="200">
             <template scope="scope">
-              <el-button
-                size="small"
-
-                @click="show(scope.$index,scope.row)">查看
+              <el-button size="small" @click="show(scope.$index,scope.row)">查看
               </el-button>
-              <el-button
-                size="small"
-                @click="edit(scope.$index, scope.row)">修改
+              <el-button size="small" @click="edit(scope.$index, scope.row)">修改
               </el-button>
               <el-button size="small" v-if="scope.row.account.enable" class="but-col" @click="forbidden(scope.$index, scope.row)" type="danger">禁用</el-button>
               <el-button size="small" v-if="!scope.row.account.enable" class="but-col" @click="startUsing(scope.$index, scope.row)">启用</el-button>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="name"
-            label="姓名"
-            align="center"
-            width="200">
+          <el-table-column prop="name" label="姓名" align="center" width="200">
           </el-table-column>
-          <el-table-column
-            prop="school.name"
-            label="学校"
-            show-overflow-tooltip>
+          <el-table-column prop="school.name" label="学校" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column
-            prop="specialty"
-            label="专业"
-            show-overflow-tooltip>
+          <el-table-column prop="specialty" label="专业" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column
-            prop="mobile"
-            label="手机号"
-            show-overflow-tooltip>
+          <el-table-column prop="mobile" label="手机号" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column
-            prop="email"
-            label="邮箱"
-            show-overflow-tooltip>
+          <el-table-column prop="email" label="邮箱" show-overflow-tooltip>
           </el-table-column>
         </el-table>
       </div>
       <div style="margin: 10px;">
         <div style="float: right;">
-          <el-pagination
-            @size-change="changePageSize"
-            @current-change="changePage"
-            :current-page="myPages.currentPage"
-            :page-sizes="myPages.pageSizes"
-            :page-size="myPages.pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="listTotal">
+          <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
+            :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
           </el-pagination>
         </div>
       </div>
       <!--弹窗-->
       <div>
         <!--修改弹窗-->
-        <Modal
-          :mask-closable="false"
-          v-model="editModal"
-          height="200"
-          title="对话框标题"
-          class-name="vertical-center-modal"
-          :width="1000">
+        <Modal :mask-closable="false" v-model="editModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="1000">
           <!--<div slot="header"> -->
           <!--</div>-->
           <modal-header slot="header" :content="editId"></modal-header>
-          <edit v-if="editModal"   @cancel="cancel"  @edit="subCallback"  :operaility-data="operailityData"></edit>
+          <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
           <div slot="footer"></div>
         </Modal>
         <!---->
         <!--增加弹窗-->
-        <Modal
-          :mask-closable="false"
-          v-model="addModal"
-          height="200"
-          title="对话框标题"
-          class-name="vertical-center-modal"
-          :width="1000">
+        <Modal :mask-closable="false" v-model="addModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="1000">
           <!--<div slot="header"> -->
           <!--</div>-->
           <modal-header slot="header" :content="addId"></modal-header>
-          <add v-if="addModal"  @cancel="cancel" @add="subCallback" :operailityData="operailityData"></add>
+          <add v-if="addModal" @cancel="cancel" @add="subCallback" :operailityData="operailityData"></add>
           <div slot="footer"></div>
         </Modal>
         <!---->
         <!--查看弹窗-->
-        <Modal
-          :mask-closable="false"
-          v-model="showModal"
-          height="200"
-          title="对话框标题"
-          class-name="vertical-center-modal"
-          :width="1000"
-        >
+        <Modal :mask-closable="false" v-model="showModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="1000">
           <modal-header slot="header" :parent="self" :content="showId"></modal-header>
-          <show v-if="showModal"  @cancel="cancel"   :operaility-data="operailityData"></show>
+          <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData"></show>
           <div slot="footer"></div>
         </Modal>
         <!---->
 
         <!--删除弹窗-->
-        <Modal
-          :mask-closable="false"
-          close-on-click-modal="false"
-          height="200"
-          v-model="removeModal"
-          title="对话框标题"
-          class-name="vertical-center-modal"
+        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="removeModal" title="对话框标题" class-name="vertical-center-modal"
           :width="500">
           <modal-header slot="header" :content="removeId"></modal-header>
           <remove v-if="removeModal" :deleteUrl="deleteUrl" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
@@ -181,36 +114,26 @@
 
         <!---->
         <!--导入弹窗-->
-        <Modal
-          :mask-closable="false"
-          close-on-click-modal="false"
-          height="200"
-          v-model="toChannelModal"
-          title="对话框标题"
-          class-name="vertical-center-modal"
+        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="toChannelModal" title="对话框标题" class-name="vertical-center-modal"
           :width="800">
           <modal-header slot="header" :content="toChannelId"></modal-header>
-          <toChannel v-if="toChannelModal" :deptId="deptId"  @toChannel="subCallback" @cancel="cancel" :operaility-data="operailityData"></toChannel>
+          <toChannel v-if="toChannelModal" :deptId="deptId" @toChannel="subCallback" @cancel="cancel" :operaility-data="operailityData"></toChannel>
           <div slot="footer"></div>
         </Modal>
         <!---->
         <!--导出弹窗-->
-        <Modal
-          :mask-closable="false"
-          close-on-click-modal="false"
-          height="200"
-          v-model="deriveModal"
-          title="对话框标题"
-          class-name="vertical-center-modal"
+        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="deriveModal" title="对话框标题" class-name="vertical-center-modal"
           :width="500">
-          <modal-header slot="header"  :content="deriveId"></modal-header>
+          <modal-header slot="header" :content="deriveId"></modal-header>
           <div>
             <div class="remove">确认导出吗</div>
 
             <el-row>
               <el-col :span="10" :offset="14">
-                <a :href="'/api/user/export/'+deptId"><el-button @click="affirmDerive"  type="primary">确定</el-button></a>
-                <el-button class="but-col" @click=" deriveModal=false" >取消</el-button>
+                <a :href="'/api/user/export/'+deptId">
+                  <el-button @click="affirmDerive" type="primary">确定</el-button>
+                </a>
+                <el-button class="but-col" @click=" deriveModal=false">取消</el-button>
               </el-col>
               </el-col>
             </el-row>
@@ -219,16 +142,10 @@
         </Modal>
         <!---->
         <!--短信通知弹窗-->
-        <Modal
-          :mask-closable="false"
-          close-on-click-modal="false"
-          height="200"
-          v-model="shortNoteModal"
-          title="对话框标题"
-          class-name="vertical-center-modal"
+        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="shortNoteModal" title="对话框标题" class-name="vertical-center-modal"
           :width="800">
           <modal-header slot="header" :content="shortNoteId"></modal-header>
-          <shortNote v-if="shortNoteModal"  @shortNote="subCallback" @cancel="cancel" :operaility-data="operailityData"></shortNote>
+          <shortNote v-if="shortNoteModal" @shortNote="subCallback" @cancel="cancel" :operaility-data="operailityData"></shortNote>
           <div slot="footer"></div>
         </Modal>
         <!---->
@@ -240,8 +157,9 @@
   .el-select .el-input {
     width: 110px;
   }
+
 </style>
-<script >
+<script>
   /*当前组件必要引入*/
   //引入--修改--组件
   import edit from "./departmentStaff_edit.vue";
@@ -258,29 +176,29 @@
   import leftTree from "../../../common/leftTree.vue";
 
   //当前组件引入全局的util
-  let Util=null;
+  let Util = null;
   let store = null;
-  export default{
+  export default {
     data() {
       return {
         //tree默认项设置
-        treeDefaults:{
-          getTreeUrl:"/dept/tree-by-manager",
-          getDataUrl:'',
-          isShowMenus:true,
+        treeDefaults: {
+          getTreeUrl: "/dept/tree-by-manager",
+          getDataUrl: '',
+          isShowMenus: true,
         },
-        fromWhereTree:"user",
+        fromWhereTree: "user",
 
         //查询表单
-        deleteUrl:'/role/remove',
+        deleteUrl: '/role/remove',
         //禁用
-        isUsing:true,
-        forbiddenUrl:'/account/disEnable',
-        usingUrl:'/account/enable',
+        isUsing: true,
+        forbiddenUrl: '/account/disEnable',
+        usingUrl: '/account/enable',
         formValidate: {
           name: '',
         },
-        gender:[{
+        gender: [{
           value: '0',
           label: '男'
         }, {
@@ -288,63 +206,64 @@
           label: '女'
         }],
         /*--按钮button--*/
-        addId:{
-          id:'add',
-          title:'添加'},
-        removeId:{
-          id:'remove',
-          title:'删除'
+        addId: {
+          id: 'add',
+          title: '添加'
         },
-        forbiddenId:{
-          id:'forbidden',
-          title:'禁用'
+        removeId: {
+          id: 'remove',
+          title: '删除'
         },
-        editId:{
-          id:'edit',
-          title:'修改'
+        forbiddenId: {
+          id: 'forbidden',
+          title: '禁用'
         },
-        auditId:{
-          id:'auditId',
-          title:'审核'
+        editId: {
+          id: 'edit',
+          title: '修改'
         },
-        showId:{
-          id:'auditId',
-          title:'查看'
+        auditId: {
+          id: 'auditId',
+          title: '审核'
         },
-        toChannelId:{
-          id:'toChannelId',
-          title:'导入'
+        showId: {
+          id: 'auditId',
+          title: '查看'
         },
-        shortNoteId:{
-          id:'shortNoteId',
-          title:'短信通知'
+        toChannelId: {
+          id: 'toChannelId',
+          title: '导入'
         },
-        deriveId:{
-          id:'deriveId',
-          title:'导出'
+        shortNoteId: {
+          id: 'shortNoteId',
+          title: '短信通知'
+        },
+        deriveId: {
+          id: 'deriveId',
+          title: '导出'
         },
         //点击add按钮,值发生改变
-        clickAddChange:false,
+        clickAddChange: false,
         //当前tree选中的node id
-        deptId:'',
+        deptId: '',
 
-        deriveModal:false,
-        toChannelModal:false,
-        shortNoteModal:false,
-        operailityData:'',
+        deriveModal: false,
+        toChannelModal: false,
+        shortNoteModal: false,
+        operailityData: '',
         multipleSelection: [],
         dynamicHt: 100,
         self: this,
         tableData1: [],
-        loading:false,
-        listTotal:0,
+        loading: false,
+        listTotal: 0,
 
         //初始化加载页面信息
-        listMessTitle:{
-          ajaxSuccess:'updateListData',
-          ajaxParams:{
-            url:'/user/search-all',
-            params:{}
+        listMessTitle: {
+          ajaxSuccess: 'updateListData',
+          ajaxParams: {
+            url: '/user/search-all',
+            params: {}
           }
         },
 
@@ -352,22 +271,24 @@
     },
     methods: {
 
-
       //初始化请求列表数据
-      init(){
+      init() {
         Util = this.$util;
         //ajax请求参数设置
-        this.myPages =  Util.pageInitPrams;
+        this.myPages = Util.pageInitPrams;
 
         this.queryQptions = {
           //url:this.listUrl,
-          params:{curPage: 1,pageSize: Util.pageInitPrams.pageSize}
+          params: {
+            curPage: 1,
+            pageSize: Util.pageInitPrams.pageSize
+          }
         }
       },
 
 
       //设置表格及分页的位置
-      setTableDynHeight(){
+      setTableDynHeight() {
         let content = this.$refs.content;
         let parHt = content.parentNode.offsetHeight;
         let myTable = this.$refs.myTable;
@@ -389,14 +310,14 @@
        * 列表数据只能选择一个
        * @param isOnly true  是否只选择一个
        */
-      isSelected(isOnly){
+      isSelected(isOnly) {
         let len = this.multipleSelection.length;
         let flag = true;
-        if(len==0){
+        if (len == 0) {
           this.showMess("请选择数据!");
           flag = false;
         }
-        if(len>1 && isOnly){
+        if (len > 1 && isOnly) {
           this.showMess("只能修改一条数据!")
           flag = false;
         }
@@ -405,31 +326,32 @@
 
 
       //通过get请求列表数据并渲染表格数据
-      updateListData(responseData){
+      updateListData(responseData) {
         let data = responseData.data;
-        this.tableData1=[];
+        this.tableData1 = [];
         data = this.addIndex(data);
-        this.tableData1= data;
-        this.listTotal = responseData.totalCount||0;
+        this.tableData1 = data;
+        this.listTotal = responseData.totalCount || 0;
       },
 
 
       //初始化加载列表数据
-      setTableData(){
+      setTableData() {
         this.setAjaxParams();
         this.postParamToServer();
       },
 
       //设置提交的参数
-      setAjaxParams(){
-        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params,this.formValidate);
+      setAjaxParams() {
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params, this.queryQptions.params,
+          this.formValidate);
       },
 
 
       //向服务器发送数据
-      postParamToServer(){
-        let options = Util._.defaultsDeep({},this.listMessTitle);
-        if(this.deptId!=""){
+      postParamToServer() {
+        let options = Util._.defaultsDeep({}, this.listMessTitle);
+        if (this.deptId != "") {
           options["ajaxParams"]["params"]["deptIds"] = this.deptId;
         }
         this.ajax(options);
@@ -440,24 +362,24 @@
        * 列表查询方法
        * @param string 查询from的id
        * */
-      handleSubmit(name){
+      handleSubmit(name) {
         this.setTableData();
       },
 
 
       /*--点击--添加--按钮--*/
-      add(){
+      add() {
         this.clickAddChange = !this.clickAddChange
       },
 
 
       /*
-      * 未分配可管理的部门
-      * @return flag blooean
-      * */
-      undistributedDep(){
+       * 未分配可管理的部门
+       * @return flag blooean
+       * */
+      undistributedDep() {
         let flag = true;
-        if(this.deptId==""){
+        if (this.deptId == "") {
           this.showMess("还没有给您分配部门管理员!暂无部门可管理!");
           flag = false;
         }
@@ -465,23 +387,25 @@
       },
 
 
-      handleAdd(isSltedTreeNode){
-        if(!this.undistributedDep()) return;
+      handleAdd(isSltedTreeNode) {
+        if (!this.undistributedDep()) return;
         let isSltedTree = this.isSltedTree(isSltedTreeNode);
-        if(isSltedTree){
-          this.operailityData = {deptId:this.deptId};
+        if (isSltedTree) {
+          this.operailityData = {
+            deptId: this.deptId
+          };
           this.openModel('add');
-        }else {
+        } else {
           this.$message.error("请选择相应部门目录!")
         }
       },
 
 
       /*--点击--删除--按钮--*/
-      remove(){
-        if(!this.isSelected()) return;
+      remove() {
+        if (!this.isSelected()) return;
         this.operailityData = this.multipleSelection;
-        this.openModel('remove') ;
+        this.openModel('remove');
       },
 
 
@@ -489,7 +413,7 @@
        * 点击--查看--按钮
        * @param index string|number  当前行索引
        * */
-      show(index){
+      show(index) {
         this.operailityData = this.tableData1[index];
         this.showModal = true;
       },
@@ -499,12 +423,12 @@
        * 点击--修改角色--按钮
        * @param index string|number  当前行索引
        * */
-      edit(index){
-        if(typeof index == 'undefined'){
-          if(!this.isSelected(true)) return;
+      edit(index) {
+        if (typeof index == 'undefined') {
+          if (!this.isSelected(true)) return;
           this.operailityData = this.multipleSelection[0];
           this.openModel('edit')
-        }else {
+        } else {
           this.operailityData = this.tableData1[index];
           this.openModel('edit')
         }
@@ -512,14 +436,15 @@
 
 
       //禁用
-      forbidden(index){
+      forbidden(index) {
         this.$Modal.confirm({
           title: '禁用',
           content: '<p>您确定要禁用该账户吗</p>',
           loading: true,
           onOk: () => {
             let rowData = this.tableData1[index];
-            let ids="", tempArr= [];
+            let ids = "",
+              tempArr = [];
 
             /*if(this.multipleSelection.length>1){
               for(var i=0,item;i<this.multipleSelection.length;i++){
@@ -535,32 +460,33 @@
 
             //初始化加载页面信息
             let resetTitle = {
-              ajaxSuccess:(res)=>{
+              ajaxSuccess: (res) => {
                 this.$Modal.remove();
                 this.successMess('禁用成功!');
-                rowData["account"]['enable']=false;
+                rowData["account"]['enable'] = false;
               },
-              errorTitle:'禁用失败!',
-              ajaxParams:{
-                url:'/account/disEnable/'+ids,
-                method:'put'
+              errorTitle: '禁用失败!',
+              ajaxParams: {
+                url: '/account/disEnable/' + ids,
+                method: 'put'
               }
             }
             this.ajax(resetTitle);
           }
-          });
+        });
       },
 
 
       //启用
-      startUsing(index){
+      startUsing(index) {
         this.$Modal.confirm({
           title: '启用',
           content: '<p>您确定要启用该账户吗</p>',
           loading: true,
           onOk: () => {
             let rowData = this.tableData1[index];
-            let ids="", tempArr= [];
+            let ids = "",
+              tempArr = [];
 
             /*if(this.multipleSelection.length>1){
               for(var i=0,item;i<this.multipleSelection.length;i++){
@@ -575,15 +501,15 @@
 
             //初始化加载页面信息
             let resetTitle = {
-              ajaxSuccess:(res)=>{
+              ajaxSuccess: (res) => {
                 this.$Modal.remove();
                 this.successMess('禁用成功!');
-                rowData["account"]['enable']=true;
+                rowData["account"]['enable'] = true;
               },
-              errorTitle:'禁用失败!',
-              ajaxParams:{
-                url:'/account/enable/'+ids,
-                method:'put'
+              errorTitle: '禁用失败!',
+              ajaxParams: {
+                url: '/account/enable/' + ids,
+                method: 'put'
               }
             }
             this.ajax(resetTitle);
@@ -593,33 +519,34 @@
 
 
       //重置
-      reset(){
-        if(!this.undistributedDep()) return;
-        if(!this.isSelected()) return;
+      reset() {
+        if (!this.undistributedDep()) return;
+        if (!this.isSelected()) return;
         this.$Modal.confirm({
           title: '重置密码',
           content: '<p>您确定要重置选中账户的密码吗</p>',
           loading: true,
           onOk: () => {
-             let ids="", tempArr= [];
-             for(var i=0,item;i<this.multipleSelection.length;i++){
-               item=this.multipleSelection[i];
-               tempArr.push(item.id);
-               this.multipleSelection = [];
-             }
-             ids = tempArr.join(",");
+            let ids = "",
+              tempArr = [];
+            for (var i = 0, item; i < this.multipleSelection.length; i++) {
+              item = this.multipleSelection[i];
+              tempArr.push(item.id);
+              this.multipleSelection = [];
+            }
+            ids = tempArr.join(",");
             //初始化加载页面信息
             let resetTitle = {
-              ajaxSuccess:(res)=>{
+              ajaxSuccess: (res) => {
                 this.$Modal.remove();
                 this.successMess('重置成功!密码为:666666');
                 this.isUsing = true;
                 this.$refs.multipleTable.clearSelection();
               },
-              errorTitle:'重置失败!',
-                ajaxParams:{
-                url:'/account/reset-password/'+ids,
-                method:'put'
+              errorTitle: '重置失败!',
+              ajaxParams: {
+                url: '/account/reset-password/' + ids,
+                method: 'put'
               }
             }
             this.ajax(resetTitle);
@@ -629,22 +556,22 @@
 
 
       //导入
-      toChannel(){
-        if(!this.undistributedDep()) return;
+      toChannel() {
+        if (!this.undistributedDep()) return;
         this.openModel('toChannel')
       },
 
 
       //导出
-      derive(){
-        if(!this.undistributedDep()) return;
+      derive() {
+        if (!this.undistributedDep()) return;
         this.openModel('derive')
       },
 
 
       //短信通知
-      shortNote(){
-        if(!this.undistributedDep()) return;
+      shortNote() {
+        if (!this.undistributedDep()) return;
         this.openModel('shortNote')
       },
 
@@ -654,8 +581,8 @@
        * 作用:根据不同的参数关闭对应的模态
        * @param targer string example:"add"、"edit"
        * */
-      cancel(targer){
-        this[targer+'Modal'] = false;
+      cancel(targer) {
+        this[targer + 'Modal'] = false;
       },
 
 
@@ -678,12 +605,12 @@
        *    }
        * @param udata boolean 默认false  是否不需要刷新当前表格数据
        * */
-      subCallback(target,title,updata){
+      subCallback(target, title, updata) {
         this.cancel(target);
-        if(title){
+        if (title) {
           this.successMess(title);
         }
-        if(!updata){
+        if (!updata) {
           this.setTableData();
         }
       },
@@ -693,8 +620,8 @@
        * 打开指定的模态窗体
        * @param options string 当前指定的模态:"add"、"edit"
        * */
-      openModel(options){
-        this[options+'Modal'] = true;
+      openModel(options) {
+        this[options + 'Modal'] = true;
       },
 
 
@@ -708,7 +635,7 @@
        * @param  self  {}  当前tree vue实例
        *
        * */
-      treeClick(obj,node,self){
+      treeClick(obj, node, self) {
 
         /*if(node.isLeaf){  //当前是否为叶子节点
             alert("====")
@@ -721,32 +648,32 @@
 
 
       /*
-      * 删除目录树回调
-      *
-      * */
-      treeRemoveNode(){
-         this.setTreeDepId("");
-         this.showTreeList("")
+       * 删除目录树回调
+       *
+       * */
+      treeRemoveNode() {
+        this.setTreeDepId("");
+        this.showTreeList("")
       },
 
 
       /*
-      * 根据部门id查询当前部门的人员信息
-      * @param id number 当前部门id
-      * */
-      showTreeList(id){
+       * 根据部门id查询当前部门的人员信息
+       * @param id number 当前部门id
+       * */
+      showTreeList(id) {
         //初始化加载页面信息
-//        this.postParamToServer();
+        //        this.postParamToServer();
       },
 
 
       /*
-      * 是否选择部门
-      * @return flag blooean  是否选择目录树节点
-      * */
-      isSltedTree(isSltedTreeNode){
+       * 是否选择部门
+       * @return flag blooean  是否选择目录树节点
+       * */
+      isSltedTree(isSltedTreeNode) {
         let flag = false;
-        if(this.deptId!="" || isSltedTreeNode(this.treeClickInit)){
+        if (this.deptId != "" || isSltedTreeNode(this.treeClickInit)) {
           flag = true;
         }
         return flag;
@@ -754,24 +681,24 @@
 
 
       /*
-      *  初始化或者刷新数列表的时候  调用treeClick函数 为deptId赋值
-      * */
-      treeClickInit(obj){
-          this.treeClick(obj)
+       *  初始化或者刷新数列表的时候  调用treeClick函数 为deptId赋值
+       * */
+      treeClickInit(obj) {
+        this.treeClick(obj)
       },
 
 
       //确定导出
-      affirmDerive(){
-//        let http = this.$store.getters.getEnvPath.http;
-//        window.open() ;
+      affirmDerive() {
+        //        let http = this.$store.getters.getEnvPath.http;
+        //        window.open() ;
         this.cancel('derive')
       },
       /*
-      * 设置当前部门Id
-      * */
-      setTreeDepId(id){
-        if(id!=""){
+       * 设置当前部门Id
+       * */
+      setTreeDepId(id) {
+        if (id != "") {
           this.deptId = id;
           this.setTableData();
         }
@@ -779,11 +706,11 @@
     },
 
     //初始化组件
-    created(){
+    created() {
       this.init();
     },
 
-    mounted(){
+    mounted() {
 
       //页面dom稳定后调用
       this.$nextTick(function () {
@@ -795,25 +722,28 @@
       })
     },
 
-    components:{
+    components: {
       //当前组件引入的子组件
-      edit,add,show,toChannel,shortNote,layoutTree,leftTree
+      edit,
+      add,
+      show,
+      toChannel,
+      shortNote,
+      layoutTree,
+      leftTree
     }
-
   }
+
 </script>
 <style>
-
-  .add-remove{
+  .add-remove {
     margin-bottom: 20px;
   }
-  .header{
+
+  .header {
     height: 30px;
     font-size: 18px;
     color: #ffffff;
-
   }
 
-
 </style>
-

@@ -41,7 +41,7 @@
     <!--导入-->
     <Modal close-on-click-modal="false" width="1100" v-model="toChannelModal" title="对话框标题" class-name="vertical-center-modal">
       <modal-header slot="header" :content="toChannelId"></modal-header>
-      <to-channel v-if="toChannelModal" @cancel="closeChannel" :url="'/user/import/user'" @success="subHandelEvent" :data="convertedData"
+      <to-channel v-if="toChannelModal" @cancel="closeChannel" :url="'/user/import/user/'+deptId" @success="subHandelEvent" :data="convertedData"
         :format="format"></to-channel>
       <div slot="footer"></div>
     </Modal>
@@ -53,7 +53,7 @@
   let Util = null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['operailityData'],
+    props: ['operailityData', 'deptId'],
     data() {
       return {
         active: 0,
@@ -72,7 +72,7 @@
         convertedData: {},
         format: {
           '姓名': 'name',
-          "部门": "deptName",
+          // "部门": "deptName",
           "性别": "sex",
           "民族": "nation",
           "出生年月": "birth",

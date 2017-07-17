@@ -78,8 +78,7 @@
             width="260">
             <template scope="scope">
               <el-button size="small" @click="xdth(scope.row)">心得体会</el-button>
-              <!--todo  查看-->
-              <el-button size="small" @click="evaluate(scope.row)">评价</el-button>
+              <!--<el-button size="small" @click="evaluate(scope.row)">评价</el-button>-->
               <el-button size="small" @click="show(scope.row)">查看</el-button>
             </template>
           </el-table-column>
@@ -97,20 +96,17 @@
             prop="activitySite"
             label="授课地点"
             align="center"
-            width="200"
-          >
+            width="200">
           </el-table-column>
           <el-table-column
             prop="hostUserName"
             label="授课老师"
-            width="120"
-          >
+            width="120">
           </el-table-column>
           <el-table-column
             prop="activityTime"
             label="日期"
-            width="120"
-          >
+            width="120">
           </el-table-column>
           <el-table-column
             prop="recordTimes"
@@ -144,7 +140,7 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="xdthId"></modal-header>
-      <xdth v-if="xdthModal" @cancel="cancel" @xdth="subCallback" :operaility-data="operailityData" :url="url"></xdth>
+      <xdth v-if="xdthModal" @cancel="cancel" :rules="rules" @xdth="subCallback" :operaility-data="operailityData" :url="url"></xdth>
       <div slot="footer"></div>
     </Modal>
     <!--查看弹窗-->

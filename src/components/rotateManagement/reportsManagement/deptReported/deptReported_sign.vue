@@ -66,7 +66,6 @@
           ajaxSuccess: 'ajaxSuccess',
           ajaxError: 'ajaxError',
           ajaxParams: {
-            jsonString: true,
             url: api.signDep.path + this.operailityData.podId,
             method: api.signDep.method
           }

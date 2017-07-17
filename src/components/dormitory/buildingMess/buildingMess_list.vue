@@ -198,6 +198,7 @@
       return {
         rules:rules,
           url:url,
+        deptId:"",
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',
         deleteUrl:'/role/remove',

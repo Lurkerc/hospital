@@ -12,7 +12,7 @@
         </el-col >
 
         <el-col :span="8">
-          <el-form-item label="科室"   >
+          <el-form-item label="科室"  prop="depId" >
             <el-select filterable   v-model="formValidate.depId" placeholder="请选择">
               <select-option :type="'userRotaryDeptlist'" :unAll="true"  :userType="userType" :name="'depName'" :id="'depId'" :userId="userId"></select-option>
             </el-select>

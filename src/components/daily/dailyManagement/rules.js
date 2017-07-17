@@ -9,7 +9,8 @@ let leaveManagementList = {
 };
 
 let leaveManagement = {
-  auditInfo: [baseRules.inputLen(0,500),baseRules.illegalChar()] // 名称 - 必填
+  status:[{ required: true, message: '此项为必填项'},baseRules.inputLen(0,50),baseRules.illegalChar()],
+  auditInfo: [baseRules.inputLen(0,500),baseRules.illegalChar()] //
 };
 
 /**
@@ -20,6 +21,7 @@ let myLeaveList = {
 };
 
 let myLeave = {
+  depId: [{ required: true, message: '此项不能为空'}], // 名称 - 必填
   beginDate: [{ required: true, message: '此项不能为空'}], // 名称 - 必填
   endDate: [{ required: true, message: '此项不能为空'}],// 名称 - 必填
   explains: [baseRules.inputLen(0,500)] ,// 名称 - 必填

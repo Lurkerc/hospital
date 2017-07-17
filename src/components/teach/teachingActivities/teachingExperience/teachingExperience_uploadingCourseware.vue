@@ -39,7 +39,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="课件资料:" prop="name7">
-            <upload-file  :uploadFiles="data.fileList" @setUploadFiles="uploadFiles"></upload-file>
+            <upload-file :uploadFiles="data.fileList"  @setUploadFiles="expenseFileEvent"></upload-file>
           </el-form-item>
         </el-col>
       </el-row>
@@ -77,7 +77,7 @@
           ajaxError:'ajaxError',
           ajaxParams:{
             url:this.url.teachctivityModifyfile+'/'+this.operailityData.id,
-            method:'put'
+            method:'post'
           }
         },
 
@@ -167,6 +167,11 @@
       //上传课件接收id
       uploadFiles(ids){
           this.formValidate.fileIds = ids;
+      },
+
+      //获取文件来拼接 文件id字符串
+      expenseFileEvent(ids){
+        this.formValidate.fileIds = ids;
       },
     }
   };

@@ -43,12 +43,16 @@
               <legend style="font-size:16px">&nbsp;&nbsp;{{groupOtions[groupIndex]}}&nbsp;&nbsp;</legend>
               <div class="cal-schoolTit">
                 必须轮转科室 <el-button type="primary" size="mini" @click="openSetDepWin(groupIndex,'mustRotaryDep')" icon="plus"></el-button>
-                组分类名称：<el-input v-model="groupItem.greatName" style="width: 120px;" placeholder="请输入内容"></el-input>
+                组分类名称：
+                <el-form :model="groupItem" ref="f" :rules="rules"  label-width="0" style="display: inline-block">
+                  <el-form-item  prop="greatName">
+                    <el-input v-model="groupItem.greatName" style="width: 120px;" placeholder="请输入内容"></el-input>
+                  </el-form-item>
+              </el-form>
               </div>
 
               <el-table
                 border
-                ref="multipleTable"
                 align="center"
                 :data="groupItem.mustRotaryDep"
                 tooltip-effect="dark"
@@ -63,7 +67,11 @@
                   label="实习时间"
                   align="center">
                   <template scope="scope">
-                    <el-input v-model="scope.row.ts" placeholder="请输入内容" style="width: 50px"></el-input> 周
+                    <el-form :model="scope.row" ref="f" :rules="rules"  label-width="0" class="demo-ruleForm">
+                      <el-form-item  prop="ts">
+                        <el-input  v-model="scope.row.ts" placeholder="请输入内容" style="width: 120px"> <template slot="append">周</template></el-input>
+                      </el-form-item>
+                    </el-form>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -182,7 +190,7 @@
   let Util = null;
   export default{
     //props接收父组件传递过来的数据
-    props: ['editOperailityData'],
+    props: ['editOperailityData','rules'],
     data() {
       return {
         //保存按钮基本信息
@@ -271,8 +279,8 @@
         //保存大纲
         editOutline:{
           type:'edit',
-          successTitle:'添加成功!',
-          errorTitle:'添加失败!',
+          successTitle:'修改成功!',
+          errorTitle:'修改失败!',
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
@@ -518,13 +526,31 @@
         this.formValidate.outlines = tempArr;
 
         //this.formValidate.outlines  greatName  mustRotaryDep  randomRotaryDep
-         let isSubmit = true;//this.submitForm("formValidate");
+         let isSubmit = this.submitForm("formValidate");
          if(isSubmit){
          if(!isLoadingFun) isLoadingFun=function(){};
          isLoadingFun(true);
          this.editOutline.ajaxParams.data=this.getFormData(this.formValidate);
          this.ajax(this.editOutline,isLoadingFun)
          }
+      },
+
+
+      /*
+       * 点击提交按钮 监听是否验证通过
+       * @param formName string  form表单v-model数据对象名称
+       * @return flag boolean   form表单验证是否通过
+       * */
+      submitForm(formName){
+        let flag = true;
+        for(let i =0;i< this.$refs.f.length; i++){
+          this.$refs.f[i].validate((valid) => {
+            if(!valid) {
+              flag= false;
+            }
+          });
+        }
+        return flag;
       },
 
 

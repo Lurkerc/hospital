@@ -128,7 +128,7 @@
         <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="toChannelModal" class-name="vertical-center-modal"
           :width="800">
           <modal-header slot="header" :content="toChannelId"></modal-header>
-          <toChannel v-if="toChannelModal" @toChannel="subCallback" @cancel="cancel" :operaility-data="operailityData"></toChannel>
+          <toChannel v-if="toChannelModal" :deptId="deptId" @toChannel="subCallback" @cancel="cancel" :operaility-data="operailityData"></toChannel>
           <div slot="footer"></div>
         </Modal>
         <!--导出弹窗-->
@@ -139,7 +139,7 @@
             <div class="remove">确认导出吗</div>
             <el-row>
               <el-col :span="10" :offset="14">
-                <a href="/api/user/export">
+                <a :href="'/api/user/export/'+deptId">
                   <el-button @click="affirmDerive" type="primary">确定</el-button>
                 </a>
                 <el-button class="but-col" @click=" deriveModal=false">取消</el-button>
@@ -267,7 +267,6 @@
         deptId: '',
 
         searchMore: false,
-        shortNoteModal: false,
         deriveModal: false,
         toChannelModal: false,
         shortNoteModal: false,

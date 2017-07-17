@@ -41,7 +41,7 @@
 
         <el-form-item label="科室" prop="depId" >
           <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
-            <select-option ></select-option>
+            <select-option :type="'userRotaryDeptlist'" :unAll="true"  :userType="userType" :name="'depName'" :id="'depId'" :userId="userId"></select-option>
           </el-select>
         </el-form-item>
 
@@ -591,6 +591,9 @@
     },
     created(){
       this.init();
+      let userInfo = this.$store.getters.getUserInfo;
+      this.userId=userInfo.id;
+      this.userType=userInfo.studentTypes;
     },
     mounted(){
       //页面dom稳定后调用

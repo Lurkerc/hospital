@@ -212,7 +212,7 @@ let mustRules = {
   // 数字
   number: {
     // type: 'number',
-    message: '该项必须为数字',
+    message: '该项必须为数字并且最多10位',
     pattern: /^\d{1,10}$/,
     trigger: defEvent
   },

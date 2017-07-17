@@ -487,7 +487,7 @@
       remove(){
         if(!this.isSelected()) return;
         for(let i=0;i<this.multipleSelection.length;i++){
-          if(this.multipleSelection[i].status != 'WSB' || this.multipleSelection[i].status != 'BH') {
+          if(!(this.multipleSelection[i].status == 'WSB' || this.multipleSelection[i].status == 'BH')) {
               this.showMess('只能删除未上报或已驳回的数据');
               return;
           }

@@ -284,7 +284,8 @@
 
         //添加
         addTerm (){
-          this.formValidate.rotaryData.push(this.templateData);
+            let templateData =  Util._.defaultsDeep({},this.templateData);
+          this.formValidate.rotaryData.push(templateData);
         },
 
 

@@ -81,16 +81,7 @@
 
         onlyOnce:true,
 
-        tableData1:[{
-          id:1,
-          shcoolName:"河南科技大学",
-          groupName:"第一小组"
-        },
-          {
-            id:2,
-            shcoolName:"清华大学",
-            groupName:"第二小组"
-          }],
+        tableData1:[],
 
         //服务器端请求数据格式化完后存储,待保存用
         saveData:{},
@@ -110,7 +101,9 @@
       //初始化请求列表数据
       init(){
         Util = this.$util;
+        this.listMessTitle.ajaxParams.params.outlineId = this.operailityData.depOutlineId;
         this.ajax(this.listMessTitle);
+
       },
 
 

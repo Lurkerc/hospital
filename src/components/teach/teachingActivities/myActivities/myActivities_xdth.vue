@@ -1,7 +1,7 @@
 <!--档案查看-->
 <template>
   <div>
-    <el-form  ref="formValidate"  label-width="100px">
+    <el-form   :model="formValidate" ref="formValidate" :rules="rules.myActivities" label-width="100px">
       <fieldset class="layui-elem-field ">
         <el-row>
           <el-col :span="8">
@@ -53,7 +53,7 @@
       <fieldset class="layui-elem-field">
       <el-row>
         <el-col :span="24">
-          <el-form-item label="心得体会:" prop="name1">
+          <el-form-item label="心得体会:" prop="activityTips">
             <el-input type="textarea" :rows="6"  resize="none" v-model="formValidate.activityTips"></el-input>
           </el-form-item>
 
@@ -64,8 +64,8 @@
 
       <el-row>
         <el-col :span="24">
-          <el-form-item label="相关资料:" prop="name7">
-            <upload-file  :type="'picture'" :uploadFiles="data.fileList" @setUploadFiles="setUploadFiles"></upload-file>
+          <el-form-item label="现场照片:" prop="name7">
+            <upload-file :type="'picture'" :uploadFiles="data.activityTipsFileList"  @setUploadFiles="expenseFileEvent"></upload-file>
           </el-form-item>
         </el-col>
       </el-row>
@@ -81,38 +81,16 @@
   </div>
 </template>
 <script>
+  import uploadPhotoWall from '../../../common/uploadPhotoWall.vue'
   export default {
-      props:['operailityData','url'],
+      props:['operailityData','url','rules'],
     data() {
       return {
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         //获取到的数据
         "data":{
-          "id":1,
-          "activityName":"教学查房",
-          "activityType":"理论",
-          "hostUserId":2,
-          "hostUserName":"张三",
-          "activityTime":"2017-03-31",
-          "activitySite":"教学楼三楼301室",
-          "activityContent":"活动内容",
-          "activityTips":"心得体会",
-          "activityTipsId":1,
-          "fileList":[
-            {
-              "fileId":"2",
-              "fileName":"文件名称",
-              "fileType":"txt"
-            }
-          ],
-          "activityTipsFileList":[
-            {
-              "fileId":"5",
-              "fileName":"心得体会照片",
-              "fileType":"jpg"
-            }
-          ]
+
         },
 
         formValidate:{
@@ -244,6 +222,13 @@
         let myData = this.$util._.defaultsDeep({},data);
         return myData;
       },
-    }
+
+
+      //获取文件来拼接 文件id字符串
+      expenseFileEvent(ids){
+        this.formValidate.fileIds = ids;
+      },
+
+    },
   };
 </script>

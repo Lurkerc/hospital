@@ -20,9 +20,16 @@ let teachingActivitiesSet = {
 let teachingExperienceList = {
   activityName: [baseRules.inputLen(0,50),baseRules.illegalChar()], //, // 场次名称 - 必填
 }
+/**
+ * 我的活动
+ */
+let myActivities = {
+  activityTips: [{ required: true, message: '此项不能为空'},baseRules.inputLen(0,500),baseRules.illegalChar()], //, // 场次名称 - 必填
+}
 
 export default {
   teachingActivitiesSetList,
   teachingActivitiesSet,
-  teachingExperienceList
+  teachingExperienceList,
+  myActivities
 };

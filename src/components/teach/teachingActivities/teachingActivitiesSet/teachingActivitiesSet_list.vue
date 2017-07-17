@@ -24,8 +24,7 @@
           type="date"
           placeholder="选择日期"
           :picker-options="pickerOptions0"
-          @change="handleStartTime"
-        >
+          @change="handleStartTime">
         </el-date-picker>
         至
       </el-form-item>

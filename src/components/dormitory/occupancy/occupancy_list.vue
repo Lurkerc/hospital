@@ -5,7 +5,7 @@
     <el-form  :model="formValidate" ref="formValidate" :rules="rules.occupancyList" label-width="100px">
       <el-row >
         <el-col :span="10" :offset="12" >
-          <el-form-item  prop="title">
+          <el-form-item  prop="userName">
             <input class="hidden">
             <el-input   v-model="formValidate.userName" placeholder="输入姓名搜索">
               <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>

@@ -57,7 +57,7 @@
 
         //获取到的数据
         "data":{
-          "id":'',
+         /* "id":'',
           "depId":'',
           "depName":"",
           "activityName":"",
@@ -87,13 +87,13 @@
               "fileUrl":"",
               "fileType":""
             }
-          ]
+          ]*/
         },
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:this.url.useractivity+'/'+this.operailityData.id,
+            url:this.url.teachActivityTips+'/'+this.operailityData.id,
             params:{
             }
           }

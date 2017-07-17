@@ -38,6 +38,16 @@ let handWork = {
   "ts":baseRules.numberMust,
 };
 
+/**
+ * 大纲添加
+ */
+let internOutline = {
+  "ts":[{ required: true, message: '此项不能为空'}],
+  "greatName":[{ required: true, message: '此项不能为空'}],
+};
+
+
+
 export {
-  internAudit,chargingStandard,reqDepVal
+  internAudit,chargingStandard,reqDepVal,internOutline
 };

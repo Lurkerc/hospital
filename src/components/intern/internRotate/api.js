@@ -145,7 +145,7 @@ const api = {
     method: 'get'
   },
   getDepPagelist:{  //手工调整--获取微调的科室
-    path: '/internship/outline/get/',
+    path: '/internship/outline/get',
     method: 'get'
   },
   /*----- 自选科室 --------------------------------------------------------------------------------*/

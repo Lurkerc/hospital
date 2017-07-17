@@ -226,6 +226,7 @@
           activityEndTime: '', //活动时间(开始)
           activityState: '', //活动状态
           depId: '', //科室ID
+          userId:'',
         },
 
         "tableData":[
@@ -248,7 +249,7 @@
         xdthModal:false,
 
         uploadingCoursewareId:{id:'uploadingCoursewareId',title:'上传课件'},
-        xdthId:{id:'xdthId',title:'上传课件'},
+        xdthId:{id:'xdthId',title:'心得体会'},
 
         operailityData:'',
         multipleSelection: [],
@@ -261,7 +262,7 @@
           paramsData:'listUrl',
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:url.userList,
+            url:url.hostUserList,
           }
         },
         /*--按钮button--*/
@@ -275,7 +276,8 @@
         Util = this.$util;
         //ajax请求参数设置
         this.myPages =  Util.pageInitPrams;
-
+        let userInfo = this.$store.getters.getUserInfo;
+        this.formValidate.userId = userInfo.id;
         this.queryQptions = {
           //url:this.listUrl,
           params:{curPage: 1,pageSize: Util.pageInitPrams.pageSize}

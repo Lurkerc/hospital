@@ -293,13 +293,11 @@
                 if(data.evaluateResultDtoList[i].tempId==this.body[k].tempId){
                   this.body[k].goal = data.evaluateResultDtoList[i].score;
                 }
-
               }
             }else {
               if(data.evaluateResultDtoList[i].tempId==this.body[k].tempId){
                 this.body[k].goal = data.evaluateResultDtoList[i].score;
               }
-
             }
           }
 
@@ -316,17 +314,14 @@
         scoreTypeArr = {
           key :'score',
           label :'标准分',
-        }
-        data._scoreLevel =_scoreLevel;
-
+        };
+        data._scoreLevel = _scoreLevel;
         if(data.hasGroup == 'Y'){
-          this.conductDataHasGroup(data,scoreTypeArr)
-
+          this.conductDataHasGroup(data,scoreTypeArr);
         }else {
-          this.conductDataNoGroup(data,scoreTypeArr)
-
+          this.conductDataNoGroup(data,scoreTypeArr);
         }
-        return data
+        return data;
       },
 
       //返回的数据存在分组
@@ -393,10 +388,10 @@
                 select1:'',
                 select1Row:isScore?child.length:1,
               }
-              let val=[]
+              let val=[];
               if(data.scoreType == 'SELECT'){
                 for(let l=0;l<child[k].templateItemOptionList.length;l++){
-                  val.push(child[k].templateItemOptionList[l].val)
+                  val.push(child[k].templateItemOptionList[l].val);
                 }
                 obj.score = val.join(':')
               }

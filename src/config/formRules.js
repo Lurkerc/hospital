@@ -94,8 +94,8 @@ let checkBirthday = function(card)
     var year = arr_data[2];
     var month = arr_data[3];
     var day = arr_data[4];
-    var birthday = new Date(year+'/'+month+'/'+day);
-    return verifyBirthday(year,month,day,birthday);
+    var birthday = new Date(year + '/' + month + '/' + day);
+    return verifyBirthday(year, month, day, birthday);
   }
   return false;
 };
@@ -168,12 +168,12 @@ let baseRules = {
   required:{required:true, message: '此项不能为空!', trigger: defEvent}, //非空验证
   mustHasOne:{  type: 'array', required: true, message: '请至少选择一个!', trigger: 'change' },  //至少选择一个
   /*
-  * 字符串区间值
-  * @min number 范围最小值
-  * @max number 范围最大值
-  * @return {}
-  * */
-  sectionVal:function (min=2,max=20) {
+   * 字符串区间值
+   * @min number 范围最小值
+   * @max number 范围最大值
+   * @return {}
+   * */
+  sectionVal: function (min = 2, max = 20) {
     return { min: min, max: max, message: '长度在 '+min+' 到 '+max+' 个字符'}
   },
   email:{ type: 'email', message: '邮箱格式不正确', trigger: defEvent,}, //邮箱验证
@@ -182,20 +182,54 @@ let baseRules = {
 
   //身份证
   idNumber:checkCard,
-
+  // 数字
+  number: {
+    // type: 'number',
+    message: '该项必须为数字并且最多10位',
+    pattern: /^\d{1,10}$/,
+    trigger: defEvent
+  },
+  /**
+   * 输入字符长度检测
+   * @min number 范围最小值
+   * @max number 范围最大值
+   *
+   * 参数：null -> 不做任何检测 inputLen()
+   *      min -> 最少输入多少个字符 inputLen(2)
+   *      0,max -> 最多输入多少个字符 inputLen(0,5)
+   *      min,max -> 只能输入min-max个字符 inputLen(1,10)
+   */
+  inputLen: (min, max) => {
+    // 长度检测
+    return (rule, value = '', callback) => {
+      let msg;
+      if (min === 0 && max && value.length > max) {
+        msg = `最多输入${max}个字符`;
+      } else {
+        if (max && (value.length > max || value.length < min)) {
+          msg = `只能输入${min}-${max}个字符`
+        }
+        if (value.length < min) {
+          msg = `最少输入${min}个字符`;
+        }
+      }
+      msg && callback(new Error(msg));
+      callback();
+    }
+  },
   /*
    * 异步验证数据
    * @optins {} //验证传递的参数
    * example
    * //{validator:baseRules.asyncVal, oldValue:{value:'',val:false}, url:'http://192.168.1.116:8000/role/list?name=&identify=djgs&type=', myMessage:'已存在', trigger: 'blur'}
    * */
-  asyncVal:function(rule,value,callback, source, options){
+  asyncVal: function (rule, value, callback, source, options) {
 
-    let url = rule.url;         //服务请求的地址
-    let params = {};   //服务请求的必须参数
+    let url = rule.url; //服务请求的地址
+    let params = {}; //服务请求的必须参数
     let messages = rule.myMessage;
-    if(value==""){
-      rule.oldValue["value"]="";
+    if (value == "") {
+      rule.oldValue["value"] = "";
       return;
     }
     /*if(rule.oldValue["value"]==value){
@@ -221,28 +255,28 @@ let baseRules = {
     }*/
     rule.oldValue["value"] = value;
     utils.queryData({
-      url:url,
-      params:params
-    })().then(function(data){
+      url: url,
+      params: params
+    })().then(function (data) {
       let response = data["data"];
-      if(data["status"]==200){
-        if(response["data"].length>0){
+      if (data["status"] == 200) {
+        if (response["data"].length > 0) {
           //数据库中已存在
-          rule.oldValue["val"]=1;
+          rule.oldValue["val"] = 1;
           callback(new Error(messages));
-        }else{
+        } else {
           //数据库中不存在
-          rule.oldValue["val"]=0;
+          rule.oldValue["val"] = 0;
           callback();
         }
-      }else{
+      } else {
         //服务端已经响应,2XX错误
-        rule.oldValue["val"]=2;
+        rule.oldValue["val"] = 2;
         callback(new Error("服务端数据验证失败!"));
       }
-    }).catch(function(error){
+    }).catch(function (error) {
       //客户端请求失败
-      rule.oldValue["val"]=3;
+      rule.oldValue["val"] = 3;
       callback(new Error(error))
     })
   }
@@ -250,39 +284,42 @@ let baseRules = {
 
 
 
-let rules={
+let rules = {
   //权限管理
-  authority:{
+  authority: {
     name: [
       _.defaultsDeep({},baseRules.required,{ message: '角色名称不能为空' }),
       baseRules.sectionVal(),
     ],
-    identify:[
-      _.defaultsDeep({},baseRules.required),
+    identify: [
+      _.defaultsDeep({}, baseRules.required),
       //baseRules.email,
     ],
-    type:[
+    type: [
       baseRules.mustHasOne
     ],
-    remark:[
+    remark: [
       baseRules.required
     ]
   },
   //人员账户
-  suers:{
-    name:[baseRules.required],  //姓名
-    sex:[baseRules.required],  //性别
-    specialty:[baseRules.required],   //专业
-    school:[baseRules.required],//学校
-    grade:[baseRules.required],   //年级
-    group:[baseRules.required],   //班级
-    idNumber:[baseRules.required],   //身份证号码
-    mobile:[baseRules.required,baseRules.mobile],    //手机号
-    email:[baseRules.required,baseRules.email,],//邮箱
+  suers: {
+    name: [baseRules.required], //姓名
+    sex: [baseRules.required], //性别
+    origin: [baseRules.inputLen(0, 20)], // 籍贯
+    specialty: [baseRules.required], //专业
+    school: [baseRules.required], //学校
+    grade: [baseRules.required], //年级
+    group: [baseRules.required], //班级
+    idNumber: [baseRules.required], //身份证号码
+    mobile: [baseRules.required, baseRules.mobile], //手机号
+    emgContactMobile: [baseRules.mobile], // 紧急联系人
+    postCode: [baseRules.number], // 邮编
+    email: [baseRules.required, baseRules.email, ], //邮箱
   },
   //本科教育-周历
-  calendar:{
-    weekSetInstructions: [baseRules.required],  //姓名,
+  calendar: {
+    weekSetInstructions: [baseRules.required], //姓名,
   }
 }
 
