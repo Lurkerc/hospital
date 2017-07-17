@@ -13,7 +13,7 @@
         <p>请于<strong>6月30日</strong>找带教干事进行入科报道到；</p>
         <p>入科报到后方可填写培训手册。</p>
         <div align="right">
-          <el-button type="info" @click="studentReport">入科报到</el-button>
+          <el-button type="info" @click="studentReport">科室信息</el-button>
         </div>
       </div>
       <!-- 科室情况 -->
@@ -66,7 +66,7 @@
     <!--技能-->
     <Modal close-on-click-modal="false" width="1000" v-model="skillModal" class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="contentHeader.skillId"></modal-header>
-      <skill v-if="skillModal" @cancel="cancel('skill')" @add="subCallback('skill')" :url="depApi"></skill>
+      <skill v-if="skillModal" :podId="studentData.rotaryIng.podId" @cancel="cancel('skill')" @add="subCallback('skill')" :url="depApi"></skill>
       <div slot="footer"></div>
     </Modal>
     <!--病例-->
@@ -193,7 +193,6 @@
           depName,
           depId
         };
-        console.log(this.caseData)
         this.openModel('largeCase')
       },
       //  出科
@@ -206,7 +205,9 @@
       //  科室要求
       depInfo() {
         this.operailityData = {
-          depOutlineId: this.studentData.rotaryIng.depId
+          depId: this.studentData.rotaryIng.depId,
+          podId: this.studentData.rotaryIng.podId,
+          depOutlineId: this.studentData.rotaryIng.rdId
         };
         this.openModel('depInfo')
       },
