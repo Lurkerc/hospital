@@ -5,13 +5,14 @@
 
       <el-row>
         <el-col :span="10" :offset="1">
-          <el-form-item label="日期：" prop="registerDate">
-            <el-date-picker name="end" v-model="formValidate.registerDate" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
+          <el-form-item label="日期：" prop="registerDate" required>
+            <el-date-picker name="end" v-model="formValidate.registerDate" @change="changeDay" :editable="false" :picker-options="pickerOptions"
+              type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="10" :offset="2">
-          <el-form-item label="日期：" prop="timeInterval">
-            <el-time-select v-model="formValidate.timeInterval" :editable="false" :picker-options="{start: '06:00',step: '00:05', end: '22:30' }"
+          <el-form-item label="时间段：" prop="timeInterval">
+            <el-time-select v-model="formValidate.timeInterval" :editable="false" :picker-options="{start,step: '00:05', end: '22:30' }"
               placeholder="选择时间">
             </el-time-select>
           </el-form-item>
@@ -56,14 +57,18 @@
 
         <el-col :span="21" :offset="1">
           <el-form-item label="培训/考核对象：" required>
-            <span v-for="(item,index) in users" :key="index">{{ item.userName }}</span>
-            <el-button type="info" @click="selectUser">选择人员</el-button>
+            <!-- <span v-for="(item,index) in users" :key="index">{{ item.userName }}</span>
+            <el-button type="info" @click="selectUser">选择人员</el-button> -->
+            <el-radio-group v-model="formValidate.trainingObject">
+              <el-radio v-for="item in userOption" :key="item.label" :label="item.label">{{ item.value }}</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-col>
         <el-col :span="10" :offset="1">
           <el-form-item label="使用部门：">
-            <span>{{ formValidate.department }}</span>
-            <el-button type="info">选择部门</el-button>
+            <!-- <span>{{ formValidate.department }}</span>
+            <el-button type="info">选择部门</el-button> -->
+            <el-input v-model="formValidate.department" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
 
@@ -108,8 +113,9 @@
   //当前组件引入全局的util
   let Util = null;
 
+  import api from './api';
   import typeOption from './typeOption'; // 事项类型
-
+  import userOption from './userOption'; // 培训对象
   import selectRoom from '../../common/selectRoom'; // 选择房间
 
   import {
@@ -124,33 +130,38 @@
           title: '提交',
           callParEvent: 'listenSubEvent'
         },
+        start: '06:00',
         countDate: 0,
         users: [],
         roomIds: [],
         roomNums: [],
         //form表单bind数据
         formValidate: {
-          registerDate: "2017-01-02",
-          timeInterval: "14:00",
-          classhour: "1",
+          registerDate: "",
+          timeInterval: "",
+          classhour: "",
           affairType: "",
-          trainingObject: "住院医",
-          peopleNum: "50",
-          teacher: "张三",
-          trainingObject: "培训对象",
-          department: "教育处",
-          creater: "李四",
-          trainingContent: "考核内容",
-          remark: "备注",
-          roomList: [{
-            "roomId": "1",
-            "roomNum": "101"
-          }],
-          userList: [{
-            userId: 1,
-            userName: '666'
-          }]
+          trainingObject: "ALL",
+          peopleNum: "",
+          teacher: "",
+          department: "",
+          creater: "",
+          trainingContent: "",
+          remark: "",
+          roomList: [ //
+            // {
+            //   "roomId": "1",
+            //   "roomNum": "101"
+            // }
+          ],
+          userList: [ // 
+            // {
+            //   userId: 1,
+            //   userName: '666'
+            // }
+          ]
         },
+        userOption,
         typeOption, // 事项类型
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle: {
@@ -160,8 +171,8 @@
           ajaxSuccess: 'ajaxSuccess',
           ajaxError: 'ajaxError',
           ajaxParams: {
-            url: '/role/add',
-            method: 'post'
+            url: api.add.path,
+            method: api.add.method
           }
         },
         selectRoomModal: false,
@@ -175,16 +186,18 @@
             id: "selectUserId",
             title: "选择人员"
           }
-        }
+        },
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+        },
       }
     },
     created() {
       //给当前组件注入全局util
       Util = this.$util;
-    },
-    mounted() {
-      //暂时没有初始化,预留初始化入口
-      //this.init();
+      this.formValidate.creater = this.$store.state.userInfo.name;
     },
     methods: {
       /*
@@ -194,14 +207,19 @@
       listenSubEvent(isLoadingFun) {
         let isSubmit = this.submitForm("formValidate");
         if (isSubmit) {
+          if (!this.roomIds.length) {
+            this.errorMess('请选择培训地点')
+            return
+          }
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
           this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
           let data = this.addMessTitle.ajaxParams.data;
           data.roomIds = this.roomIds.join(',');
           data.roomNums = this.roomNums.join(',');
-          console.log(this.addMessTitle.ajaxParams.data)
-          // this.ajax(this.addMessTitle, isLoadingFun)
+          data.registerDate = this.conductDate(data.registerDate, 'yyyy-MM-dd');
+          // console.log(this.addMessTitle.ajaxParams.data)
+          this.ajax(this.addMessTitle, isLoadingFun)
         }
       },
       /*
@@ -238,6 +256,22 @@
        * */
       init() {
         //this.ajax(this.listMessTitle)
+      },
+      // 选择日期
+      changeDay(day) {
+        let selDay = new Date(day).getTime();
+        let thisDay = new Date();
+        if (selDay > thisDay.getTime()) { // 如果选择日期超过今天，则时间段从06：00开始
+          this.start = '06:00';
+        } else { // 如果选择的是今天，那么根据当前时间来设置时间段
+          let h = thisDay.getHours();
+          let m = thisDay.getMinutes();
+          m = m < 30 ? '30' : '00';
+          h = m === '00' ? h + 1 : h; // 如果当前分钟已经大于30，则下一小时才是起始时间段
+          h = h < 10 ? '0' + h : h;
+          this.start = h + ':' + m;
+        }
+        this.formValidate.timeInterval = '';
       },
       /********************************* 按钮事件 *****************************/
       // 选择房间

@@ -3,20 +3,20 @@ const typeOption = [{
     label: '全部'
   },
   {
-    value: '2',
-    label: '考核'
+    value: 'FOCUS',
+    label: '集中培训'
   },
   {
-    value: '3',
-    label: '教学'
+    value: 'PERSONAL',
+    label: '零散培训'
   },
   {
-    value: '4',
+    value: 'EXAM',
     label: '练习'
   },
   {
-    value: '5',
-    label: '参观'
+    value: 'ORTHER',
+    label: '其他'
   },
 ];
 

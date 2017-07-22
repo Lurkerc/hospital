@@ -8,8 +8,12 @@ const api = {
     path: thisFile + '/add',
     method: 'post'
   },
+  get: { // 获取
+    path: thisFile + '/get/',
+    method: 'get'
+  },
   edit: { // 修改
-    path: thisFile + '/modify',
+    path: thisFile + '/modify/',
     method: 'put'
   },
   delete: thisFile + '/removes', // 删除

@@ -153,6 +153,12 @@ const getVueObj = function (vue) {
       "UNEVALUATED": "待评价",
       "END": "结束",
     },
+    affairsType: { // 事项类型
+      "FOCUS": "集中培训",
+      "PERSONAL": "零散培训",
+      "EXAM": "练习",
+      "ORTHER": "其他",
+    },
   };
 
   const filters = [ // 声明全局过滤器及回调函数

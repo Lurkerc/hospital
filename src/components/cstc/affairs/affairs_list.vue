@@ -7,10 +7,14 @@
           <el-button type="primary" @click="add">新建事项</el-button>
           <el-button type="success" @click="edit">修改事项</el-button>
           <el-button type="danger" @click="remove">删除事项</el-button>
-          <el-button type="info">导出Excel</el-button>
+          <!-- <el-button type="info">导出Excel</el-button> -->
         </el-col>
         <el-col :span="10" align="right" style="padding-bottom:20px;">
-          <el-input :maxlength="20" placeholder="请输入姓名" icon="search" v-model="searchObj.userName" :on-icon-click="search" style="width:200px;"></el-input>
+          <!-- <el-input :maxlength="20" placeholder="请输入姓名" icon="search" v-model="searchObj.userName" :on-icon-click="search" style="width:200px;"></el-input> -->
+          <el-select placeholder="请选择" v-model="searchObj.trainingObject" style="width:200px;">
+            <el-option v-for="item in userOption" :key="item.value" :label="item.value" :value="item.label"></el-option>
+          </el-select>
+          <el-button type="info" @click="search">搜索</el-button>
           <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
         </el-col>
         <div v-show="searchMore" style="clear:both;" align="right" ref="searchMore">
@@ -34,10 +38,10 @@
           </el-form-item>
           <el-form-item label="培训/考核对象：">
             <el-select placeholder="请选择" v-model="searchObj.trainingObject">
-              <!-- <el-option v-for="item in typeOption" :key="item.value" :label="item.label" :value="item.value"></el-option> -->
+              <el-option v-for="item in userOption" :key="item.value" :label="item.value" :value="item.label"></el-option>
             </el-select>
           </el-form-item>
-          <el-button type="info" @click="search">搜索</el-button>
+          <!-- <el-button type="info" @click="search">搜索</el-button> -->
         </div>
       </el-row>
     </el-form>
@@ -54,16 +58,24 @@
         <el-table-column prop="registerDate" label="日期" align="center" show-overflow-tooltip></el-table-column>
         <el-table-column prop="timeInterval" label="时段" show-overflow-tooltip></el-table-column>
         <el-table-column prop="classhour" label="课时" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="affairType" label="类型" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="affairType" label="类型" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.affairType | affairsType }}
+          </template>
+        </el-table-column>
         <el-table-column prop="trainingPlace" label="培训地点" show-overflow-tooltip></el-table-column>
         <el-table-column prop="trainingObject" label="培训/考核对象" show-overflow-tooltip>
           <template scope="scope">
-            {{ (scope.row.trainingObject || 0) | print }}
+            {{ scope.row.trainingObject | userType }}
           </template>
         </el-table-column>
         <el-table-column prop="peopleNum" label="人次" show-overflow-tooltip></el-table-column>
         <el-table-column prop="teacher" label="教师/考官" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="department" label="使用部门" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="department" label="使用部门" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.department || '-' }}
+          </template>
+        </el-table-column>
         <el-table-column prop="creater" label="创建人" show-overflow-tooltip></el-table-column>
       </el-table>
     </div>
@@ -84,7 +96,14 @@
     <!--编辑弹窗-->
     <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="960">
       <modal-header slot="header" :content="headerContent.editId"></modal-header>
-      <edit v-if="editModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></edit>
+      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
+      <div slot="footer"></div>
+    </Modal>
+
+    <!--查看弹窗-->
+    <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="960">
+      <modal-header slot="header" :content="headerContent.showId"></modal-header>
+      <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData"></show>
       <div slot="footer"></div>
     </Modal>
 
@@ -101,15 +120,18 @@
   let Util = null;
   import api from './api';
   import typeOption from './typeOption'; // 事项类型
+  import userOption from './userOption'; // 事项类型
 
   // 引入操作模态组件
   import add from './affairs_add'; // 增加
   import edit from './affairs_edit'; // 编辑
+  import show from './affairs_view'; // 编辑
 
   export default {
     data() {
       return {
         api,
+        userOption,
         typeOption,
         searchMore: false,
         searchObj: {
@@ -132,14 +154,18 @@
             id: 'add',
             title: '新增事项'
           },
+          editId: {
+            id: 'edit',
+            title: '修改事项'
+          },
+          showId: {
+            id: 'show',
+            title: '查看事项'
+          },
           removeId: {
             id: 'remove',
             title: '删除事项'
           },
-          editId: {
-            id: 'edit',
-            title: '修改事项'
-          }
         }
       }
     },
@@ -182,7 +208,7 @@
       // 修改
       edit() {
         if (this.isSelected(true)) {
-          this.operailityData = this.multipleSelection;
+          this.operailityData = this.multipleSelection[0];
           this.openModel('edit')
         }
       },
@@ -275,7 +301,8 @@
     },
     components: {
       add,
-      edit
+      edit,
+      show
     },
     created() {
       this.init();

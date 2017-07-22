@@ -3,7 +3,7 @@ import baseRules from '../../formRules/base'; // 公共规则
 
 // 事务管理
 let affairs = {
-  registerDate: [baseRules.required, baseRules.isDate], // 开始时间 必填且为时间类型
+  registerDate: [baseRules.isDate], // 开始时间 必填且为时间类型
   timeInterval: baseRules.required, // 结束时间 必填
   affairType: baseRules.selectText, // 类型 必选
   classhour: baseRules.numberMust, // 课时 必须为数字
