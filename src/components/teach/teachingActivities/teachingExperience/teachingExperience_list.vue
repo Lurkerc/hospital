@@ -7,7 +7,7 @@
 
         </el-col>
         <el-col :span="14" :offset="10" align="right">
-          <el-form-item label="活动名称" prop="activityName" >
+          <el-form-item label="课程名称" prop="activityName" >
             <el-input style="width:300px;"   v-model="formValidate.activityName" placeholder="输入活动名称搜索">
               <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
             </el-input>
@@ -17,12 +17,12 @@
       </el-row>
 
       <div v-if="searchMore" ref="searchMore">
-        <el-form-item label="活动类型" prop="user">
+        <el-form-item label="课程类型" prop="user">
           <el-select v-model="formValidate.activityType" label="活动状态" placeholder="请选择活动类型">
             <select-option  :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="活动时间" prop="activityBeginTime" >
+        <el-form-item label="时间" prop="activityBeginTime" >
           <el-date-picker
             v-model="formValidate.activityBeginTime"
             type="date"
@@ -44,7 +44,7 @@
           </el-date-picker>
         </el-form-item>
 
-        <el-form-item label="活动状态" prop="status" >
+        <el-form-item label="状态" prop="status" >
           <el-select filterable  v-model="formValidate.activityState" placeholder="请选择">
             <el-option label="全部" value=""></el-option>
             <el-option label="未上报" value="NO_RELEASE"></el-option>
@@ -263,6 +263,7 @@
           ajaxSuccess:'updateListData',
           ajaxParams:{
             url:url.hostUserList,
+            params:{}
           }
         },
         /*--按钮button--*/
@@ -278,9 +279,7 @@
         this.myPages =  Util.pageInitPrams;
         let userInfo = this.$store.getters.getUserInfo;
         this.formValidate.userId = userInfo.id;
-        this.queryQptions = {
-          //url:this.listUrl,
-          params:{curPage: 1,pageSize: Util.pageInitPrams.pageSize}
+        this.queryQptions = {curPage: 1,pageSize: Util.pageInitPrams.pageSize
         }
 
         this.setTableData();
@@ -326,7 +325,8 @@
         this.listTotal = data.listTotal||0;
       },
       setTableData(){
-        this.listMessTitle.ajaxParams = Object.assign(this.listMessTitle.ajaxParams,this.queryQptions);
+        let  formSearch = this.formDate(this.getFormData(this.formValidate),['activityBeginTime','activityEndTime'],this.yearMonthData);
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions,formSearch);
         this.ajax(this.listMessTitle);
       },
       //搜索监听回调
@@ -336,6 +336,16 @@
         if(isSubmit){
           this.setTableData(isLoading)
         }
+      },
+
+
+      /*
+       * 获取表单数据
+       * @return string  格式:id=0&name=aa
+       * */
+      getFormData(data){
+        let myData = Util._.defaultsDeep({},data);
+        return myData;
       },
 
 

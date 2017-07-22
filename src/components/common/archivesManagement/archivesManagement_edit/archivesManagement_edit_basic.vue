@@ -19,12 +19,8 @@
               <el-row :gutter="10" class="table-back-one">
                 <el-col :span="8" >
 
-                  <el-form-item label="姓名：" prop="name"  v-if="fromWhere=='depUser'||fromWhere=='depUser'">
-                    <el-input v-model="formValidate.name" placeholder="请输入"></el-input>
-                  </el-form-item>
-
-                  <el-form-item label="姓名：" prop="name"  v-else>
-                    <span v-if="formValidate.auditStatus=='AUDIT_SUCCESS'">{{formValidate.name}}</span>
+                  <el-form-item label="姓名：" prop="name">
+                    <span v-if="formValidate.auditStatus=='AUDIT_SUCCESS'||formValidate.auditStatus=='NOT_AUDIT'">{{formValidate.name}}</span>
                     <el-input v-else v-model="formValidate.name" placeholder="请输入"></el-input>
                   </el-form-item>
                 </el-col>
@@ -237,15 +233,13 @@
       </el-row>
     </el-form>
     <br />
-    <el-row v-if="fromWhere=='depUser'">
-      <el-col :span="10" :offset="10">
-        <load-btn @listenSubEvent="saveCurrData" :btnData="loadBtn"></load-btn>
+    <div style="font-size: 1px;overflow: hidden;line-height: 1;border-top:1px solid #e3e8ee;margin: 12px 0;"></div>
+    <el-row>
+      <el-col :span="9" :offset="10">
+        <el-button type="primary" v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @click="saveDataToParent">保存</el-button>
+        <load-btn  v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+        <span v-if="userInfo.archivesAuditStatus=='NOT_AUDIT'" style="margin-right: 10px;color: #FF4949;">您的档案信息正在审核中……</span>
         <el-button  @click="cancel">取消</el-button>
-      </el-col>
-    </el-row >
-    <el-row v-if="fromWhere=='archives'">
-      <el-col :span="24" style="text-align: center;">
-        <load-btn @listenSubEvent="saveCurrData" :btnData="{title:'保存',callParEvent:'listenSubEvent'}"></load-btn>
       </el-col>
     </el-row >
   </div>
@@ -268,7 +262,7 @@
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['operailityData','fromWhere','initData'],
+    props: ['operailityData','fromWhere','initData','userInfo'],
     data (){
       return{
         //公用业务字典
@@ -291,10 +285,10 @@
           multiple:false,    //是否多选
           url:"/schools/queryList"
         },
-        isShowSlt:false,
+        isShowSlt:true,
 
         //保存按钮基本信息
-        loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
+        loadBtn:{title:'上报审核',callParEvent:'listenSubEvent'},
         countDate:0,
         //form表单bind数据
         formValidate: {
@@ -394,6 +388,20 @@
       },
 
 
+      saveDataToParent(){
+        this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+        this.$emit("setSaveData",this.editMessTitle.ajaxParams.data);
+      },
+
+
+      listenSubEvent(){
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit) {
+
+        }
+      },
+
+
       /*
        * 点击提交按钮 监听是否验证通过
        * @param formName string  form表单v-model数据对象名称
@@ -415,7 +423,9 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-        let data = this.initData;//responseData.data;
+        let data = this.initData;//this.$store.state.archivesAudit.index.archivesContent.archivesBasicInfoDto;//this.initData;//responseData.data;
+
+        if(data===null||typeof data=="undefined"||data=="") return;
         this.formValidate = this.formDate(data,['birth','jobTime'],this.yearMonth);
         let env = this.$store.getters.getEnvPath;
         if(data.headPhoto===null){
@@ -467,6 +477,7 @@
        * @param val string || number  选中毕业学校的id
        * */
       setSltOptionValue(val,id){
+        alert(val)
         this.formValidate.schoolId = id;
         this.formValidate.school = val;
       }

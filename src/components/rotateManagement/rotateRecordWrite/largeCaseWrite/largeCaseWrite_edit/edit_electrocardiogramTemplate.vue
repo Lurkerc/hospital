@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
   <div>
-    <el-form  ref="formValidate"  class="demo-form-inline" label-width="130px" >
+    <el-form  :model="formValidate" ref="formValidate" :rules="electrocardiogramTemplate"   class="demo-form-inline" label-width="130px" >
       <el-row class="table-back-one">
         <el-col :span="6" >
           <el-form-item label="科别:" prop="name" >
@@ -444,13 +444,14 @@
 </template>
 <script>
   /*当前组件必要引入*/
-
+  import {electrocardiogramTemplate} from '../../../rules'
   //当前组件引入全局的util
   let Util = null;
   export default{
     props:['operailityData','url','podId'],
     data() {
       return {
+        electrocardiogramTemplate,
         saveBtn: {title: '提交', callParEvent: 'saveSubEvent'},
         loadBtn: {title: '上报', callParEvent: 'appearSubEvent'},
         mzRecordHeader:['药物名称/使用的剂量'],  //药物名称/使用的剂量
@@ -590,12 +591,66 @@
         if(isSubmit){
           if(!isLoadingFun) isLoadingFun=function(){};
           isLoadingFun(true);
+          if(!this.conductValidate(this.formValidate)){
+              return;
+          }
           let formValidate = this.formDate(this.getFormData(this.formValidate),['cjlDate'],'yyyy-MM-dd');
           formValidate = this.formDate(formValidate,['acaSsBegintime','acaSsEndtime','acaMzBegintime','acaMzEndtime'],'yyyy-MM-dd HH:mm:ss');
           this.addMessTitle.ajaxParams.data = formValidate;
           this.ajax(this.addMessTitle,isLoadingFun);
         }
       },
+
+
+      //处理药物名称/使用的剂量 , 生命体征, 辅助输入的药品名称
+      conductValidate(data){
+          let undefined;
+          let flag=true;
+        let mess = [{
+          key:'mzRecord',
+          label:'药物名称/使用的剂量',
+        },{
+          key:'mzStatus',
+          label:'生命体征',
+        },{
+            key:'aidDrugName',
+            label:'辅助输入的药品名称',
+          }];
+
+        for(let i=0;i<mess.length;i++){
+            let item = data[mess[i].key];
+            for(let k=0;k<item.length;k++){
+                let isHasname = false;  //名字是否为空；
+                let isHasCount = false;
+              for(let l=0;l<item[k].length;l++){
+                let val = item[k][l];
+                if(l==0){
+                    if(val == ''){
+                      isHasname = true;
+                    }
+                }else {
+                  if(val != ''){
+                    isHasCount = true;
+                  }
+                }
+                if(isHasname&&isHasCount){
+                  flag = false;
+                }
+              }
+              if(isHasname&&isHasCount){
+                this.errorMess(mess[i].label+'名称必填');
+              }
+            }
+        }
+
+        return flag;
+      },
+
+
+
+
+
+
 
       /*
        * 获取表单数据

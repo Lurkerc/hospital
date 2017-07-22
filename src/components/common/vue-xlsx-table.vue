@@ -56,7 +56,18 @@ export default {
       if (this.rawFile !== null) {
         return
       }
-      this.rawFile = e.target.files[0];
+      let evt = window.event || e;
+      let target = evt.target || evt.srcElement;
+
+      this.rawFile = target.files[0];
+
+      let fileName = this.rawFile["name"].toString();
+
+        fileName = fileName.substring(this.rawFile["name"].lastIndexOf("."),fileName.length);
+        if(!(fileName=='.xlsx' || fileName=='.xls')){
+            this.errorMess('只能导入excel');
+            return;
+        }
 
       this.fileConvertToWorkbook(this.rawFile)
         .then((workbook) => {

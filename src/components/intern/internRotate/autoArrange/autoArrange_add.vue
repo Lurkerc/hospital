@@ -7,9 +7,9 @@
           <by-group v-if="showFirstLab" @add="subCallback" :isInit="count" style="height: 100%;"></by-group>
         </keep-alive>
       </el-tab-pane>
-      <el-tab-pane label="按人员排班" @add="subCallback"  name="arrangeByUser">
+      <el-tab-pane label="按人员排班" name="arrangeByUser">
         <keep-alive>
-          <by-user v-if="showSecondLab" :isInit="count" style="height: 100%;"></by-user>
+          <by-user v-if="showSecondLab" @add="subCallback" :isInit="count" style="height: 100%;"></by-user>
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
@@ -80,7 +80,7 @@
        * @param udata boolean 默认false  是否不需要刷新当前表格数据
        * */
       subCallback(target,title,updata){
-        this.$emit(target,title,updata);
+        this.$emit("add",target,title,updata);
       },
     },
     components:{

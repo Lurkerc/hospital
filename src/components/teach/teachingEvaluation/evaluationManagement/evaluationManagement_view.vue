@@ -64,7 +64,7 @@
           </el-row>
           <el-row>
             <el-col :span="20" :offset="2">
-              <el-form-item label="是否显示备注 :" prop="title" label-width="110px">
+              <el-form-item label="是否显示备注:" prop="title" label-width="110px">
                 <el-switch
                   disabled
                   @change="hasRemarkChange"
@@ -402,10 +402,10 @@
         }else {
           _scoreLevel = [{label:'',key:'select1'}];
           this.select = ['select1'];
-          scoreTypeArr = {
+          scoreTypeArr =[ {
             key :'score',
             label :'标准分',
-          }
+          }]
         }
         data._scoreLevel =_scoreLevel;
 

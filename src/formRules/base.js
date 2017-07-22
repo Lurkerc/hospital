@@ -20,8 +20,6 @@ let changeEvent = 'change';
  * sectionVal     字符串区间
  * asyncVal       异步服务器验证
  * isDate         date检测
- * inputLen       字符串区间
- * illegalChar    非法字符串
  */
 
 /************************* 常规规则 ****************************/
@@ -88,6 +86,7 @@ let baseRules = {
     // 长度检测
     return (rule, value = '', callback) => {
       let msg;
+      if (!value) value = '';
       if (min === 0 && max && value.length > max) {
         msg = `最多输入${max}个字符`;
       } else {
@@ -108,9 +107,9 @@ let baseRules = {
    * @reg 非法字符正则表达式 默认只能输入中文、数字、英文（不含标点符号）
    *  /[@#\$%\^&\*]+/ ----> @|#|$|%|^|&|* 都属于非法字符
    */
-  illegalChar: (reg = /[^\u4e00-\u9fa5\w\s，。、；‘’“”《》——+-、~·！]/m) => {
+  illegalChar: (reg = /[^\u4e00-\u9fa5\w\s，。、；‘’“”《》——+-、~·！]_（）：]/m) => {
     return (rule, value = '', callback) => {
-      value && reg.test(value) && callback(new Error('存在非法字符！'))
+      value && reg.test(value) && callback(new Error('存在非法字符！'));
       callback()
     }
   },
@@ -187,6 +186,29 @@ let baseRules = {
       callback(new Error('格式不正确，请重新选择'));
     }
     callback();
+  },
+
+  /**
+   * 搜索项手机号
+   */
+  serchPhone: function (rule, value, callback) {
+    //检验位的检测
+    if (/[^0-9]/m.test(value)) {
+      callback(new Error('手机号必须数字'));
+    }
+    callback();
+
+  },
+  /**
+   * 搜索项手机号
+   */
+  numbers: function (rule, value, callback) {
+    //检验位的检测
+    if (/[^0-9]/m.test(value)) {
+      callback(new Error('该项必须数字'));
+    }
+    callback();
+
   }
 }
 
@@ -209,14 +231,17 @@ let mustRules = {
     pattern: /^1(3|4|5|7|8)\d{9}$/
   },
 
-  // 数字
+  // 数字-必须整数
   number: {
     // type: 'number',
-    message: '该项必须为数字并且最多10位',
+    message: '该项必须为整数并且最多10位',
     pattern: /^\d{1,10}$/,
     trigger: defEvent
   },
 };
+
+
+
 
 // 可选规则追加必填属性，规则名称后缀"Must"
 _.map(mustRules, (val, key) => {

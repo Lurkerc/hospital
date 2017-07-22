@@ -78,6 +78,10 @@ const getVueObj = function (vue) {
       // 报到
       "REGISTER": "报到",
       "NO_REGISTER": "未报到",
+      // 预约状态
+      "UNREPORTED": "待上报",
+      "START": "待使用",
+      "UNEVALUATED": "待评分",
     },
     /* 特殊描述文本（与公共部分冲突的可以作为特殊处理） */
     unit: { // 单位
@@ -95,9 +99,9 @@ const getVueObj = function (vue) {
       "2": "无"
     },
     rotaryState: { //轮转状态
-      "-1":"暂停",
-      "9":"已安排未开始轮转",
-      "99":"轮转中",
+      "-1": "暂停",
+      "9": "已安排未开始轮转",
+      "99": "轮转中",
       "999": "轮转完成",
       "9999": "轮转结束",
       "10000": "终止轮转",
@@ -130,6 +134,24 @@ const getVueObj = function (vue) {
     isNeed: { // 是否需要
       "0": "不需要",
       "1": "需要"
+    },
+    userType: { // 用户类型
+      "ALL": "所有人员",
+      "ZYY": "住院医",
+      "JXS": "进修生",
+      "SXS": "实习生",
+      "YJS": "研究生",
+      "DJLS": "带教老师",
+      "SPECIFIC": "特定人员"
+    },
+    bespeakType: { // 预约审核类型
+      "UNREPORTED": "待上报",
+      "PENDING": "驳回",
+      "REJECT": "通过",
+      "ADOPT": "通过",
+      "START": "已开课",
+      "UNEVALUATED": "待评价",
+      "END": "结束",
     },
   };
 

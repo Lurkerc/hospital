@@ -274,7 +274,7 @@
           let data = res.data;
           if(!data) return;
           this.formValidate = data;
-          this.formValidate.disState = '';
+          this.formValidate.disState = 'PASS';
           this.formValidate.reviewMess = '';
       },
       /*

@@ -57,7 +57,7 @@
 
       </el-row >
     </br>
-      <el-row >
+      <el-row  >
         <el-col :span="21" :offset="2">
           <el-form-item label="备注:" prop="remark">
             <el-input v-model="formValidate.remark" type="textarea" resize="none" :rows="8"></el-input>
@@ -185,7 +185,6 @@
       SuccessGetCurrData(responseData){
         let data = responseData.data;
         this.roomData = data;
-        this.formValidate.remark = data.remark;
       },
       cancel(){
         this.$emit('cancel','changeRoom')

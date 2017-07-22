@@ -126,6 +126,12 @@ import Index from '../components/Index'
  * 住院医
  *
  * */
+  //报名招录
+  import rdyEnrollEnroll from './subRouter/rdyEnrollEnroll'
+  //轮转安排
+  import rdyRotationArrangement from './subRouter/rdyRotationArrangement'
+  //基础设置
+  import rdyBasicSetting from './subRouter/rdyBasicSetting'
 
 /**
  *
@@ -1016,6 +1022,7 @@ const routes = [
       //研究生
 
       //住院医
+      rdyEnrollEnroll,rdyBasicSetting,rdyRotationArrangement,
 
       //进修管理
 

@@ -1,20 +1,20 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate" class="demo-form-inline" label-width="90px">
+    <el-form :model="formValidate" ref="formValidate" :rules="entityWrite" class="demo-form-inline" label-width="90px">
 
       <el-row>
         <el-col :span="8" :offset="2">
-          <el-form-item label="科室:" prop="name">
+          <el-form-item label="科室:" prop="podId">
             <el-select @change="podIdChange" v-model="formValidate.podId" placeholder="请选择" :disabled="!!podId">
-              <el-option v-for="item in optionData" :key="item.id" :label="item.depName" :value="item.podId">
+              <el-option  v-for="item in optionData" :key="item.id" :label="item.depName" :value="item.podId">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8" :offset="2">
+        <el-col :span="8" >
           <el-form-item label="病人姓名:" prop="patientName">
-            <el-input v-model="formValidate.patientName" placeholder="请输入"></el-input>
+            <el-input class="date-select-width" v-model="formValidate.patientName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
 
@@ -23,10 +23,10 @@
       <el-row>
         <el-col :span="8" :offset="2">
           <el-form-item label="病历号:" prop="patienNo">
-            <el-input v-model="formValidate.patienNo" placeholder="请输入"></el-input>
+            <el-input class="select-width" v-model.number="formValidate.patienNo" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8" :offset="2">
+        <el-col :span="8" >
           <el-form-item label="日期:" prop="fillTime">
             <el-date-picker :editable="false" v-model="formValidate.fillTime" type="date" placeholder="选择日期">
             </el-date-picker>
@@ -36,9 +36,9 @@
 
       <el-row>
         <el-col :span="16" :offset="2">
-          <el-form-item label="病种名称:" prop="name">
-            <el-select multiple v-model="disTitle" placeholder="请选择">
-              <el-option v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle" :value="item.outlineRequireId+'-'+item.disTitle">
+          <el-form-item label="病种名称:" prop="disTitle">
+            <el-select multiple v-model="formValidate.disTitle" placeholder="请选择">
+              <el-option v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.outlineRequireId+'-'+item.disTitle">
               </el-option>
             </el-select>
           </el-form-item>
@@ -95,7 +95,7 @@
 
       <el-row>
         <el-col :span="16" :offset="2">
-          <el-form-item label="相关资料:" prop="name">
+          <el-form-item label="相关资料:" >
             <upload-file @setUploadFiles="expenseFileEvent"></upload-file>
           </el-form-item>
         </el-col>
@@ -119,12 +119,14 @@
   </div>
 </template>
 <script>
+    import {entityWrite} from '../../rules'
   //当前组件引入全局的util
   let Util = null;
   export default {
     props: ['operailityData', 'url', 'podId'],
     data() {
       return {
+        entityWrite,
         disTitle: [],
         getMyRotaryRequirements: [],
         optionData: '',
@@ -158,9 +160,10 @@
           secondaryDiagnosis: '', //次要诊断
           fileIds: '', //附件IDs(多个逗号分隔)
           podId: '', //轮转id(多个逗号分隔)
-          isDirector: '', //是否主管
-          isRescue: '', //是否抢救
+          isDirector: 'Y', //是否主管
+          isRescue: 'Y', //是否抢救
           situation: '', //转归情况
+          disTitle:[],
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle: {
@@ -220,8 +223,8 @@
           isLoadingFun(true);
           let poddIds = [];
           let poddNames = [];
-          for (let i = 0; i < this.disTitle.length; i++) {
-            let disTitle = this.disTitle[i].split('-');
+          for (let i = 0; i < this.formValidate.disTitle.length; i++) {
+            let disTitle = this.formValidate.disTitle[i].split('-');
             poddIds.push(disTitle[0]);
             poddNames.push(disTitle[1]);
 
@@ -322,7 +325,7 @@
         }
         this.formValidate = formValidate;
         this.showMess(messTitle.successTitle);
-        this.disTitle = [];
+        this.formValidate.disTitle = [];
         this.isInit = true;
         this.$emit('updata');
       },
@@ -356,7 +359,7 @@
         let myData = Util._.defaultsDeep({}, data);
         return myData;
       },
-      /* 
+      /*
        * 组件初始化入口
        * */
       init() {

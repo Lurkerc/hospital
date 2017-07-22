@@ -1,130 +1,133 @@
 <template>
-  <!-- 事务管理 -->
-  <div id="nosocomial" ref="nosocomial">
-    <!-- 按钮 -->
-    <div class="buttonList" ref="buttonList">
-      <el-button size="small" type="primary" @click="add">新建事项</el-button>
-      <el-button size="small" type="success" @click="edit">修改事项</el-button>
-      <el-button size="small" type="danger" @click="remove">删除事项</el-button>
-      <el-button size="small" type="info">导出Excel</el-button>
-    </div>
-    <!-- 搜索 -->
-    <el-form :inline="true" class="el-form-item-search">
-      <el-form-item label="事项名称：">
-        <el-input size="small" v-model="value1"></el-input>
-      </el-form-item>
-      <el-form-item label="事项类型：">
-        <el-select size="small" placeholder="事项类型" v-model="value2">
-          <el-option v-for="item in typeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="考核开始时间：">
-        <el-date-picker size="small" v-model="value3" type="date" placeholder="选择日期" :picker-options="pickerOptions0">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="考核结束时间：">
-        <el-date-picker size="small" v-model="value4" type="date" placeholder="选择日期" :picker-options="pickerOptions0">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" size="small" @click="onSubmit">查询</el-button>
-      </el-form-item>
+  <!-- 中心事务 -->
+  <div ref="affairs">
+    <el-form :inline="true">
+      <el-row>
+        <el-col :span="14">
+          <el-button type="primary" @click="add">新建事项</el-button>
+          <el-button type="success" @click="edit">修改事项</el-button>
+          <el-button type="danger" @click="remove">删除事项</el-button>
+          <el-button type="info">导出Excel</el-button>
+        </el-col>
+        <el-col :span="10" align="right" style="padding-bottom:20px;">
+          <el-input :maxlength="20" placeholder="请输入姓名" icon="search" v-model="searchObj.userName" :on-icon-click="search" style="width:200px;"></el-input>
+          <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+        </el-col>
+        <div v-show="searchMore" style="clear:both;" align="right" ref="searchMore">
+          <date-group :dateGroup="{text:'',startDate:searchObj.registerStartDate,endDate:searchObj.registerEndDate}" style="display:inline-block;">
+            <el-form-item label="日期：">
+              <el-date-picker name="start" v-model="searchObj.registerStartDate" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
+                @change="handleStartTime"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="-">
+              <el-date-picker name="end" v-model="searchObj.registerEndDate" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
+                @change="handleEndTime"></el-date-picker>
+            </el-form-item>
+          </date-group>
+          <el-form-item label="事务类型：">
+            <el-select placeholder="请选择" v-model="searchObj.affairType">
+              <el-option v-for="item in typeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="使用部门：">
+            <el-input v-model="searchObj.department"></el-input>
+          </el-form-item>
+          <el-form-item label="培训/考核对象：">
+            <el-select placeholder="请选择" v-model="searchObj.trainingObject">
+              <!-- <el-option v-for="item in typeOption" :key="item.value" :label="item.label" :value="item.value"></el-option> -->
+            </el-select>
+          </el-form-item>
+          <el-button type="info" @click="search">搜索</el-button>
+        </div>
+      </el-row>
     </el-form>
     <!-- 表格 -->
-    <div id="nosocomialTable" ref="nosocomialTable">
-      <el-table align="center" :height="dynamicHt" :context="self" :data="tableData1" tooltip-effect="dark" style="width: 100%"
-        @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55">
-        </el-table-column>
-        <el-table-column label="操作" align="center">
+    <div id="myTable" ref="myTable">
+      <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark"
+        style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column label="操作" align="center" width="80">
           <template scope="scope">
-            <el-button size="small" type="info" @click="show(scope.$index,scope.row)">查看</el-button>
+            <el-button size="small" type="success" @click="show(scope.row)">查看</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="序号" align="center"></el-table-column>
-        <el-table-column label="事项名称" show-overflow-tooltip></el-table-column>
-        <el-table-column label="事项描述" show-overflow-tooltip></el-table-column>
-        <el-table-column label="事项类型" show-overflow-tooltip></el-table-column>
-        <el-table-column label="人数" show-overflow-tooltip></el-table-column>
-        <el-table-column label="联系人" show-overflow-tooltip></el-table-column>
-        <el-table-column label="开始时间" show-overflow-tooltip></el-table-column>
-        <el-table-column label="结束时间" show-overflow-tooltip></el-table-column>
-        <el-table-column label="创建人" show-overflow-tooltip></el-table-column>
-        <el-table-column label="创建时间" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="registerDate" label="日期" align="center" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="timeInterval" label="时段" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="classhour" label="课时" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="affairType" label="类型" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="trainingPlace" label="培训地点" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="trainingObject" label="培训/考核对象" show-overflow-tooltip>
+          <template scope="scope">
+            {{ (scope.row.trainingObject || 0) | print }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="peopleNum" label="人次" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="teacher" label="教师/考官" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="department" label="使用部门" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="creater" label="创建人" show-overflow-tooltip></el-table-column>
       </el-table>
     </div>
-    <!-- 分页 -->
-    <div style="float: right;margin-top:10px;">
-      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-        :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
+    <div style="margin: 10px;">
+      <div style="float: right;">
+        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
+          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        </el-pagination>
+      </div>
     </div>
-
     <!--增加弹窗-->
-    <Modal :mask-closable="false" v-model="addModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="960">
-      <modal-header slot="header" :content="button.addId"></modal-header>
+    <Modal :mask-closable="false" v-model="addModal" height="200" class-name="vertical-center-modal" :width="960">
+      <modal-header slot="header" :content="headerContent.addId"></modal-header>
       <add v-if="addModal" @cancel="cancel" @add="subCallback"></add>
       <div slot="footer"></div>
     </Modal>
 
     <!--编辑弹窗-->
-    <Modal :mask-closable="false" v-model="editModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="960">
-      <modal-header slot="header" :content="button.editId"></modal-header>
-      <edit v-if="editModal" @cancel="cancel" @add="subCallback"></edit>
+    <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="960">
+      <modal-header slot="header" :content="headerContent.editId"></modal-header>
+      <edit v-if="editModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></edit>
       <div slot="footer"></div>
     </Modal>
 
     <!--删除弹窗-->
-    <Modal close-on-click-modal="false" height="200" v-model="removeModal" title="对话框标题" class-name="vertical-center-modal" :loading="loading"
+    <Modal close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal" :loading="loading"
       :width="500">
-      <modal-header slot="header" :content="button.removeId"></modal-header>
-      <remove v-if="removeModal" :delete-url="deleteUrl" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
+      <modal-header slot="header" :content="headerContent.removeId"></modal-header>
+      <remove v-if="removeModal" :delete-url="api.delete" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
       <div slot="footer"></div>
     </Modal>
   </div>
 </template>
-
 <script>
-  //当前组件引入全局的util
   let Util = null;
-  let store = null;
-
-  import typeOption from './typeOption.js'; // 事项类型
+  import api from './api';
+  import typeOption from './typeOption'; // 事项类型
 
   // 引入操作模态组件
-  import add from './affairs_add.vue'; // 增加
-  import edit from './affairs_edit.vue'; // 编辑
+  import add from './affairs_add'; // 增加
+  import edit from './affairs_edit'; // 编辑
 
   export default {
     data() {
       return {
-        // 配置
-        deleteUrl: '', // 删除api url
-        operailityData: '',
-        pickerOptions0: { // 时间选择器配置
-          disabledDate: (time) => time.getTime() < Date.now() - 8.64e7 // 不可操作
+        api,
+        typeOption,
+        searchMore: false,
+        searchObj: {
+          registerStartDate: '', // 开始日期
+          registerEndDate: '', // 结束日期
+          affairType: '', // 事务类型
+          department: '', // 使用部门
+          trainingObject: '', // 培训/考核对象
         },
-        // 搜索
-        value1: '', // 事项名称
-        value2: '', // 事项类型
-        value3: '', // 考核开始时间
-        value4: '', // 考核结束时间
-        typeOption, // 事项选择类型
-        // 表格
-        self: this,
-        tableData1: [],
-        loading: false,
-        totalCount: 0,
         dynamicHt: 100,
-        multipleSelection: '',
-        listMessTitle: {
-          ajaxSuccess: 'listDataSuccess',
-          ajaxParams: {
-            url: '/role/list?name=&identify=&type=',
-            params: this.queryQptions
-          }
-        },
-        // 按钮
-        button: {
+        tabHeight: 0,
+        self: this,
+        loading: false,
+        operailityData: [],
+        multipleSelection: [],
+        tableData: [], // 缺少 classhour
+        totalCount: 0,
+        headerContent: {
           addId: {
             id: 'add',
             title: '新增事项'
@@ -139,35 +142,89 @@
           }
         }
       }
-
     },
     methods: {
-      onSubmit() {
-        return false
-      },
-      //初始化请求列表数据
-      init() {
+      init: function () {
         Util = this.$util;
         //ajax请求参数设置
         this.myPages = Util.pageInitPrams;
 
         this.queryQptions = {
-          url: this.listUrl,
+          url: api.list.path,
           params: {
             curPage: 1,
             pageSize: Util.pageInitPrams.pageSize
           }
         }
-        this.setTableData();
-      },
 
+        this.setTableData()
+      },
+      /********************************* 按钮事件 *****************************/
+      // 搜索
+      search() {
+        this.setTableData()
+      },
+      // 筛选 
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          if (this.searchMore) {
+            this.tabHeight = this.dynamicHt - this.$refs.searchMore.offsetHeight;
+          } else {
+            this.tabHeight = this.dynamicHt
+          }
+        })
+      },
+      // 增加
+      add() {
+        this.openModel('add')
+      },
+      // 修改
+      edit() {
+        if (this.isSelected(true)) {
+          this.operailityData = this.multipleSelection;
+          this.openModel('edit')
+        }
+      },
+      // 查看
+      show(row) {
+        this.operailityData = row;
+        this.openModel('show')
+      },
+      // 删除
+      remove() {
+        if (this.isSelected()) {
+          this.operailityData = this.multipleSelection;
+          this.openModel('remove')
+        }
+      },
+      /********************************* 表格相关 *****************************/
+      /*
+       * 设置表格数据
+       * @param isLoading Boolean 是否加载
+       */
+      setTableData(isLoading) {
+        Object.assign(this.queryQptions.params, this.searchObj);
+        let params = this.queryQptions.params;
+        params.registerStartDate = this.conductDate(params.registerStartDate, 'yyyy-MM-dd');
+        params.registerEndDate = this.conductDate(params.registerEndDate, 'yyyy-MM-dd');
+        this.ajax({
+          ajaxSuccess: 'listDataSuccess',
+          ajaxParams: this.queryQptions
+        }, isLoading)
+      },
+      // 数据请求成功回调
+      listDataSuccess(res, m, loading) {
+        this.totalCount = res.totalCount || 0;
+        this.tableData = res.data;
+      },
       //设置表格及分页的位置
       setTableDynHeight() {
-        let nosocomial = this.$refs.nosocomial;
-        let parHt = nosocomial.parentNode.offsetHeight;
-        let nosocomialTable = this.$refs.nosocomialTable;
+        let contenHeight = this.$refs.affairs.parentNode.offsetHeight;
+        let tableData = this.$refs.myTable;
         let paginationHt = 50;
-        this.dynamicHt = parHt - nosocomialTable.offsetTop - paginationHt;
+        this.dynamicHt = contenHeight - tableData.offsetTop - paginationHt;
+        this.tabHeight = this.dynamicHt;
       },
       /*
        * checkbox 选择后触发事件
@@ -193,71 +250,12 @@
         }
         return flag;
       },
-
-      //通过get请求列表数据
-      listDataSuccess(res, m, loading) {
-        let that = this;
-        let d = new Date();
-        let t2 = d.getTime();
-        let responseData = res.data;
-        this.totalCount = res.totalCount || 0;
-        if (Util._.isObject(responseData["status"]) && responseData["status"]["code"] == 0) {
-          let len = responseData.data.length;
-          let data = responseData.data.splice(0, 150);
-          this.tableData1 = [];
-          data = that.addIndex(data);
-          for (var i = 0, n = 0; i < data.length; i += 100, n++) {
-            setTimeout(() => {
-              that.tableData1 = that.tableData1.concat(data.splice(0, 100));
-            }, n * 10)
-          }
-          that.listTotal = 1;
-        } else {
-          loading(false)
-        }
-      },
-      setTableData(isLoading) {
-        this.ajax(this.listMessTitle, isLoading)
-      },
-      //搜索监听回调
-      searchEvent(isLoading) {
-        isLoading(true);
-        this.setTableData(isLoading)
-      },
-      /*
-       * 列表查询方法
-       * @param string 查询from的id
-       * */
-      handleSubmit(name) {
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            this.$Message.success('提交成功!');
-          } else {
-            this.$Message.error('表单验证失败!');
-          }
-        })
-      },
-
-      //-------- 模态框 -----------//
-      // 增加
-      add() {
-        this.openModel('add')
-      },
-      // 增加
-      edit() {
-        this.openModel('edit')
-      },
+      /********************************* 弹窗相关 *****************************/
       // 取消
       cancel(targer) {
         this[targer + 'Modal'] = false;
       },
-      // 删除
-      remove() {
-        if (!this.isSelected()) return;
-        this.operailityData = this.multipleSelection;
-        this.openModel('remove');
-      },
-      // 回调
+      // 弹窗回调
       subCallback(target, title, updata) {
         this.cancel(target);
         if (title) {
@@ -273,10 +271,14 @@
        * */
       openModel(options) {
         this[options + 'Modal'] = true;
-      }
+      },
+    },
+    components: {
+      add,
+      edit
     },
     created() {
-      this.init()
+      this.init();
     },
     mounted() {
       //页面dom稳定后调用
@@ -288,17 +290,7 @@
         Event.addHandler(window, "resize", this.setTableDynHeight);
       })
     },
-    components: {
-      add,
-      edit
-    }
   }
 
 </script>
-
-<style>
-  .buttonList {
-    margin-bottom: 10px;
-  }
-
-</style>
+<style></style>

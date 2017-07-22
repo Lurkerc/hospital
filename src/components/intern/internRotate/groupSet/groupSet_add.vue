@@ -165,7 +165,7 @@
           type:'add',
           successTitle:'添加成功!',
           errorTitle:'添加失败!',
-          ajaxSuccess:'ajaxSuccess',
+          ajaxSuccess:'completeSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
             url: api.groupAdd.path,
@@ -180,6 +180,13 @@
       init(){
         Util = this.$util;
         this.ajax(this.getSchoolsTitle);
+      },
+
+
+      completeSuccess(responseData){
+        let data = responseData.data;
+        this.active = 5;
+        this.$emit('add', 'add', '添加成功!');
       },
 
 
@@ -376,7 +383,6 @@
 
       //完成
       success(isLoadingFun){
-        this.active = 5;
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true);
         if(this.jumpThirdStep){  //调过第四步直接保存
@@ -384,7 +390,7 @@
         }else{  //第四步保存
           this.addMessTitle.ajaxParams.data = this.getFormData(this.fourGroupData);
         }
-        this.ajax(this.addMessTitle);
+        this.ajax(this.addMessTitle,isLoadingFun);
       },
 
       //保存第三步的数据

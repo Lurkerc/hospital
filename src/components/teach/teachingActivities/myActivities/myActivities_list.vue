@@ -6,7 +6,7 @@
         <el-col :span="10" >
         </el-col>
         <el-col :span="14" :offset="10" align="right">
-          <el-form-item label="活动名称" prop="activityName" >
+          <el-form-item label="课程名称" prop="activityName" >
             <el-input style="width:300px;"   v-model="formValidate.activityName" placeholder="输入活动名称搜索">
               <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
             </el-input>
@@ -17,12 +17,12 @@
 
 
       <div v-if="searchMore" ref="searchMore">
-        <el-form-item label="活动类型" prop="user">
+        <el-form-item label="课程类型" prop="user">
           <el-select v-model="formValidate.activityType" label="活动状态" placeholder="请选择活动类型">
             <select-option  :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="活动时间" prop="activityBeginTime" >
+        <el-form-item label="时间" prop="activityBeginTime" >
           <el-date-picker
             v-model="formValidate.activityBeginTime"
             type="date"

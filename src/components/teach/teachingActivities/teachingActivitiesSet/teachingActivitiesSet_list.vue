@@ -303,7 +303,6 @@
         this.queryQptions = {
           curPage: 1,pageSize: Util.pageInitPrams.pageSize
         }
-
         this.setTableData();
       },
       searchEvent(isLoading){

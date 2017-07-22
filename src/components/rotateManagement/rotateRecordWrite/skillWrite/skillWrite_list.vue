@@ -338,6 +338,10 @@
       /*--点击--删除--按钮--*/
       remove(){
         if(!this.isSelected(true)) return;
+        if(!(this.multipleSelection[0].disState == 'NO_SUBMIT' || this.multipleSelection[0].disState == 'REJECT')) {
+          this.showMess('只能删除未上报或已驳回的数据');
+          return;
+        }
         this.operailityData = [{id:this.multipleSelection[0].skillId}];
 
         this.openModel('remove') ;

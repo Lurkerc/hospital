@@ -38,7 +38,8 @@
     <!--修改档案-->
     <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1100">
       <modal-header slot="header" :content="contentHeader.editId"></modal-header>
-      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
+      <basic-audit v-if="editModal&&userInfo.auditStatus != 'AUDIT_SUCCESS'" @cancel="cancel" @edit="subCallback" :auditType="auditType" :operaility-data="operailityData"></basic-audit>
+      <archives-audit v-if="editModal&&userInfo.auditStatus == 'AUDIT_SUCCESS'" @cancel="cancel" @edit="subCallback" :auditType="auditType" :operaility-data="operailityData"></archives-audit>
       <div slot="footer"></div>
     </Modal>
     <!--修改密码-->
@@ -53,7 +54,8 @@
 <script>
   /*当前组件必要引入*/
   //import edit from "../../../teach/archivesManagement/archivesManagement/archivesManagement_edit";
-  import edit from "../../archivesManagement/archivesManagement_edit.vue";
+  import basicAudit from "../../archivesManagement/auditBasic.vue";
+  import archivesAudit from "../../archivesManagement/archivesManagement_edit.vue";
   import pwd from "../../password";
   let Util = null;
   export default {
@@ -61,6 +63,8 @@
       return {
         isOnce: true,
         operailityData: [],
+
+        auditType:"basic",
 
         //档案审核
         archivesModal: false,
@@ -105,6 +109,9 @@
         if (title) {
           this.successMess(title);
         }
+        if(target=="edit"){
+          location.reload()
+        }
       },
 
       /*
@@ -141,7 +148,8 @@
       }
     },
     components: {
-      edit,
+      basicAudit,
+      archivesAudit,
       pwd
     }
   }

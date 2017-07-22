@@ -66,6 +66,7 @@
               </el-table-column>
               <el-table-column
                 label="实习时间"
+                class-name="valiTableStyle"
                 align="center">
                 <template scope="scope">
                   <el-form :model="scope.row" ref="f" :rules="rules"  label-width="0" class="demo-ruleForm">

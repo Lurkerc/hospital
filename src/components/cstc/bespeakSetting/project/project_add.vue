@@ -1,7 +1,7 @@
 <template>
   <!-- 预约项目管理 - 增加 -->
   <div>
-    <el-form>
+    <el-form label-width="120px">
       <el-row>
         <el-col>
           <el-form-item label="项目名称：">
@@ -10,7 +10,11 @@
         </el-col>
         <el-col>
           <el-form-item label="选择房间：">
-            <el-button v-for="(item,index) in roomList" :key="index" @click="showRoomInfo(item.id)">{{ item.roomNum }}</el-button>
+            <div class="bpProjectSelectRoom" v-for="(item,index) in roomList" :key="item.id">
+              <el-button @click="showRoomInfo(item.id)">{{ item.roomNum }}</el-button>
+              <span>承载量：</span>
+              <el-input v-model="item.bearingCapacity"></el-input>
+            </div>
             <el-button type="primary" @click="selectRoom">选择房间</el-button>
           </el-form-item>
         </el-col>
@@ -35,78 +39,78 @@
         </el-col>
 
 
-        <el-col :span="12">
+        <!-- <el-col :span="12">
           <el-form-item label="是否开放预约：">
             <el-radio v-model="formValidate.isOpen" label="YES">开放</el-radio>
             <el-radio v-model="formValidate.isOpen" label="NO">关闭</el-radio>
           </el-form-item>
+        </el-col> -->
+        <!-- <template v-if="formValidate.isOpen === 'YES'"> -->
+        <el-col :span="12">
+          <el-form-item label="选择开放日期：">
+            <el-radio v-model="formValidate.timeModel" label="ALL">全天候</el-radio>
+            <el-radio v-model="formValidate.timeModel" label="SPECIFIC">特定日期</el-radio>
+          </el-form-item>
         </el-col>
-        <template v-if="formValidate.isOpen === 'YES'">
-          <el-col :span="12">
-            <el-form-item label="选择开放日期：">
-              <el-radio v-model="formValidate.timeModel" label="ALL">全天候</el-radio>
-              <el-radio v-model="formValidate.timeModel" label="SPECIFIC">特定日期</el-radio>
-            </el-form-item>
-          </el-col>
 
-          <el-col v-if="formValidate.timeModel === 'SPECIFIC'">
-            <el-form-item label="设置开放时间：">
-              <el-checkbox-group v-model="allDayTimeSlot">
-                <el-checkbox v-for="(item,index) in timeSlot" :key="item.id" :label="index" :disabled="item.isEffective === 'NO'">{{ item.name + '（' + item.startTime + ' - ' + item.endTime + '）' }}</el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-          </el-col>
+        <el-col v-if="formValidate.timeModel === 'SPECIFIC'">
+          <el-form-item label="设置开放时间：">
+            <el-checkbox-group v-model="allDayTimeSlot">
+              <el-checkbox v-for="(item,index) in timeSlot" :key="item.timeId" :label="index">{{ item.courseTime }}</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </el-col>
 
-          <el-col :span="12">
-            <el-form-item label="开发预约对象：">
-              <el-radio-group v-model="formValidate.userType">
-                <div class="bpProjectBox">
-                  <div class="bpProjectItem">
-                    <el-radio label="all">全体人员</el-radio>
-                  </div>
-                  <div class="bpProjectItem">
-                    <el-radio label="all1">特定角色</el-radio>
-                    <el-select placeholder="请选择" v-show="formValidate.userType === 'all1'">
-                      <!--<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                      </el-option>-->
-                      <el-option label="实习生" value="sxs"></el-option>
-                      <el-option label="研究生" value="yjx"></el-option>
-                      <el-option label="进修生" value="jxs"></el-option>
-                    </el-select>
-                  </div>
-                  <div class="bpProjectItem">
-                    <el-radio label="SPECIFIC">特定人员</el-radio>
-                    <el-input readonly icon="plus" :on-icon-click="selectUser" v-show="formValidate.userType === 'SPECIFIC'"></el-input>
-                  </div>
+        <el-col>
+          <el-form-item label="开发预约对象：">
+            <el-radio-group v-model="formValidate.userType">
+              <div class="bpProjectBox">
+                <div class="bpProjectItem">
+                  <el-radio label="ALL">全体人员</el-radio>
                 </div>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-
-          <div style="clear:both;" class="newCalendar" v-if="formValidate.timeModel === 'SPECIFIC'">
-            <full-calendar class="test-fc" :tpl="calendarSet.tpl" :itemLimit="calendarSet.itemLimit" :events="calendarSet.fcEvents" first-day='1'
-              locale="zh-cn" @changeMonth="changeMonth" @eventClick="eventClick" @dayClick="dayClick" @moreClick="moreClick"
-              @goPrev="goPrev" @goNext="goNext">
-              <template slot="fc-header-left" scope="p">
-                <span style="font-size: 16px;">{{monthTitle}}</span>
-              </template>
-              <template slot="fc-header-center" scope="p">
-                <span v-if="false">周-历</span>
-              </template>
-              <template slot="fc-header-right" scope="p">
-                <div style="float: right">
-                  <el-button-group>
-                    <el-button type="primary" icon="arrow-left" @click="goPrev"></el-button>
-                    <el-button type="primary" icon="arrow-right" @click="goNext"></el-button>
-                  </el-button-group>
+                <div class="bpProjectItem">
+                  <el-radio label="ZYY">住院医</el-radio>
+                  <el-radio label="JXS">进修生</el-radio>
+                  <el-radio label="SXS">实习生</el-radio>
+                  <el-radio label="YJS">研究生</el-radio>
                 </div>
-              </template>
-              <template slot="fc-event-card" scope="p">
-                <p>{{ p.event.title }}</p>
-              </template>
-            </full-calendar>
-          </div>
-        </template>
+                <div class="bpProjectItem">
+                  <el-radio label="SPECIFIC">特定人员</el-radio>
+                  <template v-if="formValidate.userType === 'SPECIFIC'">
+                    <el-tag type="success" class="bpUserItem" :closable="true" v-for="(item,index) in formValidate.userList" @close="removeUser(index)"
+                      :key="item.userId">{{ item.userName }}</el-tag>
+                    <el-button type="info" size="small" style="margin-left:10px;" @click="selectUser">选择人员</el-button>
+                  </template>
+                </div>
+              </div>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+
+        <div style="clear:both;" class="newCalendar" v-if="formValidate.timeModel === 'SPECIFIC'">
+          <full-calendar class="test-fc" :tpl="calendarSet.tpl" :itemLimit="calendarSet.itemLimit" :events="calendarSet.fcEvents" first-day='1'
+            locale="zh-cn" @changeMonth="changeMonth" @eventClick="eventClick" @dayClick="dayClick" @moreClick="moreClick"
+            @goPrev="goPrev" @goNext="goNext">
+            <template slot="fc-header-left" scope="p">
+              <span style="font-size: 16px;">{{monthTitle}}</span>
+            </template>
+            <template slot="fc-header-center" scope="p">
+              <span v-if="false">周-历</span>
+            </template>
+            <template slot="fc-header-right" scope="p">
+              <div style="float: right">
+                <el-button-group>
+                  <el-button type="primary" icon="arrow-left" @click="goPrev"></el-button>
+                  <el-button type="primary" icon="arrow-right" @click="goNext"></el-button>
+                </el-button-group>
+              </div>
+            </template>
+            <template slot="fc-event-card" scope="p">
+              <p>{{ p.event.title }}</p>
+            </template>
+          </full-calendar>
+        </div>
+        <!--</template>-->
 
         <el-col align="center" style="margin-top:10px;">
           <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
@@ -117,7 +121,7 @@
 
     <!-- 模态框 查看（view） -->
     <Modal :mask-closable="false" v-model="showModal" class-name="vertical-center-modal" :loading="true" :width="800">
-      <modal-header slot="header" :parent="self" content="查看房间"></modal-header>
+      <modal-header slot="header" :parent="self" :content="contentHeader.showId"></modal-header>
       <room-view v-if="showModal" @cancel="cancel" :operaility-data="operailityData" :id="todoId"></room-view>
       <div slot="footer"></div>
     </Modal>
@@ -133,6 +137,12 @@
       <select-device v-if="selectDeviceModal" :select="selectDeviceId" @cancel="cancel" @select="selectDeviceCall"></select-device>
       <div slot="footer"></div>
     </Modal>
+    <!--选择人员-->
+    <Modal :mask-closable="false" width="890" v-model="selectUserModal" title="添加人员" class-name="vertical-center-modal">
+      <modal-header slot="header" :content="contentHeader.selectUserId"></modal-header>
+      <select-user v-if="selectUserModal" @cancel="cancel" @setUsers="selectUserCall" :initUser="initUser"></select-user>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 
@@ -141,6 +151,7 @@
 
   import roomView from '../../room/roomManage/roomManage_view'; // 房间查看
   import selectRoom from '../../../common/selectRoom'; // 选择房间
+  import selectUser from '../../../common/selectUser'; // 选择人员
   import selectDevice from '../../device/deviceStorage/deviceStorage_select'; // 选择设备
   import fullCalendar from 'vue-ambuf-fullcalendar'; // 周历
   //引入日历相关的配置
@@ -157,6 +168,7 @@
           title: '保存设置',
           callParEvent: 'listenSubEvent'
         },
+        initUser: [],
         selectRoomId: [],
         roomList: [], // 已选房间
         selectDeviceId: [],
@@ -165,13 +177,20 @@
         formValidate: {
           name: '', // 预约项目名称
           summary: '', // 预约简介
-          userType: '', // 开放预约对象类型
+          userType: 'ALL', // 开放预约对象类型
+          roleId: '', // 可预约角色id
           userIds: '', // 可预约人id字符串，多个id以逗号分隔
           deviceTypeIds: '', // 设备ids字符串，多个id以逗号分隔
           isCourse: 'NO', // 是否课程
           status: 'UNREPORTED', // 预约项目状态
-          isOpen: 'YES', // 是否开放预约
+          // isOpen: 'YES', // 是否开放预约
           timeModel: 'SPECIFIC', // 选择开放日期
+          userList: [ // 人员列表
+            // {
+            //   userId:'',
+            //   userName:''
+            // }
+          ],
           openTimeList: [ // 开放时间列表
             // {
             //   "reserveSetType": "ROOM", // 预约设置类型
@@ -189,39 +208,7 @@
 
         openTimeList: {}, // 开放日期
         allDayTimeSlot: [], // 全天开放时间段(只记录索引)
-        timeSlot: [ // 开放时间段
-          {
-            "id": "1",
-            "name": "上一",
-            "startTime": "08:00",
-            "endTime": "09:00",
-            "isEffective": "YES"
-          }, {
-            "id": "2",
-            "name": "上一",
-            "startTime": "10:00",
-            "endTime": "11:00",
-            "isEffective": "YES"
-          }, {
-            "id": "3",
-            "name": "上一",
-            "startTime": "1:00",
-            "endTime": "2:00",
-            "isEffective": "YES"
-          }, {
-            "id": "4",
-            "name": "上一",
-            "startTime": "3:00",
-            "endTime": "4:00",
-            "isEffective": "NO"
-          }, {
-            "id": "5",
-            "name": "上一",
-            "startTime": "5:00",
-            "endTime": "6:00",
-            "isEffective": "YES"
-          }
-        ], // 时间段
+        timeSlot: [], // 时间段
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle: {
           type: 'add',
@@ -239,7 +226,12 @@
         // 模态窗
         selectDeviceModal: false,
         selectRoomModal: false,
+        selectUserModal: false,
         contentHeader: {
+          showId: {
+            id: "showId",
+            title: "查看房间"
+          },
           selectRoomId: {
             id: "selectRoomId",
             title: "选择房间"
@@ -248,6 +240,10 @@
             id: 'selectDeviceId',
             title: '选择模型'
           },
+          selectUserId: {
+            id: "selectUserId",
+            title: "选择人员"
+          }
         },
 
         // 周历
@@ -262,6 +258,7 @@
       // 初始化
       init() {
         calendarSet.setCalData([]);
+        this.getTimeSlotList();
       },
       /*
        * 点击提交按钮 监听是否提交数据
@@ -281,6 +278,12 @@
         })
         this.formValidate.roomList = roomList;
 
+        let userIdArr = [];
+        this.formValidate.userList.map(item => {
+          userIdArr.push(item.userId)
+        });
+        this.formValidate.userIds = userIdArr.join(',');
+
         let openTimeList = this.$util._.defaultsDeep({}, this.openTimeList);
         this.$util._.map(openTimeList, item => {
           item.reserveSetType = 'PROJECT';
@@ -288,8 +291,9 @@
           this.formValidate.openTimeList.push(item)
         })
         this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
-        console.log(this.addMessTitle.ajaxParams.data);
-        // this.ajax(this.addMessTitle, isLoadingFun)
+        // console.log(this.addMessTitle.ajaxParams.data);
+        // isLoadingFun();
+        this.ajax(this.addMessTitle, isLoadingFun)
       },
       /*
        * 获取表单数据
@@ -334,6 +338,7 @@
       dayClick(day, jsEvent) {
         let date = (this.conductDate(day, "yyyy-MM-dd")).toString();
         let allDayTimeSlot = this.allDayTimeSlot;
+        console.log(allDayTimeSlot)
         if (this.openTimeList[date] && !this.allDayTimeSlot.length) {
           delete this.openTimeList[date] // 如果当前日期没有选择时间段则删除此日期
         } else if (this.allDayTimeSlot.length) {
@@ -342,11 +347,11 @@
             id: [],
             title: []
           };
-          for (var i in allDayTimeSlot) {
+          allDayTimeSlot.map(i => {
             item = this.timeSlot[i];
-            tempAllDayTimeSlotObj.id.push(item.id); // 选中的时间段id
-            tempAllDayTimeSlotObj.title.push(this.getDataTitle(item)); // 选中的时间段文本描述
-          }
+            tempAllDayTimeSlotObj.id.push(item.timeId); // 选中的时间段id
+            tempAllDayTimeSlotObj.title.push(item.courseTime); // 选中的时间段文本描述
+          })
           this.openTimeList[date] = {
             date,
             timeSetIds: tempAllDayTimeSlotObj.id.join(','),
@@ -416,7 +421,37 @@
 
       // 选择人员
       selectUser() {
+        let userList = this.formValidate.userList;
+        this.initUser.length = 0;
+        if (userList.length > 0) {
+          for (var i = 0, item; i < userList.length; i++) {
+            item = userList[i];
+            this.initUser.push({
+              key: item.userId,
+              label: item.userName,
+              description: '人员id---' + item.userId + '的描述信息',
+              disabled: false
+            })
+          }
+        }
+        this.openModel('selectUser');
+      },
 
+      // 选择人员回调
+      selectUserCall(res) {
+        this.formValidate.userList.length = 0;
+        this.$util._.forEach(res, val => {
+          this.formValidate.userList.push({
+            userId: val.key,
+            userName: val.label,
+          })
+        })
+        this.cancel('selectUser');
+      },
+
+      // 删除人员
+      removeUser(index) {
+        this.formValidate.userList.splice(index, 1)
       },
 
       // 房间查看
@@ -440,6 +475,17 @@
       // 获取周历标题
       getDataTitle(obj) {
         return obj.name + '（' + obj.startTime + ' - ' + obj.endTime + '）'
+      },
+
+      // 获取时间段
+      getTimeSlotList() {
+        this.ajax({
+          ajaxSuccess: res => this.timeSlot = res.data || [],
+          ajaxParams: {
+            url: api.teachCourseTime.path,
+            method: api.teachCourseTime.method
+          }
+        })
       },
 
       // 获取数据
@@ -509,6 +555,7 @@
     components: {
       fullCalendar,
       roomView,
+      selectUser,
       selectRoom,
       selectDevice
     },
@@ -551,6 +598,17 @@
       &~.bpProjectItem {
         margin-top: 16px;
       }
+    }
+    .bpUserItem {
+      margin-left: 6px;
+      margin-top: -9px;
+    }
+  }
+
+  .bpProjectSelectRoom {
+    margin-bottom: 10px;
+    .el-input {
+      width: 80px;
     }
   }
 

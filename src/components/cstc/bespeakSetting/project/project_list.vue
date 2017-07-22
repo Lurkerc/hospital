@@ -4,7 +4,7 @@
     <el-row>
       <el-col :span="18">
         <!-- 操作按钮 -->
-        <el-button size="small" type="success" @click="add">新建预约项目</el-button>
+        <el-button type="success" @click="add">新建预约项目</el-button>
       </el-col>
       <!-- 搜索框 -->
       <el-col :span="6" align="right">
@@ -14,14 +14,15 @@
       </el-col>
     </el-row>
     <!-- 表格数据 -->
-    <div id="tableView" ref="tableView" style="padding-top:10px;">
+    <div id="tableView" ref="tableView" style="margin-top:20px;">
       <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
         style="width: 100%;" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column label="操作" width="140" align="center">
+        <el-table-column label="操作" width="210" align="center">
           <template scope="scope">
             <el-button size="small" type="info" @click="show(scope.row)">查看</el-button>
-            <el-button size="small" type="danger" @click="edit(scope.row)">修改</el-button>
+            <el-button size="small" type="success" @click="edit(scope.row)">修改</el-button>
+            <el-button size="small" type="danger" @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>
         <el-table-column label="预约项目名称" prop="name" show-overflow-tooltip></el-table-column>
@@ -40,21 +41,21 @@
     </div>
 
     <!-- 模态框 增加（add） -->
-    <Modal :mask-closable="false" v-model="addModal" height="200" class-name="vertical-center-modal" :width="1100">
+    <Modal :mask-closable="false" v-model="addModal" height="200" class-name="vertical-center-modal" :width="1000">
       <modal-header slot="header" :content="contentHeader.addId"></modal-header>
       <add v-if="addModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></add>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 编辑（edit） -->
-    <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1100">
+    <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1000">
       <modal-header slot="header" :content="contentHeader.editId"></modal-header>
-      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
+      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :opData="operailityData"></edit>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 查看（view） -->
-    <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :loading="true" :width="800">
+    <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :loading="true" :width="1000">
       <modal-header slot="header" :parent="self" :content="contentHeader.showId"></modal-header>
-      <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData"></show>
+      <show v-if="showModal" @cancel="cancel" :opData="operailityData"></show>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 删除（del） -->
@@ -142,7 +143,6 @@
       },
       /************************* 搜索逻辑 *********************************/
       search() {
-        Object.assign(this.queryQptions.params, this.searchObj);
         this.setTableData();
       },
       /************************* 表格逻辑 *********************************/
@@ -158,7 +158,7 @@
        * @param isLoading Boolean 是否加载
        */
       setTableData(isLoading) {
-        Object.assign(this.queryQptions.params, this.tree);
+        Object.assign(this.queryQptions.params, this.searchObj);
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions
@@ -170,9 +170,9 @@
         this.tableData = res.data;
       },
       //设置表格及分页的位置
-      setTableDynHeight(otherHeight = 0) {
+      setTableDynHeight() {
         let tableView = this.$refs.tableView;
-        let paginationHt = 50 + otherHeight;
+        let paginationHt = 40;
         this.dynamicHt = this.contenHeight - tableView.offsetTop - paginationHt;
       },
       /*
@@ -203,21 +203,20 @@
         this.openModel('edit')
       },
       // 编辑
-      view(row) {
+      show(row) {
         this.operailityData = row;
-        this.openModel('view')
+        this.openModel('show')
+      },
+      // 删除
+      remove(row) {
+        this.operailityData = [{
+          id: row.id
+        }];
+        this.openModel('remove')
       },
       // 取消
       cancel(targer) {
         this[targer + 'Modal'] = false;
-      },
-      // 删除
-      /*--点击--删除--按钮--*/
-      remove() {
-        if (this.isSelected()) {
-          this.operailityData = this.multipleSelection;
-          this.openModel('remove')
-        }
       },
       // 增加回调
       subCallback(target, title, updata) {

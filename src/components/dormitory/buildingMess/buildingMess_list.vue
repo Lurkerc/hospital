@@ -3,25 +3,27 @@
   <div id="content" ref="content" class="modal">
     <steps></steps>
     <el-form :model="formValidate" ref="formValidate" :rules="rules.buildingMessList" label-width="100px">
-      <el-row >
-        <el-col :span="10" :offset="12" >
-          <el-form-item  prop="name">
-            <input class="hidden">
-            <el-input   v-model="formValidate.name" placeholder="输入大楼名称搜索">
-              <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
-            </el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
+    <el-row >
+      <el-col :span="10" >
+        <el-button type="primary" @click="add">添加</el-button>
+        <el-button type="danger" @click="remove">删除</el-button>
+      </el-col>
+      <el-col :span="14"  align="right">
+        <el-form-item  prop="name">
+          <input class="hidden">
+          <el-input   v-model="formValidate.name" placeholder="输入大楼名称搜索">
+            <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
+          </el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
     </el-form>
-
     <!--列表操作按钮-->
     <div style="margin-bottom: 20px;">
-      <el-button type="primary" @click="add">添加</el-button>
-      <el-button type="danger" @click="remove">删除</el-button>
-      <el-button  type="info" >导入</el-button>
+
+      <!--<el-button  type="info" >导入</el-button>-->
       <!--<el-button @click="derive" type="info">导出</el-button>-->
-      <el-button  type="info">导出</el-button>
+      <!--<el-button  type="info">导出</el-button>-->
     </div>
     <!--列表数据-->
     <div>
@@ -63,24 +65,28 @@
           <el-table-column
             align="center"
             prop="name"
+            show-overflow-tooltip
             label="大楼名称"
             width="200">
           </el-table-column>
           <el-table-column
             prop="address"
             label="地址"
+            show-overflow-tooltip
             width="300">
           </el-table-column>
           <el-table-column
             prop="phone"
             label="办公室电话"
             align="center"
+            show-overflow-tooltip
             width="200"
           >
           </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
+            show-overflow-tooltip
           >
           </el-table-column>
 

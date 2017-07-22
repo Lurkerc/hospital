@@ -203,6 +203,7 @@ let baseRules = {
     // 长度检测
     return (rule, value = '', callback) => {
       let msg;
+      if(!value)value='';
       if (min === 0 && max && value.length > max) {
         msg = `最多输入${max}个字符`;
       } else {

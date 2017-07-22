@@ -41,7 +41,7 @@
 
         <el-form-item label="科室" prop="depId" >
           <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
-            <select-option :type="'userRotaryDeptlist'" :unAll="true"  :userType="userType" :name="'depName'" :id="'depId'" :userId="userId"></select-option>
+            <select-option :rol="role" :type="type" :unAll="true"  :userType="userType" :name="'depName'" :id="'depId'" :userId="userId"></select-option>
           </el-select>
         </el-form-item>
 
@@ -333,15 +333,16 @@
           ajaxParams:{
             url:'leave/list',
             params:''
-
           }
         },
+
 
       }
     },
     methods: {
       //初始化请求列表数据
       init(){
+
         Util = this.$util;
         //ajax请求参数设置
         this.myPages =  Util.pageInitPrams;
@@ -349,7 +350,6 @@
         curPage: 1,
           pageSize: Util.pageInitPrams.pageSize,
         }
-
         this.setTableData();
       },
       //设置表格及分页的位置

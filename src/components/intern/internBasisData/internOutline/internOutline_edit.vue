@@ -34,11 +34,11 @@
         <el-col :span="1">&nbsp;</el-col>
         <el-col :span="22">
           <div style="margin: 8px 0;" v-for="(groupItem,groupIndex) in outlines" :key="groupIndex" class="form-fieldset-wrapper">
-            <div class="form-fieldset-del">
+            <!--<div class="form-fieldset-del">
               <el-tooltip :content="'点击删除'+groupOtions[groupIndex]" placement="top" effect="light">
                 <el-button style="float: right;" type="danger" size="mini" @click="delGroup(groupIndex)" icon="close"></el-button>
               </el-tooltip>
-            </div>
+            </div>-->
             <fieldset style="min-height:90px;">
               <legend style="font-size:16px">&nbsp;&nbsp;{{groupOtions[groupIndex]}}&nbsp;&nbsp;</legend>
               <div class="cal-schoolTit">
@@ -46,7 +46,7 @@
                 组分类名称：
                 <el-form :model="groupItem" ref="f" :rules="rules"  label-width="0" style="display: inline-block">
                   <el-form-item  prop="greatName">
-                    <el-input v-model="groupItem.greatName" style="width: 120px;" placeholder="请输入内容"></el-input>
+                    <el-input v-if="typeof groupItem.greatName!='undefined'" v-model="groupItem.greatName" style="width: 120px;" placeholder="请输入内容"></el-input>
                   </el-form-item>
               </el-form>
               </div>
@@ -65,6 +65,7 @@
                 </el-table-column>
                 <el-table-column
                   label="实习时间"
+                  class-name="valiTableStyle"
                   align="center">
                   <template scope="scope">
                     <el-form :model="scope.row" ref="f" :rules="rules"  label-width="0" class="demo-ruleForm">
@@ -150,14 +151,14 @@
         <el-col :span="1">&nbsp;</el-col>
       </el-row>
     </div>
-    <br />
+    <!--<br />
     <el-row :gutter="10">
       <el-col :span="1">&nbsp;</el-col>
       <el-col :span="22">
         <el-button type="primary" @click="addGroup">添加组</el-button>
       </el-col>
       <el-col :span="1">&nbsp;</el-col>
-    </el-row>
+    </el-row>-->
     <br />
     <el-row>
       <el-col :span="8" class="textCenter">&nbsp;</el-col>
@@ -317,9 +318,24 @@
         obj["schoolName"] = data["schoolName"];
         obj["specialty"] = data["specialty"];
         obj["gradeNum"] = data["gradeNum"];
+
         Util._.forEach(data["outlines"], (item,k)=> {
-          item["greatName"]=item["mustRotaryDep"][0]["greatName"];
-          this.outlines.push(item);
+          let tempObj = {
+            "mustRotaryDep":[],
+            "randomRotaryDep":[],
+            "greatName":"",
+          }
+          let greatName = '';
+          if(item["mustRotaryDep"].length>0){
+            greatName = item["mustRotaryDep"][0]["greatName"];
+          }else{
+            if(item["randomRotaryDep"].length!='undefined'){
+              greatName = item["randomRotaryDep"][0]["greatName"];
+            }
+          }
+          tempObj["greatName"] = greatName;
+          tempObj = Object.assign(tempObj,item)
+          this.outlines.push(tempObj);
         })
         this.selectOptions.value = parseInt(data["schoolId"]);
         this.specialtyOptions.value = data["specialty"];

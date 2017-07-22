@@ -23,7 +23,8 @@
                 <el-col :span="8">
                   <el-form-item label="性别：" prop="sex">
                     <el-select v-model="formValidate.sex" placeholder="请选择">
-                      <el-option v-for="item in dictionary.gender" :key="item.id" :label="item.name" :value="item.id">
+                      <!-- <el-option v-for="item in dictionary.gender" :key="item.id" :label="item.name" :value="item.id"> -->
+                      <el-option v-for="(item,index) in sexOption" v-if="item.value" :key="index" :label="item.label" :value="item.value">
                       </el-option>
                     </el-select>
                   </el-form-item>
@@ -100,7 +101,7 @@
 
             <el-col :span="5" class="table-back-header">
               <div style="text-align: center">
-                <up-header v-if="imgSrc" @upladSuccess="setUploadHeaderSuccessUrl" :imgFile="imgSrc" :actionUrl="uploadHeaderUrl"></up-header>
+                <up-header @upladSuccess="setUploadHeaderSuccessUrl" :imgFile="imgSrc" :actionUrl="uploadHeaderUrl"></up-header>
               </div>
             </el-col>
 
@@ -231,6 +232,7 @@
   import dictionary from '../../../../libs/dictionary.js';
   //来源单位、毕业学校公用组件
   import searchSelect from '../../../common/searchSelect';
+  import sexOption from './sexOption';
 
   let Util = null;
   export default {
@@ -238,6 +240,7 @@
     props: ['operailityData', 'fromWhere'],
     data() {
       return {
+        sexOption,
         //公用业务字典
         dictionary,
         //医师资格级别
@@ -293,9 +296,9 @@
           email: '', //邮箱
           telephone: '', //办公电话
           address: '', //现住地址
-          postCode: '', //邮编
+          postCode: '', //邮编 
           headPhoto: '', //头像地址
-          headPhotoHttp: '' //头像全地址
+          headPhotoHttp: '' //头像全地址 
         },
         //上传头像
         uploadHeaderUrl: '/file/upload/static',
@@ -381,7 +384,12 @@
       SuccessGetCurrData(responseData) {
         let data = responseData.data;
         this.formValidate = this.formDate(data, ['birth', 'jobTime'], this.yearMonth);
-        this.imgSrc = data.headPhotoHttp;
+        let env = this.$store.getters.getEnvPath;
+        if (data.headPhoto === null) {
+          this.imgSrc = "";
+        } else {
+          this.imgSrc = env["http"] + data.headPhoto;
+        }
         this.selectOptions.value = this.formValidate.schoolId;
         this.isShowSlt = true;
       },

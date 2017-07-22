@@ -51,6 +51,9 @@
             label="序号"
             type="index"
             width="65">
+            <template scope="scope">
+              <span>{{scope.row.index}}</span>
+            </template>
           </el-table-column>
 
           <el-table-column label="操作"  width="200" align="center">
@@ -59,6 +62,7 @@
                 size="small"
                 @click="show(scope.$index,scope.row)">查看</el-button>
               <el-button
+                v-if="scope.row.state=='ENABLE'"
                 size="small"
                 @click="edit(scope.$index, scope.row)">修改</el-button>
               <el-button v-if="scope.row.state=='DISABLE'" size="small" @click="forbidden(scope.$index, scope.row)">启 用</el-button>
@@ -218,6 +222,7 @@
           title:'启用'
         },
 
+
         //启用
         enableModal:false,
         enableData:{
@@ -272,8 +277,12 @@
         //ajax请求参数设置
         this.myPages =  Util.pageInitPrams;
 
+
+      //ajax请求参数设置
+        this.myPages =  Util.pageInitPrams;
+
         this.queryQptions = {
-          params:{holidayName:"",roleId:"",status:""}
+          params:{curPage: 1,pageSize: Util.pageInitPrams.pageSize}
         }
 
         this.setTableData();
@@ -317,6 +326,7 @@
       updateListData(responseData){
         let data = responseData.data;
         this.tableData1=[];
+        data = this.addIndex(data);
         this.tableData1=data;
         this.listTotal = responseData.totalCount || 0;
       },

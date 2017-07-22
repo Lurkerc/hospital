@@ -56,7 +56,7 @@
           prop="index"
           width="75">
           <template scope="scope">
-            <span>{{scope.row.index}}</span>
+            <span>{{scope.row.index+1}}</span>
           </template>
         </el-table-column>
         <el-table-column

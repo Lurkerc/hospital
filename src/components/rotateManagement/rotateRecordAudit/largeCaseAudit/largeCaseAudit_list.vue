@@ -76,7 +76,8 @@
             <template scope="scope">
               <el-button size="small" @click="show(scope.row)">查看</el-button>
               <!--<el-button v-if="scope.row.cstate=='NO_SUBMIT'"  size="small" @click="audit(scope.row)">审核</el-button>-->
-              <el-button v-if="scope.row.cstate!='PASS'"  size="small" @click="audit(scope.row)">审核</el-button>
+              <el-button v-if="scope.row.cstate != 'PASS'"  size="small" @click="audit(scope.row)">审核</el-button>
+              <el-button v-if="scope.row.ctype == 'DBL' && scope.row.cstate == 'NO_PASS'"  size="small" @click="postil(scope.row)">批注</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -165,6 +166,17 @@
       <show v-if="showModal" @cancel="cancel" @show="subCallback" :operaility-data="operailityData" :url="url"></show>
       <div slot="footer"></div>
     </Modal>
+    <!--批注弹窗-->
+    <Modal
+      width="1400"
+      v-model="postilModal"
+      title="查看档案管理弹窗"
+      class-name="vertical-center-modal"
+      :loading="loading">
+      <modal-header slot="header" :content="postilId"></modal-header>
+      <postil v-if="postilModal" @cancel="cancel" @postil="subCallback" :operaility-data="operailityData" :url="url"></postil>
+      <div slot="footer"></div>
+    </Modal>
 
     <!--批量通过-->
     <Modal
@@ -199,6 +211,8 @@
   import edit from "./largeCaseWrite_audit.vue";
   //引入--查看--组件
   import show from "./largeCaseWrite_view.vue";
+  //引入--查看--组件
+  import postil from "./largeCaseAudit_postil.vue";
   //当前组件引入全局的util
   let Util=null;
   export default{
@@ -243,6 +257,7 @@
         passModal:false,
         reportedModal:false,
         rejectModal:false,
+        postilModal:false,
         totalCount:0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle:{
@@ -261,6 +276,7 @@
         passId:{id:'passId',title:'通过'},
         reportedId:{id:'reportedId',title:'上报'},
         rejectId:{id:'rejectId',title:'驳回'},
+        postilId:{id:'postilId',title:'大病历批注'},
       }
     },
     methods: {
@@ -382,6 +398,11 @@
         this.operailityData = data;
         this.openModel("audit");
       },
+      /*--点击--修改--按钮--*/
+      postil(data){
+        this.operailityData = data;
+        this.openModel("postil");
+      },
 
       /*--点击--修改--按钮--*/
       reported(data){
@@ -473,7 +494,7 @@
     },
     components:{
       //当前组件引入的子组件
-      edit,show
+      edit,show,postil
     }
   }
 </script>

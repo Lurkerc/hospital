@@ -295,16 +295,13 @@
                     if(data.evaluateResultDtoList[i].tempId==this.body[k].tempId){
                       this.body[k].goal = data.evaluateResultDtoList[i].score;
                     }
-
                 }
               }else {
                 if(data.evaluateResultDtoList[i].tempId==this.body[k].tempId){
                   this.body[k].goal = data.evaluateResultDtoList[i].score;
                 }
-
               }
             }
-
         }
       },
 
@@ -415,7 +412,7 @@
                 tempId:child[k].tempId,
                 select1:'',
               }
-              let val=[]
+              let val=[];
               if(data.scoreType == 'SELECT'){
                 for(let l=0;l<child[k].templateItemOptionList.length;l++){
                   val.push(child[k].templateItemOptionList[l].val)

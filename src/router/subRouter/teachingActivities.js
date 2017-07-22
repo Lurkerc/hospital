@@ -78,6 +78,36 @@ const jxhdRouters = {
         resolve(require('../../components/teach/teachingActivities/myRating/myRating_list.vue'));
       }, 'jxhd');
     }
+  },
+  {
+    //我的课程表
+    path:'usersyllabus',
+    name:'usersyllabus',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/teach/teachingActivities/usersyllabus/usersyllabus_list.vue'));
+      }, 'jxhd');
+    }
+  },
+  {
+    //授课安排
+    path:'hostUsersyllabus',
+    name:'hostUsersyllabus',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/teach/teachingActivities/hostUsersyllabus/hostUsersyllabus_list.vue'));
+      }, 'jxhd');
+    }
+  },
+  {
+    //课程安排
+    path:'manageUsersyllabus',
+    name:'manageUsersyllabus',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/teach/teachingActivities/manageUsersyllabus/manageUsersyllabus_list.vue'));
+      }, 'jxhd');
+    }
   }
   ]
 }

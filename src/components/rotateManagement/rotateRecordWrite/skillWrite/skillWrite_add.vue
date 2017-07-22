@@ -1,11 +1,11 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate" class="demo-form-inline" label-width="90px">
+    <el-form :model="formValidate" ref="formValidate" :rules="skillWrite" class="demo-form-inline" label-width="90px">
 
       <el-row>
         <el-col :span="8" :offset="2">
-          <el-form-item label="科室:" prop="name">
+          <el-form-item label="科室:" prop="podId">
             <el-select @change="podIdChange" v-model="formValidate.podId" placeholder="请选择" :disabled="!!podId">
               <el-option v-for="item in optionData" :key="item.id" :label="item.depName" :value="item.podId">
               </el-option>
@@ -14,7 +14,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="病人姓名:" prop="patientName">
-            <el-input v-model="formValidate.patientName" placeholder="请输入"></el-input>
+            <el-input class="date-select-width" v-model="formValidate.patientName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
 
@@ -23,7 +23,7 @@
       <el-row>
         <el-col :span="8" :offset="2">
           <el-form-item label="病历号:" prop="patienNo">
-            <el-input v-model="formValidate.patienNo" placeholder="请输入"></el-input>
+            <el-input class="select-width" v-model.number="formValidate.patienNo" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8" :offset="2">
@@ -36,9 +36,9 @@
 
       <el-row>
         <el-col :span="16" :offset="2">
-          <el-form-item label="操作名称:" prop="name">
-            <el-select multiple v-model="disTitle" placeholder="请选择">
-              <el-option v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle" :value="item.outlineRequireId+'-'+item.disTitle">
+          <el-form-item label="操作名称:" prop="disTitle">
+            <el-select multiple v-model="formValidate.disTitle" placeholder="请选择">
+              <el-option v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.outlineRequireId+'-'+item.disTitle">
               </el-option>
             </el-select>
           </el-form-item>
@@ -55,12 +55,11 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row v-if="formValidate.isSuccess=='N'">
         <el-col :span="16" :offset="2">
           <el-form-item label="失败原因:" prop="reasonFailure">
             <el-input type="textarea" v-model="formValidate.reasonFailure"></el-input>
           </el-form-item>
-        </el-col>
         </el-col>
       </el-row>
 
@@ -90,12 +89,14 @@
   </div>
 </template>
 <script>
+  import {skillWrite} from '../../rules'
   //当前组件引入全局的util
   let Util = null;
   export default {
     props: ['operailityData', 'url', 'podId'],
     data() {
       return {
+        skillWrite,
         disTitle: [],
         getMyRotaryRequirements: [], //技能名称列表
         optionData: '',
@@ -113,10 +114,11 @@
           fillTime: '', //填写时间(yyy-MM-dd HH:mm:ss)
           poddIds: [], //病种ID(多个逗号分隔)
           poddNames: '', //技能名称(多个逗号分隔)
-          isSuccess: '', //是否成功
+          isSuccess: 'Y', //是否成功
           fileIds: '', //附件IDs(多个逗号分隔)
           podId: '', //轮转ID
           reasonFailure: '', //失败原因
+          disTitle:[],
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle: {
@@ -175,13 +177,16 @@
           isLoadingFun(true);
           let poddIds = [];
           let poddNames = [];
-          for (let i = 0; i < this.disTitle.length; i++) {
-            let disTitle = this.disTitle[i].split('-');
+          for (let i = 0; i < this.formValidate.disTitle.length; i++) {
+            let disTitle = this.formValidate.disTitle[i].split('-');
             poddIds.push(disTitle[0]);
             poddNames.push(disTitle[1]);
           }
           this.formValidate.poddIds = poddIds.join(',');
           this.formValidate.poddNames = poddNames.join(',');
+          if( this.formValidate.isSuccess=='Y'){
+            this.formValidate.reasonFailure = '';
+          }
           this.addMessTitle.ajaxParams.data=this.formDate(this.getFormData(this.formValidate),['fillTime'],'yyyy-MM-dd');
           this.ajax(this.addMessTitle, isLoadingFun)
         }
@@ -273,7 +278,7 @@
         }
         this.isInit = true;
         this.formValidate = formValidate;
-        this.disTitle = [];
+        this.formValidate.disTitle = [];
         this.showMess(messTitle.successTitle);
 
         this.$emit('updata')

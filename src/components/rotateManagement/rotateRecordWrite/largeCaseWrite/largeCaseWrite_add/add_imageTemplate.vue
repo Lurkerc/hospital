@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
     <div>
-      <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="130px" >
+      <el-form :model="formValidate" ref="formValidate" :rules="imageTemplate" class="demo-form-inline" label-width="130px" >
         <el-row class="table-back-one">
           <el-col :span="24" >
             <el-form-item label="编号:" prop="czyNo" >
@@ -65,14 +65,14 @@
 
         <el-row class="table-back-two">
           <el-col :span="24" >
-            <el-form-item label="创建时间:" prop="csex" >
+            <el-form-item label="创建时间:"  >
               {{date}}
             </el-form-item>
           </el-col>
         </el-row>
         <el-row class="table-back-two">
           <el-col :span="24" >
-            <el-form-item label="创建人:" prop="createUserNmae" >
+            <el-form-item label="创建人:"  >
               {{formValidate.createUserNmae}}
             </el-form-item>
           </el-col>
@@ -98,13 +98,15 @@
 </template>
 <script>
     /*当前组件必要引入*/
-
+    /*当前组件必要引入*/
+    import {imageTemplate} from '../../../rules'
     //当前组件引入全局的util
     let Util = null;
     export default{
       props:['depId','depName','url','podId'],
         data() {
             return {
+              imageTemplate,
               saveBtn: {title: '提交', callParEvent: 'saveSubEvent'},
               loadBtn: {title: '上报', callParEvent: 'appearSubEvent'},
               name:'',
@@ -115,7 +117,7 @@
                 "cpodId":this.podId,
                 "czyNo":"",
                 "cname":"",
-                "csex":"",
+                "csex":"男",
                 "cage":"",
                 "cbyVar":"",
                 "ctgjcZkqk":"",

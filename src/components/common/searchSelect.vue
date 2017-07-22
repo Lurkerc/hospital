@@ -17,7 +17,7 @@
 <script>
   let Util=null;
   export default {
-    props:["selectOptions"],
+    props:["selectOptions",'isClear'],
     data() {
       return {
         optionData: [],
@@ -83,6 +83,11 @@
            }
         }
         this.$emit("setSltOptionValue",name,this.value);
+      }
+    },
+    watch:{
+      isClear(){
+        this.value = [];
       }
     }
   }

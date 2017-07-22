@@ -11,8 +11,9 @@
       >
         <div class="showCurrMess">
           <div v-for="(item,index) in data">
-            <div class="currUserMess">
-              头像
+            <div >
+              <img  class="currUserMess headerUrl" :src="http+item.hostUserPhoto" />
+              <!--static/img/2017/07/14/20170714092405208.JPG-->
             </div>
             <el-row :gutter="20" class="row-bg">
               <el-col :span="6"><p><strong>课程名称:</strong>{{item.activityName}} </p></el-col>
@@ -161,8 +162,13 @@
                 params: {},
               }
             },
+            http:'',
           }
       },
+    created(){
+      let env = this.$store.getters.getEnvPath;
+      this.http = env["http"]
+    },
     methods:{
 
       //数字转中文大写

@@ -6,7 +6,7 @@
         <el-col :span="24">
           <el-form-item label="科室" prop="depId" >
             <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
-              <select-option :type="'userRotaryDeptlist'" :unAll="true"  :userType="userType" :name="'depName'" :id="'depId'" :userId="userId"></select-option>
+              <select-option :role="role" :type="type"  :userType="userType"  :userId="userId"></select-option>
             </el-select>
           </el-form-item>
           <el-form-item label="考勤时间" prop="month">
@@ -535,6 +535,8 @@
         },
         headerLength:31,
         oldDate:'',
+        type:'dep',
+        role:''
       }
 
     },
@@ -544,6 +546,12 @@
 
       //初始化请求列表数据
       init(){
+        let userInfo = this.$store.getters.getUserInfo;
+        if(userInfo.roleList[0].identify == 'DJLS'){
+          this.type = 'getDepByTeacher';
+        }else {
+          this.type = 'byUserType';
+        }
         Util = this.$util;
         //ajax请求参数设置
         //初始化月份
@@ -977,6 +985,7 @@
       let userInfo = this.$store.getters.getUserInfo;
       this.userId=userInfo.id;
       this.userType=userInfo.studentTypes;
+      this.role = userInfo.roleList[0].identify;
       this.init();
     },
     mounted(){

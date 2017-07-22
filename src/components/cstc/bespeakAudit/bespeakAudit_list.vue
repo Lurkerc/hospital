@@ -1,29 +1,67 @@
 <template>
-  <!-- 预约审核 -->
-  <div id="nosocomial" ref="nosocomial">
-    <!-- 按钮 -->
-    <div class="buttonList" ref="buttonList">
-      <el-button size="small" type="primary">批量审核</el-button>
-      <el-button size="small" type="danger">批量驳回</el-button>
+  <!-- 预约申请 -->
+  <div id="bespeakClass" ref="bespeakSetRoom">
+    <el-row style="padding-bottom:20px;">
+      <!-- 搜索框 -->
+      <el-col align="right">
+        <el-input placeholder="请输入课程名称" v-model="searchObj.name" style="width:300px;" :maxlength="20">
+          <el-button slot="append" icon="search" @click="search"></el-button>
+        </el-input>
+        <el-button :icon="getSearchBtnIcon()" @click="openMoreSearch()">筛选</el-button>
+      </el-col>
+    </el-row>
+    <!-- 多条件 -->
+    <div style="overflow:hidden;" v-show="showMoreSearch" ref="showMoreSearch" align="right">
+      <el-form :inline="true">
+        <el-form-item label="课程名称:">
+          <el-input v-model="searchObj.name"></el-input>
+        </el-form-item>
+        <el-form-item label="申请时间:">
+          <date-group :dateGroup="{text:'',startDate:searchObj.createStartTime,endDate:searchObj.createEndTime}">
+            <el-date-picker name="start" v-model="searchObj.createStartTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
+              @change="handleStartTime"></el-date-picker>
+            <span>-</span>
+            <el-date-picker name="end" v-model="searchObj.createEndTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
+              @change="handleEndTime"></el-date-picker>
+          </date-group>
+        </el-form-item>
+        <el-form-item label="开放预约状态:">
+          <el-select v-model="searchObj.status" placeholder="请选择">
+            <el-option v-for="item in statusOption" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item style="margin-right:0;">
+          <el-button @click="search" type="info">查询</el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <!-- 表格 -->
-    <div id="nosocomialTable" ref="nosocomialTable">
-      <el-table align="center" :height="dynamicHt" :context="self" :data="tableData1" tooltip-effect="dark" style="width: 100%"
-        @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55">
-        </el-table-column>
-        <el-table-column label="操作" align="center">
+
+    <!-- 表格数据 -->
+    <div id="tableView" ref="tableView">
+      <el-table align="center" :height="tableHeight" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
+        style="width: 100%;" @selection-change="handleSelectionChange">
+        <el-table-column label="操作" width="70">
           <template scope="scope">
-            <el-button size="small" type="info" @click="show(scope.row)">查看</el-button>
+            <el-button size="small" type="info" @click="add(scope.row)">查看</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="预约房间号" show-overflow-tooltip></el-table-column>
-        <el-table-column label="申请使用时间" show-overflow-tooltip></el-table-column>
-        <!--<el-table-column label="事项类型" show-overflow-tooltip></el-table-column>-->
-        <el-table-column label="申请人" show-overflow-tooltip></el-table-column>
-        <el-table-column label="申请时间" show-overflow-tooltip></el-table-column>
-        <el-table-column label="预约状态" show-overflow-tooltip></el-table-column>
-        <el-table-column label="预约审批人" show-overflow-tooltip></el-table-column>
+        <el-table-column label="课程名称" prop="name" show-overflow-tooltip></el-table-column>
+        <el-table-column label="授课人" prop="lecturer" show-overflow-tooltip></el-table-column>
+        <el-table-column label="授课对象" prop="userType" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.userType | userType }}
+          </template>
+        </el-table-column>
+        <el-table-column label="申请人" prop="creater" show-overflow-tooltip></el-table-column>
+        <el-table-column label="申请时间" prop="createTime" show-overflow-tooltip></el-table-column>
+        <el-table-column label="预约状态" prop="status" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.status | typeText }}
+          </template>
+        </el-table-column>
+        <el-table-column label="最低开课人数" prop="minNum" show-overflow-tooltip></el-table-column>
+        <el-table-column label="已申请人数" prop="applicantsNum" show-overflow-tooltip></el-table-column>
       </el-table>
     </div>
     <!-- 分页 -->
@@ -32,79 +70,62 @@
         :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
     </div>
 
-    <!--增加弹窗-->
-    <Modal :mask-closable="false" v-model="addModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="960">
-      <modal-header slot="header" :content="button.addId"></modal-header>
-      <add v-if="addModal" @cancel="cancel" @add="subCallback"></add>
-      <div slot="footer"></div>
-    </Modal>
-
-    <!--编辑弹窗-->
-    <Modal :mask-closable="false" v-model="editModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="960">
-      <modal-header slot="header" :content="button.editId"></modal-header>
-      <edit v-if="editModal" @cancel="cancel" @add="subCallback"></edit>
-      <div slot="footer"></div>
-    </Modal>
-
-    <!--删除弹窗-->
-    <Modal close-on-click-modal="false" height="200" v-model="removeModal" title="对话框标题" class-name="vertical-center-modal" :loading="loading"
-      :width="500">
-      <modal-header slot="header" :content="button.removeId"></modal-header>
-      <remove v-if="removeModal" :delete-url="deleteUrl" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
+    <!-- 增加 -->
+    <Modal :mask-closable="false" v-model="addModal" height="200" class-name="vertical-center-modal" :width="1000">
+      <modal-header slot="header" :content="contentHeader.addId"></modal-header>
+      <add v-if="addModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></add>
       <div slot="footer"></div>
     </Modal>
   </div>
 </template>
-
 <script>
-  //当前组件引入全局的util
   let Util = null;
-  let store = null;
 
-  // 引入操作模态组件
-  import api from './api';
-  import add from './bespeakAudit_add'; // 查看
-  import show from './bespeakAudit_view'; // 查看评价
+  import api from './api'; // API
+  import statusOption from '../bespeakClass/statusOption'; // 预约状态类型
+
+  import add from './bespeakAudit_add';
 
   export default {
     data() {
       return {
-        // 配置
-        deleteUrl: '', // 删除api url
-        operailityData: '',
-
-        // 表格
-        self: this,
-        tableData1: [],
-        loading: false,
+        api,
         totalCount: 0,
-        dynamicHt: 100,
-        multipleSelection: '',
-        // 按钮
-        button: {
+        self: this,
+        statusOption,
+        tableHeight: 0,
+        dynamicHt: 100, // 表格高度
+        loading: false,
+        reportModal: false,
+        showMoreSearch: false, // 更多筛选
+        operailityData: [],
+        multipleSelection: [], // 表格已选集
+        searchObj: { // 搜索
+          name: '', //  名称
+          createStartTime: '', // 开始时间
+          createEndTime: '', // 结束时间
+          status: '', // 状态
+          // isOpen: '', // 是否开放预约
+          // address: '', // 房间所在位置
+          sortby: 'RESERVE_PROJECT_ROOM_CREATETIME', // 排序字段
+          order: 'DESC', // 排序方式
+        },
+        tableData: [],
+        // 模态框提示
+        contentHeader: {
           addId: {
-            id: 'add',
-            title: '新增事项'
+            id: 'addId',
+            title: '审核预约申请'
           },
-          removeId: {
-            id: 'remove',
-            title: '删除事项'
-          },
-          editId: {
-            id: 'edit',
-            title: '修改事项'
-          }
         }
       }
-
     },
     methods: {
-      onSubmit() {
-        return false
-      },
+      /************************** 基本逻辑 ******************************/
       //初始化请求列表数据
       init() {
         Util = this.$util;
+
         //ajax请求参数设置
         this.myPages = Util.pageInitPrams;
 
@@ -113,21 +134,30 @@
           params: {
             curPage: 1,
             pageSize: Util.pageInitPrams.pageSize,
-            sortby: 'RESERVE_APPLICANTDATE',
-            order: 'DESC'
           }
         }
         this.setTableData();
       },
-
-      //设置表格及分页的位置
-      setTableDynHeight() {
-        let nosocomial = this.$refs.nosocomial;
-        let parHt = nosocomial.parentNode.offsetHeight;
-        let nosocomialTable = this.$refs.nosocomialTable;
-        let paginationHt = 50;
-        this.dynamicHt = parHt - nosocomialTable.offsetTop - paginationHt;
+      /************************* 搜索逻辑 *********************************/
+      search() {
+        this.setTableData();
       },
+      // 获取筛选按钮图标
+      getSearchBtnIcon() {
+        return this.showMoreSearch ? 'arrow-up' : 'arrow-down'
+      },
+      // 显示更多筛选
+      openMoreSearch() {
+        this.showMoreSearch = !this.showMoreSearch;
+        this.$nextTick(() => {
+          if (this.showMoreSearch) {
+            this.tableHeight = this.dynamicHt - this.$refs.showMoreSearch.offsetHeight;
+          } else {
+            this.tableHeight = this.dynamicHt;
+          }
+        })
+      },
+      /************************* 表格逻辑 *********************************/
       /*
        * checkbox 选择后触发事件
        * @param val Array 存在所有的选择每一个行数据
@@ -136,96 +166,42 @@
         this.multipleSelection = val;
       },
       /*
-       * 列表数据只能选择一个
-       * @param isOnly true  是否只选择一个
+       * 设置表格数据
+       * @param isLoading Boolean 是否加载
        */
-      isSelected(isOnly) {
-        let len = this.multipleSelection.length;
-        let flag = true;
-        if (len == 0) {
-          this.showMess("请选择数据!");
-          flag = false;
-        }
-        if (len > 1 && isOnly) {
-          this.showMess("只能修改一条数据!")
-          flag = false;
-        }
-        return flag;
-      },
-
-      //通过get请求列表数据
-      listDataSuccess(res, m, loading) {
-        let that = this;
-        let d = new Date();
-        let t2 = d.getTime();
-        let responseData = res.data;
-        this.totalCount = res.totalCount || 0;
-        if (Util._.isObject(responseData["status"]) && responseData["status"]["code"] == 0) {
-          let len = responseData.data.length;
-          let data = responseData.data.splice(0, 150);
-          this.tableData1 = [];
-          data = that.addIndex(data);
-          for (var i = 0, n = 0; i < data.length; i += 100, n++) {
-            setTimeout(() => {
-              that.tableData1 = that.tableData1.concat(data.splice(0, 100));
-            }, n * 10)
-          }
-          that.listTotal = 1;
-        } else {
-          loading(false)
-        }
-      },
       setTableData(isLoading) {
+        Object.assign(this.queryQptions.params, this.searchObj);
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions
         }, isLoading)
       },
-      //搜索监听回调
-      searchEvent(isLoading) {
-        isLoading(true);
-        this.setTableData(isLoading)
+      // 数据请求成功回调
+      listDataSuccess(res, m, loading) {
+        this.totalCount = res.totalCount;
+        this.tableData = res.data;
       },
-      /*
-       * 列表查询方法
-       * @param string 查询from的id
-       * */
-      handleSubmit(name) {
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            this.$Message.success('提交成功!');
-          } else {
-            this.$Message.error('表单验证失败!');
-          }
-        })
+      //设置表格及分页的位置
+      setTableDynHeight(otherHeight = 0) {
+        let contenHeight = this.$refs.bespeakSetRoom.parentNode.offsetHeight;
+        let tableView = this.$refs.tableView;
+        let paginationHt = 50 + otherHeight;
+        this.dynamicHt = contenHeight - tableView.offsetTop - paginationHt;
+        this.tableHeight = this.dynamicHt;
       },
-
-      /********* 按钮 *************/
-      // 查看
-      show(row) {
+      /************************************** 按钮相关 **************************************************/
+      // 审核
+      add(row) {
         this.operailityData = row;
-      },
-
-      //-------- 模态框 -----------//
-      // 增加
-      add() {
         this.openModel('add')
       },
-      // 增加
-      edit() {
-        this.openModel('edit')
-      },
+      /************************************** 模态框处理 **************************************************/
       // 取消
       cancel(targer) {
         this[targer + 'Modal'] = false;
       },
-      // 删除
-      remove() {
-        if (!this.isSelected()) return;
-        this.operailityData = this.multipleSelection;
-        this.openModel('remove');
-      },
-      // 回调
+
+      // 增加回调
       subCallback(target, title, updata) {
         this.cancel(target);
         if (title) {
@@ -241,10 +217,10 @@
        * */
       openModel(options) {
         this[options + 'Modal'] = true;
-      }
+      },
     },
-    created() {
-      this.init()
+    components: {
+      add,
     },
     mounted() {
       //页面dom稳定后调用
@@ -256,17 +232,14 @@
         Event.addHandler(window, "resize", this.setTableDynHeight);
       })
     },
-    components: {
-      add,
-      show
+    created() {
+      Util = this.$util;
+      this.init()
     }
   }
 
 </script>
+<style lang="scss">
 
-<style>
-  .buttonList {
-    margin-bottom: 10px;
-  }
 
 </style>

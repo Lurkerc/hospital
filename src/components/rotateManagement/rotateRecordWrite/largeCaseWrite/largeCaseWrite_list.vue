@@ -136,19 +136,19 @@
     <!--新建-->
     <Modal
       close-on-click-modal="false"
-      width="1400"
+      :width="width"
       v-model="addModal"
       title="对话框标题"
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="addId"></modal-header>
-      <add v-if="addModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :url="url"></add>
+      <add v-if="addModal" @changeWidth="changeWidth" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :url="url"></add>
       <div slot="footer"></div>
     </Modal>
     <!--修改-->
     <Modal
       close-on-click-modal="false"
-      width="1400"
+      width="1300"
       v-model="editModal"
       title="对话框标题"
       class-name="vertical-center-modal"
@@ -173,7 +173,7 @@
     </Modal>
     <!--查看弹窗-->
     <Modal
-      width="1400"
+      width="1300"
       v-model="showModal"
       title="查看档案管理弹窗"
       class-name="vertical-center-modal"
@@ -221,6 +221,7 @@
           sortby: '',//排序列
           order: ''     //升序、降序
         },
+        width:1300,
 
         operailityData:'',
         multipleSelection: [],
@@ -271,6 +272,15 @@
         };
 
         this.setTableData();
+      },
+
+      changeWidth(val){
+          if(!val){
+            this.width = 1300;
+          }else {
+            this.width = val;
+          }
+
       },
       //设置表格及分页的位置
       setTableDynHeight(){
@@ -362,6 +372,10 @@
       /*--点击--删除--按钮--*/
       remove(){
         if(!this.isSelected(true)) return;
+        if(!(this.multipleSelection[0].cstate == 'NO_SUBMIT' || this.multipleSelection[0].cstate == 'REJECT')) {
+          this.showMess('只能删除未上报或已驳回的数据');
+          return;
+        }
         this.operailityData =[{id:this.multipleSelection[0].cid}];
         this.openModel('remove') ;
       },

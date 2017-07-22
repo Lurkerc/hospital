@@ -4,8 +4,11 @@
     <steps></steps>
     <el-form  ref="formValidate" label-width="100px">
       <el-row >
-        <el-col :span="10" :offset="12" >
-          <el-form-item  prop="title">
+        <el-col :span="10" >
+          <!--<el-button  type="info">导出excel</el-button>-->
+        </el-col>
+        <el-col :span="14" :offset="10" align="right">
+          <el-form-item  prop="buildingName">
             <input class="hidden">
             <el-input   v-model="formValidate.buildingName" placeholder="输入大楼名称搜索">
               <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
@@ -17,7 +20,7 @@
 
     <!--列表操作按钮-->
     <div style="margin-bottom: 20px;">
-      <el-button  type="info">导出excel</el-button>
+
     </div>
     <el-table
       align="center"
@@ -27,42 +30,49 @@
       highlight-current-row
     >
       <el-table-column
+        show-overflow-tooltip
         prop="allBedNum"
         align="center"
         label="床位总数"
       >
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="allZeroNum"
         align="center"
         label="空床位数"
       >
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="havBeenStayNum"
         label="已住床位数"
         align="center"
       >
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="allRoom"
         label="房间总数"
         align="center"
       >
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="allZeroRoom"
         label="全空房间数"
         align="center"
       >
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="allFullRoom"
         label="全满房间数"
         align="center"
       >
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="allHaveBeenStayNum"
         label="未满房间数"
         align="center"

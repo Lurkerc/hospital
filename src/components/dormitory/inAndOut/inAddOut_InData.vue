@@ -91,7 +91,7 @@
 
             <el-col :span="5" class="table-back-header">
               <div style="text-align: center">
-                <img class="headerUrl" :src="formValidate.headPhoto" style="width: 100%" />
+                <img class="headerUrl" :src="formValidate.headPhotoHttp" style="width: 100%" />
               </div>
             </el-col>
 
@@ -267,6 +267,13 @@
        * */
       SuccessGetCurrData(responseData){
         let data = responseData.data;
+        let env = this.$store.getters.getEnvPath;
+        if(data.headPhoto===null){
+          data.headPhotoHttp = "";
+        }else{
+            console.log( env["http"]);
+          data.headPhotoHttp = env["http"]+data.headPhoto;
+        }
         this.formValidate = data;
       },
 

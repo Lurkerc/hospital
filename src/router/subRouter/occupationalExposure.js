@@ -7,22 +7,21 @@
  * @author   zyc<332533011@qq.com>
  */
 const exposureRouters = {
-  path: 'occupationalExposureAudit',
-  name: 'occupationalExposureAudit',
-  component:resolve=> {
+  path: 'occupationalExposure',
+  name: 'occupationalExposure',
+  component: resolve => {
     require.ensure([], () => {
       resolve(require('@/components/common/rightMain'));
     }, 'occupationalExposureAudit');
   },
   redirect: to => {
-    return '/manage/occupationalExposureAudit/occupationalExposureAudit'
+    return '/manage/occupationalExposure/occupationalExposureAudit'
   },
-  children:[
-    {
+  children: [{
       //职业暴露
-      path:'occupationalExposureAudit',
-      name:'occupationalExposureAudit',
-      component:resolve=> {
+      path: 'occupationalExposureAudit',
+      name: 'occupationalExposureAudit',
+      component: resolve => {
         require.ensure([], () => {
           resolve(require('../../components/daily/dailyManagement/occupationalExposureAudit/occupationalExposure_list.vue'));
         }, 'occupationalExposureAudit');
@@ -30,9 +29,9 @@ const exposureRouters = {
     },
     {
       //职业暴露
-      path:'occupationalExposureWrite',
-      name:'occupationalExposureWrite',
-      component:resolve=> {
+      path: 'occupationalExposureWrite',
+      name: 'occupationalExposureWrite',
+      component: resolve => {
         require.ensure([], () => {
           resolve(require('../../components/daily/dailyManagement/occupationalExposureWrite/occupationalExposure_list.vue'));
         }, 'occupationalExposureAudit');

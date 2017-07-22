@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="entityWrite" class="demo-form-inline" label-width="90px" >
 
       <el-row >
         <el-col :span="8" :offset="2">
@@ -11,7 +11,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="病人姓名:" prop="patientName" >
-            <el-input v-model="formValidate.patientName" placeholder="请输入"></el-input>
+            <el-input class="date-select-width" v-model="formValidate.patientName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
 
@@ -20,7 +20,7 @@
       <el-row >
         <el-col :span="8" :offset="2">
           <el-form-item label="病历号:" prop="patienNo" >
-            <el-input v-model="formValidate.patienNo"  placeholder="请输入"></el-input>
+            <el-input class="select-width" v-model.number="formValidate.patienNo"  placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
         <el-col :span="8" :offset="2">
@@ -37,12 +37,12 @@
 
       <el-row >
         <el-col :span="16" :offset="2">
-          <el-form-item label="病种名称:" prop="name" >
-            <el-select  multiple v-model="disTitle" placeholder="请选择">
+          <el-form-item label="病种名称:" prop="disTitle" >
+            <el-select  multiple v-model="formValidate.disTitle" placeholder="请选择">
               <el-option
                 v-for="item in getMyRotaryRequirements"
                 :key="item.id"
-                :label="item.disTitle"
+                :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'"
                 :value="item.outlineRequireId+'-'+item.disTitle">
               </el-option>
             </el-select>
@@ -122,12 +122,14 @@
   </div>
 </template>
 <script>
+  import {entityWrite} from '../../rules'
   //当前组件引入全局的util
   let Util=null;
   export default {
     props:['operailityData','url'],
     data (){
       return{
+        entityWrite,
         disTitle:[],
         getMyRotaryRequirements:[],
         optionData:'',
@@ -194,7 +196,9 @@
       getListData(res){
           let data = res.data;
           if(!data) return;
+          data.disTitle = []
           let poddIds = []
+
           let poddNames = []
           if(!data.deId){
             data.deId =[]
@@ -202,9 +206,10 @@
             poddIds = (data.deId+'').split(',');
             poddNames = data.deName.split(',');
             for(let i=0;i<poddIds.length;i++){
-              this.disTitle.push( poddIds[i]+'-'+poddNames[i])
+              data.disTitle.push( poddIds[i]+'-'+poddNames[i])
             }
           }
+          data.patienNo = +data.patienNo
 
         this.formValidate = data;
         this.podIdChange(data.podId)
@@ -220,8 +225,8 @@
           isLoadingFun(true);
           let poddIds = [];
           let poddNames = [];
-          for(let i=0;i<this.disTitle.length;i++){
-            let disTitle = this.disTitle[i].split('-');
+          for(let i=0;i<this.formValidate.disTitle.length;i++){
+            let disTitle = this.formValidate.disTitle[i].split('-');
             poddIds.push(disTitle[0]);
             poddNames.push(disTitle[1]);
 

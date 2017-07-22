@@ -44,7 +44,7 @@
       <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark"
         style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column label="序号" type="index" width="70"></el-table-column>
+        <el-table-column label="序号" prop="index" width="100"></el-table-column>
         <el-table-column label="操作" align="center" width="80">
           <template scope="scope">
             <el-button size="small" type="success" @click="show(scope.row)">查看</el-button>
@@ -266,7 +266,7 @@
       // 数据请求成功回调
       listDataSuccess(res, m, loading) {
         this.totalCount = res.totalCount || 0;
-        this.tableData = res.data;
+        this.tableData = this.addIndex(res.data || []);
       },
       //设置表格及分页的位置
       setTableDynHeight() {

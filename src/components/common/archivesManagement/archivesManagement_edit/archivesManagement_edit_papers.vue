@@ -59,9 +59,19 @@
       </el-col >
     </el-row >
 
-    <el-row >
-      <el-col :span="24" style="text-align: center;">
-        <load-btn @listenSubEvent="saveCurrData" :btnData="loadBtn"></load-btn>
+    <!--<el-row >-->
+      <!--<el-col :span="24" style="text-align: center;">-->
+        <!--<load-btn @listenSubEvent="saveCurrData" :btnData="loadBtn"></load-btn>-->
+      <!--</el-col>-->
+    <!--</el-row >-->
+    <br />
+    <div style="font-size: 1px;overflow: hidden;line-height: 1;border-top:1px solid #e3e8ee;margin: 12px 0;"></div>
+    <el-row>
+      <el-col :span="9" :offset="10">
+        <el-button type="primary" v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @click="saveDataToParent">保存</el-button>
+        <load-btn  v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+        <span v-if="userInfo.archivesAuditStatus=='NOT_AUDIT'" style="margin-right: 10px;color: #FF4949;">您的档案信息正在审核中……</span>
+        <el-button  @click="cancel">取消</el-button>
       </el-col>
     </el-row >
   </div>
@@ -72,7 +82,7 @@
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['dataId','initData'],
+    props: ['dataId','initData','userInfo'],
     data (){
       return{
         //上传证件图片
@@ -147,6 +157,20 @@
           this.editMessTitle.ajaxParams.data = this.getFormData(this.cerTypeArr);
           this.$emit("setSaveData",this.editMessTitle.ajaxParams.data);
           this.ajax(this.editMessTitle, isLoadingFun);
+        }
+      },
+
+
+      saveDataToParent(){
+        this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+      },
+
+
+      listenSubEvent(){
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit) {
+          this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          this.$emit("setSaveData",this.editMessTitle.ajaxParams.data);
         }
       },
 

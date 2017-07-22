@@ -70,7 +70,7 @@
             width="160">
             <template scope="scope">
               <el-button size="small" @click="show(scope.$index)">查看</el-button>
-              <el-button size="small" @click="edit(scope.$index)">修改</el-button>
+              <el-button v-if="scope.row.groupState!='RELEASE'" size="small" @click="edit(scope.$index)">修改</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -263,6 +263,7 @@
       updateListData(responseData){
         let data = responseData.data;
         this.tableData1=[];
+        data = this.addIndex(data);
         this.tableData1=data;
         this.listTotal = responseData.totalCount || 0;
       },

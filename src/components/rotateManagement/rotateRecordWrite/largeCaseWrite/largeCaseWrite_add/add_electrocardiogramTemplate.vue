@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
     <div>
-      <el-form  ref="formValidate"  class="demo-form-inline" label-width="130px" >
+      <el-form  :model="formValidate" ref="formValidate" :rules="electrocardiogramTemplate"  class="demo-form-inline" label-width="130px" >
         <el-row class="table-back-one">
           <el-col :span="6" >
             <el-form-item label="科别:" prop="name" >
@@ -28,6 +28,7 @@
           <el-col :span="6" >
             <el-form-item label="日期:" prop="cjlDate" >
               <el-date-picker
+                :editable="false"
                 v-model="formValidate.cjlDate"
                 type="date"
                 style="width:166px"
@@ -162,6 +163,7 @@
             </el-form-item>
           </el-col>
         </el-row>
+
         <div style="width: 1380px;overflow: auto;margin: 0 auto" class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition">
           <table :width=" mzStatusHeader.length==1?'100%':mzRecordHeader.length*150">
             <colgroup  v-for="(item,index) in mzRecordHeader">
@@ -169,8 +171,8 @@
             </colgroup>
             <thead>
             <tr>
-              <th class="cell" v-for="(item,index) in mzRecordHeader">
-                {{item}}
+              <th style="text-align: center" class="cell" v-for="(item,index) in mzRecordHeader">
+                {{item}} <span v-if="index==0" style="color: red">*</span>
               </th>
             </tr>
             </thead>
@@ -184,7 +186,7 @@
               <tbody  class="add-scope">
               <tr v-for="(item,index) in formValidate.mzRecord">
                 <td v-for="(head,i) in item" :key="i">
-                  <el-input @focus="cellClick('mzRecord',index,i)" v-model="item[i]"></el-input>
+                    <el-input @focus="cellClick('mzRecord',index,i)" v-model="item[i]"></el-input>
                 </td>
               </tr>
 
@@ -193,6 +195,7 @@
             以上是使用麻醉药物的记录（每5分钟一个时间点）
           </div>
         </div>
+
         <div style="width: 1380px;overflow: auto;margin: 0 auto" class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition">
           <table :width= " mzStatusHeader.length==1?'100%':mzStatusHeader.length*150">
             <colgroup  v-for="(item,index) in mzStatusHeader">
@@ -200,8 +203,8 @@
             </colgroup>
             <thead>
             <tr>
-              <th class="cell" v-for="(item,index) in mzStatusHeader">
-                {{item}}
+              <th class="cell" style="text-align: center"  v-for="(item,index) in mzStatusHeader">
+                {{item}}<span v-if="index==0" style="color: red">*</span>
               </th>
             </tr>
             </thead>
@@ -209,13 +212,13 @@
           <div class="el-table__body-wrapper" style="max-height:400px;overflow-x: hidden;overflow-y: auto;" :style="'width:'+mzStatusHeader.length*150+'px'">
             <table   :width="mzStatusHeader.length*150">
               <colgroup  v-for="(item,index) in mzStatusHeader">
-                <col name="'el-table_1_column_'+index" :width="150">
+                <col name="'el-table_1_column_'+index"  :width="150">
               </colgroup>
 
               <tbody  class="add-scope">
               <tr v-for="(item,index) in formValidate.mzStatus  ">
                 <td v-for="(head,i) in item" :key="i">
-                  <el-input @focus="cellClick('mzStatus',index,i)" v-model="item[i]"></el-input>
+                   <el-input @focus="cellClick('mzStatus',index,i)" v-model="item[i]"></el-input>
                 </td>
               </tr>
 
@@ -231,8 +234,8 @@
             </colgroup>
             <thead>
             <tr>
-              <th class="cell" :colspan="index==0&&2"  v-for="(item,index) in aidDrugNameHeader">
-                {{item}}
+              <th class="cell" :colspan="index==0&&2" style="text-align: center"  v-for="(item,index) in aidDrugNameHeader">
+                {{item}}<span v-if="index==0" style="color: red">*</span>
               </th>
             </tr>
             </thead>
@@ -255,7 +258,6 @@
             </table>
           </div>
         </div>
-
         <el-row class="table-back-one">
           <el-col style="font-size: 18px;line-height: 78px;text-align: center" :span="1">
             入
@@ -387,7 +389,7 @@
           </el-col>
 
           <el-col :span="8" >
-            <el-form-item label="全   血:" prop="acaQx" >
+            <el-form-item label="全血:" prop="acaQx" >
               <el-input v-model="formValidate.acaQx" placeholder="请输入">
                 <span   slot="append" >ml</span>
               </el-input>
@@ -438,19 +440,19 @@
           <load-btn @appearSubEvent="appearSubEvent" :btnData="loadBtn"></load-btn>
           <el-button  @click="cancel">取消</el-button>
         </div>
-
       </el-form>
     </div>
 </template>
 <script>
     /*当前组件必要引入*/
-
+    import {electrocardiogramTemplate} from '../../../rules'
     //当前组件引入全局的util
     let Util = null;
     export default{
       props:['depId','depName','url','podId'],
         data() {
             return {
+              electrocardiogramTemplate,
               saveBtn: {title: '提交', callParEvent: 'saveSubEvent'},
               loadBtn: {title: '上报', callParEvent: 'appearSubEvent'},
               mzRecordHeader:['药物名称/使用的剂量'],  //药物名称/使用的剂量
@@ -467,7 +469,7 @@
                 "czyNo":"",
                 "cjlDate":"",
                 "cname":"",
-                "csex":"",
+                "csex":"男",
                 "cage":"",
                 "acaTz":"",
                 "acaIsybYes":"",
@@ -526,12 +528,61 @@
             let isSubmit = this.submitForm("formValidate");
             if(isSubmit){
               if(!isLoadingFun) isLoadingFun=function(){};
+
+              if(!this.conductValidate(this.formValidate)){
+                return;
+              }
               isLoadingFun(true);
               let formValidate = this.formDate(this.getFormData(this.formValidate),['cjlDate'],'yyyy-MM-dd');
                formValidate = this.formDate(formValidate,['acaSsBegintime','acaSsEndtime','acaMzBegintime','acaMzEndtime'],'yyyy-MM-dd HH:mm:ss');
               this.addMessTitle.ajaxParams.data = formValidate;
               this.ajax(this.addMessTitle,isLoadingFun);
             }
+          },
+
+          //处理药物名称/使用的剂量 , 生命体征, 辅助输入的药品名称
+          conductValidate(data){
+            let undefined;
+            let flag=true;
+            let mess = [{
+              key:'mzRecord',
+              label:'药物名称/使用的剂量',
+            },{
+              key:'mzStatus',
+              label:'生命体征',
+            },{
+              key:'aidDrugName',
+              label:'辅助输入的药品名称',
+            }];
+
+            for(let i=0;i<mess.length;i++){
+              let item = data[mess[i].key];
+              for(let k=0;k<item.length;k++){
+                let isHasname = false;  //名字是否为空；
+                let isHasCount = false;
+                for(let l=0;l<item[k].length;l++){
+                  let val = item[k][l];
+                  if(l==0){
+                    if(val == ''){
+                      isHasname = true;
+                    }
+                  }else {
+                    if(val != ''){
+                      isHasCount = true;
+                    }
+                  }
+                  if(isHasname&&isHasCount){
+                    flag = false;
+                  }
+                }
+                console.log(isHasname,isHasCount,isHasname&&isHasCount);
+                if(isHasname&&isHasCount){
+                  this.errorMess(mess[i].label+'名称必填');
+                }
+              }
+            }
+
+            return flag;
           },
 
           /*
@@ -597,7 +648,7 @@
 
           //取消
           cancel(){
-            this.$emit('cancel',this.addMessTitle.type);
+            this.$emit('cancel','add');
           },
 
           //上传文件

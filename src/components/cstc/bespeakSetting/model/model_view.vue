@@ -6,17 +6,17 @@
       <el-row>
         <el-col>
           <el-form-item label="设备：">
-            {{ formValidate.device.deviceTypeName }}
+            {{ resData.deviceTypeName }}
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="设备总数：">{{ formValidate.device.deviceNum }}</el-form-item>
+          <el-form-item label="设备总数：">{{ resData.deviceNum || 0 }}</el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="开放预约数量：">{{ formValidate.openNum }}</el-form-item>
+          <el-form-item label="开放预约数量：">{{ resData.openNum || 0}}</el-form-item>
         </el-col>
         <el-col>
-          <el-form-item label="设备简介：">{{ formValidate.device.describes }}</el-form-item>
+          <el-form-item label="设备简介：">{{ resData.describes || '暂无设备简介'}}</el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="是否开放预约：">{{ formValidate.isOpen | typeText }}
@@ -85,6 +85,14 @@
     data() {
       return {
         self: this,
+        resData: {
+          reserveDeviceSet: {
+            deviceNum: '',
+            deviceTypeName: '',
+            describe: '',
+            openNum: ''
+          }
+        },
         //form表单bind数据
         formValidate: {
           device: {}, // 房间 多个id以逗号分隔 ---> 1,2    
@@ -103,39 +111,7 @@
         oneModTimeSlot: [],
         openTimeList: {}, // 开放日期
         allDayTimeSlot: [], // 全天开放时间段(只记录索引)
-        timeSlot: [ // 开放时间段
-          {
-            "id": "1",
-            "name": "上一",
-            "startTime": "08:00",
-            "endTime": "09:00",
-            "isEffective": "YES"
-          }, {
-            "id": "2",
-            "name": "上一",
-            "startTime": "10:00",
-            "endTime": "11:00",
-            "isEffective": "YES"
-          }, {
-            "id": "3",
-            "name": "上一",
-            "startTime": "1:00",
-            "endTime": "2:00",
-            "isEffective": "YES"
-          }, {
-            "id": "4",
-            "name": "上一",
-            "startTime": "3:00",
-            "endTime": "4:00",
-            "isEffective": "NO"
-          }, {
-            "id": "5",
-            "name": "上一",
-            "startTime": "5:00",
-            "endTime": "6:00",
-            "isEffective": "YES"
-          }
-        ], // 时间段
+        timeSlot: [], // 时间段
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle: {
           type: 'set',
@@ -162,7 +138,7 @@
       // 初始化
       init() {
         calendarSet.setCalData([]);
-        this.getDataForServer()
+        this.getTimeSlotList()
       },
       /*********************************************************** 周历 ***********************************************/
       goPrev() {
@@ -211,8 +187,8 @@
           };
           for (var i in allDayTimeSlot) {
             item = this.timeSlot[i];
-            tempAllDayTimeSlotObj.id.push(item.id); // 选中的时间段id
-            tempAllDayTimeSlotObj.title.push(this.getDataTitle(item)); // 选中的时间段文本描述
+            tempAllDayTimeSlotObj.id.push(item.timeId); // 选中的时间段id
+            tempAllDayTimeSlotObj.title.push(item.courseTime); // 选中的时间段文本描述
           }
           this.openTimeList[date] = {
             date,
@@ -268,9 +244,18 @@
         this[options + 'Modal'] = false;
       },
 
-      // 获取周历标题
-      getDataTitle(obj) {
-        return obj.name + '（' + obj.startTime + ' - ' + obj.endTime + '）'
+      // 获取时间段
+      getTimeSlotList() {
+        this.ajax({
+          ajaxSuccess: res => {
+            this.timeSlot = res.data || [];
+            this.getDataForServer()
+          },
+          ajaxParams: {
+            url: api.teachCourseTime.path,
+            method: api.teachCourseTime.method
+          }
+        })
       },
 
       // 获取数据
@@ -278,10 +263,10 @@
         this.ajax({
           ajaxSuccess: 'getDataSuccess',
           ajaxParams: {
-            url: api.get.path + this.opData.id,
+            url: api.get.path + this.opData.reserveDeviceSetId,
             method: api.get.method,
             params: {
-              deviceTypeId: this.opData.id
+              deviceTypeId: this.opData.reserveDeviceSetId
             }
           }
         })
@@ -289,57 +274,37 @@
 
       // 初始化数据
       getDataSuccess(res) {
-        res = {
-          data: {
-            "device": {
-              "deviceTypeId": "1",
-              "deviceTypeName": "外科模拟人",
-              "deviceNum": "5",
-              "describes": "应用于外科模拟手术使用"
-            },
-            "reserveDeviceSet": {
-              "reserveDeviceSetId": "1",
-              "openNum": "5",
-              "isOpen": "YES",
-              "timeModel": "SPECIFIC",
-              "openTimeList": [{
-                "openTimeId": "1",
-                "reserveSetId": "1",
-                "reserveSetType": "DEVICE",
-                "date": "2017-01-02",
-                "timeSetId": "1"
-              }]
-            }
-          }
-        }
         let fData = this.formValidate;
         let rData = res.data.reserveDeviceSet;
-        let timeSlotId = [];
-        let index;
+        let timeSlotId = {};
+        let openTimeList = {};
+        this.resData = rData;
         fData.isOpen = rData.isOpen;
         fData.openNum = rData.openNum;
         fData.timeModel = rData.timeModel;
         fData.device = res.data.device;
         this.oneModTimeSlot.length = 0;
-        this.timeSlot.map(item => timeSlotId.push(item.id));
+        this.timeSlot.map(item => timeSlotId[item.timeId] = item);
         rData.openTimeList.map(item => {
-          let timeSlot = [];
-          item.timeSetId.split(',').map(id => {
-            index = timeSlotId.indexOf(id);
-            if (index > -1) {
-              let timeSlotItem = this.getDataTitle(this.timeSlot[index]);
-              timeSlot.push(timeSlotItem)
-              if (this.oneModTimeSlot.indexOf(timeSlotItem) === -1) {
-                this.oneModTimeSlot.push(timeSlotItem)
-              }
-            }
-          });
-          this.openTimeList[item.date] = {
-            date: item.date,
-            timeSetIds: item.timeSetId,
-            timeSlot,
+          if (!openTimeList[item.date]) {
+            openTimeList[item.date] = {
+              date: item.date,
+              timeSetIds: [],
+              timeSlot: []
+            };
+          }
+          openTimeList[item.date].timeSetIds.push(item.timeSetId);
+          openTimeList[item.date].timeSlot.push(timeSlotId[item.timeSetId].courseTime);
+          // 所有日期对应的时间段
+          if (this.oneModTimeSlot.indexOf(timeSlotId[item.timeSetId].courseTime) < 0) {
+            this.oneModTimeSlot.push(timeSlotId[item.timeSetId].courseTime)
           }
         })
+        // 通过时间段处理对应的时间段id
+        for (let item in openTimeList) {
+          openTimeList[item].timeSetIds = openTimeList[item].timeSetIds.join(',')
+        }
+        this.openTimeList = openTimeList;
         this.setAllDayTimeSlot()
       },
     },

@@ -1,11 +1,269 @@
 <template>
   <!-- 预约审核 - 查看 -->
-  <div>查看</div>
+  <div>
+    <el-row>
+      <el-form label-width="100px">
+        <el-col :span="10" :offset="1">
+          <el-form-item label="课程名称：">
+            {{ showData.name }}
+          </el-form-item>
+        </el-col>
+        <el-col :span="10" :offset="2">
+          <el-form-item label="授课老师：">
+            {{ showData.lecturer }}
+          </el-form-item>
+        </el-col>
+        <el-col :span="21" :offset="1">
+          <el-form-item label="课程内容：">
+            {{ showData.summary || '暂无' }}
+          </el-form-item>
+        </el-col>
+        <el-col :span="21" :offset="1">
+          <el-form-item label="场次要求：">
+            {{ showData.roomRquirement || '暂无' }}
+          </el-form-item>
+        </el-col>
+        <el-col :span="21" :offset="1">
+          <el-form-item label="选择房间：">
+            <span style="display:inline;">{{ roomNums.join('，') }}</span>
+            <el-button type="info" @click="selectRoom">选择房间</el-button>
+          </el-form-item>
+        </el-col>
+        <el-col :span="21" :offset="1">
+          <el-form-item label="设备要求：">
+            {{ showData.deviceRquirement || '暂无' }}
+          </el-form-item>
+        </el-col>
+        <el-col :span="21" :offset="1">
+          <el-form-item label="设备：">
+            <div class="bpkdBox">
+              <div v-for="(item,index) in formValidate.deviceList" :key="index" class="bpkdItem">
+                <el-tooltip class="item" effect="light" placement="bottom-start">
+                  <div slot="content" style="max-width:200px;">
+                    <p>设备名称：{{ deviceList[index].deviceTypeName }}</p>
+                    <p>设备数量：{{ deviceList[index].deviceNum || 0 }}</p>
+                    <p>设备简介：{{ deviceList[index].describe || '暂无简介' }}</p>
+                  </div>
+                  <el-button>{{ deviceList[index].deviceTypeName }}</el-button>
+                </el-tooltip>
+                <span class="bpkdTitle">数量：</span>
+                <el-input style="width:200px;" v-model="item.reserveNum"></el-input>
+              </div>
+            </div>
+            <el-button type="primary" @click="selectDevice">选择模型</el-button>
+          </el-form-item>
+        </el-col>
+        <el-col :span="21" :offset="1">
+          <el-form-item label="审批意见：">
+            <el-input type="textarea" v-model="formValidate.opinion" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容">
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-form>
+      <el-col :span="6" :offset="6" align="center">
+        <el-button type="success" @click="subData('ADOPT')">通过</el-button>
+      </el-col>
+      <el-col :span="6" align="center">
+        <el-button type="danger" @click="subData('PENDING')">驳回</el-button>
+      </el-col>
+    </el-row>
+    <!--选择房间-->
+    <Modal :mask-closable="false" v-model="selectRoomModal" height="200" class-name="vertical-center-modal" :width="960">
+      <modal-header slot="header" :content="headerContent.selectRoomId"></modal-header>
+      <select-room v-if="selectRoomModal" @cancel="cancel" @select="selectRoomCall" :select="roomIds"></select-room>
+      <div slot="footer"></div>
+    </Modal>
+    <!--选择设备-->
+    <Modal :mask-closable="false" v-model="selectDeviceModal" height="200" class-name="vertical-center-modal" :width="960">
+      <modal-header slot="header" :content="headerContent.selectDeviceId"></modal-header>
+      <select-device v-if="selectDeviceModal" @cancel="cancel" @select="selectDeviceCall" :select="deviceIds"></select-device>
+      <div slot="footer"></div>
+    </Modal>
+  </div>
 </template>
 
 <script>
-  export default {
+  //当前组件引入全局的util
+  let Util = null;
 
+  import api from './api';
+  import selectRoom from '../../common/selectRoom'; // 选择房间
+  import selectDevice from '../device/deviceStorage/deviceStorage_select'; // 选择设备
+  export default {
+    props: ['operailityData'],
+    data() {
+      return {
+        deviceIds: [],
+        formValidate: {
+          status: '',
+          opinion: '',
+          reservePojectRoom: [],
+          deviceList: [],
+        },
+        showData: {
+          name: "-",
+          lecturer: "-",
+          userType: "",
+          userList: [],
+          minNum: "",
+          summary: "",
+          roomRquirement: "",
+          deviceRquirement: "",
+          reservePojectRoom: {
+            roomNum: "",
+            bearingCapacity: ""
+          },
+          reserveOpenTimeDto: {
+            reserveSetType: "PROJECT",
+            date: "",
+            timeSetId: "",
+            time: ""
+          },
+          reservePojectDeviceList: [],
+          status: "",
+          opinion: ""
+        },
+        // 选择数据
+        deviceList: [],
+        roomIds: [],
+        roomNums: [],
+        //当前组件提交(add)数据时,ajax处理的 基础信息设置
+        addMessTitle: {
+          type: 'add',
+          successTitle: '添加成功!',
+          errorTitle: '添加失败!',
+          ajaxSuccess: 'ajaxSuccess',
+          ajaxError: 'ajaxError',
+          ajaxParams: {
+            url: '/role/add',
+            method: 'post'
+          }
+        },
+        selectRoomModal: false,
+        selectDeviceModal: false,
+        headerContent: {
+          selectRoomId: {
+            id: "selectRoomId",
+            title: "选择房间"
+          },
+          selectDeviceId: {
+            id: "selectDeviceId",
+            title: "选择设备"
+          }
+        }
+      }
+    },
+    methods: {
+      /*
+       * 组件初始化入口
+       * */
+      init() {
+        this.getShowData()
+      },
+      // 提交数据
+      subData(status) {
+        let msg = status === 'ADOPT' ? '通过' : '驳回';
+        let reservePojectRoom = [];
+
+        this.roomIds.map(id => {
+          reservePojectRoom.push({
+            id: this.operailityData.id,
+            roomId: id
+          })
+        })
+
+        this.formValidate.status = status;
+        this.formValidate.reservePojectRoom = reservePojectRoom;
+
+        this.ajax({
+          type: 'add',
+          successTitle: `${msg}成功`,
+          errorTitle: `${msg}失败`,
+          ajaxParams: {
+            jsonString: true,
+            url: api.approval.path + this.operailityData.id,
+            method: api.approval.method,
+            data: this.$util._.defaultsDeep({}, this.formValidate)
+          }
+        })
+      },
+      /*********************************************** 数据获取 ***********************************/
+      // 获取当前登录用户所能申请的项目列表
+      getShowData() {
+        this.ajax({
+          ajaxSuccess: res => {
+            this.showData = res.data || {};
+            // 房间
+            this.roomIds.push(res.data.reservePojectRoom.roomId);
+            this.roomNums.push(res.data.reservePojectRoom.roomNum);
+            // 设备
+            res.data.reservePojectDeviceList.map(item => {
+              this.formValidate.deviceList.push({
+                derviceTypeId: item.deviceTypeId,
+                reserveNum: item.reserveNum
+              });
+            });
+            this.deviceList = res.data.reservePojectDeviceList;
+          },
+          ajaxParams: {
+            url: api.get.path + this.operailityData.id,
+            method: api.get.method
+          }
+        })
+      },
+      /********************************* 按钮事件 *****************************/
+      // 选择房间
+      selectRoom() {
+        this.openModel('selectRoom')
+      },
+      // 选择设备模型
+      selectDevice() {
+        this.openModel('selectDevice')
+      },
+      /********************************* 弹窗相关 *****************************/
+      // 取消
+      cancel(targer) {
+        this[targer + 'Modal'] = false;
+      },
+      /*
+       * 打开指定的模态窗体
+       * @param options string 当前指定的模态:"add"、"edit"
+       * */
+      openModel(options) {
+        this[options + 'Modal'] = true;
+      },
+      /********************************* 弹窗回调 *****************************/
+      // 选择房间
+      selectRoomCall(res) {
+        this.roomIds.length = 0;
+        this.roomNums.length = 0;
+        res.map(item => {
+          this.roomIds.push(item.id);
+          this.roomNums.push(item.roomNum)
+        });
+        this.cancel('selectRoom')
+      },
+      // 选择设备模型
+      selectDeviceCall(res) {
+        let temp = [];
+        res.map(item => {
+          temp.push({
+            derviceTypeId: item.id,
+            reserveNum: ""
+          })
+        })
+        this.formValidate.deviceList = temp;
+        this.deviceList = res;
+        this.cancel('selectDevice')
+      },
+    },
+    components: {
+      selectRoom,
+      selectDevice
+    },
+    created() {
+      this.init()
+    }
   }
 
 </script>

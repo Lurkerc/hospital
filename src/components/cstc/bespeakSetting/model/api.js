@@ -16,6 +16,10 @@ const api = {
     path: thisFile + '/get/', // { deviceTypeId }
     method: 'get'
   },
+  teachCourseTime: { // 活动时间段获取
+    path: '/teachCourseTime/list',
+    method: 'get'
+  },
   delete: thisFile + '/remove', // 删除
 };
 

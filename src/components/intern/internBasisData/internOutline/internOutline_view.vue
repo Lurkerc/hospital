@@ -210,8 +210,22 @@
         obj["specialty"] = data["specialty"];
         obj["gradeNum"] = data["gradeNum"];
         Util._.forEach(data["outlines"], (item,k)=> {
-          item["greatName"]=item["mustRotaryDep"][0]["greatName"],
-            this.outlines.push(item);
+          let tempObj = {
+            "mustRotaryDep":[],
+            "randomRotaryDep":[],
+            "greatName":"",
+          }
+          let greatName = '';
+          if(item["mustRotaryDep"].length>0){
+            greatName = item["mustRotaryDep"][0]["greatName"];
+          }else{
+            if(item["randomRotaryDep"].length!='undefined'){
+              greatName = item["randomRotaryDep"][0]["greatName"];
+            }
+          }
+          tempObj["greatName"] = greatName;
+          tempObj = Object.assign(tempObj,item)
+          this.outlines.push(tempObj);
         })
         this.formValidate = Object.assign(this.formValidate,obj);
       },

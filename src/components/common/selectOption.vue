@@ -12,7 +12,7 @@
   let Util=null;
   export default {
 
-    props:['type','url',"selectOptions",'unAll',"setSltOptionValue",'currSelectOne','id','isCode','userType','userId','name'],
+    props:['type','url',"selectOptions",'unAll',"setSltOptionValue",'currSelectOne','id','isCode','userType','userId','name','role'],
     data() {
 
         //条件过滤，如果没有url 由type决定url 如果没有type默认科室url
@@ -41,6 +41,8 @@
           teachActivityType:'/dictionary/getByCode/TEACH_ACTIVITY_TYPE',   //获取教学活动类型
           aysUserType:'/dictionary/getByCode/SYS_USER_TYPE',                //生源类型
           userRotaryDeptlist:'/traineeRotary/arrangeRotary/userRotaryDeptlist/'+(this.userType)+'-'+this.userId,      //轮转科室用
+          getDepByTeacher:'/rotationProcess/rotaryTable/getDepByTeacher/'+this.userId,      //轮转科室用
+          byUserType:'/hospital/dept/query/byUserType/'+this.userId,      //轮转科室用
         };
         url = typeUrl[type];
         if(this.url)url = this.url;
@@ -54,7 +56,12 @@
       }else {
         Options = idOptions;
       }
-
+      let params = {};
+      if(this.type=='byUserType'){
+         params = {
+            userType:this.role,
+        }
+      }
       return {
         optionData: [],
 
@@ -67,7 +74,7 @@
           ajaxSuccess:'updateListData',
           ajaxParams:{
             url:url,  //向后台请求数据的地址
-
+            params:params,
           }
         }
       }

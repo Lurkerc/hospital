@@ -1,10 +1,10 @@
 <template>
   <!-- 房间预约管理 -->
   <div id="bespeakSetRoom" ref="bespeakSetRoom">
-    <el-row>
+    <el-row style="padding-bottom:20px;">
       <el-col :span="14">
         <!-- 操作按钮 -->
-        <el-button size="small" type="success" @click="set(false)">预约设置</el-button>
+        <el-button type="success" @click="set(false)">预约设置</el-button>
       </el-col>
       <!-- 搜索框 -->
       <el-col :span="10" align="right">
@@ -19,8 +19,8 @@
       </el-col>
     </el-row>
     <!-- 多条件 -->
-    <div class="noMarginBottom" style="overflow:hidden;" v-show="showMoreSearch" ref="showMoreSearch">
-      <el-form :inline="true" style="margin-top:10px;float:right;" label-width="74px">
+    <div style="overflow:hidden;" v-show="showMoreSearch" ref="showMoreSearch" align="right">
+      <el-form :inline="true" label-width="74px">
         <el-form-item label="房间名称:">
           <el-input v-model="searchObj.roomName"></el-input>
         </el-form-item>
@@ -36,12 +36,14 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-button @click="search">查询</el-button>
+        <el-form-item>
+          <el-button @click="search">查询</el-button>
+        </el-form-item>
       </el-form>
     </div>
 
     <!-- 表格数据 -->
-    <div id="tableView" ref="tableView" style="padding-top:10px;">
+    <div id="tableView" ref="tableView">
       <el-table align="center" :height="tableHeight" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
         style="width: 100%;" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
@@ -207,9 +209,9 @@
         this.tableData = res.data;
       },
       //设置表格及分页的位置
-      setTableDynHeight(otherHeight = 0) {
+      setTableDynHeight() {
         let tableView = this.$refs.tableView;
-        let paginationHt = 50 + otherHeight;
+        let paginationHt = 40;
         this.dynamicHt = this.contenHeight - tableView.offsetTop - paginationHt;
         this.tableHeight = this.dynamicHt;
       },

@@ -121,7 +121,7 @@
         }],
         formValidate:{
           id:this.operailityData.id,
-          status:'',
+          status:'TG',
           auditInfo:'',
         },
         "data":[

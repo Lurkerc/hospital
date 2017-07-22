@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="skillWrite" class="demo-form-inline" label-width="90px" >
 
       <el-row >
         <el-col :span="8" :offset="2">
@@ -11,7 +11,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="病人姓名:" prop="patientName" >
-            <el-input v-model="formValidate.patientName" placeholder="请输入"></el-input>
+            <el-input class="date-select-width" v-model="formValidate.patientName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
       </el-row >
@@ -19,7 +19,7 @@
       <el-row >
         <el-col :span="8" :offset="2">
           <el-form-item label="病历号:" prop="patienNo" >
-            <el-input v-model="formValidate.patienNo"  placeholder="请输入"></el-input>
+            <el-input class="select-width" v-model="formValidate.patienNo"  placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
         <el-col :span="8" :offset="2">
@@ -36,12 +36,12 @@
 
       <el-row >
         <el-col :span="16" :offset="2">
-          <el-form-item label="操作名称:" prop="name" >
-            <el-select multiple v-model="disTitle" placeholder="请选择">
+          <el-form-item label="操作名称:" prop="disTitle" >
+            <el-select multiple v-model="formValidate.disTitle" placeholder="请选择">
               <el-option
                 v-for="item in getMyRotaryRequirements"
                 :key="item.id"
-                :label="item.disTitle"
+                :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'"
                 :value="item.outlineRequireId+'-'+item.disTitle">
               </el-option>
             </el-select>
@@ -59,7 +59,7 @@
           </el-form-item>
         </el-col >
       </el-row >
-      <el-row >
+      <el-row v-if="formValidate.isSuccess=='N'">
         <el-col :span="16" :offset="2">
           <el-form-item label="失败原因:" prop="reasonFailure" >
             <el-input type="textarea" v-model="formValidate.reasonFailure"></el-input>
@@ -92,12 +92,15 @@
   </div>
 </template>
 <script>
+  import {skillWrite} from '../../rules'
+
   //当前组件引入全局的util
   let Util=null;
   export default {
     props:['operailityData','url'],
     data (){
       return{
+        skillWrite,
         optionData:'',
         disTitle:[],
         getMyRotaryRequirements:"",
@@ -107,28 +110,28 @@
         appearBtn:{title:'上报',callParEvent:'appearSubEvent'},//上报
         //form表单bind数据
         formValidate: {
-          "skillId":12,
-          "podId":12,
-          "depId":12,
-          "depName":"111",
-          "patientName":"张三",
-          "patienNo":"1212121",
-          "fillTime":"2017-05-08",
-          "isSuccess":"是否成功",
-          "reasonFailure":"失败原因",
-          "disState":"NO_SUBMIT",
-          "poddIds":"1,2,3,4",
-          "poddNames":"1,2,3123123,1231234",
-          "createUserName":"填写人名称",
-          "createTime":"2017-05-08 12:00:00",
-          "fileList":[
-            {
-              "id":11,
-              "fileName":"123",
-              "fileType":"txt",
-              "fileUrl":"www.baidu.com"
-            }
-          ]
+//          "skillId":12,
+//          "podId":12,
+//          "depId":12,
+//          "depName":"111",
+//          "patientName":"张三",
+//          "patienNo":"1212121",
+//          "fillTime":"2017-05-08",
+//          "isSuccess":"是否成功",
+//          "reasonFailure":"失败原因",
+//          "disState":"NO_SUBMIT",
+//          "poddIds":"1,2,3,4",
+//          "poddNames":"1,2,3123123,1231234",
+//          "createUserName":"填写人名称",
+//          "createTime":"2017-05-08 12:00:00",
+//          "fileList":[
+//            {
+//              "id":11,
+//              "fileName":"123",
+//              "fileType":"txt",
+//              "fileUrl":"www.baidu.com"
+//            }
+//          ]
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle:{
@@ -173,6 +176,7 @@
       getListData(res){
           let data = res.data;
           if(!data) return;
+          data.disTitle = [];
         let poddIds = []
         let poddNames = []
         if(!data.deId){
@@ -181,7 +185,7 @@
           poddIds = (data.deId+'').split(',');
           poddNames = data.deName.split(',');
           for(let i=0;i<poddIds.length;i++){
-            this.disTitle.push( poddIds[i]+'-'+poddNames[i])
+            data.disTitle.push( poddIds[i]+'-'+poddNames[i])
           }
         }
         this.formValidate = data;
@@ -199,15 +203,17 @@
           let formValidate = this.getFormData(this.formValidate);
           let poddIds = [];
           let poddNames = [];
-          for(let i=0;i<this.disTitle.length;i++){
-            let disTitle = this.disTitle[i].split('-');
+          for(let i=0;i<this.formValidate.disTitle.length;i++){
+            let disTitle = this.formValidate.disTitle[i].split('-');
             poddIds.push(disTitle[0]);
             poddNames.push(disTitle[1]);
 
           }
           formValidate.poddIds = poddIds.join(',');
           formValidate.poddNames = poddNames.join(',');
-
+          if( formValidate.isSuccess=='Y'){
+            formValidate.reasonFailure = '';
+          }
           this.addMessTitle.ajaxParams.data=this.formDate(formValidate,['fillTime'],'yyyy-MM-dd');
           this.ajax(this.addMessTitle,isLoadingFun)
         }

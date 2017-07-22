@@ -53,20 +53,27 @@
             label="序号"
             type="index"
             width="65">
+            <template scope="scope">
+              <span>{{scope.row.index}}</span>
+            </template>
           </el-table-column>
           <el-table-column
             type="selection"
             width="55">
           </el-table-column>
 
-          <el-table-column label="操作"  width="200" align="center">
+          <el-table-column label="操作"  width="260" align="center">
             <template scope="scope">
               <el-button
                 size="small"
                 @click="show(scope.$index,scope.row)">查看</el-button>
               <el-button
+                v-if="scope.row.state=='ENABLE'"
                 size="small"
                 @click="edit(scope.$index, scope.row)">修改</el-button>
+              <el-button
+                size="small"
+                @click="copyData(scope.$index, scope.row)">复制</el-button>
               <el-button v-if="scope.row.state=='DISABLE'" size="small" @click="forbidden(scope.$index, scope.row)">启 用</el-button>
               <el-button v-if="scope.row.state=='ENABLE'" size="small" @click="startUsing(scope.$index, scope.row)" type="danger">禁 用</el-button>
             </template>
@@ -132,6 +139,20 @@
       <!--</div>-->
       <modal-header slot="header" :content="addId"></modal-header>
       <add v-if="addModal"  @cancel="cancel" :rules="internOutline" @add="subCallback" :operaility-data="operailityData" ></add>
+      <div slot="footer"></div>
+    </Modal>
+    <!--复制弹窗-->
+    <Modal
+      :mask-closable="false"
+      v-model="copyModal"
+      height="200"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :width="900">
+      <!--<div slot="header"> -->
+      <!--</div>-->
+      <modal-header slot="header" :content="copyId"></modal-header>
+      <copy v-if="copyModal"   @cancel="cancel" :rules="internOutline"  @copy="subCallback" :editOperailityData="editOperailityData"></copy>
       <div slot="footer"></div>
     </Modal>
     <!---->
@@ -209,6 +230,7 @@
   /*当前组件必要引入*/
   //引入--审查--组件
   import edit from "./internOutline_edit.vue";
+  import copy from "./internOutline_copy.vue";
 
   //引入--查看--组件
   import show from "./internOutline_view.vue";
@@ -252,6 +274,10 @@
           id:'edit',
           title:'修改'
         },
+        copyId:{
+          id:'copy',
+          title:'复制'
+        },
         showId:{
           id:'auditId',
           title:'查看'
@@ -264,6 +290,9 @@
           id:'startUsing',
           title:'启用'
         },
+
+        //复制
+        copyModal:false,
 
         //启用
         enableModal:false,
@@ -325,7 +354,7 @@
         this.myPages =  Util.pageInitPrams;
 
         this.queryQptions = {
-          params:{holidayName:"",roleId:"",status:""}
+          params:{curPage: 1,pageSize: Util.pageInitPrams.pageSize}
         }
 
         this.setTableData();
@@ -369,6 +398,7 @@
       updateListData(responseData){
         let data = responseData.data;
         this.tableData1=[];
+        data = this.addIndex(data);
         this.tableData1=data;
         this.listTotal = responseData.totalCount || 0;
       },
@@ -439,6 +469,60 @@
         this.openModel("disEnable");
       },
 
+      //复制
+      copyData(index){
+        this.editOperailityData = this.tableData1[index];
+        this.openModel('copy')
+          /*//获取大纲详情
+        let getOutline={
+          ajaxSuccess:'getOutlineData',
+            ajaxParams:{
+            url: api.dgGet.path+"/"+this.tableData1[index]["outlineId"],
+          }
+        }
+        this.ajax(getOutline)*/
+      },
+
+      getOutlineData(responseData){
+        //获取大纲详情
+        let data = responseData.data;
+        delete data["depOutlineId"];
+        delete data["state"];
+        Util._.forEach(data["outlines"], (item,k)=> {
+          for(var i=0,subItem;i<item["mustRotaryDep"].length;i++){
+            subItem=item["mustRotaryDep"][i];
+            delete subItem["depSetId"];
+          }
+          for(var i=0,subItem;i<item["randomRotaryDep"].length;i++){
+            subItem=item["randomRotaryDep"][i];
+            delete subItem["depSetId"];
+          }
+        })
+
+        //保存大纲
+        let saveOutline = {
+          type:'add',
+            errorTitle:'复制失败!',
+            ajaxSuccess:'copyDataSuccess',
+            ajaxError:'ajaxError',
+            ajaxParams:{
+              url: api.dgAdd.path,
+              method: api.dgAdd.method,
+              jsonString:true,
+          },
+        }
+        saveOutline.ajaxParams.data = data;
+        this.ajax(saveOutline);
+      },
+
+
+      //复制成功
+      copyDataSuccess(responseData){
+         this.showMess("复制成功!");
+        this.formValidate = this.setObjValEmpty(this.formValidate);
+        this.setTableData();
+      },
+
 
       /*
        * 监听子组件通讯的方法
@@ -505,7 +589,7 @@
     },
     components:{
       //当前组件引入的子组件
-      edit,add,show,toChannel
+      edit,add,show,toChannel,copy
     }
 
   }

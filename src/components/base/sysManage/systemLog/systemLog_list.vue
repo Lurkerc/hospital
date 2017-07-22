@@ -217,7 +217,7 @@
         }
 
         this.setTableData();
-        console.log(  this.queryQptions);
+        //console.log(  this.queryQptions);
       },
       //设置表格及分页的位置
       setTableDynHeight(){

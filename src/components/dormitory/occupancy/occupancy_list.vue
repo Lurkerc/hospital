@@ -3,22 +3,22 @@
   <div id="content" ref="content" class="modal">
     <steps></steps>
     <el-form  :model="formValidate" ref="formValidate" :rules="rules.occupancyList" label-width="100px">
-      <el-row >
-        <el-col :span="10" :offset="12" >
+
+    <el-row >
+      <el-col :span="10" >
+        <!--<el-button  type="info">导出excel</el-button>-->
+      </el-col>
+      <el-col :span="14" :offset="10" align="right">
           <el-form-item  prop="userName">
             <input class="hidden">
             <el-input   v-model="formValidate.userName" placeholder="输入姓名搜索">
               <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
             </el-input>
           </el-form-item>
-        </el-col>
-      </el-row>
+      </el-col>
+    </el-row>
     </el-form>
-
     <!--列表操作按钮-->
-    <div style="margin-bottom: 20px;">
-      <el-button type="primary" >导出</el-button>
-    </div>
     <!--列表数据-->
     <div>
       <!--表格数据-->
@@ -59,11 +59,13 @@
             align="center"
             prop="userName"
             label="姓名"
+            show-overflow-tooltip
             width="200">
           </el-table-column>
           <el-table-column
             prop="userSex"
             label="性别"
+            show-overflow-tooltip
             width="100">
             <template scope="scope">
               {{scope.row.userSex | typeText}}
@@ -72,6 +74,7 @@
           <el-table-column
             prop="buildingName"
             label="大楼名称"
+            show-overflow-tooltip
             align="center"
             width="300"
           >
@@ -79,11 +82,13 @@
           <el-table-column
             prop="roomName"
             label="房间号"
+            show-overflow-tooltip
           >
           </el-table-column>
           <el-table-column
             prop="inDate"
             label="迁入时间"
+            show-overflow-tooltip
           >
             <template scope="scope">
               {{conductDate(scope.row.inDate,'yyyy-MM-dd')}}
@@ -91,6 +96,7 @@
           </el-table-column>
           <el-table-column
             prop="outDate"
+            show-overflow-tooltip
             label="迁出时间">
             <template scope="scope">
               {{conductDate(scope.row.outDate,'yyyy-MM-dd')}}
@@ -99,6 +105,7 @@
           <el-table-column
             prop="status"
             label="动作"
+            show-overflow-tooltip
           >
             <template scope="scope">
               {{scope.row.status?'迁出':'迁入'}}

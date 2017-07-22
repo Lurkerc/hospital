@@ -67,7 +67,7 @@
         </el-col>
       </el-row >
 
-      <el-row >
+      <el-row  >
         <el-col :span="16" :offset="2">
           <el-form-item label="备注:" prop="remark">
             <el-input v-model="formValidate.remark" type="textarea" resize="none" :rows="8"></el-input>
@@ -92,13 +92,14 @@
       title="对话框标题"
       class-name="vertical-center-modal">
       <modal-header slot="header" :content="selectUserId"></modal-header>
-      <select-user v-if="selectUserModal" @cancel="closeSelectUser"  @setUsers="setUsers" :initUser="userList" :unSelect="Object.keys(selectRoom._userList)" :operaility-data="operailityData" :url="url"></select-user>
+      <room-select-user v-if="selectUserModal" @cancel="closeSelectUser" :sex="roomData.sex && roomData.sex.toUpperCase()"  @setUsers="setUsers" :initUser="userList" :unSelect="Object.keys(selectRoom._userList)" :operaility-data="operailityData" :url="url"></room-select-user>
       <div slot="footer"></div>
     </Modal>
     <!--selectUser.vue-->
   </div>
 </template>
 <script>
+  import roomSelectUser from './roomSelectUser.vue'
   //当前组件引入全局的util
   let Util=null;
   export default {
@@ -128,8 +129,8 @@
         //当前组件提交(edit)数据时,ajax处理的 基础信息设置
         editMessTitle:{
           type:'batchImmigration',
-          successTitle:'修改成功',
-          errorTitle:'修改失败',
+          successTitle:'批量迁入成功',
+          errorTitle:'批量迁入失败',
           ajaxSuccess:'ajaxSuccess',
           ajaxParams:{
             jsonString:true,       //使用Content-Type: application/json
@@ -193,7 +194,6 @@
       SuccessGetCurrData(responseData){
         let data = responseData.data;
         this.roomData = data;
-        this.formValidate.remark = data.remark
       },
       /*
        * 当前组件发送事件给父组件
@@ -306,6 +306,9 @@
         this.formValidate.userNames = userNames.join(',');
 
       },
+    },
+    components:{
+      roomSelectUser
     }
   }
 </script>

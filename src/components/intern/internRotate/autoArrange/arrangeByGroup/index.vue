@@ -14,12 +14,15 @@
     </el-steps>
     <!--- 第一步：选择学校与专业 --->
     <div v-show="active==0" style="margin: 20px;">
+      <div style="width:100%;padding:0 10px;height:320px;overflow-y:auto;overflow-x:hidden;border: 1px solid #e0e6ed;">
       <el-row :gutter="10" v-if="schoolData.length>0">
         <el-col v-for="(item,index) in schoolData" :key="index" :span="6">
           <div class="cal-schools">
             <el-row>
               <el-col :span="20">
-                <el-button :type="item.checked?'success':''" @click="handleCheckSchool(index,item)" style="width: 100%">{{item.name}}</el-button>
+                <el-tooltip :content="item.name" effect="light" placement="top">
+                <el-button class="overflow-txt" :type="item.checked?'success':''" @click="handleCheckSchool(index,item)" style="width: 100%" v-text="item.name"></el-button>
+                </el-tooltip>
               </el-col>
               <el-col :span="4">
                 <div v-show="item.checked" class="cal-check"><i class="el-icon-check"></i></div>
@@ -28,6 +31,8 @@
           </div>
         </el-col>
       </el-row>
+      <p v-else style="text-align:center;padding-top:100px">数据加载中……</p>
+      </div>
       <br />
       <el-row>
         <el-col :span="8"><div class="cal-schoolTit" style="text-align: right;">专业：</div></el-col>
@@ -376,7 +381,6 @@
               }
             }
             tbody = data["userInfo"];
-            console.log(this.tableData);
             this.tableData.thead = thead;
             this.tableData.tbody = tbody;
 
@@ -406,11 +410,13 @@
             this.depReqData = [];
             for(var i=0,item;i<data.length;i++){
               item = data[i];
-              this.depReqData.push({
-                depOutlineId:item["depOutlineId"],
-                name:item["name"],
-                specialty:item["specialty"],
-              });
+              if(item["specialty"]==this.sltedSpecialty){
+                this.depReqData.push({
+                  depOutlineId:item["depOutlineId"],
+                  name:item["name"],
+                  specialty:item["specialty"],
+                });
+              }
             }
           },
 
@@ -474,10 +480,10 @@
               //查询当前选择学校的大纲
               if(this.active==0){
                 let option = Util._.defaultsDeep({},this.getDepReqBySchoolId);
-                option.ajaxParams.params = Object.assign(option.ajaxParams.params,{
+                /*option.ajaxParams.params = Object.assign(option.ajaxParams.params,{
                   name:this.saveSchoolData["schoolName"],
                   specialty:this.sltedSpecialty,
-                })
+                })*/
                 this.ajax(option);
               }
 
@@ -564,7 +570,7 @@
               this.getGroupPeopleTitle.ajaxParams.params={
                 schoolId:this.saveSchoolData["schoolId"],
                 specialty:this.sltedSpecialty,
-                outlineId:this.sltedDepReq,
+                outlineId:this.sltedDg,
               }
               this.ajax(this.getGroupPeopleTitle);
               return;

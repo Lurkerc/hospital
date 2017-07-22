@@ -764,7 +764,7 @@
 
         <el-row>
           <el-col :span="20" :offset="1">
-            <load-btn @postilSubEvent="postilSubEvent" :btnData="saveBtn"></load-btn>
+            <!--<load-btn @postilSubEvent="postilSubEvent" :btnData="saveBtn"></load-btn>-->
             <load-btn @saveSubEvent="saveSubEvent" :btnData="loadBtn"></load-btn>
             <el-button  @click="cancel">取消</el-button>
           </el-col>
@@ -1635,11 +1635,9 @@
           SuccessGetCurrData(res){
             let data = res.data;
             if(!data) return;
-            data.spState = '';
+            data.spState = 'PASS';
             data.reviewMess = '';
             this.formValidate = data;
-
-
           },
           /*
            * 点击提交按钮 监听是否提交数据

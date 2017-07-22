@@ -123,8 +123,8 @@
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle:{
           type:'xdth',
-          successTitle:'修改成功!',
-          errorTitle:'修改失败!',
+          successTitle:'添加成功!',
+          errorTitle:'添加失败!',
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
@@ -138,6 +138,8 @@
 
     created(){
       this.init();
+      let env = this.$store.getters.getEnvPath;
+      this.http = env;
     },
 
     methods: {
@@ -176,9 +178,15 @@
       updateListData(responseData){
         this.data = responseData.data;
         if(responseData.data.activityTipsId){
+            let data = responseData.data;
           this.isAdd=false;
-          this.editMessTitle.ajaxParams.url = this.editMessTitle.ajaxParams.url+responseData.data.activityTipsId;
-          this.formValidate.activityTips = responseData.data.activityTips;
+          this.editMessTitle.ajaxParams.url = this.editMessTitle.ajaxParams.url+data.activityTipsId;
+          if(data.activityTipsFileList){
+              for(let i=0;i<data.activityTipsFileList.length;i++){
+                data.activityTipsFileList[i].filePath  = '/api/file/download/'+ data.activityTipsFileList[i].fileId;
+              }
+          }
+          this.formValidate.activityTips = data.activityTips;
         }
 
       },

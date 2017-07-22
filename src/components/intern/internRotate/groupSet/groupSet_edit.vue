@@ -17,7 +17,7 @@
       </el-col>
       <el-col :span="6">
         <el-select
-          v-model="groupData.depGroupIndex"
+          v-model="groupData.groupIndexId"
           :filterable="true"
           placeholder="选择或输入匹配搜索">
           <el-option
@@ -343,6 +343,7 @@
       formateQuestData(data){
         let obj = {}
         if(!Util.isEmptyObject(data)){
+          data["groupIndexId"]=data["depGroupIndex"];
           if(data["groupUserNames"].indexOf(",")>-1){
             data["groupUserNames"] = data["groupUserNames"].split(",");
             data["groupUserIds"] = data["groupUserIds"].split(",");

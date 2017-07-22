@@ -218,3 +218,15 @@ table td.valiTableStyle .el-form-item__error{
   padding: 5px 0;
   position: inherit;
 }
+
+
+/*
+elementUI 步骤条样式修改
+*/
+.el-step__head.is-text.is-process{
+  background-color: #20A0FF;
+  border-color: #20A0FF;
+}
+.el-step__title .is-process{
+  color: #20A0FF;
+}

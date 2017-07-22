@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
     <div>
-      <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="130px" >
+      <el-form :model="formValidate" ref="formValidate" :rules="largeCaseTemplate"  class="demo-form-inline" label-width="130px" >
         <el-button style="float: right" type="primary" @click="templateFilling">填充模板</el-button>
         <div  style="font-size: 24px;text-align: center; height: 60px;">入院病例</div>
         <el-row class="table-back-one">
@@ -94,6 +94,7 @@
           <el-col :span="6" >
             <el-form-item label="入院日期:" prop="cruyuanDate" >
               <el-date-picker
+                :editable="false"
                 v-model="formValidate.cruyuanDate"
                 type="date"
                 style="width:166px"
@@ -105,6 +106,7 @@
           <el-col :span="6" >
             <el-form-item label="记录日期:" prop="cjlDate" >
               <el-date-picker
+                :editable="false"
                 style="width:166px"
                 v-model="formValidate.cjlDate"
                 type="date"
@@ -127,13 +129,13 @@
 
         <el-row class="table-back-one">
           <el-col :span="6" >
-            <el-form-item label="科室:" prop="cdepName" >
+            <el-form-item label="科室:"  >
               {{formValidate.cdepName}}
             </el-form-item>
           </el-col>
 
           <el-col :span="6" >
-            <el-form-item label="住院医师:" prop="phone" >
+            <el-form-item label="住院医师:"  >
               {{name}}
             </el-form-item>
           </el-col >
@@ -282,7 +284,7 @@
               <el-collapse-item title=" 体格检查" name="3">
                 <el-row >
                   <el-col :span="24">
-                    <el-form-item label="生命体征:" prop="cxbs" >
+                    <el-form-item label="生命体征:"  >
                       <el-row >
                         <el-col :span="3">
                           <el-form-item label="T:" prop="ctgjcSmtzT" label-width="50px">
@@ -531,7 +533,7 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="周围血管征:" prop="ctgjcZwxg" >
+                    <el-form-item label="周围血管征:" prop="ctgjcZwxg">
                       <el-input type="textarea" v-model="formValidate.ctgjcZwxg"></el-input>
                     </el-form-item>
                   </el-col>
@@ -682,6 +684,7 @@
           <el-col :span="5" >
             <el-form-item label="时间:" prop="cysqm1Date" label-width="70px">
               <el-date-picker
+                :editable="false"
                 v-model="formValidate.cysqm1Date"
                 type="date"
                 placeholder="选择日期">
@@ -703,6 +706,7 @@
           <el-col :span="5" >
             <el-form-item label-width="70px" label="时间:" prop="cysqm2Date" >
               <el-date-picker
+                :editable="false"
                 v-model="formValidate.cysqm2Date"
                 type="date"
                 placeholder="选择日期">
@@ -729,7 +733,7 @@
 </template>
 <script>
     /*当前组件必要引入*/
-
+    import {largeCaseTemplate} from '../../../rules'
     //当前组件引入全局的util
     //前台业务字典组件引入
     import dictionary from '../../../../../libs/dictionary.js';
@@ -738,6 +742,7 @@
         props:['depId','depName','url','podId'],
         data() {
             return {
+              largeCaseTemplate,
               saveBtn: {title: '提交', callParEvent: 'saveSubEvent'},
               loadBtn: {title: '上报', callParEvent: 'appearSubEvent'},
               name: '',
@@ -746,9 +751,9 @@
               formValidate: {
                 "caseId": '',
                 "cname": "",
-                "csex": "",
+                "csex": "男",
                 "cage": "",
-                "cisMarry": "",
+                "cisMarry": "YES",
                 "cnation": "",
                 "czhiye": "",
                 "caddress": "",

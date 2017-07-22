@@ -6,7 +6,7 @@
 ----------------------------------->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  ref="formValidate" inline label-width="100px">
+    <el-form  ref="formValidate" inline label-width="90px">
       <el-row >
         <el-col :span="24"  >
           <el-form-item label="创建人:" prop="createUserName">
@@ -41,8 +41,6 @@
             </el-select>
             </el-input>
           </el-form-item>-->
-        </el-col>
-          <el-col :span="24"  >
           <el-form-item label="生源类型:" prop="title">
             <el-select v-model="formValidate.userType" placeholder="请选择生源类型">
               <el-option label="实习生" value="SXS"></el-option>

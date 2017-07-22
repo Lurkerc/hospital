@@ -4,25 +4,26 @@
     <div v-if="!showWhat">
       <el-row>
         <el-col :span="10" :offset="5">
-          <el-form :model="formValidate" ref="formValidate" class="demo-form-inline" label-width="90px">
-            <el-form-item label="科室:" prop="name">
+          <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px">
+            <el-form-item label="科室:" prop="dep">
               <el-select v-model="dep" placeholder="请选择">
                 <el-option v-for="item in optionData" :key="item.id" :label="item.depName" :value="item.depId+'-'+item.depName+'-'+item.podId">
                 </el-option>
               </el-select>
-              <el-button @click="podIdChange(dep)">确定</el-button>
             </el-form-item>
           </el-form>
         </el-col>
+        <el-col :span="5">
+          <el-button @click="podIdChange(dep)">确定</el-button>
+        </el-col>
       </el-row>
-
     </div>
     <large-case @cancel="cancel" :url="url" @add="addSuccess" :podId="formValidate.podId" :depId="formValidate.depId" :depName="formValidate.depName"
-      v-else-if="showWhat=='largeCase'"></large-case>
+      v-else-if="showWhat=='imageTemplate'"></large-case>
     <electrocardiogramTemplate @cancel="cancel" @add="addSuccess" :podId="formValidate.podId" :depId="formValidate.depId" :depName="formValidate.depName"
       :url="url" v-else-if="showWhat=='electrocardiogramTemplate'"></electrocardiogramTemplate>
     <imageTemplate @cancel="cancel" :url="url" @add="addSuccess" :podId="formValidate.podId" :depId="formValidate.depId" :depName="formValidate.depName"
-      v-else-if="showWhat=='imageTemplate'"></imageTemplate>
+      v-else-if="showWhat=='largeCase'"></imageTemplate>
   </div>
 </template>
 <script>
@@ -38,7 +39,7 @@
     props: ['operailityData', 'url', 'initData'],
     data() {
       return {
-        showWhat: '',
+        showWhat:'',
         optionData: [],
         //保存按钮基本信息
         dep: '',
@@ -84,6 +85,8 @@
       if (this.initData) { // initData 数据结构与 formValidate 的一致
         this.formValidate = this.initData;
         this.podIdChange(this.initData.depId + '-' + this.initData.depName + '-' + this.initData.podId);
+      }else {
+          this.$emit('changeWidth',500)
       }
     },
     mounted() {
@@ -152,7 +155,12 @@
       },
 
       podIdChange(val) {
+          if(!val){
+            this.errorMess('请选择科室')
+            return;
+          }
         let dep = val.split('-');
+        this.$emit('changeWidth',1300);
         this.formValidate.depId = dep[0];
         this.formValidate.depName = dep[1];
         this.formValidate.podId = dep[2];
@@ -163,6 +171,7 @@
         } else {
           this.showWhat = 'largeCase';
         }
+
         //            largeCase electrocardiogramTemplate imageTemplate
       },
     },

@@ -95,39 +95,7 @@
         oneRoomTimeSlot: [], // 单个房间时间段
         openTimeList: {}, // 开放日期
         allDayTimeSlot: [], // 全天开放时间段(只记录索引)
-        timeSlot: [ // 开放时间段
-          {
-            "id": "1",
-            "name": "上一",
-            "startTime": "08:00",
-            "endTime": "09:00",
-            "isEffective": "YES"
-          }, {
-            "id": "2",
-            "name": "上一",
-            "startTime": "10:00",
-            "endTime": "11:00",
-            "isEffective": "YES"
-          }, {
-            "id": "3",
-            "name": "上一",
-            "startTime": "1:00",
-            "endTime": "2:00",
-            "isEffective": "YES"
-          }, {
-            "id": "4",
-            "name": "上一",
-            "startTime": "3:00",
-            "endTime": "4:00",
-            "isEffective": "NO"
-          }, {
-            "id": "5",
-            "name": "上一",
-            "startTime": "5:00",
-            "endTime": "6:00",
-            "isEffective": "YES"
-          }
-        ], // 时间段
+        timeSlot: [], // 时间段
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle: {
           type: 'set',
@@ -156,7 +124,7 @@
         this.roomIds[0] = this.opData.roomId;
         this.formValidate.roomIds = this.opData.roomId;
         calendarSet.setCalData([]);
-        this.getDataForServer()
+        this.getTimeSlotList()
       },
       /*********************************************************** 周历 ***********************************************/
       goPrev() {
@@ -203,11 +171,11 @@
             id: [],
             title: []
           };
-          for (var i in allDayTimeSlot) {
+          allDayTimeSlot.map(i => {
             item = this.timeSlot[i];
-            tempAllDayTimeSlotObj.id.push(item.id); // 选中的时间段id
-            tempAllDayTimeSlotObj.title.push(this.getDataTitle(item)); // 选中的时间段文本描述
-          }
+            tempAllDayTimeSlotObj.id.push(item.timeId); // 选中的时间段id
+            tempAllDayTimeSlotObj.title.push(item.courseTime); // 选中的时间段文本描述
+          })
           this.openTimeList[date] = {
             date,
             timeSetIds: tempAllDayTimeSlotObj.id.join(','),
@@ -262,9 +230,19 @@
         this[options + 'Modal'] = false;
       },
 
-      // 获取周历标题
-      getDataTitle(obj) {
-        return obj.name + '（' + obj.startTime + ' - ' + obj.endTime + '）'
+      // 获取时间段
+      getTimeSlotList() {
+        this.ajax({
+          ajaxSuccess: res => {
+            this.timeSlot = res.data || [];
+
+            this.getDataForServer();
+          },
+          ajaxParams: {
+            url: api.teachCourseTime.path,
+            method: api.teachCourseTime.method
+          }
+        })
       },
 
       // 获取数据
@@ -280,59 +258,35 @@
 
       // 初始化数据
       getDataSuccess(res) {
-        res = {
-          data: {
-            "room": {
-              "roomId": "1",
-              "roomNum": "101",
-              "roomName": "临床思维训练室一",
-              "address": "所在位置",
-              "summary": "内有两张病床，可同时容纳6-7个人",
-              "imageList": [{
-                "imageUrl": "www.baidu.com",
-                "imageOriginalUrl": "www.baidu.com"
-              }]
-            },
-            "roomReserveSet": {
-              "roomReserveSetId": "1",
-              "isOpen": "YES",
-              "timeModel": "SPECIFIC",
-              "openTimeList": [{
-                "openTimeId": "1",
-                "reserveSetId": "1",
-                "reserveSetType": "ROOM",
-                "date": "2017-01-02",
-                "timeSetId": "1,2,3"
-              }]
-            }
-          }
-        }
         let fData = this.formValidate;
         let rData = res.data.roomReserveSet;
-        let timeSlotId = [];
-        let index;
+        let timeSlotId = {};
+        let openTimeList = {};
         fData.isOpen = rData.isOpen;
         fData.timeModel = rData.timeModel;
-        this.timeSlot.map(item => timeSlotId.push(item.id));
+        // 时间段数组转换为对象存储
+        this.timeSlot.map(item => timeSlotId[item.timeId] = item);
+        // 根据日期设置对应的时间段
         rData.openTimeList.map(item => {
-          let timeSlot = [];
-          item.timeSetId.split(',').map(id => {
-            index = timeSlotId.indexOf(id);
-            if (index > -1) {
-              let timeSlotItem = this.getDataTitle(this.timeSlot[index]);
-              timeSlot.push(timeSlotItem)
-              if (this.oneModTimeSlot.indexOf(timeSlotItem) === -1) {
-                this.oneModTimeSlot.push(timeSlotItem)
-              }
-            }
-          });
-          this.oneRoomTimeSlot = timeSlot;
-          this.openTimeList[item.date] = {
-            date: item.date,
-            timeSetIds: item.timeSetId,
-            timeSlot,
+          if (!openTimeList[item.date]) {
+            openTimeList[item.date] = {
+              date: item.date,
+              timeSetIds: [],
+              timeSlot: []
+            };
+          }
+          openTimeList[item.date].timeSetIds.push(item.timeSetId);
+          openTimeList[item.date].timeSlot.push(timeSlotId[item.timeSetId].courseTime);
+          // 所有日期对应的时间段
+          if (this.oneModTimeSlot.indexOf(timeSlotId[item.timeSetId].courseTime) < 0) {
+            this.oneModTimeSlot.push(timeSlotId[item.timeSetId].courseTime)
           }
         })
+        // 通过时间段处理对应的时间段id
+        for (let item in openTimeList) {
+          openTimeList[item].timeSetIds = openTimeList[item].timeSetIds.join(',')
+        }
+        this.openTimeList = openTimeList;
         this.setAllDayTimeSlot()
       },
     },

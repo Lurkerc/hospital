@@ -93,7 +93,7 @@
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:this.url.teachActivityTips+'/'+this.operailityData.id,
+            url:this.url.useractivity+'/'+this.operailityData.id,
             params:{
             }
           }

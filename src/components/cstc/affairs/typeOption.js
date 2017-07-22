@@ -1,5 +1,5 @@
 const typeOption = [{
-    value: '1',
+    value: '',
     label: '全部'
   },
   {

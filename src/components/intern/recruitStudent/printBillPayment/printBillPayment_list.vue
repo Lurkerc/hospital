@@ -187,7 +187,7 @@
       // 数据请求成功回调
       listDataSuccess(res, m, loading) {
         this.totalCount = res.totalCount || 0;
-        this.tableData = res.data;
+        this.tableData = this.addIndex(res.data || []);
       },
       //设置表格及分页的位置
       setTableDynHeight() {

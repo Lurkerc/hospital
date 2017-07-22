@@ -76,7 +76,7 @@
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="rewardDate"
+            prop="email"
             label="邮箱"
             show-overflow-tooltip>
           </el-table-column>

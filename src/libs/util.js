@@ -69,7 +69,6 @@ util.queryData = function (options, fun) {
 
   let config = _.defaultsDeep({}, myConfig);
   config.method = method;
-
   //获取服务端数据
   if (method == "post" || method == "put" || method == "patch") {
 
@@ -95,6 +94,7 @@ util.queryData = function (options, fun) {
     // }
     return instance[method].bind(instance, url, config)
   }
+
 }
 
 util.ajaxconfig = ajaxconfig;
@@ -483,7 +483,6 @@ export default {
          * @param isLoadingFun  function  如果是 自定义按钮组件 点击提交事件 则会传回操作按钮是否显示loading函数（true取消loading）
          * */
         conductSuccess(messTitle, isLoadingFun) {
-
           if (!isLoadingFun) isLoadingFun = function () {};
           let ajaxSuccess = messTitle['ajaxSuccess'] || 'ajaxSuccess';
           let errorTitle = messTitle.errorTitle || "数据请求异常!";
@@ -651,6 +650,10 @@ export default {
         *
         *
         * */
+        parseDate(date,format){
+
+         return parseDate(date,format)
+        },
         conductDate(date,format){
 
           // if(typeof date =='string'){
@@ -673,9 +676,12 @@ export default {
           let datetime = new Date(date);
           let year = datetime.getFullYear();
           let month = datetime.getMonth() + 1;
-          let D = date.getDate() + ' ';
+          let D = date.getDate() + '';
           if (month < 10) {
             month = "0" + month;
+          }
+          if (D < 10) {
+            D = "0" + D;
           }
           return year + '-' + month + '-' + D;
         },

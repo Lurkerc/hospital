@@ -1,11 +1,11 @@
 <template>
   <!-- 预约申请 -->
   <div id="bespeakApply" ref="bespeakSetRoom">
-    <el-row>
+    <el-row style="padding-bottom:20px;">
       <el-col :span="14">
         <!-- 操作按钮 -->
         <el-button size="small" type="success" @click="add">新建申请</el-button>
-        <el-button size="small" type="danger" @click="del">删除申请</el-button>
+        <el-button size="small" type="danger" @click="remove">删除申请</el-button>
       </el-col>
       <!-- 搜索框 -->
       <el-col :span="10" align="right">
@@ -20,8 +20,8 @@
       </el-col>
     </el-row>
     <!-- 多条件 -->
-    <div class="noMarginBottom" style="overflow:hidden;" v-show="showMoreSearch" ref="showMoreSearch">
-      <el-form :inline="true" style="margin-top:10px;float:right;">
+    <div style="overflow:hidden;" v-show="showMoreSearch" ref="showMoreSearch" align="right">
+      <el-form :inline="true">
         <el-form-item label="项目名称:">
           <el-input v-model="searchObj.reservePojectName"></el-input>
         </el-form-item>
@@ -40,26 +40,31 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-button @click="search">查询</el-button>
+        <el-form-item style="margin-right:0;">
+          <el-button @click="search" type="info">查询</el-button>
+        </el-form-item>
       </el-form>
     </div>
 
     <!-- 表格数据 -->
-    <div id="tableView" ref="tableView" style="padding-top:10px;">
+    <div id="tableView" ref="tableView">
       <el-table align="center" :height="tableHeight" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
         style="width: 100%;" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column label="操作" width="140" align="center">
+        <el-table-column label="操作" width="200">
           <template scope="scope">
             <el-button size="small" type="info" @click="show(scope.row)">查看</el-button>
-            <el-button size="small" type="danger" @click="set(scope.row)">设置</el-button>
+            <template v-if="scope.row.status === 'UNREPORTED'">
+              <el-button size="small" type="primary" @click="edit(scope.row)">修改</el-button>
+              <el-button size="small" type="warning" @click="report(scope.row)">上报</el-button>
+            </template>
           </template>
         </el-table-column>
         <el-table-column label="项目名称" prop="reservePojectName" show-overflow-tooltip></el-table-column>
         <el-table-column label="房间号" prop="roomNum" show-overflow-tooltip></el-table-column>
         <el-table-column label="申请使用时间" prop="reserveDate" show-overflow-tooltip></el-table-column>
-        <el-table-column label="申请人" prop="applicatName" show-overflow-tooltip></el-table-column>
-        <el-table-column label="申请时间" prop="applicatDate" show-overflow-tooltip></el-table-column>
+        <el-table-column label="申请人" prop="applicantName" show-overflow-tooltip></el-table-column>
+        <el-table-column label="申请时间" prop="applicantDate" show-overflow-tooltip></el-table-column>
         <el-table-column label="预约状态" prop="status" show-overflow-tooltip>
           <template scope="scope">
             {{ scope.row.status | typeText }}
@@ -73,56 +78,70 @@
         :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
     </div>
 
-    <!-- 模态框 设置（set） -->
-    <!--<Modal :mask-closable="false" v-model="setModal" height="200" class-name="vertical-center-modal" :width="900">
-      <modal-header slot="header" :content="contentHeader.setId"></modal-header>
-      <room-set v-if="setModal" @cancel="cancel" @set="subCallback" :op-data="operailityData"></room-set>
+    <!-- 增加 -->
+    <Modal :mask-closable="false" v-model="addModal" height="200" class-name="vertical-center-modal" :width="1000">
+      <modal-header slot="header" :content="contentHeader.addId"></modal-header>
+      <add v-if="addModal" @cancel="cancel" @add="subCallback"></add>
       <div slot="footer"></div>
-    </Modal>-->
-    <!-- 模态框 查看（show） -->
-    <!--<Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="900">
+    </Modal>
+    <!-- 查看 -->
+    <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1000">
       <modal-header slot="header" :content="contentHeader.showId"></modal-header>
-      <room-view v-if="showModal" @cancel="cancel" :op-data="operailityData"></room-view>
+      <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData"></show>
       <div slot="footer"></div>
-    </Modal>-->
-
+    </Modal>
+    <!-- 编辑 -->
+    <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1000">
+      <modal-header slot="header" :content="contentHeader.editId"></modal-header>
+      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
+      <div slot="footer"></div>
+    </Modal>
+    <!-- 上报 -->
+    <Modal close-on-click-modal="false" height="200" v-model="reportModal" class-name="vertical-center-modal" :loading="loading"
+      :width="500">
+      <modal-header slot="header" :content="contentHeader.reportId"></modal-header>
+      <div>
+        <p class="remove">确定要上报么？</p>
+        <div align="center">
+          <el-button type="info" @click="reportCall">确定</el-button>
+          <el-button @click="cancel('report')">取消</el-button>
+        </div>
+      </div>
+      <div slot="footer"></div>
+    </Modal>
+    <!-- 删除 -->
+    <Modal close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal" :loading="loading"
+      :width="500">
+      <modal-header slot="header" :content="contentHeader.removeId"></modal-header>
+      <remove v-if="removeModal" :deleteUrl="api.delete" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 <script>
   let Util = null;
 
   import api from './api'; // API
-
-  // import roomSet from './room_set'; // 设置
-  // import roomView from './room_view'; // 查看
-
   import statusOption from './statusOption'; // 预约状态类型
 
+  import add from './bespeakApply_add'; // 新建申请
+  import show from './bespeakApply_view'; // 新建申请
+  import edit from './bespeakApply_edit'; // 新建申请
+
   export default {
-    props: {
-      contenHeight: {
-        type: Number,
-        default: 100
-      },
-      update: { // 是否更新表格数据
-        type: Boolean,
-        default: false
-      }
-    },
     data() {
       return {
+        api,
         totalCount: 0,
         self: this,
         statusOption,
         tableHeight: 0,
         dynamicHt: 100, // 表格高度
         loading: false,
+        reportModal: false,
         showMoreSearch: false, // 更多筛选
-        showModal: false, // 查看
-        setModal: false, // 设置
-
-        operailityData: '',
-        multipleSelection: '', // 表格已选集
+        operailityData: [],
+        multipleSelection: [], // 表格已选集
         searchObj: { // 搜索
           reservePojectName: '', //  名称
           applicantStarDate: '', // 开始时间
@@ -136,14 +155,26 @@
         tableData: [],
         // 模态框提示
         contentHeader: {
-          setId: {
-            id: 'setId',
-            title: '房间预约设置'
+          addId: {
+            id: 'addId',
+            title: '新建预约申请'
           },
           showId: {
             id: 'showId',
-            title: '查看房间预约设置'
-          }
+            title: '查看预约申请'
+          },
+          editId: {
+            id: 'editId',
+            title: '编辑预约申请'
+          },
+          reportId: {
+            id: 'reportId',
+            title: '上报预约申请'
+          },
+          removeId: {
+            id: 'removeId',
+            title: '删除预约申请'
+          },
         }
       }
     },
@@ -164,6 +195,24 @@
           }
         }
         this.setTableData();
+      },
+      // 上报
+      reportCall() {
+        this.ajax({
+          ajaxSuccess: res => {
+            this.successMess('上报成功');
+            this.cancel('report');
+            this.setTableData();
+          },
+          ajaxEorror: () => this.errorMess('上报失败'),
+          ajaxParams: {
+            url: api.report.path + this.operailityData.id,
+            method: api.report.method,
+            data: {
+              id: this.operailityData.id
+            }
+          }
+        })
       },
       /************************* 搜索逻辑 *********************************/
       search() {
@@ -234,39 +283,38 @@
         return flag;
       },
       /************************************** 按钮相关 **************************************************/
+      // 新建申请
       add() {
-
+        this.openModel('add')
       },
-      del() {
-
-      },
-      /************************************** 模态框处理 **************************************************/
-      // 增加，选择考核类型
+      // 查看
       show(row) {
         this.operailityData = row;
         this.openModel('show')
       },
-      // 设置
-      set(row) {
-        this.operailityData = row && [row] || this.multipleSelection;
-        if (!this.operailityData.length) {
-          this.errorMess('请选择需要设置的房间')
-          return
-        }
-        this.openModel('set')
+      // 编辑
+      edit(row) {
+        this.operailityData = row;
+        this.openModel('edit')
       },
-      // 取消
-      cancel(targer) {
-        this[targer + 'Modal'] = false;
+      // 上报
+      report(row) {
+        this.operailityData = row;
+        this.openModel('report')
       },
       // 删除
-      /*--点击--删除--按钮--*/
       remove() {
         if (this.isSelected()) {
           this.operailityData = this.multipleSelection;
           this.openModel('remove')
         }
       },
+      /************************************** 模态框处理 **************************************************/
+      // 取消
+      cancel(targer) {
+        this[targer + 'Modal'] = false;
+      },
+
       // 增加回调
       subCallback(target, title, updata) {
         this.cancel(target);
@@ -286,8 +334,9 @@
       },
     },
     components: {
-      // roomSet,
-      // roomView
+      add,
+      edit,
+      show
     },
     mounted() {
       //页面dom稳定后调用
@@ -299,11 +348,6 @@
         Event.addHandler(window, "resize", this.setTableDynHeight);
       })
     },
-    // watch: {
-    //   contenHeight(val) {
-    //     this.setTableDynHeight()
-    //   },
-    // },
     created() {
       Util = this.$util;
       this.init()
@@ -312,11 +356,6 @@
 
 </script>
 <style lang="scss">
-  @import'../../../assets/ambuf/css/manage_v1.0/editForm';
-  .noMarginBottom {
-    .el-form-item {
-      margin-bottom: 0;
-    }
-  }
+
 
 </style>

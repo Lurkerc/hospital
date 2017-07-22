@@ -109,7 +109,7 @@
         formValidate: {
           depId:'',
           applicantId:userInfo.id,
-          leaveType:'',
+          leaveType:'SHI', //默认为事假
           beginDate:'',
           endDate:'',
           timeLength:'',

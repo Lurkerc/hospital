@@ -3,23 +3,26 @@
   <div id="content" ref="content" class="modal">
     <steps></steps>
     <el-form  :model="formValidate" ref="formValidate" :rules="rules.roomMessList" label-width="100px">
-    <el-row >
-      <el-col :span="10" :offset="12" >
-        <el-form-item  prop="buildingName">
-          <input class="hidden">
-          <el-input   v-model="formValidate.buildingName" placeholder="输入大楼名称搜索">
-            <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
-          </el-input>
-        </el-form-item>
-      </el-col>
-    </el-row>
+      <el-row >
+        <el-col :span="10" >
+          <el-button type="primary" @click="add">添加</el-button>
+          <el-button type="primary" @click="batchAdd">批量添加</el-button>
+          <el-button type="danger" @click="remove">删除</el-button>
+        </el-col>
+        <el-col :span="14"  align="right">
+          <el-form-item  prop="buildingName">
+            <input class="hidden">
+            <el-input   v-model="formValidate.buildingName" placeholder="输入大楼名称搜索">
+              <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
   </el-form>
 
     <!--列表操作按钮-->
     <div style="margin-bottom: 20px;">
-      <el-button type="primary" @click="add">添加</el-button>
-      <el-button type="primary" @click="batchAdd">批量添加</el-button>
-      <el-button type="danger" @click="remove">删除</el-button>
+
     </div>
     <!--列表数据-->
     <div>
@@ -62,9 +65,11 @@
             align="center"
             prop="buildingName"
             label="大楼名称"
+            show-overflow-tooltip
             width="200">
           </el-table-column>
           <el-table-column
+            show-overflow-tooltip
             align="center"
             prop="sex"
             label="房间类别"
@@ -74,17 +79,20 @@
             </template>
           </el-table-column>
           <el-table-column
+            show-overflow-tooltip
             align="center"
             prop="no"
             label="房间号"
            >
           </el-table-column>
           <el-table-column
+            show-overflow-tooltip
             prop="bedNum"
             label="床位数"
             >
           </el-table-column>
           <el-table-column
+            show-overflow-tooltip
             prop="remark"
             label="备注">
 

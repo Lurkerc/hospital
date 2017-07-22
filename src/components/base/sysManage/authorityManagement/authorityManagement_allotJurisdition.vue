@@ -73,10 +73,10 @@
     },
     methods: {
       getCheckedNodes() {
-        console.log(this.$refs.tree.getCheckedNodes());
+        //console.log(this.$refs.tree.getCheckedNodes());
       },
       getCheckedKeys() {
-        console.log(this.$refs.tree.getCheckedKeys());
+        //console.log(this.$refs.tree.getCheckedKeys());
       },
 
       setCheckedKeys() {
@@ -87,7 +87,7 @@
       },
       selectNodes(){
         var treeNode = this.$refs.tree.getCheckedNodes(true);
-        console.log(treeNode)
+        //console.log(treeNode)
       },
       renderContent(h, { node, data, store }) {
         return '<div>111</div>'

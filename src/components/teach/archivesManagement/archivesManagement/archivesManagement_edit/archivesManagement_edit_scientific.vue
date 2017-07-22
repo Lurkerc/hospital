@@ -752,7 +752,7 @@
        * */
       SuccessGetCurrData(responseData){
         let data = responseData.data;
-        if(data.secient==""){
+        if(data.secient===null){
           data.secient = {
             "archivesId":'',
             "directionInfo":'',

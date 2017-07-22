@@ -46,7 +46,17 @@ const rotateRouters = {
           resolve(require('../../components/rotateManagement/rotateQuery/makeUpRotate/makeUpRotate_list.vue'));
         }, 'rotateQuery');
       }
+    },{
+      //轮转表
+      path:'myRotateTables',
+      name:'myRotateTables',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateQuery/rotateTables/myRotateTables_list.vue'));
+        }, 'rotateQuery');
+      }
     },
+
   ]
 }
 

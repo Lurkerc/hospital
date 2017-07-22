@@ -21,22 +21,22 @@
           {{ ' '}}</el-radio>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="序号" type="index" width="75">
+      <el-table-column show-overflow-tooltip align="center" label="序号" type="index" width="75">
       </el-table-column>
-      <el-table-column align="center" prop="no" label="房间号">
+      <el-table-column show-overflow-tooltip align="center" prop="no" label="房间号">
       </el-table-column>
-      <el-table-column prop="bedNum" label="床位数">
+      <el-table-column show-overflow-tooltip prop="bedNum" label="床位数">
       </el-table-column>
-      <el-table-column prop="yetBedNum" label="已入住人数">
+      <el-table-column show-overflow-tooltip prop="yetBedNum" label="已入住人数">
       </el-table-column>
-      <el-table-column prop="bedCount" label="空床数">
+      <el-table-column show-overflow-tooltip prop="bedCount" label="空床数">
       </el-table-column>
-      <el-table-column prop="sex" label="房间类型">
+      <el-table-column show-overflow-tooltip prop="sex" label="房间类型">
         <template scope="scope">
           {{scope.row.sex | roomSex}}
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态">
+      <el-table-column show-overflow-tooltip prop="status" label="状态">
       </el-table-column>
 
     </el-table>

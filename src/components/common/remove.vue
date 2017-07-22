@@ -45,8 +45,15 @@
         for(var i=0;i<this.operailityData.length;i++){
           myUrl.push(this.operailityData[i].id);
         }
-        myUrl = this.deleteUrl+"/"+myUrl.join(",");
-
+        if(this.valDataType(this.operailityData,"Array")){
+          if(this.operailityData.length>0){
+            myUrl = this.deleteUrl+"/"+myUrl.join(",");
+          }else{
+            myUrl = this.deleteUrl;
+          }
+        }else{
+          myUrl = this.deleteUrl;
+        }
         //处理服务数据
         let myPromise = Util.queryData({
           url:myUrl,

@@ -8,7 +8,7 @@
 //字典对象
 const dictionary = {
   //民族
-  nation:[{"id":"汉族","name":"汉族"},{"蒙古族":"蒙古族","name":"蒙古族"},{"id":"回族","name":"回族"},
+  nation:[{"id":"汉族","name":"汉族"},{"id":"蒙古族","name":"蒙古族"},{"id":"回族","name":"回族"},
     {"id":"藏族","name":"藏族"},{"id":"维吾尔族","name":"维吾尔族"},{"id":"苗族","name":"苗族"},
     {"id":"彝族","name":"彝族"},{"id":"壮族","name":"壮族"},{"id":"布依族","name":"布依族"},
     {"id":"朝鲜族","name":"朝鲜族"},{"id":"满族","name":"满族"},{"id":"侗族","name":"侗族"},
@@ -27,7 +27,7 @@ const dictionary = {
     {"id":"京族","name":"京族"},{"id":"塔塔尔族","name":"塔塔尔族"},{"id":"独龙族","name":"独龙族"},
     {"id":"鄂伦春族","name":"鄂伦春族"},{"id":"赫哲族","name":"赫哲族"},{"id":"门巴族","name":"门巴族"},
     {"id":"珞巴族","name":"珞巴族"},{"id":"基诺族","name":"基诺族"}],
-  gender:[{id:'boy',name:'男'},{id:'girl',name:'女'}],
+  gender:[{id:'BOY',name:'男'},{id:'GIRL',name:'女'}],
   political:[{id:'党员',name:'党员'},{id:'团员',name:'团员'},{id:'群众',name:'群众'}]
 }
 

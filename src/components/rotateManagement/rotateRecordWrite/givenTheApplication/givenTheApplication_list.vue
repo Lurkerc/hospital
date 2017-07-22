@@ -28,7 +28,7 @@
     <div id="tableData" ref="tableData" class="givenTheAppTable">
       <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%"
         @selection-change="handleSelectionChange">
-        <el-table-column label="序号" type="index" width="80"></el-table-column>
+        <el-table-column label="序号" prop="index" width="100"></el-table-column>
         <el-table-column label="操作" align="center" width="80">
           <template scope="scope">
             <template v-if="scope.row.depExaminationId">
@@ -227,7 +227,7 @@
       // 数据请求成功回调
       listDataSuccess(res, m, loading) {
         this.totalCount = res.totalCount || 0;
-        this.tableData = res.data || [];
+        this.tableData = this.addIndex(res.data || []);
       },
       //设置表格及分页的位置
       setTableDynHeight() {

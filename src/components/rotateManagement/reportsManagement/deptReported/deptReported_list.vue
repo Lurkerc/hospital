@@ -36,8 +36,8 @@
     <div id="tableView" ref="tableView" style="padding-top:10px;">
       <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
         style="width: 100%;" @selection-change="handleSelectionChange">
-        <el-table-column label="序号" type="index" width="80"></el-table-column>
         <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column label="序号" prop="index" width="100"></el-table-column>
         <el-table-column label="操作" width="140">
           <template scope="scope">
             <el-button size="small" type="info" @click="show(scope.row)">查看</el-button>
@@ -166,7 +166,7 @@
       // 数据请求成功回调
       listDataSuccess(res, m, loading) {
         this.totalCount = res.totalCount;
-        this.tableData = res.data;
+        this.tableData = this.addIndex(res.data || []);
       },
       //设置表格及分页的位置
       setTableDynHeight() {

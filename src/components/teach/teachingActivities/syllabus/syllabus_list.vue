@@ -57,6 +57,7 @@
   import url from '../app';
   let Util = null;
   export default {
+      props:['userType'],
     data() {
       return {
         //查询表单
@@ -97,7 +98,7 @@
         tableListMessTitle: {
           ajaxSuccess: 'updateTableList',
           ajaxParams: {
-            url: url.teachctivityListType+'/'+'ALLUSER',
+            url: url.teachctivityListType+'/'+this.userType,
             params: {},
           }
         },
@@ -107,8 +108,7 @@
       //初始化请求列表数据
       init(){
         Util = this.$util;
-        let userInfo = this.$store.getters.getUserInfo;
-        this.tableListMessTitle.ajaxParams.url=url.teachctivityListType+'/'+userInfo.studentTypes;// 需要角色类型,根据当前登录的角色
+        this.tableListMessTitle.ajaxParams.url=url.teachctivityListType+'/'+this.userType;// 需要角色类型,根据当前登录的角色
         //ajax请求参数设置
         let myDate=new Date();
         let year = myDate.getFullYear();
@@ -145,8 +145,9 @@
           timeOut:'',//定时
           time:1000,//定时时间
         };
+
         this.date.weekCount = this.getWeek(this.formValidate.activityBeginTime); //开始时间所在的星期
-        this.calculate(this.formValidate.courseBeginTime,this.formValidate.activityEndTime);
+        this.calculate(this.formValidate.activityBeginTime,this.formValidate.activityEndTime);
 
         let formValidate = this.formDate(this.getFormData(this.formValidate),['activityBeginTime','activityEndTime'],this.yearMonthData);
         this.tableListMessTitle.ajaxParams.params = Object.assign( this.tableListMessTitle.ajaxParams.params,formValidate);
@@ -168,7 +169,7 @@
 
       //处理表单数据
       disposeTableData(data){
-        let tableData = [{BeginTime:'',EndTime:'',}]
+        let tableData = [{BeginTime:'',EndTime:'',}];
         let ascending =this.date.startStamp ;
         let end = this.date.endStamp;
         let length=1;
@@ -186,7 +187,7 @@
         while (weekCount<8){
           if(data[0]&& data[0].activityTime.replace(/(^\s*)|(\s*$)/g, "")== this.getDate(ascending).replace(/(^\s*)|(\s*$)/g, "")){
             cell =  data.shift();
-            recordTimeIds = cell.recordTimeIds.split(',');
+            recordTimeIds =cell.recordTimeIds&& cell.recordTimeIds.split(',')||[];
             for(let i=0;i<recordTimeIds.length;i++){
               key = weekCount+'-'+recordTimeIds[i];
               tableData[index][key] = cell.activityName;  //为tableData添加内容
@@ -209,7 +210,7 @@
           }else {
             if(data[0] && data[0].activityTime.replace(/(^\s*)|(\s*$)/g, "")== this.getDate(ascending).replace(/(^\s*)|(\s*$)/g, "")){  //2017-04-04判定
               cell =  data.shift();
-              recordTimeIds = cell.recordTimeIds.split(',');
+              recordTimeIds =cell.recordTimeIds&&  cell.recordTimeIds.split(',')||[];
               for(let i=0;i<recordTimeIds.length;i++){  //拆分合并的单元格
                 key = weekCount+'-'+recordTimeIds[i];
                 tableData[index][key] = cell.activityName;  //为tableData添加内容
@@ -261,7 +262,7 @@
         if (!start) {
           startTime = this.date.startStamp = this.timestamp() - this.date.mistiming * 86400000;
         } else {
-          startTime = this.date.startStamp = this.timestamp(start) - this.date.mistiming * 86400000;
+          startTime = this.date.startStamp = this.timestamp(start) ;
         }
 
       },

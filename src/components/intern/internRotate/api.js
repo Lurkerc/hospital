@@ -62,25 +62,25 @@ const api = {
     method: 'get'
   },
   rotaryListByUser: { // 轮转人员列表展示-按人员展示
-    path: rotateSet + '/userRotaryPagelist',
+    path: rotateSet + '/userRotaryPagelist_SXS',
     method: 'get'
   },
   rotaryListByDep: { // 轮转人员列表展示-按科室展示
-    path: rotateSet + '/userRotaryDepPagelist',
+    path: rotateSet + '/userRotaryDepPagelist_SXS',
     method: 'get'
   },
   depReList: { // 轮转人员列表展示
     path: rotateSet + '/pagelist',
     method: 'get'
   },
-  exportExcelByDep:{  //轮转人员按科室展示导出excel
-    path: rotateSet + '/userRotaryDepExportExcel',
+  /*exportExcelByDep:{  //轮转人员按科室展示导出excel
+    path: rotateSet + '/userRotaryDepExportExcel_SXS',
     method: 'post'
-  },
-  exportExcelByUser:{  //人员轮转表导出excel
-    path: rotateSet + '/userRotaryExportExcel',
+  },*/
+  /*exportExcelByUser:{  //人员轮转表导出excel
+    path: rotateSet + '/userRotaryExportExcel_SXS',
     method: 'get'
-  },
+  },*/
   getDepReq:{  //获取系统中所有启用的科室要求集合
     path:"/deprequirement/list",
     method: 'get'
@@ -94,15 +94,15 @@ const api = {
     method: 'get'
   },
   userRotaryExportExcel:{   //人员轮转表导出excel
-    path: rotateSet + '/userRotaryExportExcel',
+    path: rotateSet + '/userRotaryExportExcel_SXS',
     method: 'get'
   },
   userRotaryDepExportExcel:{  //轮转人员按科室展示导出excel
-    path: rotateSet + '/userRotaryDepExportExcel',
+    path: rotateSet + '/userRotaryDepExportExcel_SXS',
     method: 'get'
   },
   regrotaryDept:{  //自动安排-过程中安排轮转(按组或人 预览轮转表后点击确定按钮时调用此接口)
-    path: rotateSet + '/regrotaryDept',
+    path: rotateSet + '/regrotaryDept_SXS',
     method: 'post'
   },
   getSchoolUserInfo:{  //自动安排-根据学校ID集合获取未安排轮转用户信息  {schoolIds}学校的id
@@ -129,11 +129,11 @@ const api = {
     method: 'post'
   },
   deleteRotary:{ // 删除轮转
-    path: handWork + '/deleteRotary',
+    path: handWork + '/deleteRotary_SXS',
     method: 'delete'
   },
   getRotaryDepIndo:{  //微调-查看用户轮转表  {userId}
-    path: handWork + '/getRotaryDepIndo',
+    path: handWork + '/getRotaryDepIndo_SXS',
     method: 'get'
   },
   regUserMicrCtrol:{  //手工调整--轮转微调  保存微调的数据
@@ -141,7 +141,7 @@ const api = {
     method: 'post'
   },
   rtuserPagelist:{  //手工调整--轮转微调人员列表
-    path: handWork + '/rtuserPagelist',
+    path: handWork + '/rtuserPagelist_SXS',
     method: 'get'
   },
   getDepPagelist:{  //手工调整--获取微调的科室
@@ -149,9 +149,17 @@ const api = {
     method: 'get'
   },
   /*----- 自选科室 --------------------------------------------------------------------------------*/
-  depReList: { // 实习医院各个专业下科室轮转要求列表
+  /*depReList: { // 实习医院各个专业下科室轮转要求列表
     path: depReFile + '/pagelist',
     method: 'get'
+  },*/
+  selectCourseGet: { // 选课页面展示-根据当前登陆人对应的学校,获取所有任选轮转科室设置
+    path :  '/rotationProcess/selectCourse/get',
+    method : 'get'
+  },
+  selectCourseAdd: { // 学员选择课程
+    path :  '/rotationProcess/selectCourse/add',
+    method : 'post'
   },
 };
 

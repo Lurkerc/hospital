@@ -59,7 +59,7 @@
     created(){
       this.init();
       let env = this.$store.getters.getEnvPath;
-      this.http = env;
+      this.http = env['http'];
     },
 
     methods: {
