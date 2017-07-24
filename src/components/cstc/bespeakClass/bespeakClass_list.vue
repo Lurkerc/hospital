@@ -54,7 +54,7 @@
         <el-table-column label="操作" width="200">
           <template scope="scope">
             <el-button size="small" type="info" @click="show(scope.row)">查看</el-button>
-            <template v-if="scope.row.status === 'UNREPORTED'">
+            <template v-if="scope.row.status === 'UNREPORTED' || scope.row.status === 'PENDING'">
               <el-button size="small" type="primary" @click="edit(scope.row)">修改</el-button>
               <el-button size="small" type="warning" @click="report(scope.row)">上报</el-button>
             </template>
@@ -68,10 +68,14 @@
           </template>
         </el-table-column>
         <el-table-column label="申请人" prop="creater" show-overflow-tooltip></el-table-column>
-        <el-table-column label="申请时间" prop="createTime" show-overflow-tooltip></el-table-column>
+        <el-table-column label="申请时间" prop="createTime" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.createTime | formatDate('yyyy-MM-dd') }}
+          </template>
+        </el-table-column>
         <el-table-column label="预约状态" prop="status" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.status | typeText }}
+            {{ scope.row.status | bespeakType }}
           </template>
         </el-table-column>
         <el-table-column label="最低开课人数" prop="minNum" show-overflow-tooltip></el-table-column>

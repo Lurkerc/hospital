@@ -3,16 +3,13 @@
   <div id="content" ref="content" @click="selectHide" class="modal">
     <el-form ref="formValidate" :inline="true"  class="form-inline lose-margin" label-width="90px" >
       <el-row >
-        <el-col :span="5">
+        <el-col :span="24">
           <el-form-item label="科室" prop="depId" >
             <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
               <select-option :type="'userRotaryDeptlist'" :unAll="true"  :userType="userType" :name="'depName'" :id="'depId'" :userId="userId"></select-option>
             </el-select>
           </el-form-item>
-        </el-col>
-        </el-col >
 
-        <el-col :span="5">
           <el-form-item label="考勤时间" prop="month">
             <el-date-picker
               :clearable="false"
@@ -22,9 +19,7 @@
               placeholder="选择月">
             </el-date-picker>
           </el-form-item>
-        </el-col >
 
-        <el-col :span="4">
           <el-button type="primary"  @click="searchEvent">&nbsp; 搜索 &nbsp;</el-button>
         </el-col >
       </el-row >

@@ -17,9 +17,14 @@ let changeEvent = 'change';
  * email          邮箱[blur]+
  * number         数字[change]+
  * ---------------------- 规则函数 -----------------------------
- * sectionVal     字符串区间
  * asyncVal       异步服务器验证
  * isDate         date检测
+ * illegalChar    特殊字符检测
+ * serchPhone     搜索项手机号
+ * sectionVal     字符串区间
+ * inputLen       字符区间
+ * numberSection  数字区间
+ * numbers        必须为数字
  */
 
 /************************* 常规规则 ****************************/
@@ -106,10 +111,23 @@ let baseRules = {
    * 非法字符串检测
    * @reg 非法字符正则表达式 默认只能输入中文、数字、英文（不含标点符号）
    *  /[@#\$%\^&\*]+/ ----> @|#|$|%|^|&|* 都属于非法字符
+   * @msg 提示信息
    */
-  illegalChar: (reg = /[^\u4e00-\u9fa5\w\s，。、；‘’“”《》——+-、~·！]_（）：]/m) => {
+  illegalChar: (reg = /[^\u4e00-\u9fa5\w\s，。、；‘’“”《》——+-、~·！]_（）：]/m, msg = '存在非法字符！') => {
     return (rule, value = '', callback) => {
-      value && reg.test(value) && callback(new Error('存在非法字符！'));
+      value && reg.test(value) && callback(new Error(msg));
+      callback()
+    }
+  },
+
+  /**
+   * 数字区间
+   * @min number 最小值
+   * @max number 最大值
+   */
+  numberSection(min = 0, max = 999999999) {
+    return (rule, value = 0, callback) => {
+      (value > max || value < min) && callback(new Error(`只能为${min}-${max}`))
       callback()
     }
   },
@@ -200,7 +218,7 @@ let baseRules = {
 
   },
   /**
-   * 搜索项手机号
+   * 必须数字
    */
   numbers: function (rule, value, callback) {
     //检验位的检测
@@ -233,9 +251,8 @@ let mustRules = {
 
   // 数字-必须整数
   number: {
-    // type: 'number',
-    message: '该项必须为整数并且最多10位',
-    pattern: /^\d{1,10}$/,
+    message: '该项必须为整数',
+    pattern: /^\d+$/,
     trigger: defEvent
   },
 };

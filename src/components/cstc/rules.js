@@ -3,11 +3,27 @@ import baseRules from '../../formRules/base'; // 公共规则
 
 // 事务管理
 let affairs = {
-  registerDate: [baseRules.isDate], // 开始时间 必填且为时间类型
+  registerDate: baseRules.isDate, // 开始时间 时间类型
   timeInterval: baseRules.required, // 结束时间 必填
   affairType: baseRules.selectText, // 类型 必选
   classhour: baseRules.numberMust, // 课时 必须为数字
   peopleNum: baseRules.numberMust, // 人数 必须为数字
+};
+
+/**
+ * 预约上课
+ */
+let bespeakClass = {
+  name: baseRules.required, // 课程名称 必填
+  roomBearingCapacity: [baseRules.numberMust, baseRules.numberSection(1, 1000)], // 房间承载人数 必须为数字
+  minNum: [baseRules.numberMust, baseRules.numberSection(1, 1000)], // 最低开课人数 必须为数字
+};
+
+/**
+ * 预约设置 - 项目
+ */
+let bespeakSetProject = {
+  name: baseRules.required, // 项目名称 必填
 };
 
 /**
@@ -128,6 +144,8 @@ let consumablesCount = {
 
 export {
   affairs,
+  bespeakClass,
+  bespeakSetProject,
   tree,
   roomManage,
   roomUsage,

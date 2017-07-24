@@ -221,8 +221,8 @@
         if (this.checkSub()) {
           this.ajax({
             type: 'edit',
-            successTitle: "${msg}成功",
-            errorTitle: "${msg}失败",
+            successTitle: `${msg}成功`,
+            errorTitle: `${msg}失败`,
             ajaxParams: {
               url: api.modify.path + this.showData.id,
               method: api.modify.method,

@@ -1,10 +1,10 @@
 <template>
   <!-- 预约项目管理 - 增加 -->
   <div>
-    <el-form label-width="120px">
+    <el-form label-width="120px" :model="formValidate" ref="formValidate" :rules="rules">
       <el-row>
         <el-col>
-          <el-form-item label="项目名称：">
+          <el-form-item label="项目名称：" prop="name">
             <el-input v-model="formValidate.name" style="width:400px;"></el-input>
           </el-form-item>
         </el-col>
@@ -156,11 +156,15 @@
   import fullCalendar from 'vue-ambuf-fullcalendar'; // 周历
   //引入日历相关的配置
   import calendarSet from './calendarSet';
-
+  // 验证规则
+  import {
+    bespeakSetProject as rules
+  } from '../../rules';
   export default {
     props: ['opData'],
     data() {
       return {
+        rules,
         self: this,
         todoId: '', // 查看房间id
         //保存按钮基本信息
@@ -265,6 +269,9 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun) {
+        if (!this.submitForm('formValidate')) {
+          return false
+        }
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true);
         this.formValidate.deviceTypeIds = this.selectDeviceId.join(','); // 设备
@@ -302,6 +309,20 @@
       getFormData(data) {
         let myData = this.$util._.defaultsDeep({}, data);
         return myData;
+      },
+      /*
+       * 点击提交按钮 监听是否验证通过
+       * @param formName string  form表单v-model数据对象名称
+       * @return flag boolean   form表单验证是否通过
+       * */
+      submitForm(formName) {
+        let flag = false;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            flag = true;
+          }
+        });
+        return flag;
       },
       /*********************************************************** 周历 ***********************************************/
       goPrev() {
@@ -501,33 +522,6 @@
 
       // 初始化数据
       getDataSuccess(res) {
-        res = {
-          data: {
-            "room": {
-              "roomId": "1",
-              "roomNum": "101",
-              "roomName": "临床思维训练室一",
-              "address": "所在位置",
-              "summary": "内有两张病床，可同时容纳6-7个人",
-              "imageList": [{
-                "imageUrl": "www.baidu.com",
-                "imageOriginalUrl": "www.baidu.com"
-              }]
-            },
-            "roomReserveSet": {
-              "roomReserveSetId": "1",
-              "isOpen": "YES",
-              "timeModel": "SPECIFIC",
-              "openTimeList": [{
-                "openTimeId": "1",
-                "reserveSetId": "1",
-                "reserveSetType": "ROOM",
-                "date": "2017-01-02",
-                "timeSetId": "1,2,3"
-              }]
-            }
-          }
-        }
         let fData = this.formValidate;
         let rData = res.data.roomReserveSet;
         let timeSlotId = [];

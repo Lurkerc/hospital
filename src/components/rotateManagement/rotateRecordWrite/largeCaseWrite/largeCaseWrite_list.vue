@@ -136,7 +136,7 @@
     <!--新建-->
     <Modal
       close-on-click-modal="false"
-      :width="width"
+      :width="1300"
       v-model="addModal"
       title="对话框标题"
       class-name="vertical-center-modal"

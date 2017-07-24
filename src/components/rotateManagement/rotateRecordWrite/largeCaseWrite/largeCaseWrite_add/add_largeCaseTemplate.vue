@@ -1558,14 +1558,30 @@
               },
               //当前组件提交(add)数据时,ajax处理的 基础信息设置
               addMessTitle: {},
+              //获取是否黏贴信息
+              getBigcaseIscopy:{
+                ajaxSuccess:'getBigcaseIscopyData',
+                ajaxParams:{
+                  url: this.url.bigcaseIscopy,
+                }
+              },
+              isCopy:'',
           }
         },
         methods: {
+
+          //通过get请求列表数据
+          getBigcaseIscopyData(responseData){
+            let data = responseData.data;
+            this.isCopy = data["configValue"];
+          },
+
           //初始化请求列表数据
           init(){
 //              获取当前登录人的信息
             let userInfo = this.$store.getters.getUserInfo;
             this.name= userInfo.name;
+            this.ajax(this.getBigcaseIscopy);
           },
           /*
            * 点击提交按钮 监听是否提交数据
@@ -1673,8 +1689,14 @@
 
           //键盘监听事件，监听是否按下ctrl + v
           keyup(key,event){
+
             event = event || window.event;
               if(event.keyCode==86 &&event.ctrlKey){
+                if(!this.isCopy) {
+                  this.showMess('不允许粘贴');
+                  event.returnValue=false;
+                  return ;
+                }
                 this.copyField[key] = 1;
               }
           },

@@ -41,7 +41,7 @@
 
         <el-form-item label="科室" prop="depId" >
           <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
-            <select-option :rol="role" :type="type" :unAll="true"  :userType="userType" :name="'depName'" :id="'depId'" :userId="userId"></select-option>
+            <select-option :role="role" :type="type"  :userType="userType"  :userId="userId"></select-option>
           </el-select>
         </el-form-item>
 
@@ -336,13 +336,21 @@
           }
         },
 
+        type:'dep',
+        role:''
+
 
       }
     },
     methods: {
       //初始化请求列表数据
       init(){
-
+        let userInfo = this.$store.getters.getUserInfo;
+        if(userInfo.roleList[0].identify == 'DJLS'){
+          this.type = 'getDepByTeacher';
+        }else {
+          this.type = 'byUserType';
+        }
         Util = this.$util;
         //ajax请求参数设置
         this.myPages =  Util.pageInitPrams;
@@ -594,6 +602,7 @@
       let userInfo = this.$store.getters.getUserInfo;
       this.userId=userInfo.id;
       this.userType=userInfo.studentTypes;
+      this.role = userInfo.roleList[0].identify;
     },
     mounted(){
       //页面dom稳定后调用

@@ -27,8 +27,10 @@
         </el-form-item>
         <el-form-item label="开放预约状态:">
           <el-select v-model="searchObj.status" placeholder="请选择">
-            <el-option v-for="item in statusOption" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
+            <!-- <el-option label="待上报" value="UNREPORTED"></el-option>
+            <el-option label="驳回" value="PENDING"></el-option>
+            <el-option label="通过" value="ADOPT"></el-option> -->
+            <el-option v-for="item in statusOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item style="margin-right:0;">
@@ -54,10 +56,14 @@
           </template>
         </el-table-column>
         <el-table-column label="申请人" prop="creater" show-overflow-tooltip></el-table-column>
-        <el-table-column label="申请时间" prop="createTime" show-overflow-tooltip></el-table-column>
+        <el-table-column label="申请时间" prop="createTime" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.createTime | formatDate('yyyy-MM-dd') }}
+          </template>
+        </el-table-column>
         <el-table-column label="预约状态" prop="status" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.status | typeText }}
+            {{ scope.row.status | bespeakType }}
           </template>
         </el-table-column>
         <el-table-column label="最低开课人数" prop="minNum" show-overflow-tooltip></el-table-column>
@@ -104,7 +110,7 @@
           name: '', //  名称
           createStartTime: '', // 开始时间
           createEndTime: '', // 结束时间
-          status: '', // 状态
+          status: 'UNREPORTED', // 状态
           // isOpen: '', // 是否开放预约
           // address: '', // 房间所在位置
           sortby: 'RESERVE_PROJECT_ROOM_CREATETIME', // 排序字段

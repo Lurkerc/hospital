@@ -25,7 +25,7 @@
         </el-col>
         <el-col :span="21" :offset="1">
           <el-form-item label="选择房间：">
-            <span style="display:inline;">{{ roomNums.join('，') }}</span>
+            <span style="display:inline;">{{ formValidate.reservePojectRoom.roomNum }}</span>
             <el-button type="info" @click="selectRoom">选择房间</el-button>
           </el-form-item>
         </el-col>
@@ -70,7 +70,7 @@
     <!--选择房间-->
     <Modal :mask-closable="false" v-model="selectRoomModal" height="200" class-name="vertical-center-modal" :width="960">
       <modal-header slot="header" :content="headerContent.selectRoomId"></modal-header>
-      <select-room v-if="selectRoomModal" @cancel="cancel" @select="selectRoomCall" :select="roomIds"></select-room>
+      <select-room v-if="selectRoomModal" @cancel="cancel" :selectOne="true" @select="selectRoomCall" :select="roomIds"></select-room>
       <div slot="footer"></div>
     </Modal>
     <!--选择设备-->
@@ -97,7 +97,11 @@
         formValidate: {
           status: '',
           opinion: '',
-          reservePojectRoom: [],
+          reservePojectRoom: {
+            id: this.operailityData.id,
+            roomId: '',
+            roomNum: '',
+          },
           deviceList: [],
         },
         showData: {
@@ -163,17 +167,8 @@
       // 提交数据
       subData(status) {
         let msg = status === 'ADOPT' ? '通过' : '驳回';
-        let reservePojectRoom = [];
-
-        this.roomIds.map(id => {
-          reservePojectRoom.push({
-            id: this.operailityData.id,
-            roomId: id
-          })
-        })
 
         this.formValidate.status = status;
-        this.formValidate.reservePojectRoom = reservePojectRoom;
 
         this.ajax({
           type: 'add',
@@ -194,16 +189,18 @@
           ajaxSuccess: res => {
             this.showData = res.data || {};
             // 房间
-            this.roomIds.push(res.data.reservePojectRoom.roomId);
-            this.roomNums.push(res.data.reservePojectRoom.roomNum);
+            this.formValidate.reservePojectRoom.roomId = res.data.reservePojectRoom.roomId;
+            this.formValidate.reservePojectRoom.roomNum = res.data.reservePojectRoom.roomNum;
             // 设备
             res.data.reservePojectDeviceList.map(item => {
               this.formValidate.deviceList.push({
-                derviceTypeId: item.deviceTypeId,
+                deviceTypeId: item.deviceTypeId,
                 reserveNum: item.reserveNum
               });
+              this.deviceIds.push(item.deviceTypeId)
             });
             this.deviceList = res.data.reservePojectDeviceList;
+            this.formValidate.opinion = res.data.opinion;
           },
           ajaxParams: {
             url: api.get.path + this.operailityData.id,
@@ -235,12 +232,8 @@
       /********************************* 弹窗回调 *****************************/
       // 选择房间
       selectRoomCall(res) {
-        this.roomIds.length = 0;
-        this.roomNums.length = 0;
-        res.map(item => {
-          this.roomIds.push(item.id);
-          this.roomNums.push(item.roomNum)
-        });
+        this.formValidate.reservePojectRoom.roomId = res[0].id;
+        this.formValidate.reservePojectRoom.roomNum = res[0].roomNum;
         this.cancel('selectRoom')
       },
       // 选择设备模型
@@ -248,7 +241,7 @@
         let temp = [];
         res.map(item => {
           temp.push({
-            derviceTypeId: item.id,
+            deviceTypeId: item.id,
             reserveNum: ""
           })
         })
@@ -268,7 +261,16 @@
 
 </script>
 
-<style>
+<style lang="scss">
   /* 预约审核 - 查看 */
+
+  .bpkdBox {
+    .bpkdItem {
+      margin-bottom: 16px;
+    }
+    .bpkdTitle {
+      margin-left: 10px;
+    }
+  }
 
 </style>

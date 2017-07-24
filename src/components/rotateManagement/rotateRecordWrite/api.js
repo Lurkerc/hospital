@@ -126,8 +126,8 @@ export default {
   /*大病例删除*/
   caseRecordBigCasesDelete:'/rotationProcess/caseRecord/bigCasesDelete',//{casesId}
 
-
-
+  // 黏贴查询是否黏贴
+  bigcaseIscopy: '/rotaryConfig/getByKey/rotary_bigcase_iscopy-SXS',
   /**
    * 临床技能操作
    * */

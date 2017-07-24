@@ -283,7 +283,7 @@
             <el-collapse-item title=" 体格检查" name="3">
               <el-row >
                 <el-col :span="24">
-                  <el-form-item label="生命体征:" prop="cxbs" >
+                  <el-form-item label="生命体征:" >
                     <el-row >
                       <el-col :span="3">
                         <el-form-item label="T:" prop="ctgjcSmtzT" label-width="50px">
@@ -934,6 +934,7 @@
       SuccessGetCurrData(res){
         let data = res.data;
         if(!data) return;
+        data.casesId =  data.caseId;
         this.formValidate =this.getFormValidate(this.formValidate,data);
       },
 

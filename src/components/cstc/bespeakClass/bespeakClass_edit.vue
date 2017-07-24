@@ -2,9 +2,9 @@
   <!-- 新建申请 -->
   <div>
     <el-row>
-      <el-form label-width="114px">
+      <el-form label-width="130px" :model="formValidate" ref="formValidate" :rules="rules">
         <el-col>
-          <el-form-item label="课程名称：">
+          <el-form-item label="课程名称：" prop="name">
             <el-input v-model="formValidate.name"></el-input>
           </el-form-item>
         </el-col>
@@ -41,18 +41,18 @@
         </el-col>
 
         <el-col :span="8">
-          <el-form-item label="可预约数量：">
-            <el-input v-model="formValidate.reservePojectRoom.bearingCapacity"></el-input>
+          <el-form-item label="可预约数量：" prop="roomBearingCapacity">
+            <el-input v-model="formValidate.roomBearingCapacity"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8" :offset="8">
-          <el-form-item label="最低开课人数：">
+          <el-form-item label="最低开课人数：" prop="minNum">
             <el-input v-model="formValidate.minNum"></el-input>
           </el-form-item>
         </el-col>
 
         <el-col>
-          <el-form-item label="课程内容：">
+          <el-form-item label="课程内容：" prop="summary">
             <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容" v-model="formValidate.summary">
             </el-input>
           </el-form-item>
@@ -60,7 +60,7 @@
 
         <el-col>
           <el-form-item>
-            <el-checkbox v-model="formValidate.timeModel" true-label="SPECIFIC" false-label="" @change="initSelectTime">不自主选择房间、只描述要求</el-checkbox>
+            <el-checkbox v-model="formValidate.timeModel" true-label="SPECIFIC" false-label="" @change="initSelectTime(false)">不自主选择房间、只描述要求</el-checkbox>
           </el-form-item>
         </el-col>
 
@@ -184,10 +184,14 @@
   import api from './api';
   import selectUser from '../../common/selectUser'; // 选择人员
   import selectDevice from '../device/deviceStorage/deviceStorage_select'; // 选择设备
+  import {
+    bespeakClass as rules
+  } from '../rules'; // 验证规则
   export default {
     props: ['operailityData'],
     data() {
       return {
+        rules,
         self: this,
         // 临时数据
         reservePoject: "", // 项目
@@ -216,6 +220,7 @@
           userIds: "", // 预约人id字符串，多个id以逗号分隔
           roomRquirement: "", // 房间描述
           deviceRquirement: "", // 设备描述
+          roomBearingCapacity: "", // 承载量
           reservePojectRoom: { // 预约房间对象
             roomId: "", // 房间id
             roomNum: "", // 房间号
@@ -271,6 +276,7 @@
         /* 基本属性 */
         formData.map(key => this.formValidate[key] = res.data[key] || '');
         /* 房间 */
+        this.formValidate.roomBearingCapacity = res.data.reservePojectRoom.bearingCapacity;
         Object.keys(roomData).map(key => roomData[key] = res.data.reservePojectRoom[key] || '');
         // 日期及时间
         Object.keys(openTime).map(key => openTime[key] = res.data.reserveOpenTimeDto[key] || '');
@@ -398,26 +404,28 @@
       },
       // 提交数据
       subData(status) {
+        if (!this.checkSub()) {
+          return
+        }
         let msg = status === 'START' ? '上报' : '保存';
         let userIds = [];
         this.formValidate.status = status;
         this.formValidate.userList.map(item => userIds.push(item.userId));
         this.formValidate.userIds = userIds.join(',');
-        // if (this.checkSub()) {
-        // console.log(this.$util._.defaultsDeep({}, this.formValidate))
-        // return
-        this.ajax({
-          type: 'edit',
-          successTitle: `${msg}成功`,
-          errorTitle: `${msg}失败`,
-          ajaxParams: {
-            jsonString: true,
-            url: api.modify.path + this.showData.id,
-            method: api.modify.method,
-            data: this.$util._.defaultsDeep({}, this.formValidate)
-          }
-        })
-        // }
+        this.formValidate.reservePojectRoom.bearingCapacity = this.formValidate.roomBearingCapacity;
+        if (this.checkSub()) {
+          this.ajax({
+            type: 'edit',
+            successTitle: `${msg}成功`,
+            errorTitle: `${msg}失败`,
+            ajaxParams: {
+              jsonString: true,
+              url: api.modify.path + this.showData.id,
+              method: api.modify.method,
+              data: this.$util._.defaultsDeep({}, this.formValidate)
+            }
+          })
+        }
       },
       // 取消
       close() {
@@ -506,23 +514,54 @@
       },
       // 检测是否可提交
       checkSub() {
-        // if (!this.formValidate.reserveProjectId) {
-        //   this.errorMess('请选择预约项目');
-        //   return false
-        // }
-        // if (!this.formValidate.reserveDate) {
-        //   this.errorMess('请选择预约项目日期');
-        //   return false
-        // }
-        if (!this.formValidate.roomId) {
-          this.errorMess('请选择预约项目房间');
+        if (!this.submitForm('formValidate')) {
           return false
         }
-        if (!this.formValidate.timeSetId) {
+        if (!this.formValidate.openTime.date) {
+          this.errorMess('请选择预约项目日期');
+          return false
+        }
+        if (!this.formValidate.openTime.timeSetId) {
+          console.log(this.formValidate.openTime.timeSetId)
           this.errorMess('请选择预约项目时间段');
           return false
         }
+        if (this.formValidate.timeModel !== 'SPECIFIC') {
+          // if (!this.formValidate.deviceList.length) {
+          //   this.errorMess('请选择预约项目所需设备');
+          //   return false
+          // }
+          if (!this.formValidate.reservePojectRoom.roomId) {
+            this.errorMess('请选择预约项目房间');
+            return false
+          }
+          for (let i in this.formValidate.deviceList) {
+            let num = this.formValidate.deviceList[i].reserveNum;
+            if (!this.deviceList[i].deviceNum) {
+              this.errorMess(`设备“${this.deviceList[i].deviceTypeName}”数量不足，不能预约`);
+              return false
+            }
+            if (num < 1 || num > this.deviceList[i].deviceNum) {
+              this.errorMess(`设备“${this.deviceList[i].deviceTypeName}预约数量最少为1，最多为${this.deviceList[i].deviceNum}`);
+              return false
+            }
+          }
+        }
         return true
+      },
+      /*
+       * 点击提交按钮 监听是否验证通过
+       * @param formName string  form表单v-model数据对象名称
+       * @return flag boolean   form表单验证是否通过
+       * */
+      submitForm(formName) {
+        let flag = false;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            flag = true;
+          }
+        });
+        return flag;
       },
       /********************************* 模态窗 **********************/
       /*
