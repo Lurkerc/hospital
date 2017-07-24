@@ -79,7 +79,7 @@
           </template>
         </el-table-column>
         <el-table-column label="最低开课人数" prop="minNum" show-overflow-tooltip></el-table-column>
-        <el-table-column label="已申请人数" prop="applicantsNum" show-overflow-tooltip></el-table-column>
+        <el-table-column label="已申请人数" prop="dataapplicantsNum" show-overflow-tooltip></el-table-column>
       </el-table>
     </div>
     <!-- 分页 -->
