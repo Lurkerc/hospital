@@ -6,8 +6,9 @@
       <el-row>
         <el-col :span="10" :offset="1">
           <el-form-item label="日期：" prop="registerDate" required>
-            <el-date-picker name="end" v-model="formValidate.registerDate" @change="changeDay" :editable="false" :picker-options="pickerOptions"
-              type="date" placeholder="选择日期"></el-date-picker>
+            <!-- <el-date-picker name="end" v-model="formValidate.registerDate" @change="changeDay" :editable="false" :picker-options="pickerOptions"
+              type="date" placeholder="选择日期"></el-date-picker> -->
+            <el-date-picker v-model="formValidate.registerDate" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="10" :offset="2">
@@ -50,7 +51,7 @@
 
         <el-col :span="21" :offset="1">
           <el-form-item label="培训地点：" required>
-            <span style="display:inline;">{{ roomNums.join('，') }}</span>
+            <span style="display:inline;margin-right:20px;">{{ roomNums.join('，') }}</span>
             <el-button type="info" @click="selectRoom">选择房间</el-button>
           </el-form-item>
         </el-col>
