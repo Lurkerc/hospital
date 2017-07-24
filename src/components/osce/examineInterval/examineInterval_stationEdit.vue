@@ -38,7 +38,7 @@
       <el-row>
         <template v-for="(item,index) in roomList">
           <template v-for="(cItem,cIndex) in item.children">
-            <el-tooltip placement="right-start" :open-delay="1500" effect="light">
+            <el-tooltip placement="right-start" :open-delay="1500" effect="light" :key="index + '-' + cIndex">
               <room-info slot="content" :basicsTime="info.basicsTime" :info="roomData[index]" :room="roomList[index].room[cIndex]" :teacher="roomList[index].teacher[cIndex]"
                 :key="index+'-'+cIndex" style="max-width:400px;"></room-info>
               <room v-if="canEdit" :option="{hasMore: cIndex > 0,type:'edit'}" :initData="{index: index,cIndex:cIndex,name:roomData[index].stationName,roomNum:item.room[cIndex].roomNum,roomSpecialty:item.room[cIndex].specialty,roomType:roomData[index].stationType === 'SP' ? 'SP' : ''}"
@@ -353,12 +353,22 @@
       },
       // 删除平行站
       removeRoomChildren(index, cIndex) {
+        let thisRoom = this.roomList[index];
+        // 删除考站对应的老师
+        let teacher = thisRoom.teacher[cIndex];
+        teacher.map(item => this.$store.commit('examineInterval/room/removeUnSelectUserById', {
+          type: 'teacher',
+          id: item.teacherId
+        }));
+        // 删除考站对应的房间
+        let room = thisRoom.room[cIndex];
+        this.$store.commit('examineInterval/room/removeUnSelectRoom', room.roomId);
         // 删除考站
         this.$store.commit('examineInterval/room/removeRoomChildren', {
           index,
           cIndex
         });
-        if (this.roomList[index].children.length < 1) {
+        if (thisRoom.children.length < 1) {
           this.$store.commit('examineInterval/room/removeRoom', index); // 删除考站索引
         }
       },

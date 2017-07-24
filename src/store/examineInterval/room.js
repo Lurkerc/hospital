@@ -395,6 +395,15 @@ const mutations = {
     state.unSelectUser[userObj.type].splice(userObj.index, 1)
   },
   /**
+   * 删除不可选择人员 
+   * userObj { type:sp, id:1 } 从禁选人员类型中删除指定id
+   */
+  removeUnSelectUserById: (state, userObj) => {
+    let theUserIdArr = state.unSelectUser[userObj.type];
+    let index = theUserIdArr.indexOf(userObj.id);
+    theUserIdArr.splice(index, 1);
+  },
+  /**
    * 删除考站专业
    * { index:考站索引，cIndex: 平行站索引 }
    */
