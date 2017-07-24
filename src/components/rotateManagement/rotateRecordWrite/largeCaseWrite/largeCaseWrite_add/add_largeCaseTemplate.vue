@@ -11,7 +11,7 @@
         <el-row class="table-back-one">
           <el-col :span="6" >
             <el-form-item label="姓名:" prop="cname" >
-              <el-input v-model="formValidate.cname" placeholder="请输入"></el-input>
+              <el-input  v-model="formValidate.cname" placeholder="请输入"></el-input>
             </el-form-item>
           </el-col>
 
@@ -165,7 +165,7 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="平时一般健康情况:" prop="cjwsYbjkqk" >
-                      <el-input type="textarea" v-model="formValidate.cjwsYbjkqk"></el-input>
+                      <el-input @keyup.native="keyup('cjwsYbjkqk',$event)" type="textarea" v-model="formValidate.cjwsYbjkqk"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -173,7 +173,7 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="传染病史:" prop="cjwsCrbs" >
-                      <el-input type="textarea" v-model="formValidate.cjwsCrbs"></el-input>
+                      <el-input @keyup.native="keyup('cjwsCrbs',$event)" type="textarea" v-model="formValidate.cjwsCrbs"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -181,14 +181,14 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="手术外伤史:" prop="cjwsSswss" >
-                      <el-input type="textarea" v-model="formValidate.cjwsSswss"></el-input>
+                      <el-input @keyup.native="keyup('cjwsSswss',$event)" type="textarea" v-model="formValidate.cjwsSswss"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="药物过敏史:" prop="cjwsYwgms" >
-                      <el-input type="textarea" v-model="formValidate.cjwsYwgms"></el-input>
+                      <el-input @keyup.native="keyup('cjwsYwgms',$event)" type="textarea" v-model="formValidate.cjwsYwgms"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -198,84 +198,84 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="呼吸系统:" prop="cxthgHxxt" >
-                      <el-input type="textarea" v-model="formValidate.cxthgHxxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgHxxt',$event)" type="textarea" v-model="formValidate.cxthgHxxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="循环系统:" prop="cxthgXuhxt" >
-                      <el-input type="textarea" v-model="formValidate.cxthgXuhxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgXuhxt',$event)" type="textarea" v-model="formValidate.cxthgXuhxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="消化系统:" prop="cxthgXihxt" >
-                      <el-input type="textarea" v-model="formValidate.cxthgXihxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgXihxt',$event)" type="textarea" v-model="formValidate.cxthgXihxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="泌尿系统:" prop="cxthgMlxt" >
-                      <el-input type="textarea" v-model="formValidate.cxthgMlxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgMlxt',$event)" type="textarea" v-model="formValidate.cxthgMlxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="血液系统:" prop="cxthgXyxt" >
-                      <el-input type="textarea" v-model="formValidate.cxthgXyxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgXyxt',$event)" type="textarea" v-model="formValidate.cxthgXyxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="内分泌系统:" prop="cxthgNfmxt" >
-                      <el-input type="textarea" v-model="formValidate.cxthgNfmxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgNfmxt',$event)" type="textarea" v-model="formValidate.cxthgNfmxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="神经系统:" prop="cxthgSjxt1" >
-                      <el-input type="textarea" v-model="formValidate.cxthgSjxt1"></el-input>
+                      <el-input @keyup.native="keyup('cxthgSjxt1',$event)" type="textarea" v-model="formValidate.cxthgSjxt1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="生殖系统:" prop="cxthgSzxt" >
-                      <el-input type="textarea" v-model="formValidate.cxthgSzxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgSzxt',$event)" type="textarea" v-model="formValidate.cxthgSzxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="肌肉骨关节系统:" prop="cxthgGgjxt" >
-                      <el-input type="textarea" v-model="formValidate.cxthgGgjxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgGgjxt',$event)" type="textarea" v-model="formValidate.cxthgGgjxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="个人史:" prop="cxthgGrs" >
-                      <el-input type="textarea" v-model="formValidate.cxthgGrs"></el-input>
+                      <el-input @keyup.native="keyup('cxthgGrs',$event)" type="textarea" v-model="formValidate.cxthgGrs"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="月经婚育史:" prop="cxthgYjhys" >
-                      <el-input type="textarea" v-model="formValidate.cxthgYjhys"></el-input>
+                      <el-input @keyup.native="keyup('cxthgYjhys',$event)" type="textarea" v-model="formValidate.cxthgYjhys"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="家庭史:" prop="cxthgJts" >
-                      <el-input type="textarea" v-model="formValidate.cxthgJts"></el-input>
+                      <el-input @keyup.native="keyup('cxthgJts',$event)" type="textarea" v-model="formValidate.cxthgJts"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -288,37 +288,37 @@
                       <el-row >
                         <el-col :span="3">
                           <el-form-item label="T:" prop="ctgjcSmtzT" label-width="50px">
-                            <el-input style="width:100px;"  v-model="formValidate.ctgjcSmtzT"></el-input>
+                            <el-input @keyup.native="keyup('ctgjcSmtzT',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzT"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
                           <el-form-item label="C:" prop="ctgjcSmtzC" label-width="50px">
-                            <el-input style="width:100px;"  v-model="formValidate.ctgjcSmtzC"></el-input>
+                            <el-input @keyup.native="keyup('ctgjcSmtzC',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzC"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
                           <el-form-item label="P:" prop="ctgjcSmtzP" label-width="50px">
-                            <el-input style="width:100px;"  v-model="formValidate.ctgjcSmtzP"></el-input>
+                            <el-input  @keyup.native="keyup('ctgjcSmtzP',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzP"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
                           <el-form-item label="	次/分:" prop="ctgjcSmtzCf1" label-width="50px">
-                            <el-input style="width:100px;"  v-model="formValidate.ctgjcSmtzCf1"></el-input>
+                            <el-input @keyup.native="keyup('ctgjcSmtzCf1',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzCf1"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
                           <el-form-item label="R:" prop="ctgjcSmtzR" label-width="50px">
-                            <el-input style="width:100px;"  v-model="formValidate.ctgjcSmtzR"></el-input>
+                            <el-input @keyup.native="keyup('ctgjcSmtzR',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzR"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
                           <el-form-item label="	次/分:" prop="ctgjcSmtzCf2" label-width="50px">
-                            <el-input style="width:100px;"  v-model="formValidate.ctgjcSmtzCf2"></el-input>
+                            <el-input @keyup.native="keyup('ctgjcSmtzCf2',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzCf2"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
                           <el-form-item label="BP:" prop="ctgjcSmtzBp" label-width="50px">
-                            <el-input style="width:100px;"  v-model="formValidate.ctgjcSmtzBp"></el-input>
+                            <el-input @keyup.native="keyup('ctgjcSmtzBp',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzBp"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
@@ -331,14 +331,14 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="一般情况:" prop="ctgjcYbqk1" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcYbqk1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcYbqk1',$event)" type="textarea" v-model="formValidate.ctgjcYbqk1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="皮肤粘膜:" prop="ctgjcPfnm" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcPfnm"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcPfnm',$event)" type="textarea" v-model="formValidate.ctgjcPfnm"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -346,7 +346,7 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="浅表淋巴结:" prop="ctgjcQblbj" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcQblbj"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcQblbj',$event)" type="textarea" v-model="formValidate.ctgjcQblbj"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -354,91 +354,91 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="头部及其器官:" prop="ctgjcTbqg" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcTbqg"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcTbqg',$event)" type="textarea" v-model="formValidate.ctgjcTbqg"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="颈部:" prop="ctgjcJb" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcJb"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcJb',$event)" type="textarea" v-model="formValidate.ctgjcJb"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="胸部:" prop="ctgjcXb" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcXb"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcXb',$event)" type="textarea" v-model="formValidate.ctgjcXb"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="胸廊:" prop="ctgjcXl" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcXl"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcXl',$event)" type="textarea" v-model="formValidate.ctgjcXl"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="乳腺:" prop="ctgjcRx" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcRx"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcRx',$event)" type="textarea" v-model="formValidate.ctgjcRx"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="肺:" prop="ctgjcFei" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcFei"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcFei',$event)" type="textarea" v-model="formValidate.ctgjcFei"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="视诊:" prop="ctgjcSz1" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcSz1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcSz1',$event)" type="textarea" v-model="formValidate.ctgjcSz1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="触诊:" prop="ctgjcCz1" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcCz1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcCz1',$event)" type="textarea" v-model="formValidate.ctgjcCz1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="叩诊:" prop="ctgjcKz1" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcKz1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcKz1',$event)" type="textarea" v-model="formValidate.ctgjcKz1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="听诊:" prop="ctgjcTz1" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcTz1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcTz1',$event)" type="textarea" v-model="formValidate.ctgjcTz1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="心脏:" prop="ctgjcXz" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcXz"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcXz',$event)" type="textarea" v-model="formValidate.ctgjcXz"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="视诊:" prop="ctgjcSz2" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcSz2"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcSz2',$event)" type="textarea" v-model="formValidate.ctgjcSz2"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="触诊:" prop="ctgjcCz2" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcCz2"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcCz2',$event)" type="textarea" v-model="formValidate.ctgjcCz2"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -458,7 +458,7 @@
                 <el-row>
                   <el-col :span="3" :offset="2">
                     <el-form-item label-width="0" prop="ctgjcKzy1" >
-                      <el-input  v-model="formValidate.ctgjcKzy1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcKzy1',$event)"  v-model="formValidate.ctgjcKzy1"></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col  style="text-align: center" :span="3" :offset="2">
@@ -466,14 +466,14 @@
                   </el-col>
                   <el-col :span="3" :offset="2">
                     <el-form-item label-width="0" prop="ctgjcKzz1" >
-                      <el-input  v-model="formValidate.ctgjcKzz1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcKzz1',$event)"  v-model="formValidate.ctgjcKzz1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :span="3" :offset="2">
                     <el-form-item label-width="0" prop="ctgjcKzy2" >
-                    <el-input  v-model="formValidate.ctgjcKzy2"></el-input>
+                    <el-input  @keyup.native="keyup('ctgjcKzy2',$event)" v-model="formValidate.ctgjcKzy2"></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col  style="text-align: center" :span="3" :offset="2">
@@ -481,14 +481,14 @@
                   </el-col>
                   <el-col :span="3" :offset="2">
                     <el-form-item  prop="ctgjcKzz2" label-width="0">
-                    <el-input  v-model="formValidate.ctgjcKzz2"></el-input>
+                    <el-input @keyup.native="keyup('ctgjcKzz2',$event)"  v-model="formValidate.ctgjcKzz2"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :span="3" :offset="2">
                     <el-form-item  prop="ctgjcKzy3" label-width="0">
-                    <el-input  v-model="formValidate.ctgjcKzy3"></el-input>
+                    <el-input @keyup.native="keyup('ctgjcKzy3',$event)"  v-model="formValidate.ctgjcKzy3"></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col  style="text-align: center" :span="3" :offset="2">
@@ -496,14 +496,14 @@
                   </el-col>
                   <el-col :span="3" :offset="2">
                     <el-form-item  prop="ctgjcKzz3" label-width="0">
-                    <el-input  v-model="formValidate.ctgjcKzz3"></el-input>
+                    <el-input  @keyup.native="keyup('ctgjcKzz3',$event)" v-model="formValidate.ctgjcKzz3"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :span="3" :offset="2">
                     <el-form-item  prop="ctgjcKzy4" label-width="0">
-                    <el-input  v-model="formValidate.ctgjcKzy4"></el-input>
+                    <el-input @keyup.native="keyup('ctgjcKzy4',$event)"  v-model="formValidate.ctgjcKzy4"></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col  style="text-align: center" :span="3" :offset="2">
@@ -511,7 +511,7 @@
                   </el-col>
                   <el-col :span="3" :offset="2">
                     <el-form-item  prop="ctgjcKzz4" label-width="0">
-                    <el-input  v-model="formValidate.ctgjcKzz4"></el-input>
+                    <el-input @keyup.native="keyup('ctgjcKzz4',$event)"  v-model="formValidate.ctgjcKzz4"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -519,7 +519,7 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="听诊:" prop="ctgjcTz2" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcTz2"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcTz2',$event)" type="textarea" v-model="formValidate.ctgjcTz2"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -527,133 +527,133 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="桡动脉:" prop="ctgjcRdm" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcRdm"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcRdm',$event)" type="textarea" v-model="formValidate.ctgjcRdm"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="周围血管征:" prop="ctgjcZwxg">
-                      <el-input type="textarea" v-model="formValidate.ctgjcZwxg"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcZwxg',$event)" type="textarea" v-model="formValidate.ctgjcZwxg"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="腹部:" prop="ctgjcFb" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcFb"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcFb',$event)" type="textarea" v-model="formValidate.ctgjcFb"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="视诊:" prop="ctgjcSz3" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcSz3"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcSz3',$event)" type="textarea" v-model="formValidate.ctgjcSz3"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="触诊:" prop="ctgjcCz3" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcCz3"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcCz3',$event)" type="textarea" v-model="formValidate.ctgjcCz3"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="一般情况:" prop="ctgjcYbqk2" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcYbqk2"></el-input>
+                      <el-input  @keyup.native="keyup('ctgjcYbqk2',$event)" type="textarea" v-model="formValidate.ctgjcYbqk2"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="肝脏:" prop="ctgjcGz" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcGz"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcGz',$event)" type="textarea" v-model="formValidate.ctgjcGz"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="脾脏:" prop="ctgjcPz" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcPz"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcPz',$event)" type="textarea" v-model="formValidate.ctgjcPz"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="肾脏:" prop="ctgjcSz" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcSz"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcSz',$event)" type="textarea" v-model="formValidate.ctgjcSz"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="其他:" prop="ctgjcQt" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcQt"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcQt',$event)" type="textarea" v-model="formValidate.ctgjcQt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="叩诊:" prop="ctgjcKz3" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcKz3"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcKz3',$event)" type="textarea" v-model="formValidate.ctgjcKz3"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="听诊:" prop="ctgjcTz3" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcTz3"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcTz3',$event)" type="textarea" v-model="formValidate.ctgjcTz3"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="肛门、直肠:" prop="ctgjcGzc" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcGzc"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcGzc',$event)" type="textarea" v-model="formValidate.ctgjcGzc"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="外生殖器:" prop="ctgjcWszq" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcWszq"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcWszq',$event)" type="textarea" v-model="formValidate.ctgjcWszq"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="脊柱:" prop="ctgjcJz" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcJz"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcJz',$event)" type="textarea" v-model="formValidate.ctgjcJz"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="四肢:" prop="ctgjcShiz" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcShiz"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcShiz',$event)" type="textarea" v-model="formValidate.ctgjcShiz"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="神经系统:" prop="ctgjcSjxt2" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcSjxt2"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcSjxt2',$event)" type="textarea" v-model="formValidate.ctgjcSjxt2"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="专科情况:" prop="ctgjcZkqk" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcZkqk"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcZkqk',$event)" type="textarea" v-model="formValidate.ctgjcZkqk"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="实验室及特殊检查:" prop="ctgjcSysjc" >
-                      <el-input type="textarea" v-model="formValidate.ctgjcSysjc"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcSysjc',$event)" type="textarea" v-model="formValidate.ctgjcSysjc"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -665,7 +665,7 @@
         <el-row class="table-back-one">
           <el-col :span="24" >
             <el-form-item label="病例摘要:" prop="cblzy" >
-              <el-input type="textarea" v-model="formValidate.cblzy"></el-input>
+              <el-input  type="textarea" v-model="formValidate.cblzy"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -1482,6 +1482,7 @@
                 },
 
               },
+              copyField:{},
               template: {
                 "czs": "反复四肢关节肿痛半年。",
                 "cxbs": "患者自诉半年前无明显诱因出现双膝关节肿痛，持续性关节，关节活动受限，行走困难，逐渐波及双腕、双手掌指、近端指间关节、双肘、双肩关节，伴晨僵，持续时间大于1小时，无发热、畏寒，无皮疹、口腔溃疡、光过敏，无口干、眼干，无肌痛、肌无力，于私人诊所药物治疗及自服药物治疗（具体不详），关节疼痛反复发作并逐渐加重，现为系统诊治到我院就诊，门诊拟“类风湿关节炎”收入院。入院症见：双膝、双腕、双手掌指及近端指间、双肩关节疼痛，活动受限，行走困难，偶有咳嗽，痰粘难咳出，无发热、畏寒，无胸闷、心悸、气喘，纳寐欠佳，二便调。近2月体重下降约10余斤。",
@@ -1575,9 +1576,22 @@
             if(isSubmit){
               if(!isLoadingFun) isLoadingFun=function(){};
               isLoadingFun(true);
-              this.addMessTitle.ajaxParams.data=this.formDate(this.getFormData(this.formValidate),['cysqm1Date','cysqm2Date','cruyuanDate','cjlDate'],'yyyy-MM-dd');
+              let formValidate = this.getFormData(this.formValidate);
+              formValidate.copyField = this.conductCopyField( formValidate.copyField);
+              this.addMessTitle.ajaxParams.data=this.formDate(formValidate,['cysqm1Date','cysqm2Date','cruyuanDate','cjlDate'],'yyyy-MM-dd');
               this.ajax(this.addMessTitle,isLoadingFun)
             }
+          },
+
+
+          //处理要提交的的数据 ，，粘贴数据
+          conductCopyField(data){
+              for(let i=0 ;i<data.length;i++){
+                if(this.copyField[data[i].fieldName]){
+                  data[i].isCopy = 1
+                }
+              }
+            return data;
           },
 
           /*
@@ -1654,6 +1668,15 @@
 
           templateFilling(){
           this.formValidate = Object.assign(this.formValidate,this.template)
+          },
+
+
+          //键盘监听事件，监听是否按下ctrl + v
+          keyup(key,event){
+            event = event || window.event;
+              if(event.keyCode==86 &&event.ctrlKey){
+                this.copyField[key] = 1;
+              }
           },
         },
         created(){

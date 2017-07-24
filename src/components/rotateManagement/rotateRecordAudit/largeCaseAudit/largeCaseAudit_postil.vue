@@ -744,757 +744,101 @@
         name: '',
         activeNames: [],
         dictionary: dictionary,
-        formValidate: {
-          /*"caseId": '',
-           //                "ctype": "DBL 大病例 MJJL 麻醉记录 YXZL 影像资料",
-           "cname": "姓名",
-           "csex": "男",
-           "cage": "13",
-           "cisMarry": "YES",
-           "cnation": "汉族",
-           "czhiye": "职业",
-           "caddress": "住址",
-           "cbirthPlace": "出生地",
-           "cbedNo": "床号",
-           "czyNo": "住院号",
-           "clesion": "病区",
-           "cruyuanDate": "2012-02-01",
-           "cjlDate": "2012-02-01",
-           "cbscsz": "病史陈述者",
-           "chuanzheUser": "与患者关系",
-           "cdepId": this.depId,
-           "cdepName": this.depName,
-           "cpodId": this.podId,
-           "czs": "主诉",
-           "cxbs": "现病史",
-           "cjwsYbjkqk": "平时一般健康情况",
-           "cjwsCrbs": "传染病史",
-           "cjwsSswss": "手术外伤史",
-           "cjwsYwgms": "药物过敏史",
-           "cxthgHxxt": "呼吸系统",
-           "cxthgXuhxt": "循环系统",
-           "cxthgXihxt": "消化系统",
-           "cxthgMlxt": "泌尿系统",
-           "cxthgXyxt": "血液系统",
-           "cxthgNfmxt": "内分泌系统",
-           "cxthgSjxt1": "神经系统",
-           "cxthgSzxt": "生殖系统",
-           "cxthgGgjxt": "肌肉骨关节系统",
-           "cxthgGrs": "个人史",
-           "cxthgYjhys": "月经婚育史",
-           "cxthgJts": "家庭史",
-           "ctgjcSmtzT": "生命体征T",
-           "ctgjcSmtzC": "生命体征C",
-           "ctgjcSmtzP": "生命体征P",
-           "ctgjcSmtzCf1": "生命特征 次/分",
-           "ctgjcSmtzR": "生命体征R",
-           "ctgjcSmtzCf2": "生命特征 次/分2",
-           "ctgjcSmtzBp": "生命特征bp",
-           "ctgjcYbqk1": "一般情况",
-           "ctgjcPfnm": "皮肤粘膜",
-           "ctgjcQblbj": "浅表淋巴结",
-           "ctgjcTbqg": "头部及其器官",
-           "ctgjcJb": "颈部",
-           "ctgjcXb": "胸部",
-           "ctgjcXl": "胸廊",
-           "ctgjcRx": "乳腺",
-           "ctgjcFei": "肺",
-           "ctgjcSz1": "视诊",
-           "ctgjcCz1": "触诊",
-           "ctgjcKz1": "叩诊",
-           "ctgjcTz1": "听诊",
-           "ctgjcXz": "心脏",
-           "ctgjcSz2": "视诊",
-           "ctgjcCz2": "触诊",
-           "ctgjcKzy1": "叩右1",
-           "ctgjcKzy2": "叩右2",
-           "ctgjcKzy3": "叩右3",
-           "ctgjcKzy4": "叩右4",
-           "ctgjcKzz1": "叩左1",
-           "ctgjcKzz2": "叩左2",
-           "ctgjcKzz3": "叩左3",
-           "ctgjcKzz4": "叩左4",
-           "ctgjcTz2": "听诊",
-           "ctgjcRdm": "桡动脉",
-           "ctgjcZwxg": "周围血管征",
-           "ctgjcFb": "腹部",
-           "ctgjcSz3": "视诊",
-           "ctgjcCz3": "触诊",
-           "ctgjcYbqk2": "一般情况",
-           "ctgjcGz": "肝脏",
-           "ctgjcPz": "脾脏",
-           "ctgjcSz": "肾脏",
-           "ctgjcQt": "其他",
-           "ctgjcKz3": "叩诊",
-           "ctgjcTz3": "听诊",
-           "ctgjcGzc": "肛门、直肠",
-           "ctgjcWszq": "外生殖器",
-           "ctgjcJz": "脊柱",
-           "ctgjcShiz": "四肢",
-           "ctgjcSjxt2": "神经系统",
-           "ctgjcZkqk": "专科情况",
-           "ctgjcSysjc": "实验室及特殊检查",
-           "cblzy": "病例摘要",
-           "ccbzd": "初步诊断",
-           "cysqm1": "医师签名",
-           "cysqm1Date": "2012-02-01",
-           "cryzd": "入院诊断",
-           "cysqm2": "医师签名1",
-           "cysqm2Date": "2012-02-01",
-           "copyField": [
-           {
-           "fieldName": "cjwsYbjkqk",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cjwsCrbs",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cjwsSswss",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cjwsYwgms",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cxthgHxxt",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cxthgXuhxt",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cxthgXihxt",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cxthgMlxt",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cxthgXyxt",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cxthgNfmxt",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cxthgSjxt1",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cxthgSzxt",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cxthgGgjxt",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cxthgGrs",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cxthgYjhys",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "cxthgJts",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSmtzT",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSmtzC",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSmtzP",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSmtzCf1",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSmtzR",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSmtzCf2",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSmtzBp",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcYbqk1",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcPfnm",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcQblbj",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcTbqg",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcJb",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcXb",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcXl",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcRx",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcFei",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSz1",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcCz1",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcKz1",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcTz1",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcXz",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSz2",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcCz2",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcKzy1",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcKzy2",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcKzy3",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcKzy4",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcKzz1",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcKzz2",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcKzz3",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcKzz4",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcTz2",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcRdm",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcZwxg",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcFb",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSz3",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcCz3",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcYbqk2",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcGz",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcPz",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSz",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcQt",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcKz3",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcTz3",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcGzc",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcWszq",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcJz",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcShiz",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSjxt2",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcZkqk",
-           "isCopy": 0
-           },
-           {
-           "fieldName": "ctgjcSysjc",
-           "isCopy": 0
-           }
-           ],
-           "mapBigLog": {
-           "cname": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cSex": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cage": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cisMarry": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cnation": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "czhiye": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "caddress": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cbirthPlace": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cbedNo": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "czyNo": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "clesion": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cruyuanDate": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cjlDate": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cbscsz": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "chuanzheUser": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "czs": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxbs": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cjwsYbjkqk": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cjwsCrbs": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cjwsSswss": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cjwsYwgms": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxthgHxxt": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxthgXuhxt": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxthgXihxt": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxthgMlxt": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxthgXyxt": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxthgNfmxt": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxthgSjxt1": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxthgSzxt": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxthgGgjxt": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxthgGrs": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxthgYjhys": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cxthgJts": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSmtzT": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSmtzC": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSmtzP": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSmtzCf1": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSmtzR": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSmtzCf2": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSmtzBp": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcYbqk1": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcPfnm": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcQblbj": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcTbqg": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcJb": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcXb": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcXl": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcRx": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcFei": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSz1": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcCz1": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcKz1": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcTz1": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcXz": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSz2": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcCz2": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcKzy1": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcKzy2": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcKzy3": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcKzy4": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcKzz1": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcKzz2": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcKzz3": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcKzz4": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcTz2": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcRdm": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcZwxg": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcFb": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSz3": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcCz3": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcYbqk2": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcGz": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcPz": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSz": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcQt": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcKz3": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcTz3": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcGzc": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcWszq": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcJz": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcShiz": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSjxt2": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcZkqk": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ctgjcSysjc": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cblzy": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "ccbzd": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cysqm1": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cysqm1Date": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cryzd": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cysqm2": {
-           "bcValue": "",
-           "bcValueIng": ""
-           },
-           "cysqm2Date": {
-           "bcValue": "",
-           "bcValueIng": ""
-           }
-           },
-           "fileList": [
-           {
-           "id": 1,
-           "fileName": "123",
-           "fileType": "txt",
-           "fileUrl": "www.baidu.com"
-           }
-           ],
-           "review": [
-           {
-           "createUserName": "审核人",
-           "createTime": "审核时间",
-           "reviewMess": "审核意见",
-           "spState": "审核状态(PASS 通过 REJECT 驳回)"
-           }
-           ],
-           "copyBl": 0.8
-           */              },
+        formValidate:{
+          "casesId":'',
+          "cname":"",
+          "csex":"",
+          "cage":"",
+          "cisMarry":"",
+          "cnation":"",
+          "czhiye":"",
+          "caddress":"",
+          "cbirthPlace":"",
+          "cbedNo":"",
+          "czyNo":"",
+          "clesion":"",
+          "cruyuanDate":"",
+          "cjlDate":"",
+          "cbscsz":"",
+          "chuanzheUser":"",
+          "cdepId":"",
+          "cdepName":"",
+          "cpodId":"",
+          "czs":"",
+          "cxbs":"",
+          "cjwsYbjkqk":"",
+          "cjwsCrbs":"",
+          "cjwsSswss":"",
+          "cjwsYwgms":"",
+          "cxthgHxxt":"",
+          "cxthgXuhxt":"",
+          "cxthgXihxt":"",
+          "cxthgMlxt":"",
+          "cxthgXyxt":"",
+          "cxthgNfmxt":"",
+          "cxthgSjxt1":"",
+          "cxthgSzxt":"",
+          "cxthgGgjxt":"",
+          "cxthgGrs":"",
+          "cxthgYjhys":"",
+          "cxthgJts":"",
+          "ctgjcSmtzT":"",
+          "ctgjcSmtzC":"",
+          "ctgjcSmtzP":"",
+          "ctgjcSmtzCf1":"",
+          "ctgjcSmtzR":"",
+          "ctgjcSmtzCf2":"",
+          "ctgjcSmtzBp":"",
+          "ctgjcYbqk1":"",
+          "ctgjcPfnm":"",
+          "ctgjcQblbj":"",
+          "ctgjcTbqg":"",
+          "ctgjcJb":"",
+          "ctgjcXb":"",
+          "ctgjcXl":"",
+          "ctgjcRx":"",
+          "ctgjcFei":"",
+          "ctgjcSz1":"",
+          "ctgjcCz1":"",
+          "ctgjcKz1":"",
+          "ctgjcTz1":"",
+          "ctgjcXz":"",
+          "ctgjcSz2":"",
+          "ctgjcCz2":"",
+          "ctgjcKzy1":"",
+          "ctgjcKzy2":"",
+          "ctgjcKzy3":"",
+          "ctgjcKzy4":"",
+          "ctgjcKzz1":"",
+          "ctgjcKzz2":"",
+          "ctgjcKzz3":"",
+          "ctgjcKzz4":"",
+          "ctgjcZwxg":"",
+          "ctgjcFb":"",
+          "ctgjcSz3":"",
+          "ctgjcCz3":"",
+          "ctgjcYbqk2":"",
+          "ctgjcGz":"",
+          "ctgjcPz":"",
+          "ctgjcSz":"",
+          "ctgjcQt":"",
+          "ctgjcKz3":"",
+          "ctgjcTz3":"",
+          "ctgjcGzc":"",
+          "ctgjcWszq":"",
+          "ctgjcJz":"",
+          "ctgjcShiz":"",
+          "ctgjcSjxt2":"",
+          "ctgjcZkqk":"",
+          "ctgjcSysjc":"",
+          "cblzy":"",
+          "ccbzd":"",
+          "cysqm1":"",
+          "cysqm1Date":"",
+          "cryzd":"",
+          "cysqm2":"",
+          "cysqm2Date":""
+        },
         template: {
           "czs": "反复四肢关节肿痛半年。",
           "cxbs": "患者自诉半年前无明显诱因出现双膝关节肿痛，持续性关节，关节活动受限，行走困难，逐渐波及双腕、双手掌指、近端指间关节、双肘、双肩关节，伴晨僵，持续时间大于1小时，无发热、畏寒，无皮疹、口腔溃疡、光过敏，无口干、眼干，无肌痛、肌无力，于私人诊所药物治疗及自服药物治疗（具体不详），关节疼痛反复发作并逐渐加重，现为系统诊治到我院就诊，门诊拟“类风湿关节炎”收入院。入院症见：双膝、双腕、双手掌指及近端指间、双肩关节疼痛，活动受限，行走困难，偶有咳嗽，痰粘难咳出，无发热、畏寒，无胸闷、心悸、气喘，纳寐欠佳，二便调。近2月体重下降约10余斤。",
@@ -1590,8 +934,7 @@
       SuccessGetCurrData(res){
         let data = res.data;
         if(!data) return;
-        this.formValidate = data;
-
+        this.formValidate =this.getFormValidate(this.formValidate,data);
       },
 
       //批注

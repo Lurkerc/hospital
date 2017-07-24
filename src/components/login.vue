@@ -6,10 +6,10 @@
       <br />
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" @keyup.enter.native="submitForm('ruleForm')"></el-input>
         </el-form-item>
         <el-form-item label="密 码" prop="password">
-          <el-input type="password" v-model="ruleForm.password"></el-input>
+          <el-input type="password" @keyup.enter.native="submitForm('ruleForm')" v-model="ruleForm.password"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>

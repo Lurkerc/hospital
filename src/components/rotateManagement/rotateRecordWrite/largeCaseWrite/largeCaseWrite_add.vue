@@ -19,11 +19,11 @@
       </el-row>
     </div>
     <large-case @cancel="cancel" :url="url" @add="addSuccess" :podId="formValidate.podId" :depId="formValidate.depId" :depName="formValidate.depName"
-      v-else-if="showWhat=='imageTemplate'"></large-case>
+      v-else-if="showWhat=='largeCase'"></large-case>
     <electrocardiogramTemplate @cancel="cancel" @add="addSuccess" :podId="formValidate.podId" :depId="formValidate.depId" :depName="formValidate.depName"
       :url="url" v-else-if="showWhat=='electrocardiogramTemplate'"></electrocardiogramTemplate>
     <imageTemplate @cancel="cancel" :url="url" @add="addSuccess" :podId="formValidate.podId" :depId="formValidate.depId" :depName="formValidate.depName"
-      v-else-if="showWhat=='largeCase'"></imageTemplate>
+      v-else-if="showWhat=='imageTemplate'"></imageTemplate>
   </div>
 </template>
 <script>
