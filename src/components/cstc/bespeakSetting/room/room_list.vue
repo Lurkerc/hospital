@@ -50,7 +50,7 @@
         <el-table-column label="操作" width="140" align="center">
           <template scope="scope">
             <el-button size="small" type="info" @click="show(scope.row)">查看</el-button>
-            <el-button size="small" type="danger" @click="set(scope.row)">设置</el-button>
+            <el-button size="small" type="success" @click="set(scope.row)">设置</el-button>
           </template>
         </el-table-column>
         <el-table-column label="房间号" prop="roomNum" show-overflow-tooltip></el-table-column>

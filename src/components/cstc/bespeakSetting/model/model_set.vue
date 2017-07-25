@@ -152,7 +152,7 @@
         this.formValidate.deviceList.length = 0;
         this.opData.map(item => {
           this.formValidate.deviceList.push({
-            deviceTypeId: item.reserveDeviceSetId,
+            deviceTypeId: item.deviceTypeId,
             deviceTypeName: item.deviceTypeName,
             openNum: ''
           })

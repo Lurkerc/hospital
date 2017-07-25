@@ -11,6 +11,17 @@ let affairs = {
 };
 
 /**
+ * 门禁
+ */
+// 门禁卡管理
+let accessControlManage = {
+  cardNum: [{
+    required: true,
+    message: '此项不能为空',
+  }, baseRules.numbers], // 卡号 必填，必须是数字
+};
+
+/**
  * 预约上课
  */
 let bespeakClass = {
@@ -144,6 +155,7 @@ let consumablesCount = {
 
 export {
   affairs,
+  accessControlManage,
   bespeakClass,
   bespeakSetProject,
   tree,

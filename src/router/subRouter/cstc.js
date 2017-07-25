@@ -110,6 +110,16 @@ const cstcRouters = {
         }, 'cstc');
       }
     },
+    {
+      //门禁管理
+      path: 'accessControl',
+      name: 'accessControl',
+      component: resolve => {
+        require.ensure([], () => {
+          resolve(require('../../components/cstc/accessControl/accessControl_list'));
+        }, 'cstc');
+      }
+    },
   ]
 }
 
