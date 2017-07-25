@@ -29,6 +29,7 @@
     <div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox">
 
     </div>
+    <br />
     <div>
       <div
         id="myTable"

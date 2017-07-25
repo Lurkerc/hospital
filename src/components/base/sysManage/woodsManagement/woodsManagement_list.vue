@@ -1,6 +1,8 @@
-<!--业务字典-->
-
-
+<!----------------------------------
+****--基地管理列表(woodsManagement_list)
+****--@date     2017/7/24
+****--@author   zyc<332533011@qq.com
+----------------------------------->
 <template>
   <div id="content" ref="content" class="modal">
     <div class="listUpAreaBox">
@@ -76,15 +78,20 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="name"
-          label="字典名称"
+          prop="jdName"
+          label="基地名称"
           align="center"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="jdZrUsername"
+          label="基地主任"
           width="200">
         </el-table-column>
         <el-table-column
-          prop="code"
-          label="字典代码"
-          show-overflow-tooltip>
+          prop="jdProclass"
+          label="专业"
+          width="200">
         </el-table-column>
       </el-table>
     </div>
@@ -108,7 +115,7 @@
         height="200"
         title="对话框标题"
         class-name="vertical-center-modal"
-        :width="1100">
+        :width="960">
         <!--<div slot="header"> -->
         <!--</div>-->
         <modal-header slot="header" :content="editId"></modal-header>
@@ -139,7 +146,7 @@
         title="对话框标题"
         class-name="vertical-center-modal"
         :loading="true"
-        :width="800"
+        :width="960"
       >
         <modal-header slot="header" :parent="self" :content="showId"></modal-header>
         <show v-if="showModal"  @cancel="cancel" :operaility-data="operailityData"></show>
@@ -168,11 +175,11 @@
 <script >
   /*当前组件必要引入*/
   //引入--修改--组件
-  import edit from "./bizDict_edit.vue";
+  import edit from "./woodsManagement_edit.vue";
   //引入--查看--组件
-  import show from "./bizDct_view.vue";
+  import show from "./woodsManagement_view.vue";
   //引入--添加--组件
-  import add from "./bizDict_add.vue";
+  import add from "./woodsManagement_add.vue";
   //当前组件引入全局的util
   let Util=null;
 
@@ -180,11 +187,15 @@
     data() {
       return {
         //查询表单
-        deleteUrl:'/dictionary/remove',
+        deleteUrl:'/rotaryBasis/BaseManage/remove',
         formValidate: {
-          "id":'',
-          "name":"",
-          "code":""
+          "jdName":"",
+          "jdProclass":"",
+          "jdZrUsername":"",
+          "jdZrUserid":"",
+          "jdStatus":"",
+          "createTime":"",
+          "jdContent":""
         },
         options: [{
           value: '0',
@@ -235,9 +246,13 @@
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:'/dictionary/list',
+            url:'/rotaryBasis/BaseManage/pageList',
             params:{
-              name:'',code:''
+              jdName:'',
+              order:'',
+              sortby:'',
+              jdState:'',
+              jdProclass:'',
             }
           }
         },
@@ -330,7 +345,12 @@
       /*--点击--删除--按钮--*/
       remove(){
         if(!this.isSelected()) return;
-        this.operailityData = this.multipleSelection;
+        let tempArr = [];
+        for(var i=0,item;i<this.multipleSelection.length;i++){
+          item = this.multipleSelection[i];
+          tempArr.push({id:item["jdId"]});
+        }
+        this.operailityData = tempArr;
         this.openModel('remove') ;
       },
       /*

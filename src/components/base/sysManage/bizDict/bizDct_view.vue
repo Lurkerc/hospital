@@ -8,14 +8,12 @@
             {{formValidate.parentName}}
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="9" >
           <el-form-item label="字典代码：">
             {{formValidate.parentCode}}
           </el-form-item>
         </el-col>
-        </el-col >
       </el-row >
       <el-row >
         <el-col :span="20" :offset="2">

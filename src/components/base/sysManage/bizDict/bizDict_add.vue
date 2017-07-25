@@ -9,14 +9,12 @@
             <el-input v-model="formValidate.parentName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="9" >
           <el-form-item label="字典代码" prop="parentCode" >
             <el-input v-model="formValidate.parentCode" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
       </el-row >
       <el-row >
         <el-col :span="20" :offset="2">

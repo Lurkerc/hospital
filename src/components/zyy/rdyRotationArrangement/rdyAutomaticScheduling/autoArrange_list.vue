@@ -1,8 +1,4 @@
-<!----------------------------------
-****--自动排班(rdyAutomaticScheduling_list)
-****--@date     2017/7/21
-****--@author   zyc<332533011@qq.com
------------------------------------>
+<!---自动排班--->
 <template>
   <div id="content" ref="content" class="modal">
     <div class="listUpAreaBox">
@@ -68,7 +64,7 @@
           tooltip-effect="dark"
           highlight-current-row
           style="width: 100%;height: 100%"
-        >
+          >
           <el-table-column
             type="selection"
             width="55">
@@ -327,7 +323,7 @@
         this.setObjValEmpty(this.formValidate);
         this.showView = command;
         if(this.showView=="列表"){
-          this.setTableData();
+            this.setTableData();
         }
       },
 

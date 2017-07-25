@@ -39,12 +39,13 @@
         ref="myTable"
       >
         <el-table
+          stripe
           align="center"
           :height="dynamicHt"
           :context="self"
           :data="tableData1"
-
           tooltip-effect="dark"
+          highlight-current-row
           style="width: 100%"
           @selection-change="handleSelectionChange">
 

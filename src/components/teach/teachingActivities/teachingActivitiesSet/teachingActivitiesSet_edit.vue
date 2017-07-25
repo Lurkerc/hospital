@@ -35,10 +35,7 @@
         <el-col :span="24">
           <el-form-item label="时间段" prop="name7">
             <el-checkbox-group v-model="formValidate.recordTimes">
-              <el-checkbox :label="'08:00-08:50/1'" >8:00-8:50</el-checkbox>
-              <el-checkbox :label="'09:00-09:50/2'" >9:00-9:50</el-checkbox>
-              <el-checkbox :label="'10:00-10:50/3'" >10:00-10:50</el-checkbox>
-              <el-checkbox :label="'11:00-11:50/4'">11:00-11:50</el-checkbox>
+              <el-checkbox v-for="(item,index) in getRecordTimes" :key="index" :label="item.courseTime+'/'+item.timeId" >{{item.courseTime}}-{{item.timeId}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </el-col>
@@ -175,7 +172,7 @@
         }],
 
 
-
+        getRecordTimes:'',
 
         "formValidate":{
           "depId":'',
@@ -296,6 +293,15 @@
             params: {},
           }
         },
+
+        //当前组件默认请求(头部)数据时,ajax处理的 基础信息设置
+        timeListMessTitle: {
+          ajaxSuccess: 'updateHeaderList',
+          ajaxParams: {
+            url: this.url.teachCourseTime,
+            params: {},
+          }
+        },
       }
     },
     created(){
@@ -305,10 +311,18 @@
     mounted(){
       //暂时没有初始化,预留初始化入口
       this.init();
-
+      this.ajax(this.timeListMessTitle)
 
     },
     methods: {
+
+      //获取时间段
+      updateHeaderList(res){
+        let data = res.data;
+        if(!data)return;
+        this.getRecordTimes = data
+
+      },
 
       //点击选择人员按钮触发
       openAndColseUser(targer,flag){
@@ -368,6 +382,7 @@
         //处理recordTimes，timeIds
         let times=[];
         let ids = [];
+        console.log(data.recordTimes);
         for (let i=0;i<data.recordTimes.length;i++){
           let val = data.recordTimes[i].split('/');
           ids.push(val[1]);

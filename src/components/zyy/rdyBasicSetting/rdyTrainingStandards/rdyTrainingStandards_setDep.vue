@@ -1,5 +1,5 @@
 <!----------------------------------
-****--设置大纲科室(internOutline_setDep)
+****--新建周历(internOutline_setDep)
 ****--@date     2017/6/28
 ****--@author   zyc<332533011@qq.com
 ----------------------------------->
@@ -12,12 +12,6 @@
         <el-col :span="8">
           <el-input placeholder="请输入内容" v-model="formValidate.name"></el-input>
         </el-col>
-        <!--<el-col :span="3">
-          <div class="cal-schoolTit" style="text-align: right;">专科：</div>
-        </el-col>
-        <el-col :span="8">
-          <el-input placeholder="请输入内容" v-model="formValidate.specialty"></el-input>
-        </el-col>-->
         <el-col :span="2" :push="1">
           <el-button type="primary" @click="handleSubmit('formValidate')" icon="search"></el-button>
         </el-col>
@@ -88,7 +82,6 @@
               },
 
               onlyOnce:true,
-
               tableData1:[],
               multipleSelection: [],
 

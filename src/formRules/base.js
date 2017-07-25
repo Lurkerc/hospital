@@ -29,6 +29,11 @@ let changeEvent = 'change';
 
 /************************* 常规规则 ****************************/
 let baseRules = {
+  // 非空验证--没有验证事件(默认的验证事件)
+  requiredNoEvent: {
+    required: true,
+    message: '此项不能为空',
+  },
   // 非空验证
   required: {
     required: true,

@@ -96,6 +96,16 @@ const sysManageRouters = {
           resolve(require('../../components/base/sysManage/sourceUnit/sourceUnit_list.vue'));
         }, 'sysManage');
       }
+    },
+    {
+      //基地管理
+      path:'woodsManagement',
+      name:'woodsManagement',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/base/sysManage/woodsManagement/woodsManagement_list.vue'));
+        }, 'sysManage');
+      }
     }
   ]
 }
