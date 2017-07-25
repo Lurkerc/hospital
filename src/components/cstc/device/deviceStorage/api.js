@@ -24,7 +24,7 @@ const api = {
     path: 'device/excelExport',
     method: 'get'
   },
-    excelImportSave: { // 导入设备信息-数据入库
+  excelImportSave: { // 导入设备信息-数据入库
     path: 'device/excelImport/save',
     method: 'post'
   },

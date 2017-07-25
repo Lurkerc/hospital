@@ -35,6 +35,12 @@ const api = {
     path: 'reserve/room/time/select/list',
     method: 'get'
   },
+
+  /********************************** 设备 ********************************************/
+  select: { // 获取选择设备列表 
+    path: 'reserve/device/select/list',
+    method: 'get'
+  }
 };
 
 export default api

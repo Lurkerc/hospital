@@ -38,7 +38,7 @@
         </el-col>
         <el-col :span="10" :offset="2">
           <el-form-item label="房间号：">
-            {{ showData.reservePojectRoom.roomNum }}
+            {{ showData.reservePojectRoom.roomNum || '未分配' }}
           </el-form-item>
         </el-col>
         <el-col :span="22" :offset="1">

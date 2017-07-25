@@ -4,6 +4,7 @@
     <el-form>
       <fieldset>
         <legend>&nbsp;&nbsp;可选项目&nbsp;&nbsp;</legend>
+        <h3 v-if="!projectData.length">暂无可预约项目</h3>
         <el-radio-group v-model="reservePoject" @change="selectProject">
           <el-radio v-for="item in projectData" :key="item.reservePojectId" :label="item">{{ item.name }}</el-radio>
         </el-radio-group>
@@ -15,41 +16,46 @@
       <span class="NO">未开放</span>
       <span class="select">已预约</span>
     </div>
+
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane v-for="(item,index) in days" :key="index" :label="item" :name="item+''"></el-tab-pane>
     </el-tabs>
-    <table class="el-table el-table--border">
-      <thead>
-        <tr>
-          <th class="is-leaf">
-            <div class="cell bpatHeader">
-              预约
-            </div>
-          </th>
-          <th class="is-leaf" v-for="item in tableBody.timeSetList" :key="item.timeSetId">
-            <div class="cell">{{ item.courseTime }}</div>
-          </th>
-        </tr>
-      </thead>
-      <tbody class="bpaBody">
-        <tr class="el-table__row" v-for="(roomItem,roomIndex) in tableBody.roomList" :key="roomItem.roomId">
-          <td>
-            <div class="cell">{{ roomItem.roomNum }}</div>
-          </td>
-          <td v-for="(dataItem,index) in roomItem.dataList" :key="roomItem.roomId + '-' + index" align="center">
-            <div class="cell">
-              <p v-if="selRoomIndex === roomIndex && setTimeSlotIndex === index" class="select" title="已预约" @click="initSelectTime(false)">约</p>
-              <p v-else :class="dataItem" :title="getTitle(dataItem)" @click="selectThisTime(roomItem,roomIndex,index,dataItem)">{{ dataItem | dataListType }}</p>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div align="center" style="margin-top:20px;">
-      <el-button type="success" @click="subData('UNREPORTED')">保存</el-button>
-      <el-button type="primary" @click="subData('START')">上报</el-button>
-      <el-button @click="cancel">取消</el-button>
-    </div>
+
+    <template v-if="projectData.length">
+      <table class="el-table el-table--border">
+        <thead>
+          <tr>
+            <th class="is-leaf">
+              <div class="cell bpatHeader">
+                预约
+              </div>
+            </th>
+            <th class="is-leaf" v-for="item in tableBody.timeSetList" :key="item.timeSetId">
+              <div class="cell">{{ item.courseTime }}</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bpaBody">
+          <tr class="el-table__row" v-for="(roomItem,roomIndex) in tableBody.roomList" :key="roomItem.roomId">
+            <td>
+              <div class="cell">{{ roomItem.roomNum }}</div>
+            </td>
+            <td v-for="(dataItem,index) in roomItem.dataList" :key="roomItem.roomId + '-' + index" align="center">
+              <div class="cell">
+                <p v-if="selRoomIndex === roomIndex && setTimeSlotIndex === index" class="select" title="已预约" @click="initSelectTime(false)">约</p>
+                <p v-else :class="dataItem" :title="getTitle(dataItem)" @click="selectThisTime(roomItem,roomIndex,index,dataItem)">{{ dataItem | dataListType }}</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div align="center" style="margin-top:20px;">
+        <el-button type="success" @click="subData('UNREPORTED')">保存</el-button>
+        <el-button type="primary" @click="subData('START')">上报</el-button>
+        <el-button @click="cancel">取消</el-button>
+      </div>
+    </template>
   </div>
 </template>
 

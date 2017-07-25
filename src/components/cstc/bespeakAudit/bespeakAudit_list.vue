@@ -110,7 +110,7 @@
           name: '', //  名称
           createStartTime: '', // 开始时间
           createEndTime: '', // 结束时间
-          status: 'UNREPORTED', // 状态
+          status: '', // 状态
           // isOpen: '', // 是否开放预约
           // address: '', // 房间所在位置
           sortby: 'RESERVE_PROJECT_ROOM_CREATETIME', // 排序字段

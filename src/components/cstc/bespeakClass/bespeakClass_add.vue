@@ -144,13 +144,12 @@
                 <el-tooltip class="item" effect="light" placement="bottom-start">
                   <div slot="content" style="max-width:200px;">
                     <p>设备名称：{{ deviceList[index].deviceTypeName }}</p>
-                    <p>设备数量：{{ deviceList[index].deviceNum || 0 }}</p>
-                    <p>设备简介：{{ deviceList[index].describe || '暂无简介' }}</p>
+                    <p>开放数量：{{ deviceList[index].openNum || 0 }}</p>
                   </div>
                   <el-button>{{ deviceList[index].deviceTypeName }}</el-button>
                 </el-tooltip>
                 <span class="bpkdTitle">数量：</span>
-                <el-input style="width:200px;" v-model="item.reserveNum"></el-input>
+                <el-input style="width:200px;" v-model="item.reserveNum" :placeholder="'1-'+deviceList[index].openNum+'之间'"></el-input>
               </div>
             </div>
             <el-button type="primary" @click="selectDevice">选择模型</el-button>
@@ -168,7 +167,8 @@
     <!-- 模态框 选择设备 -->
     <Modal :mask-closable="false" v-model="selectDeviceModal" class-name="vertical-center-modal" :loading="true" :width="900">
       <modal-header slot="header" :parent="self" :content="contentHeader.selectDeviceId"></modal-header>
-      <select-device v-if="selectDeviceModal" :select="selectDeviceId" @cancel="cancel" @select="selectDeviceCall"></select-device>
+      <select-device v-if="selectDeviceModal" :timeData="{'date':formValidate.openTime.date,reserveTimeSetId:formValidate.openTime.timeSetId}"
+        :select="selectDeviceId" @cancel="cancel" @select="selectDeviceCall"></select-device>
       <div slot="footer"></div>
     </Modal>
     <!--选择人员-->
@@ -183,7 +183,7 @@
 <script>
   import api from './api';
   import selectUser from '../../common/selectUser'; // 选择人员
-  import selectDevice from '../device/deviceStorage/deviceStorage_select'; // 选择设备
+  import selectDevice from './bespeakClass_selectDevice'; // 选择设备
   import {
     bespeakClass as rules
   } from '../rules'; // 验证规则
@@ -203,6 +203,7 @@
         projectData: {}, // 可预约项目
         tableBody: [], // 房间预约
         deviceList: [], // 设备
+
         // 提交数据
         formValidate: {
           name: "", // 预约名称
@@ -360,7 +361,11 @@
       },
       // 选择设备模型
       selectDevice() {
-        this.openModel('selectDevice')
+        if (this.formValidate.openTime.date && this.formValidate.openTime.timeSetId) {
+          this.openModel('selectDevice')
+        } else {
+          this.showMess('请选择日期和时间段')
+        }
       },
 
       // 选择设备模型
@@ -431,6 +436,8 @@
         this.formValidate.reservePojectRoom.roomId = "";
         this.formValidate.reservePojectRoom.roomNum = ""
         this.formValidate.openTime.timeSetId = "";
+        this.formValidate.deviceList.length = 0;
+        this.selectDeviceId.length = 0;
       },
       // 检测是否可提交
       checkSub() {
@@ -442,11 +449,11 @@
           return false
         }
         if (!this.formValidate.openTime.timeSetId) {
-          console.log(this.formValidate.openTime.timeSetId)
           this.errorMess('请选择预约项目时间段');
           return false
         }
-        if (this.formValidate.timeModel !== 'SPECIFIC') {
+        console.log(this.formValidate.timeModel)
+        if (!this.formValidate.timeModel) {
           // if (!this.formValidate.deviceList.length) {
           //   this.errorMess('请选择预约项目所需设备');
           //   return false
@@ -457,12 +464,12 @@
           }
           for (let i in this.formValidate.deviceList) {
             let num = this.formValidate.deviceList[i].reserveNum;
-            if (!this.deviceList[i].deviceNum) {
+            if (!this.deviceList[i].openNum) {
               this.errorMess(`设备“${this.deviceList[i].deviceTypeName}”数量不足，不能预约`);
               return false
             }
-            if (num < 1 || num > this.deviceList[i].deviceNum) {
-              this.errorMess(`设备“${this.deviceList[i].deviceTypeName}预约数量最少为1，最多为${this.deviceList[i].deviceNum}`);
+            if (isNaN(num) || num < 1 || num > this.deviceList[i].openNum) {
+              this.errorMess(`设备“${this.deviceList[i].deviceTypeName}”预约数量最少为1，最多为${this.deviceList[i].openNum}`);
               return false
             }
           }

@@ -263,10 +263,10 @@
         this.ajax({
           ajaxSuccess: 'getDataSuccess',
           ajaxParams: {
-            url: api.get.path + this.opData.reserveDeviceSetId,
+            url: api.get.path + this.opData.deviceTypeId,
             method: api.get.method,
             params: {
-              deviceTypeId: this.opData.reserveDeviceSetId
+              deviceTypeId: this.opData.deviceTypeId
             }
           }
         })
