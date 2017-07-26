@@ -18,7 +18,7 @@ const osceRouters = {
     return '/manage/osce/assessmentContent'
   },
   children: [{
-      //技能考核内容管理
+      //考核内容
       path: 'assessmentContent',
       name: 'assessmentContent',
       component: resolve => {
@@ -55,17 +55,18 @@ const osceRouters = {
       }
     },
     /***************************************** 老师角色使用 start ***********************************************/
+    // {
+    //   //考核安排 - 老师
+    //   path: 'examinePlan_teacher',
+    //   name: 'examinePlan_teacher',
+    //   component: resolve => {
+    //     require.ensure([], () => {
+    //       resolve(require('../../components/osce/examinePlan/examinePlan_list_teacher'));
+    //     }, 'osceTeacher');
+    //   }
+    // },
     {
-      //考核安排 - 老师
-      path: 'examinePlan_teacher',
-      name: 'examinePlan_teacher',
-      component: resolve => {
-        require.ensure([], () => {
-          resolve(require('../../components/osce/examinePlan/examinePlan_list_teacher'));
-        }, 'osceTeacher');
-      }
-    }, {
-      //考核评分 - 老师
+      //成绩管理
       path: 'examineScore',
       name: 'examineScore',
       component: resolve => {
@@ -93,16 +94,17 @@ const osceRouters = {
           resolve(require('../../components/osce/statisticsAnalysis/statisticsAnalysis_list.vue'));
         }, 'osce');
       }
-    }, {
-      //场次维护
-      path: 'attendanceMaintenance',
-      name: 'attendanceMaintenance',
-      component: resolve => {
-        require.ensure([], () => {
-          resolve(require('../../components/osce/attendanceMaintenance/attendanceMaintenance_list.vue'));
-        }, 'osce');
-      }
-    }
+    },
+    // {
+    //   //场次维护
+    //   path: 'attendanceMaintenance',
+    //   name: 'attendanceMaintenance',
+    //   component: resolve => {
+    //     require.ensure([], () => {
+    //       resolve(require('../../components/osce/attendanceMaintenance/attendanceMaintenance_list.vue'));
+    //     }, 'osce');
+    //   }
+    // }
   ]
 }
 

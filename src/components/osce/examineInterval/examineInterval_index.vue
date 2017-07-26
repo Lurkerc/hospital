@@ -1,27 +1,23 @@
 <template>
   <!-- 考核场次 -->
   <div id="interval" ref="interval">
-    <el-row>
+    <el-row style="padding-bottom:20px;">
       <el-col :span="14">
         <!-- 操作按钮 -->
-        <el-button size="small" type="success" @click="add">新建考核</el-button>
-        <el-button size="small" type="danger" @click="remove">删除考核</el-button>
+        <el-button type="success" @click="add">新建考核</el-button>
+        <el-button type="danger" @click="remove">删除考核</el-button>
       </el-col>
       <!-- 搜索框 -->
       <el-col :span="10" align="right">
-        <el-col :span="20">
-          <el-input placeholder="请输入考核名称" v-model="searchObj.sceneName">
-            <el-button slot="append" icon="search" @click="search"></el-button>
-          </el-input>
-        </el-col>
-        <el-col :span="4">
-          <el-button :icon="getSearchBtnIcon()" @click="openMoreSearch()">筛选</el-button>
-        </el-col>
+        <el-input placeholder="请输入考核名称" v-model="searchObj.sceneName" style="max-width:250px">
+          <el-button slot="append" icon="search" @click="search"></el-button>
+        </el-input>
+        <el-button :icon="getSearchBtnIcon()" @click="openMoreSearch()">筛选</el-button>
       </el-col>
     </el-row>
     <!-- 多条件 -->
-    <div class="editForm noMarginBottom" style="overflow:hidden;" v-show="showMoreSearch">
-      <el-form :inline="true" style="margin-top:10px;float:right;" label-width="74px">
+    <div ref="showMoreSearch" align="right" style="overflow:hidden;" v-show="showMoreSearch">
+      <el-form :inline="true" label-width="74px">
         <el-row>
           <el-form-item label="考核名称:">
             <el-input v-model="searchObj.sceneName"></el-input>
@@ -38,14 +34,14 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-button @click="search">查询</el-button>
+          <el-button @click="search" type="info">查询</el-button>
         </el-row>
       </el-form>
     </div>
 
     <!-- 表格数据 -->
-    <div id="tableView" ref="tableView" style="padding-top:10px;">
-      <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
+    <div id="tableView" ref="tableView">
+      <el-table align="center" :height="tableHeight" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
         style="width: 100%;" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="操作" width="80" align="center">
@@ -121,6 +117,7 @@
         examineStatuOption, // 状态选择
         totalCount: 0,
         self: this,
+        tableHeight: 100,
         dynamicHt: 100, // 表格高度
         loading: false,
         showMoreSearch: false, // 更多筛选
@@ -175,12 +172,14 @@
       },
       // 显示更多筛选
       openMoreSearch() {
-        this.showMoreSearch = !this.showMoreSearch
-        if (this.showMoreSearch) {
-          this.dynamicHt = this.dynamicHt - 47;
-        } else {
-          this.dynamicHt = this.dynamicHt + 47;
-        }
+        this.showMoreSearch = !this.showMoreSearch;
+        this.$nextTick(() => {
+          if (this.showMoreSearch) {
+            this.tableHeight = this.dynamicHt - this.$refs.showMoreSearch.offsetHeight;
+          } else {
+            this.tableHeight = this.dynamicHt;
+          }
+        })
       },
       /************************* 表格逻辑 *********************************/
       /*
@@ -211,6 +210,7 @@
         let tableView = this.$refs.tableView;
         let paginationHt = 50 + otherHeight;
         this.dynamicHt = this.contenHeight - tableView.offsetTop - paginationHt;
+        this.tableHeight = this.dynamicHt;
       },
       /*
        * 列表数据只能选择一个

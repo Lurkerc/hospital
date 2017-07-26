@@ -4,7 +4,7 @@
     <template v-if="emTabHeader">
       <el-tabs v-model="emTabHeader">
         <template v-for="item in tabList">
-          <el-tab-pane :label="item.sceneName" :name="(item.id).toString()"></el-tab-pane>
+          <el-tab-pane :label="item.sceneName" :key="item.id" :name="(item.id).toString()"></el-tab-pane>
         </template>
       </el-tabs>
       <div id="examineScoreContent" ref="examineScoreContent">
