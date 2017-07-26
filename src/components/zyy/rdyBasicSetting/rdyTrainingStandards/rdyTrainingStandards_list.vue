@@ -145,7 +145,7 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="addId"></modal-header>
-      <add v-if="addModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :url="url"></add>
+      <add v-if="addModal" @resize="resize" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :url="url"></add>
       <div slot="footer"></div>
     </Modal>
     <!--修改-->
@@ -226,7 +226,6 @@
         totalCount:0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle:{
-          paramsData:'listUrl',
           ajaxSuccess:'updateListData',
           ajaxParams:{
             url:url.rulesgetList.path,
@@ -356,6 +355,11 @@
        * */
       cancel(targer){
         this[targer+'Modal'] = false;
+      },
+
+      resize(){
+        this.setTableData()
+
       },
       /*
        * 监听子组件通讯的方法

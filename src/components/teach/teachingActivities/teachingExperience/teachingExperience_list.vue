@@ -96,53 +96,58 @@
             </template>
           </el-table-column>
           <el-table-column
+            show-overflow-tooltip
             align="center"
             prop="activityName"
             label="课程名称"
             width="120">
           </el-table-column>
           <el-table-column
+            show-overflow-tooltip
             prop="activityType"
             label="课程类型"
             width="120">
           </el-table-column>
           <el-table-column
+            show-overflow-tooltip
             prop="activitySite"
             label="授课地点"
             align="center"
           >
           </el-table-column>
           <el-table-column
+            show-overflow-tooltip
             prop="hostUserName"
             label="授课老师"
             width="120"
           >
           </el-table-column>
           <el-table-column
+            show-overflow-tooltip
             prop="shouldUserCount"
             label="应到人数"
             width="120"
           >
           </el-table-column>
           <el-table-column
+            show-overflow-tooltip
             prop="actuallyUserCount"
             label="签到人数"
             width="120"
           >
           </el-table-column>
           <el-table-column
+            show-overflow-tooltip
             prop="activityTime"
             label="日期"
-            width="120"
-          >
+            width="120">
           </el-table-column>
           <el-table-column
+            show-overflow-tooltip
             prop="recordTimes"
             label="时间"
-            width="120"
-          >
+            width="120">
           </el-table-column>
-
         </el-table>
       </div>
       <!--分页-->

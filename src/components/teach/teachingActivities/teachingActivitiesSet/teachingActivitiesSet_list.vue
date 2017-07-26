@@ -91,34 +91,41 @@
       <el-table-column
         label="活动时间"
         prop="activityTime"
+        show-overflow-tooltip
         width="150">
       </el-table-column>
       <el-table-column
         prop="activitySite"
+        show-overflow-tooltip
         label="活动地点"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
         prop="hostUserName"
         label="主持人"
+        show-overflow-tooltip
         width="120">
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="activityName"
         label="活动名称"
         width="120">
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="activityType"
         label="活动类型"
         width="120">
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="activityUser"
         label="参加人"
         width="120">
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="activityState"
         label="状态"
         width="120">

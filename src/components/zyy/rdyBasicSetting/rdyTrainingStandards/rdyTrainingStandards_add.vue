@@ -2,15 +2,15 @@
 
   <div>
       <el-steps :space="410" :active="active" finish-status="success">
-        <el-step title="第一步：设置轮转科室"></el-step>
+        <el-step  title="第一步：设置轮转科室"></el-step>
         <el-step title="第二步：设置科室要求"><second></second></el-step>
         <el-step title="第三步：关联院内科室"><third></third></el-step>
       </el-steps>
-
+    </br>
     <div>
-      <first  v-if="active==0"></first>
-      <first v-if="active==1"></first>
-      <first v-if="active==2"></first>
+      <first @next="next" v-if="active==1"></first>
+      <second :rtId="rtId" v-if="active==0"></second>
+      <third v-if="active==2"></third>
     </div>
   </div>
 </template>
@@ -28,6 +28,7 @@
     data (){
       return{
         active:0,
+        rtId:'',
       }
     },
     created(){
@@ -50,6 +51,17 @@
           this.addMessTitle.ajaxParams.data=this.getFormData(this.formValidate);
           this.ajax(this.addMessTitle,isLoadingFun)
         }
+      },
+
+      //下一步
+      next(id){
+        if(this.active==0){
+          this.$emit('resize') ;
+          this.rtId = id ;
+        }
+        console.log(111);
+        this.active++;
+
       },
       /*
        * 点击提交按钮 监听是否验证通过

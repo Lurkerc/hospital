@@ -85,32 +85,38 @@
           <el-table-column
             prop="activityName"
             label="课程名称"
+            show-overflow-tooltip
             width="120">
           </el-table-column>
           <el-table-column
             prop="activityType"
             label="课程类型"
+            show-overflow-tooltip
             width="120">
           </el-table-column>
           <el-table-column
             prop="activitySite"
             label="授课地点"
             align="center"
+            show-overflow-tooltip
             width="200">
           </el-table-column>
           <el-table-column
             prop="hostUserName"
             label="授课老师"
+            show-overflow-tooltip
             width="120">
           </el-table-column>
           <el-table-column
             prop="activityTime"
             label="日期"
+            show-overflow-tooltip
             width="120">
           </el-table-column>
           <el-table-column
             prop="recordTimes"
             label="时间"
+            show-overflow-tooltip
           >
           </el-table-column>
 

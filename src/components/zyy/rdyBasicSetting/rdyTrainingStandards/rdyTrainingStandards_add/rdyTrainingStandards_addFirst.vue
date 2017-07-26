@@ -4,9 +4,65 @@
 ****--@date     2017/7/24
 ****--@author   gx
 ----------------------------------->
-<!---实习大纲管理-添加--->
+<!---设置轮转科室-添加--->
 <template>
   <div>
+    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
+      <el-row >
+        <el-col :span="23" >
+          <el-form-item label="培训标准名称:" prop="rtName">
+            <el-input v-model="formValidate.rtName" placeholder="请输入"></el-input>
+          </el-form-item>
+        </el-col >
+      </el-row >
+      <el-row >
+        <el-col :span="10">
+          <el-form-item label="基地名称:" prop="jdName">
+            <el-select v-model="formValidate.jdName" placeholder="请选择活动区域">
+              <el-option
+                v-for="item in jDData"
+                :key="item.value"
+                :label="item.jdName"
+                :value="item.jdName+'-'+item.jdId+'-'+item.jdProclass">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col >
+        <el-col :span="10"  :offset="2">
+          <el-form-item label="学历:" prop="rtSchlength">
+            <el-input  v-model="formValidate.rtSchlength" placeholder="请输入"></el-input>
+          </el-form-item>
+        </el-col >
+      </el-row >
+      <el-row >
+        <el-col :span="23" >
+          <el-form-item label="培训简介:" prop="rtIntroduce">
+            <el-input  type="textarea" v-model="formValidate.rtIntroduce" placeholder="请输入"></el-input>
+          </el-form-item>
+        </el-col >
+      </el-row >
+      <el-row >
+        <el-col :span="23" >
+          <el-form-item label="培训目标:" prop="rtTarget">
+            <el-input  type="textarea"  v-model="formValidate.rtTarget" placeholder="请输入"></el-input>
+          </el-form-item>
+        </el-col >
+      </el-row >
+      <el-row >
+        <el-col :span="23" >
+          <el-form-item label="培训方法:" prop="rtMethod">
+            <el-input  type="textarea"  v-model="formValidate.rtMethod" placeholder="请输入"></el-input>
+          </el-form-item>
+        </el-col >
+      </el-row >
+      <el-row >
+        <el-col :span="23" >
+          <el-form-item label="备注:" prop="rtAdmrank">
+            <el-input  type="textarea"  v-model="formValidate.rtAdmrank" placeholder="请输入"></el-input>
+          </el-form-item>
+        </el-col >
+      </el-row >
+    </el-form>
     <br />
     <div class="el-form">
       <el-row v-if="outlines.length>0" :gutter="10">
@@ -21,13 +77,12 @@
             <fieldset style="min-height:90px;">
               <legend style="font-size:16px">&nbsp;&nbsp;{{groupOtions[groupIndex]}}&nbsp;&nbsp;</legend>
               <div class="cal-schoolTit">
-                必须轮转科室 <el-button type="primary" size="mini" @click="openSetDepWin(groupIndex,'mustRotaryDep')" icon="plus"></el-button>
+                必须轮转科室 <el-button type="primary" size="mini" @click="openSetDepWin(groupIndex,'mustRotaryDep',0)" icon="plus"></el-button>
               </div>
-
               <el-table
                 border
                 align="center"
-                :data="groupItem.mustRotaryDep"
+                :data="groupItem.mustRotaryDep[0]"
                 tooltip-effect="dark"
                 style="width: 100%">
                 </el-table-column>
@@ -48,15 +103,20 @@
                   label="操作"
                   align="center">
                   <template scope="scope">
-                    <el-button type="danger" size="mini" @click="delGroupItem(groupIndex,scope.$index,'mustRotaryDep')">删除</el-button>
+                    <el-button type="danger" size="mini" @click="delGroupItem(groupItem.mustRotaryDep[0],scope.$index)">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
-
               <br />
+              <div v-for="(randomItem,randomIndex) in  groupItem.randomRotaryDep">
+                <div style="float: right;position: relative;top: 30px;">
+                  <el-button size="mini" type="primary" icon="plus" @click="randomItemAdd(groupItem.randomRotaryDep,groupItem)"></el-button>
+                    <el-button size="mini" type="primary" icon="minus" @click="randomItemRemove(groupItem.randomRotaryDep,randomIndex,groupItem)"></el-button>
+                </div>
               <div class="cal-schoolTit">
-                可选轮转科室 <el-button type="primary" size="mini" @click="openSetDepWin(groupIndex,'randomRotaryDep')" icon="plus"></el-button>
+                可选轮转科室 <el-button type="primary" size="mini" @click="openSetDepWin(groupIndex,'randomRotaryDep',randomIndex)" icon="plus"></el-button>
               </div>
+
               <br />
               <div style="overflow: auto;margin: 0 auto" class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition">
                 <table :width="'100%'">
@@ -64,39 +124,39 @@
                   <colgroup  v-for="(item,index) in noMustHeader">
                     <col :name="'el-table_1_column_'+index" :width="150">
                   </colgroup>
-                  <thead >
-                  <tr  >
+                  <thead>
+                  <tr>
                     <th class="cell" v-for="(item,index) in noMustHeader">
                       {{item.label}}
                     </th>
                   </tr>
                   </thead>
                 </table>
-                <div v-if="groupItem.randomRotaryDep.length>0" class="el-table__body-wrapper" style="max-height:400px;overflow-x: hidden;overflow-y: auto;">
+                <div v-if="randomItem.length>0" class="el-table__body-wrapper" style="max-height:400px;overflow-x: hidden;overflow-y: auto;">
                   <table   :width="'100%'">
                     <colgroup  v-for="(item,index) in noMustHeader">
                       <col name="'el-table_1_column_'+index" :width="150">
                     </colgroup>
-
                     <tbody  class="add-scope">
-                    <tr v-for="(item,index) in groupItem.randomRotaryDep">
+                    <tr v-for="(item,index) in randomItem">
                       <td>
                         &nbsp;&nbsp;&nbsp;&nbsp;{{item.depName}}
                       </td>
-                      <td v-show="index==0" :rowspan="groupItem.randomRotaryDep.length" align="center">
-                        <el-input placeholder="请输入内容" v-model="item.ts" style="width: 50px"></el-input> 周
+                      <td v-show="index==0" :rowspan="randomItem.length" align="center">
+                        <el-input placeholder="请输入内容" v-model="groupItem.ts[randomIndex]" style="width: 50px"></el-input> 周
                       </td>
-                      <td v-show="index==0" :rowspan="groupItem.randomRotaryDep.length" align="center">
-                         <el-input placeholder="请输入内容" v-model="item.optionalNum" style="width: 50px"></el-input>
+                      <td v-show="index==0" :rowspan="randomItem.length" align="center">
+                         <el-input placeholder="请输入内容" v-model="groupItem.optionalNum[randomIndex]" style="width: 50px"></el-input>
                       </td>
                       <td align="center">
-                        <el-button type="danger" size="mini" @click="delGroupItem(groupIndex,index,'randomRotaryDep')">删除</el-button>
+                        <el-button type="danger" size="mini" @click="delGroupItem(randomItem,index)">删除</el-button>
                       </td>
                     </tr>
                     </tbody>
                   </table>
                 </div>
                 <div class="el-table__empty-block" v-else><span class="el-table__empty-text">暂无数据</span></div>
+              </div>
               </div>
             </fieldset>
           </div>
@@ -105,7 +165,7 @@
       </el-row>
       <el-row :gutter="10" v-else>
         <el-col :span="1">&nbsp;</el-col>
-        <el-col :span="22"><div class="cal-schoolTit" style="border: 1px solid #ececec;padding: 20px;"><span class="el-table__empty-text">还没有组,请添加组!</span></div></el-col>
+        <el-col :span="22"><div class="cal-schoolTit" style="border: 1px solid #ececec;padding: 20px;"><span class="el-table__empty-text">还没有阶段,请添加阶段!</span></div></el-col>
         <el-col :span="1">&nbsp;</el-col>
       </el-row>
     </div>
@@ -113,15 +173,15 @@
     <el-row :gutter="10">
       <el-col :span="1">&nbsp;</el-col>
       <el-col :span="22">
-        <el-button type="primary" @click="addGroup">添加组</el-button>
+        <el-button type="primary" @click="addGroup">添加阶段</el-button>
       </el-col>
       <el-col :span="1">&nbsp;</el-col>
     </el-row>
     <br />
+    <div v-if="ishide"></div>
     <el-row>
       <el-col :span="8" class="textCenter">&nbsp;</el-col>
       <el-col :span="4" class="textCenter"><load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn></el-col>
-      <el-col :span="4" class="textCenter"><el-button  @click="cancel">取消</el-button></el-col>
       <el-col :span="8" class="textCenter">&nbsp;</el-col>
     </el-row>
     <!--增加弹窗-->
@@ -152,8 +212,8 @@
     data() {
       return {
         //保存按钮基本信息
-        loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
-
+        loadBtn:{title:'下一步',callParEvent:'listenSubEvent'},
+        ishide:false,
         /*--按钮button--*/
         addId:{
           id:'add',
@@ -188,37 +248,58 @@
 
         //form表单bind数据
         formValidate: {
-          "schoolId":"",
-          "schoolName":"",
-          "specialty":"",
-          "gradeNum":"",
-          "outlines":[]
+          "rtId":'',
+          "rtName":"",  //培训标准名称
+          "rtProclass":"",  //专业   ,从基地获取，是基地里的培训方向
+          "rtSchlength":"",  //学历
+          "rtAdmrank":"",   //备注
+          "rtMethod":"",      //培训方法
+          "rtIntroduce":"",     //培训简介
+          "rtTarget":"",        //培训目标
+          "rtChechRea":"",      //教学、科研能力培训
+          "rtOtherContent":"",    //其他内容
+          "rtType":"0",          //指标类型
+          "rtrulesType":"西医",       //西医/中医
+          "jdName":"",          //基地名
+          "rtModelType":"ZYY",     //细则对应模块
+          "jdId":"",            //基地ID
+          outlines:[],
         },
         currGroupIndex:"",
         tabType:"",
-
+        groupNo:'',
         //组格式化组
         groupOtions:[
           "第一阶段","第二阶段","第三阶段","第四阶段","第五阶段","第六阶段","第七阶段","第八阶段","第九阶段","第十阶段","第十一阶段","第十二阶段","第十三阶段","第十四阶段","第十五阶段","第十六阶段","第十七阶段","第十八阶段","第十九阶段","第二十阶段"
         ],
         groupTemplate:{
-          "greatName":"",
-          "mustRotaryDep": [],
-          "randomRotaryDep": [],
+          "mustRotaryDep":[[]],
+          "randomRotaryDep": [[]],
+          ts:[''],
+          optionalNum:[''],
         },
         outlines: [],
+        jDData:[],
+        //获取基地数组
+        getJd :{
+          ajaxSuccess:'getJdData',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url:api.BaseManageGetList.path
+          },
+        },
 
-
-
-        //保存大纲
+        //
         saveOutline:{
           type:'add',
           successTitle:'添加成功!',
           errorTitle:'添加失败!',
-          ajaxSuccess:'ajaxSuccess',
+          ajaxSuccess:'saveOutlineSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
+            url:api.rulesAddOrEdit.path,
             jsonString:true,
+            method:api.rulesAddOrEdit.method,
           },
         },
 
@@ -228,97 +309,64 @@
       //初始化请求列表数据
       init(){
         Util = this.$util;
+        this.ajax(this.getJd);
       },
 
+      //获取基地集合
+      getJdData(res){
+        let data = res.data;
+        if(!data)return;
+        this.jDData = data;
+
+      },
 
       /**
        * 添加组列表---filter添加的数据
        */
       filterAddDepData(data){
-        let template = this.randomTemplate();
-        if(this.tabType=="mustRotaryDep"){
-          template = this.mustTemplate();
+          let type = this.tabType=='mustRotaryDep'? 'Y':'N';
+         let tempArr = [];
+         for (let i=0;i<data.length;i++){
+            let {depId,depName} = data[i];
+            let  template = this.randomTemplate(type);
+           template =Object.assign(template,data[i]) ;
+           template.cdepId = depId;
+           template.cdepName = depName;
+           tempArr.push(template);
+         }
+          this.outlines[this.currGroupIndex][this.tabType][this.groupNo] = tempArr;
+      },
+
+
+      //添加可轮转科室
+      randomItemAdd(item,groupItem){
+        item.push([]);
+        groupItem.ts.push('');
+        groupItem.optionalNum.push('');
+      },
+      //移除可轮转科室
+      randomItemRemove(item,index,groupItem){
+        item.splice(index,1);
+        groupItem.ts.splice(index,1);
+        groupItem.optionalNum.splice(index,1);
+      },
+
+      /**
+       * 添加组列表----科室
+       */
+      randomTemplate(type){
+        let template = {
+          rdId:'',
+          "depPhase":"",  //科室阶段
+          "depPhaseNum":'',    ///阶段ID
+          "depGroupNo":'',        // 组号
+          "isMustRotaryDep":type,     // Y 必须轮转 N 任选
+          "cdepId":'',           // 标准科室ID
+          "cdepName":"",      // 标准科室名称
+          "ts":'',                 // 周期
+          "depOrder":'', // 科室顺序
+          "depRandomNum":'' // 任选时有值 任选其几
         };
-        let tempArr = [];
-        for(var i=0,tempObj;i<data.length;i++){
-          tempObj = this.getFormData(Object.assign(template,data[i]));
-          tempObj["groupNo"] = this.currGroupIndex+1;
-          tempObj["depIndex"] = (i+1);
-          tempArr.push(tempObj);
-        }
-
-        let sltedGroupData = this.outlines[this.currGroupIndex][this.tabType];
-        //console.log("isSltedGroup",sltedGroupData);
-        let noMustTs = "";
-        let optionalNum = "";
-
-        if(sltedGroupData.length>0){
-          if(this.tabType!="mustRotaryDep"){
-            for(var k=0;k<sltedGroupData.length;k++){
-              if(sltedGroupData[k]["ts"]!=""){
-                noMustTs = sltedGroupData[k]["ts"];
-              }
-              if(sltedGroupData[k]["optionalNum"]!=""){
-                optionalNum = sltedGroupData[k]["optionalNum"];
-              }
-            }
-          }
-
-
-          for(var i=0;i<tempArr.length;i++){
-            for(var k=0;k<sltedGroupData.length;k++){
-              if(tempArr[i]["depId"]==sltedGroupData[k]["depId"]){
-                tempArr[i] = Object.assign(tempArr[i],sltedGroupData[k]);
-              }
-            }
-          }
-        }
-        if(this.tabType!="mustRotaryDep"){
-          tempArr[0]["ts"] = noMustTs;
-          if(tempArr.length==1){
-            optionalNum = 1;
-          }
-          tempArr[0]["optionalNum"] = optionalNum;
-        }
-        //console.log("tempArr",tempArr);
-        this.outlines[this.currGroupIndex][this.tabType] = tempArr;
-      },
-
-
-      /**
-       * 添加组列表---必选科室
-       */
-      mustTemplate(data){
-        let template = {
-          "greatName":"",   //组分类
-          "groupNo":"",     //组索引
-          "isMustRotaryDep":"Y",   //是否必选科室
-          "depId":"",    //科室id
-          "depName":"",  //科室名称
-          "ts":"",       //周期数
-          "remark":"",   //备注
-          "depIndex":"",      //所在当前行索引
-          "optionalNum":""    //自选规则是必选则为空
-        }
-        return template;
-      },
-
-
-      /**
-       * 添加组列表---自选科室
-       */
-      randomTemplate(data){
-        let template = {
-          "greatName":"",   //组分类
-          "groupNo":"",     //组索引
-          "isMustRotaryDep":"N",   //是否必选科室
-          "depId":"",    //科室id
-          "depName":"",  //科室名称
-          "ts":"",       //周期数
-          "remark":"",   //备注
-          "depIndex":"",      //所在当前行索引
-          "optionalNum":""    //自选规则是必选则为空
-        }
         return template;
       },
 
@@ -328,12 +376,11 @@
        * @param currGroupIndex {number}  当前组的索引
        * @param tabType {string}   哪一类表格数据  必填 mustRotaryDep   自选 randomRotaryDep
        */
-      openSetDepWin(currGroupIndex,tabType){
+      openSetDepWin(currGroupIndex,tabType,groupNo){
+        this.groupNo = groupNo;
         this.currGroupIndex = currGroupIndex;
         this.tabType = tabType;
-
-        this.operailityData = this.outlines[currGroupIndex][tabType];
-
+        this.operailityData = this.outlines[currGroupIndex][tabType][this.groupNo];
         this.openModel("setDep");
       },
 
@@ -352,7 +399,7 @@
        */
       addGroup(){
         if(this.groupOtions.length==this.outlines.length){
-          this.showMess("最对可以添加二十个组!");
+          this.showMess("最对可以添加二十个阶段!");
           return;
         }
         let addTemplate = this.getFormData(this.groupTemplate);
@@ -366,11 +413,20 @@
        * @param rowIndex {number}  组的索引
        * @param tabType {string}  哪一类表格数据  必填 mustRotaryDep   自选 randomRotaryDep
        */
-      delGroupItem(groupIndex,rowIndex,tabType){
-        this.outlines[groupIndex][tabType].splice(rowIndex,1);
+      delGroupItem(item,index){
+        item.splice(index,1);
+        this.ishide =  !this.ishide;  //因为删除可选科室不改变页面，添加一个标签来使页面重新渲染
       },
 
 
+      //提交保存成功
+      saveOutlineSuccess(res){
+          let data = res.data;
+        let title = this.formValidate.rtId ? '修改成功' : '保存成功';
+        this.successMess('保存成功');
+        this.$emit('next',data);
+
+      },
       /*
        * 点击提交按钮 监听是否提交数据
        * @param isLoadingFun boolean  form表单验证是否通过
@@ -378,41 +434,58 @@
       listenSubEvent(isLoadingFun){
 
         if(this.outlines.length==0){
-          this.errorMess("请添加小组!");
+          this.errorMess("请添加阶段!");
           return;
         }
-
-        let tempArr = [];
-        for(var i=0,item;i<this.outlines.length;i++){
-          item = this.outlines[i];
-          for(var k=0;k<item["mustRotaryDep"].length;k++){
-            item["mustRotaryDep"][k]["greatName"] = item["greatName"];
-          }
-          let ts= 0,optionalNum=0;
-          for(var k=0;k<item["randomRotaryDep"].length;k++){
-            if(k==0){
-              ts = item["randomRotaryDep"][k]["ts"];
-              optionalNum = item["randomRotaryDep"][k]["optionalNum"];
-            }else{
-              item["randomRotaryDep"][k]["ts"] = ts;
-              item["randomRotaryDep"][k]["optionalNum"] = optionalNum;
-            }
-            item["randomRotaryDep"][k]["greatName"] = item["greatName"];
-          }
-          tempArr = tempArr.concat(item["mustRotaryDep"]);
-          tempArr = tempArr.concat(item["randomRotaryDep"]);
-        }
-        this.formValidate.gradeNum = this.conductDate(this.formValidate.gradeNum,"yyyy");
-        this.formValidate.outlines = tempArr;
-        //this.formValidate.outlines  greatName  mustRotaryDep  randomRotaryDep
-        let isSubmit = this.submitForm("formValidate");
-        //isSubmit = true;
+//        let isSubmit = this.submitForm("formValidate");
+        let isSubmit = true;
         if(isSubmit) {
-          if (!isLoadingFun) isLoadingFun = function () {};
+          if (!isLoadingFun) isLoadingFun = function (){};
           isLoadingFun(true);
-          this.saveOutline.ajaxParams.data = this.getFormData(this.formValidate);
+          let formValidate = this.getFormData(this.formValidate);
+          let outlines = Util._.defaultsDeep([],this.outlines);
+          this.saveOutline.ajaxParams.data = this.conductFormValidate(formValidate,outlines);
           this.ajax(this.saveOutline, isLoadingFun);
         }
+      },
+
+
+      //处理提交的数据
+      conductFormValidate(formValidate,outlines){
+        let tempArr = [];
+        let depArr = formValidate.jdName.split('-');
+        formValidate.jdName = depArr[0];
+        formValidate.jdId = depArr[1];
+        formValidate.rtProclass = depArr[2];
+        for(let i=0 ;i<outlines.length;i++){
+          let item = outlines[i];
+            //处理必选科室
+          if(item.mustRotaryDep[0][0]){
+            let mustRotaryDep =  item.mustRotaryDep[0][0];
+            mustRotaryDep.depPhase = this.groupOtions[i];
+            mustRotaryDep.depPhaseNum = i+1;
+            tempArr.push(mustRotaryDep);
+
+          }
+
+          for(let k=0;k<item.randomRotaryDep.length;k++){
+            let randomRotaryDep = item.randomRotaryDep[k];
+            for(let l=0;l<randomRotaryDep.length;l++){
+              let randomRotaryDepItem = randomRotaryDep[l];
+              randomRotaryDepItem.depPhase = this.groupOtions[i];
+              randomRotaryDepItem.depPhaseNum = i+1;
+              randomRotaryDepItem.depOrder = l+1;
+              randomRotaryDepItem.depGroupNo = k+1;
+              randomRotaryDepItem.ts = item.ts[k];
+              randomRotaryDepItem.optionalNum= item.optionalNum[k];
+              tempArr.push(randomRotaryDepItem);
+            }
+          }
+
+        }
+
+        formValidate.outlines = tempArr;
+        return formValidate
       },
 
 
