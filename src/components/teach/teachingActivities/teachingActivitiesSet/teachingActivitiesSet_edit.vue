@@ -10,17 +10,17 @@
             <el-input @focus="openAndColseHost('host')" v-model="formValidate.hostUserName" ></el-input>
           </el-form-item>
           <el-form-item label="活动时间" prop="activityTime">
-            <el-date-picker type="date" placeholder="选择日期"  v-model="formValidate.activityTime" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" :editable="false" placeholder="选择日期"  v-model="formValidate.activityTime" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="类型" prop="name4">
+          <el-form-item label="类型" prop="activityType">
             <el-select v-model="formValidate.activityType"  placeholder="请选择" >
               <select-option :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="科室" prop="name1">
+          <el-form-item label="科室" prop="depId">
             <el-select  v-model="formValidate.depId" placeholder="请选择">
               <select-option :unAll="true"></select-option>
             </el-select>
@@ -33,7 +33,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="时间段" prop="name7">
+          <el-form-item label="时间段" prop="recordTimes">
             <el-checkbox-group v-model="formValidate.recordTimes">
               <el-checkbox v-for="(item,index) in getRecordTimes" :key="index" :label="item.courseTime+'/'+item.timeId" >{{item.courseTime}}-{{item.timeId}}</el-checkbox>
             </el-checkbox-group>
@@ -50,8 +50,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="病例名称" prop="casesName">
-            <el-input v-model="formValidate.casesName" :disabled="formValidate.whetherNeedCases=='NO'"></el-input>
+          <el-form-item label="病例名称" prop="casesName"  v-show="formValidate.whetherNeedCases=='YES'">
+            <el-input v-model="formValidate.casesName" ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -382,7 +382,6 @@
         //处理recordTimes，timeIds
         let times=[];
         let ids = [];
-        console.log(data.recordTimes);
         for (let i=0;i<data.recordTimes.length;i++){
           let val = data.recordTimes[i].split('/');
           ids.push(val[1]);
@@ -437,11 +436,13 @@
               this[activityUserType].activityUserTypeValue =  data.activityUserTypeValue ||[];
             }else if(activityUserType == 'partuser'){
               let value = [];
+              let activityUserTypeValue = data.activityUserTypeValue.split(',');
+              let activityUserTypeValueName = data.activityUserTypeValueName.split(',');
               if(data.activityUserTypeValue){
-                for(let i=0;i<data.activityUserTypeValue.length;i++){
+                for(let i=0;i<activityUserTypeValue.length;i++){
                   value.push({
-                    label:data.activityUserTypeValueName[0],
-                    key:+data.activityUserTypeValue[0],
+                    label:activityUserTypeValueName[i],
+                    key:+activityUserTypeValue[i],
                     description: '',
                     disabled: false
                   })
@@ -514,6 +515,7 @@
         }
         this.formValidate.activityUserTypeValue = userIds;
         this.partuser.activityUserTypeValue =users;
+        this.partuser.activityUserTypeValueId =userIds;
         this.openAndColseHost('selectUser',false)
 
       },

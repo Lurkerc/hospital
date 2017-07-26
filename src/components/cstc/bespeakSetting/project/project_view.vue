@@ -9,7 +9,7 @@
           </el-form-item>
         </el-col>
         <el-col>
-          <el-form-item label="选择房间：">
+          <el-form-item label="所在房间：">
             <div class="bpProjectSelectRoom" v-for="item in showData.roomList" :key="item.roomId">
               <el-button @click="showRoomInfo(item.roomId)">{{ item.roomNum }}</el-button>
               <span>承载人数：{{ item.bearingCapacity }}</span>
@@ -17,7 +17,7 @@
           </el-form-item>
         </el-col>
         <el-col>
-          <el-form-item label="选择模型：">
+          <el-form-item label="所需模型：">
             <el-tooltip class="item" effect="light" placement="bottom-start" v-for="item in showData.deviceList" :key="item.deviceTypeId">
               <div slot="content" style="max-width:200px;">
                 <p>设备名称：{{ item.deviceTypeName }}</p>

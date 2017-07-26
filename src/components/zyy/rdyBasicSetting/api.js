@@ -56,6 +56,30 @@ const api = {
     path: "/rotaryBasis/BaseManage/getList",
     method: 'get'
   },
+  //大病历设置
+  modifyConfigId: { // 住院医黏贴比例修改  {configId}
+    path: '/rotaryConfig/modify/',
+    method: 'put'
+  },
+  bigcaseIscopy: { // 黏贴查询是否黏贴
+    path: '/rotaryConfig/getByKey/rotary_bigcase_iscopy-ZYY',
+    method: 'get'
+  },
+  bigcaseCopyscale: { // 黏贴比例查询
+    path: '/rotaryConfig/getByKey/rotary_bigcase_copyscale-ZYY',
+    method: 'get'
+  },
+
+  //科室对照表
+  getRulesDepContrastTable: { // 配置-查看标准科室对照关系列表  {rtId}
+    path: '/rotaryBasis/rulesTraining/getRulesDepContrastTable/',
+    method: 'get'
+  },
+
+  getRulesDepHgGroup: { // 配置-查看标准科室对照关系列表  {rtId}_{rdId}
+    path: '/rotaryBasis/rulesTraining/getRulesDepHgGroup/',
+    method: 'get'
+  },
 };
 
 export default api

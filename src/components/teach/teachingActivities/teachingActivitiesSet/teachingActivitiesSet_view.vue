@@ -18,7 +18,7 @@
             {{data.activityType}}
           </el-form-item>
           <el-form-item label="主持人" prop="name5">
-            {{data.hostUserId}}
+            {{data.hostUserName}}
           </el-form-item>
           <el-form-item label="活动地点" prop="name6">
             {{data.activitySite}}

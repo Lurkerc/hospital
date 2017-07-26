@@ -4,88 +4,137 @@
 ****--@author   zyc<332533011@qq.com
 ----------------------------------->
 <template>
-  <el-table
-    stripe
-    ref="multipleTable"
-    align="center"
-    height="480"
-    :context="self"
-    :data="tableData1"
-    tooltip-effect="dark"
-    highlight-current-row
-    style="width: 100%;height: 100%"
-    @selection-change="handleSelectionChange">
-    <el-table-column
-      type="selection"
-      width="55">
-    </el-table-column>
-    <el-table-column
+  <div>
+    <el-table
+      stripe
+      ref="multipleTable"
       align="center"
-      label="序号"
-      prop="index"
-      width="75">
-      <template scope="scope">
-        <span>{{scope.$index+1}}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="userName"
-      label="姓名"
-      width="160"
-      show-overflow-tooltip>
-    </el-table-column>
-    <el-table-column
-      prop="specialty"
-      label="专业"
-      show-overflow-tooltip>
-    </el-table-column>
-    <el-table-column
-      prop="highestEdu"
-      label="学历"
-      align="center"
-      width="200">
-    </el-table-column>
-    <el-table-column
-      prop="year"
-      label="培训年限"
-      align="center"
-      width="150">
-    </el-table-column>
-  </el-table>
+      height="460"
+      :context="self"
+      :data="tableData1"
+      tooltip-effect="dark"
+      highlight-current-row
+      style="width: 100%;height: 100%"
+      @selection-change="handleSelectionChange">
+      <el-table-column
+        type="selection"
+        width="55">
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="序号"
+        prop="index"
+        width="75">
+        <template scope="scope">
+          <span>{{scope.row.index}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="userName"
+        label="姓名"
+        width="160"
+        show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column
+        prop="rtProclass"
+        label="专业"
+        show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column
+        prop="highestEdu"
+        label="学历"
+        align="center"
+        width="200">
+      </el-table-column>
+      <el-table-column
+        prop="rotaryAdmrank"
+        label="培训年限"
+        align="center"
+        width="150">
+        <template scope="scope">
+          {{scope.row.rotaryAdmrank}}年
+        </template>
+      </el-table-column>
+    </el-table>
+    <div style="margin: 10px;">
+      <div style="float: right;">
+        <el-pagination
+          @size-change="changePageSize"
+          @current-change="changePage"
+          :current-page="myPages.currentPage"
+          :page-sizes="myPages.pageSizes"
+          :page-size="myPages.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="listTotal">
+        </el-pagination>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
   /*当前组件必要引入*/
-
+  import api from "../../api.js";
   //当前组件引入全局的util
   let Util = null;
   export default{
     props:["initUser"],
     data() {
       return {
+        formValidate:{},
         multipleSelection: this.initUser,
         dynamicHt: 100,
         self: this,
         loading:false,
         listTotal:0,
         tableData1: [{
-          id: '1',
-          userName: '张三',
-          specialty: '内科',
-          highestEdu:"本科",
-          year:2,
-        }, {
-          id: '2',
-          userName: '黄飞鸿',
-          specialty: '内科',
-          highestEdu:"博士",
-          year:2,
-        }]
+          "userId":"4565",
+          "userName":"张三",
+          "rtProclass":"内科",
+          "highestEdu":"本科",
+          "rotaryAdmrank":"1",
+          "rotaryZyyType":""
+        }],
+
+        //初始化获取人员信息
+        listMessTitle:{
+          ajaxSuccess:'updateListData',
+          ajaxParams:{
+            url: api.getUsersList.path,
+            params:{
+              rotaryAdmrank:'',
+              rotaryZyyType:'',
+              userName:'',
+              sortby:'',
+              order:'',
+              rtProclass:'',
+            }
+          }
+        },
       }
     },
     methods: {
       //初始化请求列表数据
       init(){
+        Util = this.$util;
+        //ajax请求参数设置
+        this.myPages =  Util.pageInitPrams;
 
+        this.queryQptions = {
+          //url:this.listUrl,
+          params:{curPage: 1,pageSize: Util.pageInitPrams.pageSize}
+        }
+        //this.setTableData(this.listMessTitle);
+      },
+
+      setTableData(){
+        this.setAjaxParams();
+        this.ajax(this.listMessTitle);
+      },
+
+
+      //设置提交的参数
+      setAjaxParams(){
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params,this.formValidate);
       },
 
 
@@ -93,6 +142,7 @@
       updateListData(responseData){
         let data = responseData.data;
         this.tableData1=[];
+        data = this.addIndex(data);
         this.tableData1=data;
         for(var i=0,item;i<data.length;i++){
           item = data[i];
@@ -121,9 +171,9 @@
     },
     watch:{
       multipleSelection(val){
-        if(val.length>0){
-          this.$emit("setFirstVal",val);
-        }
+        //if(val.length>0){
+        this.$emit("setFirstVal",val);
+        //}
       }
     },
     created(){

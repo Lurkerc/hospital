@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!--:rules="rules.teachingActivitiesSet"-->
   <el-form :model="formValidate" ref="formValidate" :rules="rules.teachingActivitiesSet"  label-width="100px">
     <el-row>
       <el-col :span="12">
@@ -10,17 +11,17 @@
             <el-input @focus="openAndColseHost('host')" v-model="formValidate.hostUserName" ></el-input>
           </el-form-item>
           <el-form-item label="活动时间" prop="activityTime">
-            <el-date-picker type="date" placeholder="选择日期"  v-model="formValidate.activityTime" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date"  :editable="false" placeholder="选择日期"  v-model="formValidate.activityTime" style="width: 100%;"></el-date-picker>
           </el-form-item>
       </el-col>
       <el-col :span="12">
-          <el-form-item label="类型" prop="name4">
+          <el-form-item label="类型" prop="activityType">
             <el-select v-model="formValidate.activityType"  placeholder="请选择" >
               <select-option :unAll="true" :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="科室" prop="name1">
+          <el-form-item label="科室" prop="depId">
             <el-select  v-model="formValidate.depId" placeholder="请选择">
               <select-option :unAll="true"></select-option>
             </el-select>
@@ -33,7 +34,7 @@
     </el-row>
     <el-row>
       <el-col :span="24">
-        <el-form-item label="时间段" prop="name7">
+        <el-form-item label="时间段" prop="recordTimes">
             <el-checkbox-group v-model="formValidate.recordTimes">
               <el-checkbox v-for="(item,index) in getRecordTimes" :key="index" :label="item.courseTime+'/'+item.timeId" >{{item.courseTime}}</el-checkbox>
             </el-checkbox-group>
@@ -50,8 +51,8 @@
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="病例名称" prop="name7">
-          <el-input v-model="formValidate.casesName" :disabled="formValidate.whetherNeedCases=='NO'"></el-input>
+        <el-form-item label="病例名称" prop="name7" v-show="formValidate.whetherNeedCases=='YES'">
+          <el-input v-model="formValidate.casesName" ></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -168,11 +169,7 @@
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         operailityData:'',
         countDate:0,
-        options: [{
-          id:0,
-          value: '选项1',
-          label: '暂无'
-        }],
+        options: [],
 
         "formValidate":{
           "depId":'',
@@ -183,7 +180,7 @@
           "activityTime":"",
           "activitySite":"",
           "activityUser":"",
-          "whetherNeedCases":"",
+          "whetherNeedCases":"YES",
           "casesName":"",
           "activityContent":"",
           "activityUserType":"ALLUSER",
@@ -202,7 +199,8 @@
         },
         //部分人员
         partuser:{
-          activityUserTypeValue:'',
+          activityUserTypeValue:[],
+          activityUserTypeValueId:[]
         },
         //部分角色
         partrole:{
@@ -296,7 +294,7 @@
           if(!isLoadingFun) isLoadingFun=function(){};
           isLoadingFun(true);
           this.addMessTitle.ajaxParams.data=this.disposeData(this.getFormData(this.formValidate));
-          this.ajax(this.addMessTitle,isLoadingFun)
+          this.ajax(this.addMessTitle,isLoadingFun);
         }
       },
 
@@ -310,9 +308,7 @@
           data.activityDepUserType =''
         }else if(activityUserType == 'partuser'){
           let Value;
-          if(typeof this[activityUserType].activityUserTypeValueId=='object'){
-            Value =this[activityUserType].activityUserTypeValueId.join(',');
-          }
+            Value = this[activityUserType].activityUserTypeValueId.join(',');
           data.activityUserTypeValue =Value|| this[activityUserType].activityUserTypeValueId;
         }else{
           if(activityUserType!='rotarydep') data.activityDepUserType ='';
@@ -337,7 +333,7 @@
         }
         data.recordTimes = times.join(',');
         data.timeIds = ids.join(',');
-        this.formDate(data,['activityTime'])
+        this.formDate(data,['activityTime']);
           return data
       },
 
@@ -402,6 +398,7 @@
         }
         this.formValidate.activityUserTypeValue = userIds;
         this.partuser.activityUserTypeValue =users;
+        this.partuser.activityUserTypeValueId =userIds;
         this.openAndColseHost('selectUser',false)
 
 

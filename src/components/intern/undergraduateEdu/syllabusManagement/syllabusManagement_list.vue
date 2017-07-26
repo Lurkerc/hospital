@@ -155,17 +155,17 @@
         self: this,
         tableData1: [
           {
-            "weekSetId":1,
-            "schoolName":"南京大学",
-            "gradeNum":2017,
-            "classNum":1,
-            "startWeekSetYear":2016,
-            "endWeekSetYear":2017,
-            "semester":"ONE",
-            "startEndWeekSetTime":"2016-09-01至2017-01-26",
-            "createTime":"2017-05-06 18:24",
-            "whetherArrangedCourse":"NO",
-            "weekState":"NO_RELEASE"
+            "weekSetId":"",
+            "schoolName":"",
+            "gradeNum":"",
+            "classNum":"",
+            "startWeekSetYear":"",
+            "endWeekSetYear":"",
+            "semester":"",
+            "startEndWeekSetTime":"",
+            "createTime":"",
+            "whetherArrangedCourse":"",
+            "weekState":""
           }
         ],
         loading:false,

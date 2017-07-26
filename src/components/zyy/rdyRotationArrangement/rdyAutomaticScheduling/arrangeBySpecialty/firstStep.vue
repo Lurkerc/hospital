@@ -6,9 +6,10 @@
 <template>
   <el-radio-group v-model="radio" style="width: 100%;">
   <el-table
+    stripe
     :data="tableData1"
     height="480"
-    border
+    highlight-current-row
     style="width: 100%">
     <el-table-column
       label=""
@@ -18,11 +19,11 @@
       </template>
     </el-table-column>
     <el-table-column
-      prop="name"
+      prop="jdName"
       label="基地名">
     </el-table-column>
     <el-table-column
-      prop="specialty"
+      prop="jdProclass"
       label="专业"
       width="180">
     </el-table-column>
@@ -31,7 +32,7 @@
 </template>
 <script>
     /*当前组件必要引入*/
-
+    import api from "../../api.js";
     //当前组件引入全局的util
     let Util = null;
     export default{
@@ -39,21 +40,41 @@
             return {
               radio:"",
               tableData1: [{
-                id: '1',
-                name: '内科基地',
-                specialty: '内科'
-              }, {
-                id: '2',
-                name: '外科基地',
-                specialty: '外科'
-              }]
+                "jdId":"1",
+                "jdName":"基地名称",
+                "jdProclass":"内科方向",
+                "jdZrUsername":"",
+                "jdZrUserid":"",
+                "jdStatus":"",
+                "createTime":"",
+                "jdContent":"",
+              }],
+
+              //初始化获取基地信息
+              listMessTitle:{
+                ajaxSuccess:'updateListData',
+                ajaxParams:{
+                  url: api.getJdList.path,
+                  params:{
+                    jdName:'',
+                    jdState:'',
+                    jdProclass:'',
+                  }
+                }
+              },
             }
         },
         methods: {
-            //初始化请求列表数据
-            init(){
-
-            },
+          //初始化请求列表数据
+          init(){
+              //this.ajax(this.listMessTitle);
+          },
+          //通过get请求列表数据
+          updateListData(responseData){
+            let data = responseData.data;
+            this.tableData1=[];
+            this.tableData1= data;
+          },
 
         },
         created(){

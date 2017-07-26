@@ -258,19 +258,19 @@
         deleteUrl:'',
         loading:false,
         tableData: [
-          {
-            "id":1,
-            "activityName":"教学查房",
-            "activityType":"理论",
-            "hostUserName":"张三",
-            "activityTime":"2017-03-31",
-            "activitySite":"教学楼三楼301室",
-            "activityUser":"呼吸科-住院医师",
-            "shouldUserCount":30,
-            "actuallyUserCount":30,
-            "recordTimes":"9:00-10:00,10:10-11:00",
-            "activityState":"nosubmit"
-          }
+//          {
+//            "id":1,
+//            "activityName":"教学查房",
+//            "activityType":"理论",
+//            "hostUserName":"张三",
+//            "activityTime":"2017-03-31",
+//            "activitySite":"教学楼三楼301室",
+//            "activityUser":"呼吸科-住院医师",
+//            "shouldUserCount":30,
+//            "actuallyUserCount":30,
+//            "recordTimes":"9:00-10:00,10:10-11:00",
+//            "activityState":"nosubmit"
+//          }
         ],
         dynamicHt:'',
         operailityData:'',

@@ -380,16 +380,16 @@
         dynamicHt: 100,
         tableData1: [
           {
-            "weekSetId":1,
-            "schoolName":"南京大学",
-            "gradeNum":2017,
-            "classNum":1,
-            "startWeekSetYear":2016,
-            "endWeekSetYear":2017,
-            "semester":"ONE",
-            "startEndWeekSetTime":"2016-09-01至2017-01-26",
+            "weekSetId":"",
+            "schoolName":"",
+            "gradeNum":"",
+            "classNum":"",
+            "startWeekSetYear":"",
+            "endWeekSetYear":"",
+            "semester":"",
+            "startEndWeekSetTime":"",
             "createTime":"",
-            "weekSetState":"NO_ISSUED"
+            "weekSetState":""
           }
         ],
         loading:false,

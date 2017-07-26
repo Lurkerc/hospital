@@ -6,9 +6,10 @@
 <template>
   <el-radio-group v-model="radio" style="width: 100%;">
     <el-table
+      stripe
       :data="tableData1"
       height="480"
-      border
+      highlight-current-row
       style="width: 100%">
       <el-table-column
         label=""
@@ -18,20 +19,20 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="depName"
+        prop="jdName"
         label="基地名">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="rtName"
         label="培训标准名称">
       </el-table-column>
       <el-table-column
-        prop="specialty"
+        prop="rtProclass"
         label="专业"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="highestEdu"
+        prop="rtSchlength"
         label="学历"
         width="180">
       </el-table-column>
@@ -40,7 +41,7 @@
 </template>
 <script>
   /*当前组件必要引入*/
-
+  import api from "../../api.js";
   //当前组件引入全局的util
   let Util = null;
   export default{
@@ -48,26 +49,39 @@
       return {
         radio:"",
         tableData1: [{
-          id: '1',
-          depName: '内科基地名称1',
-          name: '内科培训细则1',
-          specialty: '内科',
-          highestEdu:"本科",
-        }, {
-          id: '2',
-          depName: '内科基地名称2',
-          name: '内科培训细则2',
-          specialty: '内科',
-          highestEdu:"本科",
-        }]
+          "rtId":"3",
+          "rtName":"细则名称",
+          "rtProclass":"内科方向",
+          "rtSchlength":"本科",
+          "rtType":"指标类型",
+          "rtrulesType":"西医/中医",
+          "jdName":"基地名"
+        }],
+
+        //初始化获取基地信息
+        listMessTitle:{
+          ajaxSuccess:'updateListData',
+          ajaxParams:{
+            url: api.getRulesList.path,
+            params:{
+              jdProclass:'',
+              rtModelType:'',
+            }
+          }
+        },
       }
     },
     methods: {
       //初始化请求列表数据
       init(){
-
+        //this.ajax(this.listMessTitle);
       },
-
+      //通过get请求列表数据
+      updateListData(responseData){
+        let data = responseData.data;
+        this.tableData1=[];
+        this.tableData1= data;
+      },
     },
     watch:{
       radio(val){

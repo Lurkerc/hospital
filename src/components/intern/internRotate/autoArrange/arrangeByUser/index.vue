@@ -35,16 +35,16 @@
         <p v-else style="text-align:center;padding-top:100px">数据加载中……</p>
       </div>
       <br />
-      <el-row>
+      <!--<el-row>
         <el-col :span="8"><div class="cal-schoolTit" style="text-align: right;">专业：</div></el-col>
         <el-col :span="10">
           <dictionary-select @setSltOptionValue="setSpecialtyOptionValue" :isClear="isClear" :selectOptions="specialtyOptions"></dictionary-select>
           <span v-if="sltedSpecialty==''" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;您还没有选择专业!</span>
         </el-col>
-      </el-row>
+      </el-row>-->
       <el-row style="margin-top: 10px;">
         <el-col :span="8"><div class="cal-schoolTit" style="text-align: right;">大纲：</div></el-col>
-        <el-col :span="10">
+        <el-col :span="14">
           <el-select
             v-model="sltedDg"
             :filterable="true"
@@ -56,7 +56,7 @@
               :value="item.outlineId">
             </el-option>
           </el-select>
-          <span v-if="getDgBySpecialty.length==0&&sltedSpecialty!=''" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;该专业下没有对应的大纲</span>
+          <span v-if="getDgBySpecialty.length==0" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;您还没有选择学校或者该学校下没有对应的大纲!</span>
           <span v-if="getDgBySpecialty.length>0&&sltedDg==''" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;请选择对应专业的大纲!</span>
         </el-col>
       </el-row>
@@ -75,8 +75,8 @@
               :value="item.depOutlineId">
             </el-option>
           </el-select>
-          <span v-if="depReqData.length==0&&sltedSpecialty!=''" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;该专业下没有科室轮转要求</span>
-          <span v-if="depReqData.length>0&&sltedDepReq==''" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;请选择对应专业科室轮转要求!</span>
+          <span v-if="depReqData.length==0" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;没有科室轮转要求!</span>
+          <span v-if="depReqData.length>0&&sltedDepReq==''" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;请选择对应科室轮转要求!</span>
         </el-col>
       </el-row>
     </div>
@@ -296,51 +296,12 @@
       //初始化请求列表数据
       init(){
         Util = this.$util;
+        //初始化获取学校选择项
         this.ajax(this.getSchoolsTitle);
 
-        /*let mydata = {
-          "times":[
-            {
-              "beginTime":"2017-01-01",
-              "endTime":"2017-01-15"
-            },
-            {
-              "beginTime":"2017-01-01",
-              "endTime":"2017-01-15"
-            }
-          ],
-          "userInfo":[
-            {
-              "userId":111,
-              "userName":"呼吸内科",
-              "specialty":"专业",
-              "highestEdu":"学历"
-            }
-          ],
-          "rotaryData":[
-            {
-              "userId":111,
-              "depName":"科室",
-              "beginTime":"2017-01-01",
-              "endTime":"2017-01-15"
-            },
-            {
-              "userId":111,
-              "depName":"科室",
-              "beginTime":"2017-01-16",
-              "endTime":"2017-01-31"
-            },
-            {
-              "userId":112,
-              "depName":"科室2",
-              "beginTime":"2017-01-16",
-              "endTime":"2017-01-31"
-            }
-          ]
-        }
-         this.formatTableData(mydata)*/
-
-
+        //初始化获取所有的科室要求
+        let option = Util._.defaultsDeep({},this.getDepReqBySchoolId);
+        this.ajax(option);
       },
 
 
@@ -403,13 +364,11 @@
         this.depReqData = [];
         for(var i=0,item;i<data.length;i++){
           item = data[i];
-          if(item["specialty"]==this.sltedSpecialty){
-            this.depReqData.push({
-              depOutlineId:item["depOutlineId"],
-              name:item["name"],
-              specialty:item["specialty"],
-            });
-          }
+          this.depReqData.push({
+            depOutlineId:item["depOutlineId"],
+            name:item["name"],
+            //specialty:item["specialty"],
+          });
         }
       },
 
@@ -417,6 +376,7 @@
       //根据学校id获取专业对应大纲
       getDgData(responseData){
         let data = responseData.data;
+        this.getDgBySpecialty = [];
         for(var i=0,item;i<data.length;i++){
           item = data[i];
           /*{
@@ -425,10 +385,10 @@
            "gradeNum":2017,
            "specialty":"专业"
            }*/
-          this.dgData.push({
+          this.getDgBySpecialty.push({
             outlineId:item["outlineId"],
-            dgName:item["gradeNum"]+item["specialty"],
-            specialty:item["specialty"],
+            dgName:item["gradeNum"],
+            //specialty:item["specialty"],
           });
         }
 
@@ -514,16 +474,16 @@
           this.errorMess("请选择学校!");
           return;
         }
-        if(this.sltedSpecialty==""&&this.active==0){
+        /*if(this.sltedSpecialty==""&&this.active==0){
           this.errorMess("请选择专业!");
           return;
-        }
+        }*/
         if(this.sltedDg==""&&this.active==0){
-          this.errorMess("请选专业对应的大纲!");
+          this.errorMess("请选对应的大纲!");
           return;
         }
         if(this.sltedDepReq==""&&this.active==0){
-          this.errorMess("请选专业对应的科室要求!");
+          this.errorMess("请选对应的科室要求!");
           return;
         }
         if(this.sltedPeople.length==0&&this.active==1){
@@ -560,9 +520,9 @@
       //清空所有设置的值
       clearAllVal(){
         //清空专业
-        this.sltedSpecialty = "";
-        this.specialtyOptions.value = "";
-        this.isClear = !this.isClear;
+        //this.sltedSpecialty = "";
+        //this.specialtyOptions.value = "";
+        //this.isClear = !this.isClear;
 
         //清空大纲
         this.sltedDg="";
@@ -570,8 +530,8 @@
         this.dgData = [];
 
         //清空科室要求
-        this.sltedDepReq="";
-        this.depReqData = [];
+        //this.sltedDepReq="";
+        //this.depReqData = [];
 
 
       },

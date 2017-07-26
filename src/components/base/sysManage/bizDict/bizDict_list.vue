@@ -320,7 +320,6 @@
        * @param string 查询from的id
        * */
       handleSubmit(name){
-
         this.setTableData();
       },
       /*--点击--添加--按钮--*/

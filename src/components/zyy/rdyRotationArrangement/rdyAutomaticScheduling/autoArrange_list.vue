@@ -92,20 +92,20 @@
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="schoolName"
-            label="学校"
-            width="160"
-            show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
-            prop="major"
+            prop="rtProclass"
             label="专业"
             width="160"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="rotaryBeginTime"
-            label="开始轮转时间"
+            label="轮转开始时间"
+            width="160"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="rotaryEndTime"
+            label="轮转结束时间"
             width="160"
             show-overflow-tooltip>
           </el-table-column>
@@ -141,6 +141,7 @@
     </div>
     <!--新建-->
     <Modal
+      :mask-closable="false"
       close-on-click-modal="false"
       width="1100"
       v-model="addModal"
@@ -154,6 +155,7 @@
     <!--查看弹窗-->
     <Modal
       width="800"
+      :mask-closable="false"
       v-model="showModal"
       title="查看档案管理弹窗"
       class-name="vertical-center-modal"
@@ -238,18 +240,17 @@
         self: this,
 
         //默认展示列表----数据存储
-        tableData1: [
-          {
+        tableData1: [{
             "userId":111,
             "userName":"张三",
-            "schoolName":"学校名称",
+            "rtProclass":"培训方向",
             "mobile":"手机号",
-            "major":"呼吸内科",
+            "major":"专业",
+            "rotaryBeginTime":"2015-01-01",
+            "rotaryEndTime":"2015-01-15",
             "idNumber":"身份证号",
-            "totalCost":"总费用",
-            "rtState":0,
-            "rtStartTime":"2017-05-06",
-            "isPrint":0
+            "rotaryZyyType":"社会人",
+            "rotaryState":0
           }
         ],
 

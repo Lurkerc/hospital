@@ -31,13 +31,13 @@
     </div>
     <!--- 第二步：选择专业 --->
     <div v-if="active==1" style="margin: 20px;">
-      <el-row>
+      <!--<el-row>
         <el-col :span="5"><div class="cal-schoolTit" style="text-align: right;">专业：</div></el-col>
         <el-col :span="18">
           <dictionary-select @setSltOptionValue="setSpecialtyOptionValue" :selectOptions="specialtyOptions"></dictionary-select>
           <span v-if="sltedSpecialty==''" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;您还没有选择专业!</span>
         </el-col>
-      </el-row>
+      </el-row>-->
       <el-row style="margin-top: 20px;">
         <el-col :span="5"><div class="cal-schoolTit" style="text-align: right;">对应学校大纲：</div></el-col>
       <el-col :span="18">
@@ -53,7 +53,7 @@
             :value="item.outlineId">
           </el-option>
         </el-select>
-        <span v-if="getDgBySpecialty.length==0&&sltedSpecialty!=''" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;该专业下没有对应的大纲</span>
+        <!--<span v-if="getDgBySpecialty.length==0&&sltedSpecialty!=''" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;该专业下没有对应的大纲</span>-->
         <span v-if="getDgBySpecialty.length>0&&sltedDg==''" style="color: #FF0000">&nbsp;&nbsp;&nbsp;&nbsp;请选择对应专业的大纲!</span>
       </el-col>
       </el-row>
@@ -218,10 +218,10 @@
            "gradeNum":2017,
            "specialty":"专业"
            }*/
-          this.dgData.push({
+          this.getDgBySpecialty.push({
             outlineId:item["outlineId"],
-            dgName:item["gradeNum"]+item["specialty"],
-            specialty:item["specialty"],
+            dgName:item["gradeNum"],
+            //specialty:item["specialty"],
           });
         }
 
@@ -277,7 +277,7 @@
 
 
       /*
-       * 设置专业
+       * 设置专业  此函数已废弃
        * @param val string || number  选中毕业学校的id
        * */
       setSpecialtyOptionValue(val,id){

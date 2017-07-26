@@ -9,12 +9,12 @@
       <el-col :span="5">
         <search-select v-if="formValidate.schoolId!=''" @setSltOptionValue="setSltOptionValue" :selectOptions="selectOptions"></search-select>
       </el-col>
-      <el-col :span="2">
+      <!--<el-col :span="2">
         <div class="cal-schoolTit" style="text-align: right;">专业:</div>
       </el-col>
       <el-col :span="5">
         <dictionary-select v-if="formValidate.schoolId!=''" @setSltOptionValue="setSpecialtyOptionValue" :selectOptions="specialtyOptions"></dictionary-select>
-      </el-col>
+      </el-col>-->
       <el-col :span="2">
         <div class="cal-schoolTit" style="text-align: right;">年级:</div>
       </el-col>
@@ -518,6 +518,22 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
+        if(this.formValidate.schoolName==""){
+          this.errorMess("请选择学校!");
+          return;
+        }
+        /*if(this.formValidate.specialty==""){
+         this.errorMess("请选择专业!");
+         return;
+         }*/
+        if(this.formValidate.gradeNum==""){
+          this.errorMess("请选择年级!");
+          return;
+        }
+        if(this.outlines.length==0){
+          this.errorMess("请添加小组!");
+          return;
+        }
         let tempArr = [];
         for(var i=0,item;i<this.outlines.length;i++){
           item = this.outlines[i];

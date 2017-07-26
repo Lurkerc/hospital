@@ -2,12 +2,12 @@
 <template>
   <div class="arrangeTab-zyy" style="height: 700px;overflow: auto;">
     <el-tabs v-model="activeName"  @tab-click="handleClick">
-      <el-tab-pane label="按分组排班" name="arrangeByGroup">
+      <el-tab-pane label="按专业排" name="arrangeByGroup">
         <keep-alive>
           <by-group v-if="showFirstLab" @add="subCallback" :isInit="count" style="height: 100%;"></by-group>
         </keep-alive>
       </el-tab-pane>
-      <el-tab-pane label="按人员排班" name="arrangeByUser">
+      <el-tab-pane label="按人员排" name="arrangeByUser">
         <keep-alive>
           <by-user v-if="showSecondLab" @add="subCallback" :isInit="count" style="height: 100%;"></by-user>
         </keep-alive>

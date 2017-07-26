@@ -209,9 +209,14 @@
             if(left+popoverOffset.width/2>=clientWidth-left){
               this.offset.left = left-(left+popoverOffset.width/2-(clientWidth-left));
             }else {
-              this.offset.left =left-(popoverOffset.right-popoverOffset.left)/2;
+              this.offset.left =left/2;
             }
+            if(this.dynamicHt/2<top){
+              this.offset.top = 0;
+            }else {
               this.offset.top = top;
+            }
+
             this.listMessTitle.ids = ids;
              let listMessTitle =  this.getFormData(this.listMessTitle)
             listMessTitle.ajaxParams.url = listMessTitle.ajaxParams.url+'/'+ids;
@@ -250,6 +255,7 @@
 
       //转义
       trope(type){
+         type = type.toLowerCase();
           switch(type){
             case 'rotarydep': type='轮转科室';
               break;
@@ -297,33 +303,5 @@
   }
 </script>
 <style>
-  .el-table .info-row {
-    background: #c9e5f5;
-  }
-  .el-table .positive-row {
-    background: #e2f0e4;
-  }
 
-  .info-column {
-    background: #ff00ff;
-  }
-
-  .row-bg {
-    padding: 10px 0;
-  }
-
-  .showCurrMess {
-    width: 900px;
-    position: relative;
-    background: #fff;
-  }
-
-  .currUserMess {
-    width: 120px;
-    height: 150px;
-    background: #00a2ca;
-    position: absolute;
-    top: 6px;
-    right: 6px;
-  }
 </style>

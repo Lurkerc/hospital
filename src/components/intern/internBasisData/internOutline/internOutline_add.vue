@@ -9,12 +9,12 @@
       <el-col :span="5">
         <search-select v-if="" @setSltOptionValue="setSltOptionValue" :selectOptions="selectOptions"></search-select>
       </el-col>
-      <el-col :span="2">
+      <!--<el-col :span="2">
         <div class="cal-schoolTit" style="text-align: right;">专业:</div>
       </el-col>
       <el-col :span="5">
         <dictionary-select @setSltOptionValue="setSpecialtyOptionValue" :selectOptions="specialtyOptions"></dictionary-select>
-      </el-col>
+      </el-col>-->
       <el-col :span="2">
         <div class="cal-schoolTit" style="text-align: right;">年级:</div>
       </el-col>
@@ -467,10 +467,10 @@
             this.errorMess("请选择学校!");
             return;
         }
-        if(this.formValidate.specialty==""){
+        /*if(this.formValidate.specialty==""){
           this.errorMess("请选择专业!");
           return;
-        }
+        }*/
         if(this.formValidate.gradeNum==""){
           this.errorMess("请选择年级!");
           return;

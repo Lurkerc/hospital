@@ -908,3 +908,44 @@ $boderColor:#dfe6ec;
   text-align: center;
 
 }
+
+//课程表
+.el-table .info-row {
+  background: #c9e5f5;
+}
+.el-table .positive-row {
+  background: #e2f0e4;
+}
+
+.info-column {
+  background: #ff00ff;
+}
+
+.row-bg {
+  padding: 10px 0;
+}
+
+.showCurrMess {
+  width: 900px;
+  position: relative;
+  background: #fff;
+}
+
+.currUserMess {
+  width: 120px;
+  height: 150px;
+  background: #00a2ca;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+//科室对照表
+.div-border{
+  border-bottom: 1px solid #dfe6ec;
+  height: 45px;
+  line-height: 45px;
+}
+.div-noborder{
+  border: none;
+}

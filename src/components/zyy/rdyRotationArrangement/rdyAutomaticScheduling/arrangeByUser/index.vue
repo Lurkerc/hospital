@@ -47,15 +47,15 @@
       <br />
       <el-row :gutter="10">
         <el-col :span="4"><div class="cal-schoolTit" style="text-align: right;">基地名称：</div></el-col>
-        <el-col :span="20"><div class="cal-schoolTit">内科基地</div></el-col>
+        <el-col :span="20"><div class="cal-schoolTit">{{postData.jdName}}</div></el-col>
       </el-row>
       <el-row :gutter="10">
-        <el-col :span="4"><div class="cal-schoolTit" style="text-align: right;">培训呢标准名称：</div></el-col>
-        <el-col :span="20"><div class="cal-schoolTit">内科培训细则</div></el-col>
+        <el-col :span="4"><div class="cal-schoolTit" style="text-align: right;">培训标准名称：</div></el-col>
+        <el-col :span="20"><div class="cal-schoolTit">{{postData.rtName}}</div></el-col>
       </el-row>
       <el-row :gutter="10">
         <el-col :span="4"><div class="cal-schoolTit" style="text-align: right;">轮转开始时间：</div></el-col>
-        <el-col :span="20"><div class="cal-schoolTit">2017-07-18</div></el-col>
+        <el-col :span="20"><div class="cal-schoolTit">{{postData.rtTime}}</div></el-col>
       </el-row>
       <br />
       <el-row :gutter="10">
@@ -69,7 +69,7 @@
                   {{item}}
                 </el-tag>
               </div>
-              <p v-else>没有组员</p>
+              <p v-else>没有选择人员</p>
             </fieldset>
           </div>
         </el-col>
@@ -78,7 +78,7 @@
     </div>
     <!--- 第六步：预览 --->
     <div v-if="active==5" style="margin: 20px;text-align: center;">
-
+      <showTabData :tableData="tableData"></showTabData>
     </div>
     <!--- 第七步：完成 --->
     <div v-if="active==5" style="margin: 20px;text-align: center;">
@@ -108,21 +108,21 @@
       return {
         //生成轮转表提交时post用的data
         postData:{
-          "rotaryTime":"",
-          "outlineId":"",
-          "depOutlineId":"",
-          "userIds":"",
+          "rtId": "",
+          "rtTime": "",
+          "jdName": "",
+          "rtName": "",
+          "userId": "",
+          "userName": "",
         },
 
         //第五步已选择人员查看
-        groupUserNames:[
-          "张山","刘德华","刘德华","刘德华","刘德华","刘德华","刘德华",
-          "刘德华","刘德华","刘德华","刘德华","刘德华"],
+        groupUserNames:[],
 
         //只选选周一
         pickerOptions0: {
           disabledDate(time) {
-            return time.getDay() !=1;
+            return time.getDate() != 1 && time.getDate() != 16;
           }
         },
 
@@ -149,6 +149,10 @@
 
 
         //排班预览
+        tableData: {
+          thead: [],
+          tbody: [],
+        },
         rotaryDeptGroupTitle:{
           ajaxSuccess:'setRotaryViewData',
           ajaxParams:{
@@ -184,49 +188,108 @@
 
       //存储第一步的数据
       setFirstVal(val){
-        console.log("setFirstVal",val);
+        console.log(val);
+        let nameArr = [];
+        let idArr = [];
+        this.groupUserNames = [];
+        for(var i=0,item;i<val.length;i++){
+          item = val[i];
+          nameArr.push(item["userName"]);
+          idArr.push(item["userId"]);
+          this.groupUserNames.push(item["userName"]);
+        }
+        this.postData["userId"] = idArr.join(",");
+        this.postData["userName"] = nameArr.join(",");
       },
 
 
       //存储第一步的数据
       setSecondVal(val){
-        console.log("setSecondVal",val);
+        //console.log("setSecondVal",val);
+        this.postData["jdName"] = val["jdName"];
       },
 
 
       //存储三第步的数据
       setThirdVal(val){
-        console.log("setThirdVal",val);
+        //console.log("setThirdVal",val);
+        this.postData["rtName"] = val["rtName"];
+        this.postData["rtId"] = val["rtId"];
+      },
+
+
+      //格式化排班表数据
+      formatTableData(data){
+        //this.tableData.thead  this.tableData.tbody
+        let fixedInfo=[{"prop":"userName","label":"姓名"},{"prop":"highestEdu","label":"学历"},{"prop":"specialty","label":"培训方向"}]
+        let thead = [];
+        let tbody = [];
+        let tempArr = [];
+        for(var i=0,item;i<data["times"].length;i++){
+          item = data["times"][i];
+          tempArr.push({
+            "prop":item["beginTime"]+item["endTime"],
+            "label":item["beginTime"]+" "+item["endTime"],
+          })
+        }
+        thead = fixedInfo.concat(tempArr);
+        /*for(var i=0,item;i<data["rotaryData"].length;i++){
+         item = data["rotaryData"][i];
+         bodyRight[item["beginTime"]+item["endTime"]+item["userId"]] = item;
+         }*/
+        for(var i=0,item;i<data["userInfo"].length;i++){
+          item = data["userInfo"][i];
+          for(var k=0,subItem;k<data["rotaryData"].length;k++){
+            subItem = data["rotaryData"][k];
+            if(item["userId"]==subItem["userId"]){
+              item[subItem["beginTime"]+subItem["endTime"]] = subItem["depName"];
+            }
+          }
+        }
+        tbody = data["userInfo"];
+        this.tableData.thead = thead;
+        this.tableData.tbody = tbody;
+
+      },
+
+
+      //设置排班预览的数据
+      setRotaryViewData(responseData){
+        let data = responseData.data;
+        this.formatTableData(data);
+        this.isLoading=false;
+        this.active = 5;
       },
 
 
       //下一步
       next() {
-        /*if(this.sltedSchool.length==0&&this.active==0){
-         this.errorMess("请选择基地!");
-         return;
-         }
-         if(this.sltedSpecialty==""&&this.active==0){
-         this.errorMess("请选择人员!");
-         return;
-         }
-         if(this.sltedDg==""&&this.active==0){
-         this.errorMess("请选择培训标准!");
-         return;
-         }
-         if(this.sltedDepReq==""&&this.active==0){
-         this.errorMess("请选专业对应的科室要求!");
-         return;
-         }
-         if(this.startRotateTime==""&&this.active==2){
-         this.errorMess("请选择轮转开始时间!");
-         return;
-         }*/
+        if(this.postData["userName"]==""&&this.active==0){
+          this.errorMess("请选择人员!");
+          return;
+        }
+        if(this.postData["jdName"]==""&&this.active==1){
+          this.errorMess("请选择基地!");
+          return;
+        }
+        if(this.postData["rtName"]==""&&this.active==2){
+          this.errorMess("请选择培训标准!");
+          return;
+        }
+        if(this.postData["rtTime"]==""&&this.active==3){
+          this.errorMess("请选择轮转开始时间!");
+          return;
+        }
 
-
-
-
-
+        if(this.active==4){
+          alert("生成预览表")
+          this.rotaryDeptGroupTitle.ajaxParams.data = this.getFormData(this.postData);
+          console.log(this.rotaryDeptGroupTitle.ajaxParams.data);
+          return;
+          this.isLoading=true;
+          this.ajax(this.rotaryDeptGroupTitle);
+          return;
+        }
 
         if (this.active++ > 6) this.active = 0;
 
@@ -271,6 +334,9 @@
       isInit(val){
         this.active = 0;
         this.isLoading = false;
+      },
+      startRotateTime(val){
+        this.postData["rtTime"] = this.conductDate(val);
       },
 
     },

@@ -12,6 +12,10 @@ let teachingActivitiesSet = {
   hostUserName: [{ required: true, message: '此项不能为空'},baseRules.inputLen(0,50),baseRules.illegalChar()], //, // 场次名称 - 必填
   activitySite: [{ required: true, message: '此项不能为空'},baseRules.inputLen(0,50),baseRules.illegalChar()], //, // 场次名称 - 必填
   activityTime: [{ required: true, message: '此项不能为空'}], //, // 场次名称 - 必填
+  activityType: [{ required: true, message: '此项不能为空'}], //, // 场次名称 - 必填
+  depId: [{ required: true, message: '此项不能为空'}], //, // 场次名称 - 必填
+  recordTimes: [{ required: true, message: '此项不能为空'}], //, // 场次名称 - 必填
+  whetherNeedCases: [{ required: true, message: '此项不能为空'}], //, // 场次名称 - 必填
   whetherNeedCases: [baseRules.inputLen(0,50),baseRules.illegalChar()], //, // 场次名称 - 必填
 }
 /**

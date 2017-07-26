@@ -218,6 +218,9 @@ table td.valiTableStyle .el-form-item__error{
   padding: 5px 0;
   position: inherit;
 }
+table td.clearPadding div.cell{
+  padding: 0 0;
+}
 
 
 /*

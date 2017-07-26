@@ -72,10 +72,10 @@
         countDate:0,
         //form表单bind数据
         formValidate: {
-          "outlineId":1,         //
-          "schoolId":1,
-          "schoolName":"南京大学",//学校名称
-          "gradeNum":2017,
+          "outlineId":"",         //
+          "schoolId":"",
+          "schoolName":"",//学校名称
+          "gradeNum":"",
         },
         //当前组件提交(edit)数据时,ajax处理的 基础信息设置
 
