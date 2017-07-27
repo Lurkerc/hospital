@@ -8,23 +8,23 @@ import Index from '../components/Index'
 /**
  * 工作台
  * */
-  import work from './subRouter/workbench'
+import work from './subRouter/workbench'
 
 /**
  * 日常管理
  * */
-  //评优管理
-  import pygl from './subRouter/dailyManagement'
-  //津贴管理
-  import jtgl from './subRouter/benefitsManagement'
-  //志愿者活动
-  import zyzhd from './subRouter/voluntaryAction'
-  //考勤管理
-  import kqgl from './subRouter/attendanceManagement'
-  //职业暴露
-  import zybl from './subRouter/occupationalExposure'
-  //奖惩记录
-  import jcjl from './subRouter/practiceRecords'
+//评优管理
+import pygl from './subRouter/dailyManagement'
+//津贴管理
+import jtgl from './subRouter/benefitsManagement'
+//志愿者活动
+import zyzhd from './subRouter/voluntaryAction'
+//考勤管理
+import kqgl from './subRouter/attendanceManagement'
+//职业暴露
+import zybl from './subRouter/occupationalExposure'
+//奖惩记录
+import jcjl from './subRouter/practiceRecords'
 
 /**
  *
@@ -37,26 +37,26 @@ import Index from '../components/Index'
  * 教学评价
  *
  * */
-  //我的评价
-  import evaluations from './subRouter/evaluations'
+//我的评价
+import evaluations from './subRouter/evaluations'
 
-  //评价设置
-  import evaluationSetting from './subRouter/evaluationSetting'
+//评价设置
+import evaluationSetting from './subRouter/evaluationSetting'
 
-  //统计分析
-  import jxpjStatistic from './subRouter/jxpjStatistic'
+//统计分析
+import jxpjStatistic from './subRouter/jxpjStatistic'
 
 /**
  *
  * 宿舍管理
  *
  * */
-  //基础设置
-  import dormitory from './subRouter/dormitoryManagement'
-  //住宿管理
-  import zsgl from './subRouter/stayManagement'
-  //查询统计
-  import cxtj from './subRouter/dorQueryStatistic'
+//基础设置
+import dormitory from './subRouter/dormitoryManagement'
+//住宿管理
+import zsgl from './subRouter/stayManagement'
+//查询统计
+import cxtj from './subRouter/dorQueryStatistic'
 
 /**
  *
@@ -67,14 +67,16 @@ import Index from '../components/Index'
 /**
  * 基础教务
  * */
-  //教学活动
-  import jxhd from './subRouter/teachingActivities'
-  //师资库
-  import szk from './subRouter/teacherResources'
-  //档案管理
-  import dagl from './subRouter/archivesManagement'
-  //咨询管理
-  import consultive from './subRouter/consultiveManagement'
+//教学活动
+import jxhd from './subRouter/teachingActivities'
+//师资库
+import szk from './subRouter/teacherResources'
+//档案管理
+import dagl from './subRouter/archivesManagement'
+//咨询管理
+import consultive from './subRouter/consultiveManagement'
+// 资源库管理
+import resources from './subRouter/teacherResManagement';
 
 /**
  *
@@ -1009,34 +1011,34 @@ const routes = [
 
 
       //基础教务
-      jxhd,consultive,szk,dagl,
+      jxhd, consultive, szk, dagl, resources,
 
       //技能中心
-      cstc,osce,
+      cstc, osce,
 
       //轮转管理
-      rotateRecordWrite,rotateRecordAudit,rotateQuery,appraisalManagement,reportsManagement,
+      rotateRecordWrite, rotateRecordAudit, rotateQuery, appraisalManagement, reportsManagement,
       //实习生
-      undergraduate,internBasis,recruitStudent,internRotate,rotateManagement,internHandbook,
+      undergraduate, internBasis, recruitStudent, internRotate, rotateManagement, internHandbook,
 
       //研究生
 
       //住院医
-      rdyEnrollEnroll,rdyBasicSetting,rdyRotationArrangement,
+      rdyEnrollEnroll, rdyBasicSetting, rdyRotationArrangement,
 
       //进修管理
 
       //经费管理
 
       //系统设置
-      sysManage,systemSettings,
+      sysManage, systemSettings,
     ]
   },
   {
     path: '/login',
     name: 'login',
     meta: {
-      requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+      requireAuth: true, // 添加该字段，表示进入这个路由是需要登录的
     },
     component: Login
   },
@@ -1046,10 +1048,8 @@ const routes = [
 //实例化路由
 let router = new Router({
   mode: 'history',
-  routes:routes
+  routes: routes
 })
 
 
 export default router;
-
-
