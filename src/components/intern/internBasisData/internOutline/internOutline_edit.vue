@@ -64,7 +64,7 @@
                   show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                  label="实习时间"
+                  label="周期"
                   class-name="valiTableStyle"
                   align="center">
                   <template scope="scope">
@@ -114,13 +114,16 @@
                 <div v-if="groupItem.randomRotaryDep.length>0" class="el-table__body-wrapper" style="max-height:400px;overflow-x: hidden;overflow-y: auto;">
                   <table   :width="'100%'">
                     <colgroup  v-for="(item,index) in noMustHeader">
-                      <col name="'el-table_1_column_'+index" :width="150">
+                      <col name="'el-table_1_column_'+index" :width="130">
                     </colgroup>
 
                     <tbody  class="add-scope">
                     <tr v-for="(item,index) in groupItem.randomRotaryDep">
                       <td>
                         &nbsp;&nbsp;&nbsp;&nbsp;{{item.depName}}
+                      </td>
+                      <td align="center">
+                        <el-input placeholder="请输入内容" style="width: 90%" v-model="item.rotaryUserNum"></el-input>
                       </td>
                       <td align="center">
                         <el-input placeholder="请输入内容" style="width: 90%" v-model="item.remark"></el-input>
@@ -213,12 +216,16 @@
           key :'parentTitle',
           label :'科室',
         },{
+          key :'rotaryUserNum',
+          label :'可选人数',
+        }
+        ,{
           key :'remark',
           label :'备注',
         },
           {
             key :'titleSub',
-            label :'实习时间',
+            label :'周期',
           },
           {
             key :'titleSub',
@@ -450,6 +457,7 @@
           "depName":"",  //科室名称
           "ts":"",       //周期数
           "remark":"",   //备注
+          "rotaryUserNum":"",  //可选人数
           "depIndex":"",      //所在当前行索引
           "optionalNum":""    //自选规则是必选则为空
         }

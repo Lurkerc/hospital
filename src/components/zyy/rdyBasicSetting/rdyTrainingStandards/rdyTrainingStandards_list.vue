@@ -76,10 +76,12 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="160">
+            width="200">
             <template scope="scope">
               <el-button size="small" @click="show(scope.row)">查看</el-button>
               <el-button size="small" @click="edit(scope.row)">修改</el-button>
+              <el-button  type="success" size="small" v-if="scope.row.rtState=='DISABLE'" @click="enable(scope.row)">启用</el-button>
+              <el-button type="danger" size="small" v-if="scope.row.rtState=='ENABLE'" @click="disEnable(scope.row)">禁用</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -139,7 +141,7 @@
     <!--新建-->
     <Modal
       close-on-click-modal="false"
-      width="1000"
+      width="1200"
       v-model="addModal"
       title="对话框标题"
       class-name="vertical-center-modal"
@@ -151,7 +153,7 @@
     <!--修改-->
     <Modal
       close-on-click-modal="false"
-      width="1000"
+      width="1200"
       v-model="editModal"
       title="对话框标题"
       class-name="vertical-center-modal"
@@ -170,13 +172,41 @@
       :loading="loading"
       :width="500">
       <modal-header slot="header" :content="removeId"></modal-header>
-      <remove  v-if="removeModal" :delete-url="url.buildRemove" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
+      <remove  v-if="removeModal" :delete-url="url.removeRules.path" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
+
+      <div slot="footer"></div>
+    </Modal>
+    <!--启用弹窗-->
+    <Modal
+      close-on-click-modal="false"
+      height="200"
+      v-model="enableModal"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :loading="loading"
+      :width="500">
+      <modal-header slot="header" :content="enableId"></modal-header>
+      <operate  v-if="enableModal" :type="'enable'"  @operate="subCallback" @cancel="cancel" :operateData="enableData" :operaility-data="operailityData"></operate>
+
+      <div slot="footer"></div>
+    </Modal>
+    <!--禁用弹窗-->
+    <Modal
+      close-on-click-modal="false"
+      height="200"
+      v-model="disEnableModal"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :loading="loading"
+      :width="500">
+      <modal-header slot="header" :content="disEnableId"></modal-header>
+      <operate  v-if="disEnableModal" :type="'disEnable'"  @operate="subCallback" @cancel="cancel" :operateData="disEnableData" :operaility-data="operailityData"></operate>
 
       <div slot="footer"></div>
     </Modal>
     <!--查看弹窗-->
     <Modal
-      width="1000"
+      width="1200"
       v-model="showModal"
       title="查看档案管理弹窗"
       class-name="vertical-center-modal"
@@ -205,6 +235,8 @@
         url:url,
         //搜索项
         searchMore:false,
+        disEnableModal:false,
+        enableModal:false,
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',
         deleteUrl:'/role/remove',
@@ -217,6 +249,19 @@
           sortby: '',//排序列
           order: ''     //升序、降序
         },
+        enableData:{
+            url:url.modifyRulesState.path,
+            data:{
+              state:'ENABLE'
+            }
+        }, //启用
+
+        disEnableData:{
+          url:url.modifyRulesState.path,
+          data:{
+            state:'DISABLE'
+          }
+        },  //禁用
         operailityData:'',
         multipleSelection: [],
         dynamicHt: 100,
@@ -237,6 +282,8 @@
         editId:{id:'editId',title:'修改'},
         removeId:{id:'removeId',title:'删除'},
         viewId:{id:'viewId',title:'查看'},
+        disEnableId:{id:'disEnableId',title:'禁用'},
+        enableId:{id:'enableId',title:'启用'},
 
       }
     },
@@ -336,9 +383,9 @@
       },
       /*--点击--删除--按钮--*/
       remove(){
-        if(!this.isSelected()) return;
-        this.operailityData = this.multipleSelection;
-        this.openModel('remove') ;
+        if(!this.isSelected(true)) return;
+        this.operailityData = [{id:this.multipleSelection[0].rtId}] ;
+        this.openModel('remove');
       },
       /*
        * 点击--查看--按钮
@@ -347,6 +394,21 @@
       show(data){
         this.operailityData = data;
         this.openModel("show");
+      },
+
+
+      //启用
+      enable(data){
+
+        this.operailityData ={id:data.rtId} ;
+        this.openModel('enable');
+      },
+
+
+      //禁用
+      disEnable(data){
+        this.operailityData ={id:data.rtId} ;
+        this.openModel('disEnable');
       },
       /*
        * 监听子组件通讯的方法
@@ -405,6 +467,7 @@
           this.setTableDynHeight()
         })
       },
+
     },
     created(){
       this.init();

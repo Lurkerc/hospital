@@ -46,8 +46,9 @@
           align="center"
           :height="dynamicHt"
           :data="tableData1"
-
+          stripe
           tooltip-effect="dark"
+          highlight-current-row
           style="width: 100%"
           @selection-change="handleSelectionChange">
 
@@ -71,7 +72,7 @@
                 @click="show(scope.$index,scope.row)">查看</el-button>
 
               <el-button v-if="scope.row.weekSetState=='NO_SUBMIT'" size="small" @click="edit(scope.$index, scope.row)">修改</el-button>
-              <el-button v-if="scope.row.weekSetState=='NO_SUBMIT'" size="small" @click="reported(scope.$index, scope.row)">上报</el-button>
+              <el-button v-if="scope.row.weekSetState=='NO_SUBMIT'" size="small" @click="reported(scope.$index, scope.row)" type="primary">上报</el-button>
               <el-button v-if="scope.row.weekSetState=='NO_RELEASE'" size="small" @click="publish(scope.$index)" type="primary">发布</el-button>
               <el-button v-if="scope.row.weekSetState=='RELEASE'" size="small" @click="unpublish(scope.$index)" type="danger">取消发布</el-button>
               <el-button v-if="scope.row.weekSetState=='NO_ISSUED'" size="small" @click="modifyStateIssued(scope.$index)" type="primary">下发</el-button>

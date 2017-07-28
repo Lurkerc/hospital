@@ -74,7 +74,7 @@
       </el-table-column>
       <el-table-column
         label="操作"
-        width="200">
+        width="230">
         <template scope="scope">
           <el-button
             size="small"
@@ -85,6 +85,7 @@
             @click="publish(scope.row)">发-布</el-button>
           <el-button
             size="small"
+            v-if="scope.row.activityState=='NO_RELEASE'"
             @click="edit(scope.row)">修-改</el-button>
         </template>
       </el-table-column>

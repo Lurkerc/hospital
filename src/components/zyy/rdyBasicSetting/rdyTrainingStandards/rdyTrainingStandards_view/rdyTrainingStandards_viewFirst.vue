@@ -11,54 +11,47 @@
       <el-row >
         <el-col :span="22" :offset="1">
           <el-form-item label="培训标准名称:" prop="rtName">
-            <el-input v-model="formValidate.rtName" placeholder="请输入"></el-input>
+            {{formValidate.rtName}}
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
         <el-col :span="11" :offset="1">
           <el-form-item label="基地名称:" prop="jdName">
-            <el-select v-model="formValidate.jdName" placeholder="请选择活动区域">
-              <el-option
-                v-for="item in jDData"
-                :key="item.value"
-                :label="item.jdName"
-                :value="item.jdName+'-'+item.jdId+'-'+item.jdProclass">
-              </el-option>
-            </el-select>
+            {{formValidate.jdName}}
           </el-form-item>
         </el-col >
         <el-col :span="10"  :offset="1">
           <el-form-item label="学历:" prop="rtSchlength">
-            <el-input  v-model="formValidate.rtSchlength" placeholder="请输入"></el-input>
+            {{formValidate.rtSchlength}}
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
         <el-col  :span="22" :offset="1">
           <el-form-item label="培训简介:" prop="rtIntroduce">
-            <el-input  type="textarea" v-model="formValidate.rtIntroduce" placeholder="请输入"></el-input>
+            {{formValidate.rtIntroduce}}
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
         <el-col  :span="22" :offset="1">
           <el-form-item label="培训目标:" prop="rtTarget">
-            <el-input  type="textarea"  v-model="formValidate.rtTarget" placeholder="请输入"></el-input>
+            {{formValidate.rtTarget}}
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
         <el-col  :span="22" :offset="1" >
           <el-form-item label="培训方法:" prop="rtMethod">
-            <el-input  type="textarea"  v-model="formValidate.rtMethod" placeholder="请输入"></el-input>
+            {{formValidate.rtMethod}}
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
         <el-col  :span="22" :offset="1" >
           <el-form-item label="备注:" prop="rtAdmrank">
-            <el-input  type="textarea"  v-model="formValidate.rtAdmrank" placeholder="请输入"></el-input>
+            {{formValidate.rtAdmrank}}
           </el-form-item>
         </el-col >
       </el-row >
@@ -70,14 +63,11 @@
         <el-col :span="22">
           <div style="margin: 8px 0;" v-for="(groupItem,groupIndex) in outlines" :key="groupIndex" class="form-fieldset-wrapper">
             <div class="form-fieldset-del">
-              <el-tooltip :content="'点击删除'+groupOtions[groupIndex]" placement="top" effect="light">
-                <el-button style="float: right;" type="danger" size="mini" @click="delGroup(groupIndex)" icon="close"></el-button>
-              </el-tooltip>
             </div>
             <fieldset style="min-height:90px;">
               <legend style="font-size:16px">&nbsp;&nbsp;{{groupOtions[groupIndex]}}&nbsp;&nbsp;</legend>
               <div class="cal-schoolTit">
-                必须轮转科室 <el-button type="primary" size="mini" @click="openSetDepWin(groupIndex,'mustRotaryDep',0)" icon="plus"></el-button>
+                必须轮转科室
               </div>
               <el-table
                 border
@@ -93,30 +83,15 @@
                 </el-table-column>
                 <el-table-column
                   label="培训周期"
+                  prop="ts"
                   align="center">
-                  <template scope="scope">
-                    <el-input  v-model="scope.row.ts" placeholder="请输入内容"></el-input>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  prop="teachNames"
-                  label="操作"
-                  align="center">
-                  <template scope="scope">
-                    <el-button type="danger" size="mini" @click="delGroupItem(groupItem.mustRotaryDep[0],scope.$index)">删除</el-button>
-                  </template>
                 </el-table-column>
               </el-table>
               <br />
               <div v-for="(randomItem,randomIndex) in  groupItem.randomRotaryDep">
-                <div style="float: right;position: relative;top: 30px;">
-                  <el-button size="mini" type="primary" icon="plus" @click="randomItemAdd(groupItem.randomRotaryDep,groupItem)"></el-button>
-                    <el-button size="mini" type="primary" icon="minus" @click="randomItemRemove(groupItem.randomRotaryDep,randomIndex,groupItem)"></el-button>
-                </div>
               <div class="cal-schoolTit">
-                可选轮转科室 <el-button type="primary" size="mini" @click="openSetDepWin(groupIndex,'randomRotaryDep',randomIndex)" icon="plus"></el-button>
+                可选轮转科室
               </div>
-
               <br />
               <div style="overflow: auto;margin: 0 auto" class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition">
                 <table :width="'100%'">
@@ -143,13 +118,10 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;{{item.depName}}
                       </td>
                       <td v-show="index==0" :rowspan="randomItem.length" align="center">
-                        <el-input placeholder="请输入内容" v-model="groupItem.ts[randomIndex]" style="width: 50px"></el-input> 周
+                        {{groupItem.ts[randomIndex]}} 周
                       </td>
                       <td v-show="index==0" :rowspan="randomItem.length" align="center">
-                         <el-input placeholder="请输入内容" v-model="groupItem.optionalNum[randomIndex]" style="width: 50px"></el-input>
-                      </td>
-                      <td align="center">
-                        <el-button type="danger" size="mini" @click="delGroupItem(randomItem,index)">删除</el-button>
+                        {{groupItem.optionalNum[randomIndex]}}
                       </td>
                     </tr>
                     </tbody>
@@ -165,7 +137,7 @@
       </el-row>
       <el-row :gutter="10" v-else>
         <el-col :span="1">&nbsp;</el-col>
-        <el-col :span="22"><div class="cal-schoolTit" style="border: 1px solid #ececec;padding: 20px;"><span class="el-table__empty-text">还没有阶段,请添加阶段!</span></div></el-col>
+        <el-col :span="22"><div class="cal-schoolTit" style="border: 1px solid #ececec;padding: 20px;"><span class="el-table__empty-text">还没有阶段</span></div></el-col>
         <el-col :span="1">&nbsp;</el-col>
       </el-row>
     </div>
@@ -173,7 +145,6 @@
     <el-row :gutter="10">
       <el-col :span="1">&nbsp;</el-col>
       <el-col :span="22">
-        <el-button type="primary" @click="addGroup">添加阶段</el-button>
       </el-col>
       <el-col :span="1">&nbsp;</el-col>
     </el-row>
@@ -208,7 +179,7 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
-    props:['rules','resizeFirst','rtId'],
+    props:['rules','rtId'],
     data() {
       return {
         //保存按钮基本信息
@@ -237,10 +208,6 @@
           {
             key :'depRandomNum',
             label :'任选其几',
-          },
-          {
-            key :'operateParent',
-            label :'操作',
           },
         ],
 
@@ -319,7 +286,8 @@
       init(){
         Util = this.$util;
         this.ajax(this.getJd);
-//        this.ajax(this.getOutline);
+        this.getOutline.ajaxParams.url = api.rulesgetGet.path+this.rtId
+        this.ajax(this.getOutline);
       },
 
 
@@ -486,14 +454,6 @@
       },
 
 
-      //提交保存成功
-      saveOutlineSuccess(res){
-          let data = res.data;
-        let title = this.formValidate.rtId ? '修改成功' : '保存成功';
-        this.successMess(title);
-        this.$emit('next',data);
-
-      },
 
       saveError(res){
         let title = this.formValidate.rtId ? '修改失败' : '保存失败';
@@ -505,61 +465,11 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
+        this.$emit('next');
 
-        if(this.outlines.length==0){
-          this.errorMess("请添加阶段!");
-          return;
-        }
-//        let isSubmit = this.submitForm("formValidate");
-        let isSubmit = true;
-        if(isSubmit) {
-          if (!isLoadingFun) isLoadingFun = function (){};
-          isLoadingFun(true);
-          let formValidate = this.getFormData(this.formValidate);
-          let outlines = Util._.defaultsDeep([],this.outlines);
-          this.saveOutline.ajaxParams.data = this.conductFormValidate(formValidate,outlines);
-          this.ajax(this.saveOutline, isLoadingFun);
-        }
       },
 
 
-      //处理提交的数据
-      conductFormValidate(formValidate,outlines){
-        let tempArr = [];
-        let depArr = formValidate.jdName.split('-');
-        formValidate.jdName = depArr[0];
-        formValidate.jdId = depArr[1];
-        formValidate.rtProclass = depArr[2];
-        for(let i=0 ;i<outlines.length;i++){
-          let item = outlines[i];
-            //处理必选科室
-          if(item.mustRotaryDep[0][0]){
-            let mustRotaryDep =  item.mustRotaryDep[0][0];
-            mustRotaryDep.depPhase = this.groupOtions[i];
-            mustRotaryDep.depPhaseNum = i+1;
-            tempArr.push(mustRotaryDep);
-
-          }
-
-          for(let k=0;k<item.randomRotaryDep.length;k++){
-            let randomRotaryDep = item.randomRotaryDep[k];
-            for(let l=0;l<randomRotaryDep.length;l++){
-              let randomRotaryDepItem = randomRotaryDep[l];
-              randomRotaryDepItem.depPhase = this.groupOtions[i];
-              randomRotaryDepItem.depPhaseNum = i+1;
-              randomRotaryDepItem.depOrder = l+1;
-              randomRotaryDepItem.depGroupNo = k+1;
-              randomRotaryDepItem.ts = item.ts[k];
-              randomRotaryDepItem.depRandomNum= item.optionalNum[k];
-              tempArr.push(randomRotaryDepItem);
-            }
-          }
-
-        }
-
-        formValidate.outlines = tempArr;
-        return formValidate
-      },
 
 
       /*
@@ -625,14 +535,6 @@
     components: {
       add
     },
-    watch:{
-      resizeFirst(){
-          if(this.rtId){
-            this.getOutline.ajaxParams.url = api.rulesgetGet.path+this.rtId
-            this.ajax(this.getOutline);
-          }
-      }
-    }
   }
 </script>
 

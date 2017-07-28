@@ -201,7 +201,7 @@
           listMessTitle:{
             ajaxSuccess:'updateListData',
             ajaxParams:{
-              url: api.getRotaryDepIndo.path+"/"+this.operailityData.userId,
+              url: api.getRotaryDepIndo.path+"/"+this.operailityData.userId+"_SXS",
             }
           },
 
@@ -265,7 +265,9 @@
         //通过get请求列表数据
         updateListData(responseData){
           let data = responseData.data;
+          if(data["rotaryData"].length==0) return;
           let firstRotaryData = data["rotaryData"][0];
+
           this.templateData = {
             "podId":"",
             "depId":firstRotaryData["depId"],

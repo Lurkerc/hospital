@@ -14,8 +14,10 @@
         align="center"
         :height="dynamicHt"
         :context="self"
+        stripe
         :data="tableData1"
         tooltip-effect="dark"
+        highlight-current-row
         style="width: 100%">
         <el-table-column
           label="序号"
@@ -32,8 +34,8 @@
           <template scope="scope">
             <el-button v-if="scope.row.weekState=='NO_RELEASE'"
               size="small"
-              type="warning"
-              @click="edit(scope.$index, scope.row)">修改
+              type="primary"
+              @click="edit(scope.$index, scope.row)">编辑
             </el-button>
 
           </template>
@@ -41,7 +43,7 @@
         <el-table-column
           prop="schoolName"
           label="学校"
-          width="200">
+          show-overflow-tooltip>
         </el-table-column>
         <el-table-column
           prop="gradeNum"
@@ -89,15 +91,24 @@
           prop="createTime"
           label="填报时间"
           align="center"
-          show-overflow-tooltip>
+          width="150">
         </el-table-column>
         <el-table-column
           prop="whetherArrangedCourse"
           label="状态"
           align="center"
-          width="200">
+          width="120">
           <template scope="scope">
             {{scope.row.whetherArrangedCourse=='NO'?'未排课':'已排课'}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="weekState"
+          label="是否发布"
+          align="center"
+          width="120">
+          <template scope="scope">
+            {{scope.row.weekState=='RELEASE'?'已发布':'未发布'}}
           </template>
         </el-table-column>
       </el-table>

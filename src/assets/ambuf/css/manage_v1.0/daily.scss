@@ -934,7 +934,6 @@ $boderColor:#dfe6ec;
 .currUserMess {
   width: 120px;
   height: 150px;
-  background: #00a2ca;
   position: absolute;
   top: 6px;
   right: 6px;
@@ -948,4 +947,20 @@ $boderColor:#dfe6ec;
 }
 .div-noborder{
   border: none;
+}
+.sltDepWrapper{
+  width: 100%;
+  height: 300px;
+  overflow: auto;
+  border: 1px solid #EFF2F7;
+}
+ul.sltDepUl{}
+.sltDepBox{
+  float: left;
+}
+ul.sltDepUl li.sltDep{
+  width:180px;height:25px;line-height:25px;padding-left:3px;overflow: hidden;white-space: nowrap;-o-text-overflow: ellipsis;text-overflow: ellipsis;word-break:keep-all;
+}
+ul.sltDepUl li.sltSubDep{
+  width:160px;height:25px;line-height:25px;padding-left:3px;overflow: hidden;white-space: nowrap;-o-text-overflow: ellipsis;text-overflow: ellipsis;word-break:keep-all; margin-left:20px;
 }

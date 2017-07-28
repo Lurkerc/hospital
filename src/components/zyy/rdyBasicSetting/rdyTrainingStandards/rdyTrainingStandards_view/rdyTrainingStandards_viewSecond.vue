@@ -16,16 +16,13 @@
         <div slot="right"  style="height:inherit;">
           <el-form  :model="formValidate" ref="formValidate"  label-width="90px">
                 <el-form-item label="培训目的:" prop="depsetPurpose">
-                  <el-input :rows="5"  resize="none" type="textarea" v-model="formValidate.depsetPurpose" placeholder="请输入"></el-input>
+                  <el-input readonly :rows="5"  resize="none" type="textarea" v-model="formValidate.depsetPurpose" placeholder="请输入"></el-input>
                 </el-form-item>
           </el-form>
-          <div>
-            <el-button style="float: right" size="small" type="primary" @click="add()" icon="plus"></el-button>
-          </div>
           <el-table
             align="center"
             class="add-scope"
-            height="325"
+            height="410"
             :data="formValidate.depRequirements"
             tooltip-effect="dark"
             highlight-current-row
@@ -41,110 +38,38 @@
               prop="deName"
               label="考核指标"
               show-overflow-tooltip>
-              <template scope="scope">
-                <el-form  :model="formValidate" ref="formValidate"  label-width="90px">
-                  <el-form-item  prop="depsetPurpose" label-width="0">
-                    <el-input v-model="scope.row.deName" placeholder="请输入"></el-input>
-                  </el-form-item>
-                </el-form>
-              </template>
             </el-table-column>
             <el-table-column
               prop="deType"
               label="分类"
-              width="150"
               show-overflow-tooltip>
-              <template scope="scope">
-                <el-form  :model="formValidate" ref="formValidate"  label-width="0">
-                  <el-form-item  prop="depsetPurpose" label-width="0">
-                    <el-select v-model="scope.row.deType" >
-                      <el-option
-                        v-for="item in disType"
-                        :key="item.value"
-                        :label="item.name"
-                        :value="item.value">
-                      </el-option>
-
-                    </el-select>
-                  </el-form-item>
-                </el-form>
-              </template>
             </el-table-column>
             <el-table-column
               prop="deDetype"
               show-overflow-tooltip
               label="类型"
               align="center"
-              width="150"
             >
-              <template scope="scope">
-                  <el-form  :model="formValidate" ref="formValidate"  label-width="0">
-                    <el-form-item  prop="deDetype" label-width="0">
-                      <el-select v-model="scope.row.deDetype" >
-                        <el-option label="文本" value="文本"></el-option>
-                        <el-option label="表格"  value="表格"></el-option>
-                      </el-select>
-                    </el-form-item>
-                </el-form>
-              </template>
             </el-table-column>
             <el-table-column
               prop="deCountBasic"
               label="3年要求"
               show-overflow-tooltip
             >
-              <template scope="scope">
-                <el-form  :model="formValidate" ref="formValidate"  label-width="90px">
-                  <el-form-item  prop="depsetPurpose" label-width="0">
-                    <el-input v-model="scope.row.deCountBasic" placeholder="请输入"></el-input>
-                  </el-form-item>
-                </el-form>
-              </template>
             </el-table-column>
             <el-table-column
               prop="deCountBasicSecond"
               label="2年要求"
               show-overflow-tooltip
             >
-
-              <template scope="scope">
-                <el-form  :model="formValidate" ref="formValidate"  label-width="90px">
-                  <el-form-item  prop="depsetPurpose" label-width="0">
-                    <el-input v-model="scope.row.deCountBasicSecond" placeholder="请输入"></el-input>
-                  </el-form-item>
-                </el-form>
-              </template>
             </el-table-column>
             <el-table-column
               prop="deCountBasicFirst"
               label="1年要求"
               show-overflow-tooltip
             >
-              <template scope="scope">
-                <el-form  :model="formValidate" ref="formValidate"  label-width="90px">
-                  <el-form-item  prop="depsetPurpose" label-width="0">
-                    <el-input v-model="scope.row.deCountBasicFirst" placeholder="请输入"></el-input>
-                  </el-form-item>
-                </el-form>
-              </template>
             </el-table-column>
-            <el-table-column
-              label="操作"
-              width="160">
-              <template scope="scope">
-                <el-button size="small"  type="danger" @click="remove(formValidate.depRequirements,scope.$index)" icon="close"></el-button>
-              </template>
-            </el-table-column>
-
           </el-table>
-          </br>
-          <el-row >
-            <el-col :span="16" :offset="2">
-              <div style="margin-left: 100px">
-                <load-btn @listenSubEvent="saveSubEvent" :btnData="saveBtn"></load-btn>
-              </div>
-            </el-col>
-          </el-row >
         </div>
       </layout-tree>
       </br>

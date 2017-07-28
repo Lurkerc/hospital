@@ -73,10 +73,10 @@
             prop="name"
             label="名称">
           </el-table-column>
-          <el-table-column
+          <!--<el-table-column
             prop="specialty"
             label="专业">
-          </el-table-column>
+          </el-table-column>-->
           <el-table-column
             prop="state"
             label="状态"

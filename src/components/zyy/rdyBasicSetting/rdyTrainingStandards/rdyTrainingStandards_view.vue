@@ -1,70 +1,36 @@
 <template>
 
-  <div class="showWrapper">
-    <el-form class="demo-form-inline" label-width="100px">
-
-
-      <el-row >
-        <el-col :span="8" :offset="2">
-          <el-form-item label="大楼名称:" class="feildFontweight">
-           {{data.name}}
-          </el-form-item>
-        </el-col>
-        <el-col :span="8" :offset="2">
-          <el-form-item label="办公室电话:" class="feildFontweight">
-            {{data.phone}}
-          </el-form-item>
-        </el-col>
-      </el-row >
-
-
-      <el-row >
-        <el-col :span="16" :offset="2">
-          <el-form-item label="地址:" class="feildFontweight">
-            {{data.address}}
-          </el-form-item>
-        </el-col>
-      </el-row >
-
-      <el-row >
-        <el-col :span="16" :offset="2">
-          <el-form-item label="备注:" class="feildFontweight" >
-            <el-input
-              type="textarea"
-              :rows="5"
-              readonly
-              resize="none"
-              v-model="data.remark">
-            </el-input>
-          </el-form-item>
-        </el-col>
-      </el-row >
-    </el-form>
+  <div>
+    <el-steps :space="500" :active="active" finish-status="success">
+      <el-step  title="第一步：设置轮转科室"></el-step>
+      <el-step title="第二步：设置科室要求"><second></second></el-step>
+      <el-step title="第三步：关联院内科室"><third></third></el-step>
+    </el-steps>
+    </br>
+    <div>
+      <keep-alive> <first  :rtId="rtId" @next="next" v-if="active==0"></first></keep-alive>
+      <keep-alive>  <second   @next="next"  @last="last" :rtId="rtId" v-if="active==1"></second></keep-alive>
+      <keep-alive>  <third @next="next"  @last="last" v-if="active==2"></third></keep-alive>
+    </div>
   </div>
 </template>
 <script>
+  /* --引入组件-- 第一步设置轮转科室-- */
+  import first from './rdyTrainingStandards_view/rdyTrainingStandards_viewFirst.vue'
+  /* 引入组件 第二步：设置科室要求 */
+  import second from './rdyTrainingStandards_view/rdyTrainingStandards_viewSecond.vue'
+  /* 引入组件 第三步：关联院内科室 */
+  import third from './rdyTrainingStandards_view/rdyTrainingStandards_viewThird.vue'
   //当前组件引入全局的util
   let Util=null;
   export default {
-    //props接收父组件传递过来的数据
-    props: ['operailityData','url'],
+    props:['operailityData','url'],
     data (){
       return{
-        //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
-        "data":{
-//          "id":1,
-//          "name":"1号宿舍大楼",
-//          "address":"北京市海淀区紫竹园路青东商务区A座栋楼11层",
-//          "phone":"029-2100000",
-//          "remark":"员工宿舍大楼"
-        },
-        listMessTitle:{
-          paramsData:'listUrl',
-          ajaxSuccess:'SuccessGetCurrData',
-          ajaxParams:{
-            url:this.url.buildGet+this.operailityData.id,
-          }
-        }
+        active:0,
+        rtId:this.operailityData.rtId,
+        resizeFirst:false,
+        resizeSecond:false,
       }
     },
     created(){
@@ -72,42 +38,72 @@
       Util = this.$util;
     },
     mounted(){
-      //初始化
-      this.init();
+      //暂时没有初始化,预留初始化入口
     },
     methods:{
       /*
-       * 默认组件第一次请求数据
-       * @param res JSON  数据请求成功后返回的数据
+       * 点击提交按钮 监听是否提交数据
+       * @param isLoadingFun boolean  form表单验证是否通过
        * */
-      SuccessGetCurrData(responseData){
-        let data = responseData.data;
-        this.data = data;
+      listenSubEvent(isLoadingFun){
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit){
+          if(!isLoadingFun) isLoadingFun=function(){};
+          isLoadingFun(true);
+          this.addMessTitle.ajaxParams.data=this.getFormData(this.formValidate);
+          this.ajax(this.addMessTitle,isLoadingFun)
+        }
+      },
+
+      //下一步
+      next(id){
+        this.active++;
+      },
+
+      //上一步
+      last(){
+        this.active--;
+      },
+      /*
+       * 点击提交按钮 监听是否验证通过
+       * @param formName string  form表单v-model数据对象名称
+       * @return flag boolean   form表单验证是否通过
+       * */
+      submitForm(formName){
+        let flag = false;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            flag= true;
+          }
+        });
+        return flag;
       },
       /*
        * 当前组件发送事件给父组件
        * 发送关闭(cancel)模态事件给父组件,请求关闭当前模态窗
        * */
       cancel(){
-        this.$emit('cancel','show');
+        this.$emit('cancel',this.addMessTitle.type);
+      },
+      /*
+       * 获取表单数据
+       * @return string  格式:id=0&name=aa
+       * */
+      getFormData(data){
+        let myData = Util._.defaultsDeep({},data);
+        return myData;
       },
       /*
        * 组件初始化入口
        * */
       init(){
-        //默认请求加载数据
-        this.ajax(this.listMessTitle);
+        //this.ajax(this.listMessTitle)
       },
+    },
+
+    components:{
+      //当前组件引入的子组件
+      first,second,third
     }
   }
 </script>
-<style>
-  .showWrapper{
-    height: 100%;
-    padding: 20px;
-    border: 1px solid #eee;
-  }
-  .feildFontweight{
-    font-weight: bold;
-  }
-</style>

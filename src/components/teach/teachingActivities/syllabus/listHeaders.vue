@@ -12,7 +12,9 @@
         <div class="showCurrMess">
           <div v-for="(item,index) in data">
             <div >
-              <img  class="currUserMess headerUrl" :src="http+item.hostUserPhoto" />
+              <!--item.hostUserPhoto?http+item.hostUserPhoto:-->
+              <img v-if="item.hostUserPhoto" style="width: 120px;height: 120px;" class="currUserMess headerUrl" :src="http+item.hostUserPhoto"  />
+              <img v-else class="currUserMess headerUrl" style="width: 120px;height: 120px; "  src="../../../../assets/ambuf/images/physician.png"  />
               <!--static/img/2017/07/14/20170714092405208.JPG-->
             </div>
             <el-row :gutter="20" class="row-bg">
@@ -44,7 +46,6 @@
         id="myTable"
         ref="myTable"
         class="pointer"
-
       >
         <el-table
           v-if="tableHeadList[0]"
@@ -85,7 +86,6 @@
                 width="100">
               </el-table-column>
             </el-table-column>
-
           </el-table-column>
         </el-table>
       </div>
@@ -238,8 +238,7 @@
         if(this.listMessTitle.ids!=m.ids){
             return;
         }else {
-
-          this.data = res.data;
+            this.data = res.data;
             this.popover=true;
         }
       },

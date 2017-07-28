@@ -271,7 +271,6 @@
         if(data.headPhoto===null){
           data.headPhotoHttp = "";
         }else{
-            console.log( env["http"]);
           data.headPhotoHttp = env["http"]+data.headPhoto;
         }
         this.formValidate = data;

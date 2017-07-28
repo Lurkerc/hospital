@@ -485,6 +485,7 @@ export default {
         conductSuccess(messTitle, isLoadingFun) {
           if (!isLoadingFun) isLoadingFun = function () {};
           let ajaxSuccess = messTitle['ajaxSuccess'] || 'ajaxSuccess';
+          let error = messTitle['error'] ;
           let errorTitle = messTitle.errorTitle || "数据请求异常!";
           return (res) => {
             let isSuccess = this.verifyAjaxResponse(res);
@@ -498,7 +499,11 @@ export default {
             } else {
               let flag = util.handleAjaxError(this, responseData["status"]["code"], responseData["status"]["msg"]);
               if (!flag) {
-                this.errorMess(errorTitle);
+                if(error){
+                  this.error.call(this, responseData, messTitle, isLoadingFun)
+                }else{
+                  this.errorMess(errorTitle);
+                }
               }
             }
 
@@ -641,6 +646,22 @@ export default {
             }
           })
           return data
+        },
+
+
+        /*
+        * 将字符串时间转换为时间戳
+        * @param date  {String}  例如:201-08-01
+        * */
+        parseTimestamp(date){
+          let timestamp
+          if(navigator.userAgent.indexOf("Firefox")>0){  //解决火狐兼容性问题
+            date &&(date =date+'T09:00:00');
+            timestamp = date ? Date.parse(date) : new Date().getTime();
+          }else {
+            timestamp = date ? new Date(date).getTime() : new Date().getTime();
+          }
+          return timestamp;
         },
 
 

@@ -25,7 +25,7 @@
       <el-col :span="24" class="textCenter"><el-button @click="gotoNext('next','second')" type="primary">下一步</el-button></el-col>
     </el-row>
   </div>
-  <div class="newCalendar" v-if="stepMaker=='second'">
+  <div class="newCalendar" v-show="stepMaker=='second'">
     <el-form ref="formValidate" :rules="this.$store.state.rules.calendar" :model="formValidate" class="demo-form-inline" label-width="120px">
     <br />
     <el-row :gutter="10">
@@ -34,9 +34,8 @@
       </el-col>
       <el-col :span="4" v-if="formValidate.weekSetStartTime!=''">
         <div class="cal-schoolTit">
-          {{formValidate.weekSetStartTime.split('-')[0]}} ~ {{formValidate.weekSetEndTime.split('-')[0]}}学年,
+          {{studyYearStart}} ~ {{studyYearEnd}}学年,
         </div>
-      <!--<date-group :index="0" :dateGroup="{'type':'year','startDate':formValidate.weekSetStartTime.split('-')[0],'endDate':formValidate.weekSetEndTime.split('-')[0],'text':'~'}"></date-group>-->
       </el-col>
       <el-col :span="1">
         <div class="cal-schoolTit"><!--学年,-->&nbsp;&nbsp;&nbsp;&nbsp;第</div>
@@ -84,14 +83,14 @@
     <br />
     <el-row :gutter="10">
       <el-col :span="24">
-        <el-form-item label="说明：" prop="weekSetInstructions" >
+        <!--<el-form-item label="说明：" prop="weekSetInstructions" >-->
         <el-input
           type="textarea"
           :rows="4"
           placeholder="请输入内容"
           v-model="formValidate.weekSetInstructions">
         </el-input>
-        </el-form-item>
+        <!--</el-form-item>-->
       </el-col>
     </el-row>
     <br />
@@ -106,7 +105,7 @@
     <el-row :gutter="10">
       <el-col :span="24" v-if="formValidate.weekSetStartTime!=''">
         <div class="cal-schoolTit">
-          南京鼓楼医院：{{formValidate.weekSetStartTime.split('-')[0]}} ~ {{formValidate.weekSetEndTime.split('-')[0]}}学年，{{formValidate.semester=='ONE'?'第一学期':'第二学期'}}教学周历
+          南京鼓楼医院：{{studyYearStart}} ~ {{studyYearEnd}}学年，{{formValidate.semester=='ONE'?'第一学期':'第二学期'}}教学周历
         </div>
       </el-col>
     </el-row>
@@ -424,10 +423,31 @@
           this.stepMaker = step;
         }else{
           if(this.stepMaker == "second") {
-            let val = this.submitForm("formValidate");
+            if(this.formValidate.semester==""){
+              this.showMess("请选第几学期教学周历!");
+              return
+            }
+            if(this.formValidate.weekSetStartTime==""||this.formValidate.weekSetEndTime==""){
+              this.showMess("请填写学期起止时间!");
+              return
+            }
+            if(this.formValidate.gradeNum==""){
+              this.showMess("请选择级!");
+              return
+            }
+            if(this.formValidate.classNum==""){
+              this.showMess("请填写班级!");
+              return
+            }
+            if(this.formValidate.weekSetInstructions==""){
+              this.showMess("请填写说明!");
+              return
+            }
+
+           /* let val = this.submitForm("formValidate");
             if(!val){
                 return;
-            }
+            }*/
             if(this.weekSetId==""){
               this.saveMainTitle.ajaxParams.data = this.getFormData(this.formValidate);
               this.ajax(this.saveMainTitle);
@@ -495,10 +515,18 @@
        * @param pos        {}  当前位置对象
        */
       eventClick(event, jsEvent, pos) {
-        let yearMonth = this.conductDate(this.conductDate(event.start,"yyyy-MM-dd"),"yyyy-MM");
-        this.currMonth = yearMonth;
-        this.operailityData = {weekSetId:this.weekSetId,date:event.start,yearMonth:yearMonth};
-        this.openModel("add");
+        let weekSetStartTime = this.parseTimestamp(this.formValidate.weekSetStartTime);
+        let weekSetEndTime = this.parseTimestamp(this.formValidate.weekSetEndTime);
+        let currDate = this.parseTimestamp(this.conductDate(event.start,"yyyy-MM-dd"));
+        //判断当前选择的时间是否在设定的时间范围内
+        if(weekSetStartTime<=currDate && currDate<=weekSetEndTime){
+          let yearMonth = this.conductDate(this.conductDate(event.start,"yyyy-MM-dd"),"yyyy-MM");
+          this.currMonth = yearMonth;
+          this.operailityData = {weekSetId:this.weekSetId,date:event.start,yearMonth:yearMonth};
+          this.openModel("add");
+        }else{
+          this.showMess("您选择的时间不在当前学期设置的时间范围"+this.formValidate.weekSetStartTime+"至"+this.formValidate.weekSetEndTime+"之内!");
+        }
       },
 
 
@@ -509,11 +537,19 @@
        */
 
       dayClick(day, jsEvent) {
-        let date = this.conductDate(day,"yyyy-MM-dd");
-        let yearMonth = this.conductDate(day,"yyyy-MM");
-        this.currMonth = yearMonth;
-        this.operailityData = {weekSetId:this.weekSetId,date:date,yearMonth:yearMonth};
-        this.openModel("add");
+        let weekSetStartTime = this.parseTimestamp(this.formValidate.weekSetStartTime);
+        let weekSetEndTime = this.parseTimestamp(this.formValidate.weekSetEndTime);
+        let currDate = this.parseTimestamp(this.conductDate(day,"yyyy-MM-dd"));
+        //判断当前选择的时间是否在设定的时间范围内
+        if(weekSetStartTime<=currDate && currDate<=weekSetEndTime) {
+          let date = this.conductDate(day, "yyyy-MM-dd");
+          let yearMonth = this.conductDate(day, "yyyy-MM");
+          this.currMonth = yearMonth;
+          this.operailityData = {weekSetId: this.weekSetId, date: date, yearMonth: yearMonth};
+          this.openModel("add");
+        }else{
+          this.showMess("您选择的时间不在当前学期设置的时间范围"+this.formValidate.weekSetStartTime+"至"+this.formValidate.weekSetEndTime+"之内!");
+        }
       },
       /**
        *
@@ -586,6 +622,15 @@
         }
         this.formDate(myData,['weekSetEndTime','weekSetStartTime'],this.yearMonthData);
         return myData;
+      },
+    },
+    computed:{
+      //学年起止日
+      studyYearStart(){
+        return this.conductDate(this.formValidate.weekSetStartTime,"yyyy");
+      },
+      studyYearEnd(){
+        return this.conductDate(this.formValidate.weekSetEndTime,"yyyy");
       },
     },
     created(){

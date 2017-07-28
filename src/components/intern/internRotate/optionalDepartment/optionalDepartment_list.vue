@@ -44,7 +44,6 @@
       <el-col :span="16" :offset="2">
         <div style="margin-left: 100px">
           <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
-          <el-button  @click="cancel">取消</el-button>
         </div>
       </el-col>
     </el-row >

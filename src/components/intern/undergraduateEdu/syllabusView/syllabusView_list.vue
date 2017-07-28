@@ -50,7 +50,7 @@
       :headList="tableHeader"
       @mouseEnter="mouseEnter"
       @mouseLeave="mouseLeave"
-      :url="url"
+      :url="api"
       :tableDataList="tableData">
     </listHeaders>
   </div>
@@ -64,6 +64,7 @@
   export default {
     data() {
       return {
+        api,
         //查询表单
         listUrl: '',
         url:api.teachCourseTime.path,
@@ -196,11 +197,8 @@
 
       //获取列表数据成功
       updateTableList(res){
-          let data =res.data ;
-//          if(data==0){
-//              return;
-//          }
-          data = this.convertData(data);
+        let data =res.data ;
+        data = this.convertData(data);
         this.tableData = this.disposeTableData(this.getFormData(data));
       },
 
@@ -209,7 +207,7 @@
       convertData(data){
           if(data==0)return data;
         let tempArr = [];
-        data = data[0]
+        console.log(data);
 
         for(let i in data){
           let time= i;
@@ -232,6 +230,7 @@
           }
 
         }
+        console.log(tempArr);
           return tempArr
       },
 
@@ -345,12 +344,12 @@
       timestamp(date){
         let timestamp
         if(navigator.userAgent.indexOf("Firefox")>0){  //解决火狐兼容性问题
-          date &&(date =date+'T09:00:00');
-          timestamp = date ? Date.parse(date) : new Date().getTime();
+          date &&(date =date+'T09:00:00') ;
+          timestamp = date ? Date.parse(date) : new Date().getTime() ;
         }else {
-          timestamp = date ? new Date(date).getTime() : new Date().getTime();
+          timestamp = date ? new Date(date).getTime() : new Date().getTime() ;
         }
-        return timestamp
+        return timestamp ;
 
       },
 

@@ -133,7 +133,7 @@ const api = {
     method: 'delete'
   },
   getRotaryDepIndo:{  //微调-查看用户轮转表  {userId}
-    path: handWork + '/getRotaryDepIndo_SXS',
+    path: handWork + '/getRotaryDepIndo',
     method: 'get'
   },
   regUserMicrCtrol:{  //手工调整--轮转微调  保存微调的数据

@@ -11,24 +11,21 @@
       >
         <div class="showCurrMess">
           <div v-for="(item,index) in data">
-            <div class="currUserMess">
-              头像
-            </div>
             <el-row :gutter="20" class="row-bg">
-              <el-col :span="6"><p><strong>课程名称:</strong>{{item.activityName}} </p></el-col>
-              <el-col :span="6"><p><strong>授课地点:</strong>{{item.activitySite}} </p></el-col>
+              <el-col :span="6"><p><strong>科室:</strong>{{item.courseDep}} </p></el-col>
+              <el-col :span="6"><p><strong>授课地点:</strong>{{item.courseAddress}} </p></el-col>
               <el-col :span="6"><p><strong>授课对象:</strong> {{trope(item.activityUserType)}} </p></el-col>
             </el-row>
             <el-row :gutter="20" class="row-bg">
-              <el-col :span="6"><p><strong>课程类型:</strong>{{item.activityType}}  </p></el-col>
-              <el-col :span="6"><p><strong>课程时间:</strong> {{item.activityTime}} </p></el-col>
-              <el-col :span="6"><p><strong>授课老师:</strong> {{item.hostUserName}} </p></el-col>
+              <el-col :span="6"><p><strong>课程类型:</strong>{{item.courseType}}  </p></el-col>
+              <!--<el-col :span="6"><p><strong>课程时间:</strong> {{item.activityTime}} </p></el-col>-->
+              <el-col :span="6"><p><strong>授课老师:</strong> {{item.teachName}} </p></el-col>
             </el-row>
             <el-row :gutter="20" class="row-bg">
-              <el-col :span="18"><p><strong>课程内容:</strong>{{item.activityContent}}  </p></el-col>
+              <el-col :span="18"><p><strong>课程内容:</strong>{{item.courseContent}}  </p></el-col>
             </el-row>
             <el-row  class="row-bg">
-              <el-col :span="3"><p><strong>课前预习资料:</strong> </p></el-col>
+              <el-col :span="3"><p><strong>课程资料:</strong> </p></el-col>
               <el-col :span="18"><upload-file  :show="true" :uploadFiles="item.fileList"></upload-file></el-col>
             </el-row>
           </div>
@@ -119,45 +116,47 @@
             },
 
 
-            "data":[{
-              "id":1,
-              "depId":2,
-              "depName":"内科",
-              "activityName":"教学查房",
-              "activityType":"理论",
-              "hostUserId":2,
-              "hostUserName":"张三",
-              "activityTime":"2017-03-31",
-              "activitySite":"教学楼三楼301室",
-              "activityUser":"呼吸科-住院医师",
-              "whetherNeedCases":"YES",
-              "casesName":"穿刺术",
-              "activityContent":"活动内容",
-              "activityUserType":"rotarydep",
-              "activityUserTypeValue":"2,3, 4",
-              "activityUserTypeValueName":"呼吸内科,消化内科, 血液内科",
-              "activityDepUserType":"",
-              "shouldUserCount":30,
-              "actuallyUserCount":10,
-              "timeIds":"1,2,3",
-              "recordTimes":"8:00-9:00,10:00-11:00，11:10-12:00",
-              "activityState":"nosubmit",
-              "fileList":[
-                {
-                  "fileId":"2",
-                  "fileName":"文件名称",
-                  "fileUrl":"www.baidu.com",
-                  "fileType":"txt"
-                }
-              ]
-            }],
+            "data":[
+//                {
+//              "id":1,
+//              "depId":2,
+//              "depName":"内科",
+//              "activityName":"教学查房",
+//              "activityType":"理论",
+//              "hostUserId":2,
+//              "hostUserName":"张三",
+//              "activityTime":"2017-03-31",
+//              "activitySite":"教学楼三楼301室",
+//              "activityUser":"呼吸科-住院医师",
+//              "whetherNeedCases":"YES",
+//              "casesName":"穿刺术",
+//              "activityContent":"活动内容",
+//              "activityUserType":"rotarydep",
+//              "activityUserTypeValue":"2,3, 4",
+//              "activityUserTypeValueName":"呼吸内科,消化内科, 血液内科",
+//              "activityDepUserType":"",
+//              "shouldUserCount":30,
+//              "actuallyUserCount":10,
+//              "timeIds":"1,2,3",
+//              "recordTimes":"8:00-9:00,10:00-11:00，11:10-12:00",
+//              "activityState":"nosubmit",
+//              "fileList":[
+//                {
+//                  "fileId":"2",
+//                  "fileName":"文件名称",
+//                  "fileUrl":"www.baidu.com",
+//                  "fileType":"txt"
+//                }
+//              ]
+//            }
+            ],
             dynamicHt: 100,
             //当前组件默认请求()数据时,ajax处理的 基础信息设置
            listMessTitle: {
               ajaxSuccess: 'updateList',
               ids:'',
               ajaxParams: {
-                url: this.url.teachctivityGetList,
+                url: this.url.userGetCourse.path,
                 params: {},
               }
             },
@@ -208,7 +207,7 @@
               this.offset.top = top;
             this.listMessTitle.ids = ids;
              let listMessTitle =  this.getFormData(this.listMessTitle)
-            listMessTitle.ajaxParams.url = listMessTitle.ajaxParams.url+'/'+ids;
+            listMessTitle.ajaxParams.params = {courseArrangeIds:ids};
             this.ajax(listMessTitle)
         },this.time)
       },

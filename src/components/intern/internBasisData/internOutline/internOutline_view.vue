@@ -38,7 +38,7 @@
                   show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                  label="实习时间"
+                  label="周期"
                   align="center">
                   <template scope="scope">
                     {{scope.row.ts}}周
@@ -80,6 +80,9 @@
                     <tr v-for="(item,index) in groupItem.randomRotaryDep">
                       <td>
                         &nbsp;&nbsp;&nbsp;&nbsp;{{item.depName}}
+                      </td>
+                      <td align="center">
+                        {{item.rotaryUserNum}}
                       </td>
                       <td align="center">
                         {{item.remark}}
@@ -135,12 +138,16 @@
           key :'parentTitle',
           label :'科室',
         },{
+          key :'rotaryUserNum',
+          label :'可选人数',
+        }
+        ,{
           key :'remark',
           label :'备注',
         },
           {
             key :'titleSub',
-            label :'实习时间',
+            label :'周期',
           },
           {
             key :'titleSub',

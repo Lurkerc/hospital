@@ -41,14 +41,18 @@ const api = {
     path :  '/rotaryBasis/rulesTraining/getRulesDep/',//{rtId}
     method : 'get'
   },
-  searhDepAndSpecialty: { //查询所有启用的科室（查询所有启用的科室，不带分页）
-    path: "/hospital/dept/queryAll",
-    method: 'get'
-  },
-  // searhDepAndSpecialty: { //查询标准科室科室（查询所有启用的科室，不带分页）
-  //   path: "/criterion/dept/list",
+  // searhDepAndSpecialty: { //查询所有启用的科室（查询所有启用的科室，不带分页）
+  //   path: "/hospital/dept/queryAll",
   //   method: 'get'
   // },
+  searhDepAndSpecialty: { //查询标准科室科室（查询所有启用的科室，不带分页）
+    path: "/criterion/dept/list",
+    method: 'get'
+  },
+  disType: { //第二部分类
+    path: "/dictionary/getByCode/conf_sx_dep_requires_distype",
+    method: 'get'
+  },
 
 
 

@@ -13,9 +13,8 @@
             <div class="cal-schoolTit" style="text-align: right;">选择专业：</div>
           </el-col>
           <el-col style="width: 200px;">
-            <el-select v-model="formValidate.region" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+            <el-select v-model="sltedRtId" placeholder="请选择活动区域">
+              <el-option v-for="item in rtOptions" :key="item.rtId" :label="item.rtName" :value="item.rtId"></el-option>
             </el-select>
           </el-col>
         </el-row>
@@ -27,7 +26,7 @@
         <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="90px" >
           <div class="listUpArea-searchLeft">
             <input class="hidden">
-            <el-input @keyup.enter.native="handleSubmit('formValidate')" placeholder="请输入内容" v-model="formValidate.userName">
+            <el-input @keyup.enter.native="handleSubmit('formValidate')" placeholder="请输入内容" v-model="formValidate.depName">
               <div slot="prepend">院内科室</div>
               <el-button @click="handleSubmit('formValidate')" slot="append" icon="search"></el-button>
             </el-input>
@@ -179,23 +178,56 @@
       </template>
     </el-table-column>
   </el-table>
+    <!--配置弹窗-->
+    <Modal
+      :mask-closable="false"
+      v-model="editModal"
+      height="200"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :width="960">
+      <!--<div slot="header"> -->
+      <!--</div>-->
+      <modal-header slot="header" :content="editId"></modal-header>
+      <setDepList v-if="editModal"  @cancel="cancel" @add="subCallback" :editOperailityData="editOperailityData"></setDepList>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </div>
 </template>
 <script>
 /*当前组件必要引入*/
-
+import api from "../api.js";
+import setDepList from "./setDepList.vue";
 //当前组件引入全局的util
 let Util = null;
 export default{
   data() {
     return {
       formValidate:{
-        region:"",
+        depName:"",
       },
 
+      //存储选择的培训细则
+      sltedRtId:"",
+      rtOptions:[
+        {
+          rtId:1,
+          rtName:"儿科培训细则住院医师",
+        },
+        {
+          rtId:2,
+          rtName:"急诊培训细则住院医师",
+        }
+      ],
+
+      /*--按钮button--*/
+      editId:{
+        id:'edit',
+        title:'配置院内科室与标准科室对应关系'},
+
       //表格数据
-      operailityData:'',
+      editOperailityData:'',
       dynamicHt: 100,
       self: this,
       tableData1: [],
@@ -216,9 +248,20 @@ export default{
     //初始化请求列表数据
     init(){
       this.initFormateData();
+      this.setInitRtId(this.rtOptions);
     },
 
 
+    /**
+     * 设置默认选择的细则
+     * @param options {[]}  细则的option
+     * */
+    setInitRtId(options){
+       this.sltedRtId = options[0]["rtId"];
+    },
+
+
+    //格式化表格下面的统计
     getSummaries(param) {
       const { columns, data } = param;
       const sums = [];
@@ -232,7 +275,7 @@ export default{
           return;
         }
         if (index === 3) {
-          sums[index] = '----';
+          sums[index] = ' ';
           return;
         }
         if (index === 4) {
@@ -403,8 +446,6 @@ export default{
 
        this.tableData1 = tempArr;
 
-
-
     },
 
 
@@ -443,13 +484,13 @@ export default{
      * 点击--修改角色--按钮
      * @param index string|number  当前行索引
      * */
-    edit(index){
+    edit(index,row){
       if(typeof index == 'undefined'){
         if(!this.isSelected(true)) return;
-        this.operailityData = this.multipleSelection[0];
+        this.editOperailityData = {rtId:this.sltedRtId,rdId:row["rdId"]};
         this.openModel('edit')
       }else {
-        this.operailityData = this.tableData1[index];
+        this.editOperailityData = {rtId:this.sltedRtId,rdId:row["rdId"]};
         this.openModel('edit')
       }
     },
@@ -528,6 +569,8 @@ export default{
       Event.addHandler(window, "resize", this.setTableDynHeight);
     })
   },
-  components: {}
+  components: {
+    setDepList
+  }
 }
 </script>

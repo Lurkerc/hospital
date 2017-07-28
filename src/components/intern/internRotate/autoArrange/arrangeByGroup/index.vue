@@ -6,7 +6,7 @@
 <template>
   <div>
     <el-steps style="margin: 0 auto; width: 98%;" :space="200" :active="active" finish-status="success">
-      <el-step title="第一步：选择学校与专业"></el-step>
+      <el-step title="第一步：选择学校"></el-step>
       <el-step title="第二步：设置轮转开始时间"></el-step>
       <el-step title="第三步：确认"></el-step>
       <el-step title="第四步：预览"></el-step>

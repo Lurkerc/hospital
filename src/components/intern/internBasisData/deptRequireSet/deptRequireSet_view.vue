@@ -3,7 +3,7 @@
   <div>
     <el-row>
       <el-col :span="20">
-        <div class="cal-schoolTit">病种名称：{{formValidate.name}}&nbsp;&nbsp;&nbsp;&nbsp;专业：{{formValidate.specialty}}</div>
+        <div class="cal-schoolTit">病种名称：{{formValidate.name}}&nbsp;&nbsp;<!--&nbsp;&nbsp;专业：{{formValidate.specialty}}--></div>
       </el-col>
     </el-row>
     <br />

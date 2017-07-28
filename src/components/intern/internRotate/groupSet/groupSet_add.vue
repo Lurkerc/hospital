@@ -7,7 +7,7 @@
   <div>
     <el-steps :space="200" :active="active" finish-status="success">
       <el-step title="第一步：选择学校"></el-step>
-      <el-step title="第二步：选择专业"></el-step>
+      <el-step title="第二步：选择大纲"></el-step>
       <el-step title="第三步：添加分组"></el-step>
       <el-step title="第四步：设置顺序"></el-step>
       <el-step title="第五步：完成"></el-step>
@@ -326,12 +326,12 @@
           this.ajax(option);
         }
 
-        if(this.sltedSpecialty==""&&this.active==1){
+        /*if(this.sltedSpecialty==""&&this.active==1){
           this.errorMess("请选择专业!");
           return;
-        }
+        }*/
         if(this.sltedDg==""&&this.active==1){
-          this.errorMess("请选专业对应的大纲!");
+          this.errorMess("请选学校对应的大纲!");
           return;
         }
 

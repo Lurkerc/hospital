@@ -1,16 +1,16 @@
 <template>
 
   <div>
-      <el-steps :space="410" :active="active" finish-status="success">
+      <el-steps :space="500" :active="active" finish-status="success">
         <el-step  title="第一步：设置轮转科室"></el-step>
         <el-step title="第二步：设置科室要求"><second></second></el-step>
         <el-step title="第三步：关联院内科室"><third></third></el-step>
       </el-steps>
     </br>
     <div>
-      <first @next="next" v-if="active==1"></first>
-      <second :rtId="rtId" v-if="active==0"></second>
-      <third v-if="active==2"></third>
+      <keep-alive> <first :resizeFirst="resizeFirst" :rtId="rtId" @next="next" v-if="active==0"></first></keep-alive>
+      <keep-alive>  <second :resizeSecond="resizeSecond"  @next="next"  @last="last" :rtId="rtId" v-if="active==1"></second></keep-alive>
+      <keep-alive>  <third @next="next"  @last="last" v-if="active==2"></third></keep-alive>
     </div>
   </div>
 </template>
@@ -29,6 +29,8 @@
       return{
         active:0,
         rtId:'',
+        resizeFirst:false,
+        resizeSecond:false,
       }
     },
     created(){
@@ -57,11 +59,18 @@
       next(id){
         if(this.active==0){
           this.$emit('resize') ;
+          this.resizeSecond = !this.resizeSecond;
           this.rtId = id ;
         }
-        console.log(111);
         this.active++;
+      },
 
+      //上一步
+      last(){
+          if(this.active==1){
+              this.resizeFirst = !this.resizeFirst;
+          }
+        this.active--;
       },
       /*
        * 点击提交按钮 监听是否验证通过

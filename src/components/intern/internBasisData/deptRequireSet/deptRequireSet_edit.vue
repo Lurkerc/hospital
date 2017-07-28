@@ -7,21 +7,21 @@
       <el-button type="primary" @click="add">添加</el-button>
     </el-col>
     <el-col :span="4">
-      <div class="cal-schoolTit" style="text-align: right;">病种名称：</div>
+      <div class="cal-schoolTit" style="text-align: right;">名称：</div>
     </el-col>
     <el-col :span="6">
       <el-form-item prop="name">
       <el-input placeholder="请输入内容" v-model="formValidate.name"></el-input>
       </el-form-item>
     </el-col>
-    <el-col :span="3">
+    <!--<el-col :span="3">
       <div class="cal-schoolTit" style="text-align: right;">专业：</div>
     </el-col>
     <el-col :span="6">
       <el-form-item prop="specialty">
       <dictionary-select v-if="formValidate.specialty!=''" @setSltOptionValue="setSpecialtyOptionValue" :selectOptions="specialtyOptions"></dictionary-select>
       </el-form-item>
-    </el-col>
+    </el-col>-->
   </el-row>
     </el-form-item>
   <br />

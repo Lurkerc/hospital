@@ -83,6 +83,10 @@ const api = {
     path: thisFile + "/monthCourseSetResearchRoom/",
     method: 'get'
   },
+  userGetCourse:{  //根据教学周历ID获取每个月课程设置-----教研室人员可看
+    path: "/weekSet/userGetCourse",
+    method: 'get'
+  },
 
   /*----- 课程资料 --------------------------------------------------------------------------------*/
   teacherCourseFileList:{  //课程资料列表
