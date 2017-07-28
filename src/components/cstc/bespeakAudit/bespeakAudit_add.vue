@@ -25,7 +25,11 @@
         </el-col>
         <el-col :span="21" :offset="1">
           <el-form-item label="选择房间：">
-            <span style="display:inline;">{{ formValidate.reservePojectRoom.roomNum }}</span>
+            <template v-if="formValidate.reservePojectRoom.roomNum">
+              <span style="display:inline;">{{ formValidate.reservePojectRoom.roomNum }}</span>
+              <span style="margin-left:10px;">承载量：</span>
+              <el-input style="width:200px;" v-model="formValidate.reservePojectRoom.bearingCapacity"></el-input>
+            </template>
             <el-button type="info" @click="selectRoom">选择房间</el-button>
           </el-form-item>
         </el-col>
@@ -98,8 +102,9 @@
           status: '',
           opinion: '',
           reservePojectRoom: {
-            id: this.operailityData.id,
+            id: '',
             roomId: '',
+            bearingCapacity: '',
             roomNum: '',
           },
           deviceList: [],
@@ -189,8 +194,10 @@
           ajaxSuccess: res => {
             this.showData = res.data || {};
             // 房间
+            this.formValidate.reservePojectRoom.id = res.data.reservePojectRoom.id || '';
             this.formValidate.reservePojectRoom.roomId = res.data.reservePojectRoom.roomId;
             this.formValidate.reservePojectRoom.roomNum = res.data.reservePojectRoom.roomNum;
+            this.formValidate.reservePojectRoom.bearingCapacity = res.data.reservePojectRoom.bearingCapacity;
             // 设备
             res.data.reservePojectDeviceList.map(item => {
               this.formValidate.deviceList.push({

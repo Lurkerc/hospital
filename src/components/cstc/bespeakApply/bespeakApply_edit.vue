@@ -38,7 +38,10 @@
           </td>
           <td v-for="(dataItem,index) in roomItem.dataList" :key="roomItem.roomId + '-' + index" align="center">
             <div class="cell">
-              <p v-if="selRoomIndex == roomIndex && selTimeSlotIndex == index" class="select" title="已预约" @click="initSelectTime(false)">约</p>
+              <template v-if="(selRoomIndex === roomIndex && selTimeSlotIndex === index) || (theRoomIndex === roomIndex && theTimeSlotIndex === index)">
+                <p v-if="dataItem === 'tenancyEnds' && selRoomIndex === -1" class="optional" title="可预约" @click="selectThisTime(roomItem,roomIndex,index,dataItem,true)">预</p>                
+                <p v-else class="select" title="已预约" @click="initSelectTime(false)">约</p>
+              </template>
               <p v-else :class="dataItem" :title="getTitle(dataItem)" @click="selectThisTime(roomItem,roomIndex,index,dataItem)">{{ dataItem | dataListType }}</p>
             </div>
           </td>
@@ -64,6 +67,8 @@
         activeName: '', // 日期视图 
         selRoomIndex: -1, // 房间
         selTimeSlotIndex: -1, // 时间段
+        theRoomIndex: -1, // 房间
+        theTimeSlotIndex: -1, // 时间段
         selDay: '', // 日期
         // 展示数据
         days: [], // 日期
@@ -155,14 +160,16 @@
             // 时间段
             for (let i in res.data.timeSetList) {
               if (this.showData.timeSetId === res.data.timeSetList[i].timeSetId) {
-                this.selTimeSlotIndex = i;
+                this.selTimeSlotIndex = +i;
+                this.theTimeSlotIndex = +i;
                 break;
               }
             }
             // 房间
             for (let j in res.data.roomList) {
               if (this.showData.roomId === res.data.roomList[j].roomId) {
-                this.selRoomIndex = j;
+                this.selRoomIndex = +j;
+                this.theRoomIndex = +j;
                 break;
               }
             }
@@ -203,9 +210,10 @@
        * roomIndex 房间索引
        * timeSlotIndex 时间段索引
        * timeSlotType 时间段状态
+       * isSelf 预约满之前是否是自己已预约的
        * */
-      selectThisTime(roomInfo, roomIndex, timeSlotIndex, timeSlotType) {
-        if (timeSlotType === 'tenancyEnds' || timeSlotType === 'NO') { // 未开放和已约满
+      selectThisTime(roomInfo, roomIndex, timeSlotIndex, timeSlotType, isSelf) {
+        if ((timeSlotType === 'tenancyEnds' && !isSelf) || timeSlotType === 'NO') { // 未开放和已约满
           return
         }
         this.formValidate.roomId = roomInfo.roomId;
