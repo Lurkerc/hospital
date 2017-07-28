@@ -7,11 +7,11 @@ const stateOption = [{
   },
   {
     value: 'PENDING',
-    label: '驳回'
+    label: '待审核'
   },
   {
     value: 'REJECT',
-    label: '通过'
+    label: '驳回'
   },
   {
     value: 'ADOPT',

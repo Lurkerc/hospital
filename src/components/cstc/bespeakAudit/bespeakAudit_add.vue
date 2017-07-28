@@ -68,7 +68,7 @@
         <el-button type="success" @click="subData('ADOPT')">通过</el-button>
       </el-col>
       <el-col :span="6" align="center">
-        <el-button type="danger" @click="subData('PENDING')">驳回</el-button>
+        <el-button type="danger" @click="subData('REJECT')">驳回</el-button>
       </el-col>
     </el-row>
     <!--选择房间-->

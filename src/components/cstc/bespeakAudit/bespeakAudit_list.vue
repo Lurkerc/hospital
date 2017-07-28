@@ -27,9 +27,6 @@
         </el-form-item>
         <el-form-item label="开放预约状态:">
           <el-select v-model="searchObj.status" placeholder="请选择">
-            <!-- <el-option label="待上报" value="UNREPORTED"></el-option>
-            <el-option label="驳回" value="PENDING"></el-option>
-            <el-option label="通过" value="ADOPT"></el-option> -->
             <el-option v-for="item in statusOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>

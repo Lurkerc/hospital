@@ -54,7 +54,7 @@
         <el-table-column label="操作" width="200">
           <template scope="scope">
             <el-button size="small" type="info" @click="show(scope.row)">查看</el-button>
-            <template v-if="scope.row.status === 'UNREPORTED' || scope.row.status === 'PENDING'">
+            <template v-if="scope.row.status === 'UNREPORTED' || scope.row.status === 'REJECT'">
               <el-button size="small" type="primary" @click="edit(scope.row)">修改</el-button>
               <el-button size="small" type="warning" @click="report(scope.row)">上报</el-button>
             </template>

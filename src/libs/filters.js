@@ -83,8 +83,8 @@ const getVueObj = function (vue) {
       "START": "待使用",
       "UNEVALUATED": "待评分",
       //培训标准
-      ENABLE:'启用',
-      DISABLE:'禁用',
+      ENABLE: '启用',
+      DISABLE: '禁用',
     },
     /* 特殊描述文本（与公共部分冲突的可以作为特殊处理） */
     unit: { // 单位
@@ -149,8 +149,8 @@ const getVueObj = function (vue) {
     },
     bespeakType: { // 预约审核类型
       "UNREPORTED": "待上报",
-      "PENDING": "驳回",
-      "REJECT": "通过",
+      "PENDING": "待审核",
+      "REJECT": "驳回",
       "ADOPT": "通过",
       "START": "已开课",
       "UNEVALUATED": "待评价",
