@@ -17,9 +17,10 @@
       </el-row >
       <el-row >
         <el-col :span="11" :offset="1">
-          <el-form-item label="基地名称:" prop="jdName">
-            <el-select v-model="formValidate.jdName" placeholder="请选择活动区域">
+          <el-form-item  style="width:300px" label="基地名称:" prop="jdName"  >
+            <el-select style="width:300px" v-model="formValidate.jdName" placeholder="请选择">
               <el-option
+                style="width:300px"
                 v-for="item in jDData"
                 :key="item.value"
                 :label="item.jdName"
@@ -29,8 +30,16 @@
           </el-form-item>
         </el-col >
         <el-col :span="10"  :offset="1">
-          <el-form-item label="学历:" prop="rtSchlength">
-            <el-input  v-model="formValidate.rtSchlength" placeholder="请输入"></el-input>
+          <el-form-item  style="width:300px" label="学历:" prop="rtSchlength">
+            <el-select  style="width:300px" v-model="formValidate.rtSchlength" placeholder="请选择">
+              <el-option
+                style="width:300px"
+                v-for="item in rtSchlengthData"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col >
       </el-row >
@@ -139,9 +148,7 @@
                     </colgroup>
                     <tbody  class="add-scope">
                     <tr v-for="(item,index) in randomItem">
-                      <td>
-                        &nbsp;&nbsp;&nbsp;&nbsp;{{item.depName}}
-                      </td>
+                      <td>{{item.depName}}</td>
                       <td v-show="index==0" :rowspan="randomItem.length" align="center">
                         <el-input placeholder="请输入内容" v-model="groupItem.ts[randomIndex]" style="width: 50px"></el-input> 周
                       </td>
@@ -279,13 +286,24 @@
           optionalNum:[''],
         },
         outlines: [],
+        //基地
         jDData:[],
+        //学历
+        rtSchlengthData:[],
         //获取基地数组
         getJd :{
           ajaxSuccess:'getJdData',
           ajaxError:'ajaxError',
           ajaxParams:{
             url:api.BaseManageGetList.path
+          },
+        },
+        //获取学历数据
+        getSchlength :{
+          ajaxSuccess:'getSchlengthData',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url:'/dictionary/getByCode/'+'USER_HIGHEST_EDU'
           },
         },
         //获取数据
@@ -319,7 +337,7 @@
       init(){
         Util = this.$util;
         this.ajax(this.getJd);
-//        this.ajax(this.getOutline);
+        this.ajax(this.getSchlength);
       },
 
 
@@ -330,7 +348,15 @@
           this.outlines = this.conductOutLine(data.outlines);
           data.outlines = [];
           this.formValidate = data;
+        this.ishide =  !this.ishide;
 
+      },
+
+      //获取学历数据成功回调
+      getSchlengthData(res){
+        let data = res.data;
+        if(!data)return;
+        this.rtSchlengthData = data.child
       },
 
       conductOutLine(data){

@@ -43,6 +43,8 @@
           userRotaryDeptlist:'/traineeRotary/arrangeRotary/userRotaryDeptlist/'+(this.userType)+'-'+this.userId,      //轮转科室用
           getDepByTeacher:'/rotationProcess/rotaryTable/getDepByTeacher/'+this.userId,      //轮转科室用
           byUserType:'/hospital/dept/query/byUserType/'+this.userId,      //轮转科室用
+          //根据不同角色获取科室 (科室主任和带教秘书用) 获取当前角色下的科室
+          byNowUser:'/hospital/dept/get/byNowUser/' //uesrId
         };
         url = typeUrl[type];
         if(this.url)url = this.url;

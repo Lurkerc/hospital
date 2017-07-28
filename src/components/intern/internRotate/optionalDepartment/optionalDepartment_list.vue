@@ -41,10 +41,8 @@
       </el-row>
     </fieldset>
     <el-row v-if="isAdd">
-      <el-col :span="16" :offset="2">
-        <div style="margin-left: 100px">
+      <el-col :span="10" :offset="11">
           <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
-        </div>
       </el-col>
     </el-row >
   </div>
@@ -54,6 +52,7 @@
   let Util=null;
   /*---引入url*/
   import api from '../api';
+
 
   export default {
     //props接收父组件传递过来的数据

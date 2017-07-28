@@ -12,11 +12,10 @@
             <el-menu-item v-for="(groupItem,index) in item" :key="index" @click="groupItemClick(groupItem)"  :index="i+'-'+index">{{groupItem.cdepName}}</el-menu-item>
           </el-menu-item-group>
         </el-menu>
-
         <div slot="right"  style="height:inherit;">
           <el-form  :model="formValidate" ref="formValidate"  label-width="90px">
                 <el-form-item label="培训目的:" prop="depsetPurpose">
-                  <el-input readonly :rows="5"  resize="none" type="textarea" v-model="formValidate.depsetPurpose" placeholder="请输入"></el-input>
+                  <el-input readonly :rows="5"  resize="none" type="textarea" v-model="formValidate.depsetPurpose" ></el-input>
                 </el-form-item>
           </el-form>
           <el-table
@@ -215,26 +214,7 @@
 
           getRulesDepSuccess(res){
               let data = res.data;
-              if(!data || data==0) {
-                data={
-                  "depsetPurpose":"",
-                  "cdepId":'',
-                  "cdepName":"",
-                  "depRequirements":[
-                    {
-                      "deId":'',
-                      "deName":"",
-                      "deType":"",
-                      "deDetype":"",
-                      "deLeveltype":"基本要求",
-                      "deShowtype":"",
-                      "deCountBasic":"",
-                      "deCountBasicSecond":"",
-                      "deCountBasicFirst":""
-                    }
-                  ]
-                }
-              }
+              if(!data ) return;
               this.formValidate = data;
           },
 

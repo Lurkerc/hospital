@@ -60,7 +60,9 @@
         if(this.active==0){
           this.$emit('resize') ;
           this.resizeSecond = !this.resizeSecond;
-          this.rtId = id ;
+          if(!this.rtId){
+            this.rtId = id ;
+          }
         }
         this.active++;
       },

@@ -221,7 +221,7 @@
           //初始化请求列表数据
           init(){
             this.ajax(this.listMessTitle);
-            this.ajax(this.getDisType);
+
           },
 
           listenSubEvent(){
@@ -344,6 +344,7 @@
         },
         created(){
             this.init();
+          this.ajax(this.getDisType);
         },
         mounted(){
         },
