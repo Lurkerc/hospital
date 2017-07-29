@@ -780,6 +780,9 @@ $boderColor:#dfe6ec;
   .el-form-item {
     margin-bottom: 0;
   }
+  .el-form-item__error{
+    display: none;
+  }
 }
 .to-channel{
   .cell{
@@ -949,7 +952,7 @@ $boderColor:#dfe6ec;
   border: none;
 }
 .sltDepWrapper{
-  width: 100%;
+  padding: 10px;
   height: 300px;
   overflow: auto;
   border: 1px solid #EFF2F7;
@@ -959,8 +962,8 @@ ul.sltDepUl{}
   float: left;
 }
 ul.sltDepUl li.sltDep{
-  width:180px;height:25px;line-height:25px;padding-left:3px;overflow: hidden;white-space: nowrap;-o-text-overflow: ellipsis;text-overflow: ellipsis;word-break:keep-all;
+  width:170px;height:25px;line-height:25px;padding-left:3px;overflow: hidden;white-space: nowrap;-o-text-overflow: ellipsis;text-overflow: ellipsis;word-break:keep-all;
 }
 ul.sltDepUl li.sltSubDep{
-  width:160px;height:25px;line-height:25px;padding-left:3px;overflow: hidden;white-space: nowrap;-o-text-overflow: ellipsis;text-overflow: ellipsis;word-break:keep-all; margin-left:20px;
+  width:150px;height:25px;line-height:25px;padding-left:3px;overflow: hidden;white-space: nowrap;-o-text-overflow: ellipsis;text-overflow: ellipsis;word-break:keep-all; margin-left:20px;
 }

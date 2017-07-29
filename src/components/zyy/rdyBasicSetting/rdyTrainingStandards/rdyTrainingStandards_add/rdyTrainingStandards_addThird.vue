@@ -6,15 +6,24 @@
 ----------------------------------->
 <template>
     <div>
-
+      <rdy-dep-contrast style="height: 500px;" :isShowRt="rtId" :isRefresh="resizeSecond"></rdy-dep-contrast>
+      <el-row>
+        <el-col :span="8" class="textCenter">&nbsp;</el-col>
+        <el-col :span="8" class="textCenter">
+          <el-button @click="$emit('last')">上一步</el-button>
+        </el-col>
+        <el-col  class="textCenter">&nbsp;</el-col>
+      </el-row>
     </div>
 </template>
 <script>
     /*当前组件必要引入*/
-
+    import rdyDepContrast from '../../rdyDepContrast/rdyDepContrast_list.vue'
     //当前组件引入全局的util
     let Util = null;
+
     export default{
+      props:['rtId','resizeSecond'],
         data() {
             return {}
         },
@@ -30,6 +39,9 @@
         },
         mounted(){
         },
-        components: {}
+        components: {
+
+          rdyDepContrast
+        }
     }
 </script>

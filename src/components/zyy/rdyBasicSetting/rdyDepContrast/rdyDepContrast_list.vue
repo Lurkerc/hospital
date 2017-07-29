@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
 <div id="content" ref="content" class="modal">
-  <div class="listUpAreaBox">
+  <div class="listUpAreaBox" v-if="isShowRt==0">
     <div class="listUpArea-menus">
       <div class="add-remove">
         <el-row>
@@ -20,9 +20,9 @@
         </el-row>
       </div>
     </div>
-    <div class="listUpArea-search">
+   <!-- <div class="listUpArea-search">
       <div class="listUpArea-searchWrapper">
-        <!--右侧查询-->
+        &lt;!&ndash;右侧查询&ndash;&gt;
         <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="90px" >
           <div class="listUpArea-searchLeft">
             <input class="hidden">
@@ -36,14 +36,13 @@
           </div>
         </el-form>
       </div>
-    </div>
+    </div>-->
   </div>
-  <div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox"> </div>
-  <br />
+  <!--<div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox"> </div>-->
+  <br v-if="isShowRt==0" />
   <div
     id="myTable"
     ref="myTable"
-
   >
   <el-table
     stripe
@@ -65,7 +64,7 @@
       prop="index"
       width="75">
       <template scope="scope">
-        <span>{{scope.row.index}}</span>
+        {{scope.$index+1}}
       </template>
     </el-table-column>
     <el-table-column
@@ -117,7 +116,7 @@
       width="150">
       <template scope="scope">
         <div v-for="(item, index) in scope.row.hospitalDep">
-          <div v-if="item.deType==0">
+          <div v-if="item.deType=='N'">
             <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
               固定
             </div>
@@ -134,7 +133,7 @@
       width="120">
       <template scope="scope">
         <div v-for="(item, index) in scope.row.hospitalDep">
-          <div v-if="item.deType==0">
+          <div v-if="item.deType=='N'">
             <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
               {{subItem.chTs}}月
             </div>
@@ -151,7 +150,7 @@
       width="120">
       <template scope="scope">
         <div v-for="(item, index) in scope.row.hospitalDep">
-          <div v-if="item.deType==0">
+          <div v-if="item.deType=='N'">
             <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
               {{subItem.ch2Ts}}月
             </div>
@@ -168,7 +167,7 @@
       width="120">
       <template scope="scope">
         <div v-for="(item, index) in scope.row.hospitalDep">
-          <div v-if="item.deType==0">
+          <div v-if="item.deType=='N'">
             <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
               {{subItem.ch1Ts}}月
             </div>
@@ -189,7 +188,7 @@
       <!--<div slot="header"> -->
       <!--</div>-->
       <modal-header slot="header" :content="editId"></modal-header>
-      <setDepList v-if="editModal"  @cancel="cancel" @add="subCallback" :editOperailityData="editOperailityData"></setDepList>
+      <setDepList v-if="editModal" @cancel="cancel" @add="subCallback" :editOperailityData="editOperailityData"></setDepList>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -202,6 +201,16 @@ import setDepList from "./setDepList.vue";
 //当前组件引入全局的util
 let Util = null;
 export default{
+  props:{
+    isShowRt:{
+      type:Number,
+      default:0
+    },
+    isRefresh:{
+      type:Number,
+      default:0
+    }
+  },
   data() {
     return {
       formValidate:{
@@ -210,16 +219,7 @@ export default{
 
       //存储选择的培训细则
       sltedRtId:"",
-      rtOptions:[
-        {
-          rtId:1,
-          rtName:"儿科培训细则住院医师",
-        },
-        {
-          rtId:2,
-          rtName:"急诊培训细则住院医师",
-        }
-      ],
+      rtOptions:[],
 
       /*--按钮button--*/
       editId:{
@@ -233,13 +233,22 @@ export default{
       tableData1: [],
       loading:false,
       listTotal:0,
+
+      //获取培训细则options rulesgetList
+      getRtOptionsTitle:{
+        ajaxSuccess:'getRtOptions',
+        ajaxParams:{
+          url: api.rulesgetList.path,
+          params:{
+            rtProclass:'',rtModelType:''
+          }
+        }
+      },
+
       listMessTitle:{
         ajaxSuccess:'updateListData',
         ajaxParams:{
-          url:'/dictionary/list',
-          params:{
-            name:'',code:''
-          }
+          url: api.getRulesDepContrastTable.path,
         }
       },
     }
@@ -247,7 +256,18 @@ export default{
   methods: {
     //初始化请求列表数据
     init(){
-      this.initFormateData();
+      if(this.isShowRt==0){
+        this.ajax(this.getRtOptionsTitle);
+      }else{
+        this.setTableData();
+      }
+//      this.initFormateData();
+    },
+
+    getRtOptions(responseData){
+      let data = responseData.data;
+      this.rtOptions=[];
+      this.rtOptions = data;
       this.setInitRtId(this.rtOptions);
     },
 
@@ -257,7 +277,12 @@ export default{
      * @param options {[]}  细则的option
      * */
     setInitRtId(options){
-       this.sltedRtId = options[0]["rtId"];
+       if(options.length>0){
+        this.sltedRtId = options[0]["rtId"]||"";
+       }else{
+         this.sltedRtId = "";
+         return;;
+       }
     },
 
 
@@ -304,7 +329,7 @@ export default{
 
     //格式化server传输过来的数据
     initFormateData(data){
-       data = [
+       /*data = [
          {
            "depPhaseNum":1,
            "depPhase":"第一阶段",
@@ -313,69 +338,10 @@ export default{
                "rdId":11,
                "cdepId":11,
                "cdepName":"神经内科",
-               "depType":"安排类型(1任选 0 必须轮转)",
+               "depType":"安排类型(N/1任选 Y/0必须轮转)",
                "ts":2,
                "depRandomNum":0,
                "hospitalDep":[
-                 {
-                   "hgId":"组主键ID",
-                   "hgGroup":"组号",
-                   "deType":0,
-                   "depRandomNum":0,
-                   "depIsCou":"是否按顺序(1不按顺序 0不按顺序)",
-                   "chTs":3,
-                   "ch2Ts":2,
-                   "ch1Ts":5,
-                   "hospitalDeps":[
-                     {
-                       "hospitalDepId":1,
-                       "hospitalDepName":"院内科室名称",
-                       "chTs":3,
-                       "ch2Ts":6,
-                       "ch1Ts":5
-                     },
-                     {
-                       "hospitalDepId":1,
-                       "hospitalDepName":"院内科室名称",
-                       "chTs":3,
-                       "ch2Ts":2,
-                       "ch1Ts":3
-                     },
-                     {
-                       "hospitalDepId":1,
-                       "hospitalDepName":"院内科室名称",
-                       "chTs":3,
-                       "ch2Ts":2,
-                       "ch1Ts":1
-                     }
-                   ]
-                 },
-                 {
-                   "hgId":"组主键ID",
-                   "hgGroup":"组号",
-                   "deType":1,
-                   "depRandomNum":1,
-                   "depIsCou":"是否按顺序(1不按顺序 0不按顺序)",
-                   "chTs":3,
-                   "ch2Ts":2,
-                   "ch1Ts":1,
-                   "hospitalDeps":[
-                     {
-                       "hospitalDepId":1,
-                       "hospitalDepName":"院内科室名称",
-                       "chTs":3,
-                       "ch2Ts":2,
-                       "ch1Ts":1
-                     },
-                     {
-                       "hospitalDepId":1,
-                       "hospitalDepName":"院内科室名称",
-                       "chTs":3,
-                       "ch2Ts":2,
-                       "ch1Ts":1
-                     }
-                   ]
-                 }
                ]
              }
            ],
@@ -384,7 +350,7 @@ export default{
                "rdId":22,
                "cdepId":22,
                "cdepName":"内科",
-               "depType":"安排类型(1任选 0 必须轮转)",
+               "depType":"安排类型(N任选 Y必须轮转)",
                "ts":12,
                "depRandomNum":0,
                "hospitalDep":[
@@ -411,7 +377,8 @@ export default{
              }
            ]
          }
-       ]
+       ]*/
+
        let tempArr = [];
        for(var i=0,item;i<data.length;i++){
          item = data[i];
@@ -424,11 +391,23 @@ export default{
 
         item = tempArr[i];
         totalChTs = totalCh2Ts = totalCh1Ts = 0;
+        if(item["hospitalDep"]===null){
+          item["hospitalDep"] = [];
+        }
         for(var k=0,subItem;k<item["hospitalDep"].length;k++){
           subItem = item["hospitalDep"][k];
+          if(subItem["hospitalDeps"]===null){
+            subItem["hospitalDeps"] = [];
+          }
+          if(item["depRandomNum"]===null){
+            item["depRandomNum"] = 0;
+          }
           if(subItem.deType==0) {
             for (var j = 0,ssItem; j < subItem["hospitalDeps"].length; j++) {
               ssItem = subItem["hospitalDeps"][j];
+              if(ssItem["depRandomNum"]===null){
+                ssItem["depRandomNum"] = 0;
+              }
               totalChTs+=parseInt(ssItem["chTs"]);
               totalCh2Ts+=parseInt(ssItem["ch2Ts"]);
               totalCh1Ts+=parseInt(ssItem["ch1Ts"]);
@@ -453,15 +432,21 @@ export default{
     updateListData(responseData){
       let data = responseData.data;
       this.tableData1=[];
-      data = this.addIndex(data);
-      this.tableData1= data;
-      this.listTotal = responseData.totalCount || 0;
+
+      this.initFormateData(data);
     },
 
 
-    setTableData(params){
-      this.setAjaxParams();
-      this.ajax(this.listMessTitle);
+    setTableData(){
+      //this.setAjaxParams();
+      let option = Util._.defaultsDeep({},this.listMessTitle);
+      if(this.isShowRt!=0){
+        option.ajaxParams.url+=this.isShowRt;
+      }else{
+        option.ajaxParams.url+=this.sltedRtId;
+      }
+
+      this.ajax(option);
     },
 
 
@@ -502,6 +487,9 @@ export default{
       let parHt = content.parentNode.offsetHeight;
       let myTable = this.$refs.myTable;
       let paginationHt = 12;
+      if(this.isShowRt!=0){
+        paginationHt = 0;
+      }
       this.dynamicHt = parHt - myTable.offsetTop - paginationHt;
     },
 
@@ -536,13 +524,14 @@ export default{
      * @param udata boolean 默认false  是否不需要刷新当前表格数据
      * */
     subCallback(target,title,updata){
-      this.cancel(target);
+      /*this.cancel(target);
       if(title){
         this.successMess(title);
       }
       if(!updata){
         this.setTableData();
-      }
+      }*/
+      this.setTableData();
     },
 
 
@@ -554,6 +543,14 @@ export default{
       this[options+'Modal'] = true;
     }
 
+  },
+  watch:{
+    sltedRtId(){
+      this.setTableData();
+    },
+    isRefresh(){
+      this.setTableData();
+    }
   },
   created(){
     Util = this.$util;

@@ -232,6 +232,17 @@ let baseRules = {
     }
     callback();
 
+  },
+  /**
+   * 必须数字
+   */
+  float: function (rule, value, callback) {
+    //检验位的检测
+    if (/[^0-9.?]/m.test(value)) {
+      callback(new Error('该项必须数字'));
+    }
+    callback();
+
   }
 }
 

@@ -13,6 +13,7 @@
         <el-col :span="10" >
           <el-button type="primary" @click="add">添加</el-button>
           <el-button type="danger" @click="remove">删除</el-button>
+          <el-button type="primary" @click="toChannel">导入</el-button>
         </el-col>
         <!--搜索项-->
         <el-col :span="14"  align="right">
@@ -215,6 +216,17 @@
       <show v-if="showModal" @cancel="cancel" @show="subCallback" :operaility-data="operailityData" :url="url"></show>
       <div slot="footer"></div>
     </Modal>
+    <!--导入-->
+    <Modal
+      width="800"
+      v-model="toChannelModal"
+      title="查看档案管理弹窗"
+      class-name="vertical-center-modal"
+      :loading="loading">
+      <modal-header slot="header" :content="toChannelId"></modal-header>
+      <toChannel v-if="toChannelModal" @cancel="cancel" @show="subCallback" :operaility-data="operailityData" :url="url"></toChannel>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -226,6 +238,8 @@
   import edit from "./rdyTrainingStandards_edit.vue";
   //引入--查看--组件
   import show from "./rdyTrainingStandards_view.vue";
+  //引入--导入--组件
+  import toChannel from "./rdyTrainingStandards_toChannel.vue";
 
   //当前组件引入全局的util
   let Util=null;
@@ -237,6 +251,7 @@
         searchMore:false,
         disEnableModal:false,
         enableModal:false,
+        toChannelModal:false,
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',
         deleteUrl:'/role/remove',
@@ -284,7 +299,7 @@
         viewId:{id:'viewId',title:'查看'},
         disEnableId:{id:'disEnableId',title:'禁用'},
         enableId:{id:'enableId',title:'启用'},
-
+        toChannelId:{id:'toChannelId',title:'导入培训细则'},
       }
     },
     methods: {
@@ -327,7 +342,7 @@
           flag = false;
         }
         if(len>1 && isOnly){
-          this.showMess("只能修改一条数据!")
+          this.showMess("只能修改一条数据!");
           flag = false;
         }
         return flag;
@@ -375,6 +390,10 @@
       /*--点击--添加--按钮--*/
       add(){
         this.openModel("add");
+      },
+
+      toChannel(){
+        this.openModel("toChannel");
       },
       /*--点击--修改--按钮--*/
       edit(data){
@@ -484,7 +503,7 @@
     },
     components:{
       //当前组件引入的子组件
-      add,edit,show
+      add,edit,show,toChannel
     }
   }
 </script>

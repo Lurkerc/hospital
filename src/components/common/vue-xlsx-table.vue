@@ -68,7 +68,7 @@ export default {
             this.errorMess('只能导入excel');
             return;
         }
-
+      this.ajaxCreateLoading(true);
       this.fileConvertToWorkbook(this.rawFile)
         .then((workbook) => {
           let xlsxArr = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header:this.headerType,raw:this.raw}  );
@@ -88,9 +88,11 @@ export default {
           this.initTable(
             this.xlsxArrToTableArr(xlsxArr)
           )
+       this.ajaxCreateLoading(false);
         })
         .catch((err) => {
           console.error(err)
+         this.ajaxCreateLoading(false);
         })
     },
 

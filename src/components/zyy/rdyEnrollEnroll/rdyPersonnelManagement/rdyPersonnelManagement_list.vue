@@ -114,7 +114,7 @@
         <!--查看弹窗-->
         <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1000">
           <modal-header slot="header" :parent="self" :content="showId"></modal-header>
-          <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData"></show>
+          <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData" studentType="ZYY"></show>
           <div slot="footer"></div>
         </Modal>
         <!--删除弹窗-->
@@ -169,11 +169,11 @@
 <script>
   /*当前组件必要引入*/
   //引入--修改--组件
-  import edit from "../../../intern/recruitStudent/usersManagement/usersManagement_edit";
+  import edit from "./rdyPersonnelManagement_edit";
   //引入--查看--组件
   import show from "../../../base/sysManage/departmentStaff/departmentStaff_view";
-  //引入--添加--组件
-  import add from "../../../intern/recruitStudent/usersManagement/usersManagement_add";
+  //引入--添加--组件 
+  import add from "./rdyPersonnelManagement_add";
   //引入--导入--组件
   import toChannel from "../../../intern/recruitStudent/usersManagement/usersManagement_toChannel";
   //引入--短信通知--组件

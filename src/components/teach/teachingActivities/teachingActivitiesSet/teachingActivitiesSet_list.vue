@@ -12,7 +12,7 @@
           <select-option  :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
         </el-select>
       </el-form-item>
-      <el-select  v-model="formSearch.activityState" clearable placeholder="请选择">
+      <el-select  v-model="formSearch.activityState" label="状态" clearable placeholder="请选择">
         <el-option label='全部' value=""></el-option>
         <el-option label='未发布' value="NO_RELEASE"></el-option>
         <el-option label="已发布" value="RELEASE"></el-option>
@@ -168,7 +168,7 @@
       height="200"
       title="对话框标题"
       class-name="vertical-center-modal"
-      :width="1100">
+      :width="800">
       <!--<div slot="header"> -->
       <!--</div>-->
       <modal-header slot="header" :content="editId"></modal-header>

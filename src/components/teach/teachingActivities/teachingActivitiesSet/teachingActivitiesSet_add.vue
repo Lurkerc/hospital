@@ -15,15 +15,16 @@
           </el-form-item>
       </el-col>
       <el-col :span="12">
-          <el-form-item label="类型" prop="activityType">
-            <el-select v-model="formValidate.activityType"  placeholder="请选择" >
+          <el-form-item style="width:284px;" label="类型" prop="activityType">
+            <el-select style="width:284px;" v-model="formValidate.activityType"  placeholder="请选择" >
               <select-option :unAll="true" :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="科室" prop="depId">
-            <el-select  v-model="formValidate.depId" placeholder="请选择">
-              <select-option :unAll="true"></select-option>
+          <el-form-item style="width:284px;" label="科室" prop="depId">
+            <el-select  style="width:284px;" v-model="formValidate.depId" placeholder="请选择">
+              <!--<select-option  :unAll="true"></select-option>-->
+              <select-option :type="type"  :unAll="unAll"></select-option>
             </el-select>
           </el-form-item>
 
@@ -123,10 +124,12 @@
         </el-form-item>
       </el-col>
     </el-row>
-    <el-form-item>
-      <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
-      <el-button  @click="cancel">取消</el-button>
-    </el-form-item>
+      <el-row>
+        <el-col :span="10" :offset="10">
+          <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+          <el-button  @click="cancel">取消</el-button>
+        </el-col>
+      </el-row>
   </el-form>
     <!--选择人员-->
     <Modal
@@ -163,6 +166,11 @@
       props:['url','rules'],
     data() {
       return {
+        //科室需要的数据
+        type:'',  //科室类型
+        unAll:false,  //是否全部不显示
+
+
         selectHost:[],
         selectUser:[],
         //保存按钮基本信息
@@ -256,6 +264,17 @@
     created(){
       //给当前组件注入全局util
       Util = this.$util;
+
+      let userInfo = this.$store.getters.getUserInfo;
+      let role = userInfo.roleList[0].identify;
+      if(role =='JXMS' ||role =='KEZR'){
+        this.type = 'byNowUser';
+        this.unAll = true;
+      }else {
+        this.type = 'dep';
+      }
+
+
     },
     mounted(){
       //暂时没有初始化,预留初始化入口

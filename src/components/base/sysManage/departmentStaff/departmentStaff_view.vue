@@ -5,7 +5,7 @@
       <el-tab-pane label="基本情况" name="first">
         <!-- 基本情况-->
         <keep-alive>
-          <basic :data-id="operailityData.id" v-if="currentView==0"></basic>
+          <basic :data-id="operailityData.id" :studentType="studentType" v-if="currentView==0"></basic>
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="学历信息" name="second">
@@ -96,7 +96,7 @@
   import papers from '../../../teach/archivesManagement/archivesManagement/archivesManagement_view/archivesManagement_view_papers.vue';
 
   export default {
-    props:['operailityData'],
+    props: ['operailityData', 'studentType'], // studentType 学生类型
     data() {
       return {
         activeName: 'first',
@@ -108,8 +108,19 @@
         this.currentView = tab["index"];
       },
     },
-    components:{
-      basic,education,workExperience,professionalSkill,credentials,teachingExperience,study,train,awards,scientific,papers
+    components: {
+      basic,
+      education,
+      workExperience,
+      professionalSkill,
+      credentials,
+      teachingExperience,
+      study,
+      train,
+      awards,
+      scientific,
+      papers
     }
   };
+
 </script>

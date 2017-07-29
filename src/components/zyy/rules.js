@@ -34,20 +34,73 @@ let reqDepVal = {
  * 手工调整
  */
 let handWork = {
-  "depId":[baseRules.required],
-  "ts":baseRules.numberMust,
+  "depId": [baseRules.required],
+  "ts": baseRules.numberMust,
 };
 
 /**
  * 大纲添加
  */
 let internOutline = {
-  "ts":[{ required: true, message: '此项不能为空'}],
-  "greatName":[{ required: true, message: '此项不能为空'}],
+  "ts": [{
+    required: true,
+    message: '此项不能为空'
+  }],
+  "greatName": [{
+    required: true,
+    message: '此项不能为空'
+  }],
 };
 
 
+function multiple2(rule, value, callback){
+    //检验位的检测
+  let val = (value/0.5)+'';
+    if (val!=val || /\./g.test(val)) {
+      callback(new Error('该项必须是0.5的倍数'));
+    }else {
+      callback();
+    }
+}
+
+function multiple(rule, value, callback){
+    //检验位的检测
+    if (/\./g.test(value)) {
+      callback(new Error('该项必须是1的倍数'));
+    }else {
+      callback()
+    }
+}
+/**
+ * 细则
+ */
+let rdyTrainingStandardsFirst = {
+  "rtName":[baseRules.requiredNoEvent,baseRules.inputLen(0,50),baseRules.illegalChar()],
+  "rtIntroduce":[baseRules.inputLen(0,500),baseRules.illegalChar()],
+  "rtTarget":[baseRules.inputLen(0,500),baseRules.illegalChar()],
+  "rtMethod":[baseRules.inputLen(0,500),baseRules.illegalChar()],
+  "rtAdmrank":[baseRules.inputLen(0,500),baseRules.illegalChar()],
+  "ts":[multiple2,baseRules.requiredNoEvent,baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],
+  "optionalNum":[multiple,baseRules.requiredNoEvent,baseRules.numbers,baseRules.inputLen(0,20),baseRules.illegalChar()],
+};
+
+/**/
+
+
+/**
+ * 住院医管理
+ */
+let rdyPersonnelManagement = {
+  rotaryProclass: baseRules.requiredNoEvent,
+  rotaryYear: baseRules.isDate,
+  rotaryAdmrank: baseRules.requiredNoEvent,
+  rotaryZyytype: baseRules.requiredNoEvent,
+};
 
 export {
-  internAudit,chargingStandard,reqDepVal,internOutline
+  internAudit,
+  chargingStandard,
+  reqDepVal,
+  internOutline,
+  rdyTrainingStandardsFirst
 };

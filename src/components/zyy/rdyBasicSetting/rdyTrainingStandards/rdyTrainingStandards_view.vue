@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-steps :space="500" :active="active" finish-status="success">
+    <el-steps :space="500" align-center :active="active" finish-status="success" style="margin-left: 60px">
       <el-step  title="第一步：设置轮转科室"></el-step>
       <el-step title="第二步：设置科室要求"><second></second></el-step>
       <el-step title="第三步：关联院内科室"><third></third></el-step>

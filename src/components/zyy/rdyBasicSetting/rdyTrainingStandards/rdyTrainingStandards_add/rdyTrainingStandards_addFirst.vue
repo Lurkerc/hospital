@@ -7,16 +7,16 @@
 <!---设置轮转科室-添加--->
 <template>
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form :model="formValidate" ref="formValidate1" :rules="rdyTrainingStandardsFirst" class="demo-form-inline" label-width="90px" >
       <el-row >
-        <el-col :span="22" :offset="1">
+        <el-col :span="18" :offset="3">
           <el-form-item label="培训标准名称:" prop="rtName">
             <el-input v-model="formValidate.rtName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
-        <el-col :span="11" :offset="1">
+        <el-col :span="9" :offset="3">
           <el-form-item  style="width:300px" label="基地名称:" prop="jdName"  >
             <el-select style="width:300px" v-model="formValidate.jdName" placeholder="请选择">
               <el-option
@@ -29,7 +29,7 @@
             </el-select>
           </el-form-item>
         </el-col >
-        <el-col :span="10"  :offset="1">
+        <el-col :span="9"  >
           <el-form-item  style="width:300px" label="学历:" prop="rtSchlength">
             <el-select  style="width:300px" v-model="formValidate.rtSchlength" placeholder="请选择">
               <el-option
@@ -44,28 +44,28 @@
         </el-col >
       </el-row >
       <el-row >
-        <el-col  :span="22" :offset="1">
+        <el-col  :span="18" :offset="3">
           <el-form-item label="培训简介:" prop="rtIntroduce">
             <el-input  type="textarea" v-model="formValidate.rtIntroduce" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
-        <el-col  :span="22" :offset="1">
+        <el-col  :span="18" :offset="3">
           <el-form-item label="培训目标:" prop="rtTarget">
             <el-input  type="textarea"  v-model="formValidate.rtTarget" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
-        <el-col  :span="22" :offset="1" >
+        <el-col  :span="18" :offset="3" >
           <el-form-item label="培训方法:" prop="rtMethod">
             <el-input  type="textarea"  v-model="formValidate.rtMethod" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
-        <el-col  :span="22" :offset="1" >
+        <el-col  :span="18" :offset="3" >
           <el-form-item label="备注:" prop="rtAdmrank">
             <el-input  type="textarea"  v-model="formValidate.rtAdmrank" placeholder="请输入"></el-input>
           </el-form-item>
@@ -73,10 +73,10 @@
       </el-row >
     </el-form>
     <br />
-    <div class="el-form">
+    <div class="el-form add-scope" >
       <el-row v-if="outlines.length>0" :gutter="10">
-        <el-col :span="1">&nbsp;</el-col>
-        <el-col :span="22">
+        <el-col :span="3">&nbsp;</el-col>
+        <el-col :span="18">
           <div style="margin: 8px 0;" v-for="(groupItem,groupIndex) in outlines" :key="groupIndex" class="form-fieldset-wrapper">
             <div class="form-fieldset-del">
               <el-tooltip :content="'点击删除'+groupOtions[groupIndex]" placement="top" effect="light">
@@ -104,7 +104,11 @@
                   label="培训周期"
                   align="center">
                   <template scope="scope">
-                    <el-input  v-model="scope.row.ts" placeholder="请输入内容"></el-input>
+                    <el-form :model="scope.row" ref="formValidate" :rules="rdyTrainingStandardsFirst" label-width="0" >
+                      <el-form-item  prop="ts">
+                        <el-input  v-model="scope.row.ts" placeholder="请输入内容"></el-input>
+                      </el-form-item>
+                    </el-form>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -149,11 +153,19 @@
                     <tbody  class="add-scope">
                     <tr v-for="(item,index) in randomItem">
                       <td>{{item.depName}}</td>
-                      <td v-show="index==0" :rowspan="randomItem.length" align="center">
-                        <el-input placeholder="请输入内容" v-model="groupItem.ts[randomIndex]" style="width: 50px"></el-input> 周
+                      <td v-if="index==0" :rowspan="randomItem.length" align="center">
+                        <el-form :model="{ts:groupItem.ts[randomIndex]}" ref="formValidate" :rules="rdyTrainingStandardsFirst" label-width="0" >
+                          <el-form-item  prop="ts">
+                            <el-input placeholder="请输入内容" v-model="groupItem.ts[randomIndex]" style="width: 50px"></el-input> 周
+                          </el-form-item>
+                        </el-form>
                       </td>
-                      <td v-show="index==0" :rowspan="randomItem.length" align="center">
-                         <el-input placeholder="请输入内容" v-model="groupItem.optionalNum[randomIndex]" style="width: 50px"></el-input>
+                      <td v-if="index==0" :rowspan="randomItem.length" align="center">
+                        <el-form :model="{optionalNum:groupItem.optionalNum[randomIndex]}" ref="formValidate" :rules="rdyTrainingStandardsFirst" label-width="0" >
+                          <el-form-item  prop="optionalNum">
+                            <el-input placeholder="请输入内容" v-model="groupItem.optionalNum[randomIndex]" @blur="optionalNumChange(groupItem.optionalNum,randomIndex,randomItem.length)" style="width: 50px"></el-input>
+                          </el-form-item>
+                        </el-form>
                       </td>
                       <td align="center">
                         <el-button type="danger" size="mini" @click="delGroupItem(randomItem,index)">删除</el-button>
@@ -168,28 +180,28 @@
             </fieldset>
           </div>
         </el-col>
-        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="3">&nbsp;</el-col>
       </el-row>
       <el-row :gutter="10" v-else>
-        <el-col :span="1">&nbsp;</el-col>
-        <el-col :span="22"><div class="cal-schoolTit" style="border: 1px solid #ececec;padding: 20px;"><span class="el-table__empty-text">还没有阶段,请添加阶段!</span></div></el-col>
-        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="3">&nbsp;</el-col>
+        <el-col :span="18"><div class="cal-schoolTit" style="border: 1px solid #ececec;padding: 20px;"><span class="el-table__empty-text">还没有阶段,请添加阶段!</span></div></el-col>
+        <el-col :span="3">&nbsp;</el-col>
       </el-row>
     </div>
     <br />
     <el-row :gutter="10">
-      <el-col :span="1">&nbsp;</el-col>
-      <el-col :span="22">
+      <el-col :span="3">&nbsp;</el-col>
+      <el-col :span="18">
         <el-button type="primary" @click="addGroup">添加阶段</el-button>
       </el-col>
-      <el-col :span="1">&nbsp;</el-col>
+      <el-col :span="3">&nbsp;</el-col>
     </el-row>
     <br />
     <div v-if="ishide"></div>
     <el-row>
-      <el-col :span="8" class="textCenter">&nbsp;</el-col>
+      <el-col :span="10" class="textCenter">&nbsp;</el-col>
       <el-col :span="4" class="textCenter"><load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn></el-col>
-      <el-col :span="8" class="textCenter">&nbsp;</el-col>
+      <el-col :span="10" class="textCenter">&nbsp;</el-col>
     </el-row>
     <!--增加弹窗-->
     <Modal
@@ -212,12 +224,15 @@
   import add from "../rdyTrainingStandards_setDep.vue";
   //引入--操作url的api
   import api from "../../api.js";
+  //引入--操作url的api
+  import {rdyTrainingStandardsFirst} from "../../../rules";
   //当前组件引入全局的util
   let Util = null;
   export default{
-    props:['rules','resizeFirst','rtId'],
+    props:['resizeFirst','rtId'],
     data() {
       return {
+        rdyTrainingStandardsFirst,
         //保存按钮基本信息
         loadBtn:{title:'下一步',callParEvent:'listenSubEvent'},
         ishide:false,
@@ -285,7 +300,14 @@
           ts:[''],
           optionalNum:[''],
         },
-        outlines: [],
+        outlines: [
+          {
+            "mustRotaryDep":[[]],
+            "randomRotaryDep": [[]],
+            ts:[''],
+            optionalNum:[''],
+          }
+        ],
         //基地
         jDData:[],
         //学历
@@ -318,8 +340,7 @@
         //
         saveOutline:{
           type:'add',
-          successTitle:'添加成功!',
-          errorTitle:'添加失败!',
+          errorTitle:'保存失败',
           ajaxSuccess:'saveOutlineSuccess',
           ajaxError:'ajaxError',
           error:'saveError',
@@ -394,6 +415,7 @@
             randomRotaryDep[randomRotaryIndex].push(item.randomRotaryDep[i])
           }
           obj.ts = ts;
+          if(randomRotaryDep==0) randomRotaryDep = [[]];
           obj.randomRotaryDep = randomRotaryDep;
           obj.optionalNum = optionalNum;
           tempArr[index]=obj;
@@ -439,6 +461,10 @@
       },
       //移除可轮转科室
       randomItemRemove(item,index,groupItem){
+          if(item.length<=1){
+              this.showMess('不能移除');
+              return;
+          }
         item.splice(index,1);
         groupItem.ts.splice(index,1);
         groupItem.optionalNum.splice(index,1);
@@ -515,8 +541,7 @@
       //提交保存成功
       saveOutlineSuccess(res){
           let data = res.data;
-        let title = this.formValidate.rtId ? '修改成功' : '保存成功';
-        this.successMess(title);
+        this.successMess('保存成功');
         this.$emit('next',data);
 
       },
@@ -536,8 +561,7 @@
           this.errorMess("请添加阶段!");
           return;
         }
-//        let isSubmit = this.submitForm("formValidate");
-        let isSubmit = true;
+       let isSubmit = this.submitForm("formValidate");
         if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function (){};
           isLoadingFun(true);
@@ -552,10 +576,12 @@
       //处理提交的数据
       conductFormValidate(formValidate,outlines){
         let tempArr = [];
-        let depArr = formValidate.jdName.split('-');
-        formValidate.jdName = depArr[0];
-        formValidate.jdId = depArr[1];
-        formValidate.rtProclass = depArr[2];
+        if(formValidate.jdName){
+          let depArr = formValidate.jdName.split('-');
+          formValidate.jdName = depArr[0];
+          formValidate.jdId = depArr[1];
+          formValidate.rtProclass = depArr[2];
+        }
         for(let i=0 ;i<outlines.length;i++){
           let item = outlines[i];
             //处理必选科室
@@ -595,13 +621,18 @@
        * */
       submitForm(formName){
         let flag = true;
-        for(let i =0;i< this.$refs.f.length; i++){
-          this.$refs.f[i].validate((valid) => {
+        for(let i =0;i< this.$refs[formName].length; i++){
+          this.$refs[formName][i].validate((valid) => {
             if(!valid) {
               flag= false;
             }
           });
         }
+        this.$refs[formName+'1'].validate((valid) => {
+          if (!valid) {
+            flag = false;
+          }
+        })
         return flag;
       },
 
@@ -640,6 +671,16 @@
       getFormData(data){
         let myData = Util._.defaultsDeep({},data);
         return myData;
+      },
+
+
+      //可选科室任选其几判断
+      optionalNumChange(item,index,length){
+          if(item[index]>length){
+              this.errorMess('不能大于科室数量');
+            item[index] = length;
+            this.ishide =  !this.ishide;
+          }
       },
 
     },

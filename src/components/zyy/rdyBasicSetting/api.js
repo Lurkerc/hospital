@@ -54,6 +54,11 @@ const api = {
     method: 'get'
   },
 
+  uploadExcel: { //导入
+    path: "/rotaryBasis/rulesTraining/rulesget/uploadExcel",
+    method: 'post'
+  },
+
 
 
   BaseManageGetList: { //基地集合
@@ -74,7 +79,10 @@ const api = {
     method: 'get'
   },
 
+
+
   //科室对照表
+
   getRulesDepContrastTable: { // 配置-查看标准科室对照关系列表  {rtId}
     path: '/rotaryBasis/rulesTraining/getRulesDepContrastTable/',
     method: 'get'
@@ -84,6 +92,27 @@ const api = {
     path: '/rotaryBasis/rulesTraining/getRulesDepHgGroup/',
     method: 'get'
   },
+
+  rulesDepHgGroupAddOrEdit:{ // 配置-添加或修改分组-保存数据
+    path:'/rotaryBasis/rulesTraining/rulesDepHgGroupAddOrEdit',
+    method: 'post',
+  },
+
+  removeRulesDepHgGroup:{   //配置-分组列表-删除单个分组 {hgId}
+    path:'/rotaryBasis/rulesTraining/removeRulesDepHgGroup/',
+    method: 'delete',
+  },
+
+  getDepTree:{  //获取所有院内科室
+    path:"/hospital/dept/tree",
+    method:"get",
+  },
+
+  getRulesDepHgGroupByHgId:{  //配置-修改-查看单个分组详情 {hgId}
+    path:"/rotaryBasis/rulesTraining/getRulesDepHgGroupByHgId/",
+    method:"get",
+  }
+
 };
 
 export default api

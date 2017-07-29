@@ -19,9 +19,10 @@
                   <el-input :rows="5"  resize="none" type="textarea" v-model="formValidate.depsetPurpose" placeholder="请输入"></el-input>
                 </el-form-item>
           </el-form>
-          <div>
+          <div style="margin-bottom:5px">
             <el-button style="float: right" size="small" type="primary" @click="add()" icon="plus"></el-button>
           </div>
+          </br>
           <el-table
             align="center"
             class="add-scope"
@@ -34,7 +35,7 @@
               align="center"
               label="序号"
               type="index"
-              width="100">
+              width="70">
             </el-table-column>
             <el-table-column
               align="center"
@@ -50,14 +51,14 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="deType"
+              prop="deDetype"
               label="分类"
               width="150"
               show-overflow-tooltip>
               <template scope="scope">
                 <el-form  :model="formValidate" ref="formValidate"  label-width="0">
-                  <el-form-item  prop="depsetPurpose" label-width="0">
-                    <el-select v-model="scope.row.deType" >
+                  <el-form-item  prop="deDetype" label-width="0">
+                    <el-select v-model="scope.row.deDetype" >
                       <el-option
                         v-for="item in disType"
                         :key="item.value"
@@ -71,7 +72,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="deDetype"
+              prop="deShowtype"
               show-overflow-tooltip
               label="类型"
               align="center"
@@ -79,10 +80,10 @@
             >
               <template scope="scope">
                   <el-form  :model="formValidate" ref="formValidate"  label-width="0">
-                    <el-form-item  prop="deDetype" label-width="0">
-                      <el-select v-model="scope.row.deDetype" >
-                        <el-option label="文本" value="文本"></el-option>
-                        <el-option label="表格"  value="表格"></el-option>
+                    <el-form-item  prop="deShowtype" label-width="0">
+                      <el-select v-model="scope.row.deShowtype" >
+                        <el-option label="文本" value="TEXT"></el-option>
+                        <el-option label="表格"  value="TABLE"></el-option>
                       </el-select>
                     </el-form-item>
                 </el-form>
@@ -130,7 +131,7 @@
             </el-table-column>
             <el-table-column
               label="操作"
-              width="160">
+              width="80">
               <template scope="scope">
                 <el-button size="small"  type="danger" @click="remove(formValidate.depRequirements,scope.$index)" icon="close"></el-button>
               </template>
@@ -139,19 +140,24 @@
           </el-table>
           </br>
           <el-row >
-            <el-col :span="16" :offset="2">
+            <el-col :span="10" :offset="10">
               <div style="margin-left: 100px">
                 <load-btn @listenSubEvent="saveSubEvent" :btnData="saveBtn"></load-btn>
               </div>
             </el-col>
           </el-row >
+
         </div>
       </layout-tree>
+      <hr>
       </br>
       <el-row>
         <el-col :span="8" class="textCenter">&nbsp;</el-col>
-        <el-col :span="8" class="textCenter"><load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
-          <el-button @click="$emit('last')">上一步</el-button></el-col>
+
+        <el-col :span="8" class="textCenter">
+          <el-button @click="$emit('last')">上一步</el-button>
+          <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+         </el-col>
         <el-col  class="textCenter">&nbsp;</el-col>
       </el-row>
     </div>
@@ -239,7 +245,7 @@
               let    saveMessTitle={
                   ajaxSuccess:'saveSuccess',
                   ajaxError:'ajaxError',
-                  error:'saveError',
+                  errorTitle:'保存失败',
                   ajaxParams:{
                     url:api.rulesDepRequirementAddOrEdit.path+this.rtId+'-'+this.rdId,
                     jsonString:true,
@@ -252,23 +258,10 @@
 
           //保存成功回调
           saveSuccess(res){
-              if(this.formValidate.cdepId){
-                  this.successMess('修改成功')
-              }else {
                 this.successMess('保存成功')
-              }
           },
 
-          //保存保存失败
-          saveError(){
-            if(this.formValidate.cdepId){
-              this.successMess('修改失败')
-            }else {
-              this.successMess('保存成功')
-            }
 
-
-          },
           //查看细则下科室设置
           updateListData(res){
             let data = res.data;

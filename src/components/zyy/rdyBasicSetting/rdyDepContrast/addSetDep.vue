@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
 <div>
-  <div class="cal-schoolTit">骨科：4月</div>
+  <div class="cal-schoolTit">{{operailityData["cdepName"]}}：{{operailityData["ts"]}}月</div>
   <div class="cal-schoolTit">是否连续轮转：
     <el-radio-group v-model="formValidate.depIsCou">
       <el-radio :label="1">是</el-radio>
@@ -30,18 +30,18 @@
           <el-radio-group v-model="formValidate.deType">
             <el-row>
               <el-col :span="24">
-                <div class="cal-schoolTit"><el-radio :label="1">任选其</el-radio><el-input :disabled="formValidate.deType==0" style="width: 60px;" v-model="formValidate.depRandomNum" placeholder="请输入内容"></el-input>(<em style="color: #FF0000">该数量指：在所有的院内科室中系统随机抽选几个</em>) </div>
+                <div class="cal-schoolTit"><el-radio v-model="formValidate.deType" :label="1">任选其</el-radio><el-input :disabled="formValidate.deType==0" style="width: 60px;" v-model="formValidate.depRandomNum" placeholder="请输入内容"></el-input>(<em style="color: #FF0000">该数量指：在所有的院内科室中系统随机抽选几个</em>) </div>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="24">
-                <div class="cal-schoolTit"><el-radio :label="0">必选科室</el-radio></div>
+                <div class="cal-schoolTit"><el-radio v-model="formValidate.deType" :label="0">必选科室</el-radio></div>
               </el-col>
             </el-row>
           </el-radio-group>
         </div>
         <div v-else>
-          <el-checkbox @change="removeDepIdx(scope.$index,scope.row)" v-model="scope.row.checked">{{scope.row.hospitalDepName}}--{{scope.row.hospitalDepId}}</el-checkbox>
+          <el-checkbox @change="removeDepIdx(scope.$index,scope.row)" v-model="scope.row.checked">{{scope.row.hospitalDepName}}</el-checkbox>
         </div>
       </template>
     </el-table-column>
@@ -51,10 +51,10 @@
       label="3年时间">
       <template scope="scope">
         <div v-if="scope.$index==0">
-          <el-input style="width: 60px;" :disabled="formValidate.deType==0" v-model="formValidate.chTs" placeholder="请输入内容"></el-input>
+          <el-input style="width: 60px;" @change="handleRandomInput('chTs')" :disabled="formValidate.deType==0" v-model="formValidate.chTs" placeholder="请输入内容"></el-input>
         </div>
         <div v-else>
-          <el-input style="width: 60px;" :disabled="formValidate.deType==1" v-model="scope.row.chTs" placeholder="请输入内容"></el-input>
+          <el-input style="width: 60px;" @change="handleMustInput('chTs')" :disabled="formValidate.deType==1" v-model="scope.row.chTs" placeholder="请输入内容"></el-input>
         </div>
       </template>
     </el-table-column>
@@ -64,10 +64,10 @@
       label="2年时间">
       <template scope="scope">
         <div v-if="scope.$index==0">
-          <el-input style="width: 60px;" :disabled="formValidate.deType==0" v-model="formValidate.ch2Ts" placeholder="请输入内容"></el-input>
+          <el-input style="width: 60px;" @change="handleRandomInput('ch2Ts')" :disabled="formValidate.deType==0" v-model="formValidate.ch2Ts" placeholder="请输入内容"></el-input>
         </div>
         <div v-else>
-          <el-input style="width: 60px;" :disabled="formValidate.deType==1" v-model="scope.row.ch2Ts" placeholder="请输入内容"></el-input>
+          <el-input style="width: 60px;" @change="handleMustInput('ch2Ts')" :disabled="formValidate.deType==1" v-model="scope.row.ch2Ts" placeholder="请输入内容"></el-input>
         </div>
       </template>
     </el-table-column>
@@ -77,24 +77,24 @@
       label="1年时间">
       <template scope="scope">
         <div v-if="scope.$index==0">
-          <el-input style="width: 60px;" :disabled="formValidate.deType==0" v-model="formValidate.ch1Ts" placeholder="请输入内容"></el-input>
+          <el-input style="width: 60px;" @change="handleRandomInput('ch1Ts')" :disabled="formValidate.deType==0" v-model="formValidate.ch1Ts" placeholder="请输入内容"></el-input>
         </div>
         <div v-else>
-          <el-input style="width: 60px;" :disabled="formValidate.deType==1" v-model="scope.row.ch1Ts" placeholder="请输入内容"></el-input>
+          <el-input style="width: 60px;" @change="handleMustInput('ch1Ts')" :disabled="formValidate.deType==1" v-model="scope.row.ch1Ts" placeholder="请输入内容"></el-input>
         </div>
       </template>
     </el-table-column>
   </el-table>
   <br />
   <div style="text-align: center">
-    <el-button type="primary">确定</el-button>   <el-button @click="removeDep()" type="primary">移除</el-button>
+    <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>   <el-button @click="removeDep()" type="primary">移除</el-button>
   </div>
-  <div class="cal-schoolTit">待选科室:</div>
+  <div class="cal-schoolTit">待选科室:<el-input style="width: 200px;" v-model="filterDep" placeholder="请输入内容"></el-input></div>
   <div class="sltDepWrapper">
       <ul class="sltDepUl">
         <div v-for="(item,index) in depTreeData" :key="item.id" class="sltDepBox">
-          <li class="sltDep"><el-checkbox @change="handleCheck(item)" :disabled="item.checked" v-model="item.checked">{{item.name}}--{{item.id}}</el-checkbox></li>
-          <li class="sltSubDep" v-if="typeof item.children!='undefined'" v-for="(subItem,subIndex) in item.children"><el-checkbox @change="handleCheck(subItem)" :disabled="subItem.checked" v-model="subItem.checked">{{subItem.name}}--{{subItem.id}}</el-checkbox></li>
+          <li class="sltDep"><el-checkbox @change="handleCheck(item)" :disabled="item.checked" v-model="item.checked">{{item.name}}</el-checkbox></li>
+          <li class="sltSubDep" v-if="typeof item.children!='undefined'" v-for="(subItem,subIndex) in item.children"><el-checkbox @change="handleCheck(subItem)" :disabled="subItem.checked" v-model="subItem.checked">{{subItem.name}}</el-checkbox></li>
         </div>
       </ul>
   </div>
@@ -102,41 +102,33 @@
 </template>
 <script>
 /*当前组件必要引入*/
-
+import api from "../api.js";
 //当前组件引入全局的util
 let Util = null;
 export default{
+    props:["operailityData"],
     data() {
       return {
+        //保存按钮基本信息
+        loadBtn:{title:'确定',callParEvent:'listenSubEvent'},
+
         //form表单bind数据
         formValidate: {
           "hgId":"",
-          "rtId":"",
-          "rdId":"",
-          "hgGroup":"",
+          "rtId":this.operailityData["rtId"],
+          "rdId":this.operailityData["rdId"],
+          "hgGroup":this.operailityData["hgGroup"],
           "deType":1,
           "depRandomNum":1,
           "depIsCou":1,
-          "chTs":"",
-          "ch2Ts":"",
-          "ch1Ts":"",
-          "hospitalDeps":[
-            {
-              "chId":"",
-              "rtId":"细则ID",
-              "cdepId":"标准科室ID",
-              "cdepName":"标准科室Name",
-              "hospitalDepId":1,
-              "hospitalDepName":"院内科室名称",
-              "chTs":"3年轮转周期",
-              "ch2Ts":"2年轮转周期",
-              "ch1Ts":"1年轮转周期",
-              "rdId":"标准科室周期ID"
-            }
-          ]
+          "chTs":1,
+          "ch2Ts":1,
+          "ch1Ts":1,
+          "hospitalDeps":[]
         },
 
         depTreeData:[],
+        saveDepTreeData:[],
 
         //要删除科室
         delDep:{},
@@ -147,18 +139,34 @@ export default{
         //是否任选其一
         isRandom:1,
 
+        //查询科室
+        filterDep:"",
+
         dynamicHt: 300,
         self: this,
         tableData1: [{}],
         loading:false,
         listTotal:0,
-        listMessTitle:{
-          ajaxSuccess:'updateListData',
+
+        //获取所有的科室
+        getDepMessTitle:{
+          ajaxSuccess:'setDepData',
           ajaxParams:{
-            url:'/dictionary/list',
-            params:{
-              name:'',code:''
-            }
+            url: api.getDepTree.path,
+            params:{}
+          }
+        },
+
+        //保存设置的科室
+        addMessTitle:{
+          type:'add',
+          successTitle:'添加成功!',
+          errorTitle:'添加失败!',
+          ajaxSuccess:'ajaxSuccess',
+          ajaxParams:{
+            url: api.rulesDepHgGroupAddOrEdit.path,
+            method: api.rulesDepHgGroupAddOrEdit.method,
+            jsonString:true,
           }
         },
       }
@@ -166,11 +174,10 @@ export default{
     methods: {
       //初始化请求列表数据
       init(){
-        //this.initFormateData();
-        this.initFormateDepTree();
+        this.ajax(this.getDepMessTitle);
       },
 
-      //格式化列表server传输过来的数据
+      //格式化列表server传输过来的数据  --  修改时调用当前页面没有用
       initFormateData(data){
         data = {
           "rtId":"细则ID",
@@ -206,7 +213,7 @@ export default{
 
       //格式化科室目录树
       initFormateDepTree(data){
-          data = [
+          /*data = [
             {
               "expand":true,
               "name":"内科",
@@ -233,10 +240,60 @@ export default{
               "id":2,
               "leaf":true
             }
-          ]
+          ]*/
         this.setChecked(data);
 
+        this.saveDepTreeData = Util._.defaultsDeep([],data);
         this.depTreeData = data;
+      },
+
+      //获取server端所有科室
+      setDepData(responseData){
+        let data = responseData.data;
+        if(this.valDataType(data,"Array")){
+          if(typeof data[0].children!="undefined"){
+            this.initFormateDepTree(data[0].children);
+          }
+        }
+      },
+
+      //保存的字段合并模板
+      saveFeildExtend(){
+
+        let template = {
+          "rtId":this.operailityData["rtId"],      //培训细则id
+          "rdId":this.operailityData["rdId"],      //轮转id
+          "cdepId":this.operailityData["cdepId"],    //标准科室id
+          "cdepName":this.operailityData["cdepName"],  //标准科室name
+          "chId":"",
+          "hospitalDepId":"",
+          "hospitalDepName":"",
+          "chTs":"",
+          "ch2Ts":"",
+          "ch1Ts":"",
+        }
+        return template;
+      },
+
+
+      /*
+       * 点击提交按钮 监听是否提交数据
+       * @param isLoadingFun boolean  form表单验证是否通过
+       * */
+      listenSubEvent(isLoadingFun){
+        let isSubmit = true; //this.submitForm("formValidate");
+        if(this.tableData1.length==1){
+          this.showMess("您还没有配置科室!");
+          return;
+        }
+        if(isSubmit) {
+//          console.log(this.getFormData(this.formValidate));
+//          return;
+          if (!isLoadingFun) isLoadingFun = function () {};
+          isLoadingFun(true)
+          this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          this.ajax(this.addMessTitle, isLoadingFun)
+        }
       },
 
 
@@ -278,7 +335,16 @@ export default{
           "ch2Ts":1,
           "ch1Ts":1
         }
+        if(this.formValidate.deType==1){
+          template["chTs"] = this.formValidate["chTs"];
+          template["ch2Ts"] = this.formValidate["ch2Ts"];
+          template["ch1Ts"] = this.formValidate["ch1Ts"];
+        }
         this.tableData1.push(template);
+        if(this.formValidate.deType==0){
+          this.handleMustInput();
+        }
+
       },
 
 
@@ -303,21 +369,121 @@ export default{
       },
 
 
+      //移除调用
       removeDep(){
         let tempArr = [],idsArr=[];
         Util._.forEach(this.delDep,function (v,k) {
           tempArr.push(v["idx"]);
           idsArr.push(v["id"]);
         });
+        if(tempArr.length==0){
+          this.showMess("请选择要移除的科室!");
+          return;
+        }
         tempArr.sort(function(a,b){return a-b});
 
         for (var i=tempArr.length-1;i>=0;i--){
           this.tableData1.splice(tempArr[i],1);
         }
         this.canelChecked(this.depTreeData,idsArr,false);
+        this.canelChecked(this.saveDepTreeData,idsArr,false);
         this.delDep = {};
-      }
+        this.handleMustInput();
+      },
 
+
+      /*
+       * 获取表单数据
+       * @return string  格式:id=0&name=aa
+       * */
+      getFormData(data){
+        if(this.formValidate.deType==0){
+          this.handleMustInput();
+        }else{
+          this.handleRandomInput();
+        }
+        let myData = Util._.defaultsDeep({},data);
+        let tempArr = [];
+
+        for(var i=1,item,obj;i<this.tableData1.length;i++){
+          item = this.tableData1[i];
+          obj = Object.assign({},this.saveFeildExtend(),item);
+          tempArr.push(obj);
+        }
+
+        myData["hospitalDeps"] = tempArr;
+        return myData;
+      },
+
+
+      /**
+       * 选中随机类型后改变周期调用
+       * @param type {String}   当前周期标示:"chTs" "ch2Ts" "ch1Ts"
+        * */
+      handleRandomInput(type){
+
+        for(var i=1,item;i<this.tableData1.length;i++){
+          item = this.tableData1[i];
+          if(typeof type=="undefined") {
+            item["chTs"] = this.formValidate["chTs"]==""?0:this.formValidate["chTs"];
+            item["ch2Ts"] = this.formValidate["ch2Ts"]==""?0:this.formValidate["ch2Ts"];
+            item["ch1Ts"] = this.formValidate["ch1Ts"]==""?0:this.formValidate["ch1Ts"];
+          }else{
+            item[type] = this.formValidate[type];
+          }
+        }
+      },
+
+
+      /**
+       * 选中固定类型后改变周期调用
+       * @param type {String}   当前周期标示:"chTs" "ch2Ts" "ch1Ts"
+       * */
+      handleMustInput(type){
+        let count,count1,count2,count3;
+        count = count1 = count2 = count3 = 0;
+        for(var i=1,item;i<this.tableData1.length;i++){
+          item = this.tableData1[i];
+          if(item[type]!=""){
+            if(typeof type=="undefined"){
+              count1+= parseInt(item["chTs"]);
+              count2+= parseInt(item["ch2Ts"]);
+              count3+= parseInt(item["ch1Ts"]);
+            }else {
+              count+= parseInt(item[type]);
+            }
+          }
+        }
+        if(typeof type=="undefined"){
+          this.formValidate["chTs"] = count1==0?1:count1;
+          this.formValidate["ch2Ts"] = count1==0?1:count2;
+          this.formValidate["ch1Ts"] = count1==0?1:count3;
+        }else{
+          this.formValidate[type] = count;
+        }
+      },
+    },
+    watch:{
+      filterDep(val){
+        //todo
+        //if(!val){
+          //this.depTreeData = this.saveDepTreeData;
+        //}else{
+          this.depTreeData.sort(function(a, b) {
+            return a.name.indexOf(val) < b.name.indexOf(val);
+          })
+          for(var i=0,item;i<this.depTreeData.length;i++){
+            item = this.depTreeData[i]["children"];
+            if(typeof item!="undefined"){
+              item.sort(function(a, b) {
+                return a.name.indexOf(val) < b.name.indexOf(val);
+              })
+            }
+          }
+        //}
+
+        //console.log(val);
+      }
     },
     created(){
         Util = this.$util;

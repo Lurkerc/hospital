@@ -9,47 +9,47 @@
   <div>
     <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
       <el-row >
-        <el-col :span="22" :offset="1">
+        <el-col :span="18" :offset="3">
           <el-form-item label="培训标准名称:" prop="rtName">
             {{formValidate.rtName}}
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
-        <el-col :span="11" :offset="1">
+        <el-col :span="9" :offset="3">
           <el-form-item label="基地名称:" prop="jdName">
             {{formValidate.jdName}}
           </el-form-item>
         </el-col >
-        <el-col :span="10"  :offset="1">
+        <el-col :span="9"  >
           <el-form-item label="学历:" prop="rtSchlength">
             {{formValidate.rtSchlength}}
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
-        <el-col  :span="22" :offset="1">
+        <el-col  :span="18" :offset="3">
           <el-form-item label="培训简介:" prop="rtIntroduce">
             {{formValidate.rtIntroduce}}
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
-        <el-col  :span="22" :offset="1">
+        <el-col  :span="18" :offset="3">
           <el-form-item label="培训目标:" prop="rtTarget">
             {{formValidate.rtTarget}}
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
-        <el-col  :span="22" :offset="1" >
+        <el-col  :span="18" :offset="3" >
           <el-form-item label="培训方法:" prop="rtMethod">
             {{formValidate.rtMethod}}
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
-        <el-col  :span="22" :offset="1" >
+        <el-col  :span="18" :offset="3" >
           <el-form-item label="备注:" prop="rtAdmrank">
             {{formValidate.rtAdmrank}}
           </el-form-item>
@@ -59,8 +59,8 @@
     <br />
     <div class="el-form">
       <el-row v-if="outlines.length>0" :gutter="10">
-        <el-col :span="1">&nbsp;</el-col>
-        <el-col :span="22">
+        <el-col :span="3">&nbsp;</el-col>
+        <el-col :span="18">
           <div style="margin: 8px 0;" v-for="(groupItem,groupIndex) in outlines" :key="groupIndex" class="form-fieldset-wrapper">
             <div class="form-fieldset-del">
             </div>
@@ -133,27 +133,27 @@
             </fieldset>
           </div>
         </el-col>
-        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="3">&nbsp;</el-col>
       </el-row>
       <el-row :gutter="10" v-else>
-        <el-col :span="1">&nbsp;</el-col>
-        <el-col :span="22"><div class="cal-schoolTit" style="border: 1px solid #ececec;padding: 20px;"><span class="el-table__empty-text">还没有阶段</span></div></el-col>
-        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="3">&nbsp;</el-col>
+        <el-col :span="18"><div class="cal-schoolTit" style="border: 1px solid #ececec;padding: 20px;"><span class="el-table__empty-text">还没有阶段</span></div></el-col>
+        <el-col :span="3">&nbsp;</el-col>
       </el-row>
     </div>
     <br />
     <el-row :gutter="10">
-      <el-col :span="1">&nbsp;</el-col>
-      <el-col :span="22">
+      <el-col :span="3">&nbsp;</el-col>
+      <el-col :span="18">
       </el-col>
-      <el-col :span="1">&nbsp;</el-col>
+      <el-col :span="3">&nbsp;</el-col>
     </el-row>
     <br />
     <div v-if="ishide"></div>
     <el-row>
-      <el-col :span="8" class="textCenter">&nbsp;</el-col>
+      <el-col :span="10" class="textCenter">&nbsp;</el-col>
       <el-col :span="4" class="textCenter"><load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn></el-col>
-      <el-col :span="8" class="textCenter">&nbsp;</el-col>
+      <el-col :span="10" class="textCenter">&nbsp;</el-col>
     </el-row>
     <!--增加弹窗-->
     <Modal

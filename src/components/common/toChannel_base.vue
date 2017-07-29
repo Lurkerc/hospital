@@ -126,10 +126,12 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       confirm(isLoadingFun) {
+
         isLoadingFun(true);
         //        this.$emit('toChannel',this.body);   //发送body
         //        this.tableModal = false;
         let that = this;
+        that.ajaxCreateLoading(true);
         //处理服务数据
         let myPromise = that.$util.queryData({
           jsonString: true,
@@ -150,14 +152,17 @@
             that.errorMess('系统错误')
           }
           isLoadingFun(false);
+          that.ajaxCreateLoading(false);
         }).catch(function (response) {
           if (response instanceof Error) {
             // 意外发生在设置要求引发一个错误
             that.errorMess(response.message);
             isLoadingFun(false);
+            that.ajaxCreateLoading(false);
           } else {
             that.errorMess(response.status + "错误!");
             isLoadingFun(false);
+            that.ajaxCreateLoading(false);
           }
         })
       },

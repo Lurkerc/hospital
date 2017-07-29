@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
     <div>
-      <div class="cal-schoolTit">标准科室：{{standardDep}}</div>
+      <div class="cal-schoolTit">标准科室：{{standardDep}}({{serverData["ts"]}}月)</div>
       <div class="listUpAreaBox">
         <div class="listUpArea-menus">
           <div class="add-remove">
@@ -30,11 +30,9 @@
           class-name="clearPadding"
           width="200">
           <template scope="scope">
-          <div v-for="(item, index) in scope.row.hospitalDep">
-            <div :class="{'div-noborder':scope.row.hospitalDep.length-1==index&&item.hospitalDeps.length-1==subIndex}" class="div-border" v-for="(subItem, subIndex) in item.hospitalDeps">
+            <div :class="{'div-noborder':scope.row.hospitalDeps.length-1==subIndex}" class="div-border" v-for="(subItem, subIndex) in scope.row.hospitalDeps">
               {{subItem.hospitalDepName}}
             </div>
-          </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -43,14 +41,12 @@
           class-name="clearPadding"
           label="科室安排类型">
           <template scope="scope">
-            <div v-for="(item, index) in scope.row.hospitalDep">
-              <div v-if="item.deType==0">
-                <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
+            <div v-if="scope.row.deType==0">
+                <div class="div-border" :class="{'div-noborder':scope.row.hospitalDeps.length-1==subIndex}" v-for="(subItem, subIndex) in scope.row.hospitalDeps">
                   固定
                 </div>
               </div>
-              <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" :style="'height:'+item.hospitalDeps.length*45+'px;line-height:'+item.hospitalDeps.length*45+'px'" v-else>任选其{{item.depRandomNum}}</div>
-            </div>
+              <div class="div-noborder" :style="'height:'+scope.row.hospitalDeps.length*45+'px;line-height:'+scope.row.hospitalDeps.length*45+'px'" v-else>任选其{{scope.row.depRandomNum}}</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -59,16 +55,14 @@
           class-name="clearPadding"
           label="是否连续轮转">
           <template scope="scope">
-            <div v-for="(item, index) in scope.row.hospitalDep">
-              <div v-if="item.deType==0">
-                <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
-                  是
+              <div v-if="scope.row.deType==0">
+                <div class="div-border" :class="{'div-noborder':scope.row.hospitalDeps.length-1==subIndex}" v-for="(subItem, subIndex) in scope.row.hospitalDeps">
+                  {{scope.row.depIsCou==0?'是':'否'}}
                 </div>
               </div>
-              <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" :style="'height:'+item.hospitalDeps.length*45+'px;line-height:'+item.hospitalDeps.length*45+'px'" v-else>
-                否
+              <div class="div-noborder" :style="'height:'+scope.row.hospitalDeps.length*45+'px;line-height:'+scope.row.hospitalDeps.length*45+'px'" v-else>
+                {{scope.row.depIsCou==0?'是':'否'}}
               </div>
-            </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -78,14 +72,12 @@
           class-name="clearPadding"
           width="100">
           <template scope="scope">
-            <div v-for="(item, index) in scope.row.hospitalDep">
-              <div v-if="item.deType==0">
-                <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
+              <div v-if="scope.row.deType==0">
+                <div class="div-border" :class="{'div-noborder':scope.row.hospitalDeps.length-1==subIndex}" v-for="(subItem, subIndex) in scope.row.hospitalDeps">
                   {{subItem.chTs}}月
                 </div>
               </div>
-              <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" :style="'height:'+item.hospitalDeps.length*45+'px;line-height:'+item.hospitalDeps.length*45+'px'" v-else>{{item.hospitalDeps[0].chTs}}月</div>
-            </div>
+              <div class="div-noborder" :style="'height:'+scope.row.hospitalDeps.length*45+'px;line-height:'+scope.row.hospitalDeps.length*45+'px'" v-else>{{scope.row.hospitalDeps[0].chTs}}月</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -95,14 +87,12 @@
           class-name="clearPadding"
           width="100">
           <template scope="scope">
-            <div v-for="(item, index) in scope.row.hospitalDep">
-              <div v-if="item.deType==0">
-                <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
-                  {{subItem.ch2Ts}}月
-                </div>
+            <div v-if="scope.row.deType==0">
+              <div class="div-border" :class="{'div-noborder':scope.row.hospitalDeps.length-1==subIndex}" v-for="(subItem, subIndex) in scope.row.hospitalDeps">
+                {{subItem.ch2Ts}}月
               </div>
-              <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" :style="'height:'+item.hospitalDeps.length*45+'px;line-height:'+item.hospitalDeps.length*45+'px'" v-else>{{item.hospitalDeps[0].ch2Ts}}月</div>
             </div>
+            <div class="div-noborder" :style="'height:'+scope.row.hospitalDeps.length*45+'px;line-height:'+scope.row.hospitalDeps.length*45+'px'" v-else>{{scope.row.hospitalDeps[0].ch2Ts}}月</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -112,14 +102,12 @@
           class-name="clearPadding"
           width="120">
           <template scope="scope">
-            <div v-for="(item, index) in scope.row.hospitalDep">
-              <div v-if="item.deType==0">
-                <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
-                  {{subItem.ch1Ts}}月
-                </div>
+            <div v-if="scope.row.deType==0">
+              <div class="div-border" :class="{'div-noborder':scope.row.hospitalDeps.length-1==subIndex}" v-for="(subItem, subIndex) in scope.row.hospitalDeps">
+                {{subItem.ch1Ts}}月
               </div>
-              <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" :style="'height:'+item.hospitalDeps.length*45+'px;line-height:'+item.hospitalDeps.length*45+'px'" v-else>{{item.hospitalDeps[0].ch1Ts}}月</div>
             </div>
+            <div class="div-noborder" :style="'height:'+scope.row.hospitalDeps.length*45+'px;line-height:'+scope.row.hospitalDeps.length*45+'px'" v-else>{{scope.row.ch1Ts}}月</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -128,32 +116,18 @@
           class-name="clearPadding"
           width="140">
           <template scope="scope">
-            <div v-for="(item, index) in scope.row.hospitalDep">
-              <div v-if="item.deType==0">
-                <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
-                  <el-button
-                    size="small"
-                    @click="edit(scope.$index, scope.row)">修改
-                  </el-button>
-                  <el-button
-                    size="small"
-                    type="danger"
-                    @click="remove(scope.$index,scope.row)">删除
-                  </el-button>
-                </div>
-              </div>
-              <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" :style="'height:'+item.hospitalDeps.length*45+'px;line-height:'+item.hospitalDeps.length*45+'px'" v-else>
-                <el-button
-                  size="small"
-                  @click="edit(scope.$index, scope.row)">修改
-                </el-button>
-                <el-button
-                  size="small"
-                  type="danger"
-                  @click="remove(scope.$index,scope.row)">删除
-                </el-button>
-              </div>
+            <div class="div-noborder" :style="'height:'+scope.row.hospitalDeps.length*45+'px;line-height:'+scope.row.hospitalDeps.length*45+'px'">
+              <el-button
+                size="small"
+                @click="edit(scope.$index,scope.row)">修改
+              </el-button>
+              <el-button
+                size="small"
+                type="danger"
+                @click="remove(scope.row.hgId)">删除
+              </el-button>
             </div>
+
           </template>
         </el-table-column>
       </el-table>
@@ -183,7 +157,20 @@
         <!--<div slot="header"> -->
         <!--</div>-->
         <modal-header slot="header" :content="addId"></modal-header>
-        <add v-if="addModal"  @cancel="cancel" @add="subCallback" ></add>
+        <add v-if="addModal"  @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></add>
+        <div slot="footer"></div>
+      </Modal>
+      <!--删除弹窗-->
+      <Modal
+        :mask-closable="false"
+        height="200"
+        v-model="removeModal"
+        title="对话框标题"
+        class-name="vertical-center-modal"
+        :loading="loading"
+        :width="500">
+        <modal-header slot="header" :content="removeId"></modal-header>
+        <remove v-if="removeModal" :deleteUrl="deleteUrl" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
         <div slot="footer"></div>
       </Modal>
     </div>
@@ -202,7 +189,8 @@ export default{
     props:["editOperailityData"],
     data() {
       return {
-        deleteUrl:'/dictionary/remove',
+        deleteUrl: api.removeRulesDepHgGroup.path,
+        saveDelUrl: api.removeRulesDepHgGroup.path,
         /*--按钮button--*/
         addId:{
           id:'add',
@@ -216,6 +204,9 @@ export default{
           title:'修改'
         },
 
+        //server端请求回来的原始数据
+        serverData:{},
+
         //标准科室名称
         standardDep:"",
 
@@ -228,7 +219,7 @@ export default{
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:'/dictionary/list',
+            url: api.getRulesDepHgGroup.path+this.editOperailityData["rtId"]+"_"+this.editOperailityData["rdId"],
             params:{
               name:'',code:''
             }
@@ -239,15 +230,14 @@ export default{
     methods: {
       //初始化请求列表数据
       init(){
-        //this.setTableData();
-        this.initFormateData();
-        console.log(this.editOperailityData);
+        this.setTableData();
+//        this.initFormateData();
       },
 
 
       //格式化server传输过来的数据
       initFormateData(data){
-          data = {
+        /*  data = {
             "rdId":11,
             "cdepId":11,
             "cdepName":"内科",
@@ -256,44 +246,44 @@ export default{
             "depRandomNum":0,
             "hospitalDep":[
               {
-                "hgId":"组主键ID",
+                "hgId":1,
                 "hgGroup":"组号",
                 "deType":0,
                 "depRandomNum":0,
-                "depIsCou":"是否按顺序(1不按顺序 0不按顺序)",
-                "chTs":3,
-                "ch2Ts":2,
-                "ch1Ts":5,
+                "depIsCou":1,
+                "chTs":12,
+                "ch2Ts":9,
+                "ch1Ts":24,
                 "hospitalDeps":[
                   {
                     "hospitalDepId":1,
                     "hospitalDepName":"院内科室名称",
-                    "chTs":3,
+                    "chTs":5,
                     "ch2Ts":6,
-                    "ch1Ts":5
+                    "ch1Ts":9
+                  },
+                  {
+                    "hospitalDepId":1,
+                    "hospitalDepName":"院内科室名称",
+                    "chTs":4,
+                    "ch2Ts":1,
+                    "ch1Ts":8
                   },
                   {
                     "hospitalDepId":1,
                     "hospitalDepName":"院内科室名称",
                     "chTs":3,
                     "ch2Ts":2,
-                    "ch1Ts":3
-                  },
-                  {
-                    "hospitalDepId":1,
-                    "hospitalDepName":"院内科室名称",
-                    "chTs":3,
-                    "ch2Ts":2,
-                    "ch1Ts":1
+                    "ch1Ts":7
                   }
                 ]
               },
               {
-                "hgId":"组主键ID",
+                "hgId":2,
                 "hgGroup":"组号",
                 "deType":1,
                 "depRandomNum":1,
-                "depIsCou":"是否按顺序(1不按顺序 0不按顺序)",
+                "depIsCou":0,
                 "chTs":3,
                 "ch2Ts":2,
                 "ch1Ts":1,
@@ -315,14 +305,19 @@ export default{
                 ]
               }
             ]
-          }
+          }*/
+        if(data["hospitalDep"]===null){
+          data["hospitalDep"] = [];
+        }
+        this.serverData = data;
         this.standardDep = data["cdepName"];
         this.tableData1=[];
-        this.tableData1.push(data);
+        this.tableData1=data["hospitalDep"];
+        //this.tableData1.push(data);
       },
 
       setTableData(params){
-        this.setAjaxParams();
+        //this.setAjaxParams();
         this.ajax(this.listMessTitle);
       },
 
@@ -337,14 +332,22 @@ export default{
       updateListData(responseData){
         let data = responseData.data;
         this.tableData1=[];
-        data = this.addIndex(data);
-        this.tableData1= data;
-        this.listTotal = responseData.totalCount || 0;
+        this.initFormateData(data);
       },
 
 
       /*--点击--添加--按钮--*/
       add(){
+        this.operailityData = {
+          "rtId":this.editOperailityData["rtId"],      //培训细则id
+          "rdId":this.editOperailityData["rdId"],      //轮转id
+          "cdepId":this.serverData["cdepId"],    //标准科室id
+          "cdepName":this.serverData["cdepName"],  //标准科室name
+          "ts":this.serverData["ts"],  //标准科室周期
+          "hgGroup":this.serverData["hospitalDep"].length,
+          "hgId":"",
+
+        }
         this.openModel('add');
       },
 
@@ -353,22 +356,25 @@ export default{
        * 点击--修改角色--按钮
        * @param index string|number  当前行索引
        * */
-      edit(index){
-        if(typeof index == 'undefined'){
-          if(!this.isSelected(true)) return;
-          this.operailityData = this.multipleSelection[0];
-          this.openModel('edit')
-        }else {
-          this.operailityData = this.tableData1[index];
-          this.openModel('edit')
+      edit(index,row){
+        this.operailityData = {
+          "rtId":this.editOperailityData["rtId"],      //培训细则id
+          "rdId":this.editOperailityData["rdId"],      //轮转id
+          "cdepId":this.serverData["cdepId"],    //标准科室id
+          "cdepName":this.serverData["cdepName"],  //标准科室name
+          "ts":this.serverData["ts"],  //标准科室周期
+          "hgGroup":index,
+          "hgId":row["hgId"],
+
         }
+        this.openModel('edit');
       },
 
 
       /*--点击--删除--按钮--*/
-      remove(){
-        if(!this.isSelected()) return;
-        this.operailityData = this.multipleSelection;
+      remove(hgId){
+        this.deleteUrl = this.saveDelUrl+hgId;
+        this.operailityData = [];
         this.openModel('remove') ;
       },
 
@@ -409,6 +415,7 @@ export default{
         }
         if(!updata){
           this.setTableData();
+          this.$emit("add");
         }
       },
 

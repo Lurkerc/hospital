@@ -1,7 +1,7 @@
 <template>
 
   <div>
-      <el-steps :space="500" :active="active" finish-status="success">
+      <el-steps :space="500" align-center :active="active" finish-status="success" style="margin-left: 60px">
         <el-step  title="第一步：设置轮转科室"></el-step>
         <el-step title="第二步：设置科室要求"><second></second></el-step>
         <el-step title="第三步：关联院内科室"><third></third></el-step>
@@ -10,7 +10,7 @@
     <div>
       <keep-alive> <first :resizeFirst="resizeFirst" :rtId="rtId" @next="next" v-if="active==0"></first></keep-alive>
       <keep-alive>  <second :resizeSecond="resizeSecond"  @next="next"  @last="last" :rtId="rtId" v-if="active==1"></second></keep-alive>
-      <keep-alive>  <third @next="next"  @last="last" v-if="active==2"></third></keep-alive>
+      <keep-alive>  <third @next="next"  @last="last" :rtId="rtId" :resizeSecond="resizeSecond" v-if="active==2"></third></keep-alive>
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@
         active:0,
         rtId:'',
         resizeFirst:false,
-        resizeSecond:false,
+        resizeSecond:1,
       }
     },
     created(){
@@ -59,7 +59,7 @@
       next(id){
         if(this.active==0){
           this.$emit('resize') ;
-          this.resizeSecond = !this.resizeSecond;
+          this.resizeSecond++;
           if(!this.rtId){
             this.rtId = id ;
           }

@@ -39,12 +39,12 @@
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="deType"
+              prop="deDetype"
               label="分类"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="deDetype"
+              prop="deShowtype"
               show-overflow-tooltip
               label="类型"
               align="center"
@@ -74,8 +74,10 @@
       </br>
       <el-row>
         <el-col :span="8" class="textCenter">&nbsp;</el-col>
-        <el-col :span="8" class="textCenter"><load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
-          <el-button @click="$emit('last')">上一步</el-button></el-col>
+        <el-col :span="8" class="textCenter">
+          <el-button @click="$emit('last')">上一步</el-button>
+          <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+         </el-col>
         <el-col  class="textCenter">&nbsp;</el-col>
       </el-row>
     </div>
