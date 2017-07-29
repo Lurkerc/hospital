@@ -7,7 +7,7 @@
 <!--档案审核-->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form :model="formValidate" ref="formValidate" inline label-width="90px" class="demo-ruleForm">
+    <el-form :model="formValidate" ref="formValidate" inline label-width="100px" class="demo-ruleForm">
       <el-row style="margin-bottom:0">
         <!--列表操作按钮-->
         <el-col :span="10" >
@@ -17,8 +17,8 @@
         </el-col>
         <!--搜索项-->
         <el-col :span="14"  align="right">
-          <el-form-item label="生源类型" prop="rtName" >
-            <el-input style="width:300px;"   v-model="formValidate.rtName" placeholder="输入细则名称搜索">
+          <el-form-item label="培训标准名称:" prop="rtName" >
+            <el-input style="width:300px;"   v-model="formValidate.rtName" placeholder="输入培训标准名称搜索">
               <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
             </el-input>
           </el-form-item>
@@ -28,13 +28,13 @@
       </br>
       <!--高级搜索项-->
       <div v-if="searchMore" ref="searchMore">
-        <el-form-item label="基地名称" prop="jdName" >
+        <el-form-item label="基地名称:" prop="jdName" >
             <el-input style="width:300px;"   v-model="formValidate.jdName" placeholder="输入专业"></el-input>
         </el-form-item>
-        <el-form-item label="专业" prop="rtProclass" >
+        <el-form-item label="专业:" prop="rtProclass" >
             <el-input style="width:300px;"   v-model="formValidate.rtProclass" placeholder="输入专业"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="state" >
+        <el-form-item label="状态:" prop="state" >
           <el-select filterable  v-model="formValidate.state" placeholder="请选择">
             <el-option label="全部" value=""></el-option>
             <el-option label="启用" value="ENABLE"></el-option>

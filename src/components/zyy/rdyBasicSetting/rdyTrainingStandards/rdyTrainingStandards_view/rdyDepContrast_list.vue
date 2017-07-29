@@ -116,7 +116,7 @@
       width="150">
       <template scope="scope">
         <div v-for="(item, index) in scope.row.hospitalDep">
-          <div v-if="item.deType==0">
+          <div v-if="item.deType=='N'">
             <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
               固定
             </div>
@@ -133,7 +133,7 @@
       width="120">
       <template scope="scope">
         <div v-for="(item, index) in scope.row.hospitalDep">
-          <div v-if="item.deType==0">
+          <div v-if="item.deType=='N'">
             <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
               {{subItem.chTs}}月
             </div>
@@ -150,7 +150,7 @@
       width="120">
       <template scope="scope">
         <div v-for="(item, index) in scope.row.hospitalDep">
-          <div v-if="item.deType==0">
+          <div v-if="item.deType=='N'">
             <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
               {{subItem.ch2Ts}}月
             </div>
@@ -167,7 +167,7 @@
       width="120">
       <template scope="scope">
         <div v-for="(item, index) in scope.row.hospitalDep">
-          <div v-if="item.deType==0">
+          <div v-if="item.deType=='N'">
             <div class="div-border" :class="{'div-noborder':scope.row.hospitalDep.length-1==index}" v-for="(subItem, subIndex) in item.hospitalDeps">
               {{subItem.ch1Ts}}月
             </div>
@@ -196,7 +196,7 @@
 </template>
 <script>
 /*当前组件必要引入*/
-import api from "../api.js";
+import api from "../../api.js";
 import setDepList from "./setDepList.vue";
 //当前组件引入全局的util
 let Util = null;

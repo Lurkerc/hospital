@@ -10,7 +10,7 @@
     <div>
       <keep-alive> <first :resizeFirst="resizeFirst" :rtId="rtId" @next="next" v-if="active==0"></first></keep-alive>
       <keep-alive>  <second :resizeSecond="resizeSecond"  @next="next"  @last="last" :rtId="rtId" v-if="active==1"></second></keep-alive>
-      <keep-alive>  <third @next="next"  @last="last" :rtId="rtId" :resizeSecond="resizeSecond" v-if="active==2"></third></keep-alive>
+      <keep-alive>  <third @next="next" @cancel="cancel" @last="last" :rtId="rtId" :resizeSecond="resizeSecond" v-if="active==2"></third></keep-alive>
     </div>
   </div>
 </template>
@@ -93,7 +93,7 @@
        * 发送关闭(cancel)模态事件给父组件,请求关闭当前模态窗
        * */
       cancel(){
-        this.$emit('cancel',this.addMessTitle.type);
+        this.$emit('cancel','add');
       },
       /*
        * 获取表单数据

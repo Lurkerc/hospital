@@ -63,14 +63,6 @@ function multiple2(rule, value, callback){
     }
 }
 
-function multiple(rule, value, callback){
-    //检验位的检测
-    if (/\./g.test(value)) {
-      callback(new Error('该项必须是1的倍数'));
-    }else {
-      callback()
-    }
-}
 /**
  * 细则
  */
@@ -80,8 +72,19 @@ let rdyTrainingStandardsFirst = {
   "rtTarget":[baseRules.inputLen(0,500),baseRules.illegalChar()],
   "rtMethod":[baseRules.inputLen(0,500),baseRules.illegalChar()],
   "rtAdmrank":[baseRules.inputLen(0,500),baseRules.illegalChar()],
-  "ts":[multiple2,baseRules.requiredNoEvent,baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],
-  "optionalNum":[multiple,baseRules.requiredNoEvent,baseRules.numbers,baseRules.inputLen(0,20),baseRules.illegalChar()],
+  "ts":[baseRules.requiredNoEvent,baseRules.float,multiple2,baseRules.inputLen(0,20),baseRules.illegalChar()],
+  "optionalNum":[baseRules.requiredNoEvent,baseRules.numbers,baseRules.inputLen(0,20),baseRules.illegalChar()],
+};
+
+let rdyTrainingStandardsSecond = {
+  "depsetPurpose":[baseRules.requiredNoEvent,baseRules.inputLen(0,500),baseRules.illegalChar()],
+  "deName":[baseRules.requiredNoEvent,baseRules.inputLen(0,50),baseRules.illegalChar()],
+  "optionalNum":[baseRules.requiredNoEvent,baseRules.numbers,baseRules.inputLen(0,20),baseRules.illegalChar()],
+  "deDetype":[baseRules.requiredNoEvent],
+  "deShowtype":[baseRules.requiredNoEvent],
+  "deCountBasic":[baseRules.requiredNoEvent,baseRules.numbers,baseRules.inputLen(0,20),baseRules.illegalChar()],
+  "deCountBasicSecond":[baseRules.requiredNoEvent,baseRules.numbers,baseRules.inputLen(0,20),baseRules.illegalChar()],
+  "deCountBasicFirst":[baseRules.requiredNoEvent,baseRules.numbers,baseRules.inputLen(0,20),baseRules.illegalChar()],
 };
 
 /**/
@@ -102,5 +105,6 @@ export {
   chargingStandard,
   reqDepVal,
   internOutline,
-  rdyTrainingStandardsFirst
+  rdyTrainingStandardsFirst,
+  rdyTrainingStandardsSecond
 };

@@ -360,6 +360,8 @@
         Util = this.$util;
         this.ajax(this.getJd);
         this.ajax(this.getSchlength);
+        this.getOutline.ajaxParams.url = api.rulesgetGet.path+this.rtId;
+        this.ajax(this.getOutline);
       },
 
 
@@ -542,13 +544,12 @@
       //提交保存成功
       saveOutlineSuccess(res){
           let data = res.data;
-        this.successMess('保存成功');
+        this.successMess('修改成功');
         this.$emit('next',data);
-
       },
 
       saveError(res){
-        this.errorMess('保存失败');
+        this.errorMess('修改失败');
 
       },
       /*
@@ -590,7 +591,6 @@
             mustRotaryDep.depPhase = this.groupOtions[i];
             mustRotaryDep.depPhaseNum = i+1;
             tempArr.push(mustRotaryDep);
-
           }
 
           for(let k=0;k<item.randomRotaryDep.length;k++){
@@ -695,7 +695,7 @@
     watch:{
       resizeFirst(){
           if(this.rtId){
-            this.getOutline.ajaxParams.url = api.rulesgetGet.path+this.rtId
+            this.getOutline.ajaxParams.url = api.rulesgetGet.path+this.rtId;
             this.ajax(this.getOutline);
           }
       }
