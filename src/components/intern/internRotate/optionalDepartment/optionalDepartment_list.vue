@@ -282,15 +282,12 @@
 
       //处理用户选择的科室
       conductUserSelectDep(groupNo,userSelectDep){
-       console.log(userSelectDep);
           let groupNum = this.groupNum;
         for(let i=0;i<userSelectDep.length;i++){
             let item =  userSelectDep[i];
-            console.log(groupNo);
             let index = groupNum[item.groupNo] ||0 ; //当前所对应的索引
             let group =   groupNo[index];   //当前组号所对应的组 [],
             let depIds = item.depIds;   //选中的科室
-          console.log(group);
             for(let k=0 ;k<group.length ;k++){
               if(depIds.includes(group[k].depId+'')){
                 group[k].isSelcet = true;

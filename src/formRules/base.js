@@ -267,7 +267,7 @@ let mustRules = {
 
   // 数字-必须整数
   number: {
-    message: '该项必须为整数',
+    message: '该项必须为正整数',
     pattern: /^\d+$/,
     trigger: defEvent
   },

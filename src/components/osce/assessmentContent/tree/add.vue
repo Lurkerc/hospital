@@ -53,7 +53,7 @@
         //form表单bind数据
         formValidate: {
           treeName: '',
-          parentTreeRoad: this.operailityData.parentTreeRoad,
+          parentTreeRoad: this.operailityData.parentTreeRoad || this.operailityData.treeRoad,
           parentId: this.operailityData.id,
           remark: '',
         },
@@ -79,6 +79,7 @@
     created() {
       //给当前组件注入全局util
       Util = this.$util;
+      console.log(this.operailityData)
     },
     mounted() {
       //初始化

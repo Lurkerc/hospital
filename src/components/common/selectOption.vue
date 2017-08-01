@@ -103,7 +103,7 @@
         }
         if(!this.unAll){
           data.unshift({
-            [this.userId||'id']: '',
+            [this.id||'id']: '',
             [this.name||'name']:'全部'
           },)
         }

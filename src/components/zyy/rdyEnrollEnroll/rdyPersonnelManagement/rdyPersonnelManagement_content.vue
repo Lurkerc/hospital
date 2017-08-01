@@ -163,10 +163,10 @@
   import edit from "./rdyPersonnelManagement_edit";
   //引入--查看--组件
   import show from "../../../base/sysManage/departmentStaff/departmentStaff_view";
-  //引入--添加--组件 
+  //引入--添加--组件
   import add from "./rdyPersonnelManagement_add";
   //引入--导入--组件
-  import toChannel from "../../../intern/recruitStudent/usersManagement/usersManagement_toChannel";
+  import toChannel from "./rdyPersonnelManagement_toChannel.vue";
   //引入--短信通知--组件
   import shortNote from "../../../intern/recruitStudent/usersManagement/usersManagement_shortNote";
   import sexOption from '../../../intern/recruitStudent/usersManagement/sexOption'; // 性别

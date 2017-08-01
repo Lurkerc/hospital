@@ -118,22 +118,34 @@
                     <col name="'el-table_1_column_'+index" :width="130">
                   </colgroup>
 
-                  <tbody  class="add-scope">
+                  <tbody>
                   <tr v-for="(item,index) in groupItem.randomRotaryDep">
                     <td>
                       &nbsp;&nbsp;&nbsp;&nbsp;{{item.depName}}
                     </td>
-                    <td align="center">
+                    <td class="valiTableStyle" align="center">
+                      <el-form :model="{rotaryUserNum:item.rotaryUserNum}" ref="f" :rules="rules"  label-width="0" style="display: inline-block">
+                        <el-form-item  prop="rotaryUserNum">
                       <el-input placeholder="请输入内容" style="width: 90%" v-model="item.rotaryUserNum"></el-input>
+                        </el-form-item>
+                      </el-form>
                     </td>
                     <td align="center">
                       <el-input placeholder="请输入内容" style="width: 90%" v-model="item.remark"></el-input>
                     </td>
-                    <td v-show="index==0" :rowspan="groupItem.randomRotaryDep.length" align="center">
-                      <el-input placeholder="请输入内容" v-model="item.ts" style="width: 50px"></el-input> 周
+                    <td class="valiTableStyle" v-show="index==0" :rowspan="groupItem.randomRotaryDep.length" align="center">
+                      <el-form :model="{ts:item.ts}" ref="f" :rules="rules"  label-width="0" style="display: inline-block">
+                        <el-form-item  prop="ts">
+                      <el-input @change.native="valTsAndRandomNum(groupIndex,item.ts,item.optionalNum,groupItem.randomRotaryDep.length)" placeholder="请输入内容" v-model="item.ts" style="width: 50px"></el-input> 周
+                        </el-form-item>
+                      </el-form>
                     </td>
-                    <td v-show="index==0" :rowspan="groupItem.randomRotaryDep.length" align="center">
-                      自选 <el-input placeholder="请输入内容" v-model="item.optionalNum" style="width: 50px"></el-input> 科
+                    <td class="valiTableStyle" v-show="index==0" :rowspan="groupItem.randomRotaryDep.length" align="center">
+                      <el-form :model="{ts:item.optionalNum}" ref="f" :rules="rules"  label-width="0" style="display: inline-block">
+                        <el-form-item  prop="ts">
+                      自选 <el-input @change.native="valTsAndRandomNum(groupIndex,item.ts,item.optionalNum,groupItem.randomRotaryDep.length)" placeholder="请输入内容" v-model="item.optionalNum" style="width: 50px"></el-input> 科
+                        </el-form-item>
+                      </el-form>
                     </td>
                     <td align="center">
                       <el-button type="danger" size="mini" @click="delGroupItem(groupIndex,index,'randomRotaryDep')">删除</el-button>
@@ -487,7 +499,7 @@
           return;
         }
 
-        let tempArr = [];
+        let tempArr = [],valRandomArr=[],myFlag=true;
         for(var i=0,item;i<this.outlines.length;i++){
           item = this.outlines[i];
           for(var k=0;k<item["mustRotaryDep"].length;k++){
@@ -498,14 +510,29 @@
             if(k==0){
               ts = item["randomRotaryDep"][k]["ts"];
               optionalNum = item["randomRotaryDep"][k]["optionalNum"];
+              valRandomArr.push({idx:i,ts:ts,randomNum:optionalNum,len:item["randomRotaryDep"].length});
             }else{
               item["randomRotaryDep"][k]["ts"] = ts;
               item["randomRotaryDep"][k]["optionalNum"] = optionalNum;
             }
             item["randomRotaryDep"][k]["greatName"] = item["greatName"];
           }
+          if(item["mustRotaryDep"].length==0&&item["randomRotaryDep"].length==0){
+            this.errorMess('您必须要填写:"必须轮转科室"!');
+            myFlag = false;
+            break;
+          }
           tempArr = tempArr.concat(item["mustRotaryDep"]);
           tempArr = tempArr.concat(item["randomRotaryDep"]);
+        }
+        if(!myFlag) return;
+        for(var i=0,item;i<valRandomArr.length;i++){
+          item = valRandomArr[i];
+          let flag = this.valTsAndRandomNum(item.idx,item.ts,item.randomNum,item.len);
+          if(!flag){
+            return;
+            break;
+          }
         }
         this.formValidate.gradeNum = this.conductDate(this.formValidate.gradeNum,"yyyy");
         this.formValidate.outlines = tempArr;
@@ -517,6 +544,32 @@
           isLoadingFun(true);
           this.saveOutline.ajaxParams.data = this.getFormData(this.formValidate);
           this.ajax(this.saveOutline, isLoadingFun);
+        }
+      },
+
+
+      /**
+       * 验证轮转周期与自选是否匹配
+       * @param idx {Number}  当前组所在索引
+       * @param ts {Number}  周期数
+       * @param radom  {Number}  任选其几
+       * @param len  {Number}
+       * */
+      valTsAndRandomNum(idx,ts,randomNum,len){
+        if(randomNum=="") return true;
+        if(randomNum>len){
+          this.errorMess(this.groupOtions[idx]+"自选规则："+randomNum+"不能大于自选轮转科室数量："+len);
+          return false;
+        }
+        if(ts=="") return true;
+        ts = parseInt(ts);
+        randomNum = parseInt(randomNum);
+        let res = ts/randomNum
+        if(String(res).indexOf(".")>-1){
+          this.errorMess(this.groupOtions[idx]+"您填写的周期数："+ts+" 与所填写的自选规则："+randomNum+"不能匹配!");
+          return false;
+        }else{
+            return true;
         }
       },
 

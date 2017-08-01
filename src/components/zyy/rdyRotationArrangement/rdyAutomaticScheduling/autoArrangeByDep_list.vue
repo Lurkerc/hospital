@@ -60,7 +60,7 @@
             params:{
               userName:"",
               schoolName:"",
-              year:"2017",
+              year:"",
               rtState:"",
             }
           }

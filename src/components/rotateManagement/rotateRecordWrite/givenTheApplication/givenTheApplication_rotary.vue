@@ -28,11 +28,22 @@
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>轮转记录填写：</h4>
-          <el-table align="center" :context="self" :data="viewData.depRequired" tooltip-effect="dark">
-            <el-table-column label="名称" prop="requiredName"></el-table-column>
-            <el-table-column label="要求例数" prop="requiredNum" show-overflow-tooltip></el-table-column>
-            <el-table-column label="实填例数" prop="userNum" show-overflow-tooltip></el-table-column>
-          </el-table>
+          <!-- 实习生 -->
+          <template v-if="studentType">
+            <el-table align="center" :context="self" :data="viewData.depRequired" tooltip-effect="dark">
+              <el-table-column label="名称" prop="requiredName"></el-table-column>
+              <el-table-column label="要求例数" prop="requiredNum" show-overflow-tooltip></el-table-column>
+              <el-table-column label="实填例数" prop="userNum" show-overflow-tooltip></el-table-column>
+            </el-table>
+          </template>
+          <!-- 非实习生 -->
+          <template v-else>
+            <el-table align="center" :context="self" :data="viewData.depRequirement" tooltip-effect="dark">
+              <el-table-column label="名称" prop="disTitle"></el-table-column>
+              <el-table-column label="要求例数" prop="disNum" show-overflow-tooltip></el-table-column>
+              <el-table-column label="实填例数" prop="disTs" show-overflow-tooltip></el-table-column>
+            </el-table>
+          </template>
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>出科成绩：</h4>
@@ -139,16 +150,26 @@
           title: '上报',
           callParEvent: 'listenSubEvent'
         },
+        // 学生类型
+        studentType: 'SXS', // 默认实习生
       }
     },
     methods: {
       // 初始化
       init() {
+        // 检测当前登录用户是否是实习生
+        let thisUserRoleList = [];
+        this.$store.state.userInfo.map(item => thisUserRoleList.push(identify));
+        if (thisUserRoleList.indexOf('SXS') > -1) {
+          this.studentType = 'SXS'
+        }
+
         if (this.operailityData.depExaminationId) {
           this.getViewData()
         } else {
           this.getViewDataForPodId()
         }
+        this.getDepRequirement();
       },
 
       // 获取预览数据
@@ -165,6 +186,7 @@
       // 获取数据成功
       getDataSuccess(res) {
         this.viewData = res.data;
+        this.viewDate.depRequirement = []; // 非实习生查看的轮转记录填写
         this.summaryFileList.comment = res.data.userSummary;
         let fileIds = [];
         this.uploadFiles.length = 0;
@@ -177,7 +199,7 @@
           })
         });
         this.summaryFileList.fileIds = fileIds.join(',');
-        this.getViewDataForPodId()
+        this.getViewDataForPodId();
       },
 
       // 通过轮转id获取预览数据
@@ -195,6 +217,18 @@
       getDataForPodIdSuccess(res) {
         this.$util._.map(res.data, (val, key) => {
           this.viewData[key] = val
+        })
+      },
+
+      // 获取非实习生查看的轮转记录填写
+      getDepRequirement() {
+        this.ajax({
+          ajaxSuccess: res => this.viewDate.depRequirement = res.data || [],
+          ajaxParams: {
+            url: api.getDepRequirement.path + this.operailityData.rdId + '-' + this.operailityData.depId + '-' +
+              this.operailityData.podId,
+            method: api.getDepRequirement.method
+          }
         })
       },
 

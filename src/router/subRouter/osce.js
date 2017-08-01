@@ -66,7 +66,7 @@ const osceRouters = {
     //   }
     // },
     {
-      //成绩管理
+      //考核评分
       path: 'examineScore',
       name: 'examineScore',
       component: resolve => {
@@ -95,16 +95,16 @@ const osceRouters = {
         }, 'osce');
       }
     },
-    // {
-    //   //场次维护
-    //   path: 'attendanceMaintenance',
-    //   name: 'attendanceMaintenance',
-    //   component: resolve => {
-    //     require.ensure([], () => {
-    //       resolve(require('../../components/osce/attendanceMaintenance/attendanceMaintenance_list.vue'));
-    //     }, 'osce');
-    //   }
-    // }
+    {
+      //成绩管理
+      path: 'attendanceMaintenance',
+      name: 'attendanceMaintenance',
+      component: resolve => {
+        require.ensure([], () => {
+          resolve(require('../../components/osce/attendanceMaintenance/attendanceMaintenance_list.vue'));
+        }, 'osce');
+      }
+    }
   ]
 }
 

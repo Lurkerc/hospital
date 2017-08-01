@@ -28,7 +28,7 @@ const api = {
 
   //第二步选择人员
   getUsersList:{  //根据专业获取所有未安排轮转的住院医
-    path: '/traineeRotary/getRotaryUser/ZYY',
+    path: '/traineeRotary/arrangeRotary/getRotaryUser/ZYY',
     method: 'get'
   },
 
@@ -39,6 +39,12 @@ const api = {
   },
 
   //第五步确认预览
+  rotaryDeptUser:{  //自动安排-按人员排班预览
+    path: "/traineeRotary/arrangeRotary/rotaryDeptMonthUser_ZYY",
+    method: 'post'
+  },
+
+
   setRotaryViewData:{  //保存轮转数据
     path: '/traineeRotary/arrangeRotary/rotaryDeptMonthUser_ZYY',
     method: 'post'
@@ -63,11 +69,11 @@ const api = {
     path: rotateSet + '/userRotaryDepExportExcel_ZYY',
     method: 'get'
   },
-
-  rotaryDeptUser:{  //自动安排-按人员安排轮转  按人员排班预览
-    path: rotateSet + '/rotaryDeptUser',
+  userRotaryByUserId:{  //根据人员ID和人员类型查看轮转表(自动排班--查看轮转表)  {userType}-{userId} 例如:SXS-100
+    path: rotateSet + '/userRotaryByUserId',
     method: 'get'
   },
+
 
   /*----- 手工调整 --------------------------------------------------------------------------------*/
 
@@ -83,8 +89,8 @@ const api = {
     path: handWork + '/deleteRotary_ZYY',
     method: 'delete'
   },
-  getRotaryDepIndo:{  //微调-查看用户轮转表  {userId}
-    path: handWork + '/getRotaryDepIndo_ZYY',
+  getRotaryDepIndo:{  //微调-查看用户轮转表  {userId}_ZYY
+    path: handWork + '/getRotaryDepIndo',
     method: 'get'
   },
   regUserMicrCtrol:{  //手工调整--轮转微调  保存微调的数据

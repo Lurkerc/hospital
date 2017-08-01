@@ -19,12 +19,12 @@
       <first @setFirstVal="setFirstVal"></first>
     </div>
     <!--- 第二步：选择基地 --->
-    <div v-if="active==1" style="margin: 20px;">
+    <div v-show="active==1" style="margin: 20px;">
       <second @setSecondVal="setSecondVal"></second>
     </div>
     <!--- 第三步：选择培训标准 --->
     <div v-if="active==2" style="margin: 20px;">
-      <third @setThirdVal="setThirdVal"></third>
+      <third @setThirdVal="setThirdVal" :initRtId="initRtId" :jdProclass="jdProclass"></third>
     </div>
     <!--- 第四步：设置轮转时间 --->
     <div v-if="active==3" style="margin: 10px 20px;">
@@ -81,7 +81,7 @@
       <showTabData :tableData="tableData"></showTabData>
     </div>
     <!--- 第七步：完成 --->
-    <div v-if="active==5" style="margin: 20px;text-align: center;">
+    <div v-if="active==6" style="margin: 20px;text-align: center;">
       数据提交中……
     </div>
     <el-row :gutter="10">
@@ -115,6 +115,12 @@
           "userId": "",
           "userName": "",
         },
+
+        //第二步的选择的专业方向
+        jdProclass:"",
+
+        //第三步默认选择的细则
+        initRtId:{},
 
         //第五步已选择人员查看
         groupUserNames:[],
@@ -188,7 +194,6 @@
 
       //存储第一步的数据
       setFirstVal(val){
-        console.log(val);
         let nameArr = [];
         let idArr = [];
         this.groupUserNames = [];
@@ -203,18 +208,20 @@
       },
 
 
-      //存储第一步的数据
+      //存储第二步的数据
       setSecondVal(val){
         //console.log("setSecondVal",val);
         this.postData["jdName"] = val["jdName"];
+        this.jdProclass = val["jdProclass"];
       },
 
 
       //存储三第步的数据
       setThirdVal(val){
+        this.initRtId = val;
         //console.log("setThirdVal",val);
-        this.postData["rtName"] = val["rtName"];
-        this.postData["rtId"] = val["rtId"];
+        this.postData["rtName"] = val.split("##")[0];
+        this.postData["rtId"] = val.split("##")[1];
       },
 
 
@@ -282,10 +289,7 @@
         }
 
         if(this.active==4){
-          alert("生成预览表")
           this.rotaryDeptGroupTitle.ajaxParams.data = this.getFormData(this.postData);
-          console.log(this.rotaryDeptGroupTitle.ajaxParams.data);
-          return;
           this.isLoading=true;
           this.ajax(this.rotaryDeptGroupTitle);
           return;
@@ -316,7 +320,7 @@
         this.active = 6;
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true);
-        //this.ajax(this.saveRotaryDataTitle);
+        this.ajax(this.saveRotaryDataTitle);
       },
 
 
@@ -338,6 +342,11 @@
       startRotateTime(val){
         this.postData["rtTime"] = this.conductDate(val);
       },
+      jdProclass(){
+        this.initRtId="";
+        this.postData["rtName"] = "";
+        this.postData["rtId"] = "";
+      }
 
     },
     created(){

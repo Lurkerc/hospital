@@ -85,6 +85,9 @@
                   label="培训周期"
                   prop="ts"
                   align="center">
+                  <template scope="scope">
+                    {{scope.row.ts}} 月
+                  </template>
                 </el-table-column>
               </el-table>
               <br />
@@ -118,7 +121,7 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;{{item.depName}}
                       </td>
                       <td v-show="index==0" :rowspan="randomItem.length" align="center">
-                        {{groupItem.ts[randomIndex]}} 周
+                        {{groupItem.ts[randomIndex]}} 月
                       </td>
                       <td v-show="index==0" :rowspan="randomItem.length" align="center">
                         {{groupItem.optionalNum[randomIndex]}}

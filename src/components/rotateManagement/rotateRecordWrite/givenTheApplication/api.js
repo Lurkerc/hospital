@@ -20,6 +20,10 @@ const api = {
     path: '/traineeRotary/arrangeRotary/userRotaryDeptlist/', // {userType}-{userId}
     method: 'get'
   },
+  getDepRequirement: { // 根据细则ID和标准科室周期主键ID获取科室要求
+    path: '/rotaryBasis/rulesTraining/getDepRequirement/', // {rdId}_{depId}_{podId}
+    method: 'post'
+  },
 };
 
 export default api

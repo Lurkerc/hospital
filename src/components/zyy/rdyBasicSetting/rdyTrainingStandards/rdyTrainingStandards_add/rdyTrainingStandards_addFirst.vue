@@ -30,8 +30,8 @@
           </el-form-item>
         </el-col >
         <el-col :span="9"  >
-          <el-form-item  style="width:300px" label="学历:" prop="rtSchlength">
-            <el-select  style="width:300px" v-model="formValidate.rtSchlength" placeholder="请选择">
+          <el-form-item  style="width:350px" label="学历:" prop="rtSchlength">
+            <el-select  style="width:348px" v-model="formValidate.rtSchlength" placeholder="请选择">
               <el-option
                 style="width:300px"
                 v-for="item in rtSchlengthData"
@@ -105,9 +105,9 @@
                   class-name="valiTableStyle"
                   align="center">
                   <template scope="scope">
-                    <el-form :model="scope.row" ref="formValidate" :rules="rdyTrainingStandardsFirst" label-width="0" >
-                      <el-form-item  prop="ts">
-                        <el-input  v-model="scope.row.ts" placeholder="请输入内容"></el-input>
+                    <el-form :model="scope.row" inline ref="formValidate" :rules="rdyTrainingStandardsFirst" label-width="0" >
+                      <el-form-item   prop="ts">
+                        <el-input style="width: 200px;" v-model="scope.row.ts" placeholder="请输入内容"></el-input>月
                       </el-form-item>
                     </el-form>
                   </template>
@@ -151,20 +151,20 @@
                     <colgroup  v-for="(item,index) in noMustHeader">
                       <col name="'el-table_1_column_'+index" :width="150">
                     </colgroup>
-                    <tbody  class="add-scope">
+                    <tbody  >
                     <tr v-for="(item,index) in randomItem">
                       <td>{{item.depName}}</td>
                       <td class="valiTableStyle" v-if="index==0" :rowspan="randomItem.length" align="center">
                         <el-form :model="{ts:groupItem.ts[randomIndex]}" ref="formValidate" :rules="rdyTrainingStandardsFirst" label-width="0" >
                           <el-form-item  prop="ts">
-                            <el-input placeholder="请输入内容" v-model="groupItem.ts[randomIndex]" style="width: 50px"></el-input> 周
+                            <el-input placeholder="请输入内容" v-model="groupItem.ts[randomIndex]" style="width: 85%"></el-input>月
                           </el-form-item>
                         </el-form>
                       </td>
                       <td class="valiTableStyle" v-if="index==0" :rowspan="randomItem.length" align="center">
                         <el-form :model="{optionalNum:groupItem.optionalNum[randomIndex]}" ref="formValidate" :rules="rdyTrainingStandardsFirst" label-width="0" >
                           <el-form-item  prop="optionalNum">
-                            <el-input placeholder="请输入内容" v-model="groupItem.optionalNum[randomIndex]" @blur="optionalNumChange(groupItem.optionalNum,randomIndex,randomItem.length)" style="width: 50px"></el-input>
+                            <el-input  @change.native="valTsAndRandomNum(groupIndex,groupItem.ts[randomIndex],groupItem.optionalNum[randomIndex],randomItem.length,randomIndex+1)" style="width: 90%"  placeholder="请输入内容" v-model="groupItem.optionalNum[randomIndex]" ></el-input>
                           </el-form-item>
                         </el-form>
                       </td>
@@ -567,8 +567,14 @@
           isLoadingFun(true);
           let formValidate = this.getFormData(this.formValidate);
           let outlines = Util._.defaultsDeep([],this.outlines);
-          this.saveOutline.ajaxParams.data = this.conductFormValidate(formValidate,outlines);
-          this.ajax(this.saveOutline, isLoadingFun);
+           let data = this.conductFormValidate(formValidate,outlines);
+           if(data){  //data为false是验证未通过
+             this.saveOutline.ajaxParams.data = data;
+               this.ajax(this.saveOutline, isLoadingFun);
+           }else {
+             isLoadingFun(false);
+           }
+
         }
       },
 
@@ -576,6 +582,7 @@
       //处理提交的数据
       conductFormValidate(formValidate,outlines){
         let tempArr = [];
+        let flag = true;
         if(formValidate.jdName){
           let depArr = formValidate.jdName.split('-');
           formValidate.jdName = depArr[0];
@@ -585,13 +592,14 @@
         for(let i=0 ;i<outlines.length;i++){
           let item = outlines[i];
             //处理必选科室
-          if(item.mustRotaryDep[0][0]){
-            let mustRotaryDep =  item.mustRotaryDep[0][0];
-            mustRotaryDep.depPhase = this.groupOtions[i];
-            mustRotaryDep.depPhaseNum = i+1;
-            tempArr.push(mustRotaryDep);
+          for(let k=0;k<item.mustRotaryDep[0].length;k++){
+              let mustRotaryDep =  item.mustRotaryDep[0][k];
+              mustRotaryDep.depPhase = this.groupOtions[i];
+              mustRotaryDep.depPhaseNum = i+1;
+              tempArr.push(mustRotaryDep);
 
           }
+
 
           for(let k=0;k<item.randomRotaryDep.length;k++){
             let randomRotaryDep = item.randomRotaryDep[k];
@@ -605,12 +613,55 @@
               randomRotaryDepItem.depRandomNum= item.optionalNum[k];
               tempArr.push(randomRotaryDepItem);
             }
+            if(randomRotaryDep!=0){
+              flag = this.valTsAndRandomNum(i,item.ts[k],item.optionalNum[k],randomRotaryDep.length,k+1);
+              if(!flag){
+                return flag
+              }
+            }
+
           }
 
         }
 
         formValidate.outlines = tempArr;
         return formValidate
+      },
+
+      /**
+       * 验证轮转周期与自选是否匹配
+       * @param idx {Number}  当前组所在索引
+       * @param ts {Number}  周期数
+       * @param radom  {Number}  任选其几
+       * @param len  {Number}
+       * @param randomdepNum  {Number}  当前可选科室位置
+       * */
+      valTsAndRandomNum(idx,ts,randomNum,len,randomdepNum){
+          if(randomNum==0){
+            this.errorMess(this.groupOtions[idx]+" 第"+randomdepNum+"个可选轮转科室中 "+"任选其几：不能为0");
+            return false;
+          }
+          if(ts==0){
+            this.errorMess(this.groupOtions[idx]+" 第"+randomdepNum+"个可选轮转科室中 "+"周期数：不能为0");
+            return false;
+          }
+
+        if(randomNum=="") return false;
+        if(randomNum>len){
+          this.errorMess(this.groupOtions[idx]+" 第"+randomdepNum+"个可选轮转科室中 "+"任选其几："+randomNum+"不能大于可选轮转科室："+len);
+          return false;
+        }
+        if(ts=="") return;
+        ts = parseInt(ts);
+        randomNum = parseInt(randomNum);
+        let res = ts/randomNum;
+         res = (res / 0.5) + '';
+        if (res != res || /\./g.test(res)){
+          this.errorMess(this.groupOtions[idx]+" 第"+randomdepNum+"个可选轮转科室中 "+"您填写的周期数："+ts+" 与所填写的任选其几："+randomNum+"不能匹配!");
+          return false;
+        }else{
+          return true;
+        }
       },
 
 
@@ -621,18 +672,20 @@
        * */
       submitForm(formName){
         let flag = true;
-        for(let i =0;i< this.$refs[formName].length; i++){
-          this.$refs[formName][i].validate((valid) => {
-            if(!valid) {
-              flag= false;
-            }
-          });
+        if(this.$refs[formName]){
+          for(let i =0;i< this.$refs[formName].length; i++){
+            this.$refs[formName][i].validate((valid) => {
+              if(!valid) {
+                flag= false;
+              }
+            });
+          }
         }
         this.$refs[formName+'1'].validate((valid) => {
           if (!valid) {
             flag = false;
           }
-        })
+        });
         return flag;
       },
 

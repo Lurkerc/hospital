@@ -58,31 +58,31 @@ const rotateRouters = {
     },
     {
       //抢救记录
-      path:'SaveRecordWrite',
-      name:'SaveRecordWrite',
+      path:'saveRecordWrite',
+      name:'saveRecordWrite',
       component:resolve=> {
         require.ensure([], () => {
-          resolve(require('../../components/rotateManagement/rotateRecordWrite/SaveRecordWrite/SaveRecordWrite_list.vue'));
+          resolve(require('../../components/rotateManagement/rotateRecordWrite/saveRecordWrite/saveRecordWrite_list.vue'));
         }, 'rotateRecordWrite');
       }
     },
     {
       //管床纪录
-      path:'TubeBedRecordWrite',
-      name:'TubeBedRecordWrite',
+      path:'tubeBedRecordWrite',
+      name:'tubeBedRecordWrite',
       component:resolve=> {
         require.ensure([], () => {
-          resolve(require('../../components/rotateManagement/rotateRecordWrite/TubeBedRecordWrite/TubeBedRecordWrite_list.vue'));
+          resolve(require('../../components/rotateManagement/rotateRecordWrite/tubeBedRecordWrite/tubeBedRecordWrite_list.vue'));
         }, 'rotateRecordWrite');
       }
     },
     {
       //专题综述
-      path:'MonographReviewWrite',
-      name:'MonographReviewWrite',
+      path:'monographReviewWrite',
+      name:'monographReviewWrite',
       component:resolve=> {
         require.ensure([], () => {
-          resolve(require('../../components/rotateManagement/rotateRecordWrite/MonographReviewWrite/MonographReviewWrite_list.vue'));
+          resolve(require('../../components/rotateManagement/rotateRecordWrite/monographReviewWrite/monographReviewWrite_list.vue'));
         }, 'rotateRecordWrite');
       }
     },

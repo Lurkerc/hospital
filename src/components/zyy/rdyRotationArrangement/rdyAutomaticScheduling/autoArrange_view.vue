@@ -55,7 +55,7 @@
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url: api.userRotaryByUserId.path+"/"+"SXS-"+this.operailityData.userId,
+            url: api.userRotaryByUserId.path+"/"+"ZYY-"+this.operailityData.userId,
             params:{}
           }
         },

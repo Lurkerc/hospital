@@ -42,8 +42,9 @@ let handWork = {
  * 大纲添加
  */
 let internOutline = {
-  "ts":[{ required: true, message: '此项不能为空'}],
+  "ts":baseRules.numberMust,
   "greatName":[{ required: true, message: '此项不能为空'}],
+  "rotaryUserNum":baseRules.numberMust,
 };
 
 

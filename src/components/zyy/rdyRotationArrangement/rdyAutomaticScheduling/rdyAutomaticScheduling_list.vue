@@ -95,12 +95,12 @@
             label="姓名"
             show-overflow-tooltip>
           </el-table-column>
-          <el-table-column
+          <!--<el-table-column
             prop="schoolName"
             label="学校"
             width="160"
             show-overflow-tooltip>
-          </el-table-column>
+          </el-table-column>-->
           <el-table-column
             prop="major"
             label="专业"
@@ -110,6 +110,12 @@
           <el-table-column
             prop="rotaryBeginTime"
             label="开始轮转时间"
+            width="160"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="rotaryEndTime"
+            label="结束轮转时间"
             width="160"
             show-overflow-tooltip>
           </el-table-column>

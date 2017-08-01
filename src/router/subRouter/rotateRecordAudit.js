@@ -61,31 +61,31 @@ const rotateRouters = {
     },
     {
       //抢救记录审核
-      path:'SaveRecordAudit',
-      name:'SaveRecordAudit',
+      path:'saveRecordAudit',
+      name:'saveRecordAudit',
       component:resolve=> {
         require.ensure([], () => {
-          resolve(require('../../components/rotateManagement/rotateRecordAudit/SaveRecordAudit/SaveRecordAudit_list.vue'));
+          resolve(require('../../components/rotateManagement/rotateRecordAudit/saveRecordAudit/saveRecordAudit_list.vue'));
         }, 'rotateRecordAudit');
       }
     },
     {
       //管床纪录审核
-      path:'TubeBedRecordAudit',
-      name:'TubeBedRecordAudit',
+      path:'tubeBedRecordAudit',
+      name:'tubeBedRecordAudit',
       component:resolve=> {
         require.ensure([], () => {
-          resolve(require('../../components/rotateManagement/rotateRecordAudit/TubeBedRecordAudit/TubeBedRecordAudit_list.vue'));
+          resolve(require('../../components/rotateManagement/rotateRecordAudit/tubeBedRecordAudit/tubeBedRecordAudit_list.vue'));
         }, 'rotateRecordAudit');
       }
     },
     {
       //专题综述审核
-      path:'MonographReviewAudit',
-      name:'MonographReviewAudit',
+      path:'monographReviewAudit',
+      name:'monographReviewAudit',
       component:resolve=> {
         require.ensure([], () => {
-          resolve(require('../../components/rotateManagement/rotateRecordAudit/MonographReviewAudit/MonographReviewAudit_list.vue'));
+          resolve(require('../../components/rotateManagement/rotateRecordAudit/monographReviewAudit/monographReviewAudit_list.vue'));
         }, 'rotateRecordAudit');
       }
     },

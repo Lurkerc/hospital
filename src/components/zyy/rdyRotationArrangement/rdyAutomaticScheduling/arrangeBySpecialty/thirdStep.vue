@@ -15,7 +15,7 @@
         label=""
         width="50">
         <template scope="scope">
-          <el-radio class="radio" :label="scope.row">&nbsp;</el-radio>
+          <el-radio class="radio" :label="scope.row.rtName+'##'+scope.row.rtId">&nbsp;</el-radio>
         </template>
       </el-table-column>
       <el-table-column
@@ -45,10 +45,12 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
+    props:["initRtId","jdProclass"],
     data() {
       return {
-        radio:"",
-        tableData1: [{
+        radio:this.initRtId,
+        tableData1: [
+            /*{
           "rtId":"3",
           "rtName":"细则名称",
           "rtProclass":"内科方向",
@@ -56,7 +58,8 @@
           "rtType":"指标类型",
           "rtrulesType":"西医/中医",
           "jdName":"基地名"
-        }],
+        }*/
+        ],
 
         //初始化获取基地信息
         listMessTitle:{
@@ -64,8 +67,8 @@
           ajaxParams:{
             url: api.getRulesList.path,
             params:{
-              jdProclass:'',
-              rtModelType:'',
+              rtProclass:this.jdProclass,
+              rtModelType:'ZYY',
             }
           }
         },
@@ -74,7 +77,7 @@
     methods: {
       //初始化请求列表数据
       init(){
-        //this.ajax(this.listMessTitle);
+        this.ajax(this.listMessTitle);
       },
       //通过get请求列表数据
       updateListData(responseData){

@@ -165,7 +165,7 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="平时一般健康情况:" prop="cjwsYbjkqk" >
-                      <el-input @keyup.native="keyup('cjwsYbjkqk',$event)" type="textarea" v-model="formValidate.cjwsYbjkqk"></el-input>
+                      <el-input @keyup.native="keyup('cjwsYbjkqk',$event)" @paste.native="contextmenu('cjwsYbjkqk',$event)" type="textarea" v-model="formValidate.cjwsYbjkqk"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -173,7 +173,7 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="传染病史:" prop="cjwsCrbs" >
-                      <el-input @keyup.native="keyup('cjwsCrbs',$event)" type="textarea" v-model="formValidate.cjwsCrbs"></el-input>
+                      <el-input @keyup.native="keyup('cjwsCrbs',$event)"  @paste.native="contextmenu('cjwsCrbs',$event)" type="textarea" v-model="formValidate.cjwsCrbs"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -181,14 +181,14 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="手术外伤史:" prop="cjwsSswss" >
-                      <el-input @keyup.native="keyup('cjwsSswss',$event)" type="textarea" v-model="formValidate.cjwsSswss"></el-input>
+                      <el-input @keyup.native="keyup('cjwsSswss',$event)"  @paste.native="contextmenu('cjwsSswss',$event)" type="textarea" v-model="formValidate.cjwsSswss"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="药物过敏史:" prop="cjwsYwgms" >
-                      <el-input @keyup.native="keyup('cjwsYwgms',$event)" type="textarea" v-model="formValidate.cjwsYwgms"></el-input>
+                      <el-input @keyup.native="keyup('cjwsYwgms',$event)"  @paste.native="contextmenu('cjwsYwgms',$event)" type="textarea" v-model="formValidate.cjwsYwgms"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -198,84 +198,84 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="呼吸系统:" prop="cxthgHxxt" >
-                      <el-input @keyup.native="keyup('cxthgHxxt',$event)" type="textarea" v-model="formValidate.cxthgHxxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgHxxt',$event)"  @paste.native="contextmenu('cxthgHxxt',$event)" type="textarea" v-model="formValidate.cxthgHxxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="循环系统:" prop="cxthgXuhxt" >
-                      <el-input @keyup.native="keyup('cxthgXuhxt',$event)" type="textarea" v-model="formValidate.cxthgXuhxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgXuhxt',$event)"  @paste.native="contextmenu('cxthgXuhxt',$event)" type="textarea" v-model="formValidate.cxthgXuhxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="消化系统:" prop="cxthgXihxt" >
-                      <el-input @keyup.native="keyup('cxthgXihxt',$event)" type="textarea" v-model="formValidate.cxthgXihxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgXihxt',$event)"  @paste.native="contextmenu('cxthgXihxt',$event)" type="textarea" v-model="formValidate.cxthgXihxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="泌尿系统:" prop="cxthgMlxt" >
-                      <el-input @keyup.native="keyup('cxthgMlxt',$event)" type="textarea" v-model="formValidate.cxthgMlxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgMlxt',$event)"  @paste.native="contextmenu('cxthgMlxt',$event)" type="textarea" v-model="formValidate.cxthgMlxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="血液系统:" prop="cxthgXyxt" >
-                      <el-input @keyup.native="keyup('cxthgXyxt',$event)" type="textarea" v-model="formValidate.cxthgXyxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgXyxt',$event)"  @paste.native="contextmenu('cxthgXyxt',$event)" type="textarea" v-model="formValidate.cxthgXyxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="内分泌系统:" prop="cxthgNfmxt" >
-                      <el-input @keyup.native="keyup('cxthgNfmxt',$event)" type="textarea" v-model="formValidate.cxthgNfmxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgNfmxt',$event)"  @paste.native="contextmenu('cxthgNfmxt',$event)" type="textarea" v-model="formValidate.cxthgNfmxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="神经系统:" prop="cxthgSjxt1" >
-                      <el-input @keyup.native="keyup('cxthgSjxt1',$event)" type="textarea" v-model="formValidate.cxthgSjxt1"></el-input>
+                      <el-input @keyup.native="keyup('cxthgSjxt1',$event)"  @paste.native="contextmenu('cxthgSjxt1',$event)" type="textarea" v-model="formValidate.cxthgSjxt1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="生殖系统:" prop="cxthgSzxt" >
-                      <el-input @keyup.native="keyup('cxthgSzxt',$event)" type="textarea" v-model="formValidate.cxthgSzxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgSzxt',$event)"  @paste.native="contextmenu('cxthgSzxt',$event)" type="textarea" v-model="formValidate.cxthgSzxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="肌肉骨关节系统:" prop="cxthgGgjxt" >
-                      <el-input @keyup.native="keyup('cxthgGgjxt',$event)" type="textarea" v-model="formValidate.cxthgGgjxt"></el-input>
+                      <el-input @keyup.native="keyup('cxthgGgjxt',$event)"  @paste.native="contextmenu('cxthgGgjxt',$event)" type="textarea" v-model="formValidate.cxthgGgjxt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="个人史:" prop="cxthgGrs" >
-                      <el-input @keyup.native="keyup('cxthgGrs',$event)" type="textarea" v-model="formValidate.cxthgGrs"></el-input>
+                      <el-input @keyup.native="keyup('cxthgGrs',$event)"  @paste.native="contextmenu('cxthgGrs',$event)" type="textarea" v-model="formValidate.cxthgGrs"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="月经婚育史:" prop="cxthgYjhys" >
-                      <el-input @keyup.native="keyup('cxthgYjhys',$event)" type="textarea" v-model="formValidate.cxthgYjhys"></el-input>
+                      <el-input @keyup.native="keyup('cxthgYjhys',$event)"  @paste.native="contextmenu('cxthgYjhys',$event)" type="textarea" v-model="formValidate.cxthgYjhys"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="家庭史:" prop="cxthgJts" >
-                      <el-input @keyup.native="keyup('cxthgJts',$event)" type="textarea" v-model="formValidate.cxthgJts"></el-input>
+                      <el-input @keyup.native="keyup('cxthgJts',$event)"  @paste.native="contextmenu('cxthgJts',$event)" type="textarea" v-model="formValidate.cxthgJts"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -288,37 +288,37 @@
                       <el-row >
                         <el-col :span="3">
                           <el-form-item label="T:" prop="ctgjcSmtzT" label-width="50px">
-                            <el-input @keyup.native="keyup('ctgjcSmtzT',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzT"></el-input>
+                            <el-input @keyup.native="keyup('ctgjcSmtzT',$event)"  @paste.native="contextmenu('ctgjcSmtzT',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzT"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
                           <el-form-item label="C:" prop="ctgjcSmtzC" label-width="50px">
-                            <el-input @keyup.native="keyup('ctgjcSmtzC',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzC"></el-input>
+                            <el-input @keyup.native="keyup('ctgjcSmtzC',$event)"  @paste.native="contextmenu('ctgjcSmtzC',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzC"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
                           <el-form-item label="P:" prop="ctgjcSmtzP" label-width="50px">
-                            <el-input  @keyup.native="keyup('ctgjcSmtzP',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzP"></el-input>
+                            <el-input  @keyup.native="keyup('ctgjcSmtzP',$event)"  @paste.native="contextmenu('ctgjcSmtzP',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzP"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
                           <el-form-item label="	次/分:" prop="ctgjcSmtzCf1" label-width="50px">
-                            <el-input @keyup.native="keyup('ctgjcSmtzCf1',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzCf1"></el-input>
+                            <el-input @keyup.native="keyup('ctgjcSmtzCf1',$event)"  @paste.native="contextmenu('ctgjcSmtzCf1',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzCf1"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
                           <el-form-item label="R:" prop="ctgjcSmtzR" label-width="50px">
-                            <el-input @keyup.native="keyup('ctgjcSmtzR',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzR"></el-input>
+                            <el-input @keyup.native="keyup('ctgjcSmtzR',$event)"  @paste.native="contextmenu('ctgjcSmtzR',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzR"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
                           <el-form-item label="	次/分:" prop="ctgjcSmtzCf2" label-width="50px">
-                            <el-input @keyup.native="keyup('ctgjcSmtzCf2',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzCf2"></el-input>
+                            <el-input @keyup.native="keyup('ctgjcSmtzCf2',$event)"  @paste.native="contextmenu('ctgjcSmtzCf2',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzCf2"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
                           <el-form-item label="BP:" prop="ctgjcSmtzBp" label-width="50px">
-                            <el-input @keyup.native="keyup('ctgjcSmtzBp',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzBp"></el-input>
+                            <el-input @keyup.native="keyup('ctgjcSmtzBp',$event)"  @paste.native="contextmenu('ctgjcSmtzBp',$event)" style="width:100px;"  v-model="formValidate.ctgjcSmtzBp"></el-input>
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
@@ -331,14 +331,14 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="一般情况:" prop="ctgjcYbqk1" >
-                      <el-input @keyup.native="keyup('ctgjcYbqk1',$event)" type="textarea" v-model="formValidate.ctgjcYbqk1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcYbqk1',$event)"  @paste.native="contextmenu('ctgjcYbqk1',$event)" type="textarea" v-model="formValidate.ctgjcYbqk1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="皮肤粘膜:" prop="ctgjcPfnm" >
-                      <el-input @keyup.native="keyup('ctgjcPfnm',$event)" type="textarea" v-model="formValidate.ctgjcPfnm"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcPfnm',$event)"  @paste.native="contextmenu('ctgjcPfnm',$event)" type="textarea" v-model="formValidate.ctgjcPfnm"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -346,7 +346,7 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="浅表淋巴结:" prop="ctgjcQblbj" >
-                      <el-input @keyup.native="keyup('ctgjcQblbj',$event)" type="textarea" v-model="formValidate.ctgjcQblbj"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcQblbj',$event)"  @paste.native="contextmenu('ctgjcQblbj',$event)" type="textarea" v-model="formValidate.ctgjcQblbj"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -354,91 +354,91 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="头部及其器官:" prop="ctgjcTbqg" >
-                      <el-input @keyup.native="keyup('ctgjcTbqg',$event)" type="textarea" v-model="formValidate.ctgjcTbqg"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcTbqg',$event)"   @paste.native="contextmenu('ctgjcTbqg',$event)" type="textarea" v-model="formValidate.ctgjcTbqg"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="颈部:" prop="ctgjcJb" >
-                      <el-input @keyup.native="keyup('ctgjcJb',$event)" type="textarea" v-model="formValidate.ctgjcJb"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcJb',$event)"  @paste.native="contextmenu('ctgjcJb',$event)" type="textarea" v-model="formValidate.ctgjcJb"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="胸部:" prop="ctgjcXb" >
-                      <el-input @keyup.native="keyup('ctgjcXb',$event)" type="textarea" v-model="formValidate.ctgjcXb"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcXb',$event)"  @paste.native="contextmenu('ctgjcXb',$event)" type="textarea" v-model="formValidate.ctgjcXb"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="胸廊:" prop="ctgjcXl" >
-                      <el-input @keyup.native="keyup('ctgjcXl',$event)" type="textarea" v-model="formValidate.ctgjcXl"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcXl',$event)"  @paste.native="contextmenu('ctgjcXl',$event)" type="textarea" v-model="formValidate.ctgjcXl"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="乳腺:" prop="ctgjcRx" >
-                      <el-input @keyup.native="keyup('ctgjcRx',$event)" type="textarea" v-model="formValidate.ctgjcRx"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcRx',$event)"  @paste.native="contextmenu('ctgjcRx',$event)" type="textarea" v-model="formValidate.ctgjcRx"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="肺:" prop="ctgjcFei" >
-                      <el-input @keyup.native="keyup('ctgjcFei',$event)" type="textarea" v-model="formValidate.ctgjcFei"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcFei',$event)"  @paste.native="contextmenu('ctgjcFei',$event)" type="textarea" v-model="formValidate.ctgjcFei"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="视诊:" prop="ctgjcSz1" >
-                      <el-input @keyup.native="keyup('ctgjcSz1',$event)" type="textarea" v-model="formValidate.ctgjcSz1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcSz1',$event)"  @paste.native="contextmenu('ctgjcSz1',$event)" type="textarea" v-model="formValidate.ctgjcSz1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="触诊:" prop="ctgjcCz1" >
-                      <el-input @keyup.native="keyup('ctgjcCz1',$event)" type="textarea" v-model="formValidate.ctgjcCz1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcCz1',$event)"  @paste.native="contextmenu('ctgjcCz1',$event)" type="textarea" v-model="formValidate.ctgjcCz1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="叩诊:" prop="ctgjcKz1" >
-                      <el-input @keyup.native="keyup('ctgjcKz1',$event)" type="textarea" v-model="formValidate.ctgjcKz1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcKz1',$event)"  @paste.native="contextmenu('ctgjcKz1',$event)" type="textarea" v-model="formValidate.ctgjcKz1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="听诊:" prop="ctgjcTz1" >
-                      <el-input @keyup.native="keyup('ctgjcTz1',$event)" type="textarea" v-model="formValidate.ctgjcTz1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcTz1',$event)"  @paste.native="contextmenu('ctgjcTz1',$event)" type="textarea" v-model="formValidate.ctgjcTz1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="心脏:" prop="ctgjcXz" >
-                      <el-input @keyup.native="keyup('ctgjcXz',$event)" type="textarea" v-model="formValidate.ctgjcXz"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcXz',$event)"  @paste.native="contextmenu('ctgjcXz',$event)" type="textarea" v-model="formValidate.ctgjcXz"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="视诊:" prop="ctgjcSz2" >
-                      <el-input @keyup.native="keyup('ctgjcSz2',$event)" type="textarea" v-model="formValidate.ctgjcSz2"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcSz2',$event) "  @paste.native="contextmenu('ctgjcSz2',$event)" type="textarea" v-model="formValidate.ctgjcSz2"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="触诊:" prop="ctgjcCz2" >
-                      <el-input @keyup.native="keyup('ctgjcCz2',$event)" type="textarea" v-model="formValidate.ctgjcCz2"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcCz2',$event)"  @paste.native="contextmenu('ctgjcCz2',$event)" type="textarea" v-model="formValidate.ctgjcCz2"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -458,7 +458,7 @@
                 <el-row>
                   <el-col :span="3" :offset="2">
                     <el-form-item label-width="0" prop="ctgjcKzy1" >
-                      <el-input @keyup.native="keyup('ctgjcKzy1',$event)"  v-model="formValidate.ctgjcKzy1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcKzy1',$event)"  @paste.native="contextmenu('ctgjcKzy1',$event)"  v-model="formValidate.ctgjcKzy1"></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col  style="text-align: center" :span="3" :offset="2">
@@ -466,14 +466,14 @@
                   </el-col>
                   <el-col :span="3" :offset="2">
                     <el-form-item label-width="0" prop="ctgjcKzz1" >
-                      <el-input @keyup.native="keyup('ctgjcKzz1',$event)"  v-model="formValidate.ctgjcKzz1"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcKzz1',$event)"  @paste.native="contextmenu('ctgjcKzz1',$event)"  v-model="formValidate.ctgjcKzz1"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :span="3" :offset="2">
                     <el-form-item label-width="0" prop="ctgjcKzy2" >
-                    <el-input  @keyup.native="keyup('ctgjcKzy2',$event)" v-model="formValidate.ctgjcKzy2"></el-input>
+                    <el-input  @keyup.native="keyup('ctgjcKzy2',$event)"  @paste.native="contextmenu('ctgjcKzy2',$event)" v-model="formValidate.ctgjcKzy2"></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col  style="text-align: center" :span="3" :offset="2">
@@ -481,14 +481,14 @@
                   </el-col>
                   <el-col :span="3" :offset="2">
                     <el-form-item  prop="ctgjcKzz2" label-width="0">
-                    <el-input @keyup.native="keyup('ctgjcKzz2',$event)"  v-model="formValidate.ctgjcKzz2"></el-input>
+                    <el-input @keyup.native="keyup('ctgjcKzz2',$event)"   @paste.native="contextmenu('ctgjcKzz2',$event)" v-model="formValidate.ctgjcKzz2"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :span="3" :offset="2">
                     <el-form-item  prop="ctgjcKzy3" label-width="0">
-                    <el-input @keyup.native="keyup('ctgjcKzy3',$event)"  v-model="formValidate.ctgjcKzy3"></el-input>
+                    <el-input @keyup.native="keyup('ctgjcKzy3',$event)"  @paste.native="contextmenu('ctgjcKzy3',$event)" v-model="formValidate.ctgjcKzy3"></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col  style="text-align: center" :span="3" :offset="2">
@@ -496,14 +496,14 @@
                   </el-col>
                   <el-col :span="3" :offset="2">
                     <el-form-item  prop="ctgjcKzz3" label-width="0">
-                    <el-input  @keyup.native="keyup('ctgjcKzz3',$event)" v-model="formValidate.ctgjcKzz3"></el-input>
+                    <el-input  @keyup.native="keyup('ctgjcKzz3',$event)"  @paste.native="contextmenu('ctgjcKzz3',$event)" v-model="formValidate.ctgjcKzz3"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :span="3" :offset="2">
                     <el-form-item  prop="ctgjcKzy4" label-width="0">
-                    <el-input @keyup.native="keyup('ctgjcKzy4',$event)"  v-model="formValidate.ctgjcKzy4"></el-input>
+                    <el-input @keyup.native="keyup('ctgjcKzy4',$event)"   @paste.native="contextmenu('ctgjcKzy4',$event)" v-model="formValidate.ctgjcKzy4"></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col  style="text-align: center" :span="3" :offset="2">
@@ -511,7 +511,7 @@
                   </el-col>
                   <el-col :span="3" :offset="2">
                     <el-form-item  prop="ctgjcKzz4" label-width="0">
-                    <el-input @keyup.native="keyup('ctgjcKzz4',$event)"  v-model="formValidate.ctgjcKzz4"></el-input>
+                    <el-input @keyup.native="keyup('ctgjcKzz4',$event)"   @paste.native="contextmenu('ctgjcKzz4',$event)" v-model="formValidate.ctgjcKzz4"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -519,7 +519,7 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="听诊:" prop="ctgjcTz2" >
-                      <el-input @keyup.native="keyup('ctgjcTz2',$event)" type="textarea" v-model="formValidate.ctgjcTz2"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcTz2',$event)"  @paste.native="contextmenu('ctgjcTz2',$event)" type="textarea" v-model="formValidate.ctgjcTz2"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -527,133 +527,133 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="桡动脉:" prop="ctgjcRdm" >
-                      <el-input @keyup.native="keyup('ctgjcRdm',$event)" type="textarea" v-model="formValidate.ctgjcRdm"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcRdm',$event)"  @paste.native="contextmenu('ctgjcRdm',$event)" type="textarea" v-model="formValidate.ctgjcRdm"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="周围血管征:" prop="ctgjcZwxg">
-                      <el-input @keyup.native="keyup('ctgjcZwxg',$event)" type="textarea" v-model="formValidate.ctgjcZwxg"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcZwxg',$event)"  @paste.native="contextmenu('ctgjcZwxg',$event)" type="textarea" v-model="formValidate.ctgjcZwxg"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="腹部:" prop="ctgjcFb" >
-                      <el-input @keyup.native="keyup('ctgjcFb',$event)" type="textarea" v-model="formValidate.ctgjcFb"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcFb',$event)"  @paste.native="contextmenu('ctgjcFb',$event)" type="textarea" v-model="formValidate.ctgjcFb"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="视诊:" prop="ctgjcSz3" >
-                      <el-input @keyup.native="keyup('ctgjcSz3',$event)" type="textarea" v-model="formValidate.ctgjcSz3"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcSz3',$event)"  @paste.native="contextmenu('ctgjcSz3',$event)" type="textarea" v-model="formValidate.ctgjcSz3"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="触诊:" prop="ctgjcCz3" >
-                      <el-input @keyup.native="keyup('ctgjcCz3',$event)" type="textarea" v-model="formValidate.ctgjcCz3"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcCz3',$event)"  @paste.native="contextmenu('ctgjcCz3',$event)" type="textarea" v-model="formValidate.ctgjcCz3"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="一般情况:" prop="ctgjcYbqk2" >
-                      <el-input  @keyup.native="keyup('ctgjcYbqk2',$event)" type="textarea" v-model="formValidate.ctgjcYbqk2"></el-input>
+                      <el-input  @keyup.native="keyup('ctgjcYbqk2',$event)"  @paste.native="contextmenu('ctgjcYbqk2',$event)" type="textarea" v-model="formValidate.ctgjcYbqk2"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="肝脏:" prop="ctgjcGz" >
-                      <el-input @keyup.native="keyup('ctgjcGz',$event)" type="textarea" v-model="formValidate.ctgjcGz"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcGz',$event)"  @paste.native="contextmenu('ctgjcGz',$event)" type="textarea" v-model="formValidate.ctgjcGz"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="脾脏:" prop="ctgjcPz" >
-                      <el-input @keyup.native="keyup('ctgjcPz',$event)" type="textarea" v-model="formValidate.ctgjcPz"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcPz',$event)"  @paste.native="contextmenu('ctgjcPz',$event)" type="textarea" v-model="formValidate.ctgjcPz"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="肾脏:" prop="ctgjcSz" >
-                      <el-input @keyup.native="keyup('ctgjcSz',$event)" type="textarea" v-model="formValidate.ctgjcSz"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcSz',$event)"  @paste.native="contextmenu('ctgjcSz',$event)" type="textarea" v-model="formValidate.ctgjcSz"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="其他:" prop="ctgjcQt" >
-                      <el-input @keyup.native="keyup('ctgjcQt',$event)" type="textarea" v-model="formValidate.ctgjcQt"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcQt',$event)"  @paste.native="contextmenu('ctgjcQt',$event)" type="textarea" v-model="formValidate.ctgjcQt"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="叩诊:" prop="ctgjcKz3" >
-                      <el-input @keyup.native="keyup('ctgjcKz3',$event)" type="textarea" v-model="formValidate.ctgjcKz3"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcKz3',$event)"  @paste.native="contextmenu('ctgjcKz3',$event)" type="textarea" v-model="formValidate.ctgjcKz3"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="听诊:" prop="ctgjcTz3" >
-                      <el-input @keyup.native="keyup('ctgjcTz3',$event)" type="textarea" v-model="formValidate.ctgjcTz3"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcTz3',$event)"  @paste.native="contextmenu('ctgjcTz3',$event)" type="textarea" v-model="formValidate.ctgjcTz3"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="肛门、直肠:" prop="ctgjcGzc" >
-                      <el-input @keyup.native="keyup('ctgjcGzc',$event)" type="textarea" v-model="formValidate.ctgjcGzc"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcGzc',$event)"  @paste.native="contextmenu('ctgjcGzc',$event)" type="textarea" v-model="formValidate.ctgjcGzc"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="外生殖器:" prop="ctgjcWszq" >
-                      <el-input @keyup.native="keyup('ctgjcWszq',$event)" type="textarea" v-model="formValidate.ctgjcWszq"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcWszq',$event)"  @paste.native="contextmenu('ctgjcWszq',$event)" type="textarea" v-model="formValidate.ctgjcWszq"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="脊柱:" prop="ctgjcJz" >
-                      <el-input @keyup.native="keyup('ctgjcJz',$event)" type="textarea" v-model="formValidate.ctgjcJz"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcJz',$event)"  @paste.native="contextmenu('ctgjcJz',$event)" type="textarea" v-model="formValidate.ctgjcJz"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="四肢:" prop="ctgjcShiz" >
-                      <el-input @keyup.native="keyup('ctgjcShiz',$event)" type="textarea" v-model="formValidate.ctgjcShiz"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcShiz',$event)"  @paste.native="contextmenu('ctgjcShiz',$event)" type="textarea" v-model="formValidate.ctgjcShiz"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="神经系统:" prop="ctgjcSjxt2" >
-                      <el-input @keyup.native="keyup('ctgjcSjxt2',$event)" type="textarea" v-model="formValidate.ctgjcSjxt2"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcSjxt2',$event)"  @paste.native="contextmenu('ctgjcSjxt2',$event)" type="textarea" v-model="formValidate.ctgjcSjxt2"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="专科情况:" prop="ctgjcZkqk" >
-                      <el-input @keyup.native="keyup('ctgjcZkqk',$event)" type="textarea" v-model="formValidate.ctgjcZkqk"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcZkqk',$event)"  @paste.native="contextmenu('ctgjcZkqk',$event)" type="textarea" v-model="formValidate.ctgjcZkqk"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="实验室及特殊检查:" prop="ctgjcSysjc" >
-                      <el-input @keyup.native="keyup('ctgjcSysjc',$event)" type="textarea" v-model="formValidate.ctgjcSysjc"></el-input>
+                      <el-input @keyup.native="keyup('ctgjcSysjc',$event)"  @paste.native="contextmenu('ctgjcSysjc',$event)" type="textarea" v-model="formValidate.ctgjcSysjc"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -1689,7 +1689,6 @@
 
           //键盘监听事件，监听是否按下ctrl + v
           keyup(key,event){
-
             event = event || window.event;
               if(event.keyCode==86 &&event.ctrlKey){
                 if(!this.isCopy) {
@@ -1700,7 +1699,22 @@
                 this.copyField[key] = 1;
               }
           },
+
+
+          //监听右键，粘贴
+          contextmenu(key,event){
+            event = event || window.event;
+              if (!this.isCopy) {
+                this.showMess('不允许粘贴');
+                event.returnValue=false;
+                return ;
+              }
+              this.copyField[key] = 1;
+          },
+
+
         },
+
         created(){
             this.init();
 

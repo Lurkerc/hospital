@@ -206,7 +206,7 @@
             <el-col :span="12" class="editForm">
               <el-form-item label="培训方向：" prop="rotaryProclass">
                 <el-select v-model="formValidate.rotaryProclass" filterable placeholder="请选择" style="width: 353px;">
-                  <el-option v-for="item in rotaryProclassOption" :key="item.code" :label="item.name" :value="item.code">
+                  <el-option v-for="item in rotaryProclassOption" :key="item.code" :label="item.name" :value="item.name">
                   </el-option>
                 </el-select>
               </el-form-item>

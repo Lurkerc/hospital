@@ -160,7 +160,7 @@
 
           //保存的数据
           saveData:{
-            "userType":"SXS",
+            "userType":"ZYY",
             "userId":"",
             "userName":"",
             "minBegin":"2017-01-01",   //this.formValidate.rotaryStartTime
@@ -201,7 +201,7 @@
           listMessTitle:{
             ajaxSuccess:'updateListData',
             ajaxParams:{
-              url: api.getRotaryDepIndo.path+"/"+this.operailityData.userId,
+              url: api.getRotaryDepIndo.path+"/"+this.operailityData.userId+"_ZYY",
             }
           },
 
@@ -391,7 +391,7 @@
           this.saveData["userName"] = myData["userName"];
           this.saveData["minBegin"] = myData["rotaryStartTime"];
           /*saveData:{
-            "userType":"SXS",
+            "userType":"ZYY",
               "userId":"",
               "userName":"",
               "minBegin":"2017-01-01",   //this.formValidate.rotaryStartTime

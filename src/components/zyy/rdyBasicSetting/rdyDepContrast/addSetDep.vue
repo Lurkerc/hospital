@@ -14,6 +14,8 @@
   </div>
   <br />
   <el-table
+    v-for="valItem in 1"
+    :key="valItem"
     border
     align="center"
     :height="dynamicHt"
@@ -24,13 +26,17 @@
     <el-table-column
       prop="hospitalDepName"
       label="科室名称"
+      class-name="valiTableStyle"
       show-overflow-tooltip>
       <template scope="scope">
         <div v-if="scope.$index==0">
           <el-radio-group v-model="formValidate.deType">
             <el-row>
               <el-col :span="24">
-                <div class="cal-schoolTit"><el-radio v-model="formValidate.deType" :label="1">任选其</el-radio><el-input :disabled="formValidate.deType==0" style="width: 60px;" v-model="formValidate.depRandomNum" placeholder="请输入内容"></el-input>(<em style="color: #FF0000">该数量指：在所有的院内科室中系统随机抽选几个</em>) </div>
+                <div class="cal-schoolTit">
+                  <el-radio v-model="formValidate.deType" :label="1">任选其</el-radio>
+                  <el-input :disabled="formValidate.deType==0" @change.native="watchDeType(formValidate.depRandomNum)" style="width: 60px;" v-model="formValidate.depRandomNum" placeholder="请输入内容"></el-input>(<em style="color: #FF0000">该数量指：在所有的院内科室中系统随机抽选几个</em>)
+                </div>
               </el-col>
             </el-row>
             <el-row>
@@ -48,46 +54,74 @@
     <el-table-column
       prop="chTs"
       width="120"
+      class-name="valiTableStyle"
       label="3年时间">
       <template scope="scope">
+
         <div v-if="scope.$index==0">
+          <el-form :model="{ts:formValidate.chTs}" ref="formValidate" :rules="rdyDepContrast" label-width="0" >
+            <el-form-item  prop="ts">
           <el-input style="width: 60px;" @change="handleRandomInput('chTs')" :disabled="formValidate.deType==0" v-model="formValidate.chTs" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </el-form>
         </div>
         <div v-else>
-          <el-input style="width: 60px;" @change="handleMustInput('chTs')" :disabled="formValidate.deType==1" v-model="scope.row.chTs" placeholder="请输入内容"></el-input>
+          <el-form :model="{ts:scope.row.chTs}" ref="formValidate" :rules="rdyDepContrast" label-width="0" >
+            <el-form-item  prop="ts">
+              <el-input style="width: 60px;" @change="handleMustInput('chTs')" :disabled="formValidate.deType==1" v-model="scope.row.chTs" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </el-form>
         </div>
       </template>
     </el-table-column>
     <el-table-column
       prop="ch2Ts"
       width="120"
+      class-name="valiTableStyle"
       label="2年时间">
       <template scope="scope">
         <div v-if="scope.$index==0">
+          <el-form :model="{ts:formValidate.ch2Ts}" ref="formValidate" :rules="rdyDepContrast" label-width="0" >
+            <el-form-item  prop="ts">
           <el-input style="width: 60px;" @change="handleRandomInput('ch2Ts')" :disabled="formValidate.deType==0" v-model="formValidate.ch2Ts" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </el-form>
         </div>
         <div v-else>
+          <el-form :model="{ts:formValidate.ch2Ts}" ref="formValidate" :rules="rdyDepContrast" label-width="0" >
+            <el-form-item  prop="ts">
           <el-input style="width: 60px;" @change="handleMustInput('ch2Ts')" :disabled="formValidate.deType==1" v-model="scope.row.ch2Ts" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </el-form>
         </div>
       </template>
     </el-table-column>
     <el-table-column
       prop="ch1Ts"
       width="120"
+      class-name="valiTableStyle"
       label="1年时间">
       <template scope="scope">
         <div v-if="scope.$index==0">
+          <el-form :model="{ts:formValidate.ch1Ts}" ref="formValidate" :rules="rdyDepContrast" label-width="0" >
+            <el-form-item  prop="ts">
           <el-input style="width: 60px;" @change="handleRandomInput('ch1Ts')" :disabled="formValidate.deType==0" v-model="formValidate.ch1Ts" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </el-form>
         </div>
         <div v-else>
+          <el-form :model="{ts:formValidate.ch1Ts}" ref="formValidate" :rules="rdyDepContrast" label-width="0" >
+            <el-form-item  prop="ts">
           <el-input style="width: 60px;" @change="handleMustInput('ch1Ts')" :disabled="formValidate.deType==1" v-model="scope.row.ch1Ts" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </el-form>
         </div>
       </template>
     </el-table-column>
   </el-table>
   <br />
   <div style="text-align: center">
-    <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>   <el-button @click="removeDep()" type="primary">移除</el-button>
+    <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>   <el-button @click="removeDep()" type="danger">移除</el-button>
   </div>
   <div class="cal-schoolTit">待选科室:<el-input style="width: 200px;" v-model="filterDep" placeholder="请输入内容"></el-input></div>
   <div class="sltDepWrapper">
@@ -103,12 +137,15 @@
 <script>
 /*当前组件必要引入*/
 import api from "../api.js";
+import {rdyDepContrast} from "../../rules";
 //当前组件引入全局的util
 let Util = null;
 export default{
     props:["operailityData"],
     data() {
       return {
+        //验证规则
+        rdyDepContrast,
         //保存按钮基本信息
         loadBtn:{title:'确定',callParEvent:'listenSubEvent'},
 
@@ -275,25 +312,54 @@ export default{
         return template;
       },
 
+      //监控人选其几的值是否大于选中的科室
+      watchDeType(val){
+        if(isNaN(val)){
+          this.formValidate.depRandomNum = 1;
+        }else{
+          val = parseInt(val);
+          if(val<=0 || val>(this.tableData1.length-1)){
+            this.formValidate.depRandomNum = 1;
+          }
+        }
+      },
 
       /*
        * 点击提交按钮 监听是否提交数据
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
-        let isSubmit = true; //this.submitForm("formValidate");
+        let isSubmit = this.submitForm("formValidate");
         if(this.tableData1.length==1){
           this.showMess("您还没有配置科室!");
           return;
         }
         if(isSubmit) {
-//          console.log(this.getFormData(this.formValidate));
-//          return;
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true)
           this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
           this.ajax(this.addMessTitle, isLoadingFun)
         }
+      },
+
+
+      /*
+       * 点击提交按钮 监听是否验证通过
+       * @param formName string  form表单v-model数据对象名称
+       * @return flag boolean   form表单验证是否通过
+       * */
+      submitForm(formName){
+        let flag = true;
+        if(this.$refs[formName]){
+          for(let i =0;i< this.$refs[formName].length; i++){
+            this.$refs[formName][i].validate((valid) => {
+              if(!valid) {
+                flag= false;
+              }
+            });
+          }
+        }
+        return flag;
       },
 
 

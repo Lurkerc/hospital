@@ -28,9 +28,9 @@
       </br>
       <!--高级搜索项-->
       <div v-if="searchMore" ref="searchMore">
-        <el-form-item label="基地名称:" prop="jdName" >
-            <el-input style="width:300px;"   v-model="formValidate.jdName" placeholder="输入专业"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="基地名称:" prop="jdName" >-->
+            <!--<el-input style="width:300px;"   v-model="formValidate.jdName" placeholder="输入专业"></el-input>-->
+        <!--</el-form-item>-->
         <el-form-item label="专业:" prop="rtProclass" >
             <el-input style="width:300px;"   v-model="formValidate.rtProclass" placeholder="输入专业"></el-input>
         </el-form-item>
@@ -288,7 +288,7 @@
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:url.rulesgetList.path,
+            url:url.rulesgetPageList.path,
             params:{}
           }
         },

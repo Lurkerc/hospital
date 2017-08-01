@@ -780,6 +780,35 @@
           </el-col>
         </el-row>
       </el-form>
+      </br>
+      <el-row>
+        <el-col :span="10" :offset="9">
+          <div style="margin-left: 100px">
+            <el-button class="but-col" @click="derive" type="primary">导出到word</el-button>
+          </div>
+        </el-col>
+      </el-row>
+
+        <!--导出弹窗-->
+        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="deriveModal" title="对话框标题" class-name="vertical-center-modal"
+               :width="500">
+          <modal-header slot="header" :content="deriveId"></modal-header>
+          <div>
+            <div class="remove">确认导出吗</div>
+
+            <el-row>
+              <el-col :span="10" :offset="14">
+                <a :href="url.caseRecordExportToWord+operailityData.cid">
+                  <el-button @click="affirmDerive" type="primary">确定</el-button>
+                </a>
+                <el-button class="but-col" @click=" deriveModal=false">取消</el-button>
+              </el-col>
+              </el-col>
+            </el-row>
+          </div>
+          <div slot="footer"></div>
+        </Modal>
+        <!---->
     </div>
 </template>
 <script>
@@ -1924,6 +1953,11 @@
                   url:this.url.caseRecordGet+this.operailityData.cid,
                 }
               },
+              deriveModal:false,
+              deriveId: {
+                id: 'deriveId',
+                title: '导出'
+              },
           }
         },
         methods: {
@@ -2385,7 +2419,18 @@
             this.$emit('cancel',this.addMessTitle.type);
           },
 
-         //上传文件
+          //导出
+          derive() {
+            this.deriveModal=true
+          },
+
+          //确定导出
+          affirmDerive() {
+            //        let http = this.$store.getters.getEnvPath.http;
+            //        window.open() ;
+            this.deriveModal=false;
+          },
+          //上传文件
           expenseFileEvent(ids){
 
             this.formValidate.fileIds = ids;

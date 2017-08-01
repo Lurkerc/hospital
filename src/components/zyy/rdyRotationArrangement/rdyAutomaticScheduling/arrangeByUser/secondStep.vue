@@ -39,7 +39,8 @@
     data() {
       return {
         radio:"",
-        tableData1: [{
+        tableData1: [
+            /*{
           "jdId":"1",
           "jdName":"基地名称",
           "jdProclass":"内科方向",
@@ -48,7 +49,8 @@
           "jdStatus":"",
           "createTime":"",
           "jdContent":"",
-        }],
+        }*/
+        ],
 
         //初始化获取基地信息
         listMessTitle:{
@@ -67,7 +69,7 @@
     methods: {
       //初始化请求列表数据
       init(){
-        //this.ajax(this.listMessTitle);
+        this.ajax(this.listMessTitle);
       },
       //通过get请求列表数据
       updateListData(responseData){

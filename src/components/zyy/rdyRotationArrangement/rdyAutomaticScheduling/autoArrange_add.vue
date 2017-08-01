@@ -4,7 +4,7 @@
     <el-tabs v-model="activeName"  @tab-click="handleClick">
       <el-tab-pane label="按专业排" name="arrangeByGroup">
         <keep-alive>
-          <by-group v-if="showFirstLab" @add="subCallback" :isInit="count" style="height: 100%;"></by-group>
+          <by-specialty v-if="showFirstLab" @add="subCallback" :isInit="count" style="height: 100%;"></by-specialty>
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="按人员排" name="arrangeByUser">
@@ -33,7 +33,7 @@
   }
 </style>
 <script>
-  import  byGroup from './arrangeBySpecialty/index.vue'
+  import  bySpecialty from './arrangeBySpecialty/index.vue'
   import  byUser from './arrangeByUser/index.vue'
   export default {
 
@@ -84,7 +84,7 @@
       },
     },
     components:{
-      byGroup,byUser
+      bySpecialty,byUser
     }
 
 

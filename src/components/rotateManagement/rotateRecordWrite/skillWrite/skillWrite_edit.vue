@@ -38,12 +38,8 @@
         <el-col :span="16" :offset="2">
           <el-form-item label="操作名称:" prop="disTitle" >
             <el-select multiple v-model="formValidate.disTitle" placeholder="请选择">
-              <el-option
-                v-for="item in getMyRotaryRequirements"
-                :key="item.id"
-                :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'"
-                :value="item.outlineRequireId+'-'+item.disTitle">
-              </el-option>
+              <el-option v-if="role == 'SXS'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.outlineRequireId+'-'+item.disTitle"> </el-option>
+              <el-option v-if="role == 'SXS'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.deId+'-'+item.disTitle"></el-option>
             </el-select>
           </el-form-item>
         </el-col >
@@ -159,7 +155,8 @@
             url:this.url.skillRecordGet+this.operailityData.skillId,  //向后台请求数据的地址
 
           }
-        }
+        },
+        role:'',
       }
     },
     created(){
@@ -298,8 +295,19 @@
             url:this.url.getMyRotaryRequirements+'jn-'+val,
 
           }
-        }
-        this.ajax(listMessTitle)
+        };
+
+        //获取当前登录人来判定调用那个接口来获取技能和病种名称
+        let userInfo = this.$store.getters.getUserInfo;
+        let role = userInfo.roleList[0].identify;
+        this.role = role;
+        if(role == 'SXS'){
+          listMessTitle.ajaxParams.url =  this.url.getMyRotaryRequirements + 'jn-' + val;
+        }else if (role == 'ZYY'){
+          listMessTitle.ajaxParams.url =  this.url.ZYYgetMyRotaryRequirements + 'jn-' + val;
+        };
+
+        this.ajax(listMessTitle);
 
       },
 

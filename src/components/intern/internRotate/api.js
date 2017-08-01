@@ -132,7 +132,7 @@ const api = {
     path: handWork + '/deleteRotary_SXS',
     method: 'delete'
   },
-  getRotaryDepIndo:{  //微调-查看用户轮转表  {userId}
+  getRotaryDepIndo:{  //微调-查看用户轮转表  {userId}_SSX
     path: handWork + '/getRotaryDepIndo',
     method: 'get'
   },

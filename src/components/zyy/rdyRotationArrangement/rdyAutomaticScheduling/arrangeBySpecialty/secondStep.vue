@@ -108,19 +108,22 @@
         formValidate:{
           userName:""
         },
+        dataObj:{},
         multipleSelection: this.initUser,
         dynamicHt: 100,
         self: this,
         loading:false,
         listTotal:0,
-        tableData1: [{
+        tableData1: [
+            /*{
           "userId":"4565",
           "userName":"张三",
           "rtProclass":"内科",
           "highestEdu":"本科",
           "rotaryAdmrank":"1",
           "rotaryZyyType":""
-        }],
+        }*/
+        ],
 
         //初始化获取人员信息
         listMessTitle:{
@@ -150,7 +153,7 @@
           //url:this.listUrl,
           params:{curPage: 1,pageSize: Util.pageInitPrams.pageSize}
         }
-        //this.setTableData(this.listMessTitle);
+        this.setTableData(this.listMessTitle);
       },
 
       setTableData(){
@@ -182,17 +185,17 @@
         this.tableData1=data;
         for(var i=0,item;i<data.length;i++){
           item = data[i];
-          item["index"] = i;
+          item["idx"] = i;
           this.dataObj[item["userId"]] = item;
         }
         this.$nextTick(function () {
           let tempArr = this.multipleSelection;
           for (var i = 0,idx; i < tempArr.length; i++) {
-            idx = this.dataObj[tempArr[i]["userId"]]["index"];
+            idx = this.dataObj[tempArr[i]["userId"]]["idx"];
             this.$refs.multipleTable.toggleRowSelection(this.tableData1[idx], true);
           }
         })
-        //this.listTotal = responseData.totalCount || 0;
+        this.listTotal = responseData.totalCount || 0;
       },
 
 
