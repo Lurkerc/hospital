@@ -45,10 +45,10 @@
 
     data() {
       return {
-        formValidate: {
+        formValidate: { // statisticsId 与 sceneId 二传一
           userId: this.operailityData.userId, //考生id
           statisticsId: this.operailityData.statisticsId, //统计id
-          sceneId: this.operailityData.sceneIds, //场次id
+          // sceneId: this.operailityData.sceneIds, //场次id
         },
         isShowList: true,
 

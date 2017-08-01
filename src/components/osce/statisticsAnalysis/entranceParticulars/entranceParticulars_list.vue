@@ -40,7 +40,6 @@
   /*  引入--场次概况*/
   import overviewSession from './entranceParticulars_overviewSession.vue'
   /*  引入--考生详情*/
-  7
   import examinee from './entranceParticulars_examinee.vue'
   /*  引入--分站详情*/
   import substation from './entranceParticulars_substation.vue'
