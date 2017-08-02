@@ -68,6 +68,7 @@ function multiple2(rule, value, callback) {
  */
 let rdyTrainingStandardsFirst = {
   "rtName": [baseRules.requiredNoEvent, baseRules.inputLen(0, 50), baseRules.illegalChar()],
+  "jdName": [baseRules.requiredNoEvent],
   "rtIntroduce": [baseRules.inputLen(0, 500), baseRules.illegalChar()],
   "rtTarget": [baseRules.inputLen(0, 500), baseRules.illegalChar()],
   "rtMethod": [baseRules.inputLen(0, 500), baseRules.illegalChar()],
@@ -95,7 +96,7 @@ let rdyTrainingStandardsSecond = {
  */
 let rdyPersonnelManagement = {
   rotaryProclass: baseRules.requiredNoEvent,
-  rotaryYear: baseRules.isDate,
+  rotaryYear: baseRules.requiredNoEvent,
   rotaryAdmrank: baseRules.requiredNoEvent,
   rotaryZyytype: baseRules.requiredNoEvent,
 };
@@ -104,8 +105,8 @@ let rdyPersonnelManagement = {
  * 对照表
  */
 let rdyDepContrast = {
-  "radomNum":baseRules.numbers,
-  "ts":[baseRules.requiredNoEvent,baseRules.float,multiple2,baseRules.inputLen(0,20),baseRules.illegalChar()],
+  "radomNum": baseRules.numbers,
+  "ts": [baseRules.requiredNoEvent, baseRules.float, multiple2, baseRules.inputLen(0, 20), baseRules.illegalChar()],
 };
 
 export {

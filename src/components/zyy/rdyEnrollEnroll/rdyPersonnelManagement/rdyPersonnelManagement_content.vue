@@ -99,7 +99,7 @@
       <!--修改弹窗-->
       <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1000">
         <modal-header slot="header" :content="editId"></modal-header>
-        <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :fromWhere="fromWhereTree"></edit>
+        <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
         <div slot="footer"></div>
       </Modal>
       <!--增加弹窗-->

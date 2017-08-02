@@ -110,7 +110,7 @@
         <!--<div slot="header"> -->
         <!--</div>-->
         <modal-header slot="header" :content="editId"></modal-header>
-        <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :fromWhere="fromWhereTree" :operaility-data="operailityData"></edit>
+        <edit v-if="editModal" @cancel="cancel" @edit="subCallback" fromWhere="depUser" :operaility-data="operailityData"></edit>
         <div slot="footer"></div>
       </Modal>
       <!---->
@@ -198,7 +198,7 @@
   let Util = null;
   let store = null;
   export default {
-    props: ['deptId', 'fromWhereTree'],
+    props: ['deptId'],
     data() {
       return {
         sexOption,
