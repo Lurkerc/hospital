@@ -26,8 +26,12 @@ export default {
   /*删除病种*/
   diseaseRemove:'/rotationProcess/diseaseRecord/remove',//{diseaseId}
 
-  /*根据科室要求ID和科室获取需完成数量、已完成数量、未完成数量*/
+  /*实习生  根据科室要求ID和科室获取需完成数量、已完成数量、未完成数量*/
   getMyRotaryRequirements:'/deprequirement/getMyRotaryRequirements/',//{type}-{podId}
+
+
+  /* 住院医  根据科室要求ID和科室获取需完成数量、已完成数量、未完成数量*/
+  ZYYgetMyRotaryRequirements:'/rotaryBasis/rulesTraining/getMyRotaryRequirements/',//{type}-{podId}
 
 
 
@@ -128,10 +132,11 @@ export default {
 
   // 黏贴查询是否黏贴
   bigcaseIscopy: '/rotaryConfig/getByKey/rotary_bigcase_iscopy-SXS',
+
+
   /**
    * 临床技能操作
    * */
-
 
   /*临床操作记录添加上报 post*/
   clinicalRecordAddSubmit:'/traineeRotary/clinicalRecord/addSubmit',
@@ -140,21 +145,8 @@ export default {
   /*临床操作记录添加 post*/
   clinicalRecordAdd:'/traineeRotary/clinicalRecord/add',
 
-
-  /* 临床操作记录列表(教育处-带教秘书-科室主任-带教老) get*/
-  clinicalRecordMangePageList:'/traineeRotary/clinicalRecord/mangePageList',
-
   /* 临床操作记录列表(轮转生查看) get*/
   clinicalRecordPageList:'/traineeRotary/clinicalRecord/pageList',
-
-  /* 临床操作记录批量通过 post*/
-  clinicalRecordModifySubPass:'/traineeRotary/clinicalRecord/modifySubPass',//ids
-
-  /* 临床操作记录批量驳回 post*/
-  clinicalRecordModifySubReject:'/traineeRotary/clinicalRecord/modifySubReject',//ids
-
-  /* 临床操作记录审核 post*/
-  clinicalRecordReview:'/traineeRotary/clinicalRecord/review',//id
 
   /* 临床操作记录删除 delete*/
   clinicalRecordDelete:'/traineeRotary/clinicalRecord/delete',//ids
@@ -170,6 +162,51 @@ export default {
 
 
 
+  /**
+   * 临床技能操作
+   * */
+
+  /*参加抢救危重病人记录查看 get*/
+  rescuePatientRecordGet:'/traineeRotary/rescuePatientRecord/get/',//{id}
+
+  /*参加抢救危重病人记录修改 put*/
+  rescuePatientRecordModify:'/traineeRotary/rescuePatientRecord/modify/',//{id}
+
+  /*参加抢救危重病人记录上报 post*/
+  rescuePatientRecordAddSubmit:'/traineeRotary/rescuePatientRecord/addSubmit',//
+
+  /*参加抢救危重病人记录添加 post*/
+  rescuePatientRecordAdd:'/traineeRotary/rescuePatientRecord/add',//
+
+  /*参加抢救危重病人记录列表(轮转生查看)get*/
+  rescuePatientRecordPageList:'/traineeRotary/rescuePatientRecord/pageList',//
+
+  /*参加抢救危重病人记录删除 delete*/
+  rescuePatientRecordDelete:'/traineeRotary/rescuePatientRecord/delete/',//{ids}
+
+  /*参加抢救危重病人记录上报 put*/
+  rescuePatientRecordModifySubmit:'/traineeRotary/rescuePatientRecord/modifySubmit',//{ids}
+
+  /**
+   * 管床记录
+   * */
+
+  /*管床记录查看 get*/
+  tubeBedRecordingGet:'/traineeRotary/tubeBedRecording/get/',//{id}
+
+
+  /*管床记录列表(教育处-科室主任-教学秘书-带教老师) get*/
+  tubeBedRecordingMangePageList:'/traineeRotary/tubeBedRecording/mangePageList',
+
+  /*管床记录列表(轮转生查看) get*/
+  tubeBedRecordingPageList:'/traineeRotary/tubeBedRecording/pageList',
+
+  /*管床批量通过 post*/
+  tubeBedRecordingModifySubPass:'/traineeRotary/tubeBedRecording/modifySubPass', //{ids}
+
+
+  /*管床记录批量驳回 post*/
+  tubeBedRecordingModifySubReject:'/traineeRotary/tubeBedRecording/modifySubReject', //{ids}
 
 
 }

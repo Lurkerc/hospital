@@ -71,10 +71,11 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="160">
+            width="200">
             <template scope="scope">
               <el-button size="small" @click="show(scope.row)">查看</el-button>
-              <el-button size="small" @click="edit(scope.row)">修改</el-button>
+              <el-button v-if="scope.row.state=='NO_SUBMIT' || scope.row.state=='REJECT'" size="small" @click="edit(scope.row)">修改</el-button>
+              <el-button v-if="scope.row.state=='NO_SUBMIT' || scope.row.state=='REJECT'"  size="small" @click="reported(scope.row)">上报</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -102,6 +103,9 @@
             show-overflow-tooltip
             prop="clinicalType"
             label="操作方式">
+            <template scope="scope">
+              {{ scope.row.clinicalType  |typeText}}
+            </template>
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
@@ -168,7 +172,7 @@
       :loading="loading"
       :width="500">
       <modal-header slot="header" :content="removeId"></modal-header>
-      <remove  v-if="removeModal" :delete-url="url.buildRemove" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
+      <remove  v-if="removeModal" :delete-url="url.clinicalRecordDelete" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
 
       <div slot="footer"></div>
     </Modal>
@@ -183,6 +187,21 @@
       <show v-if="showModal" @cancel="cancel" @show="subCallback" :operaility-data="operailityData" :url="url"></show>
       <div slot="footer"></div>
     </Modal>
+
+    <!--上报弹窗-->
+    <Modal
+      close-on-click-modal="false"
+      height="200"
+      v-model="reportedModal"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :loading="loading"
+      :width="500">
+      <modal-header slot="header" :content="reportedId"></modal-header>
+      <operate v-if="reportedModal" :type="'reported'" :operateUrl="url.clinicalRecordModifySubmit"   @operate="subCallback" @cancel="cancel" :operaility-data="operailityData"></operate>
+      <div slot="footer"></div>
+    </Modal>
+    <!---->
   </div>
 </template>
 <script>
@@ -231,6 +250,7 @@
         ],
         searchMore: false,
         loading:false,
+        reportedModal:false,
         totalCount:0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle:{
@@ -246,6 +266,7 @@
         editId:{id:'editId',title:'修改'},
         removeId:{id:'removeId',title:'删除'},
         viewId:{id:'viewId',title:'查看'},
+        reportedId:{id:'reportedId',title:'上报'},
         //人员
         userId:'',
         userType:'',
@@ -346,6 +367,12 @@
       add(){
         this.openModel("add");
       },
+
+      //上报
+      reported(data){
+        this.operailityData = data;
+        this.openModel("reported");
+      },
       /*--点击--修改--按钮--*/
       edit(data){
         this.operailityData = data;
@@ -354,6 +381,12 @@
       /*--点击--删除--按钮--*/
       remove(){
         if(!this.isSelected()) return;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].state != 'NO_SUBMIT' && this.multipleSelection[i].state != 'REJECT') {
+            this.showMess('只能删除未上报或已驳回的数据');
+            return;
+          }
+        }
         this.operailityData = this.multipleSelection;
         this.openModel('remove') ;
       },

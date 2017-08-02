@@ -5,8 +5,8 @@
 
       <el-row >
         <el-col :span="16" :offset="4">
-          <el-form-item label="操作项目名称:" prop="clinicalName" >
-            <el-input v-model="formValidate.clinicalName" placeholder="请输入"></el-input>
+          <el-form-item label="病名:" prop="clinicalName" >
+            {{getData.diseaseName}}
           </el-form-item>
         </el-col>
       </el-row >
@@ -14,10 +14,7 @@
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="科室:" prop="podId">
-            <el-select  v-model="formValidate.podId" placeholder="请选择" >
-              <el-option  v-for="item in optionData" :key="item.id" :label="item.depName" :value="item.depId+'-'+item.depName+'-'+item.podId">
-              </el-option>
-            </el-select>
+            {{getData.depName}}
           </el-form-item>
         </el-col>
       </el-row >
@@ -25,25 +22,15 @@
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="操作时间:" prop="clinicalTime" >
-            <el-date-picker
-              style="width: 200px"
-              v-model="formValidate.clinicalTime"
-              type="date"
-              :editable="false"
-              placeholder="选择日期">
-            </el-date-picker>
+            {{getData.tubeTime}}
           </el-form-item>
         </el-col>
       </el-row >
 
       <el-row >
         <el-col :span="16" :offset="4">
-          <el-form-item label="操作方式:" prop="clinicalType" >
-            <el-select  v-model="formValidate.clinicalType" placeholder="请选择" >
-              <el-option  label="主要完成" value="MAIN_COMPLETED"> </el-option>
-              <el-option  label="助手" value="ASSISTANT"> </el-option>
-              <el-option  label="观摩" value="WATCH"></el-option>
-            </el-select>
+          <el-form-item label="病历号:" prop="clinicalType" >
+            {{getData.caseNumber}}
           </el-form-item>
         </el-col>
       </el-row >
@@ -51,7 +38,7 @@
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="指导教师:" prop="teacherName" >
-            <el-input v-model="formValidate.teacherName" placeholder="请输入"></el-input>
+            {{getData.teacherName}}
           </el-form-item>
         </el-col>
       </el-row >
@@ -59,17 +46,56 @@
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="备注:" prop="note">
-            <el-input v-model="formValidate.note" type="textarea" resize="none" :rows="8"></el-input>
+            <el-input v-model="formValidate.note" readonly type="textarea" resize="none" :rows="8"></el-input>
           </el-form-item>
         </el-col>
       </el-row >
     </el-form>
+    <el-row>
+      <el-col :span="20" :offset="2">
+        <el-table
+          v-if="tableData!=0"
+          align="center"
+          :max-height="250"
+          :data="tableData"
+          tooltip-effect="dark"
+          highlight-current-row
+          style="width: 100%;height: 100%">
+          <el-table-column
+            align="center"
+            label="序号"
+            prop="index"
+            width="100">
+            <template scope="scope">
+              <span>{{scope.row.index}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="createTime"
+            label="审核时间">
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="reviewMess"
+            label="审核意见">
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="spState"
+            label="审核状态">
+            <template scope="scope">
+              {{scope.row.spState | typeText}}
+            </template>
+          </el-table-column>
 
-    <el-row >
-      <el-col :span="14" :offset="6">
+        </el-table>
+      </el-col>
+    </el-row>
+    <el-row style="padding-top: 20px">
+      <el-col :span="10" :offset="8">
         <div style="margin-left: 100px">
-          <load-btn @listenSubEvent="save" :btnData="loadBtn"></load-btn>
-          <load-btn @listenSubEvent="saveReportedEvent" :btnData="saveReported"></load-btn>
+          <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
           <el-button  @click="cancel">取消</el-button>
         </div>
       </el-col>
@@ -80,33 +106,30 @@
   //当前组件引入全局的util
   let Util=null;
   export default {
-      props:['operailityData','url'],
+    props:['operailityData','url'],
     data (){
       return{
         //保存按钮基本信息
-        loadBtn:{title:'保存',callParEvent:'listenSubEvent'},
-        saveReported:{title:'上报',callParEvent:'listenSubEvent'},
+        loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         //form表单bind数据
         formValidate: {
-          podId:"",   //轮转ID
-          depId:"",   //科室ID
-          depName:"",   //科室
-          clinicalName:"",   //操作名称
-          clinicalType:"",   //操作方式
-          clinicalTime:"",   //管床时间(2017-01-01)
-          teacherName:"",   //指导老师
-          note:'',        //备注
+          spState:"PASS",   //审核状态
+          reviewMess:"",   //审核意见
         },
+        getData:{
+
+        },
+        tableData:[],
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle:{
-          type:'add',
-          successTitle:'添加成功!',
-          errorTitle:'添加失败!',
+          type:'edit',
+          successTitle:'修改成功!',
+          errorTitle:'修改失败!',
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
-            url:this.url.clinicalRecordAdd,
-            method:'post',
+            url:this.url.clinicalRecordReview+this.operailityData.id,
+            method:'put',
             data:{},
           }
         },
@@ -114,7 +137,7 @@
         listMessTitle: {
           ajaxSuccess: 'updateListData',
           ajaxParams: {
-            url: '', //向后台请求数据的地址
+            url:this.url.clinicalRecordGet+this.operailityData.id, //向后台请求数据的地址
 
           }
         },
@@ -124,9 +147,6 @@
     created(){
       //给当前组件注入全局util
       Util = this.$util;
-      let userInfo = this.$store.getters.getUserInfo;
-      let userType = userInfo.studentTypes;
-      this.listMessTitle.ajaxParams.url = this.url.userRotaryDeptlist + userType + '-' + userInfo.id;
       this.init()
     },
     mounted(){
@@ -137,11 +157,13 @@
       updateListData(res) {
         let data = res.data;
         if (!data) return;
-        this.optionData = data;
-
+        this.getData = data;
+        if(data.reviewMess){
+          this.tableData = data.reviewMess
+        }
       },
       /*
-       * 保存或上报按钮会调用这个公共函数
+       * 点击提交按钮 监听是否提交数据
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
@@ -150,28 +172,9 @@
           if(!isLoadingFun) isLoadingFun=function(){};
           isLoadingFun(true);
           let formValidate = this.formValidate;
-          if(formValidate.podId){
-            let deps = formValidate.podId.split('-');
-            formValidate.depId = deps[0];
-            formValidate.depName = deps[1];
-            formValidate.podId = deps[2];
-          }
-          formValidate = this.formDate(formValidate,['clinicalTime'],'yyyy-MM-dd');
           this.addMessTitle.ajaxParams.data=formValidate;
           this.ajax(this.addMessTitle,isLoadingFun)
         }
-      },
-
-//      保存 改变url
-      save(isLoadingFun){
-        this.addMessTitle.ajaxParams.url = this.url.clinicalRecordAdd;
-        this.listenSubEvent(isLoadingFun);
-      },
-
-      //保存上报 改变url
-      saveReportedEvent(isLoadingFun){
-        this.addMessTitle.ajaxParams.url = this.url.clinicalRecordAddSubmit;
-        this.listenSubEvent(isLoadingFun);
       },
       /*
        * 点击提交按钮 监听是否验证通过
@@ -194,8 +197,6 @@
       cancel(){
         this.$emit('cancel',this.addMessTitle.type);
       },
-
-
       /*
        * 获取表单数据
        * @return string  格式:id=0&name=aa
@@ -208,10 +209,11 @@
        * 组件初始化入口
        * */
       init(){
-          //请求科室数据
+        //请求科室数据
         this.ajax(this.listMessTitle)
       },
 
     }
   }
 </script>
+

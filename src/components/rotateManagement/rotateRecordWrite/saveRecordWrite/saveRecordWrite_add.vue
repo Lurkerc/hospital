@@ -5,8 +5,8 @@
 
       <el-row >
         <el-col :span="16" :offset="4">
-          <el-form-item label="操作项目名称:" prop="clinicalName" >
-            <el-input v-model="formValidate.clinicalName" placeholder="请输入"></el-input>
+          <el-form-item label=" 病名:" prop="diseaseName" >
+            <el-input v-model="formValidate.diseaseName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
       </el-row >
@@ -24,10 +24,10 @@
 
       <el-row >
         <el-col :span="16" :offset="4">
-          <el-form-item label="操作时间:" prop="clinicalTime" >
+          <el-form-item label="操作时间:" prop="tubeTime" >
             <el-date-picker
               style="width: 200px"
-              v-model="formValidate.clinicalTime"
+              v-model="formValidate.tubeTime"
               type="date"
               :editable="false"
               placeholder="选择日期">
@@ -38,12 +38,8 @@
 
       <el-row >
         <el-col :span="16" :offset="4">
-          <el-form-item label="操作方式:" prop="clinicalType" >
-            <el-select  v-model="formValidate.clinicalType" placeholder="请选择" >
-              <el-option  label="主要完成" value="MAIN_COMPLETED"> </el-option>
-              <el-option  label="助手" value="ASSISTANT"> </el-option>
-              <el-option  label="观摩" value="WATCH"></el-option>
-            </el-select>
+          <el-form-item label="病历号:" prop="caseNumber" >
+            <el-input v-model="formValidate.caseNumber" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
       </el-row >
@@ -91,11 +87,11 @@
           podId:"",   //轮转ID
           depId:"",   //科室ID
           depName:"",   //科室
-          clinicalName:"",   //操作名称
-          clinicalType:"",   //操作方式
-          clinicalTime:"",   //管床时间(2017-01-01)
+          diseaseName:"",   //病名
+          caseNumber:"",   //病例号
+          tubeTime:"",   //抢救时间(2017-01-01)
           teacherName:"",   //指导老师
-          note:'',        //备注
+          note:'',
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle:{
@@ -105,7 +101,7 @@
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
-            url:this.url.clinicalRecordAdd,
+            url:this.url.rescuePatientRecordAdd,
             method:'post',
             data:{},
           }
@@ -156,7 +152,7 @@
             formValidate.depName = deps[1];
             formValidate.podId = deps[2];
           }
-          formValidate = this.formDate(formValidate,['clinicalTime'],'yyyy-MM-dd');
+          formValidate = this.formDate(formValidate,['tubeTime'],'yyyy-MM-dd');
           this.addMessTitle.ajaxParams.data=formValidate;
           this.ajax(this.addMessTitle,isLoadingFun)
         }
@@ -164,13 +160,13 @@
 
 //      保存 改变url
       save(isLoadingFun){
-        this.addMessTitle.ajaxParams.url = this.url.clinicalRecordAdd;
+        this.addMessTitle.ajaxParams.url = this.url.rescuePatientRecordAdd;
         this.listenSubEvent(isLoadingFun);
       },
 
       //保存上报 改变url
       saveReportedEvent(isLoadingFun){
-        this.addMessTitle.ajaxParams.url = this.url.clinicalRecordAddSubmit;
+        this.addMessTitle.ajaxParams.url = this.url.rescuePatientRecordAddSubmit;
         this.listenSubEvent(isLoadingFun);
       },
       /*

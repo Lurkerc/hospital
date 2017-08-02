@@ -6,15 +6,15 @@
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="操作项目名称:" prop="clinicalName" >
-            <el-input v-model="formValidate.clinicalName" placeholder="请输入"></el-input>
+           {{formValidate.clinicalName}}
           </el-form-item>
         </el-col>
       </el-row >
 
       <el-row >
         <el-col :span="16" :offset="4">
-          <el-form-item label="科室:" >
-           {{formValidate.depName}}
+          <el-form-item label="科室:" prop="podId">
+            {{formValidate.depName}}
           </el-form-item>
         </el-col>
       </el-row >
@@ -22,13 +22,7 @@
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="操作时间:" prop="clinicalTime" >
-            <el-date-picker
-              style="width: 200px"
-              v-model="formValidate.clinicalTime"
-              type="date"
-              :editable="false"
-              placeholder="选择日期">
-            </el-date-picker>
+            {{formValidate.clinicalTime}}
           </el-form-item>
         </el-col>
       </el-row >
@@ -36,11 +30,7 @@
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="操作方式:" prop="clinicalType" >
-            <el-select  v-model="formValidate.clinicalType" placeholder="请选择" >
-              <el-option  label="主要完成" value="MAIN_COMPLETED"> </el-option>
-              <el-option  label="助手" value="ASSISTANT"> </el-option>
-              <el-option  label="观摩" value="WATCH"></el-option>
-            </el-select>
+            {{formValidate.clinicalType | typeText}}
           </el-form-item>
         </el-col>
       </el-row >
@@ -48,7 +38,7 @@
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="指导教师:" prop="teacherName" >
-            <el-input v-model="formValidate.teacherName" placeholder="请输入"></el-input>
+            {{formValidate.teacherName}}
           </el-form-item>
         </el-col>
       </el-row >
@@ -56,20 +46,55 @@
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="备注:" prop="note">
-            <el-input v-model="formValidate.note" type="textarea" resize="none" :rows="8"></el-input>
+            <el-input v-model="formValidate.note" readonly type="textarea" resize="none" :rows="8"></el-input>
           </el-form-item>
         </el-col>
       </el-row >
     </el-form>
+    <el-row>
+      <el-col :span="20" :offset="2">
+        <el-table
+          v-if="tableData!=0"
+          align="center"
+          :max-height="250"
+          :data="tableData"
+          tooltip-effect="dark"
+          highlight-current-row
+          style="width: 100%;height: 100%">
+          <el-table-column
+            align="center"
+            label="序号"
+            prop="index"
+            width="100">
+            <template scope="scope">
+              <span>{{scope.row.index}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="createTime"
+            label="审核时间">
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="reviewMess"
+            label="审核意见">
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="spState"
+            label="审核状态">
+            <template scope="scope">
+              {{scope.row.spState | typeText}}
+            </template>
+          </el-table-column>
 
-    <el-row >
-      <el-col :span="10" :offset="10">
-        <div style="margin-left: 100px">
-          <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
-          <el-button  @click="cancel">取消</el-button>
-        </div>
+        </el-table>
       </el-col>
-    </el-row >
+    </el-row>
+
+
+
   </div>
 </template>
 <script>
@@ -83,29 +108,19 @@
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         //form表单bind数据
         formValidate: {
-          clinicalType:"",   //操作类型
-          clinicalName:"",   //操作名称
-          clinicalTime:"",   //管床时间(2017-01-01)
-          teacherName:"",   //指导老师
-          note:'',
-        },
-        getData:{
-
-        },
-        //当前组件提交(add)数据时,ajax处理的 基础信息设置
-        addMessTitle:{
-          type:'edit',
-          successTitle:'修改成功!',
-          errorTitle:'修改失败!',
-          ajaxSuccess:'ajaxSuccess',
-          ajaxError:'ajaxError',
-          ajaxParams:{
-            url:this.url.clinicalRecordModify+this.operailityData.id,
-            method:'put',
-            data:{},
-          }
+          "id":111,
+          "depName":"科室",
+          "createUserName":"名称",
+          "createTime":"2014-01-01 10:10:10",
+          "clinicalName":"病名",
+          "clinicalType":"WATCH",
+          "clinicalTime":"2016-01-01",
+          "note":"备注说明",
+          "teacherName":"指导老师",
+          "state":"NO_SUBMIT"
         },
 
+        tableData:[],
         listMessTitle: {
           ajaxSuccess: 'updateListData',
           ajaxParams: {
@@ -129,24 +144,11 @@
       updateListData(res) {
         let data = res.data;
         if (!data) return;
-        this.getData = data;
-        this.formValidate = this.getFormValidate(this.formValidate,data);
-
-      },
-      /*
-       * 点击提交按钮 监听是否提交数据
-       * @param isLoadingFun boolean  form表单验证是否通过
-       * */
-      listenSubEvent(isLoadingFun){
-        let isSubmit = this.submitForm("formValidate");
-        if(isSubmit){
-          if(!isLoadingFun) isLoadingFun=function(){};
-          isLoadingFun(true);
-          let formValidate = this.formValidate;
-          formValidate = this.formDate(formValidate,['clinicalTime'],'yyyy-MM-dd');
-          this.addMessTitle.ajaxParams.data=formValidate;
-          this.ajax(this.addMessTitle,isLoadingFun)
+        this.formValidate = data;
+        if(data.reviewMess){
+            this.tableData = data.reviewMess
         }
+
       },
       /*
        * 点击提交按钮 监听是否验证通过
@@ -185,6 +187,11 @@
         this.ajax(this.listMessTitle)
       },
 
+      podIdChange(){
+
+
+
+      }
     }
   }
 </script>

@@ -78,4 +78,48 @@ export default {
   /*大病例查看*/
   caseRecordGet:'/rotationProcess/caseRecord/get/',//{caseId}
 
+
+
+/**
+ * 临床操作记录列表
+ *
+ * */
+
+  /* 临床操作记录列表(教育处-带教秘书-科室主任-带教老) get*/
+  clinicalRecordMangePageList:'/traineeRotary/clinicalRecord/mangePageList',
+
+
+  /*临床操作记录查看 get*/
+  clinicalRecordGet:'/traineeRotary/clinicalRecord/get/',//{id}
+
+  /* 临床操作记录批量通过 post*/
+  clinicalRecordModifySubPass:'/traineeRotary/clinicalRecord/modifySubPass',//ids
+
+  /* 临床操作记录批量驳回 post*/
+  clinicalRecordModifySubReject:'/traineeRotary/clinicalRecord/modifySubReject',//ids
+
+  /* 临床操作记录审核 post*/
+  clinicalRecordReview:'/traineeRotary/clinicalRecord/review/',//id
+
+
+  /**
+   * 临床操作记录列表
+   *
+   * */
+
+
+  /*抢救记录批量通过 post*/
+  rescuePatientRecordModifySubPass:'/traineeRotary/rescuePatientRecord/modifySubPass',//{ids}
+
+  /*批量驳回 post*/
+  rescuePatientRecordModifySubReject:'/traineeRotary/rescuePatientRecord/modifySubReject',//{ids}
+
+  /*抢救记录审核 post*/
+  rescuePatientRecordReview:'/traineeRotary/rescuePatientRecord/review/',//{ids}
+
+  /*参加抢救危重病人记录列表(教育处-科室主任-教学秘书-带教老师) get*/
+  rescuePatientRecordMangePageList:'/traineeRotary/rescuePatientRecord/mangePageList',//
+
+
+
 }
