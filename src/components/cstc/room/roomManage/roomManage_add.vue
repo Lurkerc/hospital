@@ -45,7 +45,7 @@
       <el-row>
         <el-col :span="18" :offset="2">
           <el-form-item label="房间图片：">
-            <upload-file @upladSuccess="upladSuccess"></upload-file>
+            <upload-file @upladSuccess="upladSuccess" :fileList="fileList"></upload-file>
           </el-form-item>
         </el-col>
       </el-row>
@@ -106,6 +106,7 @@
             method: this.urlParams.method
           }
         },
+        fileList: [],
       }
     },
     created() {
@@ -160,7 +161,9 @@
        * */
       resetForm(formName) {
         // this.$emit('cancel', this.addMessTitle.type);
-        this.$refs[formName].resetFields()
+        this.$refs[formName].resetFields();
+        this.fileList = [];
+        this.formValidate.imgIds = '';
       },
       /*
        * 获取表单数据
