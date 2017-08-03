@@ -80,7 +80,7 @@ const api = {
     method: 'post'
   },
   monthCourseSetResearchRoom:{  //根据教学周历ID获取每个月课程设置-----教研室人员可看
-    path: thisFile + "/monthCourseSetResearchRoom/",
+    path: thisFile + "/monthCourseSetResearchRoom",
     method: 'get'
   },
   userGetCourse:{  //根据教学周历ID获取每个月课程设置-----教研室人员可看

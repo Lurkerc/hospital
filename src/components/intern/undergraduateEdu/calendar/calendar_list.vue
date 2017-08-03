@@ -380,7 +380,7 @@
         multipleSelection: [],
         dynamicHt: 100,
         tableData1: [
-          {
+          /*{
             "weekSetId":"",
             "schoolName":"",
             "gradeNum":"",
@@ -391,7 +391,7 @@
             "startEndWeekSetTime":"",
             "createTime":"",
             "weekSetState":""
-          }
+          }*/
         ],
         loading:false,
         listTotal:0,

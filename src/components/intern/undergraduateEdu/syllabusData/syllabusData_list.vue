@@ -165,14 +165,14 @@
         dynamicHt: 100,
         self: this,
         tableData1: [
-          {
+          /*{
             "courseDataId":"",
             "courseContent":"111",
             "courseType":"见习",
             "courseTime":"2017-02-08",
             "courseDataCreateTime":"2017-02-08",
             "courseDataState":"NO_SUBMIT"
-          }
+          }*/
         ],
         loading:false,
         listTotal:0,

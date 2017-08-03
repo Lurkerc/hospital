@@ -249,7 +249,7 @@
 
         //默认展示列表----数据存储
         tableData1: [
-          {
+          /*{
             "userId":111,
             "userName":"张三",
             "schoolName":"学校名称",
@@ -260,7 +260,7 @@
             "rtState":0,
             "rtStartTime":"2017-05-06",
             "isPrint":0
-          }
+          }*/
         ],
 
         //按部门展示列表----数据存储

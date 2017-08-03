@@ -312,7 +312,7 @@
       SuccessGetCurrData(responseData) {
         let data = responseData.data;
         let env = this.$store.getters.getEnvPath;
-        if (data.headPhoto === null) {
+        if (data.headPhoto === null || data.headPhoto=="") {
           data.headPhotoHttp = "";
         } else {
           data.headPhotoHttp = env["http"] + data.headPhoto;

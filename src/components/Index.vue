@@ -10,13 +10,13 @@
             <div class="sidebar-content">
                 <div class="sidebar-inner">
                     <div class="sidebar-fold" @click="handleViewSubNav"></div>
-                    <div v-if="!gotoRouter" style="text-align: center;margin-top: 100px;">数据请求失败!</div>
+                    <div v-if="!gotoRouter" style="text-align: center;margin-top: 100px;">数据请求{{typeof userInfo.name=='undefined'?'失败':'中……'}}!</div>
                     <Left v-if="gotoRouter" :leftNavData="Nav" :subIndex="subIndex" :dataStructure="dataStructures"></Left>
                 </div>
             </div>
         </div>
         <div class="viewFramework-main">
-            <div v-if="!gotoRouter" style="text-align: center;margin-top: 100px;">数据请求失败!</div>
+            <div v-if="!gotoRouter" style="text-align: center;margin-top: 100px;">数据请求{{typeof userInfo.name=='undefined'?'失败':'中……'}}!</div>
             <router-view v-if="gotoRouter" :subNavs="subNavs" :subIndex="subIndex" :dataStructure="dataStructures"></router-view>
         </div>
     </div>
@@ -106,6 +106,12 @@ export default {
       Util = this.$util;
 
       this.ajax(this.getMenusData);
+    },
+    computed:{
+      userInfo(){
+        let info = this.$store.getters.getUserInfo || {};
+        return info;
+      }
     },
     methods:{
       setMeusData(responseData){

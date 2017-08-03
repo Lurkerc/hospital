@@ -165,7 +165,7 @@
         dynamicHt: 100,
         self: this,
         tableData1: [
-          {
+          /*{
             "weekSetId":"",
             "schoolName":"",
             "gradeNum":"",
@@ -177,7 +177,7 @@
             "createTime":"",
             "whetherArrangedCourse":"",
             "weekState":""
-          }
+          }*/
         ],
         loading:false,
         listTotal:0,

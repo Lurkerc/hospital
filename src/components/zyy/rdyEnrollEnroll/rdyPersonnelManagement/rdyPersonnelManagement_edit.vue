@@ -339,9 +339,9 @@
           email: '', //邮箱
           telephone: '', //办公电话
           address: '', //现住地址
-          postCode: '', //邮编 
+          postCode: '', //邮编
           headPhoto: '', //头像地址
-          headPhotoHttp: '', //头像全地址 
+          headPhotoHttp: '', //头像全地址
           rotaryProclass: '', // 培训方向
           rotaryYear: '', // 参培年份
           rotaryAdmrank: '', // 培训年限
@@ -442,7 +442,7 @@
         let data = responseData.data;
         this.formValidate = this.formDate(data, ['birth', 'jobTime'], this.yearMonth);
         let env = this.$store.getters.getEnvPath;
-        if (data.headPhoto === null) {
+        if (data.headPhoto === null || data.headPhoto=="") {
           this.imgSrc = "";
         } else {
           this.imgSrc = env["http"] + data.headPhoto;

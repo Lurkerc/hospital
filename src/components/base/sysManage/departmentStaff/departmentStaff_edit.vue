@@ -413,7 +413,7 @@
         let data = responseData.data;
         this.formValidate = this.formDate(data,['birth','jobTime'],this.yearMonth);
         let env = this.$store.getters.getEnvPath;
-        if(data.headPhoto===null){
+        if(data.headPhoto === null || data.headPhoto==""){
           this.imgSrc = "";
         }else{
           this.imgSrc = env["http"]+data.headPhoto;

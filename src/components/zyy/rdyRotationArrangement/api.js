@@ -101,8 +101,8 @@ const api = {
     path: handWork + '/rtuserPagelist_ZYY',
     method: 'get'
   },
-  getDepPagelist:{  //手工调整--获取微调的科室
-    path: '/internship/outline/get',
+  getDepPagelist:{  //手工调整--获取微调的科室 {rtId}
+    path: '/rotaryBasis/rulesTraining/getRulesDepInfoList',
     method: 'get'
   },
 };

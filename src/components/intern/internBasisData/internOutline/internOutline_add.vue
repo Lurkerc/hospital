@@ -564,13 +564,19 @@
         if(ts=="") return true;
         ts = parseInt(ts);
         randomNum = parseInt(randomNum);
-        let res = ts/randomNum
+        if(ts>=randomNum){
+          return true;
+        }else{
+          this.errorMess(this.groupOtions[idx]+"您填写的周期数："+ts+" 与所填写的自选规则："+randomNum+"不能匹配!");
+          return false;
+        }
+        /*let res = ts/randomNum
         if(String(res).indexOf(".")>-1){
           this.errorMess(this.groupOtions[idx]+"您填写的周期数："+ts+" 与所填写的自选规则："+randomNum+"不能匹配!");
           return false;
         }else{
             return true;
-        }
+        }*/
       },
 
 

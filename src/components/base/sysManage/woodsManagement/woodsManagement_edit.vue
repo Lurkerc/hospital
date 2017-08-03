@@ -13,7 +13,7 @@
       <el-row >
         <el-col :span="9" :offset="2">
           <el-form-item label="专业" prop="jdProclass" >
-            <dictionary-select v-if="formValidate.jdProclass!=''" @setSltOptionValue="setSpecialtyOptionValue" :selectOptions="specialtyOptions"></dictionary-select>
+            <dictionary-select style="width: 90%" v-if="formValidate.jdProclass!=''" @setSltOptionValue="setSpecialtyOptionValue" :selectOptions="specialtyOptions"></dictionary-select>
           </el-form-item>
         </el-col>
 
@@ -121,7 +121,7 @@
         //请求专业数据
         specialtyOptions:{
           multiple:false,    //是否多选
-          url: "/dictionary/getByCode/TRAINING_DIRECTION_SX",
+          url: "/dictionary/getByCode/ROTARY_PROCLASS",
           value:'',
         },
 

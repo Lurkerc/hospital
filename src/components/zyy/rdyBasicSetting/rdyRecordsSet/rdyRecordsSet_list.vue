@@ -121,7 +121,7 @@
           type:'add',
           successTitle:'添加成功!',
           errorTitle:'添加失败!',
-          ajaxSuccess:'ajaxSuccess',
+          ajaxSuccess:'saveSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
             url: api.modifyConfigId.path,
@@ -183,15 +183,25 @@
         if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
-          this.saveIsCopy.ajaxParams.url += this.isCopy.configId;
-          this.saveIsCopy.ajaxParams.data = this.getFormData(this.isCopy);
-          this.ajax(this.saveIsCopy, isLoadingFun);
 
-          this.saveCopyScale.ajaxParams.url += this.copyScale.configId;
+          let saveIsCopy = Util._.defaultsDeep({},this.saveIsCopy);
+
+          saveIsCopy.ajaxParams.url += this.isCopy.configId;
+          saveIsCopy.ajaxParams.data = this.getFormData(this.isCopy);
+          this.ajax(saveIsCopy,isLoadingFun);
+
+          let saveCopyScale = Util._.defaultsDeep({},this.saveCopyScale);
+          saveCopyScale.ajaxParams.url += this.copyScale.configId;
           this.copyScale["configValue"] = this.formValidate.percent;
-          this.saveCopyScale.ajaxParams.data = this.getFormData(this.copyScale);
-          this.ajax(this.saveCopyScale, isLoadingFun);
+          saveCopyScale.ajaxParams.data = this.getFormData(this.copyScale);
+          this.ajax(saveCopyScale,isLoadingFun);
         }
+      },
+
+
+      //保存成功
+      saveSuccess(){
+        this.successMess("保存成功!");
       },
 
 

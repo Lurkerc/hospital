@@ -1,4 +1,3 @@
-<!--档案审核-->
 <template>
   <div id="content" ref="content" class="modal">
     <el-form  :model="formValidate" ref="formValidate" :rules="rules.teachingExperienceList"  inline label-width="90px" class="demo-ruleForm">
@@ -124,9 +123,8 @@
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
-            prop="shouldUserCount"
-            label="应到人数"
-            width="120"
+            prop="activityUser"
+            label="参加人"
           >
           </el-table-column>
           <el-table-column
@@ -235,19 +233,19 @@
         },
 
         "tableData":[
-          {
-            "id":1,
-            "activityName":"教学查房",
-            "activityType":"理论",
-            "hostUserName":"张三",
-            "activityTime":"2017-03-31",
-            "activitySite":"教学楼三楼301室",
-            "activityUser":"呼吸科-住院医师",
-            "shouldUserCount":30,
-            "actuallyUserCount":30,
-            "recordTimes":"9:00-10:00,10:10-11:00",
-            "activityState":"nosubmit"
-          }
+//          {
+//            "id":1,
+//            "activityName":"教学查房",
+//            "activityType":"理论",
+//            "hostUserName":"张三",
+//            "activityTime":"2017-03-31",
+//            "activitySite":"教学楼三楼301室",
+//            "activityUser":"呼吸科-住院医师",
+//            "shouldUserCount":30,
+//            "actuallyUserCount":30,
+//            "recordTimes":"9:00-10:00,10:10-11:00",
+//            "activityState":"nosubmit"
+//          }
         ],
         //窗口开关
         uploadingCoursewareModal:false,

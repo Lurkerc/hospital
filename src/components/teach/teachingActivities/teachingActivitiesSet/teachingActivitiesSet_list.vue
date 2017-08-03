@@ -12,12 +12,14 @@
           <select-option  :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
         </el-select>
       </el-form-item>
-      <el-select  v-model="formSearch.activityState" label="状态" clearable placeholder="请选择">
+      <el-form-item label="状态"  prop="user">
+      <el-select  v-model="formSearch.activityState"  placeholder="请选择">
         <el-option label='全部' value=""></el-option>
         <el-option label='未发布' value="NO_RELEASE"></el-option>
         <el-option label="已发布" value="RELEASE"></el-option>
         <el-option label="结束" value="STOP"></el-option>
       </el-select>
+      </el-form-item>
       <el-form-item label="时间" prop="beginTime">
         <el-date-picker
           v-model="formSearch.activityBeginTime"
@@ -78,15 +80,15 @@
         <template scope="scope">
           <el-button
             size="small"
-            @click="show(scope.row)">查-看</el-button>
+            @click="show(scope.row)">查看</el-button>
           <el-button
             size="small"
             v-if="scope.row.activityState=='NO_RELEASE'"
-            @click="publish(scope.row)">发-布</el-button>
+            @click="publish(scope.row)">发布</el-button>
           <el-button
             size="small"
             v-if="scope.row.activityState=='NO_RELEASE'"
-            @click="edit(scope.row)">修-改</el-button>
+            @click="edit(scope.row)">修改</el-button>
         </template>
       </el-table-column>
       <el-table-column

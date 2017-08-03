@@ -10,7 +10,7 @@
     props: ['name'],
     methods: {
       menuClick() {
-        this.$emit('click', this.name, '内部传值', false)
+        this.$emit('click', this.name)
       }
     }
   }

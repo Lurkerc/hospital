@@ -19,7 +19,7 @@
         <el-row>
           <el-col :span="20" :offset="2">
             <el-form-item label-width="0" prop="name7">
-              <img v-for="(img,index) in item.fileList" :key="index" :src="http+img.fileUrl" >
+              <img style="width: 140px;height: 140px;margin:0 5px;border: 1px solid #bfcbd9; " v-for="(img,index) in item.fileList" :key="index" :src="config.urlPrefix+'/file/download/'+img.id" >
               <!--<upload-file   :show="true" :uploadFiles="item.fileList"></upload-file>-->
             </el-form-item>
           </el-col>
@@ -29,12 +29,13 @@
   </div>
 </template>
 <script>
+  import config from "../../../../config/config.js";
   export default {
     props:['operailityData','url'],
     data() {
       return {
         activeName: 'first',
-
+        config,
         //获取到的数据
         "data":[],
         http:'',

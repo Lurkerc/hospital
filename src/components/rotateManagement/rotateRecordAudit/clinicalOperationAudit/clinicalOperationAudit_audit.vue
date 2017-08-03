@@ -139,14 +139,14 @@
         tableData:[],
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle:{
-          type:'edit',
-          successTitle:'修改成功!',
-          errorTitle:'修改失败!',
+          type:'audit',
+          successTitle:'审核成功!',
+          errorTitle:'审核失败!',
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
             url:this.url.clinicalRecordReview+this.operailityData.id,
-            method:'put',
+            method:'post',
             data:{},
           }
         },

@@ -131,7 +131,7 @@ export default {
   caseRecordBigCasesDelete:'/rotationProcess/caseRecord/bigCasesDelete',//{casesId}
 
   // 黏贴查询是否黏贴
-  bigcaseIscopy: '/rotaryConfig/getByKey/rotary_bigcase_iscopy-SXS',
+  bigcaseIscopy: '/rotaryConfig/getByKey/rotary_bigcase_iscopy-',
 
 
   /**
@@ -195,18 +195,24 @@ export default {
   tubeBedRecordingGet:'/traineeRotary/tubeBedRecording/get/',//{id}
 
 
-  /*管床记录列表(教育处-科室主任-教学秘书-带教老师) get*/
-  tubeBedRecordingMangePageList:'/traineeRotary/tubeBedRecording/mangePageList',
 
   /*管床记录列表(轮转生查看) get*/
   tubeBedRecordingPageList:'/traineeRotary/tubeBedRecording/pageList',
 
-  /*管床批量通过 post*/
-  tubeBedRecordingModifySubPass:'/traineeRotary/tubeBedRecording/modifySubPass', //{ids}
+  /*管床记录删除 delete*/
+  tubeBedRecordingDelete:'/traineeRotary/tubeBedRecording/delete', //{ids}
 
+  /*管床记录上报 put*/
+  tubeBedRecordingModifySubmit:'/traineeRotary/tubeBedRecording/modifySubmit', //{ids}
 
-  /*管床记录批量驳回 post*/
-  tubeBedRecordingModifySubReject:'/traineeRotary/tubeBedRecording/modifySubReject', //{ids}
+  /*管床记录修改 put*/
+  tubeBedRecordingModify:'/traineeRotary/tubeBedRecording/modify/', //{id}
+
+  /*管床记录添加上报 post*/
+  tubeBedRecordingAddSubmit:'/traineeRotary/tubeBedRecording/addSubmit', //{id}
+
+  /*管床记录添加 post*/
+  tubeBedRecordingAdd:'/traineeRotary/tubeBedRecording/add', //{id}
 
 
 }

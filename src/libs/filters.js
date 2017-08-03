@@ -85,6 +85,12 @@ const getVueObj = function (vue) {
       //培训标准
       ENABLE: '启用',
       DISABLE: '禁用',
+
+      MAIN_COMPLETED:"主要完成",
+      ASSISTANT:"助手",
+      WATCH:"观摩",
+
+      SUBMIT:"未审核",
     },
     /* 特殊描述文本（与公共部分冲突的可以作为特殊处理） */
     unit: { // 单位
@@ -162,6 +168,15 @@ const getVueObj = function (vue) {
       "EXAM": "练习",
       "ORTHER": "其他",
     },
+    curriculum: { // 课程状态
+      "NOT_SUBMIT": "保存草稿",
+      "NOT_AUDIT": "提交审核",
+      "1": "待修订",
+      "2": "待审核",
+      "3": "试运行",
+      "4": "在运行",
+      "5": "已退出",
+    }
   };
 
   const filters = [ // 声明全局过滤器及回调函数

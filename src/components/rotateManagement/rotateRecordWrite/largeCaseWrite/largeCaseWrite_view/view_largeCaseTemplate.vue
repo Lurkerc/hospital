@@ -798,7 +798,7 @@
 
             <el-row>
               <el-col :span="10" :offset="14">
-                <a :href="url.caseRecordExportToWord+operailityData.cid">
+                <a :href="config.urlPrefix+url.caseRecordExportToWord+operailityData.cid">
                   <el-button @click="affirmDerive" type="primary">确定</el-button>
                 </a>
                 <el-button class="but-col" @click=" deriveModal=false">取消</el-button>
@@ -813,7 +813,7 @@
 </template>
 <script>
     /*当前组件必要引入*/
-
+    import config from "../../../../../config/config.js";
     //当前组件引入全局的util
     //前台业务字典组件引入
     import dictionary from '../../../../../libs/dictionary.js';
@@ -822,6 +822,7 @@
         props:['url','operailityData'],
         data() {
             return {
+              config,
               saveBtn: {title: '提交', callParEvent: 'saveSubEvent'},
               loadBtn: {title: '上报', callParEvent: 'appearSubEvent'},
               name: '',

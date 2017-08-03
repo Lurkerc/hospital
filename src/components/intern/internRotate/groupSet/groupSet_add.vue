@@ -19,7 +19,9 @@
           <div class="cal-schools">
             <el-row>
               <el-col :span="20">
-                <el-button :type="item.checked?'success':''" @click="handleCheckSchool(index,item)" style="width: 100%">{{item.name}}</el-button>
+                <el-tooltip :content="item.name" effect="light" placement="top">
+                  <el-button class="overflow-txt" :type="item.checked?'success':''" @click="handleCheckSchool(index,item)" style="width: 100%" v-text="item.name"></el-button>
+                </el-tooltip>
               </el-col>
               <el-col :span="4">
                 <div v-show="item.checked" class="cal-check"><i class="el-icon-check"></i></div>
@@ -75,7 +77,7 @@
       <el-col :span="24" style="text-align: center;">
         <el-button v-if="active>0&&active<4" style="margin-top: 12px;" @click="up">上一步</el-button>
         <el-button v-if="active<3" style="margin-top: 12px;" @click="next" :loading="isLoading">下一步</el-button>
-        <load-btn v-if="active>2" style="margin-top: 12px;"  @listenSubEvent="success" :btnData="loadBtn"></load-btn>
+        <load-btn v-if="active>2" style="margin-top: 12px;" v-show="fourGroupData.length>0&&!jumpThirdStep" @listenSubEvent="success" :btnData="loadBtn"></load-btn>
       </el-col>
     </el-row>
   </div>
@@ -379,6 +381,7 @@
           this.active = 0;
           this.ajax(this.getSchoolsTitle);
         };
+        this.isLoading = false;
       },
 
       //完成

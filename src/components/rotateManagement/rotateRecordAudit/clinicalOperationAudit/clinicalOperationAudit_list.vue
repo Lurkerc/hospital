@@ -73,7 +73,7 @@
             width="200">
             <template scope="scope">
               <el-button size="small" @click="show(scope.row)">查看</el-button>
-              <el-button v-if="scope.row.disState!='PASS'" size="small" @click="audit(scope.row)">审核</el-button>
+              <el-button v-if="scope.row.state!='PASS'" size="small" @click="audit(scope.row)">审核</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -362,9 +362,15 @@
         this.operailityData = data;
         this.openModel("audit");
       },
-
+      /*--点击--批量驳回-按钮--*/
       reject(){
         if(!this.isSelected()) return;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].state == 'PASS'){
+            this.errorMess('已通过的不能驳回');
+            return;
+          }
+        }
         this.operailityData =this.multipleSelection;
         this.openModel('reject') ;
       },

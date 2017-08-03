@@ -34,6 +34,13 @@
         </el-card>
       </el-col>
     </el-row>
+    <el-row>
+      <el-col :span="24">
+        <p style="text-align: center;color: #FF0000">
+          您选择的大纲分组顺序已被删除，不能设置顺序,建议在第三步"勾上跳过顺序设置"!
+        </p>
+      </el-col>
+    </el-row>
     <!--增加弹窗-->
     <Modal
       :mask-closable="false"
@@ -137,6 +144,7 @@
 
           //循环大组的数量
           this.bigGroupData = [];
+
           for(var i=0,item,rotateOrder;i<data["outlineGroupIndex"].length;i++){
             rotateOrder = "";
             item = data["outlineGroupIndex"][i];
@@ -163,6 +171,7 @@
 
           //将第三设置的小组1,2,3,1,2,3  平均分配到大组中
           let bigGroupLen = this.bigGroupData.length;
+          if(bigGroupLen==0) return;
           for(var i=0,item;i<this.groupData.length;i++){
             item = this.groupData[i];
             this.bigGroupData[i%bigGroupLen]["subGroup"].push(item);

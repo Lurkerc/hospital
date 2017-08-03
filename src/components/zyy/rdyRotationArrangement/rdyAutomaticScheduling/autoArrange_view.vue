@@ -31,7 +31,7 @@
             label="周期"
             width="100">
             <template scope="scope">
-              {{scope.row.ts}}周
+              {{scope.row.ts}}月
             </template>
           </el-table-column>
         </el-table>

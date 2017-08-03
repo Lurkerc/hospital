@@ -11,7 +11,9 @@
           <div class="cal-schools">
             <el-row>
               <el-col :span="20">
-                <el-button :type="item.checked?'success':''" @click="handleCheckSchool(index,item)" style="width: 100%">{{item.name}}</el-button>
+                <el-tooltip :content="item.name" effect="light" placement="top">
+                  <el-button class="overflow-txt" :type="item.checked?'success':''" @click="handleCheckSchool(index,item)" style="width: 100%" v-text="item.name"></el-button>
+                </el-tooltip>
               </el-col>
               <el-col :span="4">
                 <div v-show="item.checked" class="cal-check"><i class="el-icon-check"></i></div>
@@ -64,6 +66,7 @@
           </el-col>
           <el-col :span="4">
             <el-date-picker
+              :editable="false"
               style="width: 100px"
               v-model="formValidate.gradeNum"
               align="right"
@@ -81,7 +84,10 @@
         </el-row>
         <br />
         <el-row :gutter="10">
-          <el-col :span="24">
+          <el-col :span="3">
+            <div class="cal-schoolTit" style="text-align: right;">说明:</div>
+          </el-col>
+          <el-col :span="20">
             <!--<el-form-item label="说明：" prop="weekSetInstructions" >-->
               <el-input
                 type="textarea"

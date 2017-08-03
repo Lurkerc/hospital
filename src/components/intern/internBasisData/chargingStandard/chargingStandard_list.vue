@@ -60,7 +60,7 @@
           type:'add',
           successTitle:'添加成功!',
           errorTitle:'添加失败!',
-          ajaxSuccess:'ajaxSuccess',
+          ajaxSuccess:'saveSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
             url: api.modifyConfigId.path,
@@ -92,10 +92,17 @@
         if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
-          this.saveHargingStandard.ajaxParams.url += this.formValidate.configId;
-          this.saveHargingStandard.ajaxParams.data = this.getFormData(this.formValidate);
-          this.ajax(this.saveHargingStandard, isLoadingFun);
+          let saveHargingStandard = Util._.defaultsDeep({},this.saveHargingStandard)
+          saveHargingStandard.ajaxParams.url += this.formValidate.configId;
+          saveHargingStandard.ajaxParams.data = this.getFormData(this.formValidate);
+          this.ajax(saveHargingStandard, isLoadingFun);
         }
+      },
+
+
+      //保存成功
+      saveSuccess(){
+        this.successMess("保存成功!");
       },
 
 

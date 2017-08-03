@@ -236,11 +236,7 @@
         multipleSelection: [],
         dynamicHt: 100,
         self: this,
-        tableData1: [{
-          "id":8,
-          "name":"",
-          "code":""
-        },],
+        tableData1: [],
         loading:false,
         listTotal:0,
         listMessTitle:{

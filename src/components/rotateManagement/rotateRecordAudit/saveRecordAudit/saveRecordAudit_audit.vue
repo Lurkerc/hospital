@@ -46,7 +46,25 @@
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="备注:" prop="note">
-            <el-input v-model="formValidate.note" readonly type="textarea" resize="none" :rows="8"></el-input>
+            <el-input v-model="getData.note" readonly type="textarea" resize="none" :rows="8"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row >
+
+      <el-row >
+        <el-col :span="16" :offset="4">
+          <el-form-item label="审核结果:" prop="spState">
+            <el-radio-group v-model="formValidate.spState">
+              <el-radio label="PASS" >通过</el-radio>
+              <el-radio label="REJECT" >驳回</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row >
+      <el-row >
+        <el-col :span="16" :offset="4">
+          <el-form-item label="审核结果:" prop="reviewMess">
+            <el-input v-model="formValidate.reviewMess" type="textarea" resize="none" :rows="8"></el-input>
           </el-form-item>
         </el-col>
       </el-row >
@@ -122,14 +140,14 @@
         tableData:[],
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle:{
-          type:'edit',
-          successTitle:'修改成功!',
-          errorTitle:'修改失败!',
+          type:'audit',
+          successTitle:'审核成功!',
+          errorTitle:'审核失败!',
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
-            url:this.url.clinicalRecordReview+this.operailityData.id,
-            method:'put',
+            url:this.url.rescuePatientRecordReview+this.operailityData.id,
+            method:'post',
             data:{},
           }
         },
@@ -137,7 +155,7 @@
         listMessTitle: {
           ajaxSuccess: 'updateListData',
           ajaxParams: {
-            url:this.url.clinicalRecordGet+this.operailityData.id, //向后台请求数据的地址
+            url:this.url.rescuePatientRecordGet+this.operailityData.id, //向后台请求数据的地址
 
           }
         },

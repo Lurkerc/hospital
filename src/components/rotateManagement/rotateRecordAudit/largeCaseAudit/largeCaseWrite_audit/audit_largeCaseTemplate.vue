@@ -748,7 +748,7 @@
         </el-col >
         <el-col :span="8" >
           <el-form-item label="粘贴比例:" prop="phone" >
-            {{formValidate.copyBl}}
+            {{formValidate.copyBl*100+'%'}}
           </el-form-item>
         </el-col >
       </el-row >

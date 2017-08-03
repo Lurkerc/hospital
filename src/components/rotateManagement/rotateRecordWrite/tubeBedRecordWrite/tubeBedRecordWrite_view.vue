@@ -5,8 +5,8 @@
 
       <el-row >
         <el-col :span="16" :offset="4">
-          <el-form-item label="操作项目名称:" prop="clinicalName" >
-           {{formValidate.clinicalName}}
+          <el-form-item label="病名:" prop="clinicalName" >
+           {{formValidate.diseaseName}}
           </el-form-item>
         </el-col>
       </el-row >
@@ -22,15 +22,15 @@
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="操作时间:" prop="clinicalTime" >
-            {{formValidate.clinicalTime}}
+            {{formValidate.tubeTime}}
           </el-form-item>
         </el-col>
       </el-row >
 
       <el-row >
         <el-col :span="16" :offset="4">
-          <el-form-item label="操作方式:" prop="clinicalType" >
-            {{formValidate.clinicalType |typeText}}
+          <el-form-item label="病历号:" prop="clinicalType" >
+            {{formValidate.caseNumber}}
           </el-form-item>
         </el-col>
       </el-row >
@@ -82,10 +82,10 @@
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
-            prop="state"
+            prop="spState"
             label="审核状态">
             <template scope="scope">
-              {{scope.row.state | typeText}}
+              {{scope.row.spState | typeText}}
             </template>
           </el-table-column>
 
@@ -108,23 +108,23 @@
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         //form表单bind数据
         formValidate: {
-          "id":111,
-          "depName":"科室",
-          "createUserName":"名称",
-          "createTime":"2014-01-01 10:10:10",
-          "clinicalName":"病名",
-          "clinicalType":"WATCH",
-          "clinicalTime":"2016-01-01",
-          "note":"备注说明",
-          "teacherName":"指导老师",
-          "state":"NO_SUBMIT"
+//          "id":111,
+//          "depName":"科室",
+//          "createUserName":"名称",
+//          "createTime":"2014-01-01 10:10:10",
+//          "clinicalName":"病名",
+//          "clinicalType":"WATCH",
+//          "clinicalTime":"2016-01-01",
+//          "note":"备注说明",
+//          "teacherName":"指导老师",
+//          "state":"NO_SUBMIT"
         },
 
         tableData:[],
         listMessTitle: {
           ajaxSuccess: 'updateListData',
           ajaxParams: {
-            url:this.url.clinicalRecordGet+this.operailityData.id, //向后台请求数据的地址
+            url:this.url.tubeBedRecordingGet+this.operailityData.id, //向后台请求数据的地址
 
           }
         },

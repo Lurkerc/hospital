@@ -400,6 +400,7 @@
         if(!this.isSelected()) return;
         let operailityData =[];
         for(let i=0;i<this.multipleSelection.length;i++){
+
           operailityData.push(this.multipleSelection[i].diseaseId)
         }
 
@@ -413,6 +414,10 @@
         if(!this.isSelected()) return;
         let operailityData =[];
         for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].disState == 'PASS'){
+            this.errorMess('已通过的不能驳回');
+            return;
+          }
           operailityData.push(this.multipleSelection[i].diseaseId);
         }
         this.passData.data.diseaseIds = operailityData.join(',');

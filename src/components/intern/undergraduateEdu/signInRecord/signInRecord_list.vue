@@ -89,14 +89,16 @@
               loading:false,
               listTotal:0,
               //表格数据
-              tableData1:[{
-                "courseArrangeId":23,
-                "userName":111,
-                "courseContent":"课程1",
-                "teacherName":"见习",
-                "courseDate":"2017-02-08",
-                "signDate":"张三",
-              }],
+              tableData1:[
+                /*{
+                  "courseArrangeId":23,
+                  "userName":111,
+                  "courseContent":"课程1",
+                  "teacherName":"见习",
+                  "courseDate":"2017-02-08",
+                  "signDate":"张三",
+                }*/
+              ],
 
 
               //默认请求列表数据

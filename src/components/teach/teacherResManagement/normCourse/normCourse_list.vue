@@ -78,9 +78,9 @@
           <div slot="footer"></div>
         </Modal> -->
         <!--增加弹窗-->
-        <Modal :mask-closable="false" v-model="addModal" height="200" class-name="vertical-center-modal" :width="1000">
+        <Modal :mask-closable="false" v-model="addModal" class-name="vertical-center-modal" :width="1100">
           <modal-header slot="header" :content="addId"></modal-header>
-          <add v-if="addModal" @cancel="cancel" @add="subCallback" :operailityData="operailityData"></add>
+          <add v-if="addModal" @cancel="cancel" @add="subCallback" :operailityData="operailityData" style="height:650px;"></add>
           <div slot="footer"></div>
         </Modal>
         <!--查看弹窗-->

@@ -14,7 +14,7 @@
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="科室:" >
-           {{formValidate.depName}}
+           {{getData.depName}}
           </el-form-item>
         </el-col>
       </el-row >

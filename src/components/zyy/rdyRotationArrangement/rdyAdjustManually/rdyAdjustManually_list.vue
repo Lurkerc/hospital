@@ -231,7 +231,7 @@
         multipleSelection: [],
         dynamicHt: 100,
         self: this,
-        tableData1: [{}],
+        tableData1: [],
         loading:false,
         listTotal:0,
         listMessTitle:{

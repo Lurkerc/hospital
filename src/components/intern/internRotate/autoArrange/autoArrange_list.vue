@@ -438,7 +438,6 @@
        * @param udata boolean 默认false  是否不需要刷新当前表格数据
        * */
       subCallback(target,title,updata){
-          alert("list")
         this.cancel(target);
         if(title){
           this.successMess(title);

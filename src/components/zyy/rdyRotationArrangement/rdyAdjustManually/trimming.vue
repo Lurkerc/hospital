@@ -42,7 +42,8 @@
               <el-form :model="scope.row" :ref="'formValidate_depId'+scope.$index" label-width="0" :rules="rules">
                 <el-form-item prop="depId">
                   <el-select
-                    v-model="scope.row.depId"
+                    style="width: 90%;"
+                    v-model="scope.row.splitDepId"
                     :filterable="true"
                     placeholder="选择或输入匹配搜索">
                     <el-option
@@ -72,7 +73,7 @@
             prop="ts"
             label="周期"
             align="center"
-            width="100">
+            width="80">
             <template scope="scope">
               <el-input v-model="scope.row.ts"></el-input>
             </template>
@@ -169,7 +170,7 @@
             "podIdList":[],     //this.formValidate.rotaryData[0].podId
             "tsList":[],        //this.formValidate.rotaryData[0].ts
             "depIdList":[],     //this.formValidate.rotaryData[0].depId
-            "cIdList":[],       //this.formValidate.rotaryData[0].depId
+            "cIdList":[],       //this.formValidate.rotaryData[0].cdepId
             "rdIdList":[],      //this.formValidate.rotaryData[0].rdId
           },
 
@@ -178,8 +179,8 @@
             "podId":"",
             "depId":"",
             "depName":"",
-            "rtId":111,
-            "rdId":111,
+            "rtId":"",
+            "rdId":"",
             "ts":"",
           },
 
@@ -236,29 +237,51 @@
         getDepOptionData(responseData){
           let data = responseData.data;
           let tempArr = [];
-          if(!Util.isEmptyObject(data)){
-             Util._.forEach(data["outlines"],function (v,k) {
-               tempArr=tempArr.concat(v["mustRotaryDep"]);
-               tempArr=tempArr.concat(v["randomRotaryDep"]);
-             })
-            let depOptions={};
-            for(var i=0,item;i<tempArr.length;i++){
-               item = tempArr[i];
-              depOptions[item["depId"]]={
-                id:item["depId"],
-                name:item["depName"],
-              }
-              this.depOptionObjData[item["depId"]]={
-                  "depName":item["depName"],
-                  "groupNo":item["groupNo"]
-              };
-            }
-            this.depOptionData = [];
-            Util._.forEach(depOptions, (v,k)=> {
-              this.depOptionData.push(v);
-            })
+          for(var i=0,item;i<data.length;i++){
+            item = data[i];
+            let depPhaseNum = item["depPhaseNum"];  //阶段号或组号
+            let depPhase = item["depPhase"];   //阶段或组分类名称
+            if(item["cdepList"]!==null){   //标准科室为空
+              for(var k=0,subItem;k<item["cdepList"].length;k++){
+                subItem = item["cdepList"][k];
+                let cdepName = subItem["cdepName"];   //标准科室名称
+                let cdepId = subItem["cdepId"];       //标准科室id
+                let rdId = subItem["rdId"];           //细则与标准科室关系id
 
+                if(item["cdepList"]!==null) {  //院内科室为空
+                  for (var j = 0, ssubItem; j < subItem["hospitalDepList"].length; j++) {
+                    ssubItem = subItem["hospitalDepList"][j];
+                    ssubItem["showName"] = ssubItem["depName"] + "(" + cdepName + "-" + depPhase + ")";  //页面上展示院内科室下拉项
+                    ssubItem["cdepId"] = cdepId;               //标准科室id
+                    ssubItem["rdId"] = rdId;                   //细则与标准科室关系id
+                    ssubItem["depPhaseNum"] = depPhaseNum;     //阶段号或组号
+                  }
+                  tempArr = tempArr.concat(subItem["hospitalDepList"]);
+                }
+              }
+            }
           }
+
+          let depOptions={};
+          for(var i=0,item;i<tempArr.length;i++){
+            item = tempArr[i];
+            depOptions[item["depId"]]={
+              id:item["depId"]+"##"+item["rdId"],
+              name:item["showName"],
+            }
+            this.depOptionObjData[item["depId"]+"##"+item["rdId"]]={
+              "depName":item["depName"],           //院内科室名称
+              "cdepId":item["cdepId"],             //标准科室id
+              "rdId":item["rdId"],                 //细则与标准科室关系id
+              "depId":item["depId"],               //院内科室id
+              "depPhaseNum":item["depPhaseNum"],   //阶段号或组号
+            };
+          }
+          this.depOptionData = [];
+          Util._.forEach(depOptions, (v,k)=> {
+            this.depOptionData.push(v);
+          })
+          //console.log("depOptionData",this.depOptionData);
         },
 
 
@@ -266,14 +289,22 @@
         updateListData(responseData){
           let data = responseData.data;
           let firstRotaryData = data["rotaryData"][0];
-          this.templateData = {
-            "podId":"",
-            "depId":firstRotaryData["depId"],
-            "depName":firstRotaryData["depName"],
-            "rtId":firstRotaryData["rtId"],
-            "rdId":firstRotaryData["rdId"],
-            "ts":firstRotaryData["ts"],
+          for(var i=0,item;i<data["rotaryData"].length;i++){
+            item = data["rotaryData"][i];
+            item["splitDepId"] = item["depId"]+"##"+item["rdId"]
           }
+          //console.log("data",data);
+          this.templateData = {
+            "podId":"",                                  //轮转id
+            "depId":firstRotaryData["depId"],            //院内科室id
+            "depName":firstRotaryData["depName"],        //院内科室名称
+            "rtId":firstRotaryData["rtId"],              //细则id
+            "rdId":firstRotaryData["rdId"],              //细则与标准科室关系id
+            "ts":firstRotaryData["ts"],                  //轮转周期
+            "splitDepId":"",                             //用来标示科室唯一性(存储院内科室id+##+细则与标准科室关系id)  例如:565##7863
+            "depPhaseNum":"",                            //阶段号或组号
+          }
+          //console.log("data",data);
           let option = Util._.defaultsDeep({},this.getDepOptionTitle);
           option.ajaxParams.url += "/"+firstRotaryData["rtId"];
           this.ajax(option);
@@ -409,14 +440,22 @@
           })
           for(var i=0,item;i<myData["rotaryData"].length;i++){
             item = myData["rotaryData"][i];
-            rtIdList.push(item["rtId"]);
-            podIdList.push(item["podId"]);
-            tsList.push(item["ts"]);
-            depIdList.push(item["depId"]);
-            cIdList.push(item["depId"]);
-            rdIdList.push(item["rdId"]);
-            depName.push(this.depOptionObjData[item["depId"]]["depName"]);
-            groupNo.push(this.depOptionObjData[item["depId"]]["groupNo"]);
+            if(item["splitDepId"]!=""){
+              let splitDepId = item["splitDepId"];
+              rtIdList.push(item["rtId"]);                                                      //细则id
+              podIdList.push(item["podId"]);                                                    //轮转id(新建添加时为空)
+              tsList.push(item["ts"]);                                                          //轮转周期
+              depIdList.push(this.depOptionObjData[item["splitDepId"]]["depId"]);               //院内科室id
+              cIdList.push(this.depOptionObjData[item["splitDepId"]]["cdepId"]);                //标准科室id
+              rdIdList.push(this.depOptionObjData[item["splitDepId"]]["rdId"]);                 //细则与标准科室关系id
+              depName.push(this.depOptionObjData[item["splitDepId"]]["depName"]);               //院内科室名称
+              //判断 是否为新加的科室 || 后台返回的数据中是否包含阶段号或组号(depPhaseNum)
+              if(item["depPhaseNum"]==""||item["depPhaseNum"]===null){
+                groupNo.push(this.depOptionObjData[item["splitDepId"]]["depPhaseNum"]);         //阶段号或组号
+              }else{
+                groupNo.push(item["depPhaseNum"]);                                              //阶段号或组号
+              }
+            }
           }
           this.saveData["rtIdList"] = rtIdList;
           this.saveData["podIdList"] = podIdList;

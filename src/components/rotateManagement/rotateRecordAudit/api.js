@@ -103,7 +103,7 @@ export default {
 
 
   /**
-   * 临床操作记录列表
+   * 抢救记录
    *
    * */
 
@@ -120,6 +120,27 @@ export default {
   /*参加抢救危重病人记录列表(教育处-科室主任-教学秘书-带教老师) get*/
   rescuePatientRecordMangePageList:'/traineeRotary/rescuePatientRecord/mangePageList',//
 
+  /*参加抢救危重病人记录查看 get*/
+  rescuePatientRecordGet:'/traineeRotary/rescuePatientRecord/get/',//{id}
 
+  /**
+   * 管床记录
+   *
+   * */
+
+  /*管床记录查看 get*/
+  tubeBedRecordingGet:'/traineeRotary/tubeBedRecording/get/',//{id}
+
+  /*管床记录列表(教育处-科室主任-教学秘书-带教老师) get*/
+  tubeBedRecordingMangePageList:'/traineeRotary/tubeBedRecording/mangePageList',
+
+  /*管床批量通过 post*/
+  tubeBedRecordingModifySubPass:'/traineeRotary/tubeBedRecording/modifySubPass', //{ids}
+
+  /*管床记录批量驳回 post*/
+  tubeBedRecordingModifySubReject:'/traineeRotary/tubeBedRecording/modifySubReject', //{ids}
+
+  /*管床记录审核 post*/
+  tubeBedRecordingReview:'/traineeRotary/tubeBedRecording/review/', //{ids}
 
 }
