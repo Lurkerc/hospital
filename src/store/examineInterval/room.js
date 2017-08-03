@@ -215,14 +215,14 @@ const mutations = {
   // 增加专业列表
   addSpecialtyList: (state, specialtyArr) => {
     if (specialtyArr instanceof Array) {
-      state.specialtyList = state.specialtyList.concat(specialtyArr)
+      state.specialtyList = state.specialtyList.concat(_.compact(specialtyArr))
     } else {
       state.specialtyList.push(specialtyArr);
     }
     state.specialtyList = _.uniq(state.specialtyList);
   },
   /******************** 更新 **********************************/
-  /**
+  /** 
    * [更新考站名称]
    * @param  {[type]} state [description]
    * @param  {[type]} data  [description]
@@ -407,7 +407,16 @@ const mutations = {
    * 删除考站专业
    * { index:考站索引，cIndex: 平行站索引 }
    */
-  removeRoomSpecialty: (state, indexObj) => state.roomList[indexObj.index].room[indexObj.cIndex].specialty = '',
+  removeRoomSpecialty: (state, indexObj) => state.roomList[indexObj.index].room[indexObj.cIndex].specialty = 0,
+  /******************************************* 销毁值 ******************************************/
+  destroy: state => {
+    state.roomList = null; // 考站列表
+    state.roomInfo = null; // 考站房间信息
+    state.scriptList = null; // 可选剧本列表
+    state.specialtyList = null; // 专业列表
+    state.unSelectRoom = null; // 不允许选择的房间id
+    state.unSelectUser = null; // 不允许选择的人员
+  },
 };
 
 export {

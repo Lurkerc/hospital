@@ -17,7 +17,10 @@
             <template scope="scope">
               <el-form :model="scope.row" :rules="rules.addScore" :ref="'formValidate'+[scope.$index+'scope']" label-width="80px">
                 <el-form-item prop="mark" error="cuo" label-width="0px">
-                  <el-input @blur="markChange(scope.row)" type="number" @change="scoreInputChange" :min="0" :max="scope.row.score" v-model.number="scope.row.mark"></el-input>
+                  <el-input v-if="studentInfo.examStatus === 'ONGOING'" @blur="markChange(scope.row)" type="number" @change="scoreInputChange"
+                    :min="0" :max="scope.row.score" v-model.number="scope.row.mark"></el-input>
+                  <el-input v-else @blur="markChange(scope.row)" type="number" @change="scoreInputChange" :min="0" :max="scope.row.score" v-model.number="scope.row.mark"
+                    :disabled="!chgScore"></el-input>
                 </el-form-item>
               </el-form>
             </template>
@@ -27,7 +30,8 @@
         <el-form-item label="点评">
           <el-row>
             <el-col :span="20">
-              <el-input type="textarea" resize="none" v-model="contentDataList.evaluate" :rows="3"></el-input>
+              <el-input type="textarea" resize="none" v-model="contentDataList.evaluate" :rows="3" v-if="studentInfo.examStatus === 'ONGOING'"></el-input>
+              <el-input type="textarea" resize="none" v-model="contentDataList.evaluate" :rows="3" v-else :disabled="!chgScore"></el-input>
             </el-col>
           </el-row>
         </el-form-item>
@@ -41,7 +45,7 @@
       </div>
       <div class="studentInfoBox">
         <div class="studentPhotoPos">
-          <img :src="getPhotoPath(studentInfo.userPhotoPath) || '//iph.href.lu/120x160'" alt="">
+          <img :src="getPhotoPath(studentInfo.userPhotoPath)">
         </div>
         <!-- 基本信息 -->
         <p class="otherInfo">姓名：{{ studentInfo.userName }}</p>
@@ -152,6 +156,7 @@
       },
       // 考生切换
       changeStudent(type) {
+        this.contentDataList.detailsList.length = 0;
         clearTimeout(studentInfoTime);
         if (type) {
           type === 'n' ? ++this.nowId : --this.nowId;
@@ -254,7 +259,8 @@
         if (this.chgScore) { // 恢复显示修改按钮
           this.chgScore = false;
         }
-        this.setContentList()
+        // this.setContentList()
+        this.changeStudent(); // 重新获取考生的所有信息
       },
       /*
        * 点击提交按钮 监听是否提交数据 (评分)
@@ -335,7 +341,6 @@
               sceneId: this.sceneId,
               stationId: this.stationId,
               arrangementId: this.arrangementId,
-              reqTime: new Date().getTime(),
             }
           }
         };
@@ -481,7 +486,7 @@
 
       // 获取头像地址
       getPhotoPath(path) {
-        return path && this.$store.getters.getEnvPath.http + path || ''
+        return path && this.$store.getters.getEnvPath.http + path || '/static/image/defAvatar.png'
       },
     },
     created() {
@@ -506,8 +511,10 @@
         right: 10px;
         top: 0;
         width: 120px;
+        background-color: #f3f3f3;
         img {
-          width: 100%;
+          width: 120px;
+          height: 120px;
         }
       }
     }

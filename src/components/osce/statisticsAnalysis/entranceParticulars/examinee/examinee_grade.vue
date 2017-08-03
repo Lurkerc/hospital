@@ -31,12 +31,12 @@
     </div>
     <!--左侧-->
     <div class=" leftSched" style="top: 50px;">
-      <img class="user-img" :src="getPhotoPath(operailityData.userPhoto)" alt="">
+      <img class="examineeUserPic" :src="getPhotoPath(operailityData.userPhoto)">
       <p class="infoItem bottom">考生姓名：{{data.userName}}</p>
       <p class="infoItem bottom">总分：{{data.sceneTotalMark}}</p>
       <p class="infoItem bottom">总排名：{{data.ranking}}</p>
       <p class="infoItem bottom">总标准分：{{data.sceneStandardMark}}</p>
-      <p class="infoItem bottom">该分站得分：{{data.sceneStandardMark}}</p>
+      <p class="infoItem bottom">该分站得分：{{data.sceneTotalMark}}</p>
       <p class="infoItem bottom">该分站排名：{{data.stationRanking}}</p>
       <p class="infoItem bottom">
         <el-button type="primary">查看考试视频</el-button>
@@ -289,3 +289,13 @@
   }
 
 </script>
+
+<style>
+  .examineeUserPic {
+    width: 120px;
+    height: 120px;
+    display: block;
+    margin: 10px auto;
+  }
+
+</style>

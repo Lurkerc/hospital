@@ -12,18 +12,18 @@
               <span>{{scope.row.index}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="160">
+          <el-table-column label="操作">
             <template scope="scope">
               <el-button size="small" type="success" @click="show(scope.row)">查看详情</el-button>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="sceneName" label="场次" width="300" show-overflow-tooltip>
+          <el-table-column align="center" prop="sceneName" label="场次" show-overflow-tooltip>
           </el-table-column>
           <el-table-column prop="stationName" label="考站名称" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="roomNum" label="房间" align="center">
+          <el-table-column prop="roomNum" label="房间" align="center" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="teacherName" label="考官">
+          <el-table-column prop="teacherName" label="考官" show-overflow-tooltip>
           </el-table-column>
           <el-table-column prop="maxMark" label="最高分">
           </el-table-column>

@@ -83,7 +83,7 @@
           </div>
         </el-col>
         <el-col style="margin-top:20px;">
-          <load-btn @listenSubEvent="saveInfo" :btnData="loadBtn"></load-btn>
+          <load-btn @listenSubEvent="saveInfo" :btnData="loadBtn" :disabled="!canEdit" :class="{'is-disabled':!canEdit}"></load-btn>
         </el-col>
       </el-row>
     </el-form>

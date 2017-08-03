@@ -25,23 +25,23 @@
           style="width: 100%;height: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55">
           </el-table-column>
-          <el-table-column align="center" label="序号" prop="index" width="100">
+          <el-table-column align="center" label="序号" prop="index" width="80">
             <template scope="scope">
               <span>{{scope.row.index}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="160">
+          <el-table-column label="操作" width="80" align="center">
             <template scope="scope">
               <el-button size="small" type="info" @click="entrance(scope.row)">进入</el-button>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="statisticsName" label="统计名称" show-overflow-tooltip width="200">
+          <el-table-column prop="statisticsName" label="统计名称" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="sceneNames" align="center" label="统计场次名称" show-overflow-tooltip width="400">
+          <el-table-column prop="sceneNames" label="统计场次名称" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="createrName" label="创建人" align="center">
+          <el-table-column prop="createrName" label="创建人" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="createTime" label="创建时间">
+          <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip>
             <template scope="scope">
               {{ scope.row.createTime | formatDate('yyyy-MM-dd HH:mm:ss') }}
             </template>

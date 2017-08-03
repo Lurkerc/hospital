@@ -140,6 +140,14 @@ let mutations = {
     let index = theUserIdArr.indexOf(userObj.id);
     theUserIdArr.splice(index, 1);
   },
+  // 值销毁
+  destroy: state => {
+    state.info = null; // 基本共用信息
+    state.room = null; // 该站房间信息
+    state.teacher = null; // 监考老师信息
+    state.unSelectRoom = null; // 禁选房间id集合
+    state.unSelectUser = null; // 不允许选择的人员
+  },
 }
 
 let getters = {

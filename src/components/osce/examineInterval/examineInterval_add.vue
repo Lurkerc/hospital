@@ -516,7 +516,7 @@
         // 参考人员专业
         let specialtyList = [];
         for (let i = 0, list = this.userList, len = list.length; i < len; i++) {
-          if (!(specialtyList.indexOf(list[i].specialty) > -1)) {
+          if (list[i].specialty && !(specialtyList.indexOf(list[i].specialty) > -1)) {
             specialtyList.push(list[i].specialty);
           }
         }
@@ -524,7 +524,7 @@
         // 参考人员删除同步删除对应房间的专业
         for (let i = 0, roomList = this.roomList, leng = roomList.length; i < leng; i++) {
           for (let j = 0, roomItem = roomList[i].room, roomItemLen = roomItem.length; j < roomItemLen; j++) {
-            if (!(specialtyList.indexOf(roomItem[j].specialty) > -1)) {
+            if (roomItem[j].specialty && !(specialtyList.indexOf(roomItem[j].specialty) > -1)) {
               this.$store.commit('examineInterval/room/removeRoomSpecialty', {
                 index: i,
                 cIndex: j
@@ -815,6 +815,10 @@
         let Event = Util.events;
         Event.addHandler(window, "resize", this.setRoomListHeight);
       })
+    },
+    destroyed() {
+      this.$store.commit('examineInterval/room/destroy');
+      this.$store.commit('examineInterval/station/destroy');
     },
   }
 

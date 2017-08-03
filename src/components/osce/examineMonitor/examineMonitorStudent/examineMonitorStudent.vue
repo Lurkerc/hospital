@@ -5,13 +5,13 @@
     <div class="teacherInfo">
       <el-row class="border">
         <el-col :span="6" class="teacherInfoItem" v-for="(item,tIndex) in stationRoom.teacherList" :key="tIndex" @click.native="selectTeacher(item.userId)">
-          <img src="http://iph.href.lu/60x60">
-          <p>{{ item.teacherName }}</p>
+          <img :src="getPhotoPath(item.userPhotoPath)">
+          <p :class="{'active':teacherUserId === item.userId}">{{ item.userName }}</p>
         </el-col>
       </el-row>
       <!-- 教师头像 -->
       <div class="phontoContent">
-        <img :src="getPhotoPath(teacherInfo.userPhotoPath) || 'http://iph.href.lu/120x160'" alt="">
+        <img :src="getPhotoPath(teacherInfo.userPhotoPath)">
         <p class="teacherName">{{ teacherInfo.userName }}</p>
       </div>
       <!-- 当前时间 -->
@@ -42,7 +42,7 @@
     <div class="studentInfo">
       <p class="studentInfoNum">当前考核人员（{{ nowId }}/{{ userSums }}）</p>
       <div class="studentPhoto">
-        <img :src="getPhotoPath(studentInfo.userPhotoPath) || 'http://iph.href.lu/120x160'" alt="">
+        <img :src="getPhotoPath(studentInfo.userPhotoPath)" alt="">
       </div>
       <!-- 基本信息 -->
       <p class="otherInfo">姓名：{{ studentInfo.userName }}</p>
@@ -260,7 +260,7 @@
       },
       // 获取头像地址
       getPhotoPath(path) {
-        return path && this.$store.getters.getEnvPath.http + path || ''
+        return path && this.$store.getters.getEnvPath.http + path || '/static/image/defAvatar.png'
       },
     },
     created() {

@@ -3,8 +3,6 @@
   <div style="height:100%;">
     <!-- 操作按钮 -->
     <p>
-
-      <!--<el-button size="small" type="info" @click="show">返回列表</el-button>-->
       <el-button size="small" type="success" @click="changeInfoView" style="float:right;">切换视图</el-button>
       <el-button size="small" v-if="stationTeacher.isSign === 'YES'" type="info" @click="openInfo" style="float:right;margin-right:20px;">进入考核现场</el-button>
     </p>
@@ -20,7 +18,7 @@
             <p class="teacherInfoText">教官：{{ stationTeacher.userName || '-'}}</p>
           </div>
           <div class="teacherInfoPic">
-            <img :src="getPhotoPath(stationTeacher.userPhotoPath) || '//iph.href.lu/120x180'" alt="">
+            <img :src="getPhotoPath(stationTeacher.userPhotoPath)">
           </div>
         </div>
         <div class="videBox" id="videoBox">
@@ -212,7 +210,7 @@
       },
       // 获取头像地址
       getPhotoPath(path) {
-        return path && this.$store.getters.getEnvPath.http + path || ''
+        return path && this.$store.getters.getEnvPath.http + path || '/static/image/defAvatar.png'
       },
     },
     created() {
@@ -258,7 +256,7 @@
       background-color: #eaedf1;
     }
     .teacherInfoBox {
-      width: 178px;
+      // width: 178px;
     }
     .videBox {
       margin: 10px;
@@ -272,13 +270,15 @@
     }
     .teacherInfoPic {
       position: absolute;
-      top: 40px;
-      right: 10px;
+      top: 30px;
+      right: 0;
       width: 120px;
-      height: 180px;
+      height: 120px;
       img {
         width: 100%;
         height: 100%;
+        padding: 10px;
+        background-color: #fff;
       }
     }
     .loginBtn {

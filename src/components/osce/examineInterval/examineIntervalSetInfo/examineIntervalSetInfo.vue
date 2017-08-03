@@ -126,12 +126,10 @@
       infoBasic,
       infoContent,
       infoView
-    }
+    },
+    destroyed() {
+      this.$store.commit('examineInterval/temp/destroy');
+    },
   }
 
 </script>
-
-<style>
-
-
-</style>

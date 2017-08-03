@@ -3,15 +3,15 @@
   <div class="exmUserContent modalContent">
     <!-- 老师信息 -->
     <div class="teacherInfo leftCon">
-      <el-row class="border" style="height:85px">
+      <el-row class="border">
         <el-col :span="6" class="teacherInfoItem" v-for="(item,index) in teacherData" :key="index" @click.native="selectTeacher(item)">
-          <img :src="getPhotoPath(item.userPhotoPath) || '//iph.href.lu/60x60'" />
-          <p> {{item.userName}}</p>
+          <img :src="getPhotoPath(item.userPhoto)" style="margin:0 auto;" />
+          <p :class="{'active':teacherUserId === item.teacherId}">{{ item.userName }}</p>
         </el-col>
       </el-row>
       <!-- 教师头像 -->
       <div class="phontoContent">
-        <img :src="getPhotoPath(stationData.userPhotoPath) || '//iph.href.lu/120x180'" class="user-img" alt="" style="margin:0;">
+        <img :src="getPhotoPath(selectTeaData.userPhoto)" style="margin:0 auto;">
       </div>
       <!-- 其他内容 -->
       <p class="otherInfo">考站名称：{{stationData.stationName}}</p>
@@ -91,6 +91,7 @@
     props: ['nowIndex', 'index', 'url', 'stationData'],
     data() {
       return {
+        teacherUserId: '',
         //老师列表请求数据
         teacherForm: {
           roomId: this.stationData.roomId, //房间id
@@ -205,8 +206,9 @@
       },
       //获取右侧列表 选择老师的时候调用
       selectTeacher(data) {
+        this.teacherUserId = data.teacherId;
         clearTimeout(atmTime);
-        this.selectTeaData = data
+        this.selectTeaData = data;
         this.scheduleForm.teacherId = data.teacherId;
         this.scheduleList.ajaxParams.params = Object.assign(this.scheduleList.ajaxParams.params, this.scheduleForm, {
           reqTime: new Date().getTime()
@@ -316,7 +318,7 @@
       },
       // 获取头像地址
       getPhotoPath(path) {
-        return path && this.$store.getters.getEnvPath.http + path || ''
+        return path && this.$store.getters.getEnvPath.http + path || '/static/image/defAvatar.png'
       },
     },
     created() {

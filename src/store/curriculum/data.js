@@ -30,7 +30,25 @@ const mutations = {
       peersEvaluate: [], // 同行评价项集合
       superiorsEvaluate: [], // 上级评价项集合
     };
-    state.planDtoList = [];
+    state.planDtoList = [{
+      no: "", // 第几节课 int 数字
+      duration: "", // 课时(几小时)   int 数字
+      content: "", // 教学内容
+      remark: "", // 详细介绍
+      realia: "", // 所需教具
+      wareDtoList: [], // 课件对象集合
+      wareDtoListTemp: { // 课件对象集合（操作使用）
+        before: [], // 课前
+        in_progress: [], // 课前
+        after: [], // 课后
+      },
+      testingDtoList: [], // 测评对象集合
+      testingDtoListTemp: { // 测评对象集合（操作使用）
+        before: [], // 课前
+        in_progress: [], // 课前
+        after: [], // 课后
+      },
+    }];
   },
   /**************************** 添加值 *******************************/
   // 添加课程计划
@@ -42,9 +60,25 @@ const mutations = {
       remark: "", // 详细介绍
       realia: "", // 所需教具
       wareDtoList: [], // 课件对象集合
+      wareDtoListTemp: { // 课件对象集合（操作使用）
+        before: [], // 课前
+        in_progress: [], // 课前
+        after: [], // 课后
+      },
       testingDtoList: [], // 测评对象集合
+      testingDtoListTemp: { // 测评对象集合（操作使用）
+        before: [], // 课前
+        in_progress: [], // 课前
+        after: [], // 课后
+      },
     })
   },
+  /**
+   * 添加课件
+   *                  课前    课中        课后    课索引    追加的附件数组
+   * wareObj { type: 'before|in_progress|after', index:0, list:[] }
+   */
+  addWareDto: (state, wareObj) => state.planDtoList[wareObj.index].wareDtoListTemp[wareObj.type].push(...wareObj.list),
   /**************************** 更新值 *******************************/
   /**
    * 更新课程基本信息

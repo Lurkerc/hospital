@@ -2,7 +2,7 @@
   <!-- 考生考核表信息 -->
   <div class="modalContent">
     <div class="leftCon">
-      <img :src="getPhotoPath(studentData.userPhotoPath) || 'http://iph.href.lu/120x180'" alt="">
+      <img :src="getPhotoPath(studentData.userPhotoPath)">
       <p class="infoItem bottom">考生姓名：{{ studentData.userName || '-' }}</p>
       <p class="infoItem bottom">总分：{{ studentData.sumMark || '0'}}</p>
       <p class="infoItem bottom">排名：{{ studentData.ranking || '0'}}</p>
@@ -180,7 +180,7 @@
       },
       // 获取头像地址
       getPhotoPath(path) {
-        return path && this.$store.getters.getEnvPath.http + path || ''
+        return path && this.$store.getters.getEnvPath.http + path || '/static/image/defAvatar.png'
       },
     },
     components: {
@@ -207,8 +207,8 @@
       bottom: 0;
       border-right: 1px solid $boderColor;
       img {
-        width: 60%;
-        max-width: 120px;
+        width: 120px;
+        height: 120px;
         display: block;
         margin: 10px auto;
       }

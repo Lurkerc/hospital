@@ -39,6 +39,8 @@ const mutations = {
   },
   // 设置编辑状态
   setEdit: (state, b) => state.edit = b,
+  /******************************************* 销毁值 ******************************************/
+  destroy: state => state.info = null,
 }
 
 let getters = {

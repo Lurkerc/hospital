@@ -2,9 +2,9 @@
   <!-- 考生考核表信息 -->
   <div class="modalContent" ref="content">
     <div v-show="isShowList" class="text-headline ">分站得分总览</div>
-
+    <!-- 单/多次场次考核的考生详情的查看 -->
     <div v-show="isShowList" class="leftCon" style="top: 50px;border-top: 1px solid #dfe6ec;">
-      <img class="user-img" :src="getPhotoPath(data.userPhoto)" alt="">
+      <img :src="getPhotoPath(data.userPhoto)" class="examineeUserPic">
       <p class="infoItem bottom">考生姓名：{{data.userName}}</p>
       <p class="infoItem bottom">总分：{{data.sceneTotalMark}}</p>
       <p class="infoItem bottom">排名：{{data.ranking}}</p>
@@ -26,7 +26,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="80">
               <template scope="scope">
-                <el-button size="small" @click="show(scope.row)">查看</el-button>
+                <el-button size="small" @click="show(scope.row)" type="info">查看</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -47,7 +47,7 @@
       return {
         formValidate: { // statisticsId 与 sceneId 二传一
           userId: this.operailityData.userId, //考生id
-          statisticsId: this.operailityData.statisticsId, //统计id
+          // statisticsId: this.operailityData.statisticsId, //统计id
           // sceneId: this.operailityData.sceneIds, //场次id
         },
         isShowList: true,
@@ -100,8 +100,12 @@
 
       },
       setTableData() {
+        if (this.operailityData.statisticsId) { // 有统计id则只传统计id，否则只传场次id
+          this.formValidate.statisticsId = this.operailityData.statisticsId //统计id
+        } else {
+          this.formValidate.sceneId = this.operailityData.sceneIds //场次id
+        }
         this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params, this.formValidate);
-        // console.log(this.listMessTitle.ajaxParams.params)
         this.ajax(this.listMessTitle);
       },
 
@@ -180,12 +184,11 @@
       },
       // 获取头像地址
       getPhotoPath(path) {
-        return path && this.$store.getters.getEnvPath.http + path || ''
+        return path && this.$store.getters.getEnvPath.http + path || '/static/image/defAvatar.png'
       },
     },
     created() {
       this.init();
-      console.log(this.formValidate)
     },
     mounted() {
       //页面dom稳定后调用
@@ -204,3 +207,13 @@
   }
 
 </script>
+
+<style>
+  .examineeUserPic {
+    width: 120px;
+    height: 120px;
+    display: block;
+    margin: 10px auto;
+  }
+
+</style>

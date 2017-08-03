@@ -72,7 +72,7 @@
         initUnSelectUser: 'examineInterval/room/initUnSelectUser', // 初始化禁选人员
         initSpecialtyList: 'examineInterval/room/initSpecialtyList', // 初始化可选专业
         initEdit: 'examineInterval/station/initEdit', // 初始化是否可编辑
-        initTemp: 'examineInterval/temp/initData', // 初始化中转状态
+        // initTemp: 'examineInterval/temp/initData', // 初始化中转状态
       }),
       initState() {
         this.initRoomList();
@@ -84,7 +84,7 @@
         this.initUnSelectUser();
         this.initSpecialtyList();
         this.initEdit();
-        this.initTemp();
+        // this.initTemp();
       },
     },
     components: {
