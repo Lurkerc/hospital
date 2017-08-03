@@ -33,7 +33,7 @@
           </el-date-picker>
         </el-form-item>
       </el-col>
-      <el-col :span="6" >
+      <el-col v-if="this.role=='JYC'" :span="6" >
         <el-form-item label="科室" prop="name" >
           <el-select v-model="formValidate.depId" placeholder="科室">
             <select-option  :type="'dep'"></select-option>
@@ -47,6 +47,7 @@
   </el-form></div>
   <div id="content" ref="content" style="position: absolute;left:0;top: 85px;bottom: 0;right:6px;">
     <listHeaders
+      :role="role"
       :headList="tableHeader"
       @mouseEnter="mouseEnter"
       @mouseLeave="mouseLeave"
@@ -62,6 +63,7 @@
   import api from '../api.js';
   let Util = null;
   export default {
+    props:['role'],
     data() {
       return {
         api,
@@ -130,7 +132,7 @@
         tableListMessTitle: {
           ajaxSuccess: 'updateTableList',
           ajaxParams: {
-            url: api.WeekSetTimeTables+'/',  //todo 需要角色类型,根据当前登录的角色
+            url: api.WeekSetTimeTables+'/',
             params: {},
           }
         },
@@ -139,6 +141,16 @@
     methods: {
       //初始化请求列表数据
       init(){
+          //通过role来判断当前权限的是学员还是教育处，带教老师
+        if(this.role=='XY'){
+          this.tableListMessTitle.ajaxParams.url = this.api.WeekSetUserWeekSetTimeTables;
+        }else if(this.role=='LS'){
+          this.tableListMessTitle.ajaxParams.url = this.api.WeekSetTeacherWeekSetTimeTables;
+        } else if(this.role=='JYC'){
+          this.tableListMessTitle.ajaxParams.url = this.api.WeekSetTimeTables;
+        }
+
+
         Util = this.$util;
         var myDate=new Date();
         let year = myDate.getFullYear();

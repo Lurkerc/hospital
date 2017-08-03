@@ -57,7 +57,7 @@
       <el-row >
         <el-col :span="16" :offset="2">
           <el-form-item label="次要诊断:" prop="secondaryDiagnosis" >
-            <el-input type="textarea" v-model="formValidate.secondaryDiagnosis"></el-input>
+            <el-input type="textarea"  v-model="formValidate.secondaryDiagnosis"></el-input>
           </el-form-item>
         </el-col>
         </el-col >

@@ -128,8 +128,25 @@ teachctivityListType: '/teachctivityManagement/list',///{userType}
     path: thisFile + "/userSignRecord/pagelist",
     method: 'get'
   },
+
   //教育处-课程表
   WeekSetTimeTables:'/weekSet/manageWeekSetTimeTables',
+
+  //教育处-查看课程详情
+  WeekSetManageGetCourse:'/weekSet/manageGetCourse',
+
+  //老师-课程表
+  WeekSetTeacherWeekSetTimeTables:'/weekSet/teacherWeekSetTimeTables',
+
+  //老师-查看课程详情
+  teacherGetCourse:'/weekSet/teacherGetCourse',
+
+  //学员-课程表
+  WeekSetUserWeekSetTimeTables:'/weekSet/userWeekSetTimeTables',
+
+  //学员-学生查看课程详情
+  weekSetUserGetCourse:'/weekSet/userGetCourse',
+
 };
 
 export default api

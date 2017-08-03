@@ -38,12 +38,32 @@ const underRouters = {
       }
     },
     {
-      //课程表预览
-      path:'syllabusView',
-      name:'syllabusView',
+      //我的课程表  学员
+      path:'mySyllabus',
+      name:'mySyllabus',
       component:resolve=> {
         require.ensure([], () => {
-          resolve(require('../../components/intern/undergraduateEdu/syllabusView/syllabusView_list.vue'));
+          resolve(require('../../components/intern/undergraduateEdu/mySyllabus/mySyllabus_list.vue'));
+        }, 'undergraduate');
+      }
+    },
+    {
+      //授课安排 老师
+      path:'teachingSchedule',
+      name:'teachingSchedule',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/intern/undergraduateEdu/teachingSchedule/teachingSchedule_list.vue'));
+        }, 'undergraduate');
+      }
+    },
+    {
+      //课程安排  教育处
+      path:'courseArrangement',
+      name:'courseArrangement',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/intern/undergraduateEdu/courseArrangement/courseArrangement_list.vue'));
         }, 'undergraduate');
       }
     },

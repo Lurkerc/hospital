@@ -236,13 +236,44 @@ export default {
   thematicReviewPageList:'/traineeRotary/thematicReview/pageList',
 
   /*专题概述上报 put*/
-  thematicReviewModifySubmit:'/traineeRotary/thematicReview/modifySubmit/',//{id}
+  thematicReviewModifySubmit:'/traineeRotary/thematicReview/modifySubmit',//{id}
 
   /*专题概述添加上报 post*/
   thematicReviewAddSubmit:'/traineeRotary/thematicReview/addSubmit',//{id}
 
   /*专题概述添加 post*/
   thematicReviewAdd:'/traineeRotary/thematicReview/add',//{id}
+
+
+  /**
+   * 调查报告
+   * */
+
+  /*调查报告或经验总结查看(教育处人员查看) post*/
+  medicalEthicsGetId:'/traineeRotary/medicalEthics/get/',//{id}
+
+  /*调查报告或经验总结查看(教育处人员查看) post*/
+  medicalEthicsGet:'/traineeRotary/medicalEthics/get',
+
+  /*调查报告或经验总结审核 post*/
+  medicalEthicsReview:'/traineeRotary/medicalEthics/review/',//{id}
+
+  /*调查报告或经验总结修改 post*/
+  medicalEthicsModify:'/traineeRotary/medicalEthics/modify/',//{id}
+
+  /*调查报告或经验总结查看(教育处人员查看列表) post*/
+  medicalEthicsPageList:'/traineeRotary/medicalEthics/pageList',
+
+  /*调查报告或经验总结上报 post*/
+  medicalEthicsModifySubmit:'/traineeRotary/medicalEthics/modifySubmit',//{id}
+
+  /*调查报告或经验总结添加上报 post*/
+  medicalEthicsAddSubmit:'/traineeRotary/medicalEthics/addSubmit',//{id}
+
+  /*调查报告或经验总结添加 post*/
+  medicalEthicsAdd:'/traineeRotary/medicalEthics/add',//{id}
+
+
 
 
 }

@@ -90,7 +90,7 @@
 </template>
 <script>
   export default{
-      props:['headList','tableDataList','url'],
+      props:['headList','tableDataList','url','role'],
       data(){
           return{
             tableHeadList:[],
@@ -162,6 +162,15 @@
             },
           }
       },
+    created(){
+      if(this.role=='XY'){
+        this.listMessTitle.ajaxParams.url = this.url.weekSetUserGetCourse
+      }else if(this.role=='LS'){
+        this.listMessTitle.ajaxParams.url = this.url.teacherGetCourse
+      } else if(this.role=='JYC'){
+        this.listMessTitle.ajaxParams.url = this.url.WeekSetManageGetCourse
+      }
+    },
     methods:{
 
       //数字转中文大写
@@ -199,12 +208,17 @@
             let left = cell.left-(popoverOffset.left||335);
             let top = cell.top-popoverOffset.top+cell.height;
 
-            if(left+popoverOffset.width/2>=clientWidth-left){
-              this.offset.left = left-(left+popoverOffset.width/2-(clientWidth-left));
-            }else {
-              this.offset.left =left-(popoverOffset.right-popoverOffset.left)/2;
-            }
-              this.offset.top = top;
+          if(left+popoverOffset.width/2>=clientWidth-left){
+            this.offset.left = left-(left+popoverOffset.width/2-(clientWidth-left));
+          }else {
+            this.offset.left =left/2;
+          }
+          if(this.dynamicHt/2<top){
+            this.offset.top = 0;
+          }else {
+            this.offset.top = top;
+          }
+
             this.listMessTitle.ids = ids;
              let listMessTitle =  this.getFormData(this.listMessTitle)
             listMessTitle.ajaxParams.params = {courseArrangeIds:ids};
@@ -289,34 +303,4 @@
 
   }
 </script>
-<style>
-  .el-table .info-row {
-    background: #c9e5f5;
-  }
-  .el-table .positive-row {
-    background: #e2f0e4;
-  }
 
-  .info-column {
-    background: #ff00ff;
-  }
-
-  .row-bg {
-    padding: 10px 0;
-  }
-
-  .showCurrMess {
-    width: 900px;
-    position: relative;
-    background: #fff;
-  }
-
-  .currUserMess {
-    width: 120px;
-    height: 150px;
-    background: #00a2ca;
-    position: absolute;
-    top: 6px;
-    right: 6px;
-  }
-</style>

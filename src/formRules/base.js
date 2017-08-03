@@ -118,7 +118,7 @@ let baseRules = {
    *  /[@#\$%\^&\*]+/ ----> @|#|$|%|^|&|* 都属于非法字符
    * @msg 提示信息
    */
-  illegalChar: (reg = /[^\u4e00-\u9fa5\w\s，。、；‘’“”《》——+-、~·！]_（）：]/m, msg = '存在非法字符！') => {
+  illegalChar: (reg = /[^\u4e00-\u9fa5\w\s，。、；‘’“”《》——+-、~·！\]_（）：]/gm, msg = '存在非法字符！') => {
     return (rule, value = '', callback) => {
       value && reg.test(value) && callback(new Error(msg));
       callback()
