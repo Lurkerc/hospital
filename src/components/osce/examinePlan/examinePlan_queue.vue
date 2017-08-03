@@ -3,7 +3,7 @@
   <div>
     <el-row style="margin-bottom:16px;">
       <el-col :span="4">
-        <img src="http://iph.href.lu/120x120" alt="">
+        <img :src="getPhotoPath(queueData.headPhoto)" class="examinePlanQueueUserPic">
       </el-col>
       <el-col :span="18">
         <el-form labelWidth="86px" :model="queryData" ref="queryData">
@@ -40,10 +40,13 @@
     </template>
     <p v-else-if="queueData.userId" style="line-height:300px;text-align:center;">暂无可抽签的考站</p>
     <p v-else style="line-height:300px;text-align:center;">请先查询</p>
-    <p align="center">
-      <load-btn v-if="!drawSuccess" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
-      <el-button v-else type="info" @click="close">关闭</el-button>
-    </p>
+    <template v-if="!hasSrawList()">
+      <p align="center">
+        <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+        <!-- <load-btn v-if="drawSuccess" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn> -->
+        <!-- <el-button v-else type="info" @click="close">关闭</el-button> -->
+      </p>
+    </template>
   </div>
 </template>
 
@@ -56,13 +59,14 @@
       return {
         drawSuccess: false,
         queueActive: '',
-        drawList: [],
+        drawList: {},
         queueData: {
           userId: "",
           userName: "",
           userNum: "",
           idCard: "",
-          drawList: []
+          headPhoto: "",
+          drawList: {}
         },
         queryData: { // 查询信息
           sceneId: this.sceneId,
@@ -138,7 +142,7 @@
             query.userName = res.data.userName;
             query.userNum = res.data.userNum;
             query.idCard = res.data.idCard;
-            this.drawList = res.data.drawList || [];
+            this.drawList = res.data.drawList || {};
             this.drawSuccess = true;
             for (let item in this.drawList) {
               if (!this.queueActive) {
@@ -190,11 +194,12 @@
       },
       // 关闭抽签
       close() {
-        this.$emit('planQueue', this.addMessTitle.type, this.addMessTitle.successTitle)
+        console.log(this.addMessTitle.type)
+        this.$emit('cancel', this.addMessTitle.type)
       },
       // 获取头像地址
       getPhotoPath(path) {
-        return path && this.$store.getters.getEnvPath.http + path || ''
+        return path && this.$store.getters.getEnvPath.http + path || '/static/image/defAvatar.png'
       },
     },
     components: {
@@ -208,6 +213,9 @@
 </script>
 
 <style>
-
+  .examinePlanQueueUserPic {
+    width: 100px;
+    height: 100px;
+  }
 
 </style>

@@ -8,7 +8,7 @@
     <div v-if="defaults.isShowMenus" class="treeMenus" style="">
       <el-button type="primary" @click="add">新建</el-button>
       <el-button type="primary" @click="edit">修改</el-button>
-      <el-button :disabled="sltParentId===0?true:false" type="primary" @click="remove">删除</el-button>
+      <el-button :disabled="sltParentId === 0 ? true : false" type="primary" @click="remove">删除</el-button>
     </div>
 
     <div class="treeContent">
@@ -312,6 +312,8 @@
 
       //更新目录树数据
       updataTree() {
+        this.sltParentId = 0;
+        this.clearCurrSltedData();
         this.postParamToServer();
       },
 

@@ -70,7 +70,7 @@
             <el-button @click="handleSubmit('formValidate')">查询</el-button>
           </el-form>
         </div>
-        <el-table border ref="myTable" :max-height="400" :data="tableData" style="width: 100%;">
+        <el-table ref="myTable" :max-height="300" :data="tableData" style="width: 100%;">
           <!--<el-table-column
               type="selection"
               width="55">
@@ -79,7 +79,7 @@
           </el-table-column>
 
 
-          <el-table-column prop="userName"  label="姓名">
+          <el-table-column prop="userName" label="姓名">
           </el-table-column>
           <el-table-column prop="userSex" label="性别" width="80">
             <template scope="scope">
@@ -91,7 +91,7 @@
           <el-table-column prop="userNum" label="准考证号" width="200">
           </el-table-column>
 
-          <el-table-column prop="isSign" label="是否签到" width="100">
+          <el-table-column prop="isSign" label="是否签到">
             <template scope="scope">
               {{(scope.row.isSign || '0') | typeText}}
             </template>
@@ -180,16 +180,16 @@
       //初始化
       this.init();
     },
-    beforeDestroy(){
+    beforeDestroy() {
       clearInterval(this.timeOut);
     },
     methods: {
-      reset(){
+      reset() {
         clearInterval(this.timeOut);
         this.loginValidate.userName = '';
         this.loginValidate.idCard = '';
         this.loginValidate.pic = '';
-//        this.timeOut = setInterval(this.isResult, 100);
+        //        this.timeOut = setInterval(this.isResult, 100);
       },
       /*
        * 列表查询方法
@@ -256,7 +256,7 @@
         this.loginValidate.userName = '';
         this.loginValidate.idCard = '';
         this.loginValidate.pic = '';
-//        this.timeOut = setInterval(that.isResult, 100);
+        //        this.timeOut = setInterval(that.isResult, 100);
       },
       listenSubEvent(isLoadingFun) {
         let isSubmit = this.submitForm("loginValidate");
@@ -348,7 +348,7 @@
         }
         let that = this;
         clearInterval(this.timeOut);
-//        this.timeOut = setInterval(this.isResult, 100)
+        //        this.timeOut = setInterval(this.isResult, 100)
       })
     },
 

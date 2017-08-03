@@ -43,7 +43,8 @@
           <template scope="scope">
             <el-button size="small" type="success" @click="show(scope.row)" :disabled="scope.row.status === 'NOARRANGED'">查看</el-button>
             <el-button size="small" type="danger" @click="planLogin(scope.row)">签到</el-button>
-            <el-button size="small" type="info" @click="openPlanQueue(scope.row.id)" v-if="scope.row.sceneType === 'STANDARD'">抽签</el-button>
+            <!-- 规范考核、已发布才能抽签 -->
+            <el-button size="small" type="info" @click="openPlanQueue(scope.row.id)" v-if="scope.row.sceneType === 'STANDARD' && scope.row.status === 'PUBLISH'">抽签</el-button>
             <!--<el-button size="small" type="warning" @click="openPlanFix(scope.row.id)" v-else>安排</el-button>-->
           </template>
         </el-table-column>
@@ -82,7 +83,7 @@
       <div slot="footer"></div>
     </Modal>
     <!-- 签到 -->
-    <Modal :mask-closable="false" width="920" v-model="planLoginModal" class-name="vertical-center-modal">
+    <Modal :mask-closable="false" width="1000" v-model="planLoginModal" class-name="vertical-center-modal">
       <modal-header slot="header" :content="contentHeader.planLoginId"></modal-header>
       <plan-login v-if="planLoginModal" @cancel="cancel" @setFix="subCallback" :sceneId="sceneId"></plan-login>
       <div slot="footer"></div>

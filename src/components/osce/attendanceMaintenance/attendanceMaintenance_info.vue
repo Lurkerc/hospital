@@ -33,19 +33,19 @@
             <el-button size="small" v-if="!scope.row.scheduleId" @click="addScore(scope.row)">添加评分</el-button>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="userName" label="考生姓名" width="120">
+        <el-table-column align="center" prop="userName" label="考生姓名" width="120" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="mark" label="得分" align="center" width="75">
+        <el-table-column prop="mark" label="得分" align="center" width="75" show-overflow-tooltip>
           <template scope="scope">
             {{ scope.row.mark || 0 }}
           </template>
         </el-table-column>
-        <el-table-column prop="evaluate" label="教师评语" align="center">
+        <el-table-column prop="evaluate" label="教师评语" align="center" show-overflow-tooltip>
           <template scope="scope">
             {{ scope.row.evaluate || '-' }}
           </template>
         </el-table-column>
-        <el-table-column prop="teacherName" label="评分教师" width="120" align="center">
+        <el-table-column prop="teacherName" label="评分教师" width="120" align="center" show-overflow-tooltip>
         </el-table-column>
       </el-table>
     </div>

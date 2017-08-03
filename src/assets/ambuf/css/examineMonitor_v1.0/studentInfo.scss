@@ -26,8 +26,7 @@ $bgColor:#f3f3f3; // 背景颜色
         }
         .phontoContent {
             width: 120px;
-            margin: 10px auto;
-            border: 1px solid $boderColor;
+            margin: 10px auto; // border: 1px solid $boderColor;
             text-align: center;
             img {
                 width: 100%;
@@ -60,7 +59,13 @@ $bgColor:#f3f3f3; // 背景颜色
             overflow: hidden;
         }
         p {
+            height: 20px;
             line-height: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
         }
         p.active {
             color: $activeColor;

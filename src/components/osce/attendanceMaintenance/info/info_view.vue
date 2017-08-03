@@ -9,12 +9,12 @@
       <!-- 教师头像 -->
       <p class="teacher-header">考官</p>
       <div class="phontoContent">
-        <img :src="examUserData.teacher.teacherUserPhotoPath" alt="" class="user-img">
+        <img :src="getPhotoPath(examUserData.teacher.teacherUserPhotoPath)">
       </div>
       <!-- 其他内容 -->
-      <p class="otherInfo "> 考核内容 : {{examUserData.contentName}}</p>
-      <p class="otherInfo "> &nbsp;&nbsp; 姓名 : {{examUserData.teacher.teacherUserName}}</p>
-      <p class="otherInfo ">房间号 : {{examUserData.roomNum}}</p>
+      <p class="otherInfo ">姓名：{{examUserData.teacher.teacherUserName}}</p>
+      <p class="otherInfo ">房间号：{{examUserData.roomNum}}</p>
+      <p class="otherInfo ">考核内容：{{examUserData.contentName}}</p>
     </div>
     <!-- 考核信息 -->
     <div class="exmContentMain " style="top: 31px;">
@@ -39,13 +39,13 @@
     <div class="studentInfo" style="top: 31px;">
       <p class="studentInfoNum">考生</p>
       <div class="studentPhoto">
-        <img :src="examUserData.examUser.userPhotoPath" alt="" class="user-img">
+        <img :src="getPhotoPath(examUserData.examUser.userPhotoPath)">
       </div>
-      <p class="otherInfo ">姓名 : {{examUserData.examUser.userName}}</p>
-      <p class="otherInfo">性别 : {{examUserData.examUser.userSex | typeText}}</p>
+      <p class="otherInfo">姓名：{{examUserData.examUser.userName}}</p>
+      <p class="otherInfo">性别：{{examUserData.examUser.userSex | typeText}}</p>
       <el-row>
-        <el-col :span="4">&nbsp; &nbsp; 点评 : </el-col>
-        <el-col :span="19">
+        <el-col :span="5">&nbsp;&nbsp;&nbsp;&nbsp; 点评：</el-col>
+        <el-col :span="18">
           <el-input type="textarea" readonly resize="none" v-model="examUserData.scoreTable.evaluate" :rows="3"></el-input>
         </el-col>
       </el-row>
@@ -145,7 +145,12 @@
           }
         });
         return sums;
-      }
+      },
+
+      // 获取头像地址
+      getPhotoPath(path) {
+        return path && this.$store.getters.getEnvPath.http + path || '/static/image/defAvatar.png'
+      },
     },
     created() {
       this.init();

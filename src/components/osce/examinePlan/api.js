@@ -64,10 +64,10 @@ const api = {
     method: 'get'
   },
   signList: { // 获取场次参考人员签到列表（查看参考人员信息加载时调用）
-    path: file + '/user/sign/list/',//{id}
+    path: file + '/user/sign/list/', //{id}
     method: 'get'
   },
-    userSign: { // 获取场次参考人员签到列表（查看参考人员信息加载时调用）
+  userSign: { // 获取场次参考人员签到列表（查看参考人员信息加载时调用）
     path: file + '/user/sign',
     method: 'post'
   },

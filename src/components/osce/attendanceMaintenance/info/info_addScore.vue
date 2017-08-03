@@ -8,12 +8,12 @@
     <div class="teacherInfo " style="top: 31px;padding-top: 0">
       <!-- 教师头像 -->
       <p class="teacher-header">考官</p>
-      <div class="phontoContent">
-        <img :src="getPhotoPath(examUserData.teacher.teacherUserPhotoPath) || '//iph.href.lu/120x180'" alt="" class="user-img">
+      <div class="phontoContent" style="border:none;">
+        <img :src="getPhotoPath(examUserData.teacher.teacherUserPhotoPath)">
       </div>
       <!-- 其他内容 -->
-      <p class="otherInfo "> &nbsp;&nbsp; 姓名 : {{examUserData.teacher.teacherUserName}}</p>
-      <p class="otherInfo ">房间号 : {{examUserData.roomNum}}</p>
+      <p class="otherInfo ">姓名： {{examUserData.teacher.teacherUserName}}</p>
+      <p class="otherInfo ">房间号： {{examUserData.roomNum}}</p>
     </div>
     <!-- 考核信息 -->
     <div class="exmContentMain " style="top: 31px;">
@@ -66,10 +66,10 @@
     <div class="studentInfo" style="top: 31px;">
       <p class="studentInfoNum">考生</p>
       <div class="studentPhoto">
-        <img :src="getPhotoPath(examUserData.examUser.userPhotoPath) || '//iph.href.lu/120x180'" alt="" class="user-img">
+        <img :src="getPhotoPath(examUserData.examUser.userPhotoPath)">
       </div>
-      <p class="otherInfo ">姓名 : {{examUserData.examUser.userName}}</p>
-      <p class="otherInfo">性别 : {{examUserData.examUser.userSex | typeText}}</p>
+      <p class="otherInfo">姓名：{{examUserData.examUser.userName}}</p>
+      <p class="otherInfo">性别：{{examUserData.examUser.userSex | typeText}}</p>
     </div>
 
   </div>
@@ -304,7 +304,7 @@
 
       // 获取头像地址
       getPhotoPath(path) {
-        return path && this.$store.getters.getEnvPath.http + path || ''
+        return path && this.$store.getters.getEnvPath.http + path || '/static/image/defAvatar.png'
       },
     },
     created() {
