@@ -79,6 +79,9 @@ export default {
   caseRecordGet:'/rotationProcess/caseRecord/get/',//{caseId}
 
 
+  /*导出word大病例*/
+  caseRecordExportToWord:'/rotationProcess/caseRecord/exportToWord/',//{casesId}
+
 
 /**
  * 临床操作记录列表

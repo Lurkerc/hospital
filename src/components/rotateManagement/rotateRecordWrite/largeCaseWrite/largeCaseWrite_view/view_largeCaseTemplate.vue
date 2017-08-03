@@ -7,29 +7,49 @@
     <div>
       <el-form   class="demo-form-inline" label-width="130px" >
         <el-row class="table-back-one">
+          <!--批注-->
+          <el-col :span="24" >
+            <el-col :span="6" >
+              <el-form-item  prop="cname" >
+                <div class="postil-text" >{{mapBigLog.cname.bcValue| placeholder}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" >
+              <el-form-item  prop="cname" >
+                <div class="postil-text"  >{{mapBigLog.cSex.bcValue| placeholder}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" >
+              <el-form-item  prop="cname" >
+                <div class="postil-text" >{{mapBigLog.cage.bcValue|placeholder}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" >
+              <el-form-item  prop="cname" >
+                <div class="postil-text" >{{mapBigLog.cisMarry.bcValue| typeText|placeholder}}</div>
+              </el-form-item>
+            </el-col>
+          </el-col>
+
           <el-col :span="6" >
-            <div class="postil-text" >{{mapBigLog.cname.bcValue}}</div>
             <el-form-item label="姓名:" prop="cname" >
               {{formValidate.cname}}
             </el-form-item>
           </el-col>
 
           <el-col :span="6" >
-            <div class="postil-text"  >{{mapBigLog.cSex.bcValue}}</div>
             <el-form-item label="性别:" prop="csex" >
               {{formValidate.csex}}
             </el-form-item>
           </el-col >
 
           <el-col :span="6" >
-            <div class="postil-text" >{{mapBigLog.cage.bcValue}}</div>
             <el-form-item label="年龄:" prop="cage" >
               {{formValidate.cage}}
             </el-form-item>
           </el-col >
 
           <el-col :span="6" >
-            <div class="postil-text" >{{mapBigLog.cisMarry.bcValue| typeText}}</div>
             <el-form-item label="婚否:" prop="cisMarry" >
               {{formValidate.cisMarry | typeText}}
             </el-form-item>
@@ -38,29 +58,49 @@
         </el-row >
 
         <el-row class="table-back-two" >
+          <!--批注-->
+          <el-col :span="24" >
+            <el-col :span="6" >
+              <el-form-item  prop="cname" >
+                <div class="postil-text" >{{mapBigLog.cnation.bcValue| placeholder}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" >
+              <el-form-item  prop="cname" >
+                <div class="postil-text"  >{{mapBigLog.czhiye.bcValue| placeholder}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" >
+              <el-form-item  prop="cname" >
+                <div class="postil-text" >{{mapBigLog.caddress.bcValue|placeholder}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" >
+              <el-form-item  prop="cname" >
+                <div class="postil-text" >{{mapBigLog.cbirthPlace.bcValue|placeholder}}</div>
+              </el-form-item>
+            </el-col>
+          </el-col>
+
           <el-col :span="6" >
-            <div class="postil-text" >{{mapBigLog.cnation.bcValue}}</div>
             <el-form-item label="民族:" prop="cnation" >
               {{formValidate.cnation}}
             </el-form-item>
           </el-col>
 
           <el-col :span="6" >
-            <div class="postil-text" >{{mapBigLog.czhiye.bcValue}}</div>
             <el-form-item label="职业:" prop="czhiye" >
               {{formValidate.czhiye}}
             </el-form-item>
           </el-col >
 
           <el-col :span="6" >
-            <div class="postil-text" >{{mapBigLog.caddress.bcValue}}</div>
             <el-form-item label="住址:" prop="caddress" >
               {{formValidate.caddress}}
             </el-form-item>
           </el-col >
 
           <el-col :span="6" >
-            <div class="postil-text" >{{mapBigLog.cbirthPlace.bcValue}}</div>
             <el-form-item label="出生地:" prop="cbirthPlace" >
               {{formValidate.cbirthPlace}}
             </el-form-item>
@@ -68,22 +108,38 @@
         </el-row >
 
         <el-row class="table-back-one">
+          <!--批注-->
+          <el-col :span="24" >
+            <el-col :span="6" >
+              <el-form-item   >
+                <div class="postil-text" >{{mapBigLog.cbedNo.bcValue| placeholder}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" >
+              <el-form-item   >
+                <div class="postil-text"  >{{mapBigLog.czyNo.bcValue| placeholder}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12" >
+              <el-form-item   >
+                <div class="postil-text" >{{mapBigLog.clesion.bcValue|placeholder}}</div>
+              </el-form-item>
+            </el-col>
+          </el-col>
+
           <el-col :span="6" >
-            <div class="postil-text" >{{mapBigLog.cbedNo.bcValue}}</div>
             <el-form-item label="床号:" prop="cbedNo" >
               {{formValidate.cbedNo}}
             </el-form-item>
           </el-col>
 
           <el-col :span="6" >
-            <div class="postil-text" >{{mapBigLog.czyNo.bcValue}}</div>
             <el-form-item label="住院号:" prop="czyNo" >
               {{formValidate.czyNo}}
             </el-form-item>
           </el-col >
 
           <el-col :span="12" >
-            <div class="postil-text" >{{mapBigLog.clesion.bcValue}}</div>
             <el-form-item label="病区:" prop="clesion" >
               {{formValidate.clesion}}
             </el-form-item>
@@ -91,22 +147,42 @@
         </el-row >
 
         <el-row class="table-back-two">
+          <!--批注-->
+          <el-col :span="24" >
+            <el-col :span="6" >
+              <el-form-item   >
+                <div class="postil-text" >{{mapBigLog.cruyuanDate.bcValue| placeholder}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" >
+              <el-form-item   >
+                <div class="postil-text"  >{{mapBigLog.cjlDate.bcValue| placeholder}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" >
+              <el-form-item   >
+                <div class="postil-text" >{{mapBigLog.cbscsz.bcValue|placeholder}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" >
+              <el-form-item   >
+                <div class="postil-text" >{{mapBigLog.chuanzheUser.bcValue|placeholder}}</div>
+              </el-form-item>
+            </el-col>
+          </el-col>
           <el-col :span="6" >
-            <div class="postil-text" >{{mapBigLog.cruyuanDate.bcValue}}</div>
             <el-form-item label="入院日期:" prop="cruyuanDate" >
               {{formValidate.cruyuanDate}}
             </el-form-item>
           </el-col>
 
           <el-col :span="6" >
-            <div class="postil-text" >{{mapBigLog.cjlDate.bcValue}}</div>
             <el-form-item label="记录日期:" prop="cjlDate" >
               {{formValidate.cjlDate}}
             </el-form-item>
           </el-col >
 
           <el-col :span="6" >
-            <div class="postil-text" >{{mapBigLog.cbscsz.bcValue}}</div>
             <el-form-item label="病史陈述者:" prop="cbscsz" >
               {{formValidate.cbscsz}}
             </el-form-item>
@@ -135,7 +211,9 @@
 
         <el-row class="table-back-two">
           <el-col :span="24" >
-            <div class="postil-text" >{{mapBigLog.czs.bcValue}}</div>
+            <el-form-item   >
+              <div class="postil-text" >{{mapBigLog.czs.bcValue}}</div>
+            </el-form-item>
             <el-form-item label="主诉:" prop="czs" >
               <el-input type="textarea" readonly v-model="formValidate.czs"></el-input>
             </el-form-item>
@@ -144,7 +222,9 @@
 
         <el-row class="table-back-one">
           <el-col :span="24" >
-            <div class="postil-text" >{{mapBigLog.cxbs.bcValue}}</div>
+            <el-form-item   >
+              <div class="postil-text" >{{mapBigLog.cxbs.bcValue}}</div>
+            </el-form-item>
             <el-form-item label="现病史:" prop="cxbs" >
               <el-input type="textarea" readonly v-model="formValidate.cxbs"></el-input>
             </el-form-item>
@@ -158,7 +238,9 @@
               <el-collapse-item title="既往史" name="1">
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cjwsYbjkqk.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cjwsYbjkqk.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="平时一般健康情况:" prop="cjwsYbjkqk" >
                       <el-input readonly type="textarea" v-model="formValidate.cjwsYbjkqk"></el-input>
                     </el-form-item>
@@ -167,7 +249,9 @@
 
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cjwsCrbs.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cjwsCrbs.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="传染病史:" prop="cjwsCrbs" >
                       <el-input readonly type="textarea" v-model="formValidate.cjwsCrbs"></el-input>
                     </el-form-item>
@@ -176,7 +260,9 @@
 
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cjwsSswss.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cjwsSswss.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="手术外伤史:" prop="cjwsSswss" >
                       <el-input readonly type="textarea" v-model="formValidate.cjwsSswss"></el-input>
                     </el-form-item>
@@ -184,7 +270,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cjwsYwgms.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cjwsYwgms.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="药物过敏史:" prop="cjwsYwgms" >
                       <el-input readonly type="textarea" v-model="formValidate.cjwsYwgms"></el-input>
                     </el-form-item>
@@ -195,7 +283,9 @@
               <el-collapse-item title="系统回顾" name="2">
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cxthgHxxt.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cxthgHxxt.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="呼吸系统:" prop="cxthgHxxt" >
                       <el-input readonly type="textarea" v-model="formValidate.cxthgHxxt"></el-input>
                     </el-form-item>
@@ -203,7 +293,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cxthgXuhxt.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cxthgXuhxt.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="循环系统:" prop="cxthgXuhxt" >
                       <el-input type="textarea" v-model="formValidate.cxthgXuhxt"></el-input>
                     </el-form-item>
@@ -211,7 +303,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cxthgXihxt.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cxthgXihxt.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="消化系统:" prop="cxthgXihxt" >
                       <el-input readonly type="textarea" v-model="formValidate.cxthgXihxt"></el-input>
                     </el-form-item>
@@ -219,7 +313,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cxthgMlxt.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cxthgMlxt.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="泌尿系统:" prop="cxthgMlxt" >
                       <el-input readonly type="textarea" v-model="formValidate.cxthgMlxt"></el-input>
                     </el-form-item>
@@ -227,7 +323,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cxthgXyxt.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cxthgXyxt.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="血液系统:" prop="cxthgXyxt" >
                       <el-input readonly type="textarea" v-model="formValidate.cxthgXyxt"></el-input>
                     </el-form-item>
@@ -235,7 +333,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cxthgNfmxt.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cxthgNfmxt.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="内分泌系统:" prop="cxthgNfmxt" >
                       <el-input readonly type="textarea" v-model="formValidate.cxthgNfmxt"></el-input>
                     </el-form-item>
@@ -243,7 +343,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cxthgSjxt1.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cxthgSjxt1.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="神经系统:" prop="cxthgSjxt1" >
                       <el-input readonly type="textarea" v-model="formValidate.cxthgSjxt1"></el-input>
                     </el-form-item>
@@ -251,7 +353,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cxthgSzxt.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cxthgSzxt.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="生殖系统:" prop="cxthgSzxt" >
                       <el-input  readonly type="textarea" v-model="formValidate.cxthgSzxt"></el-input>
                     </el-form-item>
@@ -259,7 +363,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cxthgGgjxt.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cxthgGgjxt.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="肌肉骨关节系统:" prop="cxthgGgjxt" >
                       <el-input readonly type="textarea" v-model="formValidate.cxthgGgjxt"></el-input>
                     </el-form-item>
@@ -267,7 +373,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cxthgGrs.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cxthgGrs.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="个人史:" prop="cxthgGrs" >
                       <el-input readonly type="textarea" v-model="formValidate.cxthgGrs"></el-input>
                     </el-form-item>
@@ -275,7 +383,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cxthgYjhys.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cxthgYjhys.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="月经婚育史:" prop="cxthgYjhys" >
                       <el-input  readonly type="textarea" v-model="formValidate.cxthgYjhys"></el-input>
                     </el-form-item>
@@ -283,7 +393,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.cxthgJts.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.cxthgJts.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="家庭史:" prop="cxthgJts" >
                       <el-input readonly type="textarea" v-model="formValidate.cxthgJts"></el-input>
                     </el-form-item>
@@ -292,48 +404,84 @@
               </el-collapse-item>
               <!---->
               <el-collapse-item title=" 体格检查" name="3">
+
                 <el-row >
+                  <!--批注-->
+                  <el-col :span="24" >
+                    <el-form-item   prop="cname" >
+                      <el-row>
+                        <el-col :span="3" >
+                          <el-form-item  label-width="50px" label="T:" prop="cname" >
+                            <div class="postil-text" >{{mapBigLog.ctgjcSmtzT.bcValue | placeholder}}</div>
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="3" >
+                          <el-form-item label-width="50px" label="C:" prop="cname" >
+                            <div class="postil-text"  >{{mapBigLog.ctgjcSmtzC.bcValue | placeholder}}</div>
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="3" >
+                          <el-form-item label-width="50px"  label="P:" prop="cname" >
+                            <div class="postil-text" >{{mapBigLog.ctgjcSmtzP.bcValue|placeholder}}</div>
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="3" >
+                          <el-form-item label="	次/分:" prop="cname" label-width="50px" >
+                            <div class="postil-text" >{{mapBigLog.ctgjcSmtzCf1.bcValue| typeText|placeholder}}</div>
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="3" >
+                          <el-form-item  label="R:"  prop="cname" label-width="50px" >
+                            <div class="postil-text" >{{mapBigLog.ctgjcSmtzR.bcValue| placeholder}}</div>
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="3" >
+                          <el-form-item  label="	次/分:" prop="cname"  label-width="50px">
+                            <div class="postil-text"  >{{mapBigLog.ctgjcSmtzCf2.bcValue| placeholder}}</div>
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="3" >
+                          <el-form-item label="BP:"  prop="cname"  label-width="50px">
+                            <div class="postil-text" >{{mapBigLog.ctgjcSmtzBp.bcValue|placeholder}}</div>
+                          </el-form-item>
+                        </el-col>
+                      </el-row>
+                    </el-form-item>
+                  </el-col>
                   <el-col :span="24">
                     <el-form-item label="生命体征:" prop="cxbs" >
                       <el-row >
                         <el-col :span="3">
-                          <div class="postil-text" >{{mapBigLog.ctgjcSmtzT.bcValue}}</div>
                           <el-form-item label="T:" prop="ctgjcSmtzT" label-width="50px">
                             {{formValidate.ctgjcSmtzT}}
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
-                          <div class="postil-text" >{{mapBigLog.ctgjcSmtzC.bcValue}}</div>
                           <el-form-item label="C:" prop="ctgjcSmtzC" label-width="50px">
                             {{formValidate.ctgjcSmtzC}}
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
-                          <div class="postil-text" >{{mapBigLog.ctgjcSmtzP.bcValue}}</div>
                           <el-form-item label="P:" prop="ctgjcSmtzP" label-width="50px">
                             {{formValidate.ctgjcSmtzP}}
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
-                          <div class="postil-text" >{{mapBigLog.ctgjcSmtzCf1.bcValue}}</div>
                           <el-form-item label="	次/分:" prop="ctgjcSmtzCf1" label-width="50px">
                             {{formValidate.ctgjcSmtzCf1}}
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
-                          <div class="postil-text" >{{mapBigLog.ctgjcSmtzR.bcValue}}</div>
                           <el-form-item label="R:" prop="ctgjcSmtzR" label-width="50px">
                             {{formValidate.ctgjcSmtzR}}
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
-                          <div class="postil-text" >{{mapBigLog.ctgjcSmtzCf2.bcValue}}</div>
                           <el-form-item label="	次/分:" prop="ctgjcSmtzCf2" label-width="50px">
                             {{formValidate.ctgjcSmtzCf2}}
                           </el-form-item>
                         </el-col>
                         <el-col :span="3">
-                          <div class="postil-text" >{{mapBigLog.ctgjcSmtzBp.bcValue}}</div>
                           <el-form-item label="BP:" prop="ctgjcSmtzBp" label-width="50px">
                             {{formValidate.ctgjcSmtzBp}}
                           </el-form-item>
@@ -347,7 +495,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcYbqk1.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcYbqk1.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="一般情况:" prop="ctgjcYbqk1" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcYbqk1"></el-input>
                     </el-form-item>
@@ -355,7 +505,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcPfnm.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcPfnm.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="皮肤粘膜:" prop="ctgjcPfnm" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcPfnm"></el-input>
                     </el-form-item>
@@ -364,7 +516,9 @@
 
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcQblbj.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcQblbj.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="浅表淋巴结:" prop="ctgjcQblbj" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcQblbj"></el-input>
                     </el-form-item>
@@ -373,7 +527,9 @@
 
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcTbqg.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcTbqg.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="头部及其器官:" prop="ctgjcTbqg" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcTbqg"></el-input>
                     </el-form-item>
@@ -381,7 +537,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcJb.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcJb.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="颈部:" prop="ctgjcJb" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcJb"></el-input>
                     </el-form-item>
@@ -389,7 +547,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcXb.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcXb.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="胸部:" prop="ctgjcXb" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcXb"></el-input>
                     </el-form-item>
@@ -397,7 +557,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcXl.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcXl.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="胸廊:" prop="ctgjcXl" >
                       <el-input type="textarea"  readonly v-model="formValidate.ctgjcXl"></el-input>
                     </el-form-item>
@@ -405,7 +567,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcRx.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcRx.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="乳腺:" prop="ctgjcRx" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcRx"></el-input>
                     </el-form-item>
@@ -413,7 +577,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcFei.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcFei.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="肺:" prop="ctgjcFei" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcFei"></el-input>
                     </el-form-item>
@@ -421,7 +587,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcSz1.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcSz1.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="视诊:" prop="ctgjcSz1" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcSz1"></el-input>
                     </el-form-item>
@@ -429,7 +597,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcCz1.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcCz1.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="触诊:" prop="ctgjcCz1" >
                       <el-input type="textarea"  readonly v-model="formValidate.ctgjcCz1"></el-input>
                     </el-form-item>
@@ -437,7 +607,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcKz1.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcKz1.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="叩诊:" prop="ctgjcKz1" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcKz1"></el-input>
                     </el-form-item>
@@ -445,7 +617,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcTz1.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcTz1.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="听诊:" prop="ctgjcTz1" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcTz1"></el-input>
                     </el-form-item>
@@ -453,7 +627,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcXz.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcXz.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="心脏:" prop="ctgjcXz" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcXz"></el-input>
                     </el-form-item>
@@ -461,7 +637,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcSz2.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcSz2.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="视诊:" prop="ctgjcSz2" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcSz2"></el-input>
                     </el-form-item>
@@ -469,7 +647,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcCz2.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcCz2.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="触诊:" prop="ctgjcCz2" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcCz2"></el-input>
                     </el-form-item>
@@ -490,7 +670,9 @@
 
                 <el-row style="text-align: center">
                   <el-col :span="3" :offset="2">
-                    <div class="postil-text" >{{mapBigLog.ctgjcKzy1.bcValue}}</div>
+                    <el-form-item  label-width="0" >
+                      <div class="postil-text" >{{mapBigLog.ctgjcKzy1.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label-width="0" prop="ctgjcKzy1" >
                       {{formValidate.ctgjcKzy1}}
                     </el-form-item>
@@ -499,7 +681,9 @@
                     <div>II</div>
                   </el-col>
                   <el-col :span="3" :offset="2">
-                    <div class="postil-text" >{{mapBigLog.ctgjcKzz1.bcValue}}</div>
+                    <el-form-item  label-width="0" >
+                      <div   class="postil-text" >{{mapBigLog.ctgjcKzz1.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label-width="0" prop="ctgjcKzz1" >
                       {{formValidate.ctgjcKzz1}}
                     </el-form-item>
@@ -507,7 +691,9 @@
                 </el-row>
                 <el-row style="text-align: center">
                   <el-col :span="3" :offset="2">
-                    <div class="postil-text" >{{mapBigLog.ctgjcKzy2.bcValue}}</div>
+                    <el-form-item   label-width="0">
+                      <div class="postil-text" >{{mapBigLog.ctgjcKzy2.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label-width="0" prop="ctgjcKzy2" >
                       {{formValidate.ctgjcKzy2}}
                     </el-form-item>
@@ -516,7 +702,9 @@
                     <div>III</div>
                   </el-col>
                   <el-col :span="3" :offset="2">
-                    <div class="postil-text" >{{mapBigLog.ctgjcKzz2.bcValue}}</div>
+                    <el-form-item   label-width="0">
+                      <div class="postil-text" >{{mapBigLog.ctgjcKzz2.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item  prop="ctgjcKzz2" label-width="0">
                       {{formValidate.ctgjcKzz2}}
                     </el-form-item>
@@ -524,7 +712,9 @@
                 </el-row>
                 <el-row style="text-align: center">
                   <el-col :span="3" :offset="2">
-                    <div class="postil-text" >{{mapBigLog.ctgjcKzy3.bcValue}}</div>
+                    <el-form-item   label-width="0">
+                      <div class="postil-text" >{{mapBigLog.ctgjcKzy3.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item  prop="ctgjcKzy3" label-width="0">
                       {{formValidate.ctgjcKzy3}}
                     </el-form-item>
@@ -533,7 +723,9 @@
                     <div>IV</div>
                   </el-col>
                   <el-col :span="3" :offset="2">
-                    <div class="postil-text" >{{mapBigLog.ctgjcKzz3.bcValue}}</div>
+                    <el-form-item   label-width="0">
+                      <div class="postil-text" >{{mapBigLog.ctgjcKzz3.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item  prop="ctgjcKzz3" label-width="0">
                       {{formValidate.ctgjcKzz3}}
                     </el-form-item>
@@ -541,7 +733,9 @@
                 </el-row>
                 <el-row style="text-align: center">
                   <el-col :span="3" :offset="2">
-                    <div class="postil-text" >{{mapBigLog.ctgjcKzy4.bcValue}}</div>
+                    <el-form-item   label-width="0">
+                      <div class="postil-text" >{{mapBigLog.ctgjcKzy4.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item  prop="ctgjcKzy4" label-width="0">
                       {{formValidate.ctgjcKzy4}}
                     </el-form-item>
@@ -550,7 +744,9 @@
                     <div>V</div>
                   </el-col>
                   <el-col :span="3" :offset="2">
-                    <div class="postil-text" >{{mapBigLog.ctgjcKzz4.bcValue}}</div>
+                    <el-form-item   label-width="0">
+                      <div class="postil-text" >{{mapBigLog.ctgjcKzz4.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item  prop="ctgjcKzz4" label-width="0">
                       {{formValidate.ctgjcKzz4}}
                     </el-form-item>
@@ -559,7 +755,9 @@
 
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcTz2.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.ctgjcTz2.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="听诊:" prop="ctgjcTz2" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcTz2"></el-input>
                     </el-form-item>
@@ -568,7 +766,9 @@
 
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcRdm.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcRdm.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="桡动脉:" prop="ctgjcRdm" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcRdm"></el-input>
                     </el-form-item>
@@ -576,7 +776,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcZwxg.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.ctgjcZwxg.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="周围血管征:" prop="ctgjcZwxg" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcZwxg"></el-input>
                     </el-form-item>
@@ -584,7 +786,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcFb.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcFb.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="腹部:" prop="ctgjcFb" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcFb"></el-input>
                     </el-form-item>
@@ -592,7 +796,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcSz3.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcSz3.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="视诊:" prop="ctgjcSz3" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcSz3"></el-input>
                     </el-form-item>
@@ -600,7 +806,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcCz3.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.ctgjcCz3.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="触诊:" prop="ctgjcCz3" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcCz3"></el-input>
                     </el-form-item>
@@ -608,7 +816,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcYbqk2.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcYbqk2.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="一般情况:" prop="ctgjcYbqk2" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcYbqk2"></el-input>
                     </el-form-item>
@@ -616,7 +826,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcGz.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcGz.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="肝脏:" prop="ctgjcGz" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcGz"></el-input>
                     </el-form-item>
@@ -624,7 +836,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcPz.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.ctgjcPz.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="脾脏:" prop="ctgjcPz" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcPz"></el-input>
                     </el-form-item>
@@ -632,7 +846,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcSz.bcValue}}</div>
+                    <el-form-item   >
+                      <div class="postil-text" >{{mapBigLog.ctgjcSz.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="肾脏:" prop="ctgjcSz" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcSz"></el-input>
                     </el-form-item>
@@ -640,7 +856,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcQt.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcQt.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="其他:" prop="ctgjcQt" >
                       <el-input type="textarea"  readonly v-model="formValidate.ctgjcQt"></el-input>
                     </el-form-item>
@@ -648,7 +866,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcKz3.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcKz3.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="叩诊:" prop="ctgjcKz3" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcKz3"></el-input>
                     </el-form-item>
@@ -656,7 +876,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcTz3.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcTz3.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="听诊:" prop="ctgjcTz3" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcTz3"></el-input>
                     </el-form-item>
@@ -664,7 +886,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcGzc.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcGzc.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="肛门、直肠:" prop="ctgjcGzc" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcGzc"></el-input>
                     </el-form-item>
@@ -672,7 +896,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcWszq.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcWszq.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="外生殖器:" prop="ctgjcWszq" >
                       <el-input type="textarea"  readonly v-model="formValidate.ctgjcWszq"></el-input>
                     </el-form-item>
@@ -680,7 +906,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcJz.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcJz.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="脊柱:" prop="ctgjcJz" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcJz"></el-input>
                     </el-form-item>
@@ -688,7 +916,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcShiz.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcShiz.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="四肢:" prop="ctgjcShiz" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcShiz"></el-input>
                     </el-form-item>
@@ -696,7 +926,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcSjxt2.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcSjxt2.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="神经系统:" prop="ctgjcSjxt2" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcSjxt2"></el-input>
                     </el-form-item>
@@ -704,7 +936,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcZkqk.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcZkqk.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="专科情况:" prop="ctgjcZkqk" >
                       <el-input type="textarea"  readonly v-model="formValidate.ctgjcZkqk"></el-input>
                     </el-form-item>
@@ -712,7 +946,9 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <div class="postil-text" >{{mapBigLog.ctgjcSysjc.bcValue}}</div>
+                    <el-form-item  >
+                      <div class="postil-text" >{{mapBigLog.ctgjcSysjc.bcValue}}</div>
+                    </el-form-item>
                     <el-form-item label="实验室及特殊检查:" prop="ctgjcSysjc" >
                       <el-input type="textarea" readonly v-model="formValidate.ctgjcSysjc"></el-input>
                     </el-form-item>
@@ -725,7 +961,9 @@
 
         <el-row class="table-back-one">
           <el-col :span="24" >
-            <div class="postil-text" >{{mapBigLog.cblzy.bcValue}}</div>
+            <el-form-item  >
+              <div class="postil-text" >{{mapBigLog.cblzy.bcValue}}</div>
+            </el-form-item>
             <el-form-item label="病例摘要:" prop="cblzy" >
               <el-input type="textarea" readonly v-model="formValidate.cblzy"></el-input>
             </el-form-item>
@@ -733,20 +971,26 @@
         </el-row>
         <el-row class="table-back-two">
           <el-col :span="24" >
-            <div class="postil-text" >{{mapBigLog.ccbzd.bcValue}}</div>
+            <el-form-item  >
+              <div class="postil-text" >{{mapBigLog.ccbzd.bcValue}}</div>
+            </el-form-item>
             <el-form-item label="初步诊断:" prop="ccbzd" >
               <el-input type="textarea" readonly v-model="formValidate.ccbzd"></el-input>
             </el-form-item>
 
           </el-col>
           <el-col :span="5" :offset="1">
-            <div class="postil-text" >{{mapBigLog.cysqm1.bcValue}}</div>
+            <el-form-item  >
+              <div class="postil-text" >{{mapBigLog.cysqm1.bcValue}}</div>
+            </el-form-item>
             <el-form-item label="医师签名:" prop="cysqm1" >
               {{formValidate.cysqm1}}
             </el-form-item>
           </el-col>
           <el-col :span="5" >
-            <div class="postil-text" >{{mapBigLog.cysqm1Date.bcValue}}</div>
+            <el-form-item  >
+              <div class="postil-text" >{{mapBigLog.cysqm1Date.bcValue}}</div>
+            </el-form-item>
             <el-form-item label="时间:" prop="cysqm1Date" label-width="70px">
               {{formValidate.cysqm1Date}}
             </el-form-item>
@@ -754,19 +998,25 @@
         </el-row>
         <el-row class="table-back-one">
           <el-col :span="24" >
-            <div class="postil-text" >{{mapBigLog.cryzd.bcValue}}</div>
+            <el-form-item  >
+              <div class="postil-text" >{{mapBigLog.cryzd.bcValue}}</div>
+            </el-form-item>
             <el-form-item label="入院诊断:" prop="cryzd" >
               <el-input readonly type="textarea" v-model="formValidate.cryzd"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="5" :offset="1">
-            <div class="postil-text" >{{mapBigLog.cysqm2.bcValue}}</div>
+            <el-form-item  >
+              <div class="postil-text" >{{mapBigLog.cysqm2.bcValue}}</div>
+            </el-form-item>
             <el-form-item label="医师签名:" prop="cysqm2" >
               {{formValidate.cysqm2}}
             </el-form-item>
           </el-col>
           <el-col :span="5" >
-            <div class="postil-text" >{{mapBigLog.cysqm2Date.bcValue}}</div>
+            <el-form-item  >
+              <div class="postil-text" >{{mapBigLog.cysqm2Date.bcValue}}</div>
+            </el-form-item>
             <el-form-item label-width="70px" label="时间:" prop="cysqm2Date" >
               {{formValidate.cysqm2Date}}
             </el-form-item>

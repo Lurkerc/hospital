@@ -332,23 +332,29 @@
       //根据教学周历ID获取每个月课程设置--server回调
       getMonthCourseData(responseData){
         let data = responseData.data;
+        if(!this.valDataType(data,"Array")) return;
+        //if(Util.isEmptyObject(data)) return;
         let myData = [];
-        if(Util.isEmptyObject(data)){
+        if(data.length==0){
           calendarSet.setCalData([]);
           return;
         }
         let currFormate= ["上","下","晚"];
-        Util._.forEach(data,function (v,k) {
-          let contentArr = v;
-          for(var i=0;i<contentArr.length;i++){
-            let num = (i+1);
-            myData.unshift({
-              title: currFormate[contentArr[i]["timeType"]]+num+":"+contentArr[i]["depName"]+"   "+contentArr[i]["timeStr"],
-              start: k,
-              end: k,
-            })
-          }
-        })
+        for(var i=0,item;i<data.length;i++){
+          item = data[i];
+          Util._.forEach(item,function (v,k) {
+            let contentArr = v;
+            for(var i=0;i<contentArr.length;i++){
+              let num = (i+1);
+              myData.unshift({
+                title: currFormate[contentArr[i]["timeType"]]+num+":"+contentArr[i]["depName"]+"   "+contentArr[i]["timeStr"],
+                start: k,
+                end: k,
+              })
+            }
+
+          })
+        }
         calendarSet.setCalData(myData);
       },
 
@@ -501,10 +507,10 @@
 
 
       goPrev(){
-        this.$children[4].goPrev();
+        this.$children[5].goPrev();
       },
       goNext(){
-        this.$children[4].goNext();
+        this.$children[5].goNext();
       },
       changeMonth(start, end, current,foramatData) {
         this.monthTitle = foramatData(current,'MMMM YYYY');

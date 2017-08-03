@@ -144,6 +144,7 @@ const getVueObj = function (vue) {
       "0": "不需要",
       "1": "需要"
     },
+
     userType: { // 用户类型
       "ALL": "所有人员",
       "ZYY": "住院医",
@@ -176,7 +177,13 @@ const getVueObj = function (vue) {
       "3": "试运行",
       "4": "在运行",
       "5": "已退出",
-    }
+    },
+    //占位符
+    placeholder:{
+      '' :  '　',
+      'null' : '　',
+      'undefined':'　'
+    },
   };
 
   const filters = [ // 声明全局过滤器及回调函数

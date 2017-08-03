@@ -77,7 +77,7 @@
               <el-button size="small" @click="show(scope.row)">查看</el-button>
               <!--<el-button v-if="scope.row.cstate=='NO_SUBMIT'"  size="small" @click="audit(scope.row)">审核</el-button>-->
               <el-button v-if="scope.row.cstate != 'PASS'"  size="small" @click="audit(scope.row)">审核</el-button>
-              <el-button v-if="scope.row.ctype == 'DBL' && scope.row.cstate == 'NO_PASS'"  size="small" @click="postil(scope.row)">批注</el-button>
+              <el-button v-if="scope.row.cstate != 'PASS'" size="small" @click="postil(scope.row)">批注</el-button>
             </template>
           </el-table-column>
           <el-table-column

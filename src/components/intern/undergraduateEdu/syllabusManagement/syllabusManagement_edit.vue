@@ -212,7 +212,6 @@
           item = data[i];
           Util._.forEach(item,function (v,k) {
             let contentArr = v;
-            console.log(contentArr);
             for(var i=0;i<contentArr.length;i++){
               let num = (i+1);
               myData.unshift({

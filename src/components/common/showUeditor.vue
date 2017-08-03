@@ -26,6 +26,11 @@
         }
       }
     },
+    data(){
+      return{
+        UEeditor:null,
+      }
+    },
     components: { VueUEditor },
     methods: {
       editorReady (editorInstance) {

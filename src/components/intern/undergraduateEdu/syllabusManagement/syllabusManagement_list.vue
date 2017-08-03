@@ -212,6 +212,8 @@
         }
         this.setTableData();
       },
+
+
       //设置表格及分页的位置
       setTableDynHeight(){
         let content = this.$refs.content;
@@ -220,6 +222,7 @@
         let paginationHt = 50;
         this.dynamicHt = parHt - myTable.offsetTop - paginationHt;
       },
+
 
       //通过get请求列表数据
       updateListData(responseData){
@@ -259,7 +262,6 @@
       },
 
 
-
       /*
        * 监听子组件通讯的方法
        * 作用:根据不同的参数关闭对应的模态
@@ -268,6 +270,8 @@
       cancel(targer){
         this[targer+'Modal'] = false;
       },
+
+
       /*
        * 监听子组件通讯的方法
        * 作用:ajax请求成功回调,该监听方法在libs/util 中的混合模式下定义回调
@@ -296,6 +300,8 @@
           this.setTableData();
         }
       },
+
+
       /*
        * 打开指定的模态窗体
        * @param options string 当前指定的模态:"add"、"edit"

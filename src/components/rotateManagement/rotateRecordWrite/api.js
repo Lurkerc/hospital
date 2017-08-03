@@ -215,4 +215,34 @@ export default {
   tubeBedRecordingAdd:'/traineeRotary/tubeBedRecording/add', //{id}
 
 
+
+  /**
+   * 管床记录
+   * */
+
+  /*专题概述查看(轮转生本人查看) get*/
+  thematicReviewGet:'/traineeRotary/thematicReview/get',
+
+  /*专题概述查看(教育处人员查看) get*/
+  thematicReviewGetId:'/traineeRotary/thematicReview/get/',//{id}
+
+  /*专题综述审核 post*/
+  thematicReviewReview:'/traineeRotary/thematicReview/review/',//{id}
+
+  /*专题概述修改 post*/
+  thematicReviewModify:'/traineeRotary/thematicReview/modify/',//{id}
+
+  /*专题概述查看(教育处人员查看列表) get*/
+  thematicReviewPageList:'/traineeRotary/thematicReview/pageList',
+
+  /*专题概述上报 put*/
+  thematicReviewModifySubmit:'/traineeRotary/thematicReview/modifySubmit/',//{id}
+
+  /*专题概述添加上报 post*/
+  thematicReviewAddSubmit:'/traineeRotary/thematicReview/addSubmit',//{id}
+
+  /*专题概述添加 post*/
+  thematicReviewAdd:'/traineeRotary/thematicReview/add',//{id}
+
+
 }
