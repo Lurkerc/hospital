@@ -63,6 +63,7 @@
 <script>
   let sd = null; // 倒计时
   let studentTime = null;
+  let isLive = true;
   import api from '../api';
   export default {
     props: ['nowIndex', 'index', 'sceneId', 'stationId', 'roomId', 'userSum'],
@@ -238,7 +239,9 @@
       },
       // 更新考核内容数据
       updateExmContent(res) {
-        studentTime = setTimeout(() => this.getContentByTeacher(), 30000)
+        if (isLive) {
+          studentTime = setTimeout(() => this.getContentByTeacher(), 30000)
+        }
         if (res.data) {
           this.exmContent = res.data;
         } else {
@@ -268,6 +271,9 @@
       this.teacherUserId = this.stationRoom.teacherList[0].userId;
       this.getNowTime();
       this.changeStudent()
+    },
+    beforeDestroy() {
+      isLive = false
     },
     destroyed() {
       clearTimeout(studentTime);
