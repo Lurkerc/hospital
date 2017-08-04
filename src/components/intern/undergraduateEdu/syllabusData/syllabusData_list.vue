@@ -27,11 +27,11 @@
           align="center"
           width="160">
           <template scope="scope">
-            <el-button v-if="scope.row.courseDataId!=''" size="small" @click="show(scope.$index, scope.row)">查看</el-button>
-            <el-button v-if="scope.row.courseDataId!=''" size="small" @click="edit(scope.$index, scope.row)">修改</el-button>
+            <el-button v-if="typeof scope.row.courseDataId=='number'" size="small" @click="show(scope.$index, scope.row)">查看</el-button>
+            <el-button v-if="typeof scope.row.courseDataId=='number'" size="small" @click="edit(scope.$index, scope.row)">修改</el-button>
             <!--<el-button size="small" @click="show(scope.$index, scope.row)">查看</el-button>
             <el-button size="small" @click="edit(scope.$index, scope.row)">修改</el-button>-->
-            <el-button v-if="scope.row.courseDataId==''" size="small" @click="upload(scope.$index, scope.row)">上传</el-button>
+            <el-button v-if="typeof scope.row.courseDataId!='number'" size="small" @click="upload(scope.$index, scope.row)">上传</el-button>
           </template>
         </el-table-column>
         <el-table-column

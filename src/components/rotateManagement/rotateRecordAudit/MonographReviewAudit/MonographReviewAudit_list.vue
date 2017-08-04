@@ -16,12 +16,12 @@
         </el-col>
         <!--搜索项-->
         <el-col :span="14"  align="right">
-          <el-form-item label="病名" prop="name" >
-            <el-input style="width:300px;"   v-model="formValidate.name" placeholder="输入病名搜索">
+          <el-form-item label="姓名" prop="userName" >
+            <el-input style="width:300px;"   v-model="formValidate.userName" placeholder="输入姓名搜索">
               <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
             </el-input>
           </el-form-item>
-          <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+          <!--<el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>-->
         </el-col>
       </el-row>
       </br>
@@ -29,10 +29,8 @@
       <div v-show="searchMore"  ref="searchMore">
         <el-form-item label="科室" prop="userType" >
           <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
-            <!---->
             <select-option :type="'userRotaryDeptlist'" :userType="userType" :userId="userId"  name="depName" id="depId"></select-option>
           </el-select>
-
         </el-form-item>
 
         <el-button type="info" @click="searchEvent">查询</el-button>
@@ -79,36 +77,16 @@
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
-            prop="depName"
-            label="科室"
+            prop="userName"
+            label="姓名"
             width="200">
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
             align="center"
-            prop="diseaseName"
-            label="病名"
+            prop="createTime"
+            label="创建时间"
             width="200">
-          </el-table-column>
-          <el-table-column
-            show-overflow-tooltip
-            align="center"
-            prop="caseNumber"
-            label="病历号"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            show-overflow-tooltip
-            prop="tubeTime"
-            label="操作时间"
-            align="center"
-            width="200"
-          >
-          </el-table-column>
-          <el-table-column
-            show-overflow-tooltip
-            prop="teacherName"
-            label="指导老师">
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
@@ -118,7 +96,6 @@
               {{scope.row.state | typeText}}
             </template>
           </el-table-column>
-
         </el-table>
       </div>
       <!--分页-->
@@ -204,10 +181,7 @@
         listUrl:'/role/list?name=&identify=&type=',
         deleteUrl:'/role/remove',
         formValidate: {
-          depId: '',       //科室ID
-          name: '',       //操作名称
-          sortby: '',    //   排序列
-          order: ''     //升序、降序
+          userName:"",  //用户名
         },
 
         operailityData:'',
@@ -216,16 +190,10 @@
         self: this,
         tableData: [
 //          {
-//            "id":111,
-//            "depName":"科室",
-//            "createUserName":"名称",
-//            "createTime":"2014-01-01 10:10:10",
-//            "clinicalName":"操作名称",
-//            "clinicalType":"病例号",
-//            "clinicalTime":"2016-01-01",
-//            "note":"备注说明",
-//            "teacherName":"指导老师",
-//            "state":"NO_SUBMIT"
+//            "id":11,
+//            "userName":"张三",
+//            "state":"SUBMIT",
+//            "createTime":"2017-01-01 10:20:08"
 //          }
         ],
         searchMore: false,
@@ -238,7 +206,7 @@
           paramsData:'listUrl',
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:url.tubeBedRecordingMangePageList,
+            url:url.thematicReviewPageList,
             params:{}
           }
         },

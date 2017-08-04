@@ -9,7 +9,7 @@
     <div style="font-size: 22px;text-align: center" v-if="what==''">
       加载中
     </div>
-    <el-form v-else-if="what=='view'"  :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="100px" >
+    <el-form v-else-if="what=='view'"  :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="120px" >
       <el-row >
         <el-col :span="16" :offset="2">
           <el-form-item label="填写人:" prop="diseaseName">
@@ -28,7 +28,7 @@
 
       <el-row >
         <el-col :span="16" :offset="2">
-          <el-form-item label="专题综述:" prop="diseaseName">
+          <el-form-item label="报告经验与总结:" prop="diseaseName">
             <div v-html="formValidate.content" ></div>
           </el-form-item>
         </el-col>

@@ -146,4 +146,33 @@ export default {
   /*管床记录审核 post*/
   tubeBedRecordingReview:'/traineeRotary/tubeBedRecording/review/', //{ids}
 
+
+  /**
+   * 专题概述
+   * */
+
+
+  /*专题概述查看(教育处人员查看) get*/
+  thematicReviewGetId:'/traineeRotary/thematicReview/get/',//{id}
+
+  /*专题综述审核 post*/
+  thematicReviewReview:'/traineeRotary/thematicReview/review/',//{id}
+
+  /*专题概述查看(教育处人员查看列表) get*/
+  thematicReviewPageList:'/traineeRotary/thematicReview/pageList',
+
+  /**
+   * 调查报告
+   * */
+
+  /*调查报告或经验总结查看(教育处人员查看) post*/
+  medicalEthicsGetId:'/traineeRotary/medicalEthics/get/',//{id}
+
+  /*调查报告或经验总结审核 post*/
+  medicalEthicsReview:'/traineeRotary/medicalEthics/review/',//{id}
+
+  /*调查报告或经验总结查看(教育处人员查看列表) post*/
+  medicalEthicsPageList:'/traineeRotary/medicalEthics/pageList',
+
+
 }

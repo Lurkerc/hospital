@@ -217,23 +217,14 @@ export default {
 
 
   /**
-   * 管床记录
+   * 专题概述
    * */
 
   /*专题概述查看(轮转生本人查看) get*/
   thematicReviewGet:'/traineeRotary/thematicReview/get',
 
-  /*专题概述查看(教育处人员查看) get*/
-  thematicReviewGetId:'/traineeRotary/thematicReview/get/',//{id}
-
-  /*专题综述审核 post*/
-  thematicReviewReview:'/traineeRotary/thematicReview/review/',//{id}
-
   /*专题概述修改 post*/
   thematicReviewModify:'/traineeRotary/thematicReview/modify/',//{id}
-
-  /*专题概述查看(教育处人员查看列表) get*/
-  thematicReviewPageList:'/traineeRotary/thematicReview/pageList',
 
   /*专题概述上报 put*/
   thematicReviewModifySubmit:'/traineeRotary/thematicReview/modifySubmit',//{id}
@@ -249,20 +240,14 @@ export default {
    * 调查报告
    * */
 
-  /*调查报告或经验总结查看(教育处人员查看) post*/
-  medicalEthicsGetId:'/traineeRotary/medicalEthics/get/',//{id}
 
-  /*调查报告或经验总结查看(教育处人员查看) post*/
+  /*调查报告或经验总结查看() post*/
   medicalEthicsGet:'/traineeRotary/medicalEthics/get',
 
-  /*调查报告或经验总结审核 post*/
-  medicalEthicsReview:'/traineeRotary/medicalEthics/review/',//{id}
 
   /*调查报告或经验总结修改 post*/
   medicalEthicsModify:'/traineeRotary/medicalEthics/modify/',//{id}
 
-  /*调查报告或经验总结查看(教育处人员查看列表) post*/
-  medicalEthicsPageList:'/traineeRotary/medicalEthics/pageList',
 
   /*调查报告或经验总结上报 post*/
   medicalEthicsModifySubmit:'/traineeRotary/medicalEthics/modifySubmit',//{id}

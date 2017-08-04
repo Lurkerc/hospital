@@ -8,16 +8,26 @@
 
     <div class="newCalendar" v-if="stepMaker=='third'">
       <el-row :gutter="10">
-        <el-col :span="24" v-if="formValidate.weekSetStartTime!=''">
+        <el-col :span="3"><div class="cal-schoolTit" style="text-align: right;">学校名称:</div></el-col>
+        <el-col :span="20">
+          <div class="cal-schoolTit">{{formValidate.schoolName}}</div>
+        </el-col>
+      </el-row>
+      <el-row :gutter="10">
+        <el-col :span="3">&nbsp;</el-col>
+        <el-col :span="20" v-if="formValidate.weekSetStartTime!=''">
           <div class="cal-schoolTit">
-            南京鼓楼医院：{{formValidate.weekSetStartTime.split('-')[0]}} ~ {{formValidate.weekSetEndTime.split('-')[0]}}学年，{{formValidate.semester=='ONE'?'第一学期':'第二学期'}}教学周历
+            {{formValidate.weekSetStartTime.split('-')[0]}} ~ {{formValidate.weekSetEndTime.split('-')[0]}}学年，{{formValidate.semester=='ONE'?'第一学期':'第二学期'}}教学周历
           </div>
         </el-col>
       </el-row>
       <el-row :gutter="10">
-        <el-col :span="24">
+        <el-col :span="3">
+          <div class="cal-schoolTit" style="text-align: right;">学期起止时间：</div>
+        </el-col>
+        <el-col :span="20">
           <div class="cal-schoolTit">
-            学期起止时间：{{formValidate.weekSetStartTime}} 至 {{formValidate.weekSetEndTime}}
+            {{formValidate.weekSetStartTime}} 至 {{formValidate.weekSetEndTime}}
             ，{{formValidate.gradeNum}}级，{{formValidate.classNum}}班
           </div>
         </el-col>

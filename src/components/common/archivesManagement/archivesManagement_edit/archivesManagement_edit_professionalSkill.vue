@@ -108,7 +108,7 @@
     data (){
       return{
         //保存按钮基本信息
-        loadBtn:{title:'保存',callParEvent:'listenSubEvent'},
+        loadBtn:{title:'上报审核',callParEvent:'listenSubEvent'},
         dataTemplate:{
           "technicalTitle":"",
           "approvalDate":"",

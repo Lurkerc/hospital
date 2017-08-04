@@ -30,10 +30,14 @@
   <div class="newCalendar" v-show="stepMaker=='second'">
     <el-form ref="formValidate" :rules="this.$store.state.rules.calendar" :model="formValidate" class="demo-form-inline" label-width="120px">
     <br />
+      <el-row :gutter="10">
+        <el-col :span="3"><div class="cal-schoolTit" style="text-align: right;">学校名称:</div></el-col>
+        <el-col :span="20">
+          <div class="cal-schoolTit">{{formValidate.schoolNames}}</div>
+        </el-col>
+      </el-row>
     <el-row :gutter="10">
-      <el-col :span="3">
-        <div class="cal-schoolTit" style="text-align: right;">南京鼓楼医院:</div>
-      </el-col>
+      <el-col :span="3">&nbsp;</el-col>
       <el-col :span="4" v-if="formValidate.weekSetStartTime!=''">
         <div class="cal-schoolTit">
           {{studyYearStart}} ~ {{studyYearEnd}}学年,
@@ -108,9 +112,16 @@
   </div>
   <div class="newCalendar" v-if="stepMaker=='third'">
     <el-row :gutter="10">
-      <el-col :span="24" v-if="formValidate.weekSetStartTime!=''">
+      <el-col :span="3"><div class="cal-schoolTit" style="text-align: right;">学校名称：</div></el-col>
+      <el-col :span="20">
+        <div class="cal-schoolTit">{{formValidate.schoolNames}}</div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="10">
+      <el-col :span="3">&nbsp;</el-col>
+      <el-col :span="20" v-if="formValidate.weekSetStartTime!=''">
         <div class="cal-schoolTit">
-          南京鼓楼医院：{{studyYearStart}} ~ {{studyYearEnd}}学年，{{formValidate.semester=='ONE'?'第一学期':'第二学期'}}教学周历
+          {{studyYearStart}} ~ {{studyYearEnd}}学年，{{formValidate.semester=='ONE'?'第一学期':'第二学期'}}教学周历
         </div>
       </el-col>
     </el-row>
@@ -413,8 +424,9 @@
 
       //上报
       saveMess(){
-        this.submitCalendarTitle.ajaxParams.url+= "/" +this.weekSetId;
-        this.ajax(this.submitCalendarTitle);
+        let submitCalendarTitle = Util._.defaultsDeep({},this.submitCalendarTitle);
+        submitCalendarTitle.ajaxParams.url+= "/" +this.weekSetId;
+        this.ajax(submitCalendarTitle);
       },
 
 
@@ -503,14 +515,15 @@
       //获取周历信息成功回调
       getMainData(responseData){
         this.formValidate  = responseData.data;
+        this.formValidate.schoolNames = responseData.data.schoolName;
       },
 
 
       goPrev(){
-        this.$children[5].goPrev();
+        this.$children[6].goPrev();
       },
       goNext(){
-        this.$children[5].goNext();
+        this.$children[6].goNext();
       },
       changeMonth(start, end, current,foramatData) {
         this.monthTitle = foramatData(current,'MMMM YYYY');

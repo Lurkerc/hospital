@@ -238,6 +238,10 @@
         if(this.listMessTitle.ids!=m.ids){
             return;
         }else {
+          if(res.data==0){
+            this.showMess('无课程资料');
+            return;
+          }
             this.data = res.data;
             this.popover=true;
         }

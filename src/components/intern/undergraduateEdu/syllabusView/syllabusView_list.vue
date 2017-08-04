@@ -219,7 +219,6 @@
       convertData(data){
           if(data==0)return data;
         let tempArr = [];
-        console.log(data);
 
         for(let i in data){
           let time= i;
@@ -242,7 +241,6 @@
           }
 
         }
-        console.log(tempArr);
           return tempArr
       },
 

@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="100px" >
+    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="120px" >
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="填写人:" prop="diseaseName">
@@ -20,7 +20,7 @@
 
       <el-row >
         <el-col :span="16" :offset="4">
-          <el-form-item label="专题综述:" prop="diseaseName">
+          <el-form-item label="报告经验与总结:" prop="diseaseName">
             <div v-html="getData.content" ></div>
           </el-form-item>
         </el-col>
@@ -121,7 +121,7 @@
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
-            url:this.url.thematicReviewReview+this.operailityData.id,
+            url:this.url.medicalEthicsReview+this.operailityData.id,
             method:'post',
             data:{},
           }
@@ -130,7 +130,7 @@
         listMessTitle: {
           ajaxSuccess: 'updateListData',
           ajaxParams: {
-            url:this.url.thematicReviewGetId+this.operailityData.id, //向后台请求数据的地址
+            url:this.url.medicalEthicsGetId+this.operailityData.id, //向后台请求数据的地址
 
           }
         },

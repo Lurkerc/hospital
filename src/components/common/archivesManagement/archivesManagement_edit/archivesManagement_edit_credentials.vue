@@ -111,7 +111,7 @@
           "remark":"",
           "archivesId":this.dataId
         },
-        loadBtn:{title:'保存',callParEvent:'listenSubEvent'},
+        loadBtn:{title:'上报审核',callParEvent:'listenSubEvent'},
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         editMessTitle:{
           type:'edit',

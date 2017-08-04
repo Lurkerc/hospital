@@ -84,7 +84,7 @@
           <el-table-column
             prop="schoolName"
             label="学校"
-          >
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="gradeNum"

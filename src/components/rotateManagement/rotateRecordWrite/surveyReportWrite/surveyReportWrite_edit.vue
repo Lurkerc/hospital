@@ -6,10 +6,10 @@
 ----------------------------------->
 <template>
   <div>
-    <el-form :model="ueditorVal" ref="formValidate"  class="demo-form-inline" label-width="100px" >
+    <el-form :model="ueditorVal" ref="formValidate"  class="demo-form-inline" label-width="120px" >
       <el-row >
         <el-col :span="21" :offset="1">
-          <el-form-item label="专题综述:" prop="diseaseName" >
+          <el-form-item label="报告经验与总结:" prop="diseaseName" >
             <viewUEditor :name="'ud1'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
           </el-form-item>
         </el-col>

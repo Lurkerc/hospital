@@ -34,7 +34,7 @@
         <el-col :span="3" style="text-align: right;line-height: 30px;">授课老师</el-col>
         <el-col :span="20">
           <el-form-item label="">
-            {{formValidate.courseTime}}
+            {{formValidate.teachNames}}
           </el-form-item>
         </el-col>
       </el-row>
@@ -42,7 +42,7 @@
         <el-col :span="3" style="text-align: right;line-height: 30px;">授课地点</el-col>
         <el-col :span="20">
           <el-form-item label="">
-            {{formValidate.courseTime}}
+            {{formValidate.courseAddress}}
           </el-form-item>
         </el-col>
       </el-row>
@@ -74,11 +74,21 @@
       return {
         courseNames:"",
         formValidate: {
-          "courseDataId":23,
+          /*"courseDataId":23,
           "courseContent":"111",
           "courseType":"见习",
           "courseTime":"2017-02-08",
+          "courseDataState":"RELEASE",*/
+
+          "courseDataId":23,
+          "courseContent":"111",
+          "courseType":"见习",
+          "teachNames":"老师",
+          "courseAddress":"授课地点",
+          "courseTime":"2017-02-08",
+          "courseDataNote":"备注",
           "courseDataState":"RELEASE",
+
           "fileList":[
             {
               "fileId":"2",
