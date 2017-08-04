@@ -389,15 +389,18 @@
 
 
       saveDataToParent(){
-        this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
-        this.$emit("setSaveData",this.editMessTitle.ajaxParams.data);
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit) {
+          this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          this.$emit("setSaveData", this.editMessTitle.ajaxParams.data);
+        }
       },
 
 
       listenSubEvent(){
         let isSubmit = this.submitForm("formValidate");
         if(isSubmit) {
-
+          this.$emit("subAuditArchives",this.editMessTitle.ajaxParams.data);
         }
       },
 
@@ -477,7 +480,6 @@
        * @param val string || number  选中毕业学校的id
        * */
       setSltOptionValue(val,id){
-        alert(val)
         this.formValidate.schoolId = id;
         this.formValidate.school = val;
       }

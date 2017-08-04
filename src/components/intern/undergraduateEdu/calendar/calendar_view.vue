@@ -193,8 +193,8 @@
         if(!this.valDataType(data,"Array")) return;
         //if(Util.isEmptyObject(data)) return;
         let myData = [];
+        calendarSet.setCalData([]);
         if(data.length==0){
-          calendarSet.setCalData([]);
           return;
         }
         let currFormate= ["上","下","晚"];

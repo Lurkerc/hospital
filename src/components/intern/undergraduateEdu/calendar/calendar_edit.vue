@@ -310,7 +310,7 @@
 
         //上报教学周历设置
         submitCalendarTitle:{
-          type:'add',
+          type:'edit',
           successTitle:'添加成功!',
           errorTitle:'添加失败!',
           ajaxError:'ajaxError',

@@ -205,14 +205,18 @@
 
 
       saveDataToParent(){
-        this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit) {
+          this.editMessTitle.ajaxParams.data = this.formDate(this.getFormData(this.tableData), ['date'], this.yearMonth);
+          this.$emit("setSaveData", this.editMessTitle.ajaxParams.data);
+        }
       },
 
 
       listenSubEvent(){
         let isSubmit = this.submitForm("formValidate");
         if(isSubmit) {
-          this.$emit("setSaveData",this.editMessTitle.ajaxParams.data);
+          this.$emit("subAuditArchives",this.editMessTitle.ajaxParams.data);
         }
       },
 

@@ -778,7 +778,7 @@
        * */
       SuccessGetCurrData(responseData){
         let data = this.initData;//responseData.data;
-        if(data.secient===null){
+        if(data.secient===null || Util.isEmptyObject(data)){
           data.secient = {
             "archivesId":'',
             "directionInfo":'',

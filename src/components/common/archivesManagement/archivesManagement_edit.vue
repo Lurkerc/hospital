@@ -6,66 +6,66 @@
       <el-tab-pane label="基本情况" name="first">
         <!-- 基本情况-->
         <keep-alive>
-        <basic :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" :operailityData="operailityData" :initData="archivesMess.archivesBasicInfoDto" :fromWhere="'archives'" v-if="currentView==0"></basic>
+        <basic :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" @subAuditArchives="subAuditArchives" :operailityData="operailityData" :initData="archivesMess.archivesBasicInfoDto" :fromWhere="'archives'" v-if="currentView==0"></basic>
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="学历信息" name="second">
         <keep-alive>
-        <education :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" :data-id="operailityData.id" :initData="archivesMess.archivesEduInfoDtoList" v-if="currentView==1"></education>
+        <education :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" @subAuditArchives="subAuditArchives" :data-id="operailityData.id" :initData="archivesMess.archivesEduInfoDtoList" v-if="currentView==1"></education>
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="工作经历" name="third">
         <!--   工作经历-->
         <keep-alive>
-        <work-experience :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" :data-id="operailityData.id" :initData="archivesMess.archivesWorkRecordInfoDtoList" v-if="currentView==2"></work-experience>
+        <work-experience :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" @subAuditArchives="subAuditArchives" :data-id="operailityData.id" :initData="archivesMess.archivesWorkRecordInfoDtoList" v-if="currentView==2"></work-experience>
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="专业技术职称晋升情况" name="fourth">
         <!-- 专业技术职称晋升情况-->
         <keep-alive>
-        <professional-skill :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" :data-id="operailityData.id" :initData="archivesMess.archivesPromotionInfoDtoList" v-if="currentView==3"></professional-skill>
+        <professional-skill :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" @subAuditArchives="subAuditArchives" :data-id="operailityData.id" :initData="archivesMess.archivesPromotionInfoDtoList" v-if="currentView==3"></professional-skill>
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="资格证书取得情况" name="five">
         <!-- 资格证书取得情况-->
         <keep-alive>
-        <credentials :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" :data-id="operailityData.id" :initData="archivesMess.archivesQualifiedInfoDtoList" v-if="currentView==4"></credentials>
+        <credentials :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" @subAuditArchives="subAuditArchives" :data-id="operailityData.id" :initData="archivesMess.archivesQualifiedInfoDtoList" v-if="currentView==4"></credentials>
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="教学经历" name="six">
         <!--教学经历-->
         <keep-alive>
-        <teaching-experience :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" :data-id="operailityData.id" :initData="archivesMess.archivesTeachRecordDto" v-if="currentView==5"></teaching-experience>
+        <teaching-experience :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" @subAuditArchives="subAuditArchives" :data-id="operailityData.id" :initData="archivesMess.archivesTeachRecordDto" v-if="currentView==5"></teaching-experience>
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="学习培训情况" name="seven">
         <!--学习培训情况-->
         <keep-alive>
-        <study :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" :data-id="operailityData.id" :initData="archivesMess.archivesTrainInfoDtoList" v-if="currentView==6"></study>
+        <study :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" @subAuditArchives="subAuditArchives" :data-id="operailityData.id" :initData="archivesMess.archivesTrainInfoDtoList" v-if="currentView==6"></study>
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="培训考试、考核情况" name="eight">
         <!--培训考试、考核情况-->
         <keep-alive>
-        <train :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" :data-id="operailityData.id" :initData="archivesMess.archivesTrainExamInfoDtoList" v-if="currentView==7"></train>
+        <train :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" @subAuditArchives="subAuditArchives" :data-id="operailityData.id" :initData="archivesMess.archivesTrainExamInfoDtoList" v-if="currentView==7"></train>
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="获奖情况" name="nine">
         <!--获奖情况-->
         <keep-alive>
-        <awards :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" :data-id="operailityData.id" :initData="archivesMess.archivesPrizeInfoDtoList" v-if="currentView==8"></awards>
+        <awards :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" @subAuditArchives="subAuditArchives" :data-id="operailityData.id" :initData="archivesMess.archivesPrizeInfoDtoList" v-if="currentView==8"></awards>
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="科研信息" name="ten">
         <!--科研信息-->
         <keep-alive>
-        <scientific :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" :data-id="operailityData.id" :initData="archivesMess.archivesScientificDto" v-if="currentView==9"></scientific>
+        <scientific :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" @subAuditArchives="subAuditArchives" :data-id="operailityData.id" :initData="archivesMess.archivesScientificDto" v-if="currentView==9"></scientific>
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="证件复印件" name="eleven">
         <!--证件复印件-->
         <keep-alive>
-        <papers :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" :data-id="operailityData.id" :initData="archivesMess.archivesFilesDtoList" v-if="currentView==10"></papers>
+        <papers :userInfo="userInfo" @cancel="cancel" @edit="subCallback" @setSaveData="setSaveData" @subAuditArchives="subAuditArchives" :data-id="operailityData.id" :initData="archivesMess.archivesFilesDtoList" v-if="currentView==10"></papers>
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
@@ -117,6 +117,9 @@
           "archivesFilesDtoList",
         ],
 
+        //点击是否为上报审核按钮
+        isClickAudit:false,
+
         //所有档案信息存储
         archivesMess:{
           //archivesBasicInfoDto:{"id":12557,"deptId":64,"name":"张永超","sex":"boy","nation":"汉族","birth":null,"origin":null,"political":null,"highestEdu":null,"specialty":"12","schoolId":null,"school":null,"jobTime":201707,"grade":"321","classNum":"32","length":"23","duties":"32","doctor":"1","doctorLevel":null,"idNumber":"130434198410127014","mobile":"13266666666","emgContact":null,"emgContactMobile":null,"qq":null,"email":"44@qq.com","telephone":null,"address":null,"postCode":null,"headPhoto":"static/img/2017/07/12/20170712210024794.JPG","createTime":1499864426903,"updateTime":1499864426903,"auditStatus":"AUDIT_SUCCESS","enable":1,"archivesAuditStatus":"NOT_AUDIT","studentTypes":"PTYH"},           //基本信息
@@ -154,6 +157,21 @@
             jsonString:true
           }
         },
+
+
+        //上报审核档案信息
+        submitArchivesAudit:{
+          type:'edit',
+          successTitle:'档案上报成功!',
+          errorTitle:'档案上报失败!',
+          ajaxSuccess:'allAuditSuccess',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url:'/archives/submit-archives-audit',
+            method:'put',
+            //jsonString:true
+          }
+        }
       };
     },
     methods: {
@@ -172,7 +190,11 @@
         if(!Util.isEmptyObject(data)){
           Util._.forEach(data,function (v,k) {
             if(v===null){
-              data[k] = "";
+              if(k=="archivesScientificDto"||k=="archivesScientificDto"){
+                data[k] = {};
+              }else{
+                data[k] = [];
+              }
             }
           })
           this.archivesMess= Object.assign(this.archivesMess,data);
@@ -216,8 +238,22 @@
        *
        * */
       setSaveData(val){
+        this.isClickAudit = false;
         let key = this.labSaveDataKey[this.currentView];
         this.archivesMess[key] = val;
+
+        //保存所有档案
+        //this.subAllArchivesMessTitle.ajaxParams.data = {archivesContent:this.archivesMess};
+        this.saveDataToServer();
+      },
+
+
+      //上报审核个人档案
+      subAuditArchives(){
+        this.isClickAudit = true;
+        //alert("上报审核档案")
+        return;
+        this.ajax(this.submitArchivesAudit);
       },
 
 
@@ -228,14 +264,23 @@
       saveDataToServer(isLoadingFun){
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true);
-        this.subAllArchivesMessTitle.ajaxParams.data = this.getFormData(this.archivesMess);
+        this.subAllArchivesMessTitle.ajaxParams.data = {archivesContent:this.getFormData(this.archivesMess)};
+        //console.log(this.subAllArchivesMessTitle.ajaxParams.data);
+        return
         this.ajax(this.subAllArchivesMessTitle, isLoadingFun);
       },
 
+
+      //所有档案信息保存成功
       saveDataSuccess(responseData){
         this.showMess("保存成功!");
       },
 
+
+      //所有档案信息上报审核成功
+      allAuditSuccess(responseData){
+        this.showMess("档案上报成功!");
+      },
 
 
       /*
