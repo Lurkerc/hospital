@@ -145,6 +145,7 @@
                   <div slot="content" style="max-width:200px;">
                     <p>设备名称：{{ deviceList[index].deviceTypeName }}</p>
                     <p>开放数量：{{ deviceList[index].openNum || 0 }}</p>
+                    <p>设备简介：{{ deviceList[index].describes || '暂无简介' }}</p>
                   </div>
                   <el-button>{{ deviceList[index].deviceTypeName }}</el-button>
                 </el-tooltip>
@@ -401,6 +402,10 @@
         this.formValidate.openTime.timeSetId = this.tableBody.timeSetList[timeSlotIndex].timeSetId;
         this.selRoomIndex = roomIndex;
         this.selTimeSlotIndex = timeSlotIndex;
+        // 清除原来的设备信息
+        this.formValidate.deviceList.length = 0;
+        this.selectDeviceId.length = 0;
+        this.deviceList.length = 0;
       },
       // 提交数据
       subData(status) {
@@ -523,6 +528,12 @@
         if (!this.submitForm('formValidate')) {
           return false
         }
+
+        if (this.formValidate.minNum < 1 || this.formValidate.minNum > this.formValidate.roomBearingCapacity) {
+          this.errorMess('最低开课人数为1且不能超过可预约数量');
+          return false
+        }
+
         if (!this.formValidate.openTime.date) {
           this.errorMess('请选择预约项目日期');
           return false

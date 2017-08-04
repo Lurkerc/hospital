@@ -264,6 +264,8 @@ const mutations = {
       state.unSelectUser[key] = userArrObj[key]
     })
   },
+  // 增加专业列表
+  updateSpecialtyList: (state, specialtyArr = []) => state.specialtyList = _.uniq(_.compact(specialtyArr)),
   /******************* 设置考站信息初始化数据 ********************************/
   setInitData: (state, infoData) => {
     let originData = _.defaultsDeep({}, infoData)

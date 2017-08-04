@@ -2,7 +2,7 @@
 ****--照片墙(uploadPhotoWall)
 -->
 <template>
-  <div>
+  <div :class="{'rUFShow':show}">
     <el-upload :action="action" list-type="picture-card" :file-list="fileLists" :headers="headers" :on-preview="handlePictureCardPreview"
       :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :on-remove="handleRemove">
       <i class="el-icon-plus"></i>
@@ -15,7 +15,7 @@
 <script>
   import config from '../../../config/config.js';
   export default {
-    props: ["actionUrl", "imgFile", "index", "fileList", "onlyOnePic"],
+    props: ["actionUrl", "imgFile", "index", "fileList", "onlyOnePic", "show"],
     data() {
       return {
         headers: {},
@@ -107,3 +107,12 @@
   }
 
 </script>
+<style lang="scss">
+  .rUFShow {
+    .el-upload,
+    .el-upload-list__item-actions span.el-upload-list__item-delete {
+      display: none;
+    }
+  }
+
+</style>

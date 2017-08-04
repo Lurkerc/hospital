@@ -186,7 +186,7 @@
           userIds: '', // 可预约人id字符串，多个id以逗号分隔
           deviceTypeIds: '', // 设备ids字符串，多个id以逗号分隔
           isCourse: 'NO', // 是否课程
-          status: 'UNREPORTED', // 预约项目状态
+          status: 'ADOPT', // 预约项目状态
           // isOpen: 'YES', // 是否开放预约
           timeModel: 'SPECIFIC', // 选择开放日期
           userList: [ // 人员列表
@@ -272,8 +272,7 @@
         if (!this.submitForm('formValidate')) {
           return false
         }
-        if (!isLoadingFun) isLoadingFun = function () {};
-        isLoadingFun(true);
+
         this.formValidate.deviceTypeIds = this.selectDeviceId.join(','); // 设备
 
         let roomList = [];
@@ -291,12 +290,22 @@
         });
         this.formValidate.userIds = userIdArr.join(',');
 
+        let openTimeListArr = [];
         let openTimeList = this.$util._.defaultsDeep({}, this.openTimeList);
         this.$util._.map(openTimeList, item => {
           item.reserveSetType = 'PROJECT';
           delete item.timeSlot;
-          this.formValidate.openTimeList.push(item)
+          openTimeListArr.push(item)
         })
+        this.formValidate.openTimeList = openTimeListArr;
+
+        if (!this.checkData()) {
+          return
+        }
+
+        if (!isLoadingFun) isLoadingFun = function () {};
+        isLoadingFun(true);
+
         this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
         // console.log(this.addMessTitle.ajaxParams.data);
         // isLoadingFun();
@@ -323,6 +332,35 @@
           }
         });
         return flag;
+      },
+
+      // 检测数据是否合理
+      checkData() {
+        if (!this.formValidate.roomList.length) {
+          this.errorMess('至少选择一个房间')
+          return false
+        }
+        if (!this.selectDeviceId.length) {
+          this.errorMess('至少选择一台设备')
+          return false
+        }
+        for (let list = this.formValidate.roomList, item, l = list.length, i = 0; i < l; i++) {
+          item = list[i];
+          if (isNaN(item.bearingCapacity) || item.bearingCapacity > 10000 || item.bearingCapacity < 1) {
+            this.errorMess(`房间号“${this.roomList[i].roomNum}”承载量 1-10000 之间`)
+            return false
+          }
+        }
+        if (this.formValidate.userType === 'SPECIFIC' && !this.formValidate.userList.length) {
+          this.errorMess('至少选择一个人员')
+          return false
+        }
+        if (this.formValidate.timeModel === 'SPECIFIC' && !this.formValidate.openTimeList
+          .length) {
+          this.errorMess('开放日期至少要有一天')
+          return false
+        }
+        return true
       },
       /*********************************************************** 周历 ***********************************************/
       goPrev() {

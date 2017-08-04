@@ -8,16 +8,20 @@
           <el-form-item label="设备：">
             <div class="modelSetBox">
               <div v-for="(item,index) in formValidate.deviceList" :key="index" class="modelSetItem">
-                <el-tooltip class="item" effect="light" placement="bottom-start">
-                  <div slot="content" style="max-width:200px;">
-                    <p>设备名称：{{ opData[index].deviceTypeName }}</p>
-                    <p>设备数量：{{ opData[index].deviceNum || 0 }}</p>
-                    <p>设备简介：{{ opData[index].describe || '暂无简介' }}</p>
-                  </div>
-                  <el-button>{{ item.deviceTypeName }}</el-button>
-                </el-tooltip>
-                <span style="margin-left:10px;">开放预约数量：</span>
-                <el-input v-model="item.openNum" style="width:200px"></el-input>
+                <el-form :model="item" ref="item" :rules="rules" :inline="true">
+                  <el-tooltip class="item" effect="light" placement="bottom-start">
+                    <div slot="content" style="max-width:200px;">
+                      <p>设备名称：{{ opData[index].deviceTypeName }}</p>
+                      <p>设备数量：{{ opData[index].deviceNum || 0 }}</p>
+                      <p>设备简介：{{ opData[index].describes || '暂无简介' }}</p>
+                    </div>
+                    <el-button>{{ item.deviceTypeName }}</el-button>
+                  </el-tooltip>
+                  <span style="margin-left:10px;">开放预约数量：</span>
+                  <el-form-item prop="openNum">
+                    <el-input v-model="item.openNum" style="width:200px"></el-input>
+                  </el-form-item>
+                </el-form>
               </div>
             </div>
           </el-form-item>
@@ -88,6 +92,9 @@
 
 <script>
   import api from './api';
+  import {
+    bespeakSetModel as rules
+  } from '../../rules';
 
   import roomView from '../../room/roomManage/roomManage_view'; // 房间查看
   import fullCalendar from 'vue-ambuf-fullcalendar'; // 周历
@@ -98,6 +105,7 @@
     props: ['opData'],
     data() {
       return {
+        rules,
         self: this,
         todoId: '', // 查看房间id
         // roomIds: [],
@@ -170,14 +178,17 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun) {
-        if (!isLoadingFun) isLoadingFun = function () {};
-        isLoadingFun(true);
         let openTimeList = this.$util._.defaultsDeep({}, this.openTimeList);
         this.$util._.map(openTimeList, item => {
           item.reserveSetType = 'DEVICE';
           delete item.timeSlot;
           this.formValidate.openTimeList.push(item)
         })
+        if (!this.checkData()) {
+          return
+        }
+        if (!isLoadingFun) isLoadingFun = function () {};
+        isLoadingFun(true);
         if (this.formValidate.deviceList.length === 1) { // 单个设备
           this.formValidate.openNum = this.formValidate.deviceList[0].openNum
         }
@@ -192,6 +203,22 @@
       getFormData(data) {
         let myData = this.$util._.defaultsDeep({}, data);
         return myData;
+      },
+      // 检测数据是否合理
+      checkData() {
+        for (let list = this.formValidate.deviceList, item, l = list.length, i = 0; i < l; i++) {
+          item = list[i];
+          if (item.openNum > (this.opData[i].deviceNum || 0)) {
+            this.errorMess(`“${this.opData[i].deviceTypeName}”开放预约数量最多只能为 ${(this.opData[i].deviceNum || 0)}`)
+            return false
+          }
+        }
+        if (this.formValidate.isOpen === 'YES' && this.formValidate.timeModel === 'SPECIFIC' && !this.formValidate.openTimeList
+          .length) {
+          this.errorMess('开放日期至少要有一天')
+          return false
+        }
+        return true
       },
       /*********************************************************** 周历 ***********************************************/
       goPrev() {

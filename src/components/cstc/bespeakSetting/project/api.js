@@ -20,7 +20,7 @@ const api = {
     path: '/teachCourseTime/list',
     method: 'get'
   },
-  delete: thisFile + '/remove', // 删除
+  delete: 'reserve/poject/room/remove', // 删除
 };
 
 export default api

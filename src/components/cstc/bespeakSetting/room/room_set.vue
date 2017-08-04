@@ -159,14 +159,20 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun) {
-        if (!isLoadingFun) isLoadingFun = function () {};
-        isLoadingFun(true);
+
         let openTimeList = this.$util._.defaultsDeep({}, this.openTimeList);
         this.$util._.map(openTimeList, item => {
           item.reserveSetType = 'ROOM';
           delete item.timeSlot;
           this.formValidate.openTimeList.push(item)
         })
+
+        if (!this.checkData()) {
+          return
+        }
+
+        if (!isLoadingFun) isLoadingFun = function () {};
+        isLoadingFun(true);
         this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
         this.ajax(this.addMessTitle, isLoadingFun)
         // console.log(this.addMessTitle.ajaxParams.data)
@@ -179,6 +185,16 @@
       getFormData(data) {
         let myData = this.$util._.defaultsDeep({}, data);
         return myData;
+      },
+
+      // 检测数据是否合理
+      checkData() {
+        if (this.formValidate.isOpen === 'YES' && this.formValidate.timeModel === 'SPECIFIC' && !this.formValidate.openTimeList
+          .length) {
+          this.errorMess('开放日期至少要有一天')
+          return false
+        }
+        return true
       },
       /*********************************************************** 周历 ***********************************************/
       goPrev() {

@@ -30,7 +30,7 @@
         </el-col>
         <el-col>
           <el-form-item label="预约简介：">
-            {{ showData.summary }}
+            {{ showData.summary || '暂无简介' }}
           </el-form-item>
         </el-col>
 

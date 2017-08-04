@@ -63,8 +63,8 @@
                 :key="index">
                 <div slot="content" style="max-width:200px;">
                   <p>设备名称：{{ item.deviceTypeName }}</p>
-                  <p>设备数量：{{ item.deviceNum || 0 }}</p>
-                  <p>设备简介：{{ item.describe || '暂无简介' }}</p>
+                  <p>开放数量：{{ item.openNum || 0 }}</p>
+                  <p>设备简介：{{ item.describes || '暂无简介' }}</p>
                 </div>
                 <el-button>{{ item.deviceTypeName + ' 数量：' + item.reserveNum }}</el-button>
               </el-tooltip>

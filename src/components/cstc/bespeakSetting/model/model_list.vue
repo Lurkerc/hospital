@@ -58,9 +58,9 @@
               </template>
             </el-table-column>
             <el-table-column label="设备名称" prop="deviceTypeName" show-overflow-tooltip></el-table-column>
-            <el-table-column label="描述" prop="describe" show-overflow-tooltip>
+            <el-table-column label="描述" prop="describes" show-overflow-tooltip>
               <template scope="scope">
-                {{ scope.row.describe || '-' }}
+                {{ scope.row.describes || '-' }}
               </template>
             </el-table-column>
             <el-table-column label="总数量" prop="deviceNum" show-overflow-tooltip>

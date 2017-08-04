@@ -55,7 +55,8 @@
       </div>
       <!-- 操作按钮 -->
       <p align="center" style="margin-top:20px;">
-        <el-button v-if="studentInfo.examStatus === 'NOTEXAM' && studentInfo.contentId" type="danger" @click="idVerification">身份确认并开始考核</el-button>
+        <!-- <el-button v-if="studentInfo.examStatus === 'NOTEXAM' && studentInfo.contentId" type="danger" @click="idVerification">身份确认并开始考核</el-button> -->
+        <el-button v-if="studentInfo.examStatus === 'NOTEXAM'" type="danger" @click="idVerification">身份确认并开始考核</el-button>
         <el-button v-if="studentInfo.examStatus === 'ONGOING'" type="danger" @click="finishAndSub">考核结束提交分数</el-button>
         <el-button v-if="!chgScore && studentInfo.examStatus === 'FINISH'" type="danger" @click="changeScore">修改分数</el-button>
 

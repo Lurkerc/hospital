@@ -26,8 +26,15 @@ let accessControlManage = {
  */
 let bespeakClass = {
   name: baseRules.required, // 课程名称 必填
-  roomBearingCapacity: [baseRules.numberMust, baseRules.numberSection(1, 1000)], // 房间承载人数 必须为数字
-  minNum: [baseRules.numberMust, baseRules.numberSection(1, 1000)], // 最低开课人数 必须为数字
+  roomBearingCapacity: [baseRules.numberMust, baseRules.numberSection(1, 10000)], // 房间承载人数 必须为数字
+  minNum: [baseRules.numberMust], // 最低开课人数 必须为数字
+};
+
+/**
+ * 预约设置 - 设备
+ */
+let bespeakSetModel = {
+  openNum: baseRules.numbers,
 };
 
 /**
@@ -157,6 +164,7 @@ export {
   affairs,
   accessControlManage,
   bespeakClass,
+  bespeakSetModel,
   bespeakSetProject,
   tree,
   roomManage,

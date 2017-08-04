@@ -6,10 +6,10 @@ const stateOption = [{
   label: '未上报'
 }, {
   value: 'PENDING',
-  label: '驳回'
+  label: '待审核'
 }, {
   value: 'REJECT',
-  label: '通过'
+  label: '驳回'
 }, {
   value: 'ADOPT',
   label: '通过'

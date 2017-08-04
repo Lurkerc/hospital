@@ -544,6 +544,7 @@
               key: item.userId,
               label: item.userName,
               description: '人员id---' + item.userId + '的描述信息',
+              specialty: item.specialty,
               disabled: false
             })
           }
@@ -576,7 +577,7 @@
           user: unSelUser
         });
         // 参考人员专业
-        this.$store.commit('examineInterval/room/addSpecialtyList', specialtyList);
+        this.$store.commit('examineInterval/room/updateSpecialtyList', specialtyList);
       },
       //关闭选择人员弹窗
       closeSltUser() {

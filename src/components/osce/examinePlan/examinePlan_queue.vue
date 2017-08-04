@@ -179,6 +179,7 @@
       resetInput() {
         this.drawList = [];
         this.queueSubData.userId = -1;
+        this.queueData.headPhoto = '';
         this.$refs['queryData'].resetFields();
       },
       // 抽签成功

@@ -32,10 +32,13 @@
 </template>
 
 <script>
+  import {
+    basic as rules
+  } from '../rules';
   export default {
     data() {
       return {
-        rules: {}, // 验证输入规则
+        rules, // 验证输入规则
         course: {
           title: "", //课程名称
           tags: "", //标签，多个|分割

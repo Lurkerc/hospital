@@ -20,7 +20,7 @@
       <el-row >
         <el-col :span="8" :offset="2">
           <el-form-item label="病历号:" prop="patienNo" >
-            <el-input class="select-width" v-model.number="formValidate.patienNo"  placeholder="请输入"></el-input>
+            <el-input class="select-width" v-model="formValidate.patienNo"  placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
         <el-col :span="8" :offset="2">
@@ -37,10 +37,10 @@
 
       <el-row >
         <el-col :span="16" :offset="2">
-          <el-form-item label="病种名称:" prop="disTitle" >
-            <el-select  multiple v-model="formValidate.disTitle" placeholder="请选择">
+          <el-form-item style="width: 100%" label="病种名称:" prop="disTitle" >
+            <el-select style="width: 100%" multiple v-model="formValidate.disTitle" placeholder="请选择">
               <el-option v-if="role == 'SXS'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.outlineRequireId+'-'+item.disTitle"> </el-option>
-              <el-option v-if="role == 'SXS'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.deId+'-'+item.disTitle"></el-option>
+              <el-option v-if="role == 'ZYY'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.deId+'-'+item.disTitle"></el-option>
             </el-select>
           </el-form-item>
         </el-col >
@@ -206,7 +206,7 @@
               data.disTitle.push( poddIds[i]+'-'+poddNames[i])
             }
           }
-          data.patienNo = +data.patienNo
+          data.patienNo = data.patienNo
 
         this.formValidate = data;
         this.podIdChange(data.podId)
@@ -323,7 +323,7 @@
         if(role=='SXS'){
           listMessTitle.ajaxParams.url =  this.url.getMyRotaryRequirements + 'bz-' + val;
         }else if (role=='ZYY'){
-          listMessTitle.ajaxParams.url =  this.url.ZYYgetMyRotaryRequirements + 'bz-' + val;
+          listMessTitle.ajaxParams.url =  this.url.ZYYgetMyRotaryRequirements + 'bz_' + val;
         };
         this.ajax(listMessTitle)
 

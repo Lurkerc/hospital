@@ -36,10 +36,10 @@
 
       <el-row >
         <el-col :span="16" :offset="2">
-          <el-form-item label="操作名称:" prop="disTitle" >
-            <el-select multiple v-model="formValidate.disTitle" placeholder="请选择">
+          <el-form-item style="width: 100%;" label="操作名称:" prop="disTitle" >
+            <el-select style="width: 100%;" multiple v-model="formValidate.disTitle" placeholder="请选择">
               <el-option v-if="role == 'SXS'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.outlineRequireId+'-'+item.disTitle"> </el-option>
-              <el-option v-if="role == 'SXS'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.deId+'-'+item.disTitle"></el-option>
+              <el-option v-if="role == 'ZYY'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.deId+'-'+item.disTitle"></el-option>
             </el-select>
           </el-form-item>
         </el-col >
@@ -304,7 +304,7 @@
         if(role == 'SXS'){
           listMessTitle.ajaxParams.url =  this.url.getMyRotaryRequirements + 'jn-' + val;
         }else if (role == 'ZYY'){
-          listMessTitle.ajaxParams.url =  this.url.ZYYgetMyRotaryRequirements + 'jn-' + val;
+          listMessTitle.ajaxParams.url =  this.url.ZYYgetMyRotaryRequirements + 'jn_' + val;
         };
 
         this.ajax(listMessTitle);

@@ -26,7 +26,7 @@
         <!--<template v-if="viewData.fileList.length">
           <img v-for="item in viewData.fileList" :src="staticPath + item.path + item.name" class="classViewImg" />
         </template>-->
-        <upload-file v-if="fileList.length" :fileList="fileList" class="onlyShowUploadPic"></upload-file>
+        <upload-file v-if="fileList.length" :fileList="fileList" :show="true"></upload-file>
         <template v-else>暂无图片</template>
       </el-col>
     </el-row>
@@ -105,13 +105,6 @@
     border-radius: 6px;
     overflow: hidden;
     margin: 0 22px 22px 0;
-  }
-
-  .onlyShowUploadPic {
-    .el-upload,
-    .el-upload-list__item-actions span.el-upload-list__item-delete {
-      display: none;
-    }
   }
 
 </style>

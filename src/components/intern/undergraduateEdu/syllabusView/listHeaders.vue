@@ -14,7 +14,7 @@
             <el-row :gutter="20" class="row-bg">
               <el-col :span="6"><p><strong>科室:</strong>{{item.courseDep}} </p></el-col>
               <el-col :span="6"><p><strong>授课地点:</strong>{{item.courseAddress}} </p></el-col>
-              <el-col :span="6"><p><strong>授课对象:</strong> {{trope(item.activityUserType)}} </p></el-col>
+              <el-col :span="6"><p><strong>授课对象:</strong> {{item.gradeNum+'级'+item.classNum+'班'}} </p></el-col>
             </el-row>
             <el-row :gutter="20" class="row-bg">
               <el-col :span="6"><p><strong>课程类型:</strong>{{item.courseType}}  </p></el-col>

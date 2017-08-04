@@ -159,7 +159,7 @@
       init() {
         // 检测当前登录用户是否是实习生
         let thisUserRoleList = [];
-        this.$store.state.userInfo.map(item => thisUserRoleList.push(identify));
+        this.$store.state.userInfo.roleList.map(item => thisUserRoleList.push(item.identify));
         if (thisUserRoleList.indexOf('SXS') > -1) {
           this.studentType = 'SXS'
         }

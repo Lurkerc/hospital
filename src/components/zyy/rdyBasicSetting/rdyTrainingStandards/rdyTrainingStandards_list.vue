@@ -12,7 +12,7 @@
         <!--列表操作按钮-->
         <el-col :span="10" >
           <el-button type="primary" @click="add">添加</el-button>
-          <el-button type="danger" @click="remove">删除</el-button>
+          <!--<el-button type="danger" @click="remove">删除</el-button>-->
           <el-button type="primary" @click="toChannel">导入</el-button>
         </el-col>
         <!--搜索项-->
@@ -342,7 +342,7 @@
           flag = false;
         }
         if(len>1 && isOnly){
-          this.showMess("只能修改一条数据!");
+          this.showMess("只能操作一条数据!");
           flag = false;
         }
         return flag;

@@ -39,7 +39,7 @@
           <td v-for="(dataItem,index) in roomItem.dataList" :key="roomItem.roomId + '-' + index" align="center">
             <div class="cell">
               <template v-if="(selRoomIndex === roomIndex && selTimeSlotIndex === index) || (theRoomIndex === roomIndex && theTimeSlotIndex === index)">
-                <p v-if="dataItem === 'tenancyEnds' && selRoomIndex === -1" class="optional" title="可预约" @click="selectThisTime(roomItem,roomIndex,index,dataItem,true)">预</p>                
+                <p v-if="dataItem === 'tenancyEnds' && selRoomIndex === -1" class="optional" title="可预约" @click="selectThisTime(roomItem,roomIndex,index,dataItem,true)">预</p>
                 <p v-else class="select" title="已预约" @click="initSelectTime(false)">约</p>
               </template>
               <p v-else :class="dataItem" :title="getTitle(dataItem)" @click="selectThisTime(roomItem,roomIndex,index,dataItem)">{{ dataItem | dataListType }}</p>

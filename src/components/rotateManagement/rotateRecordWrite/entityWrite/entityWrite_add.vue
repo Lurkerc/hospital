@@ -23,7 +23,7 @@
       <el-row>
         <el-col :span="8" :offset="2">
           <el-form-item label="病历号:" prop="patienNo">
-            <el-input class="select-width" v-model.number="formValidate.patienNo" placeholder="请输入"></el-input>
+            <el-input class="select-width" v-model="formValidate.patienNo" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8" >
@@ -36,10 +36,10 @@
 
       <el-row>
         <el-col :span="16" :offset="2">
-          <el-form-item label="病种名称:" prop="disTitle">
-            <el-select multiple v-model="formValidate.disTitle" placeholder="请选择">
+          <el-form-item label="病种名称:" style="width: 100%" prop="disTitle">
+            <el-select multiple style="width: 100%" v-model="formValidate.disTitle" placeholder="请选择">
               <el-option v-if="role == 'SXS'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.outlineRequireId+'-'+item.disTitle"> </el-option>
-              <el-option v-if="role == 'SXS'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.deId+'-'+item.disTitle"></el-option>
+              <el-option v-if="role == 'ZYY'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+')'" :value="item.deId+'-'+item.disTitle"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -137,7 +137,7 @@
           callParEvent: 'saveSubEvent'
         }, //保存
         saveContinueBtn: {
-          title: '提交病继续',
+          title: '提交并继续',
           callParEvent: 'saveContinueSubEvent'
         }, //保存
         appearBtn: {
@@ -327,6 +327,7 @@
         this.formValidate = formValidate;
         this.showMess(messTitle.successTitle);
         this.formValidate.disTitle = [];
+        this.getMyRotaryRequirements = [];
         this.isInit = true;
         this.$emit('updata');
       },
@@ -388,7 +389,7 @@
         if(role=='SXS'){
           listMessTitle.ajaxParams.url =  this.url.getMyRotaryRequirements + 'bz-' + val;
         }else if (role=='ZYY'){
-          listMessTitle.ajaxParams.url =  this.url.ZYYgetMyRotaryRequirements + 'bz-' + val;
+          listMessTitle.ajaxParams.url =  this.url.ZYYgetMyRotaryRequirements + 'bz_' + val;
         }
         this.ajax(listMessTitle);
 
