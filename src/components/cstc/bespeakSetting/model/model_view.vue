@@ -96,7 +96,7 @@
         //form表单bind数据
         formValidate: {
           device: {}, // 房间 多个id以逗号分隔 ---> 1,2    
-          isOpen: 'YES', // 是否开放预约
+          isOpen: 'NO', // 是否开放预约
           timeModel: 'SPECIFIC', // 选择开放日期
           openNum: '', // 单个预约数量
           openTimeList: [ // 开放时间列表

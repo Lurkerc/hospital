@@ -44,7 +44,7 @@
             <el-button size="small" type="success" @click="show(scope.row)" :disabled="scope.row.status === 'NOARRANGED'">查看</el-button>
             <el-button size="small" type="danger" @click="planLogin(scope.row)">签到</el-button>
             <!-- 规范考核、已发布才能抽签 -->
-            <el-button size="small" type="info" @click="openPlanQueue(scope.row.id)" v-if="scope.row.sceneType === 'STANDARD' && scope.row.status === 'PUBLISH'">抽签</el-button>
+            <el-button size="small" type="info" @click="openPlanQueue(scope.row.id)" v-if="canQueue(scope.row)">抽签</el-button>
             <!--<el-button size="small" type="warning" @click="openPlanFix(scope.row.id)" v-else>安排</el-button>-->
           </template>
         </el-table-column>
@@ -156,6 +156,11 @@
           }
         }
         this.setTableData();
+      },
+      // 是否可以抽签
+      canQueue(row) {
+        let disQueue = ['NOARRANGED', 'UNPUBLISH']; // 未生成轮转表,未发布
+        return row.sceneType === 'STANDARD' && !(disQueue.indexOf(row.status) > -1)
       },
       /************************* 搜索逻辑 *********************************/
       search() {

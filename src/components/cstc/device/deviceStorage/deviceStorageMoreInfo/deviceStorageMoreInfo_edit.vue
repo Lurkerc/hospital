@@ -4,7 +4,7 @@
       <el-form :model="formValidate" ref="formValidate" :rules="rules" label-width="124px">
         <el-col :span="9" :offset="2">
           <el-form-item label="购买时间：" prop="purchaseTime" required>
-            <el-date-picker v-model="formValidate.purchaseTime" :editable="false" type="datetime" placeholder="选择日期时间"></el-date-picker>
+            <el-date-picker v-model="formValidate.purchaseTime" :editable="false" type="date" placeholder="选择日期时间"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="9" :offset="2">
