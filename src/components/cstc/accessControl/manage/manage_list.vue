@@ -21,10 +21,10 @@
             </el-form-item>
             <el-form-item label="申请时间:">
               <date-group :dateGroup="{text:'',startDate:searchObj.createTimeBegin,endDate:searchObj.createTimeEnd}">
-                <el-date-picker name="start" v-model="searchObj.createTimeBegin" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
+                <el-date-picker name="start" v-model="searchObj.createTimeBegin" :editable="false" type="datetime" placeholder="选择开始时间" :picker-options="pickerOptions0"
                   @change="handleStartTime"></el-date-picker>
                 <span>-</span>
-                <el-date-picker name="end" v-model="searchObj.createTimeEnd" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
+                <el-date-picker name="end" v-model="searchObj.createTimeEnd" :editable="false" type="datetime" placeholder="选择结束时间" :picker-options="pickerOptions1"
                   @change="handleEndTime"></el-date-picker>
               </date-group>
             </el-form-item>
@@ -210,6 +210,10 @@
        */
       setTableData() {
         Object.assign(this.queryQptions.params, this.searchObj);
+        let params = this.queryQptions.params;
+        params.createTimeBegin = this.conductDate(params.createTimeBegin, 'yyyy-MM-dd hh:mm:ss');
+        params.createTimeEnd = this.conductDate(params.createTimeEnd, 'yyyy-MM-dd hh:mm:ss');
+
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions

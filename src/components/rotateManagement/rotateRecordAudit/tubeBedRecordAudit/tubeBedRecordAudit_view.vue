@@ -64,11 +64,8 @@
           <el-table-column
             align="center"
             label="序号"
-            prop="index"
+            type="index"
             width="100">
-            <template scope="scope">
-              <span>{{scope.row.index}}</span>
-            </template>
           </el-table-column>
           <el-table-column
             show-overflow-tooltip

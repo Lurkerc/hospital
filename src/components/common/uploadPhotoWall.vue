@@ -12,6 +12,7 @@
       :on-preview="handlePictureCardPreview"
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload"
+      :on-error="onError"
       :on-remove="handleRemove">
       <i class="el-icon-plus"></i>
     </el-upload>
@@ -57,6 +58,11 @@
        * 上传成功后处理
        * */
       handleAvatarSuccess(res, file, fileList) {
+          if(res.status.code){
+              this.errorMess(res.status.msg);
+            fileList.length =  fileList.length-1;
+            return;
+          }
         if(this.onlyOnePic){
           if(fileList.length>1){
             fileList.shift();
@@ -112,6 +118,13 @@
           });
         }
         return isJPG && isLt2M;
+      },
+
+      onError(error, file, fileList) {
+        //文件上传失败时的钩子，返回字段为 error, file, fileList
+        this.$Notice.warning({
+          title: '上传失败',
+        });
       },
     }
   }

@@ -10,7 +10,7 @@
       <nmenu-item :class="{'active':menuActive === 'courseware'}" name="courseware" @click="menuClick">课件</nmenu-item>
       <nmenu-item :class="{'active':menuActive === 'EO'}" name="EO" @click="menuClick">评测与作业</nmenu-item>
       <nmenu-item :class="{'active':menuActive === 'TQVInfo'}" name="TQVInfo" @click="menuClick">教学质量评价表</nmenu-item>
-      <nmenu-item :class="{'active':menuActive === 'TREInfo'}" name="TREInfo" @click="menuClick">试运行评估表</nmenu-item>
+      <!-- <nmenu-item :class="{'active':menuActive === 'TREInfo'}" name="TREInfo" @click="menuClick">试运行评估表</nmenu-item> -->
     </div>
     <!-- 底部 -->
     <div align="center" slot="footer">
@@ -33,7 +33,7 @@
     <!-- 教学质量评价表 -->
     <tqv-info-edit v-if="menuActive === 'TQVInfo'" ref="TQVInfo"></tqv-info-edit>
     <!-- 试运行评估表 -->
-    <tre-info-edit v-if="menuActive === 'TREInfo'" ref="TREInfo"></tre-info-edit>
+    <!-- <tre-info-edit v-if="menuActive === 'TREInfo'" ref="TREInfo"></tre-info-edit> -->
     <!-- 内容 end -->
   </layout>
 </template>
@@ -50,7 +50,7 @@
   import coursewareEdit from './courseware/courseware_edit'; // 课件
   import eoEdit from './EO/EO_edit'; // 评测与作业
   import tqvInfoEdit from './TQVInfo/TQVInfo_edit'; // 教学质量评价表
-  import treInfoEdit from './TREInfo/TREInfo_edit'; // 试运行评估表
+  // import treInfoEdit from './TREInfo/TREInfo_edit'; // 试运行评估表
 
   //当前组件引入全局的util
   let Util = null;
@@ -101,7 +101,7 @@
       coursewareEdit,
       eoEdit,
       tqvInfoEdit,
-      treInfoEdit,
+      // treInfoEdit,
     }
 
   }

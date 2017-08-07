@@ -62,7 +62,7 @@
       </el-row >
       <el-row >
         <el-col :span="16" :offset="4">
-          <el-form-item label="审核结果:" prop="reviewMess">
+          <el-form-item label="审核意见:" prop="reviewMess">
             <el-input v-model="formValidate.reviewMess" type="textarea" resize="none" :rows="8"></el-input>
           </el-form-item>
         </el-col>
@@ -81,11 +81,8 @@
         <el-table-column
           align="center"
           label="序号"
-          prop="index"
+          type="index"
           width="100">
-          <template scope="scope">
-            <span>{{scope.row.index}}</span>
-          </template>
         </el-table-column>
         <el-table-column
           show-overflow-tooltip

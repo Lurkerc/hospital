@@ -161,6 +161,12 @@ export default {
   /*专题概述查看(教育处人员查看列表) get*/
   thematicReviewPageList:'/traineeRotary/thematicReview/pageList',
 
+  /*批量通过 post*/
+  thematicReviewModifySubPass:'/traineeRotary/thematicReview/modifySubPass',//{ids}
+
+  /*批量驳回 post*/
+  thematicReviewModifySubReject:'/traineeRotary/thematicReview/modifySubReject',//{ids}
+
   /**
    * 调查报告
    * */

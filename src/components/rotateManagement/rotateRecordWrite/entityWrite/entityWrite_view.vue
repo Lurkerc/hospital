@@ -89,6 +89,48 @@
         </el-col >
       </el-row >
 
+      <el-table
+        v-if="data.reviewMess && data.reviewMess[0]"
+        align="center"
+        :height="200"
+        :data="data.reviewMess"
+        tooltip-effect="dark"
+        highlight-current-row
+        style="width: 100%;height: 100%">
+        <el-table-column
+          align="center"
+          label="序号"
+          type="index"
+          width="100">
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="createUserName"
+          label="审核人"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="审核时间"
+          width="300">
+        </el-table-column>
+        <el-table-column
+          prop="reviewMess"
+          label="审核意见"
+          align="center"
+          width="200"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="spState"
+          label="审核状态"
+        >
+          <template scope="scope">
+            {{ scope.row.spState | typeText}}
+          </template>
+        </el-table-column>
+
+      </el-table>
 
     </el-form>
   </div>

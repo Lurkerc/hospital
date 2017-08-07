@@ -91,7 +91,8 @@
 
   .tvmInfoContent {
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
+    overflow-y: auto;
     padding: $padding;
     padding-left: $menuWidth; // float: left;
   }

@@ -80,7 +80,8 @@
       //给当前组件注入全局util
       Util = this.$util;
       let userInfo = this.$store.getters.getUserInfo;
-      this.listMessTitle.ajaxParams.url = this.url.userRotaryDeptlist + 'SXS-' + userInfo.id;
+      let role = userInfo.studentTypes;
+      this.listMessTitle.ajaxParams.url = this.url.userRotaryDeptlist +role+'-' + userInfo.id;
       this.ajax(this.listMessTitle);
       if (this.initData) { // initData 数据结构与 formValidate 的一致
         this.formValidate = this.initData;

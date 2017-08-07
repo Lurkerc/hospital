@@ -25,11 +25,12 @@
         <el-table-column label="序号" prop="index" width="100"></el-table-column>
         <el-table-column label="操作" align="center" width="80">
           <template scope="scope">
-            <template v-if="scope.row.examinationId">
-              <el-button size="small" type="success" @click="rotary(scope.row)" v-if="scope.row.depQualified === 'QUALIFIED'">出科</el-button>
-              <el-button size="small" type="warning" @click="show(scope.row)" v-else>查看</el-button>
-            </template>
-            <span v-else>---</span>
+            <!-- <template v-if="scope.row.examinationId"> -->
+            <el-button size="small" type="success" @click="rotary(scope.row)">出科</el-button>
+            <!-- <el-button size="small" type="success" @click="rotary(scope.row)" v-if="scope.row.depQualified === 'QUALIFIED'">出科</el-button> -->
+            <!-- <el-button size="small" type="warning" @click="show(scope.row)" v-else>查看</el-button> -->
+            <!-- </template>
+            <span v-else>---</span> -->
           </template>
         </el-table-column>
         <el-table-column label="姓名" prop="userName"></el-table-column>

@@ -145,7 +145,7 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="passId"></modal-header>
-      <operate v-if="passModal" :type="'pass'" :operate-url="url.tubeBedRecordingModifySubPass" :methods="'post'"  @cancel="cancel" @operate="subCallback" :operaility-data="operailityData" ></operate>
+      <operate v-if="passModal" :type="'pass'" :operate-url="url.thematicReviewModifySubPass" :methods="'post'"  @cancel="cancel" @operate="subCallback" :operaility-data="operailityData" ></operate>
       <div slot="footer"></div>
     </Modal>
 
@@ -157,7 +157,7 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="rejectId"></modal-header>
-      <operate v-if="rejectModal" :type="'reject'" :operate-url="url.tubeBedRecordingModifySubReject" :methods="'post'"  @cancel="cancel" @operate="subCallback" :operaility-data="operailityData" ></operate>
+      <operate v-if="rejectModal" :type="'reject'" :operate-url="url.thematicReviewModifySubReject" :methods="'post'"  @cancel="cancel" @operate="subCallback" :operaility-data="operailityData" ></operate>
       <div slot="footer"></div>
     </Modal>
     <!---->

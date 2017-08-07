@@ -86,11 +86,11 @@ const getVueObj = function (vue) {
       ENABLE: '启用',
       DISABLE: '禁用',
 
-      MAIN_COMPLETED:"主要完成",
-      ASSISTANT:"助手",
-      WATCH:"观摩",
+      MAIN_COMPLETED: "主要完成",
+      ASSISTANT: "助手",
+      WATCH: "观摩",
 
-      SUBMIT:"未审核",
+      SUBMIT: "未审核",
     },
     /* 特殊描述文本（与公共部分冲突的可以作为特殊处理） */
     unit: { // 单位
@@ -178,11 +178,24 @@ const getVueObj = function (vue) {
       "4": "在运行",
       "5": "已退出",
     },
+    casesStatus: { // 基础教务-资源库管理-病历库
+      "NOT_SUBMIT": "未上报",
+      "NOT_AUDIT": "待审核",
+      "AUDIT_FAILURE": "不通过",
+      "AUDIT_SUCCESS": "通过",
+      "PUBLISH": "已发布",
+      "UNPUBLISH": "未发布",
+    },
     //占位符
-    placeholder:{
-      '' :  '　',
-      'null' : '　',
-      'undefined':'　'
+    placeholder: {
+      '': '　',
+      'null': '　',
+      'undefined': '　'
+    },
+    // 是否在线
+    isOnline: {
+      "YES": "在线",
+      "NO": "离线",
     },
   };
 

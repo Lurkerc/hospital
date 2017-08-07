@@ -17,8 +17,15 @@ let plan = {
   content: baseRules.requiredNoEvent,
 };
 
+/**
+ * 
+ */
+let evaluateRules = {
+
+};
 
 export {
+  evaluateRules,
   plan,
   basic
 };

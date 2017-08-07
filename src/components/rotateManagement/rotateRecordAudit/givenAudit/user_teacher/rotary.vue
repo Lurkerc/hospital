@@ -129,7 +129,7 @@
         <span v-else>暂无附件</span>
       </el-col>
       <el-col :span="20" :offset="2">
-        <h4>老师评语：
+        <h4>老师评价：
           <el-button>去评价</el-button>
         </h4>
       </el-col>

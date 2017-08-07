@@ -77,6 +77,12 @@
         style="width: 100%;height: 100%">
         <el-table-column
           align="center"
+          label="序号"
+          type="index"
+          width="100">
+        </el-table-column>
+        <el-table-column
+          align="center"
           prop="createUserName"
           label="审核人"
           width="200">

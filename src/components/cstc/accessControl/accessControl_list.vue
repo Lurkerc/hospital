@@ -9,10 +9,10 @@
         <record v-if="accessControlActive === 'record'" @show="show"></record>
       </el-tab-pane>
       <el-tab-pane label="权限管理" name="jurisdiction">
-        <record v-if="accessControlActive === 'jurisdiction'" @show="show"></record>
+        <jurisdiction v-if="accessControlActive === 'jurisdiction'" @show="show"></jurisdiction>
       </el-tab-pane>
       <el-tab-pane label="门禁设备管理" name="device">
-        <record v-if="accessControlActive === 'device'" @show="show"></record>
+        <device v-if="accessControlActive === 'device'" @show="show"></device>
       </el-tab-pane>
     </el-tabs>
   </div>

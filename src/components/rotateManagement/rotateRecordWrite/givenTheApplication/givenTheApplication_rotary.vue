@@ -29,21 +29,26 @@
         <el-col :span="20" :offset="2">
           <h4>轮转记录填写：</h4>
           <!-- 实习生 -->
-          <template v-if="studentType">
+          <!-- <template v-if="studentType">
             <el-table align="center" :context="self" :data="viewData.depRequired" tooltip-effect="dark">
               <el-table-column label="名称" prop="requiredName"></el-table-column>
               <el-table-column label="要求例数" prop="requiredNum" show-overflow-tooltip></el-table-column>
               <el-table-column label="实填例数" prop="userNum" show-overflow-tooltip></el-table-column>
             </el-table>
-          </template>
+          </template> -->
           <!-- 非实习生 -->
-          <template v-else>
+          <!-- <template v-else>
             <el-table align="center" :context="self" :data="viewData.depRequirement" tooltip-effect="dark">
               <el-table-column label="名称" prop="disTitle"></el-table-column>
               <el-table-column label="要求例数" prop="disNum" show-overflow-tooltip></el-table-column>
               <el-table-column label="实填例数" prop="disTs" show-overflow-tooltip></el-table-column>
             </el-table>
-          </template>
+          </template> -->
+          <el-table align="center" :context="self" :data="depRequirement" tooltip-effect="dark">
+            <el-table-column label="名称" prop="disTitle"></el-table-column>
+            <el-table-column label="要求例数" prop="disNum" show-overflow-tooltip></el-table-column>
+            <el-table-column label="实填例数" prop="disTs" show-overflow-tooltip></el-table-column>
+          </el-table>
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>出科成绩：</h4>
@@ -139,7 +144,43 @@
     data() {
       return {
         self: this,
-        viewData: {},
+        depRequirement: [], //轮转记录
+        viewData: {
+          depExaminationId: '',
+          depId: "",
+          podId: "",
+          depName: "",
+          userName: "",
+          rotaryBeginTime: "",
+          rotaryEndTime: "",
+          minerDays: '',
+          sickDays: '',
+          personalDays: '',
+          rewardNum: '',
+          penaltyNum: '',
+          theoryExamScore: '',
+          theoryExamIsMakeup: '',
+          skillExamScore: '',
+          skillExamIsMakeup: '',
+          dailyExamScore: '',
+          coligateScore: '',
+          userSummary: "",
+          teacherEvaluation: "",
+          depRequired: [],
+          userSummaryCreateTime: '',
+          summaryFileList: [],
+          teacherComment: "",
+          teacherCommentCreateTime: "",
+          teacherCommentUserName: "",
+          teacherCommentFileList: [],
+          depComment: "",
+          depCommentCreateTime: "",
+          depCommentFileList: [],
+          depQualified: "",
+          teacherAutograph: "",
+          isMakeupRotary: '',
+          makeupTs: ''
+        },
         summaryFileList: {
           fileIds: '',
           comment: '',
@@ -169,7 +210,6 @@
         } else {
           this.getViewDataForPodId()
         }
-        this.getDepRequirement();
       },
 
       // 获取预览数据
@@ -186,7 +226,7 @@
       // 获取数据成功
       getDataSuccess(res) {
         this.viewData = res.data;
-        this.viewDate.depRequirement = []; // 非实习生查看的轮转记录填写
+        // this.viewDate.depRequirement = []; // 非实习生查看的轮转记录填写
         this.summaryFileList.comment = res.data.userSummary;
         let fileIds = [];
         this.uploadFiles.length = 0;
@@ -216,17 +256,34 @@
       // 获取数据成功
       getDataForPodIdSuccess(res) {
         this.$util._.map(res.data, (val, key) => {
-          this.viewData[key] = val
+          val && (this.viewData[key] = val)
         })
+
+        if (this.studentType === 'SXS') {
+          this.getDepRequirementBySXS()
+        } else {
+          this.getDepRequirement();
+        }
       },
 
+      // 获取实习生查看的轮转记录填写
+      getDepRequirementBySXS() {
+        this.ajax({
+          ajaxSuccess: res => this.depRequirement = res.data || [],
+          ajaxParams: {
+            url: api.getDepRequirementBySXS.path + '--' + this.viewData.podId,
+            method: api.getDepRequirementBySXS.method
+          }
+        })
+      },
       // 获取非实习生查看的轮转记录填写
       getDepRequirement() {
         this.ajax({
-          ajaxSuccess: res => this.viewDate.depRequirement = res.data || [],
+          ajaxSuccess: res => this.depRequirement = res.data || [],
           ajaxParams: {
-            url: api.getDepRequirement.path + this.operailityData.rdId + '-' + this.operailityData.depId + '-' +
-              this.operailityData.podId,
+            url: api.getDepRequirement.path + (this.operailityData.rdId || '') + '-' + (this.viewData.depId ||
+                '') + '-' +
+              this.viewData.podId,
             method: api.getDepRequirement.method
           }
         })

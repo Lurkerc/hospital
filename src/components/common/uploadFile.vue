@@ -38,7 +38,7 @@
      * */
 
 
-    props: ["uploadUrl", 'downloadUrl', 'type', 'accept', 'show', 'drag', 'size', 'message', 'length', 'uploadFiles',
+    props: ["uploadUrl", 'downloadUrl', 'type', 'accept', 'show','unSize','drag', 'size', 'message', 'length', 'uploadFiles',
       'params'
     ],
     data() {
@@ -199,13 +199,15 @@
           return false;
         }
         //文件大小超出默认则提示
+        if(!this.unSize){
+          let isbeyond = (+this.fileSize) * 1024 > file.size;
+          if (!isbeyond) {
+            this.$Notice.warning({
+              title: '超出文件大小限制',
+              desc: ` 文件  ${file.name}  太大，不能超过 ${+this.fileSize/1000}M。`
+            });
+        }
 
-        let isbeyond = (+this.fileSize) * 1024 > file.size;
-        if (!isbeyond) {
-          this.$Notice.warning({
-            title: '超出文件大小限制',
-            desc: ` 文件  ${file.name}  太大，不能超过 ${+this.fileSize/1000}M。`
-          });
 
           return false;
         }

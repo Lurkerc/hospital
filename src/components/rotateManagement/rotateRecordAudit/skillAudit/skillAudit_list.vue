@@ -238,9 +238,9 @@
   /*当前组件必要引入*/
   import url from '../api'
   //引入--修改--组件
-  import audit from "./entityWrite_audit.vue";
+  import audit from "./skillAudit_audit.vue";
   //引入--查看--组件
-  import show from "./entityWrite_view.vue";
+  import show from "./skillAudit_view.vue";
 
   //当前组件引入全局的util
   let Util=null;
