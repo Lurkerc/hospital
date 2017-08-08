@@ -58,7 +58,7 @@
        * 上传成功后处理
        * */
       handleAvatarSuccess(res, file, fileList) {
-          if(res.status.code){
+          if(res.status.code!=0){
               this.errorMess(res.status.msg);
             fileList.length =  fileList.length-1;
             return;

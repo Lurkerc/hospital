@@ -18,7 +18,7 @@
       <el-row>
         <el-col :span="8" :offset="2">
           <el-form-item label="标签:" prop="tags">
-            <el-input v-model="formValidate.tags" placeholder="请输入"></el-input>
+            <el-input v-model="formValidate.tags" placeholder='多个标签用","号分隔'></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8" :offset="2">
@@ -128,14 +128,14 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
-    props:['operailityData','fromWhereTree','unImgs','unLogo','unFile','url'],
+    props:['operailityData','fromWhereTree','unImgs','unLogo','unFile','url','name','id'],
     data() {
       return {
         contenHeight: 0,
         viewTypes: '', // 视图类型
         //tree默认项设置
         treeDefaults: {
-//          getTreeUrl: api.resourceTypeTree.path,
+          getTreeUrl: this.url.resourceTypeTree.path,
           getDataUrl: '',
           isShowMenus: false,
           isShowSearch: false, //是否显示目录树查询
@@ -145,8 +145,8 @@
         treeBtn:{title:'保存',callParEvent:'listenSubEvent'},
         typeName:this.name,
         type:{
-          typeName:'',   //资源分类名称
-          updateTypeName:'',    //随时更新的资源分类名称
+          typeName:this.name,   //资源分类名称
+          updateTypeName:this.name,    //随时更新的资源分类名称
         },
         formValidate:{
           typeId:this.id,  //资源分类ID
@@ -182,24 +182,23 @@
 
             },
           },
-
+        },
           //获取数据
           getMessTitle:{
             ajaxSuccess:'getListData',
             ajaxParams:{
-              url:this.url.videoGet.path+this.operailityData.id,  //向后台请求数据的地址
+              url:this.url.get.path+this.operailityData.id,  //向后台请求数据的地址
 
             }
           },
 
-
-        },
       }
     },
     methods: {
       //初始化请求列表数据
       init(){
           this.ajax(this.getMessTitle);
+
       },
 
 
@@ -207,7 +206,6 @@
       getListData(res){
         let data = res.data;
         if(!data) return;
-        this.type.typeName = data   //todo 缺少分类名称    缺少查看接口
         this.formValidate = data;
       },
       //点击数的回调函数
@@ -294,13 +292,21 @@
 
 
       //封面图
-      expenseLogoEvent(a,b,c){
-        console.log(a,b,c);
+      expenseLogoEvent(file){
+          if(file[0]){
+            this.formValidate.imgsPath = file[0].src;
+          }else {
+            this.formValidate.imgsPath = '';
+          }
       },
 
       //imgsPath
-      expenseImgsEvent(a,b,c){
-        console.log(a,b,c);
+      expenseImgsEvent(file){
+        let tempArr = [];
+        for(let i=0;i<file[i].length;i++){
+          if(file[i].src)tempArr.push(file[i].src);
+        }
+        this.formValidate.imgsPath = tempArr.join(',');
       },
 
 

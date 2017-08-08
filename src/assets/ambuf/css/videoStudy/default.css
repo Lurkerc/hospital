@@ -1,0 +1,95 @@
+@charset "utf-8";
+/* CSS Document */
+@import "../common/reset.css";
+
+/*
+ *
+ *  @description: 在线学习-资源学习
+ *  @author: zyc
+ *  @update: name (2016-08-23)
+ *  Copyright ambuf. All Rights Reserved.
+ * ***************************************************************************
+ */
+
+/*
+ *
+ *  @description: 视频学习
+ *  @author: zyc
+ *  @update: name (2016-08-23)
+ *  Copyright ambuf. All Rights Reserved.
+ * ***************************************************************************
+ */
+.showContent{
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+.video-type-box{
+  position: relative;
+  padding: 0 0 20px 0;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.video-title-left{
+  margin-right: 400px;
+}
+.video-title-right{
+  position: absolute;
+  top: -20px;
+  right: 0;
+  padding: 20px 0;
+}
+.video-introduce-title{
+  padding: 20px 0;
+}
+.video-introduce-content{
+  min-height: 200px;
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+/* 视频评论 */
+.comment-subBtn{
+  padding: 20px;
+  float: right;
+}
+.comment-list{
+  position: relative;
+  min-height: 150px;
+  padding-bottom: 20px;
+  margin-bottom: 16px;
+  background: #F9FAFC;
+}
+.comment-list-header{
+  position: absolute;
+  top: 0;
+  left: 30px;
+  width: 100px;
+}
+.comment-list-date{
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  width: 100px;
+  text-align: right;
+}
+.comment-user-mess{
+  margin: 0 20px 0 170px;
+  padding-top: 50px;
+  color: #F7BA2A;
+  font-weight: 700;
+}
+.comment-list-content{
+  margin: 0 20px 0 170px;
+  padding-top: 10px;
+}
+.showMore{
+  padding: 10px 0;
+  text-align: center;
+  background: #f5f5f5;
+}
+.commentNum{
+  position: absolute;
+  top: -50px;
+  right: 20px;
+}

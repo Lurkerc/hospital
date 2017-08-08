@@ -4,7 +4,7 @@ const api = {
     method: 'get',
   },
 
-  videoGet: { // 查看(只查视频详情)
+  get: { // 查看(只查视频详情)
     path:  '/video/get/',//{id}
     method: 'get',
   },
@@ -24,7 +24,7 @@ const api = {
     method: 'POST',
   },
 
-  videoAudit:{ // 批量审核
+  audit:{ // 批量审核
     path:  '/video/audit/',  //{ids}
     method: 'put',
   },
@@ -34,12 +34,12 @@ const api = {
     method: 'post',
   },
 
-  videoCanceled:{ // 撤销
-    path:  '/video/canceled/',  //{ids}
+  canceled:{ // 撤销
+    path:  '/video/canceled',  //{ids}
     method: 'put',
   },
 
-  videoPublished:{ // 发布
+  published:{ // 发布
     path:  '/video/published',  //{ids}
     method: 'put',
   },

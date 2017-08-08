@@ -7,6 +7,8 @@ import router,{menus} from './router';
 import App from './App';
 import iView from 'iview';
 import VueCookie from 'vue-cookie';
+import VueAwesomeSwiper from 'vue-awesome-swiper';
+
 //import VueQuillEditor from 'vue-quill-editor'
 //import $ from 'jquery'
 
@@ -26,6 +28,7 @@ Vue.use(Util);
 Vue.use(iView);
 Vue.use(ElementUI);
 Vue.use(VueCookie);
+Vue.use(VueAwesomeSwiper);
 //Vue.use(VueQuillEditor)
 
 Vue.config.productionTip = false;

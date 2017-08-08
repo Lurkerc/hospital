@@ -10,8 +10,8 @@
 <script>
   /*当前组件必要引入*/
   import teacher from './user_teacher/list'; // 老师（带教老师）
-  import kezr from './user_kezr/list'; // 老师（科室主任）
-  import dep from './user_dep/list'; // 教育处（带教秘书、导师）
+  import kezr from './user_kezr/list'; // 老师（科室主任、带教秘书）
+  import dep from './user_dep/list'; // 教育处（教育处、导师）
   //当前组件引入全局的util
   export default {
     data() {
@@ -26,8 +26,8 @@
         let view = ['teacher', 'kezr', 'dep']; // 视图
         let identify = [ // 角色
           ['DJLS'], // 带教老师（出科 | 查看）
-          ['KEZR'], // 科室主任（出科 | 查看）
-          ['JYC', 'DS'] // 教育处、带教秘书、导师 （查看）
+          ['KEZR', 'JXMS'], // 科室主任、带教秘书（出科 | 查看）
+          ['JYC', 'DS'] // 教育处、导师 （查看）
         ];
         let defView = 'def'; // 默认视图
 

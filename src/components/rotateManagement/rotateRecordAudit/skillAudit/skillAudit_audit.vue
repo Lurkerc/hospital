@@ -124,15 +124,15 @@
       </el-row >
 
       <el-row >
-        <el-col :span="16" :offset="2">
-          <el-form-item label="审核结果:" prop="disState" >
-            <el-radio-group v-model="formValidate.disState">
-              <el-radio class="radio"  label="PASS">通过</el-radio>
-              <el-radio class="radio"  label="REJECT">未通过</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col >
-      </el-row >
+      <el-col :span="16" :offset="2">
+        <el-form-item label="审核结果:" prop="disState" >
+          <el-radio-group v-model="formValidate.disState">
+            <el-radio class="radio"  label="PASS">通过</el-radio>
+            <el-radio class="radio"  label="REJECT">未通过</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-col >
+    </el-row >
 
       <el-row >
         <el-col :span="16" :offset="2">

@@ -19,7 +19,7 @@
       <el-row>
         <el-col :span="8" :offset="2">
           <el-form-item label="标签:" prop="tags">
-            <el-input v-model="formValidate.tags" placeholder="请输入"></el-input>
+            <el-input v-model="formValidate.tags" placeholder='多个标签用","号分隔'></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8" :offset="2">
@@ -68,7 +68,7 @@
       <el-row v-if="!unLogo">
         <el-col :span="16" :offset="2">
           <el-form-item label="视频封面:" >
-            <img-wall  :onlyOnePic="true" @upladSuccess="expenseLogoEvent"></img-wall>
+            <img-wall  :actionUrl="'/file/upload/static'" :onlyOnePic="true" @upladSuccess="expenseLogoEvent"></img-wall>
           </el-form-item>
         </el-col>
       </el-row>
@@ -76,11 +76,13 @@
       <el-row v-if="!unImgs">
         <el-col :span="16" :offset="2">
           <el-form-item label="缩略图:">
-            <img-wall  @upladSuccess="expenseImgsEvent"></img-wall>
+            <img-wall  :actionUrl="'/file/upload/static'"  @upladSuccess="expenseImgsEvent"></img-wall>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
+
+
 
     <el-row>
       <el-col :span="16" :offset="2">
@@ -91,7 +93,7 @@
       </el-col>
     </el-row>
 
-    <!--增加弹窗-->
+    <!--树弹窗-->
     <Modal
       :mask-closable="false"
       v-model="typeModal"
@@ -133,10 +135,9 @@
   data() {
       return {
         contenHeight: 0,
-        viewTypes: '', // 视图类型
         //tree默认项设置
         treeDefaults: {
-//          getTreeUrl: api.resourceTypeTree.path,
+         getTreeUrl: this.url.resourceTypeTree.path,
           getDataUrl: '',
           isShowMenus: false,
           isShowSearch: false, //是否显示目录树查询
@@ -207,6 +208,7 @@
       listenSubEvent(isLoadingFun){
         if(!isLoadingFun) isLoadingFun=function(){};
         isLoadingFun(true);
+
         this.addMessTitle.ajaxParams.data = this.formValidate;
         this.ajax(this.addMessTitle,isLoadingFun)
       },
@@ -274,6 +276,7 @@
       //上传视频文件
       expenseFileEvent(){
 
+
       },
 
 
@@ -283,8 +286,12 @@
       },
 
       //imgsPath
-      expenseImgsEvent(a,b,c){
-        console.log(a,b,c);
+      expenseImgsEvent(file){
+          let tempArr = [];
+        for(let i=0;i<file[i].length;i++) {
+            if(file[i].src)tempArr.push(file[i].src);
+        }
+        this.formValidate.imgsPath = tempArr.join(',');
       },
 
 

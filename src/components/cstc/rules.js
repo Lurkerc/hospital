@@ -15,10 +15,14 @@ let affairs = {
  */
 // 门禁卡管理
 let accessControlManage = {
-  cardNum: [{
-    required: true,
-    message: '此项不能为空',
-  }, baseRules.numbers], // 卡号 必填，必须是数字
+  cardNum: [baseRules.requiredNoEvent, baseRules.numbers], // 卡号 必填，必须是数字
+};
+// 门禁设备管理
+let accessControlDevice = {
+  doorName: baseRules.required, // 门禁名称 必填
+  doorNum: baseRules.requiredNoEvent, // 门禁名称 必填
+  accessSn: baseRules.required, // 控制器SN 必填
+  accessIp: [baseRules.required, baseRules.ip], // 控制器IP 必填
 };
 
 /**
@@ -163,6 +167,7 @@ let consumablesCount = {
 export {
   affairs,
   accessControlManage,
+  accessControlDevice,
   bespeakClass,
   bespeakSetModel,
   bespeakSetProject,

@@ -14,6 +14,7 @@
             type="date"
             :editable="false"
             placeholder="选择日期"
+            :clearable="false"
             :picker-options="pickerOptions0"
             @change="handleStartTime"
           >
@@ -26,6 +27,7 @@
             v-model="formValidate.courseEndTime"
             align="right"
             type="date"
+            :clearable="false"
             :editable="false"
             placeholder="选择日期"
             :picker-options="pickerOptions1"

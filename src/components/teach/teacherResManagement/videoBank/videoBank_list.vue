@@ -65,7 +65,7 @@
             <el-table-column label="上传时间" prop="createTime" width="200">
               <template scope="scope">
                 <template v-if="scope.row.createTime">
-                  {{ scope.row.publishStatus | formatDate('yyyy-MM-dd HH:mm') }}
+                  {{ scope.row.createTime | formatDate('yyyy-MM-dd HH:mm') }}
                 </template>
                 <span v-else>-</span>
               </template>
@@ -92,7 +92,7 @@
         <!-- 分页按钮 -->
         <div style="float: right;margin-top:10px;">
           <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-                         :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal"></el-pagination>
+                         :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
         </div>
       </div>
     </layout-tree>
@@ -107,7 +107,7 @@
       <!--<div slot="header"> -->
       <!--</div>-->
       <modal-header slot="header" :content="editId"></modal-header>
-      <edit v-if="editModal" :fromWhereTree="fromWhereTree"  @cancel="cancel"  @edit="subCallback" :url="url" :operaility-data="operailityData"></edit>
+      <edit v-if="editModal" :id="deptId" :name="typeName"  :fromWhereTree="fromWhereTree"  @cancel="cancel"  @edit="subCallback" :url="url" :operaility-data="operailityData"></edit>
       <div slot="footer"></div>
     </Modal>
     <!---->
@@ -152,7 +152,7 @@
       :width="800"
     >
       <modal-header slot="header" :parent="self" :content="jurisdictionSetId"></modal-header>
-      <jurisdiction v-if="jurisdictionSetModal" @jurisdictionSet="subCallback"  :url="url" @cancel="cancel" :operaility-data="operailityData"></jurisdiction>
+      <jurisdiction  v-if="jurisdictionSetModal" :id="deptId" :name="typeName" @jurisdictionSet="subCallback"  :url="url" @cancel="cancel" :operaility-data="operailityData"></jurisdiction>
       <div slot="footer"></div>
     </Modal>
     <!--批量审核-->
@@ -287,12 +287,12 @@
         //发布
         publishData:{
           method:'put',
-          url: api.videoPublished.path,
+          url: api.published.path,
         },
         //撤销
         revocationData:{
           method:'put',
-          url: api.videoCanceled.path,
+          url: api.canceled.path,
         },
 
 
@@ -303,7 +303,7 @@
         tableHeight:0,
         self: this,
         loading:false,
-        listTotal:0,
+        totalCount:0,
         searchObj: { // 搜索
           name: '', // 名称
         },
@@ -433,6 +433,14 @@
         this.postParamToServer(this.listMessTitle);
       },
 
+      //通过get请求列表数据
+      updateListData(responseData){
+        if(!responseData.data)return;
+        this.tableData = this.addIndex(responseData.data);
+        if(!responseData.totalCount) return;
+        this.totalCount = responseData.totalCount;
+      },
+
 
       /*--点击--添加--按钮--*/
       add(){
@@ -513,13 +521,14 @@
       //设置表格及分页的位置
       getContentHeight() {
         this.contenHeight = this.$refs.treeContent.parentNode.parentNode.offsetHeight;
+        this.setTableDynHeight()
       },
 
 
       //设置表格及分页的位置
       setTableDynHeight() {
         let tableView = this.$refs.tableView;
-        let paginationHt = 45;
+        let paginationHt = 100;
         this.dynamicHt = this.contenHeight - tableView.offsetTop - paginationHt;
         this.tableHeight = this.dynamicHt;
       },
@@ -633,7 +642,7 @@
         this.setTableDynHeight();
         //为窗体绑定改变大小事件
         let Event = Util.events;
-        Event.addHandler(window, "resize", this.getContentHeight);
+        Event.addHandler(window, "resize", this.setTableDynHeight);
       })
     },
     components: {

@@ -24,7 +24,7 @@ const api = {
     path: 'room/select/list',
     method: 'get'
   },
-  remove: thisFile + '/remove', // 删除一条或多条门禁设备数据（删除门禁设备时调用）
+  delete: thisFile + '/remove', // 删除一条或多条门禁设备数据（删除门禁设备时调用）
 };
 
 export default api

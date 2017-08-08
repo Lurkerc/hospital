@@ -120,7 +120,7 @@
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>小结附件：</h4>
-          <uploadFile @setUploadFiles="setUploadFiles" :uploadFiles="uploadFiles"></uploadFile>
+          <upload-file @setUploadFiles="setUploadFiles" :uploadFiles="uploadFiles"></upload-file>
         </el-col>
       </el-form>
       <div style="padding-top:16px;clear:both;">

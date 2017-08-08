@@ -19,12 +19,13 @@
           </el-form-item>
           <el-form-item  label="科室:"   prop="title">
             <el-select v-model="formValidate.depId" placeholder="请选择科室">
-              <select-option :unAll="true" :type="'dep'"> </select-option>
+              <select-option :type="'userRotaryDeptlist'" :userType="userType" :userId="userId"  name="depName" id="depId"></select-option>
             </el-select>
             </el-input>
           </el-form-item>
           <el-form-item label="状态:"  prop="title">
             <el-select v-model="formValidate.cstate" placeholder="请选择状态">
+              <el-option label="全部" value=""></el-option>
               <el-option label="未上报" value="NO_SUBMIT"></el-option>
               <el-option label="驳回" value="REJECT"></el-option>
               <el-option label="待审核" value="NO_PASS"></el-option>
@@ -76,8 +77,8 @@
             width="200">
             <template scope="scope">
               <el-button size="small" @click="show(scope.row)">查看</el-button>
-              <el-button v-if="scope.row.cstate=='NO_SUBMIT'"  size="small" @click="edit(scope.row)">修改</el-button>
-              <el-button v-if="scope.row.cstate=='NO_SUBMIT'"  size="small" @click="reported(scope.row)">上报</el-button>
+              <el-button v-if="scope.row.cstate=='NO_SUBMIT'||scope.row.cstate=='REJECT'"  size="small" @click="edit(scope.row)">修改</el-button>
+              <el-button v-if="scope.row.cstate=='NO_SUBMIT'||scope.row.cstate=='REJECT'"  size="small" @click="reported(scope.row)">上报</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -258,7 +259,8 @@
         removeId:{id:'removeId',title:'删除'},
         viewId:{id:'viewId',title:'查看'},
         reportedId:{id:'reportedId',title:'上报'},
-
+        userId:'',
+        userType:'',
       }
     },
     methods: {
@@ -266,6 +268,10 @@
       init(){
         Util = this.$util;
         //ajax请求参数设置
+        let userInfo = this.$store.getters.getUserInfo;
+        this.userType = userInfo.studentTypes;
+        this.userId = userInfo.id;
+
         this.myPages =  Util.pageInitPrams;
         this.queryQptions = {
           curPage: 1,pageSize: Util.pageInitPrams.pageSize
@@ -280,7 +286,6 @@
           }else {
             this.width = val;
           }
-
       },
       //设置表格及分页的位置
       setTableDynHeight(){
@@ -309,11 +314,12 @@
           flag = false;
         }
         if(len>1 && isOnly){
-          this.showMess("只能修改一条数据!")
+          this.showMess("只能操作一条数据!");
           flag = false;
         }
         return flag;
       },
+
 
       //通过get请求列表数据
       updateListData(responseData){

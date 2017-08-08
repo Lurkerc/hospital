@@ -1,6 +1,6 @@
 <template>
   <div :class="{'onlyUploadShow': uploadShow }">
-    <el-upload ref="upload" multiple with-credentials :before-upload="beforeUpload" :on-progress="onProgress" :on-success="onSuccess"
+    <el-upload ref="upload" :multiple="!unMultiple" with-credentials :before-upload="beforeUpload" :on-progress="onProgress" :on-success="onSuccess"
       :on-error="onError" :on-preview="onPreview" :on-remove="onRemove" :on-format-error="onFormatError" :on-exceeded-size="onExceededSize"
       :file-list="fileList" :drag="isDrag" :headers="headers" :class="{uploadShow:uploadShow,'picture-card':listType=='picture-card'}"
       :list-type="listType" :action="upUrl">
@@ -12,7 +12,7 @@
         <p>点击或将文件拖拽到这里上传</p>
       </div>
       <i class="el-icon-plus" v-show="!uploadShow" v-if="listType=='picture-card'"></i>
-      <div slot="tip" v-if="!data.message" v-show="!uploadShow" class="el-upload__tip">只能上传{{selectAccept}}文件，且不超过{{+this.fileSize/1000}}M</div>
+      <div slot="tip" v-if="!data.message" v-show="!uploadShow" class="el-upload__tip">只能上传<span v-if="length" style="font-size: 16px;vertical-align: inherit;">{{length}}个</span>{{selectAccept}}文件 <span v-if="!unSize" style="vertical-align: inherit;">，且不超过{{+this.fileSize/1000}}M</span> </div>
       <div slot="tip" v-if="data.message" v-show="!uploadShow" class="el-upload__tip">{{data.message}}</div>
     </el-upload>
     <el-dialog v-if="listType=='picture-card'" v-show="!uploadShow" v-model="dialogVisible" size="tiny">
@@ -39,7 +39,7 @@
 
 
     props: ["uploadUrl", 'downloadUrl', 'type', 'accept', 'show','unSize','drag', 'size', 'message', 'length', 'uploadFiles',
-      'params'
+      'params','unMultiple'
     ],
     data() {
       //        let pictureAccept ='image/jpeg,image/png,image/bmp,image/gif,image/psd,image/tiff,image/tga,application/postscript';
@@ -64,7 +64,7 @@
         accept: this.accept,
         drag: this.drag,
         size: this.size || 500,
-        length: this.length || 5,
+        length: this.length || 50,
         message: this.message,
         show: this.show,
       };
@@ -122,7 +122,7 @@
         isDrag: data.drag || false,
         data: data,
         fileSize: data.size,
-        upUrl: config.urlPrefix + '/file/upload',
+        upUrl: config.urlPrefix + (this.uploadUrl||'/file/upload'),
         downUrl: config.urlPrefix + '/file/download',
         fileList: [],
         uploadList: [],
@@ -206,10 +206,9 @@
               title: '超出文件大小限制',
               desc: ` 文件  ${file.name}  太大，不能超过 ${+this.fileSize/1000}M。`
             });
-        }
+            return false;
+          }
 
-
-          return false;
         }
         //判断类型
         let type = file.name.split('.');
@@ -320,7 +319,6 @@
           this.fileList = this.converterPictureList(val)
           this.$emit('setUploadFiles', this.processorPictureList(this.fileList), this.fileList);
         } else {
-
           this.fileList = this.converterTextList(val);
           this.$emit('setUploadFiles', this.processorList(this.fileList), this.fileList);
         }

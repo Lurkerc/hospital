@@ -25,6 +25,7 @@ let changeEvent = 'change';
  * inputLen       字符区间
  * numberSection  数字区间
  * numbers        必须为数字
+ * ip             IP地址 0.0.0.0 - 255.255.255.255
  */
 
 /************************* 常规规则 ****************************/
@@ -220,8 +221,8 @@ let baseRules = {
       callback(new Error('手机号必须数字'));
     }
     callback();
-
   },
+
   /**
    * 必须数字
    */
@@ -231,8 +232,8 @@ let baseRules = {
       callback(new Error('该项必须数字'));
     }
     callback();
-
   },
+
   /**
    * 必须数字
    */
@@ -242,8 +243,19 @@ let baseRules = {
       callback(new Error('该项必须数字'));
     }
     callback();
+  },
 
-  }
+  /**
+   * IP地址
+   */
+  ip: function (rule, value, callback) {
+    //检验位的检测
+    // 0.0.0.0 - 255.255.255.255
+    if (!(/^(25[0-5]|2[0-4]\d|1\d\d|\d\d|\d).(25[0-5]|2[0-4]\d|1\d\d|\d\d|\d).(25[0-5]|2[0-4]\d|1\d\d|\d\d|\d).(25[0-5]|2[0-4]\d|1\d\d|\d\d|\d)$/.test(value))) {
+      callback(new Error('IP地址不正确'));
+    }
+    callback();
+  },
 }
 
 /************************* 可选规则 ****************************/

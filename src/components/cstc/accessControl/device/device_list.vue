@@ -49,7 +49,11 @@
         </el-table-column>
         <el-table-column label="门禁名称" prop="doorName" show-overflow-tooltip></el-table-column>
         <el-table-column label="门禁编号" prop="doorNum" show-overflow-tooltip></el-table-column>
-        <el-table-column label="设备所在位置" prop="location" show-overflow-tooltip></el-table-column>
+        <el-table-column label="设备所在位置" prop="location" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.location || '-' }}
+          </template>
+        </el-table-column>
         <el-table-column label="门禁IP" prop="accessIp" show-overflow-tooltip></el-table-column>
         <el-table-column label="门禁SN" prop="accessSn" show-overflow-tooltip></el-table-column>
         <el-table-column label="状态" prop="isOnline" show-overflow-tooltip>
@@ -67,7 +71,7 @@
     <!-- 模态框 增加（add） -->
     <Modal :mask-closable="false" v-model="addModal" class-name="vertical-center-modal" :width="800">
       <modal-header slot="header" :content="headerContent.addId"></modal-header>
-      <add v-if="addModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></add>
+      <add v-if="addModal" @cancel="cancel" @add="subCallback"></add>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 编辑（edit） -->
@@ -89,10 +93,11 @@
   let Util = null;
   import api from './api';
   import add from './device_add';
-  import edit from './device_add';
+  import edit from './device_edit';
   export default {
     data() {
       return {
+        api,
         totalCount: 0,
         self: this,
         dynamicHt: 0,
@@ -109,7 +114,7 @@
         tableData: [],
         multipleSelection: [],
         operailityData: [],
-        roomList:[],
+        roomList: [],
         headerContent: {
           addId: {
             id: "addId",
@@ -144,18 +149,18 @@
         this.setTableData();
       },
       // 获取选择房间
-      getSelectRoom(){
+      getSelectRoom() {
         this.ajax({
           ajaxSuccess: res => this.roomList = res.data,
-          ajaxParams:{
-            url:api.roomList.path
+          ajaxParams: {
+            url: api.roomList.path
           }
         })
       },
       /************************* 按钮事件 *********************************/
       // 添加
       add() {
-        this.openModel('edit')
+        this.openModel('add')
       },
       // 修改
       edit(row) {

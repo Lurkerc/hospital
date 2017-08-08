@@ -474,6 +474,10 @@
         } else if (row.mark < 0 || !row.mark) {
           row.mark = 0
         }
+        // 自动提交（考核中）
+        if(this.studentInfo.examStatus === 'ONGOING' && this.studentInfo.sceneStatus === 'ONGOING'){
+          this.listenSubEvent()
+        }
       },
 
       // 检测当前考站是否是考核中

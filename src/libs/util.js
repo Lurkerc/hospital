@@ -836,6 +836,11 @@ export default {
         }
 
       },
+
+      beforeDestroy(){
+        this.$util.events.removeHandler(window, "resize",this.setTableDynHeight)
+      },
+
       components: {
         modalHeader,
         loadBtn,

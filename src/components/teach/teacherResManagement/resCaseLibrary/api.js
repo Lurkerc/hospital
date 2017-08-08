@@ -1,48 +1,64 @@
-/**   --病历库--   **/
-const thisFile = 'cases';
-const types = "CASES";
 const api = {
-  tree: { // 左侧树
-    path: '/resourceType/tree?types='+types,
-    method: 'get'
+  audit: { // 批量审核
+    path:  '/cases/audit/', //{ids}
+    method: 'post',
   },
-  jurisdiction:{  //权限设置-提交保存  save/{ids}
-    path: thisFile + '/permissions/save',
-    method: 'post'
+
+  get: { // 查看
+    path:  '/cases/get/', //{id}
+    method: 'get',
   },
-  casesListPage:{  //目录树列表
-    path: thisFile + '/listPage',
-    method: 'get'
+
+  listPage: { // 列表
+    path:  '/cases/listPage',
+    method: 'get',
   },
-  casesGet:{ //查看  get/{id}
-    path: thisFile + '/get',
-    method: 'get'
+
+  remove: { // 删除
+    path:  '/cases/remove', //{ids}
+    method: 'delete',
   },
-  casesRemove:{  //删除  remove/{ids}
-    path: thisFile + '/remove',
-    method: 'delete'
+
+  save: { // 权限设置-提交保存
+    path:  '/cases/permissions/save/', //{ids}
+    method: 'post',
   },
-  casesModify:{  //修改  modify/{id}
-    path: thisFile + '/modify',
-    method: 'put'
+
+  canceled: { // 撤销
+    path:  '/cases/canceled', //{ids}
+    method: 'put',
   },
-  casesAdd:{  //添加
-    path: thisFile + '/add',
-    method: 'post'
+
+  published: { // 发布
+    path:  '/cases/published', //{ids}
+    method: 'put',
   },
-  canceled:{  //撤销  canceled/{ids}
-    path: thisFile + '/canceled',
-    method: 'put'
+
+  modify: { // 修改
+    path:  '/cases/modify/', //{id}
+    method: 'put',
   },
-  published:{  //发布  published/{ids}
-    path: thisFile + '/published',
-    method: 'put'
+
+  add: { // 添加
+    path:  '/cases/add', //{id}
+    method: 'post',
   },
-  casesAudit:{  //批量审核  audit/{ids}
-    path: thisFile + '/audit',
-    method: 'post'
+
+  // VIDEO 教学视频
+  //   2 LITERATURE 文档文献
+  //   3 CASES 典型病例
+  //   4 cases 医学图谱
+
+  resourceTypeTree:{ // 左侧树
+    path:  '/resourceType/tree',  //{ids}   //
+    method: 'delete',
   },
-  types:types,
+
+
+
+
+
+
 };
 
 export default api

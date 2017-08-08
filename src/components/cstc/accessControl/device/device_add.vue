@@ -28,13 +28,13 @@
         <el-col :span="10" :offset="1">
           <el-form-item label="设备所在位置：" prop="locationType">
             <el-radio class="radio" v-model="formValidate.locationType" label="ROOM">房间</el-radio>
-            <el-radio class="radio" v-model="formValidate.locationType" label="OTHER">其他</el-radio>
+            <el-radio class="radio" v-model="formValidate.locationType" label="ORTHER">其他</el-radio>
           </el-form-item>
         </el-col>
         <el-col :span="10" :offset="2">
           <el-form-item label="房间号：" prop="roomId" v-if="formValidate.locationType === 'ROOM'">
-            <el-select v-model="formValidate.roomId" placeholder="请选择" @change="changeSelRoom">
-              <el-option v-for="item in roomList" :key="item.id" :label="item.roomNum" :value="item.id">
+            <el-select v-model="roomSelIndex" placeholder="请选择" @change="changeSelRoom">
+              <el-option v-for="(item,index) in roomList" :key="item.id" :label="item.roomNum" :value="index">
               </el-option>
             </el-select>
           </el-form-item>
@@ -54,12 +54,16 @@
   let Util = null;
   import api from "./api";
   import typeOption from "./typeOption";
+  import {
+    accessControlDevice as rules
+  } from "../../rules";
   export default {
     data() {
       return {
-        rules: {},
+        rules,
         roomList: [],
         typeOption,
+        roomSelIndex: '',
         formValidate: {
           doorName: "", // 门禁名称
           doorNum: "", // 门禁编号
@@ -105,8 +109,10 @@
         })
       },
       // 选择房间
-      changeSelRoom(val){
-        console.log(val)
+      changeSelRoom(val) {
+        let selRoom = this.roomList[this.roomSelIndex];
+        this.formValidate.roomId = selRoom.id;
+        this.formValidate.roomNum = selRoom.roomNum;
       },
       /*
        * 点击提交按钮 监听是否提交数据

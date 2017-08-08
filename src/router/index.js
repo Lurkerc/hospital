@@ -31,6 +31,8 @@ import jcjl from './subRouter/practiceRecords'
  * 在线学习
  *
  * */
+//资源学习
+import resourcesStudy from './subRouter/resourcesStudy';
 
 /**
  *
@@ -1000,6 +1002,7 @@ const routes = [
       pygl,jtgl,zyzhd,kqgl,zybl,jcjl,
 
       //在线学习
+      resourcesStudy,
 
       //教学评价
       evaluations,evaluationSetting,jxpjStatistic,

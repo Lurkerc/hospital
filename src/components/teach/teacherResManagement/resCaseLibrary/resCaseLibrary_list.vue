@@ -1,5 +1,5 @@
 <!----------------------------------
-****--病历库(normCourseTree_list)
+****--病例库(normCourseTree_list)
 ****--@date     2017/8/4
 ****--@author   zyc<332533011@qq.com
 ----------------------------------->
@@ -58,13 +58,14 @@
                 <el-button size="small" type="primary" @click="edit(scope.row)">修改</el-button>
               </template>
             </el-table-column>
-            <el-table-column label="名称" prop="title" align="center" show-overflow-tooltip></el-table-column>
+            <el-table-column label="名称" prop="name" align="center" show-overflow-tooltip></el-table-column>
             <el-table-column label="标签" prop="tags" show-overflow-tooltip></el-table-column>
-            <el-table-column label="大小" prop="tags" show-overflow-tooltip></el-table-column>
-            <el-table-column label="上传时间" prop="updateTime" width="200">
+            <el-table-column label="时长" prop="length" show-overflow-tooltip></el-table-column>
+            <el-table-column label="大小" prop="size" show-overflow-tooltip></el-table-column>
+            <el-table-column label="上传时间" prop="createTime" width="200">
               <template scope="scope">
                 <template v-if="scope.row.createTime">
-                  {{ scope.row.publishStatus | formatDate('yyyy-MM-dd HH:mm') }}
+                  {{ scope.row.createTime | formatDate('yyyy-MM-dd HH:mm') }}
                 </template>
                 <span v-else>-</span>
               </template>
@@ -91,7 +92,7 @@
         <!-- 分页按钮 -->
         <div style="float: right;margin-top:10px;">
           <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-                         :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal"></el-pagination>
+                         :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
         </div>
       </div>
     </layout-tree>
@@ -106,7 +107,7 @@
       <!--<div slot="header"> -->
       <!--</div>-->
       <modal-header slot="header" :content="editId"></modal-header>
-      <edit v-if="editModal"   @cancel="cancel"  @edit="subCallback" :operaility-data="operailityData"></edit>
+      <edit v-if="editModal" :id="deptId" :name="typeName"  :fromWhereTree="fromWhereTree"  @cancel="cancel"  @edit="subCallback" :url="url" :operaility-data="operailityData"></edit>
       <div slot="footer"></div>
     </Modal>
     <!---->
@@ -120,8 +121,9 @@
       :width="800">
       <!--<div slot="header"> -->
       <!--</div>-->
+
       <modal-header slot="header" :content="addId"></modal-header>
-      <add v-if="addModal"  @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></add>
+      <add v-if="addModal" :id="deptId" :name="typeName" :fromWhereTree="fromWhereTree"  :url="url" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></add>
       <div slot="footer"></div>
     </Modal>
     <!---->
@@ -133,7 +135,7 @@
       title="对话框标题"
       class-name="vertical-center-modal"
       :loading="true"
-      :width="800"
+      :width="1200"
     >
       <modal-header slot="header" :parent="self" :content="showId"></modal-header>
       <show v-if="showModal"  @cancel="cancel"   :operaility-data="operailityData"></show>
@@ -150,7 +152,7 @@
       :width="800"
     >
       <modal-header slot="header" :parent="self" :content="jurisdictionSetId"></modal-header>
-      <jurisdiction v-if="jurisdictionSetModal"  @cancel="cancel" :operaility-data="operailityData"></jurisdiction>
+      <jurisdiction  v-if="jurisdictionSetModal" :id="deptId" :name="typeName" @jurisdictionSet="subCallback"  :url="url" @cancel="cancel" :operaility-data="operailityData"></jurisdiction>
       <div slot="footer"></div>
     </Modal>
     <!--批量审核-->
@@ -164,7 +166,7 @@
       :width="800"
     >
       <modal-header slot="header" :parent="self" :content="auditId"></modal-header>
-      <audit v-if="auditModal"  @cancel="cancel" :operaility-data="operailityData"></audit>
+      <audit v-if="auditModal" :fromWhereTree="fromWhereTree" @cancel="cancel" :url="url" :operaility-data="operailityData"></audit>
       <div slot="footer"></div>
     </Modal>
     <!---->
@@ -217,28 +219,30 @@
 
   import add from "./resCaseLibrary_add.vue";
   import edit from "./resCaseLibrary_edit.vue";
-  import show from "./resCaseLibrary_view.vue";
-  import jurisdiction from "./jurisdiction_set.vue";
-  import audit from "./audit.vue";
+  import show from "../videoBank/videoBank_view.vue";
+  import jurisdiction from "../videoBank/videoBank_set.vue";
+  import audit from "../videoBank/audit.vue";
   import api from "./api.js";
   //当前组件引入全局的util
   let Util = null;
   export default{
     data() {
       return {
-        contenHeight: 0,
-        viewTypes: '', // 视图类型
+        url : api,
+        typeName : "",   // 分类名称
+        contenHeight : 0,
+        viewTypes : '', // 视图类型
         //tree默认项设置
-        treeDefaults: {
-          getTreeUrl: api.tree.path,
-          getDataUrl: '',
-          isShowMenus: false,
-          isShowSearch: false, //是否显示目录树查询
+        treeDefaults : {
+          getTreeUrl : api.resourceTypeTree.path,
+          getDataUrl : '',
+          isShowMenus : false,
+          isShowSearch : false, //是否显示目录树查询
         },
-        fromWhereTree: "user",
+        fromWhereTree : "CASES",
 
         //查询表单
-        deleteUrl: api.casesRemove.path,
+        deleteUrl : api.remove.path,
         //当前tree选中的node id
         deptId: 1,
 
@@ -279,7 +283,7 @@
         //撤销发布
         revocationModal:false,
 
-
+        totalCount:0,
         //发布
         publishData:{
           method:'put',
@@ -302,26 +306,32 @@
         listTotal:0,
         searchObj: { // 搜索
           name: '', // 名称
-          managerName: '', // 管理员
-          operator: '', // 操作人
-          createTime: '', // 节点创建时间
         },
-        tableData: [{
-          "id":18,                 //id
-          "typeId":1000,           //所属分类ID
-          "title":"title测试",     //标题
-          "brief":"brief测试",     //概要、摘要
-          "tags":"tags",          //关键词
-          "content":"内容",       //内容
-          "logo":"首图",          //第一张图
-          "viewNum":20,          //浏览次数
-          "operatorId":10160,    //发布人ID
-          "operator":"闫沧",      //发布人
-          "auditStatus":"NOT_AUDIT",      //审核状态 NOT_SUBMIT','NOT_AUDIT','AUDIT_FAILURE','AUDIT_SUCCESS'
-          "publishStatus":"PUBLISH",      //发布状态：PUBLISH、UNPUBLISH
-          "createTime":"20",              //创建时间 Long 时间戳
-          "updateTime":"201"              //修改时间 Long 时间戳
-        },],
+        tableData: [
+          {
+            "id":3,                             //主键ID
+            "typeId":1,                         //资源分类ID
+            "name":"1",                         //视频名称
+            "tags":"1",                         //标签
+            "length":1,                         //时长
+            "size":1,                           //视频大小
+            "count":1,                          //播放次数
+            "remark":"1",                       //简介
+            "fileId":1,                         //视频ID
+            "filePath":"1",                     //视频地址(相对到文件)
+            "logoPath":"1",                     // 封面图
+            "imgsPath":"1",                     //其他图片
+            "likes":1,                          //喜欢
+            "disLikes":3,                       //不喜欢
+            "operatorId":null,                  //上传人ID
+            "operator":'sss',                    // 上传人
+            "createTime":"201",                 //上传时间 Long 时间戳
+            "updateTime":"20121",               // 修改时间 Long 时间戳
+            "auditStatus":"AUDIT_FAILURE",      //发布状态 PUBLISH 已发布 UNPUBLISH 未发布
+            "publishStatus":"UNPUBLISH",        //审核状态
+            "openStatus":"PRIVATE"              //公开状态
+          },
+        ],
 
         //当前科室详情
         depDetails:{
@@ -339,7 +349,7 @@
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url: api.casesListPage.path,
+            url: api.listPage.path,
             params:{
               "typeId":"",   //分类ID
               "title":"",  //标题模糊查
@@ -347,6 +357,8 @@
             }
           }
         },
+
+
       }
     },
     methods: {
@@ -423,6 +435,13 @@
         this.postParamToServer(this.listMessTitle);
       },
 
+      //通过get请求列表数据
+      updateListData(responseData){
+        if(!responseData.data)return;
+        this.tableData = this.addIndex(responseData.data);
+        if(!responseData.totalCount) return;
+        this.totalCount = responseData.totalCount;
+      },
 
       /*--点击--添加--按钮--*/
       add(){
@@ -509,7 +528,7 @@
       //设置表格及分页的位置
       setTableDynHeight() {
         let tableView = this.$refs.tableView;
-        let paginationHt = 45;
+        let paginationHt = 100;
         this.dynamicHt = this.contenHeight - tableView.offsetTop - paginationHt;
         this.tableHeight = this.dynamicHt;
       },
@@ -528,7 +547,7 @@
       treeClick(obj, node, self) {
         // 记录视图
         this.viewTypes = obj.types;
-        this.setTreeDepId(obj.id);
+        this.setTreeDepId(obj.id,obj);
       },
 
 
@@ -551,9 +570,10 @@
       /*
        * 设置当前部门Id
        * */
-      setTreeDepId(id) {
+      setTreeDepId(id,obj) {
         if (id) {
           this.deptId = id;
+          this.typeName = obj.name;
         }
       },
 
@@ -622,7 +642,7 @@
         this.setTableDynHeight();
         //为窗体绑定改变大小事件
         let Event = Util.events;
-        Event.addHandler(window, "resize", this.getContentHeight);
+        Event.addHandler(window, "resize", this.setTableDynHeight);
       })
     },
     components: {

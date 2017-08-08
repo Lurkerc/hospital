@@ -49,11 +49,12 @@
         <el-table-column label="序号" prop="index" width="100"></el-table-column>
         <el-table-column label="操作" width="140">
           <template scope="scope">
-            <template v-if="scope.row.depExaminationId">
+            <!-- <template v-if="scope.row.depExaminationId">
               <el-button size="small" type="warning" @click="show(scope.row)">查看</el-button>
               <el-button size="small" type="success" @click="rotary(scope.row)" v-if="scope.row.depQualified === 'QUALIFIED'">审核</el-button>
             </template>
-            <span v-else>---</span>
+            <span v-else>---</span> -->
+            <el-button size="small" type="success" @click="rotary(scope.row)">审核</el-button>
           </template>
         </el-table-column>
         <el-table-column label="姓名" prop="userName"></el-table-column>
@@ -223,6 +224,11 @@
         this.openModel('show');
       },
       /*************************************** 模态框 **********************************/
+      // 出科
+      rotary(row) {
+        this.operailityData = row;
+        this.openModel('rotary');
+      },
       // 编辑
       edit(row) {
         this.operailityData = row;
