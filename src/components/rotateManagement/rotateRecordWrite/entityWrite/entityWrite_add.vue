@@ -319,10 +319,11 @@
           mainDiagnosis: '', //主要诊断
           secondaryDiagnosis: '', //次要诊断
           fileIds: '', //附件IDs(多个逗号分隔)
-          podId: '', //病种名(多个逗号分隔)
-          isDirector: '', //是否主管
-          isRescue: '', //是否抢救
+          podId: '', //轮转id(多个逗号分隔)
+          isDirector: 'Y', //是否主管
+          isRescue: 'Y', //是否抢救
           situation: '', //转归情况
+          disTitle:[],
         }
         this.formValidate = formValidate;
         this.showMess(messTitle.successTitle);
@@ -391,6 +392,8 @@
         }else if (role=='ZYY'){
           listMessTitle.ajaxParams.url =  this.url.ZYYgetMyRotaryRequirements + 'bz_' + val;
         }
+        this.formValidate.disTitle = [];
+        this.getMyRotaryRequirements = [];
         this.ajax(listMessTitle);
 
       },

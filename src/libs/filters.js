@@ -83,14 +83,24 @@ const getVueObj = function (vue) {
       "START": "待使用",
       "UNEVALUATED": "待评分",
       //培训标准
-      ENABLE: '启用',
-      DISABLE: '禁用',
+      "ENABLE": '启用',
+      "DISABLE": '禁用',
 
-      MAIN_COMPLETED: "主要完成",
-      ASSISTANT: "助手",
-      WATCH: "观摩",
+      "MAIN_COMPLETED": "主要完成",
+      "ASSISTANT": "助手",
+      "WATCH": "观摩",
 
-      SUBMIT: "未审核",
+      "SUBMIT": "未审核",
+
+      // 在线学习课程状态
+      "TESTRUN": "试运行",
+      "EXIT": "退出",
+
+      // 在线学习课程作业类型
+      "RADIO": "单选题",
+      "CHECKBOX": "多选题",
+      "JUDGMENT": "判断题",
+      "ANSWER": "问答题",
     },
     /* 特殊描述文本（与公共部分冲突的可以作为特殊处理） */
     unit: { // 单位
@@ -171,12 +181,9 @@ const getVueObj = function (vue) {
     },
     curriculum: { // 课程状态
       "NOT_SUBMIT": "保存草稿",
-      "NOT_AUDIT": "提交审核",
-      "1": "待修订",
-      "2": "待审核",
-      "3": "试运行",
-      "4": "在运行",
-      "5": "已退出",
+      "NOT_AUDIT": "已上报",
+      "AUDIT_FAILURE": "驳回",
+      "AUDIT_SUCCESS": "通过",
     },
     casesStatus: { // 基础教务-资源库管理-病历库
       "NOT_SUBMIT": "未上报",

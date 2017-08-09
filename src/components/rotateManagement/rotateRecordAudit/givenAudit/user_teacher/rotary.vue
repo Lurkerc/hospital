@@ -24,7 +24,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="20" :offset="2">
-          <el-form-item label="老师评价：">{{ viewData.teacherEvaluation }}</el-form-item>
+          <el-form-item label="老师评价：">{{ viewData.teacherEvaluation || '暂无' }}</el-form-item>
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>轮转记录填写：</h4>
@@ -112,21 +112,19 @@
       </el-form>
       <el-col :span="20" :offset="2">
         <h4>个人小结：</h4>
-        {{ viewData.userSummary }}
+        {{ viewData.userSummary || '暂无' }}
       </el-col>
       <el-col :span="20" :offset="2">
         <h4>小结附件：</h4>
-        <uploadFile v-if="studentUploadFiles.length" :uploadFiles="studentUploadFiles" :show="true"></uploadFile>
-        <span v-else>暂无附件</span>
+        <uploadFile :uploadFiles="studentUploadFiles" :show="true"></uploadFile>
       </el-col>
       <el-col :span="20" :offset="2">
         <h4>科室评语：</h4>
-        {{ viewData.depComment }}
+        {{ viewData.depComment || '暂无' }}
       </el-col>
       <el-col :span="20" :offset="2">
         <h4>科室附件：</h4>
-        <uploadFile v-if="depUploadFiles.length" :uploadFiles="depUploadFiles" :show="true"></uploadFile>
-        <span v-else>暂无附件</span>
+        <uploadFile :uploadFiles="depUploadFiles" :show="true"></uploadFile>
       </el-col>
       <el-col :span="20" :offset="2">
         <h4>老师评价：
@@ -158,7 +156,7 @@
   import uploadFile from '../../../../../components/common/uploadFile';
 
   export default {
-    props: ['operailityData'],
+    props: ['operailityData', 'userType'],
     data() {
       return {
         self: this,
@@ -184,6 +182,9 @@
           title: '上报',
           callParEvent: 'listenSubEvent'
         },
+        // 学生类型
+        studentType: 'SXS', // 默认实习生
+        depRequirement: [],
       }
     },
     methods: {
@@ -243,6 +244,33 @@
         for (let key in this.numParams) {
           this.numParams[key] = res.data[key]
         }
+
+        if (this.studentType === 'SXS') {
+          this.operailityData.podId && this.getDepRequirementBySXS()
+        } else {
+          this.operailityData.podId && this.getDepRequirement();
+        }
+      },
+
+      // 获取实习生查看的轮转记录填写
+      getDepRequirementBySXS() {
+        this.ajax({
+          ajaxSuccess: res => this.depRequirement = res.data || [],
+          ajaxParams: {
+            url: api.getDepRequirementBySXS.path + '--' + this.operailityData.podId,
+            method: api.getDepRequirementBySXS.method
+          }
+        })
+      },
+      // 获取非实习生查看的轮转记录填写
+      getDepRequirement() {
+        this.ajax({
+          ajaxSuccess: res => this.depRequirement = res.data || [],
+          ajaxParams: {
+            url: api.getDepRequirement.path + '--' + this.operailityData.podId,
+            method: api.getDepRequirement.method
+          }
+        })
       },
 
       // 上传附件
@@ -263,21 +291,20 @@
         }
         // 获取输入数据
         for (let key in this.numParams) {
-          if (!(this.numParams[key] > -1 && this.numParams[key] < 1000)) {
+          if (isNaN(this.numParams[key]) || !(this.numParams[key] > -1 && this.numParams[key] < 1000)) {
             this.errorMess(`${tips[key]}只能为数字并且在0-999之间！`)
             return
           }
           if (!this.numParams[key]) {
-            data[key] = 0
+            this.numParams[key] = 0
           }
         }
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true);
 
-        let data = Object.assign(this.summaryFileList, this.numParams);
-
+        let data = this.$util._.defaultsDeep({}, this.summaryFileList, this.numParams);
         this.ajax({
-          ajaxSuccess: () => this.$emit('rotary', 'rotary', '保存成功'),
+          ajaxSuccess: () => this.$emit('rotary', 'rotary', '上报成功'),
           ajaxParams: {
             url: api.teacherAddComment.path + this.operailityData.depExaminationId,
             method: api.teacherAddComment.method,

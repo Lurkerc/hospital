@@ -1,9 +1,14 @@
 <!-- 基础教务 - 资源库管理 - 创建标准课程 -->
 <template>
   <layout>
+    <!-- 课程标题 -->
+    <p slot="title">{{ title || '加载中...' }}</p>
+    <!-- 封面图 -->
+    <img src="//iph.href.lu/180x180" alt="" slot="menuTop">
     <!-- 菜单 -->
     <div slot="menu">
-      <nmenu-item :class="{'active':menuActive === 'basic'}" name="basic" @click="menuClick">课程基本信息</nmenu-item>
+      <!-- <nmenu-item :class="{'active':menuActive === 'basic'}" name="basic" @click="menuClick">课程基本信息</nmenu-item> -->
+      <nmenu-item :class="{'active':menuActive === 'notice'}" name="notice" @click="menuClick">公告</nmenu-item>
       <nmenu-item :class="{'active':menuActive === 'intro'}" name="intro" @click="menuClick">课程简介</nmenu-item>
       <nmenu-item :class="{'active':menuActive === 'outline'}" name="outline" @click="menuClick">课程教学大纲</nmenu-item>
       <nmenu-item :class="{'active':menuActive === 'plan'}" name="plan" @click="menuClick">教学计划</nmenu-item>
@@ -13,27 +18,28 @@
       <nmenu-item :class="{'active':menuActive === 'TREInfo'}" name="TREInfo" @click="menuClick">试运行评估表</nmenu-item>
     </div>
     <!-- 底部 -->
-    <div align="center" slot="footer">
-      <el-button type="info" @click="save">保存草稿</el-button>
-      <el-button type="success">提交审核</el-button>
+    <div slot="footer">
+      <slot></slot>
     </div>
     <!-- 内容 start -->
     <!-- 课程基本信息 -->
-    <basic-edit v-if="menuActive === 'basic'" ref="basic"></basic-edit>
+    <basic-view v-if="menuActive === 'basic'"></basic-view>
+    <!-- 公告 -->
+    <notice-view v-if="menuActive === 'notice'"></notice-view>
     <!-- 课程简介 -->
-    <intro-edit v-if="menuActive === 'intro'" ref="intro"></intro-edit>
+    <intro-view v-if="menuActive === 'intro'"></intro-view>
     <!-- 课程教学大纲 -->
-    <outline-edit v-if="menuActive === 'outline'" ref="outline"></outline-edit>
+    <outline-view v-if="menuActive === 'outline'"></outline-view>
     <!-- 教学计划 -->
-    <plan-edit v-if="menuActive === 'plan'" ref="plan"></plan-edit>
+    <plan-view v-if="menuActive === 'plan'"></plan-view>
     <!-- 课件 -->
-    <courseware-edit v-if="menuActive === 'courseware'" ref="courseware"></courseware-edit>
+    <courseware-view v-if="menuActive === 'courseware'"></courseware-view>
     <!-- 评测与作业 -->
-    <eo-edit v-if="menuActive === 'EO'" ref="EO"></eo-edit>
+    <eo-view v-if="menuActive === 'EO'"></eo-view>
     <!-- 教学质量评价表 -->
-    <tqv-info-edit v-if="menuActive === 'TQVInfo'" ref="TQVInfo"></tqv-info-edit>
+    <tqv-info-view v-if="menuActive === 'TQVInfo'"></tqv-info-view>
     <!-- 试运行评估表 -->
-    <tre-info-edit v-if="menuActive === 'TREInfo'" ref="TREInfo"></tre-info-edit>
+    <tre-info-view v-if="menuActive === 'TREInfo'"></tre-info-view>
     <!-- 内容 end -->
   </layout>
 </template>
@@ -43,50 +49,60 @@
   import layout from "./components/layout"; // 基础布局
   import nmenuItem from './components/menu'; // 菜单项
 
-  import basicEdit from './basic/basic_edit'; // 课程基本信息
-  import introEdit from './intro/intro_edit'; // 课程简介
-  import outlineEdit from './outline/outline_edit'; // 课程教学大纲
-  import planEdit from './plan/plan_edit'; // 教学计划
-  import coursewareEdit from './courseware/courseware_edit'; // 课件
-  import eoEdit from './EO/EO_edit'; // 评测与作业
-  import tqvInfoEdit from './TQVInfo/TQVInfo_edit'; // 教学质量评价表
-  import treInfoEdit from './TREInfo/TREInfo_edit'; // 试运行评估表
+  import basicView from './basic/basic_view'; // 课程基本信息
+  import noticeView from './notice/notice_view'; // 公告
+  import introView from './intro/intro_view'; // 课程简介
+  import outlineView from './outline/outline_view'; // 课程教学大纲
+  import planView from './plan/plan_view'; // 教学计划
+  import coursewareView from './courseware/courseware_view'; // 课件
+  import eoView from './EO/EO_view'; // 评测与作业
+  import tqvInfoView from './TQVInfo/TQVInfo_view'; // 教学质量评价表
+  import treInfoView from './TREInfo/TREInfo_view'; // 试运行评估表
 
   //当前组件引入全局的util
   let Util = null;
   export default {
+    props: ['operailityData'],
     data() {
       return {
-        menuActive: 'basic', // 激活菜单
+        title: '', // 课程名称
+        menuActive: 'notice', // 激活菜单
       }
     },
     methods: {
+      // 初始化
+      init() {
+        this.title = this.$store.state.curriculum.data.course.title;
+      },
       // 菜单点击
       menuClick(menu) {
-        this.save() && (this.menuActive = menu);
-      },
-      // 保存 调用子组件的save方法
-      save() {
-        return this.$refs[this.menuActive].save()
+        this.menuActive = menu;
       },
     },
 
     //初始化组件
-    created() {},
+    created() {
+      this.$store.commit('curriculum/data/init')
+      this.init();
+    },
 
-    mounted() {},
+    // 销毁状态
+    destroyed() {
+      this.$store.commit('curriculum/data/destroy')
+    },
 
     components: {
       layout,
       nmenuItem,
-      basicEdit,
-      introEdit,
-      outlineEdit,
-      planEdit,
-      coursewareEdit,
-      eoEdit,
-      tqvInfoEdit,
-      treInfoEdit,
+      basicView,
+      noticeView,
+      introView,
+      outlineView,
+      planView,
+      coursewareView,
+      eoView,
+      tqvInfoView,
+      treInfoView,
     }
 
   }

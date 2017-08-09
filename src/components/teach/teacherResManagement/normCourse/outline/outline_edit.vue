@@ -1,7 +1,8 @@
 <template>
   <!-- 课程教学大纲 -->
   <div class="nUeditorBox" ref="nUeditorBox">
-    <show-ueditor name="outline" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"
+    <div v-if="isReadOnly" v-html="ueditorVal.outline"></div>
+    <show-ueditor v-else name="outline" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"
       style="width:100%;"></show-ueditor>
   </div>
 </template>
@@ -10,6 +11,7 @@
   import api from '../api';
   import showUeditor from '../../../../common/showUeditor'; // 编辑器
   export default {
+    props: ['readOnly'],
     data() {
       return {
         UE: {}, // 编辑器
@@ -19,8 +21,9 @@
         },
         ueditorConfig: {
           //详细配置参考UEditor 官网api
-          initialFrameHeight: 400 //初始化编辑器高度,默认320
+          initialFrameHeight: 390 //初始化编辑器高度,默认320
         },
+        isReadOnly: false, // 只读
       }
     },
     methods: {
@@ -43,6 +46,7 @@
 
       // 初始化
       init() {
+        this.isReadOnly = this.readOnly !== undefined;
         this.ueditorVal.outline = this.$store.state.curriculum.data.course.outline
       },
       // 保存数据
@@ -65,7 +69,7 @@
 
 <style>
   .nUeditorBox {
-    padding-left: 16px;
+    /* padding-left: 16px; */
     height: 100%;
   }
 

@@ -49,12 +49,9 @@
         <el-table-column label="序号" prop="index" width="100"></el-table-column>
         <el-table-column label="操作" width="140">
           <template scope="scope">
-            <!-- <template v-if="scope.row.depExaminationId">
-              <el-button size="small" type="warning" @click="show(scope.row)">查看</el-button>
-              <el-button size="small" type="success" @click="rotary(scope.row)" v-if="scope.row.depQualified === 'QUALIFIED'">审核</el-button>
-            </template>
-            <span v-else>---</span> -->
-            <el-button size="small" type="success" @click="rotary(scope.row)">审核</el-button>
+            <el-button :disabled="!scope.row.depExaminationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
+            <el-button :disabled="!scope.row.depExaminationId" size="small" type="success" @click="rotary(scope.row)" v-if="scope.row.depQualified === 'QUALIFIED'">审核</el-button>
+            <!-- <el-button size="small" type="success" @click="rotary(scope.row)">审核</el-button> -->
           </template>
         </el-table-column>
         <el-table-column label="姓名" prop="userName"></el-table-column>
@@ -76,14 +73,14 @@
     <Modal :mask-closable="false" v-model="rotaryModal" height="200" class-name="vertical-center-modal" :width="900">
       <modal-header slot="header" :content="contentHeader.rotaryId"></modal-header>
       <template v-if="rotaryModal">
-        <rotary @cancel="cancel" @rotary="subCallback" :operaility-data="operailityData"></rotary>
+        <rotary @cancel="cancel" @rotary="subCallback" :operaility-data="operailityData" :user-type="viewUserType"></rotary>
       </template>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 查看 -->
     <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="900">
       <modal-header slot="header" :content="contentHeader.showId"></modal-header>
-      <show v-if="showModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></show>
+      <show v-if="showModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :user-type="viewUserType"></show>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -104,6 +101,7 @@
         orderOption,
         sortbyOption,
         userTypeOption,
+        viewUserType: '',
         userInfo: {}, // 用户信息
         userIdentify: [], // 用户角色
         departmentId: '',
@@ -219,23 +217,26 @@
         this.setTableData()
       },
       // 查看
-      show(row) {
-        this.operailityData = row;
-        this.openModel('show');
-      },
+      // show(row) {
+      //   this.operailityData = row;
+      //   this.openModel('show');
+      // },
       /*************************************** 模态框 **********************************/
       // 出科
       rotary(row) {
+        this.viewUserType = row.podClass;
         this.operailityData = row;
         this.openModel('rotary');
       },
       // 编辑
       edit(row) {
+        this.viewUserType = row.podClass;
         this.operailityData = row;
         this.openModel('edit');
       },
       // 查看
       show(row) {
+        this.viewUserType = row.podClass;
         this.operailityData = row;
         this.openModel('show');
       },

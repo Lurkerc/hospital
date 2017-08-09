@@ -200,6 +200,7 @@ export default {
       if (this.operateData) {
         options = this.handleOperateData(myUrl, options)
       }
+
       //处理服务数据  ajax请求
       let myPromise = Util.queryData(options)();
       myPromise.then(function (res) {
@@ -218,7 +219,7 @@ export default {
           isLoadingFun(false);
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
-          util.handleAjaxError(that,error.response.status+'');
+          Util.handleAjaxError(that,error.response.status+'');
         } else if (error.request) {
           isLoadingFun(false);
           // The request was made but no response was received

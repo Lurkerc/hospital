@@ -320,6 +320,12 @@
       /*--点击--批量通过--按钮--*/
       pass(){
         if(!this.isSelected()) return;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].state == 'PASS'){
+            this.errorMess('已通过的数据不能进行再次通过');
+            return;
+          }
+        }
         this.operailityData =this.multipleSelection;
         this.openModel('pass') ;
       },

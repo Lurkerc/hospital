@@ -34,6 +34,10 @@
         type:String,
         default:"http://jackzhang1204.github.io/materials/mov_bbb.mp4",
       },
+      poster:{  //视频服务器所在地址:
+        type:String,
+        default:"http://jackzhang1204.github.io/materials/poster.png",
+      },
       videoName:{  //视频服名称:
         type:String,
         default:"我在测试呢",
@@ -68,7 +72,7 @@
             skin: "vodWhite",
             title: "A-A-A-A-A",
             lang: 'zh_CN',
-            poster: "http://jackzhang1204.github.io/materials/poster.png",
+            poster: this.poster,
           }, "player");
           setTimeout(()=>{
 

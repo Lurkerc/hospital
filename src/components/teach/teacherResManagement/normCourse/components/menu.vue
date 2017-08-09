@@ -32,6 +32,9 @@
       // 激活状态
       color: #FFF;
       background: #20A0FF;
+      &::before {
+        background-image: url(~@/assets/ambuf/images/study/menu_active.png);
+      }
     }
     &:not(.active):hover {
       // 鼠标划过状态
@@ -41,12 +44,12 @@
       // 小图标
       content: ' ';
       width: 14px;
-      height: 14px;
-      background-color: #ccc;
+      height: 14px; // background-color: #ccc;
       margin-top: 15px;
       margin-right: 10px;
       display: block;
       float: left;
+      background-image: url(~@/assets/ambuf/images/study/menu_default.png);
     }
     .trmmText {
       line-height: $menuHeight;

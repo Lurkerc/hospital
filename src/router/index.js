@@ -997,7 +997,7 @@ const routes = [
     component: Index,
     children:[
       //工作台
-      work,
+       work,
       //日常管理
       pygl,jtgl,zyzhd,kqgl,zybl,jcjl,
 

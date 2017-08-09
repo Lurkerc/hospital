@@ -17,7 +17,7 @@
             <template scope="scope">
               <el-form :model="scope.row" :rules="rules.addScore" :ref="'formValidate'+[scope.$index+'scope']" label-width="80px">
                 <el-form-item prop="mark" error="cuo" label-width="0px">
-                  <el-input v-if="studentInfo.examStatus === 'ONGOING'" @blur="markChange(scope.row)" type="number" @change="scoreInputChange"
+                  <el-input v-if="studentInfo.examStatus === 'ONGOING'" @blur="markChange(scope.row,scope.$index)" type="number" @change="scoreInputChange"
                     :min="0" :max="scope.row.score" v-model.number="scope.row.mark"></el-input>
                   <el-input v-else @blur="markChange(scope.row)" type="number" @change="scoreInputChange" :min="0" :max="scope.row.score" v-model.number="scope.row.mark"
                     :disabled="!chgScore"></el-input>
@@ -266,13 +266,14 @@
       /*
        * 点击提交按钮 监听是否提交数据 (评分)
        * @param isLoadingFun boolean  form表单验证是否通过
+       * autoSubmitData 自动提交分数的数据
        * */
-      listenSubEvent(isLoadingFun) {
+      listenSubEvent(isLoadingFun, autoSubmitData) {
         let isSubmit = this.submitForm("formValidate");
         if (isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
-          this.addMessTitle.ajaxParams.data = this.contentDataList;
+          this.addMessTitle.ajaxParams.data = autoSubmitData || this.contentDataList;
           this.ajax(this.addMessTitle, isLoadingFun)
         }
       },
@@ -466,8 +467,12 @@
         return sums;
       },
 
-
-      markChange(row) {
+      /**
+       * 检测分数是否正确
+       * row 行
+       * index 所修改分数所在行索引
+       */
+      markChange(row, index) {
         //mark 得分验证
         if (row.mark > row.score) {
           row.mark = row.score
@@ -475,8 +480,11 @@
           row.mark = 0
         }
         // 自动提交（考核中）
-        if(this.studentInfo.examStatus === 'ONGOING' && this.studentInfo.sceneStatus === 'ONGOING'){
-          this.listenSubEvent()
+        if (this.studentInfo.examStatus === 'ONGOING' && this.studentInfo.sceneStatus === 'ONGOING' && row.mark != 0) {
+          this.addMessTitle.ajaxParams.url = api.submit.path;
+          let data = this.$util._.defaultsDeep({}, this.contentDataList);
+          data.detailsList = [data.detailsList[index]]; // 只提交被修改的一行分数
+          this.listenSubEvent(null, data)
         }
       },
 

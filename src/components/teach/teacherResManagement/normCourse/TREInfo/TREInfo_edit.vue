@@ -64,10 +64,10 @@
 </script>
 
 <style lang="scss">
-  /* 教学质量评价表 */
+  /* 试运行评估表 */
 
   .nTREInfo {
-    padding-left: 16px;
+    // padding-left: 16px;
   }
 
 </style>

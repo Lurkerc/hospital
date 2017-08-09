@@ -2,8 +2,6 @@
 
   <div>
     <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
-
-
       <el-row >
         <el-col :span="8" :offset="2">
           <el-form-item label="科室:" prop="name" >
@@ -15,7 +13,6 @@
             {{formValidate.patientName}}
           </el-form-item>
         </el-col >
-
       </el-row >
 
       <el-row >
@@ -52,7 +49,6 @@
           <el-form-item label="次要诊断:" prop="name" >
             <el-input type="textarea" readonly v-model="formValidate.secondaryDiagnosis"></el-input>
           </el-form-item>
-        </el-col>
         </el-col >
       </el-row >
 
@@ -167,11 +163,6 @@
           </el-form-item>
         </el-col >
       </el-row >
-
-
-
-
-
     </el-form>
 
     <el-row >

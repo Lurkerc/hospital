@@ -4,134 +4,131 @@
 ****--@author   zyc<332533011@qq.com
 ----------------------------------->
 <template>
-  <div>
-    <div style="text-align: center;padding: 10px;">
-      <h2>临床病理解剖学</h2>
+  <!--<div>
+    <div style="width: 90%;margin: 0 auto;">
+    <h2 style="text-align: center;padding: 20px 0;">pdf文件名称</h2>
+    <el-row>
+      <el-col :span="11">
+        <el-button @click="gotoPage('up')">上一页</el-button>
+        <el-button @click="gotoPage('down')">下一页</el-button>
+        <el-input v-model.number="myPage" style="width: 5em"></el-input> /{{numPages}}
+        <el-button @click="rotate += 90">&#x27F3;</el-button>
+        <el-button @click="rotate -= 90">&#x27F2;</el-button>
+        &lt;!&ndash;<el-button @click="$refs.pdf.print()">print</el-button>&ndash;&gt;
+      </el-col>
+      <el-col :span="12">
+        当前页&#45;&#45;{{myPage}}
+      </el-col>
+    </el-row>
     </div>
-    <div class="swiper-img-body">
-      <div class="swiper-img-box">
-        <div class="swiper-img-left">
-          <swiper :options="swiperOption1" ref="mySwiper1">
-            <!-- slides -->
-            <swiper-slide v-for="(item,index) in imagesList" :key="index">
-              <img width="100%" height="500" :src="item.src" />
-            </swiper-slide>
-            <!-- Optional controls -->
-            <div class="swiper-button-prev" slot="button-prev"></div>
-            <div class="swiper-button-next" slot="button-next"></div>
-          </swiper>
-        </div>
-        <div class="swiper-img-right">
-          <swiper :options="swiperOption2" :class="{' gallery-thumbs':true}" ref="mySwiper2">
-            <!-- slides -->
-            <swiper-slide v-for="(item,index) in imagesList" :key="index">
-              <img width="100%" height="120" style="margin-top: 3px;" :src="item.src" />
-            </swiper-slide>
-            <!-- Optional controls -->
-            <div class="swiper-scrollbar"   slot="scrollbar"></div>
-          </swiper>
-        </div>
-      </div>
+    <br />
+    <div style="width: 90%;margin: 0 auto;">
+      <div v-if="loadedRatio > 0 && loadedRatio < 1" style="background-color: green; color: white; text-align: center" :style="{ width: loadedRatio * 100 + '%' }">{{ Math.floor(loadedRatio * 100) }}%</div>
+      <pdf v-if="show" ref="pdf" style="border: 1px solid #EFF2F7;box-shadow: 0 0 4px 0 rgba(135,134,134,0.50);" :src="src" :page="page" :rotate="rotate" @password="password" @progress="loadedRatio = $event" @error="error" @numPages="numPages = $event"></pdf>
     </div>
-    <div style="margin: 20px auto; width: 1000px;">
-      {{imagesList[currIdx].content}}
+    <br />
+    <div style="width: 90%;margin: 0 auto;">
+      <el-row>
+        <el-col :span="11">
+          <el-button @click="gotoPage('up')">上一页</el-button>
+          <el-button @click="gotoPage('down')">下一页</el-button>
+          <el-input v-model.number="page" style="width: 5em"></el-input> /{{numPages}}
+          <el-button @click="rotate += 90">&#x27F3;</el-button>
+          <el-button @click="rotate -= 90">&#x27F2;</el-button>
+          &lt;!&ndash;<el-button @click="$refs.pdf.print()">print</el-button>&ndash;&gt;
+        </el-col>
+        <el-col :span="12">
+          当前页&#45;&#45;{{myPage}}
+        </el-col>
+      </el-row>
     </div>
-  </div>
+  </div>-->
+  <!--<pdf src="/static/test.pdf"></pdf>-->
 </template>
 
 <script>
-  /*当前组件必要引入*/
-
-  //当前组件引入全局的util
-  let Util = null;
-  export default{
-    data() {
+  //import pdf from "vue-pdf"
+  export default {
+    /*components:{
+        pdf
+    },
+    data () {
       return {
-        imagesList:[
-          {src:"/static/swiper-img/nature1.jpg",content:"内容介绍1"},
-          {src:"/static/swiper-img/nature2.jpg",content:"内容介绍2"},
-          {src:"/static/swiper-img/nature3.jpg",content:"内容介绍3"},
-          {src:"/static/swiper-img/nature4.jpg",content:"内容介绍4"},
-          {src:"/static/swiper-img/nature5.jpg",content:"内容介绍5"},
+        show: true,
+        pdfList: [
+          '/static/test.pdf',
+          /!*'https://cdn.mozilla.net/pdfjs/tracemonkey.pdf',
+          'https://cdn.rawgit.com/mozilla/pdf.js/c6e8ca86/test/pdfs/freeculture.pdf',
+          'https://cdn.rawgit.com/mozilla/pdf.js/c6e8ca86/test/pdfs/annotation-link-text-popup.pdf',
+          'https://cdn.rawgit.com/mozilla/pdf.js/c6e8ca86/test/pdfs/calrgb.pdf',
+          'https://cdn.rawgit.com/sayanee/angularjs-pdf/68066e85/example/pdf/relativity.protected.pdf',
+          'data:application/pdf;base64,JVBERi0xLjUKJbXtrvsKMyAwIG9iago8PCAvTGVuZ3RoIDQgMCBSCiAgIC9GaWx0ZXIgL0ZsYXRlRGVjb2RlCj4+CnN0cmVhbQp4nE2NuwoCQQxF+/mK+wMbk5lkHl+wIFislmIhPhYEi10Lf9/MVgZCAufmZAkMppJ6+ZLUuFWsM3ZXxvzpFNaMYjEriqpCtbZSBOsDzw0zjqPHZYtTrEmz4eto7/0K54t7GfegOGCBbBdDH3+y2zsMsVERc9SoRkXORqKGJupS6/9OmMIUfgypJL4KZW5kc3RyZWFtCmVuZG9iago0IDAgb2JqCiAgIDEzOAplbmRvYmoKMiAwIG9iago8PAogICAvRXh0R1N0YXRlIDw8CiAgICAgIC9hMCA8PCAvQ0EgMC42MTE5ODcgL2NhIDAuNjExOTg3ID4+CiAgICAgIC9hMSA8PCAvQ0EgMSAvY2EgMSA+PgogICA+Pgo+PgplbmRvYmoKNSAwIG9iago8PCAvVHlwZSAvUGFnZQogICAvUGFyZW50IDEgMCBSCiAgIC9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NTc0IDg0MS44ODk3NzEgXQogICAvQ29udGVudHMgMyAwIFIKICAgL0dyb3VwIDw8CiAgICAgIC9UeXBlIC9Hcm91cAogICAgICAvUyAvVHJhbnNwYXJlbmN5CiAgICAgIC9DUyAvRGV2aWNlUkdCCiAgID4+CiAgIC9SZXNvdXJjZXMgMiAwIFIKPj4KZW5kb2JqCjEgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzCiAgIC9LaWRzIFsgNSAwIFIgXQogICAvQ291bnQgMQo+PgplbmRvYmoKNiAwIG9iago8PCAvQ3JlYXRvciAoY2Fpcm8gMS4xMS4yIChodHRwOi8vY2Fpcm9ncmFwaGljcy5vcmcpKQogICAvUHJvZHVjZXIgKGNhaXJvIDEuMTEuMiAoaHR0cDovL2NhaXJvZ3JhcGhpY3Mub3JnKSkKPj4KZW5kb2JqCjcgMCBvYmoKPDwgL1R5cGUgL0NhdGFsb2cKICAgL1BhZ2VzIDEgMCBSCj4+CmVuZG9iagp4cmVmCjAgOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDA1ODAgMDAwMDAgbiAKMDAwMDAwMDI1MiAwMDAwMCBuIAowMDAwMDAwMDE1IDAwMDAwIG4gCjAwMDAwMDAyMzAgMDAwMDAgbiAKMDAwMDAwMDM2NiAwMDAwMCBuIAowMDAwMDAwNjQ1IDAwMDAwIG4gCjAwMDAwMDA3NzIgMDAwMDAgbiAKdHJhaWxlcgo8PCAvU2l6ZSA4CiAgIC9Sb290IDcgMCBSCiAgIC9JbmZvIDYgMCBSCj4+CnN0YXJ0eHJlZgo4MjQKJSVFT0YK',*!/
         ],
-        currIdx:0,
-        swiperOption1: {
-          // NotNextTick is a component's own property, and if notNextTick is set to true, the component will not instantiate the swiper through NextTick, which means you can get the swiper object the first time (if you need to use the get swiper object to do what Things, then this property must be true)
-          // notNextTick是一个组件自有属性，如果notNextTick设置为true，组件则不会通过NextTick来实例化swiper，也就意味着你可以在第一时间获取到swiper对象，假如你需要刚加载遍使用获取swiper对象来做什么事，那么这个属性一定要是true
-          notNextTick: true,
-          // swiper configs 所有的配置同swiper官方api配置
-          prevButton:'.swiper-button-prev',
-          nextButton:'.swiper-button-next',
-          height:400,
-          // if you need use plugins in the swiper, you can config in here like this
-          // 如果自行设计了插件，那么插件的一些配置相关参数，也应该出现在这个对象中，如下debugger
-          debugger: true,
-          mousewheelControl : true,
-          // swiper callbacks
-          // swiper的各种回调函数也可以出现在这个对象中，和swiper官方一样
-          onTransitionStart(swiper){
-            //console.log(swiper)
-          },
-          // more Swiper configs and callbacks...
-          // ...
-        },
-        swiperOption2: {
-          // NotNextTick is a component's own property, and if notNextTick is set to true, the component will not instantiate the swiper through NextTick, which means you can get the swiper object the first time (if you need to use the get swiper object to do what Things, then this property must be true)
-          // notNextTick是一个组件自有属性，如果notNextTick设置为true，组件则不会通过NextTick来实例化swiper，也就意味着你可以在第一时间获取到swiper对象，假如你需要刚加载遍使用获取swiper对象来做什么事，那么这个属性一定要是true
-          notNextTick: true,
-          // swiper configs 所有的配置同swiper官方api配置
-          //autoplay: 3000,
-          direction : 'vertical',
-          spaceBetween: 10,
-          centeredSlides: true,
-          slidesPerView: 'auto',
-          touchRatio: 0.2,
-          slideToClickedSlide: true,
-          mousewheelControl : true,
-          //prevButton:'.swiper-button-prev',
-          //nextButton:'.swiper-button-next',
-          height:100,
-          // if you need use plugins in the swiper, you can config in here like this
-          // 如果自行设计了插件，那么插件的一些配置相关参数，也应该出现在这个对象中，如下debugger
-          debugger: true,
-          // swiper callbacks
-          // swiper的各种回调函数也可以出现在这个对象中，和swiper官方一样
-          onTransitionStart(swiper){
-            //console.log(swiper)
-          },
-          // more Swiper configs and callbacks...
-          // ...
+        src:'/static/test.pdf',
+        loadedRatio: 0,
+        page: 1,
+        myPage:1,
+        numPages: 0,
+        rotate: 0,
+        outTime:null,
+      }
+    },
+    watch:{
+      myPage(val){
+        if(!isNaN(val)){
+          if(val>0&&val<=this.numPages){
+            if (/^\d+$/.test(val)) {
+                      if(this.outTime!==null){
+          clearTimeout(this.outTime);
+        }
+        this.outTime = setTimeout(()=>{
+          this.page = this.myPage;
+        },500)
+            }else{
+              this.showMess("你输入的页面数不合法!")
+            }
+          }else{
+            this.showMess("你输入的页面数不合法!");
+          }
+        }else{
+            this.showMess("你输入的页面数不合法!")
         }
       }
     },
     methods: {
-      //初始化请求列表数据
-      init(){
+      password: function(updatePassword, reason) {
 
+        updatePassword(prompt('password is "test"'));
       },
+      error: function(err) {
 
-    },
-    created(){
-      this.init();
-    },
-    // you can find current swiper instance object like this, while the notNextTick property value must be true
-    // 如果你需要得到当前的swiper对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的swiper对象，同时notNextTick必须为true
-    computed: {
-      swiperLeft() {
-        return this.$refs.mySwiper1.swiper
+        //console.log(err);
       },
-      swiperRight() {
-        return this.$refs.mySwiper2.swiper
-      },
-    },
-    mounted(){
-      //this.swiper.slideTo(3, 1000, false)
-      this.swiperLeft.params.control = this.swiperRight;
-      this.swiperRight.params.control = this.swiperLeft;
-    },
-    components: {}
+      gotoPage(type){
+        if(type=="up"){
+          if(this.myPage==1){
+            return;
+          }
+          if(this.myPage>2){
+            this.myPage--;
+          }
+        }else{
+          if(this.myPage==this.numPages){
+            return;
+          }
+          if(this.myPage<14){
+            this.myPage++;
+          }
+        }
+
+
+      }
+    }*/
   }
+
 </script>
+
 <style>
- @import '../../../../assets/ambuf/css/manage_v1.0/swiper.css';
+  /* 题库 */
+
 </style>

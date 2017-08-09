@@ -369,8 +369,13 @@
         if(!this.isSelected()) return;
         let operailityData =[];
         for(let i=0;i<this.multipleSelection.length;i++){
-          operailityData.push({id:this.multipleSelection[i].cid})
+          if(this.multipleSelection[i].cstate == 'PASS'){
+            this.errorMess('已通过的数据不能进行再次通过');
+            return;
+          }
+          operailityData.push({id:this.multipleSelection[i].cid});
         }
+
         this.operailityData = operailityData
         this.openModel('pass') ;
       },
@@ -380,7 +385,11 @@
         if(!this.isSelected()) return;
         let operailityData =[];
         for(let i=0;i<this.multipleSelection.length;i++){
-          operailityData.push({id:this.multipleSelection[i].cid})
+          if(this.multipleSelection[i].cstate == 'PASS'){
+            this.errorMess('已通过的不能驳回');
+            return;
+          }
+          operailityData.push({id:this.multipleSelection[i].cid});
         }
         this.operailityData = operailityData
         this.openModel('reject') ;

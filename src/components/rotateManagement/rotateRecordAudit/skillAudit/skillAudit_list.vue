@@ -105,7 +105,7 @@
           <el-table-column
             align="center"
             prop="diseaseName"
-            label="病种名称"
+            label="技能操作名称"
             width="200">
           </el-table-column>
           <el-table-column
@@ -398,9 +398,12 @@
         if(!this.isSelected()) return;
         let operailityData =[];
         for(let i=0;i<this.multipleSelection.length;i++){
-          operailityData.push(this.multipleSelection[i].skillId)
+          if(this.multipleSelection[i].disState == 'PASS'){
+            this.errorMess('已通过的数据不能进行再次通过');
+            return;
+          }
+          operailityData.push(this.multipleSelection[i].diseaseId);
         }
-        console.log(this.multipleSelection,operailityData.join(','));
 
         this.passData.data.diseaseIds = operailityData.join(',');
         this.openModel('pass') ;

@@ -18,7 +18,7 @@
           </el-col>
           <el-col class="timeInfo">
             <el-form-item label="共缺时间：">
-              <span>{{ viewData.minerDays + viewData.sickDays + viewData.personalDays }} 天</span>
+              <span>{{ (viewData.minerDays + viewData.sickDays + viewData.personalDays) || 0 }} 天</span>
             </el-form-item>
             <el-form-item label="其中：">
               <span>旷工 {{ viewData.minerDays || 0 }} 天，</span>
@@ -44,10 +44,10 @@
                   <span>惩罚 {{ item.penaltyNum || 0 }} 次</span>
                 </el-form-item>
                 <div>
-                  <el-form-item label="老师评价：">{{ item.teacherEvaluation }}</el-form-item>
+                  <el-form-item label="老师评价：">{{ item.teacherEvaluation || '暂无' }}</el-form-item>
                 </div>
                 <div>
-                  <el-form-item label="老师评语：">{{ item.teacherComment }}</el-form-item>
+                  <el-form-item label="老师评语：">{{ item.teacherComment || '暂无' }}</el-form-item>
                 </div>
                 <h4>轮转记录填写：</h4>
                 <el-table align="center" :context="self" :data="item.depRequired" tooltip-effect="dark">
@@ -125,11 +125,11 @@
           </el-col>
           <el-col>
             <h4>个人小结：</h4>
-            {{ viewData.userSummary }}
+            {{ viewData.userSummary || '暂无' }}
           </el-col>
           <el-col>
             <h4>实习单位意见：</h4>
-            {{ viewData.eduComment }}
+            {{ viewData.eduComment || '暂无' }}
           </el-col>
           <el-col>
             <h4 style="margin-bottom:0;">出科结果：

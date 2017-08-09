@@ -67,8 +67,8 @@
             width="200">
             <template scope="scope">
               <el-button size="small" @click="show(scope.row)">查看</el-button>
-              <el-button v-if="scope.row.disState=='NO_SUBMIT'" size="small" @click="edit(scope.row)">修改</el-button>
-              <el-button v-if="scope.row.disState=='NO_SUBMIT'" size="small" @click="reported(scope.row)">上报</el-button>
+              <el-button v-if="scope.row.disState=='NO_SUBMIT' || scope.row.disState=='REJECT'" size="small" @click="edit(scope.row)">修改</el-button>
+              <el-button v-if="scope.row.disState=='NO_SUBMIT' || scope.row.disState=='REJECT'" size="small" @click="reported(scope.row)">上报</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -283,7 +283,7 @@
           flag = false;
         }
         if(len>1 && isOnly){
-          this.showMess("只能修改一条数据!")
+          this.showMess("只能删除一条数据!")
           flag = false;
         }
         return flag;

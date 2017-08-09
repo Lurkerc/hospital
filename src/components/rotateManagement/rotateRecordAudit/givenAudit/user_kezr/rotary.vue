@@ -24,7 +24,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="20" :offset="2">
-          <el-form-item label="老师评价：">{{ viewData.teacherEvaluation }}</el-form-item>
+          <el-form-item label="老师评价：">{{ viewData.teacherEvaluation || '暂无' }}</el-form-item>
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>轮转记录填写：</h4>
@@ -105,17 +105,15 @@
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>小结附件：</h4>
-          <uploadFile v-if="studentUploadFiles.length" :uploadFiles="studentUploadFiles" :show="true"></uploadFile>
-          <span v-else>暂无附件</span>
+          <uploadFile :uploadFiles="depUploadFiles" :show="true"></uploadFile>
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>老师评语：</h4>
-          {{ viewData.teacherComment }}
+          {{ viewData.teacherComment || '暂无' }}
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>老师附件：</h4>
-          <uploadFile v-if="studentUploadFiles.length" :uploadFiles="teacherUploadFiles" :show="true"></uploadFile>
-          <span v-else>暂无附件</span>
+          <uploadFile :uploadFiles="teacherUploadFiles" :show="true"></uploadFile>
         </el-col>
 
         <el-col :span="20" :offset="2">
@@ -128,11 +126,13 @@
         </el-col>
         <el-col :span="20" :offset="2" style="margin-top:20px;">
           <el-form-item label="是否合格：">
-            <el-radio class="radio" v-model="summaryFileList.depQualified" label="QUALIFIED">合格</el-radio>
-            <el-radio class="radio" v-model="summaryFileList.depQualified" label="NO_QUALIFIED">不合格</el-radio>
+            <el-radio-group v-model="summaryFileList.depQualified">
+              <el-radio label="QUALIFIED">合格</el-radio>
+              <el-radio label="NO_QUALIFIED">不合格</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-col>
-        <template v-if="summaryFileList.depQualified === 'QUALIFIED'">
+        <template v-if="summaryFileList.depQualified === 'NO_QUALIFIED'">
           <el-col :span="10" :offset="2">
             <el-form-item label="是否需要补轮转：">
               <el-radio class="radio" v-model="summaryFileList.isMakeupRotary" :label="1">需要</el-radio>
@@ -163,7 +163,7 @@
   import uploadFile from '../../../../../components/common/uploadFile';
 
   export default {
-    props: ['operailityData'],
+    props: ['operailityData', 'userType'],
     data() {
       return {
         self: this,
@@ -171,7 +171,7 @@
         summaryFileList: {
           fileIds: '',
           comment: '',
-          depQualified: 'QUALIFIED', // 是否合格 QUALIFIED合格|NO_QUALIFIED不合格
+          depQualified: "QUALIFIED", // 是否合格 QUALIFIED合格|NO_QUALIFIED不合格
           isMakeupRotary: 1, // 是否需要补轮转 0不需要|1需要
           makeupTs: 1, // 轮转周期
         },
@@ -183,6 +183,9 @@
           title: '确定',
           callParEvent: 'listenSubEvent'
         },
+        // 学生类型
+        studentType: 'SXS', // 默认实习生
+        depRequirement: [],
       }
     },
     methods: {
@@ -240,6 +243,33 @@
         });
 
         this.summaryFileList.fileIds = fileIds.join(',');
+
+        if (this.studentType === 'SXS') {
+          this.operailityData.podId && this.getDepRequirementBySXS()
+        } else {
+          this.operailityData.podId && this.getDepRequirement();
+        }
+      },
+
+      // 获取实习生查看的轮转记录填写
+      getDepRequirementBySXS() {
+        this.ajax({
+          ajaxSuccess: res => this.depRequirement = res.data || [],
+          ajaxParams: {
+            url: api.getDepRequirementBySXS.path + '--' + this.operailityData.podId,
+            method: api.getDepRequirementBySXS.method
+          }
+        })
+      },
+      // 获取非实习生查看的轮转记录填写
+      getDepRequirement() {
+        this.ajax({
+          ajaxSuccess: res => this.depRequirement = res.data || [],
+          ajaxParams: {
+            url: api.getDepRequirement.path + '--' + this.operailityData.podId,
+            method: api.getDepRequirement.method
+          }
+        })
       },
 
       // 上传附件

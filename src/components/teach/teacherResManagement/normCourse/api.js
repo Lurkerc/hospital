@@ -32,7 +32,7 @@ const api = {
     path: thisFile + '/operation/', // {id}
     method: 'put'
   },
-  endOperation: { // 课程试运行
+  endOperation: { // 课程退出
     path: thisFile + '/end/operation/', // {id}
     method: 'put'
   },

@@ -9,28 +9,33 @@
         </el-col>
         <el-col :span="20" align="right">
           <el-form-item label="达标分数：">
-            <el-input class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.before.score"></el-input>
+            <el-input :readonly="isReadOnly" class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.before.score"></el-input>
             <span>(系统可自动根据试题数量折算满分100)</span>
           </el-form-item>
         </el-col>
         <el-col>
           <el-form-item>
-            <el-button size="small" type="success" @click="addTestingDto('before',index)">添加试题</el-button>
-            <el-button size="small" type="danger" @click="removeTestingDto('before',index)">删除试题</el-button>
-            <el-button size="small" type="warning" @click="importTestingDto('before',index)">导入试题</el-button>
-            <el-button size="small" type="info" @click="exportTestingDto('before',index)">导出试题</el-button>
+            <template v-if="!isReadOnly">
+              <el-button size="small" type="success" @click="addTestingDto('before',index)">添加试题</el-button>
+              <el-button size="small" type="danger" @click="removeTestingDto('before',index)">删除试题</el-button>
+              <el-button size="small" type="warning" @click="importTestingDto('before',index)">导入试题</el-button>
+              <el-button size="small" type="info" @click="exportTestingDto('before',index)">导出试题</el-button>
+            </template>
             <el-button size="small" type="primary" @click="showTestingDto('before',index)">整体预览</el-button>
           </el-form-item>
         </el-col>
         <el-table ref="singleTable" :data="item.testingDtoListTemp.before.questionsDtoList" @selection-change="handleSelectionChangeBefore">
-          <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column v-if="!isReadOnly" type="selection" width="55"></el-table-column>
           <el-table-column type="index" label="序号" width="68">
           </el-table-column>
           <el-table-column property="types" label="试题类型">
             <template scope="scope">
-              <el-select v-model="scope.row.types" size="small">
+              <el-select v-if="!isReadOnly" v-model="scope.row.types" size="small">
                 <el-option v-for="item in testTypeOption" v-if="item.value" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
+              <template v-else>
+                {{ scope.row.types | typeText }}
+              </template>
             </template>
           </el-table-column>
           <el-table-column property="subject" label="题干">
@@ -64,9 +69,9 @@
               <el-button size="small">编辑</el-button>
             </template>
           </el-table-column>
-          <el-table-column property="title" label="分数">
+          <el-table-column label="分数">
             <template scope="scope">
-              <el-button size="small">编辑</el-button>
+              {{ getScoreByTable(item.testingDtoListTemp.before.questionsDtoList,scope.$index) }}
             </template>
           </el-table-column>
         </el-table>
@@ -77,28 +82,33 @@
         </el-col>
         <el-col :span="20" align="right">
           <el-form-item label="达标分数：">
-            <el-input class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.in_progress.score"></el-input>
+            <el-input :readonly="isReadOnly" class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.in_progress.score"></el-input>
             <span>(系统可自动根据试题数量折算满分100)</span>
           </el-form-item>
         </el-col>
         <el-col>
           <el-form-item>
-            <el-button size="small" type="success" @click="addTestingDto('in_progress',index)">添加试题</el-button>
-            <el-button size="small" type="danger" @click="removeTestingDto('in_progress',index)">删除试题</el-button>
-            <el-button size="small" type="warning" @click="importTestingDto('in_progress',index)">导入试题</el-button>
-            <el-button size="small" type="info" @click="exportTestingDto('in_progress',index)">导出试题</el-button>
+            <template v-if="!isReadOnly">
+              <el-button size="small" type="success" @click="addTestingDto('in_progress',index)">添加试题</el-button>
+              <el-button size="small" type="danger" @click="removeTestingDto('in_progress',index)">删除试题</el-button>
+              <el-button size="small" type="warning" @click="importTestingDto('in_progress',index)">导入试题</el-button>
+              <el-button size="small" type="info" @click="exportTestingDto('in_progress',index)">导出试题</el-button>
+            </template>
             <el-button size="small" type="primary" @click="showTestingDto('in_progress',index)">整体预览</el-button>
           </el-form-item>
         </el-col>
         <el-table ref="singleTable" :data="item.testingDtoListTemp.in_progress.questionsDtoList" @selection-change="handleSelectionChangeIn_progress">
-          <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column v-if="!isReadOnly" type="selection" width="55"></el-table-column>
           <el-table-column type="index" label="序号" width="68">
           </el-table-column>
           <el-table-column property="types" label="试题类型">
             <template scope="scope">
-              <el-select v-model="scope.row.types" size="small">
+              <el-select v-if="!isReadOnly" v-model="scope.row.types" size="small">
                 <el-option v-for="item in testTypeOption" v-if="item.value" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
+              <template v-else>
+                {{ scope.row.types | typeText }}
+              </template>
             </template>
           </el-table-column>
           <el-table-column property="subject" label="题干">
@@ -125,7 +135,7 @@
           </el-table-column>
           <el-table-column property="title" label="分数">
             <template scope="scope">
-              <el-button size="small">编辑</el-button>
+              {{ getScoreByTable(item.testingDtoListTemp.in_progress.questionsDtoList,scope.$index) }}
             </template>
           </el-table-column>
         </el-table>
@@ -136,28 +146,33 @@
         </el-col>
         <el-col :span="20" align="right">
           <el-form-item label="达标分数：">
-            <el-input class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.after.score"></el-input>
+            <el-input :readonly="isReadOnly" class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.after.score"></el-input>
             <span>(系统可自动根据试题数量折算满分100)</span>
           </el-form-item>
         </el-col>
         <el-col>
           <el-form-item>
-            <el-button size="small" type="success" @click="addTestingDto('after',index)">添加试题</el-button>
-            <el-button size="small" type="danger" @click="removeTestingDto('after',index)">删除试题</el-button>
-            <el-button size="small" type="warning" @click="importTestingDto('after',index)">导入试题</el-button>
-            <el-button size="small" type="info" @click="exportTestingDto('after',index)">导出试题</el-button>
+            <template v-if="!isReadOnly">
+              <el-button size="small" type="success" @click="addTestingDto('after',index)">添加试题</el-button>
+              <el-button size="small" type="danger" @click="removeTestingDto('after',index)">删除试题</el-button>
+              <el-button size="small" type="warning" @click="importTestingDto('after',index)">导入试题</el-button>
+              <el-button size="small" type="info" @click="exportTestingDto('after',index)">导出试题</el-button>
+            </template>
             <el-button size="small" type="primary" @click="showTestingDto('after',index)">整体预览</el-button>
           </el-form-item>
         </el-col>
         <el-table ref="singleTable" :data="item.testingDtoListTemp.after.questionsDtoList" @selection-change="handleSelectionChangeAfter">
-          <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column v-if="!isReadOnly" type="selection" width="55"></el-table-column>
           <el-table-column type="index" label="序号" width="68">
           </el-table-column>
           <el-table-column property="types" label="试题类型">
             <template scope="scope">
-              <el-select v-model="scope.row.types" size="small">
+              <el-select v-if="!isReadOnly" v-model="scope.row.types" size="small">
                 <el-option v-for="item in testTypeOption" v-if="item.value" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
+              <template v-else>
+                {{ scope.row.types | typeText }}
+              </template>
             </template>
           </el-table-column>
           <el-table-column property="subject" label="题干">
@@ -184,7 +199,7 @@
           </el-table-column>
           <el-table-column property="title" label="分数">
             <template scope="scope">
-              <el-button size="small">编辑</el-button>
+              {{ getScoreByTable(item.testingDtoListTemp.after.questionsDtoList,scope.$index) }}
             </template>
           </el-table-column>
         </el-table>
@@ -199,17 +214,20 @@
   } from '../rules';
   import testTypeOption from './testTypeOption';
   export default {
+    props: ['readOnly'],
     data() {
       return {
         rules, // 验证输入规则
         testTypeOption, // 试题类型
         multipleSelection: [],
         planDtoList: {},
+        isReadOnly: false, // 只读
       }
     },
     methods: {
       // 初始化
       init() {
+        this.isReadOnly = this.readOnly !== undefined;
         this.planDtoList = this.$store.state.curriculum.data.planDtoList;
       },
       /******************************************** 按钮事件 ***************************************/
@@ -301,6 +319,22 @@
         str[2] = (text[bit - 1]) || '';
         return str.join('')
       },
+
+      // 根据题目计算分数
+      getScoreByTable(data, index) {
+        let weight = 100; // 默认满分为100
+        let len = data.length;
+        let m = weight % len;
+        let num = parseInt(weight / len);
+        let arr = [];
+        if (m === 0) { // 整除
+          return parseInt(num)
+        } else if (m - index > 0) { // 有余平均+1
+          return num + 1
+        } else { // 整数
+          return num
+        }
+      },
     },
     created() {
       this.init()
@@ -313,7 +347,7 @@
   /* 评测与作业 */
 
   .nTestTable {
-    padding-left: 16px;
+    // padding-left: 16px;
     .el-form-item {
       margin: 4px 0;
     }

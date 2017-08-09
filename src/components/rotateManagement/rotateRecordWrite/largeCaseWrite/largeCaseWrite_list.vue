@@ -314,7 +314,7 @@
           flag = false;
         }
         if(len>1 && isOnly){
-          this.showMess("只能操作一条数据!");
+          this.showMess("只能删除一条数据!");
           flag = false;
         }
         return flag;

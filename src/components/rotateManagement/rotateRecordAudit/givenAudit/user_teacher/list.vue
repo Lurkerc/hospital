@@ -56,7 +56,9 @@
             <span v-else>---</span>
           </template> -->
           <template scope="scope">
-            <el-button size="small" type="success" @click="rotary(scope.row)">出科</el-button>
+            <!-- <el-button size="small" type="success" @click="rotary(scope.row)">出科</el-button> -->
+            <el-button :disabled="!scope.row.depExaminationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
+            <el-button :disabled="!scope.row.depExaminationId" size="small" type="success" @click="rotary(scope.row)" v-if="scope.row.depQualified === 'QUALIFIED'">审核</el-button>
           </template>
         </el-table-column>
         <el-table-column label="姓名" prop="userName" show-overflow-tooltip></el-table-column>
@@ -95,20 +97,20 @@
       <modal-header slot="header" :content="contentHeader.rotaryId"></modal-header>
       <template v-if="rotaryModal">
         <!--带教老师-->
-        <rotary @cancel="cancel" @rotary="subCallback" :operaility-data="operailityData"></rotary>
+        <rotary @cancel="cancel" @rotary="subCallback" :operaility-data="operailityData" :user-type="viewUserType"></rotary>
       </template>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 查看 -->
     <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="900">
       <modal-header slot="header" :content="contentHeader.showId"></modal-header>
-      <show v-if="showModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></show>
+      <show v-if="showModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :user-type="viewUserType"></show>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 分数详情 -->
     <Modal :mask-closable="false" v-model="depQualifiedModal" height="200" class-name="vertical-center-modal" :width="800">
       <modal-header slot="header" :content="contentHeader.depQualifiedId"></modal-header>
-      <dep-qualified v-if="depQualifiedModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></dep-qualified>
+      <dep-qualified v-if="depQualifiedModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :user-type="viewUserType"></dep-qualified>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -130,6 +132,7 @@
         orderOption,
         sortbyOption,
         userTypeOption,
+        viewUserType: '', // 当前查看的用户角色
         userInfo: {}, // 用户信息
         userIdentify: [], // 用户角色
         departmentId: '',
@@ -242,6 +245,7 @@
       /*************************************** 按钮事件 **********************************/
       // 出科
       rotary(row) {
+        this.viewUserType = row.podClass;
         this.operailityData = row;
         this.openModel('rotary');
       },
@@ -251,11 +255,13 @@
       },
       // 查看
       show(row) {
+        this.viewUserType = row.podClass;
         this.operailityData = row;
         this.openModel('show');
       },
       // 合格查看
       depQualified(row) {
+        this.viewUserType = row.podClass;
         this.operailityData = row;
         this.openModel('depQualified');
       },
@@ -266,10 +272,10 @@
         this.openModel('edit');
       },
       // 查看
-      show(row) {
-        this.operailityData = row;
-        this.openModel('show');
-      },
+      // show(row) {
+      //   this.operailityData = row;
+      //   this.openModel('show');
+      // },
       // 操作回调
       subCallback(target, title, updata) {
         this.cancel(target);

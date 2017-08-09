@@ -23,17 +23,19 @@
       <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%"
         @selection-change="handleSelectionChange">
         <el-table-column label="序号" prop="index" width="100"></el-table-column>
-        <el-table-column label="操作" align="center" width="80">
+        <el-table-column label="操作" width="140">
           <template scope="scope">
             <!-- <template v-if="scope.row.examinationId"> -->
-            <el-button size="small" type="success" @click="rotary(scope.row)">出科</el-button>
+            <!-- <el-button size="small" type="success" @click="rotary(scope.row)">出科</el-button> -->
             <!-- <el-button size="small" type="success" @click="rotary(scope.row)" v-if="scope.row.depQualified === 'QUALIFIED'">出科</el-button> -->
             <!-- <el-button size="small" type="warning" @click="show(scope.row)" v-else>查看</el-button> -->
             <!-- </template>
             <span v-else>---</span> -->
+            <el-button :disabled="!scope.row.examinationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
+            <el-button :disabled="!scope.row.examinationId" size="small" type="success" @click="rotary(scope.row)" v-if="scope.row.depQualified === 'QUALIFIED'">出科</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="姓名" prop="userName"></el-table-column>
+        <el-table-column label="姓名" prop="userName" show-overflow-tooltip></el-table-column>
         <el-table-column label="科室" prop="greatName" show-overflow-tooltip></el-table-column>
         <el-table-column label="入科时间" prop="rotaryBeginTime" show-overflow-tooltip></el-table-column>
         <el-table-column label="出科时间" prop="rotaryEndTime" show-overflow-tooltip>

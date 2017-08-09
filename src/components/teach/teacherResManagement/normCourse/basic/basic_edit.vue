@@ -4,10 +4,10 @@
     <el-form class="editForm" :model="course" ref="course" :rules="rules" label-width="120px">
       <el-col :span="19">
         <el-form-item label="课程名称：" prop="title">
-          <el-input v-model="course.title"></el-input>
+          <el-input v-model="course.title" :readonly="isReadOnly"></el-input>
         </el-form-item>
         <el-form-item label="标签：" prop="tags">
-          <el-input v-model="course.tags"></el-input>
+          <el-input v-model="course.tags" :readonly="isReadOnly"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="4" :offset="1">
@@ -15,7 +15,7 @@
       </el-col>
       <el-col>
         <el-form-item label="应用方向说明：" prop="direction">
-          <el-input v-model="course.direction" type="textarea" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
+          <el-input v-model="course.direction" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" :readonly="isReadOnly"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="8">
@@ -36,9 +36,11 @@
     basic as rules
   } from '../rules';
   export default {
+    props: ['readOnly'],
     data() {
       return {
         rules, // 验证输入规则
+        isReadOnly: false, // 只读
         course: {
           title: "", //课程名称
           tags: "", //标签，多个|分割
@@ -54,6 +56,7 @@
       // 初始化
       init() {
         let state = this.$store.state;
+        this.isReadOnly = this.readOnly !== undefined;
         // 只取有用的字段
         for (let key in this.course) {
           this.course[key] = state.curriculum.data.course[key]

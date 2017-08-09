@@ -273,10 +273,11 @@
           fillTime: '', //填写时间(yyy-MM-dd HH:mm:ss)
           poddIds: [], //病种ID(多个逗号分隔)
           poddNames: '', //技能名称(多个逗号分隔)
-          isSuccess: '', //是否成功
+          isSuccess: 'Y', //是否成功
           fileIds: '', //附件IDs(多个逗号分隔)
           podId: '', //轮转ID
           reasonFailure: '', //失败原因
+          disTitle:[],
         }
         this.isInit = true;
         this.formValidate = formValidate;
@@ -346,6 +347,8 @@
         }else if (role=='ZYY'){
           listMessTitle.ajaxParams.url =  this.url.ZYYgetMyRotaryRequirements + 'jn_' + val;
         };
+        this.formValidate.disTitle = [];
+        this.getMyRotaryRequirements = [];
         this.ajax(listMessTitle)
 
       },

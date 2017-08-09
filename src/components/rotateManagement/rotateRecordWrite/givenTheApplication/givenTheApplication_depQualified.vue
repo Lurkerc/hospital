@@ -30,14 +30,19 @@
             </el-form-item>
           </el-col>
           <el-col>
-            <el-form-item label="老师评价：">{{ viewData.teacherEvaluation }}</el-form-item>
+            <el-form-item label="老师评价：">{{ viewData.teacherEvaluation || '暂无' }}</el-form-item>
           </el-col>
           <el-col>
             <h4>轮转记录填写：</h4>
-            <el-table align="center" :context="self" :data="viewData.depRequired" tooltip-effect="dark">
+            <!-- <el-table align="center" :context="self" :data="viewData.depRequired" tooltip-effect="dark">
               <el-table-column label="名称" prop="requiredName"></el-table-column>
               <el-table-column label="要求例数" prop="requiredNum" show-overflow-tooltip></el-table-column>
               <el-table-column label="实填例数" prop="userNum" show-overflow-tooltip></el-table-column>
+            </el-table> -->
+            <el-table align="center" :context="self" :data="depRequirement" tooltip-effect="dark">
+              <el-table-column label="名称" prop="disTitle"></el-table-column>
+              <el-table-column label="要求例数" prop="disNum" show-overflow-tooltip></el-table-column>
+              <el-table-column label="实填例数" prop="disTs" show-overflow-tooltip></el-table-column>
             </el-table>
           </el-col>
           <el-col>
@@ -116,16 +121,22 @@
 <script>
   import api from './api';
   export default {
-    props: ['operailityData'],
+    props: ['operailityData', 'userType'],
     data() {
       return {
         self: this,
         viewData: [],
+        // 学生类型
+        studentType: 'SXS', // 默认实习生
+        depRequirement: [],
       }
     },
     methods: {
       // 初始化
       init() {
+        if (this.userType.indexOf('SXS') > -1) {
+          this.studentType = 'SXS'
+        }
         this.getViewData()
       },
 
@@ -143,6 +154,36 @@
       // 获取数据成功
       getDataSuccess(res) {
         this.viewData = res.data;
+        if (this.studentType === 'SXS') {
+          this.operailityData.podId && this.getDepRequirementBySXS()
+        } else {
+          this.operailityData.rdId = this.viewData.rdId;
+          this.operailityData.depId = this.viewData.depId;
+          this.operailityData.podId && this.getDepRequirement();
+        }
+      },
+
+      // 获取实习生查看的轮转记录填写
+      getDepRequirementBySXS() {
+        this.ajax({
+          ajaxSuccess: res => this.depRequirement = res.data || [],
+          ajaxParams: {
+            url: api.getDepRequirementBySXS.path + '--' + this.viewData.podId,
+            method: api.getDepRequirementBySXS.method
+          }
+        })
+      },
+      // 获取非实习生查看的轮转记录填写
+      getDepRequirement() {
+        this.ajax({
+          ajaxSuccess: res => this.depRequirement = res.data || [],
+          ajaxParams: {
+            url: api.getDepRequirement.path + (this.operailityData.rdId || '') + '-' + (this.viewData.depId ||
+                '') + '-' +
+              this.viewData.podId,
+            method: api.getDepRequirement.method
+          }
+        })
       },
     },
     components: {},

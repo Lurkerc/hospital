@@ -400,8 +400,11 @@
         if(!this.isSelected()) return;
         let operailityData =[];
         for(let i=0;i<this.multipleSelection.length;i++){
-
-          operailityData.push(this.multipleSelection[i].diseaseId)
+          if(this.multipleSelection[i].disState == 'PASS'){
+            this.errorMess('已通过的数据不能进行再次通过');
+            return;
+          }
+          operailityData.push(this.multipleSelection[i].diseaseId);
         }
 
         this.passData.data.diseaseIds = operailityData.join(',');

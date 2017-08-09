@@ -24,7 +24,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="20" :offset="2">
-          <el-form-item label="老师评价：">{{ viewData.teacherEvaluation }}</el-form-item>
+          <el-form-item label="老师评价：">{{ viewData.teacherEvaluation || '-' }}</el-form-item>
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>轮转记录填写：</h4>
@@ -140,7 +140,7 @@
   import uploadFile from '../../../../components/common/uploadFile';
 
   export default {
-    props: ['operailityData'],
+    props: ['operailityData', 'userType'],
     data() {
       return {
         self: this,
@@ -200,8 +200,7 @@
       init() {
         // 检测当前登录用户是否是实习生
         let thisUserRoleList = [];
-        this.$store.state.userInfo.roleList.map(item => thisUserRoleList.push(item.identify));
-        if (thisUserRoleList.indexOf('SXS') > -1) {
+        if (this.userType.indexOf('SXS') > -1) {
           this.studentType = 'SXS'
         }
 
@@ -262,6 +261,8 @@
         if (this.studentType === 'SXS') {
           this.getDepRequirementBySXS()
         } else {
+          this.operailityData.rdId = this.viewData.rdId;
+          this.operailityData.depId = this.viewData.depId;
           this.getDepRequirement();
         }
       },
@@ -271,7 +272,7 @@
         this.ajax({
           ajaxSuccess: res => this.depRequirement = res.data || [],
           ajaxParams: {
-            url: api.getDepRequirementBySXS.path + '--' + this.viewData.podId,
+            url: api.getDepRequirementBySXS.path + '--' + this.operailityData.podId,
             method: api.getDepRequirementBySXS.method
           }
         })
@@ -281,9 +282,9 @@
         this.ajax({
           ajaxSuccess: res => this.depRequirement = res.data || [],
           ajaxParams: {
-            url: api.getDepRequirement.path + (this.operailityData.rdId || '') + '-' + (this.viewData.depId ||
+            url: api.getDepRequirement.path + (this.operailityData.rdId || '') + '-' + (this.operailityData.depId ||
                 '') + '-' +
-              this.viewData.podId,
+              this.operailityData.podId,
             method: api.getDepRequirement.method
           }
         })

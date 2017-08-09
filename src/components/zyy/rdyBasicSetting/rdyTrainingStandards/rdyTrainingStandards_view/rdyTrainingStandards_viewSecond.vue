@@ -49,6 +49,9 @@
               label="类型"
               align="center"
             >
+              <template scope="scope">
+                {{scope.row.deShowtype=='TEXT'?'文本':'表格' }}
+              </template>
             </el-table-column>
             <el-table-column
               prop="deCountBasic"

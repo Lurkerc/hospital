@@ -29,7 +29,7 @@
       <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%"
         @selection-change="handleSelectionChange">
         <el-table-column label="序号" prop="index" width="100"></el-table-column>
-        <el-table-column label="操作" align="center" width="80">
+        <el-table-column label="操作" width="140">
           <!-- <template scope="scope">
             <template v-if="scope.row.depExaminationId">
               <el-button size="small" type="success" @click="rotary(scope.row)" v-if="!isManage && scope.row.depQualified === 'QUALIFIED'">出科</el-button>
@@ -38,8 +38,10 @@
             <span v-else>---</span>
           </template> -->
           <template scope="scope">
-            <el-button size="small" type="success" @click="rotary(scope.row)">出科</el-button>
+            <!-- <el-button size="small" type="success" @click="rotary(scope.row)">出科</el-button> -->
             <!-- <el-button size="small" type="warning" @click="show(scope.row)">查看</el-button> -->
+            <el-button :disabled="!scope.row.depExaminationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
+            <el-button :disabled="!scope.row.depExaminationId" size="small" type="success" @click="rotary(scope.row)" v-if="scope.row.depQualified === 'QUALIFIED'">出科</el-button>
           </template>
         </el-table-column>
         <el-table-column label="姓名" prop="userName" show-overflow-tooltip></el-table-column>
@@ -78,13 +80,13 @@
     <!-- 模态框 出科 -->
     <Modal :mask-closable="false" v-model="rotaryModal" height="200" class-name="vertical-center-modal" :width="900">
       <modal-header slot="header" :content="contentHeader.rotaryId"></modal-header>
-      <rotary v-if="rotaryModal" @cancel="cancel" @rotary="subCallback" :operaility-data="operailityData"></rotary>
+      <rotary v-if="rotaryModal" @cancel="cancel" @rotary="subCallback" :operaility-data="operailityData" :user-type="userType"></rotary>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 查看 -->
     <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="900">
       <modal-header slot="header" :content="contentHeader.showId"></modal-header>
-      <show v-if="showModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></show>
+      <show v-if="showModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :user-type="userType"></show>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 理论补考 -->
@@ -99,10 +101,10 @@
       <skill v-if="skillModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></skill>
       <div slot="footer"></div>
     </Modal>
-    <!-- 模态框 理论补考 -->
+    <!-- 模态框 考核详情 -->
     <Modal :mask-closable="false" v-model="depQualifiedModal" height="200" class-name="vertical-center-modal" :width="800">
       <modal-header slot="header" :content="contentHeader.depQualifiedId"></modal-header>
-      <dep-qualified v-if="depQualifiedModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></dep-qualified>
+      <dep-qualified v-if="depQualifiedModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :user-type="userType"></dep-qualified>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -127,7 +129,8 @@
         sortbyOption,
         userTypeOption,
         isManage: false, // 是否是管理者
-        userInfo: {}, // 用户角色
+        userType: [], // 用户角色
+        userInfo: {}, // 用户信息
         departmentId: '',
         departmentOption: [],
         tableData: [],
@@ -184,6 +187,7 @@
         }
 
         this.userInfo = this.$store.getters.getUserInfo;
+        this.userInfo.roleList.map(item => this.userType.push(item.identify));
 
         this.getDepartmentOption();
         this.setTableData();

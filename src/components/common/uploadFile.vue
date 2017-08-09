@@ -1,8 +1,8 @@
 <template>
   <div :class="{'onlyUploadShow': uploadShow }">
-    <el-upload ref="upload" :multiple="!unMultiple" with-credentials :before-upload="beforeUpload" :on-progress="onProgress" :on-success="onSuccess"
-      :on-error="onError" :on-preview="onPreview" :on-remove="onRemove" :on-format-error="onFormatError" :on-exceeded-size="onExceededSize"
-      :file-list="fileList" :drag="isDrag" :headers="headers" :class="{uploadShow:uploadShow,'picture-card':listType=='picture-card'}"
+    <el-upload ref="upload" :multiple="!unMultiple" with-credentials :before-upload="beforeUpload" :on-progress="onProgress"
+      :on-success="onSuccess" :on-error="onError" :on-preview="onPreview" :on-remove="onRemove" :on-format-error="onFormatError"
+      :on-exceeded-size="onExceededSize" :file-list="fileList" :drag="isDrag" :headers="headers" :class="{uploadShow:uploadShow,'picture-card':listType=='picture-card'}"
       :list-type="listType" :action="upUrl">
       <div v-if="listType=='text'" v-show="!uploadShow">
         <el-button size="small" type="primary">点击上传</el-button>
@@ -12,9 +12,14 @@
         <p>点击或将文件拖拽到这里上传</p>
       </div>
       <i class="el-icon-plus" v-show="!uploadShow" v-if="listType=='picture-card'"></i>
-      <div slot="tip" v-if="!data.message" v-show="!uploadShow" class="el-upload__tip">只能上传<span v-if="length" style="font-size: 16px;vertical-align: inherit;">{{length}}个</span>{{selectAccept}}文件 <span v-if="!unSize" style="vertical-align: inherit;">，且不超过{{+this.fileSize/1000}}M</span> </div>
+      <div slot="tip" v-if="!data.message" v-show="!uploadShow" class="el-upload__tip">只能上传<span v-if="length" style="font-size: 16px;vertical-align: inherit;">{{length}}个</span>{{selectAccept}}文件
+        <span v-if="!unSize" style="vertical-align: inherit;">，且不超过{{+this.fileSize/1000}}M</span>
+      </div>
       <div slot="tip" v-if="data.message" v-show="!uploadShow" class="el-upload__tip">{{data.message}}</div>
     </el-upload>
+    <div v-if="uploadShow && !fileList.length" class="noFileTips">
+      暂无附件
+    </div>
     <el-dialog v-if="listType=='picture-card'" v-show="!uploadShow" v-model="dialogVisible" size="tiny">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
@@ -38,8 +43,9 @@
      * */
 
 
-    props: ["uploadUrl", 'downloadUrl', 'type', 'accept', 'show','unSize','drag', 'size', 'message', 'length', 'uploadFiles',
-      'params','unMultiple'
+    props: ["uploadUrl", 'downloadUrl', 'type', 'accept', 'show', 'unSize', 'drag', 'size', 'message', 'length',
+      'uploadFiles',
+      'params', 'unMultiple'
     ],
     data() {
       //        let pictureAccept ='image/jpeg,image/png,image/bmp,image/gif,image/psd,image/tiff,image/tga,application/postscript';
@@ -122,7 +128,7 @@
         isDrag: data.drag || false,
         data: data,
         fileSize: data.size,
-        upUrl: config.urlPrefix + (this.uploadUrl||'/file/upload'),
+        upUrl: config.urlPrefix + (this.uploadUrl || '/file/upload'),
         downUrl: config.urlPrefix + '/file/download',
         fileList: [],
         uploadList: [],
@@ -158,9 +164,9 @@
         if (typeof list != 'object' && !list.length) return;
         for (let i = 0; i < list.length; i++) {
           arr.push({})
-          if( list[i].fileId){
+          if (list[i].fileId) {
             arr[i].id = list[i].fileId;
-          }else {
+          } else {
             arr[i].id = list[i].id;
           }
           arr[i].name = list[i].fileName;
@@ -199,7 +205,7 @@
           return false;
         }
         //文件大小超出默认则提示
-        if(!this.unSize){
+        if (!this.unSize) {
           let isbeyond = (+this.fileSize) * 1024 > file.size;
           if (!isbeyond) {
             this.$Notice.warning({
@@ -328,3 +334,10 @@
 
 </script>
 
+<style>
+  .noFileTips {
+    text-align: center;
+    line-height: 26px;
+  }
+
+</style>

@@ -2,11 +2,21 @@
   <!-- 布局基础 -->
   <div class="tvmInfoMain" ref="tvmInfoMain">
     <div class="tvmInfoBox" :style="{'height':tvmInfoBoxHeight + 'px'}">
-      <div class="tvmInfoMenu">
-        <slot name="menu"></slot>
+      <div class="tvmInfoleft">
+        <div class="tvmInfMenuTop" ref="tvmInfMenuTop">
+          <slot name="menuTop"></slot>
+        </div>
+        <div class="tvmInfoMenu">
+          <slot name="menu"></slot>
+        </div>
       </div>
-      <div class="tvmInfoContent">
-        <slot></slot>
+      <div class="tvmInfoRight">
+        <div class="tvmInfoTitle">
+          <slot name="title"></slot>
+        </div>
+        <div class="tvmInfoContent">
+          <slot></slot>
+        </div>
       </div>
     </div>
     <div class="tvmInfoFooter" ref="tvmInfoFooter">
@@ -29,6 +39,7 @@
       setTvmInfoBoxHeight() {
         let main = this.$refs.tvmInfoMain.offsetHeight;
         let footer = this.$refs.tvmInfoFooter.offsetHeight;
+        let tvmInfMenuTop = this.$refs.tvmInfMenuTop.offsetHeight;
         this.tvmInfoBoxHeight = main - footer
       },
     },
@@ -49,13 +60,18 @@
 <style lang="scss">
   /* 布局基础 */
 
-  $menuWidth:180px;
+  $menuWidth:210px;
   $borderColor:#d1dbe5;
   $padding:16px;
   .tvmInfoMain {
     margin: -$padding;
-    &[displayfooter] .tvmInfoFooter {
-      display: none;
+    &[displayfooter] {
+      .tvmInfoFooter {
+        display: none;
+      }
+      .tvmInfoTitle {
+        left: 0;
+      }
     }
   }
 
@@ -81,25 +97,80 @@
     }
   }
 
-  .tvmInfoMenu {
-    width: $menuWidth; // float: left;
+  .tvmInfoleft {
+    // 左侧
+    width: $menuWidth;
     border-right: 1px solid $borderColor;
     position: absolute;
     left: 0;
     top: 0;
+    bottom: 0;
   }
 
-  .tvmInfoContent {
+  .tvmInfoRight {
+    // 右侧
     height: 100%;
     overflow: hidden;
     overflow-y: auto;
     padding: $padding;
-    padding-left: $menuWidth; // float: left;
+    padding-left: $menuWidth + $padding; // position: relative;
   }
 
   .tvmInfoFooter {
+    // 底部
     padding: $padding;
     border-top: 1px solid $borderColor;
+  }
+
+  .tvmInfMenuTop {
+    // 菜单顶部
+    img {
+      width: 100%;
+      height: 168px;
+    }
+    &:not(:empty)~.tvmInfoMenu {
+      top: 168px;
+    }
+  }
+
+  .tvmInfoMenu {
+    // 菜单
+    width: 100%;
+    overflow-y: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 3;
+  }
+
+  .tvmInfoTitle {
+    // 课程标题
+    font-size: 20px; // line-height: 88px;
+    // height: 88px;
+    // width: 100%;
+    color: #20A0FF;
+    text-align: center;
+    padding: 26px 0;
+    background-color: #fff;
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: $menuWidth + $padding;
+    right: $padding;
+    &:empty {
+      height: 0;
+      padding: 0;
+    }
+    &:not(:empty)~.tvmInfoContent {
+      padding-top: 70px;
+    }
+  }
+
+  .tvmInfoContent {
+    // 内容区域
+    height: 100%;
+    z-index: 1;
   }
 
 </style>

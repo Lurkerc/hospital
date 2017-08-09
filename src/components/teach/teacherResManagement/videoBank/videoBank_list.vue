@@ -135,7 +135,7 @@
       title="对话框标题"
       class-name="vertical-center-modal"
       :loading="true"
-      :width="800"
+      :width="1000"
     >
       <modal-header slot="header" :parent="self" :content="showId"></modal-header>
       <show v-if="showModal"  @cancel="cancel"   :operaility-data="operailityData"></show>
@@ -152,7 +152,7 @@
       :width="800"
     >
       <modal-header slot="header" :parent="self" :content="jurisdictionSetId"></modal-header>
-      <jurisdiction  v-if="jurisdictionSetModal" :id="deptId" :name="typeName" @jurisdictionSet="subCallback"  :url="url" @cancel="cancel" :operaility-data="operailityData"></jurisdiction>
+      <jurisdiction  v-if="jurisdictionSetModal" :id="deptId"  :name="typeName" @jurisdictionSet="subCallback"  :url="url" @cancel="cancel" :operaility-data="operailityData"></jurisdiction>
       <div slot="footer"></div>
     </Modal>
     <!--批量审核-->
@@ -166,7 +166,7 @@
       :width="800"
     >
       <modal-header slot="header" :parent="self" :content="auditId"></modal-header>
-      <audit v-if="auditModal" :fromWhereTree="fromWhereTree" @cancel="cancel" :url="url" :operaility-data="operailityData"></audit>
+      <audit v-if="auditModal" :fromWhereTree="fromWhereTree" @audit="subCallback" @cancel="cancel" :url="url" :operaility-data="operailityData"></audit>
       <div slot="footer"></div>
     </Modal>
     <!---->
@@ -521,12 +521,12 @@
       //设置表格及分页的位置
       getContentHeight() {
         this.contenHeight = this.$refs.treeContent.parentNode.parentNode.offsetHeight;
-        this.setTableDynHeight()
       },
 
 
       //设置表格及分页的位置
       setTableDynHeight() {
+        this.getContentHeight()
         let tableView = this.$refs.tableView;
         let paginationHt = 100;
         this.dynamicHt = this.contenHeight - tableView.offsetTop - paginationHt;
@@ -642,7 +642,7 @@
         this.setTableDynHeight();
         //为窗体绑定改变大小事件
         let Event = Util.events;
-        Event.addHandler(window, "resize", this.setTableDynHeight);
+        Event.addHandler(window, "resize",this.setTableDynHeight);
       })
     },
     components: {

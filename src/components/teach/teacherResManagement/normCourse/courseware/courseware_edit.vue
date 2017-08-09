@@ -7,8 +7,10 @@
         <legend style="font-size:16px">&nbsp;&nbsp;第{{ indexText(index) }}节：{{ item.content || '未填写' }}&nbsp;&nbsp;</legend>
         <el-col>
           <el-form-item label="课前资料：">
-            <el-button type="info" size="small" @click="uploadFile('before',index)">上传资料</el-button>
-            <el-button type="primary" size="small" @click="selectFile('before',index)">选择资源</el-button>
+            <template v-if="!isReadOnly">
+              <el-button type="info" size="small" @click="uploadFile('before',index)">上传资料</el-button>
+              <el-button type="primary" size="small" @click="selectFile('before',index)">选择资源</el-button>
+            </template>
           </el-form-item>
         </el-col>
         <el-table ref="singleTable" :data="item.wareDtoListTemp.before">
@@ -17,10 +19,13 @@
           <el-table-column property="title" label="操作" width="120" align="center">
             <template scope="scope">
               <el-button type="warning" size="mini" @click="showFile(scope.row)">预览</el-button>
-              <el-button type="danger" size="mini" @click="removeFile('before',index,scope.$index)">删除</el-button>
+              <el-button v-if="!isReadOnly" type="danger" size="mini" @click="removeFile('before',index,scope.$index)">删除</el-button>
             </template>
           </el-table-column>
           <el-table-column property="title" label="显示名称">
+            <template scope="scope">
+              <el-input v-model="scope.row.title" :readonly="isReadOnly"></el-input>
+            </template>
           </el-table-column>
           <el-table-column property="title" label="文件名称">
           </el-table-column>
@@ -33,8 +38,10 @@
         </el-table>
         <el-col>
           <el-form-item label="课中资料：">
-            <el-button type="info" size="small" @click="uploadFile('in_progress',index)">上传资料</el-button>
-            <el-button type="primary" size="small" @click="selectFile('in_progress',index)">选择资源</el-button>
+            <template v-if="!isReadOnly">
+              <el-button type="info" size="small" @click="uploadFile('in_progress',index)">上传资料</el-button>
+              <el-button type="primary" size="small" @click="selectFile('in_progress',index)">选择资源</el-button>
+            </template>
           </el-form-item>
         </el-col>
         <el-table ref="singleTable" :data="item.wareDtoListTemp.in_progress">
@@ -43,10 +50,13 @@
           <el-table-column property="title" label="操作" width="120" align="center">
             <template scope="scope">
               <el-button type="warning" size="mini" @click="showFile(scope.row)">预览</el-button>
-              <el-button type="danger" size="mini" @click="removeFile('in_progress',index,scope.$index)">删除</el-button>
+              <el-button v-if="!isReadOnly" type="danger" size="mini" @click="removeFile('in_progress',index,scope.$index)">删除</el-button>
             </template>
           </el-table-column>
           <el-table-column property="title" label="显示名称">
+            <template scope="scope">
+              <el-input v-model="scope.row.title" :readonly="isReadOnly"></el-input>
+            </template>
           </el-table-column>
           <el-table-column property="title" label="文件名称">
           </el-table-column>
@@ -59,8 +69,10 @@
         </el-table>
         <el-col>
           <el-form-item label="课后资料：">
-            <el-button type="info" size="small" @click="uploadFile('after',index)">上传资料</el-button>
-            <el-button type="primary" size="small" @click="selectFile('after',index)">选择资源</el-button>
+            <template v-if="!isReadOnly">
+              <el-button type="info" size="small" @click="uploadFile('after',index)">上传资料</el-button>
+              <el-button type="primary" size="small" @click="selectFile('after',index)">选择资源</el-button>
+            </template>
           </el-form-item>
         </el-col>
         <el-table ref="singleTable" :data="item.wareDtoListTemp.after">
@@ -69,10 +81,13 @@
           <el-table-column property="title" label="操作" width="120" align="center">
             <template scope="scope">
               <el-button type="warning" size="mini" @click="showFile(scope.row)">预览</el-button>
-              <el-button type="danger" size="mini" @click="removeFile('after',index,scope.$index)">删除</el-button>
+              <el-button v-if="!isReadOnly" type="danger" size="mini" @click="removeFile('after',index,scope.$index)">删除</el-button>
             </template>
           </el-table-column>
           <el-table-column property="title" label="显示名称">
+            <template scope="scope">
+              <el-input v-model="scope.row.title" :readonly="isReadOnly"></el-input>
+            </template>
           </el-table-column>
           <el-table-column property="title" label="文件名称">
           </el-table-column>
@@ -93,15 +108,18 @@
   //   plan as rules
   // } from '../rules';
   export default {
+    props: ['readOnly'],
     data() {
       return {
         rules: {}, // 验证输入规则
+        isReadOnly: false, // 只读
         planDtoList: {},
       }
     },
     methods: {
       // 初始化
       init() {
+        this.isReadOnly = this.readOnly !== undefined;
         this.planDtoList = this.$store.state.curriculum.data.planDtoList;
       },
       /******************************************** 按钮事件 ***************************************/
@@ -183,7 +201,7 @@
   /* 课件 */
 
   .nFileTable {
-    padding-left: 16px;
+    // padding-left: 16px;
     .el-form-item {
       margin: 4px 0;
     }

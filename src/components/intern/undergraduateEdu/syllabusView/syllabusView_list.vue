@@ -156,8 +156,8 @@
         Util = this.$util;
         var myDate=new Date();
         let year = myDate.getFullYear();
-        let start=year+"-01-01";
-        let end = this.getFirstAndLastMonthDay(year,12);
+        let start=this.parseDate(year+"-01-01");
+        let end = this.parseDate(this.getFirstAndLastMonthDay(year,12));
 
         //ajax请求参数设置
          //初始化时间戳
@@ -281,7 +281,7 @@
           }
         }
         //再把第其余对象数据填满
-        while (ascending<end){
+        while (ascending<=end){
           if(weekCount>7){
             weekCount=1;
             index++;

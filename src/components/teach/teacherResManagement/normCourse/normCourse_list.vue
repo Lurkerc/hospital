@@ -8,9 +8,9 @@
         <div class="listUpArea-menus">
           <div class="add-remove">
             <el-button class="but-col" @click="add" type="info">创建标准课程</el-button>
-            <el-button class="but-col" @click="reset" type="success">审核标准课程</el-button>
-            <el-button class="but-col" @click="toChannel" type="primary">课程试运行</el-button>
-            <el-button class="but-col" @click="derive" type="danger">课程退出</el-button>
+            <el-button class="but-col" @click="examine" type="success">审核标准课程</el-button>
+            <el-button class="but-col" @click="testRun" type="primary">课程试运行</el-button>
+            <el-button class="but-col" @click="exit" type="danger">课程退出</el-button>
           </div>
         </div>
         <div class="listUpArea-search">
@@ -19,8 +19,8 @@
             <el-form ref="formValidate" :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px">
               <div class="listUpArea-searchLeft">
                 <input class="hidden">
-                <el-input placeholder="请输入内容" v-model="formValidate.name">
-                  <div slot="prepend">姓名</div>
+                <el-input placeholder="请输入课程名称" v-model="formValidate.title">
+                  <div slot="prepend">课程名称</div>
                   <el-button slot="append" @click="handleSubmit('formValidate')" icon="search"></el-button>
                 </el-input>
               </div>
@@ -33,8 +33,8 @@
       </div>
       <div v-if="searchMore" class="listUpAreaMoreSearchBox" ref="searchMore">
         <el-form :inline="true" align="right">
-          <el-form-item label="姓名：">
-            <el-input v-model="formValidate.name"></el-input>
+          <el-form-item label="课程名称：">
+            <el-input v-model="formValidate.title"></el-input>
           </el-form-item>
           <el-button type="info" @click="search">查询</el-button>
         </el-form>
@@ -55,11 +55,15 @@
               </el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="课程名称" align="center" width="200"></el-table-column>
-          <el-table-column prop="createUser" label="创建人" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="title" label="课程名称" align="center" width="200"></el-table-column>
+          <el-table-column prop="operator" label="创建人" show-overflow-tooltip></el-table-column>
           <el-table-column prop="changeStatu" label="资源转化状态" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="statu" label="课程状态" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="classNum" label="课程包含节数" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="status" label="课程状态" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.status | curriculum | typeText }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="totalLesson" label="课程包含节数" show-overflow-tooltip></el-table-column>
           <el-table-column prop="createTime" label="创建日期" show-overflow-tooltip></el-table-column>
           <el-table-column prop="updateTime" label="最新更新日期" show-overflow-tooltip></el-table-column>
         </el-table>
@@ -79,16 +83,22 @@
         </Modal> -->
         <!--增加弹窗-->
         <Modal :mask-closable="false" v-model="addModal" class-name="vertical-center-modal" :width="1100">
-          <modal-header slot="header" :content="addId"></modal-header>
+          <modal-header slot="header" :content="headerContent.addId"></modal-header>
           <add v-if="addModal" @cancel="cancel" @add="subCallback" :operailityData="operailityData" style="height:650px;"></add>
           <div slot="footer"></div>
         </Modal>
-        <!--查看弹窗-->
-        <!-- <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1000">
-          <modal-header slot="header" :parent="self" :content="showId"></modal-header>
-          <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData"></show>
+        <!-- 查看弹窗 -->
+        <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1100">
+          <modal-header slot="header" :parent="self" :content="headerContent.showId"></modal-header>
+          <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData" style="height:650px;"></show>
           <div slot="footer"></div>
-        </Modal> -->
+        </Modal>
+        <!--审核弹窗-->
+        <Modal :mask-closable="false" v-model="examineModal" height="200" class-name="vertical-center-modal" :width="1100">
+          <modal-header slot="header" :parent="self" :content="headerContent.examineId"></modal-header>
+          <examine v-if="examineModal" @cancel="cancel" @audit="subCallback" :operaility-data="operailityData" style="height:650px;"></examine>
+          <div slot="footer"></div>
+        </Modal>
         <!--删除弹窗-->
         <!-- <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal"
           :width="500">
@@ -107,15 +117,17 @@
 
 </style>
 <script>
+  import api from './api';
+  import treeApi from './treeApi';
   /*当前组件必要引入*/
   //引入--修改--组件
   // import edit from "./usersManagement_edit";
   //引入--查看--组件
-  // import show from "../../../base/sysManage/departmentStaff/departmentStaff_view";
+  import show from "./normCourse_view";
   //引入--添加--组件
   import add from "./normCourse_add";
-  //引入--导入--组件
-  // import toChannel from "./usersManagement_toChannel";
+  //引入--审核--组件
+  import examine from "./normCourse_examine";
   //引入--短信通知--组件
   // import shortNote from "./usersManagement_shortNote";
 
@@ -133,9 +145,9 @@
       return {
         //tree默认项设置
         treeDefaults: {
-          getTreeUrl: "/dept/tree-by-SXS",
+          getTreeUrl: treeApi.tree.path,
           getDataUrl: '',
-          isShowMenus: false,
+          isShowMenus: true,
           isShowSearch: false,
         },
         fromWhereTree: "user",
@@ -143,52 +155,30 @@
         //查询表单
         deleteUrl: '/role/remove',
         formValidate: {
-          name: '', // 按照姓名模糊查询
-          sex: '', // 性别
-          mobile: '', // 手机号
-          email: '', // 邮箱
-          idNumber: '', // 身份号
-          grade: '', // 年级
-          classNum: '', // 班级
-          auditStatus: '', // 审核状态
+          title: '', // 课程名称
         },
         /*--按钮button--*/
-
-        addId: {
-          id: 'add',
-          title: '添加'
-        },
-        removeId: {
-          id: 'remove',
-          title: '删除'
-        },
-        forbiddenId: {
-          id: 'forbidden',
-          title: '禁用'
-        },
-        editId: {
-          id: 'edit',
-          title: '修改'
-        },
-        auditId: {
-          id: 'auditId',
-          title: '审核'
-        },
-        showId: {
-          id: 'auditId',
-          title: '查看'
-        },
-        toChannelId: {
-          id: 'toChannelId',
-          title: '导入'
-        },
-        shortNoteId: {
-          id: 'shortNoteId',
-          title: '短信通知'
-        },
-        deriveId: {
-          id: 'deriveId',
-          title: '导出'
+        headerContent: {
+          addId: {
+            id: 'addId',
+            title: '添加'
+          },
+          removeId: {
+            id: 'removeId',
+            title: '删除'
+          },
+          examineId: {
+            id: 'examineId',
+            title: '审核'
+          },
+          editId: {
+            id: 'editId',
+            title: '修改'
+          },
+          showId: {
+            id: 'showId',
+            title: '查看'
+          },
         },
         //点击add按钮,值发生改变
         clickAddChange: false,
@@ -196,19 +186,30 @@
         deptId: '',
 
         searchMore: false,
-        operailityData: '',
+        examineModal: false,
+
+        operailityData: [],
         multipleSelection: [],
         dynamicHt: 100,
         tabHeight: 100,
         self: this,
         tableData: [{
-          name: "呼吸系统疾病",
-          createUser: "张三",
-          changeStatu: "完成",
-          statu: "待修订",
-          classNum: "2",
-          createTime: "2017-10-20",
-          updateTime: "2017-10-22",
+          "id": 18,
+          "typeId": 1,
+          "title": "title测试",
+          "tags": "tags",
+          "direction": "direction",
+          "operatorId": 10160,
+          "operator": "闫沧",
+          "logo": "logo",
+          "remark": "remark",
+          "outline": "outline",
+          "totalLesson": 2,
+          "status": "TESTRUN",
+          "auditStatus": "NOT_SUBMIT",
+          "assessmentFileId": null,
+          "createTime": "111",
+          "updateTime": "222"
         }],
         loading: false,
         listTotal: 0,
@@ -217,7 +218,7 @@
         listMessTitle: {
           ajaxSuccess: 'updateListData',
           ajaxParams: {
-            url: '/user/search-all',
+            url: api.listPage.path,
             params: {}
           }
         },
@@ -240,6 +241,7 @@
         }
       },
 
+      /*************************************** 表格相关 **********************************************/
       //设置表格及分页的位置
       setTableDynHeight() {
         let content = this.$refs.content;
@@ -266,11 +268,11 @@
         let len = this.multipleSelection.length;
         let flag = true;
         if (len == 0) {
-          this.showMess("请选择数据!");
+          this.showMess("请选择课程!");
           flag = false;
         }
         if (len > 1 && isOnly) {
-          this.showMess("只能修改一条数据!")
+          this.showMess("只能选择一条课程!")
           flag = false;
         }
         return flag;
@@ -315,14 +317,71 @@
        * 列表查询方法
        * @param string 查询from的id
        * */
-      handleSubmit(name) {
+      handleSubmit() {
         this.setTableData();
       },
 
-
-      /*--点击--添加--按钮--*/
+      /************************************** 按钮事件 ************************************************/
+      // 添加
       add() {
-        this.clickAddChange = !this.clickAddChange
+        this.clickAddChange = !this.clickAddChange;
+        this.openModel('add');
+      },
+
+      // 添加
+      handleAdd(isSltedTreeNode) {
+        if (!this.undistributedDep()) return;
+        let isSltedTree = this.isSltedTree(isSltedTreeNode);
+        if (isSltedTree) {
+          this.operailityData = {
+            deptId: this.deptId
+          };
+          this.openModel('add');
+        } else {
+          this.$message.error("请选择相应部门目录!")
+        }
+      },
+
+      /*--点击--删除--按钮--*/
+      remove() {
+        if (!this.isSelected()) return;
+        this.operailityData = this.multipleSelection;
+        this.openModel('remove');
+      },
+
+
+      /*
+       * 点击--查看--按钮
+       * @param index string|number  当前行索引
+       * */
+      show(row) {
+        this.operailityData = row;
+        this.openModel('show');
+      },
+
+
+      /*
+       * 点击--修改角色--按钮
+       * @param index string|number  当前行索引
+       * */
+      edit(row) {
+        this.operailityData = row;
+        this.openModel('edit')
+      },
+
+      // 审核
+      examine() {
+        if (this.isSelected(true)) {
+          this.openModel('examine')
+        }
+      },
+      // 试运行
+      testRun() {
+
+      },
+      // 退出
+      exit() {
+
       },
 
       // 搜索
@@ -356,196 +415,7 @@
         return flag
       },
 
-
-      handleAdd(isSltedTreeNode) {
-        if (!this.undistributedDep()) return;
-        let isSltedTree = this.isSltedTree(isSltedTreeNode);
-        if (isSltedTree) {
-          this.operailityData = {
-            deptId: this.deptId
-          };
-          this.openModel('add');
-        } else {
-          this.$message.error("请选择相应部门目录!")
-        }
-      },
-
-
-      /*--点击--删除--按钮--*/
-      remove() {
-        if (!this.isSelected()) return;
-        this.operailityData = this.multipleSelection;
-        this.openModel('remove');
-      },
-
-
-      /*
-       * 点击--查看--按钮
-       * @param index string|number  当前行索引
-       * */
-      show(index) {
-        this.operailityData = this.tableData[index];
-        this.showModal = true;
-      },
-
-
-      /*
-       * 点击--修改角色--按钮
-       * @param index string|number  当前行索引
-       * */
-      edit(index) {
-        if (typeof index == 'undefined') {
-          if (!this.isSelected(true)) return;
-          this.operailityData = this.multipleSelection[0];
-          this.openModel('edit')
-        } else {
-          this.operailityData = this.tableData[index];
-          this.openModel('edit')
-        }
-      },
-
-
-      //禁用
-      forbidden(index) {
-        this.$Modal.confirm({
-          title: '禁用',
-          content: '<p>您确定要禁用该账户吗</p>',
-          loading: true,
-          onOk: () => {
-            let rowData = this.tableData[index];
-            let ids = "",
-              tempArr = [];
-
-            /*if(this.multipleSelection.length>1){
-              for(var i=0,item;i<this.multipleSelection.length;i++){
-                item=this.multipleSelection[i];
-                tempArr.push(item.id);
-              }
-              ids = tempArr.join(",");
-            }else{
-              ids = rowData.id;
-            }*/
-            ids = rowData.id;
-
-
-            //初始化加载页面信息
-            let resetTitle = {
-              ajaxSuccess: (res) => {
-                this.$Modal.remove();
-                this.successMess('禁用成功!');
-                rowData["account"]['enable'] = false;
-              },
-              errorTitle: '禁用失败!',
-              ajaxParams: {
-                url: '/account/disEnable/' + ids,
-                method: 'put'
-              }
-            }
-            this.ajax(resetTitle);
-          }
-        });
-      },
-
-
-      //启用
-      startUsing(index) {
-        this.$Modal.confirm({
-          title: '启用',
-          content: '<p>您确定要启用该账户吗</p>',
-          loading: true,
-          onOk: () => {
-            let rowData = this.tableData[index];
-            let ids = "",
-              tempArr = [];
-
-            /*if(this.multipleSelection.length>1){
-              for(var i=0,item;i<this.multipleSelection.length;i++){
-                item=this.multipleSelection[i];
-                tempArr.push(item.id);
-              }
-              ids = tempArr.join(",");
-            }else{
-              ids = rowData.id;
-            }*/
-            ids = rowData.id;
-
-            //初始化加载页面信息
-            let resetTitle = {
-              ajaxSuccess: (res) => {
-                this.$Modal.remove();
-                this.successMess('禁用成功!');
-                rowData["account"]['enable'] = true;
-              },
-              errorTitle: '禁用失败!',
-              ajaxParams: {
-                url: '/account/enable/' + ids,
-                method: 'put'
-              }
-            }
-            this.ajax(resetTitle);
-          }
-        });
-      },
-
-
-      //重置
-      reset() {
-        if (!this.undistributedDep()) return;
-        if (!this.isSelected()) return;
-        this.$Modal.confirm({
-          title: '重置密码',
-          content: '<p>您确定要重置选中账户的密码吗</p>',
-          loading: true,
-          onOk: () => {
-            let ids = "",
-              tempArr = [];
-            for (var i = 0, item; i < this.multipleSelection.length; i++) {
-              item = this.multipleSelection[i];
-              tempArr.push(item.id);
-              this.multipleSelection = [];
-            }
-            ids = tempArr.join(",");
-            //初始化加载页面信息
-            let resetTitle = {
-              ajaxSuccess: (res) => {
-                this.$Modal.remove();
-                this.successMess('重置成功!密码为:666666');
-                this.isUsing = true;
-                this.$refs.multipleTable.clearSelection();
-              },
-              errorTitle: '重置失败!',
-              ajaxParams: {
-                url: '/account/reset-password/' + ids,
-                method: 'put'
-              }
-            }
-            this.ajax(resetTitle);
-          }
-        });
-      },
-
-
-      //导入
-      toChannel() {
-        if (!this.undistributedDep()) return;
-        this.openModel('toChannel')
-      },
-
-
-      //导出
-      derive() {
-        if (!this.undistributedDep()) return;
-        this.openModel('derive')
-      },
-
-
-      //短信通知
-      shortNote() {
-        if (!this.undistributedDep()) return;
-        this.openModel('shortNote')
-      },
-
-
+      /****************************************** 弹窗相关 ********************************************/
       /*
        * 监听子组件通讯的方法
        * 作用:根据不同的参数关闭对应的模态
@@ -594,7 +464,7 @@
         this[options + 'Modal'] = true;
       },
 
-
+      /***************************************** 树相关 ***********************************************/
       /*
        * 左侧目录树节点click调用父组件方法
        *
@@ -606,12 +476,6 @@
        *
        * */
       treeClick(obj, node, self) {
-
-        /*if(node.isLeaf){  //当前是否为叶子节点
-            alert("====")
-        }else {
-
-        }*/
         this.setTreeDepId(obj.id);
         this.showTreeList(obj.id);
       },
@@ -658,21 +522,15 @@
       },
 
 
-      //确定导出
-      affirmDerive() {
-        //        let http = this.$store.getters.getEnvPath.http;
-        //        window.open() ;
-        this.cancel('derive')
-      },
       /*
        * 设置当前部门Id
        * */
       setTreeDepId(id) {
-        if (id != "") {
+        if (id) {
           this.deptId = id;
           this.setTableData();
         }
-      }
+      },
     },
 
     //初始化组件
@@ -681,7 +539,6 @@
     },
 
     mounted() {
-
       //页面dom稳定后调用
       this.$nextTick(function () {
         //初始表格高度及分页位置
@@ -696,9 +553,8 @@
       //当前组件引入的子组件
       // edit,
       add,
-      // show,
-      // toChannel,
-      // shortNote,
+      show,
+      examine,
       layoutTree,
       leftTree
     }

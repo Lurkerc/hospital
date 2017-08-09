@@ -306,7 +306,6 @@
         }else if (role == 'ZYY'){
           listMessTitle.ajaxParams.url =  this.url.ZYYgetMyRotaryRequirements + 'jn_' + val;
         };
-
         this.ajax(listMessTitle);
 
       },

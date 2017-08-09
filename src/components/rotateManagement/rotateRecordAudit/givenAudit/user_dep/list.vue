@@ -49,10 +49,7 @@
         <el-table-column label="序号" prop="index" width="100"></el-table-column>
         <el-table-column label="操作" width="80">
           <template scope="scope">
-            <template v-if="scope.row.depExaminationId">
-              <el-button size="small" type="warning" @click="show(scope.row)">查看</el-button>
-            </template>
-            <span v-else>---</span>
+            <el-button :disabled="!scope.row.depExaminationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
           </template>
         </el-table-column>
         <el-table-column label="姓名" prop="userName"></el-table-column>
@@ -89,13 +86,13 @@
     <!-- 模态框 查看 -->
     <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="900">
       <modal-header slot="header" :content="contentHeader.showId"></modal-header>
-      <show v-if="showModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></show>
+      <show v-if="showModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :user-type="viewUserType"></show>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 分数详情 -->
     <Modal :mask-closable="false" v-model="depQualifiedModal" height="200" class-name="vertical-center-modal" :width="800">
       <modal-header slot="header" :content="contentHeader.depQualifiedId"></modal-header>
-      <dep-qualified v-if="depQualifiedModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></dep-qualified>
+      <dep-qualified v-if="depQualifiedModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :user-type="viewUserType"></dep-qualified>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -117,6 +114,7 @@
         orderOption,
         sortbyOption,
         userTypeOption,
+        viewUserType: '',
         userInfo: {}, // 用户角色
         departmentId: '',
         departmentOption: [],
@@ -223,23 +221,26 @@
         this.setTableData()
       },
       // 查看
-      show(row) {
-        this.operailityData = row;
-        this.openModel('show');
-      },
+      // show(row) {
+      //   this.operailityData = row;
+      //   this.openModel('show');
+      // },
       // 合格查看
       depQualified(row) {
+        this.viewUserType = row.podClass;
         this.operailityData = row;
         this.openModel('depQualified');
       },
       /*************************************** 模态框 **********************************/
       // 编辑
       edit(row) {
+        this.viewUserType = row.podClass;
         this.operailityData = row;
         this.openModel('edit');
       },
       // 查看
       show(row) {
+        this.viewUserType = row.podClass;
         this.operailityData = row;
         this.openModel('show');
       },

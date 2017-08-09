@@ -65,7 +65,9 @@ export default{
     // 获取内容部分高度
     getContentHeight() {
       this.contenHeight = this.$refs.content.parentNode.parentNode.offsetHeight;
-    }
+    },
+
+
 
   },
   created(){
@@ -78,7 +80,7 @@ export default{
       this.getContentHeight();
       //为窗体绑定改变大小事件
       let Event = this.$util.events;
-      Event.addHandler(window, "resize", this.getContentHeight);
+//      Event.addHandler(window, "resize", this.getContentHeight);
     })
   },
   components: {

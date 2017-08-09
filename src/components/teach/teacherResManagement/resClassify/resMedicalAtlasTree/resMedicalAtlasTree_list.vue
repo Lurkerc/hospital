@@ -354,6 +354,7 @@
 
       //设置表格及分页的位置
       setTableDynHeight() {
+        this.getContentHeight();
         let tableView = this.$refs.tableView;
         let paginationHt = 45;
         this.dynamicHt = this.contenHeight - tableView.offsetTop - paginationHt;
@@ -468,7 +469,7 @@
         this.setTableDynHeight();
         //为窗体绑定改变大小事件
         let Event = Util.events;
-        Event.addHandler(window, "resize", this.getContentHeight);
+        Event.addHandler(window, "resize", this.setTableDynHeight);
       })
     },
     components: {

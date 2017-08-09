@@ -132,8 +132,7 @@
         </el-col>
         <el-col>
           <h4>小结附件：</h4>
-          <uploadFile v-if="studentUploadFiles.length" :uploadFiles="studentUploadFiles" :show="true"></uploadFile>
-          <span v-else>暂无附件</span>
+          <uploadFile :uploadFiles="studentUploadFiles" :show="true"></uploadFile>
         </el-col>
         <el-col>
           <h4>教育处评语：</h4>
@@ -142,6 +141,12 @@
         <el-col>
           <h4>资料附件：</h4>
           <uploadFile @setUploadFiles="setUploadFiles" :uploadFiles="teacherUploadFiles"></uploadFile>
+        </el-col>
+        <el-col style="margin-top:20px;">
+          <el-form-item label="出科是否合格：">
+            <el-radio class="radio" v-model="summaryFileList.depQualified" label="QUALIFIED">合格</el-radio>
+            <el-radio class="radio" v-model="summaryFileList.depQualified" label="NO_QUALIFIED">不合格</el-radio>
+          </el-form-item>
         </el-col>
       </el-form>
       <div style="padding-top:16px;clear:both;">
@@ -169,6 +174,7 @@
         summaryFileList: {
           fileIds: '',
           comment: '',
+          depQualified: 'QUALIFIED', // 是否合格 QUALIFIED合格|NO_QUALIFIED不合格
         },
         studentUploadFiles: [],
         teacherUploadFiles: [],
@@ -200,6 +206,7 @@
       getDataSuccess(res) {
         this.viewData = res.data;
         this.summaryFileList.comment = res.data.eduComment;
+        this.summaryFileList.depQualified = res.data.depQualified;
         let fileIds = [];
         this.studentUploadFiles.length = 0;
         this.teacherUploadFiles.length = 0;
@@ -211,6 +218,7 @@
             filePath: '/api/file/download/' + item.id
           })
         });
+        console.log(this.studentUploadFiles)
         // 老师附件
         res.data.teacherCommentFileList.map(item => {
           fileIds.push(item.id);

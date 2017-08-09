@@ -135,7 +135,7 @@
       title="对话框标题"
       class-name="vertical-center-modal"
       :loading="true"
-      :width="800"
+      :width="1100"
     >
       <modal-header slot="header" :parent="self" :content="showId"></modal-header>
       <show v-if="showModal"  @cancel="cancel"   :operaility-data="operailityData"></show>
@@ -166,7 +166,7 @@
       :width="800"
     >
       <modal-header slot="header" :parent="self" :content="auditId"></modal-header>
-      <audit v-if="auditModal" :fromWhereTree="fromWhereTree" @cancel="cancel" :url="url" :operaility-data="operailityData"></audit>
+      <audit v-if="auditModal"  @audit="subCallback" :fromWhereTree="fromWhereTree" @cancel="cancel" :url="url" :operaility-data="operailityData"></audit>
       <div slot="footer"></div>
     </Modal>
     <!---->
@@ -219,7 +219,7 @@
 
   import add from "./resLiterature_add.vue";
   import edit from "./resLiterature_edit.vue";
-  import show from "../videoBank/videoBank_view.vue";
+  import show from "./resLiterature_view.vue";
   import jurisdiction from "../videoBank/videoBank_set.vue";
   import audit from "../videoBank/audit.vue";
   import api from "./api.js";
@@ -525,6 +525,7 @@
 
       //设置表格及分页的位置
       setTableDynHeight() {
+        this.getContentHeight()
         let tableView = this.$refs.tableView;
         let paginationHt = 100;
         this.dynamicHt = this.contenHeight - tableView.offsetTop - paginationHt;

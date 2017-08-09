@@ -4,20 +4,20 @@
     <el-row class="givenTheApplicationOfLarge">
       <el-form :inline="true">
         <el-col :span="12">
-          <el-form-item label="姓名：">{{ viewData.userName }}</el-form-item>
+          <el-form-item label="姓名：">{{ viewData.userName || operailityData.userName }}</el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="科室：">{{ viewData.greatName }}</el-form-item>
+          <el-form-item label="科室：">{{ viewData.greatName || operailityData.greatName }}</el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="入科时间：">{{ viewData.beginTime }}</el-form-item>
+          <el-form-item label="入科时间：">{{ viewData.beginTime || operailityData.rotaryBeginTime }}</el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="出科时间：">{{ viewData.endTime }}</el-form-item>
+          <el-form-item label="出科时间：">{{ viewData.endTime || operailityData.rotaryEndTime }}</el-form-item>
         </el-col>
         <el-col class="timeInfo">
           <el-form-item label="共缺时间：">
-            <span>{{ viewData.minerDays + viewData.sickDays + viewData.personalDays }} 天</span>
+            <span>{{ (viewData.minerDays + viewData.sickDays + viewData.personalDays) || 0 }} 天</span>
           </el-form-item>
           <el-form-item label="其中：">
             <span>旷工 {{ viewData.minerDays || 0 }} 天，</span>
@@ -160,6 +160,9 @@
         summaryFileList: {
           fileIds: '',
           comment: '',
+          groupNo: this.operailityData.groupNo || '',
+          rtId: this.operailityData.rtId || '',
+          examinationId: this.operailityData.examinationId || 0,
         },
         uploadFiles: [],
         //保存按钮基本信息
@@ -172,7 +175,9 @@
     methods: {
       // 初始化
       init() {
-        this.getViewData()
+        if (this.operailityData.examinationId) {
+          this.getViewData()
+        }
       },
 
       // 获取预览数据
@@ -213,7 +218,8 @@
         this.ajax({
           ajaxSuccess: () => this.$emit('rotary', 'rotary', '保存成功'),
           ajaxParams: {
-            url: api.addUserComment.path + this.operailityData.examinationId,
+            jsonString: true,
+            url: api.addUserComment.path + (this.operailityData.examinationId || 0),
             method: api.addUserComment.method,
             data: this.summaryFileList,
           }

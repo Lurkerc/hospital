@@ -75,8 +75,8 @@
         <el-row >
           <el-col :span="10" :offset="4">
             <div style="margin-left: 100px">
-              <el-button v-if="formValidate.state!='SUBMIT'"  @click="edit">修改</el-button>
-              <el-button  v-if="formValidate.state!='SUBMIT'"   @click="reported">上报</el-button>
+              <el-button v-if="formValidate.state!='SUBMIT'|| formValidate.state!='REJECT'"  @click="edit">修改</el-button>
+              <el-button  v-if="formValidate.state!='SUBMIT'|| formValidate.state!='REJECT'"   @click="reported">上报</el-button>
             </div>
           </el-col>
         </el-row >

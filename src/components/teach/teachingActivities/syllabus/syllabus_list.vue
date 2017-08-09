@@ -14,8 +14,7 @@
               :editable="false"
               placeholder="选择日期"
               :picker-options="pickerOptions0"
-              @change="handleStartTime"
-            >
+              @change="handleStartTime">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="结束时间" prop="activityEndTime" >
@@ -112,8 +111,8 @@
         //ajax请求参数设置
         let myDate=new Date();
         let year = myDate.getFullYear();
-        let start=year+"-01-01";
-        let end = this.getFirstAndLastMonthDay(year,12);
+        let start=this.parseDate(year+"-01-01");
+        let end = this.parseDate(this.getFirstAndLastMonthDay(year,12));
         this.formValidate.activityBeginTime = start; //获得格式化的时间
         this.formValidate.activityEndTime = end;
 
@@ -183,6 +182,7 @@
         tableData[index].BeginTime = this.getDate(ascending);
         tableData[index].EndTime = this.countDate(ascending,weekCount);
         tableData[index].weekIndex = this.theWeek(ascending);
+        console.log(ascending,end);
         let cell ='';
         while (weekCount<8){
           if(data[0]&& data[0].activityTime.replace(/(^\s*)|(\s*$)/g, "")== this.getDate(ascending).replace(/(^\s*)|(\s*$)/g, "")){
@@ -198,8 +198,9 @@
             ascending = ascending+86400000;
           }
         }
+        console.log(ascending,end);
         //再把第其余对象数据填满
-        while (ascending<end){
+        while (ascending<=end){
           if(weekCount>7){
             weekCount=1;
             index++;
@@ -227,6 +228,7 @@
             this.tableData = tableData
           }
         }
+        console.log(ascending,end);
         return tableData
       },
       //鼠标进入单元格
@@ -272,7 +274,7 @@
       timestamp(date){
         let timestamp
         if(navigator.userAgent.indexOf("Firefox")>0){  //解决火狐兼容性问题
-          date &&(date =date+'T09:00:00');
+          date &&(date =date+'T00:00:00');
           timestamp = date ? Date.parse(date) : new Date().getTime();
         }else {
           timestamp = date ? new Date(date).getTime() : new Date().getTime();

@@ -18,10 +18,12 @@ let plan = {
 };
 
 /**
- * 
+ * 教学质量评价表
  */
 let evaluateRules = {
-
+  studentWeight: baseRules.numbers,
+  peersWeight: baseRules.numbers,
+  evaluate: baseRules.numbers,
 };
 
 export {
