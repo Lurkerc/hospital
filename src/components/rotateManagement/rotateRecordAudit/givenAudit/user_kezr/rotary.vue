@@ -148,10 +148,10 @@
       </el-form>
       <div style="padding-top:16px;clear:both;">
         <el-col :span="6" :offset="6" align="center">
-          <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+          <el-button @click="save('BC')" type="success">保存</el-button>
         </el-col>
         <el-col :span="6" align="center">
-          <el-button @click="cancel">取消</el-button>
+          <el-button @click="save('SB')" type="info">上报</el-button>
         </el-col>
       </div>
     </el-row>
@@ -174,15 +174,11 @@
           depQualified: "QUALIFIED", // 是否合格 QUALIFIED合格|NO_QUALIFIED不合格
           isMakeupRotary: 1, // 是否需要补轮转 0不需要|1需要
           makeupTs: 1, // 轮转周期
+          czType: '',
         },
         studentUploadFiles: [], // 学生附件
         teacherUploadFiles: [], // 老师附件
         depUploadFiles: [], // 科室附件
-        //保存按钮基本信息
-        loadBtn: {
-          title: '确定',
-          callParEvent: 'listenSubEvent'
-        },
         // 学生类型
         studentType: 'SXS', // 默认实习生
         depRequirement: [],
@@ -278,17 +274,17 @@
       },
 
       // 确定
-      listenSubEvent(isLoadingFun) {
-        if (!isLoadingFun) isLoadingFun = function () {};
-        isLoadingFun(true)
+      save(type) {
+        let msg = type === 'BC' ? '保存' : '上报';
+        this.summaryFileList.czType = type;
         this.ajax({
-          ajaxSuccess: () => this.$emit('rotary', 'rotary', '保存成功'),
+          ajaxSuccess: () => this.$emit('rotary', 'rotary', msg + '成功'),
           ajaxParams: {
             url: api.depAddComment.path + this.operailityData.depExaminationId,
             method: api.depAddComment.method,
             data: this.summaryFileList,
           }
-        }, isLoadingFun)
+        })
       },
 
       // 取消

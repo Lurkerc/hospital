@@ -141,10 +141,10 @@
       </el-col>
       <div style="padding-top:16px;clear:both;">
         <el-col :span="6" :offset="6" align="center">
-          <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+          <el-button @click="save('BC')" type="success">保存</el-button>
         </el-col>
         <el-col :span="6" align="center">
-          <el-button @click="cancel">取消</el-button>
+          <el-button @click="save('SB')" type="info">上报</el-button>
         </el-col>
       </div>
     </el-row>
@@ -164,6 +164,7 @@
         summaryFileList: {
           fileIds: '', // 附件IDs
           comment: '', // 老师评语
+          czType: '', // 操作类型
         },
         numParams: { // 数字类输入，如果为空则为0
           minerDays: '', // 旷工天数
@@ -177,11 +178,6 @@
         studentUploadFiles: [], // 学生附件
         teacherUploadFiles: [], // 老师附件
         depUploadFiles: [], // 科室附件
-        //保存按钮基本信息
-        loadBtn: {
-          title: '上报',
-          callParEvent: 'listenSubEvent'
-        },
         // 学生类型
         studentType: 'SXS', // 默认实习生
         depRequirement: [],
@@ -279,7 +275,8 @@
       },
 
       // 保存
-      listenSubEvent(isLoadingFun) {
+      save(type) {
+        let msg = type === 'BC' ? '保存' : '上报';
         let tips = {
           minerDays: '旷工天数', // 旷工天数
           sickDays: '病假天数', // 病假天数
@@ -300,18 +297,17 @@
             this.numParams[key] = 0
           }
         }
-        if (!isLoadingFun) isLoadingFun = function () {};
-        isLoadingFun(true);
 
+        this.summaryFileList.czType = type;
         let data = this.$util._.defaultsDeep({}, this.summaryFileList, this.numParams);
         this.ajax({
-          ajaxSuccess: () => this.$emit('rotary', 'rotary', '上报成功'),
+          ajaxSuccess: () => this.$emit('rotary', 'rotary', msg + '成功'),
           ajaxParams: {
             url: api.teacherAddComment.path + this.operailityData.depExaminationId,
             method: api.teacherAddComment.method,
             data,
           }
-        }, isLoadingFun)
+        })
       },
 
       // 上报
