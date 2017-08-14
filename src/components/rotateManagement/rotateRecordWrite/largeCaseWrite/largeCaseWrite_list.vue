@@ -6,18 +6,18 @@
 ----------------------------------->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  ref="formValidate" inline label-width="100px">
+    <el-form   ref="formValidate" :model="formValidate" :rules="largeCaseWriteList" inline label-width="100px">
       <el-row >
         <el-col :span="24"  >
-          <el-form-item  label="姓名:" prop="title">
+          <el-form-item  label="姓名:" prop="cname">
             <el-input   v-model="formValidate.cname" placeholder="输入姓名搜索">
             </el-input>
           </el-form-item>
-          <el-form-item label="住院号:"  prop="title">
+          <el-form-item label="住院号:"  prop="czyNo">
             <el-input   v-model="formValidate.czyNo" placeholder="输入住院号搜索">
             </el-input>
           </el-form-item>
-          <el-form-item  label="科室:"   prop="title">
+          <el-form-item  label="科室:"   >
             <el-select v-model="formValidate.depId" placeholder="请选择科室">
               <select-option :type="'userRotaryDeptlist'" :userType="userType" :userId="userId"  name="depName" id="depId"></select-option>
             </el-select>
@@ -197,6 +197,7 @@
   </div>
 </template>
 <script>
+  import {largeCaseWriteList} from '../../rules'
   /*当前组件必要引入*/
   import url from '../api'
   //引入--新建--组件
@@ -210,6 +211,7 @@
   export default{
     data() {
       return {
+        largeCaseWriteList,
         url:url,
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',

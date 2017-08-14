@@ -79,10 +79,10 @@
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
-            prop="state"
+            prop="spState"
             label="审核状态">
             <template scope="scope">
-              {{scope.row.state | typeText}}
+              {{scope.row.spState | typeText}}
             </template>
           </el-table-column>
 

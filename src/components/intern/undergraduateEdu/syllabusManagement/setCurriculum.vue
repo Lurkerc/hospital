@@ -8,6 +8,8 @@
     <h2 style="text-align: center;padding: 10px 0;">{{operailityData.date}}课程安排</h2>
     <br />
     <el-table
+      v-for="item in 1"
+      :key="item"
       align="center"
       :data="course"
       tooltip-effect="dark"
@@ -21,17 +23,25 @@
         label="课程内容"
         align="center"
         width="160"
+        class-name="valiTableStyle"
         show-overflow-tooltip>
         <template scope="scope">
+          <el-form :model="{numberMust:scope.row.courseContent}" ref="f" :rules="setSyllabus"  label-width="0" style="display: inline-block">
+            <el-form-item  prop="numberMust">
           <el-input v-model="scope.row.courseContent"></el-input>
+            </el-form-item>
+          </el-form>
         </template>
       </el-table-column>
       <el-table-column
         prop="classNum"
         label="课程类型"
         align="center"
+        class-name="valiTableStyle"
         width="160">
         <template scope="scope">
+          <el-form :model="{numberMust:scope.row.courseType}" ref="f" :rules="setSyllabus"  label-width="0" style="display: inline-block">
+            <el-form-item  prop="numberMust">
           <el-select
             v-if="optionData.length>0"
             v-model="scope.row.courseType"
@@ -45,22 +55,34 @@
               :value="item.name">
             </el-option>
           </el-select>
+            </el-form-item>
+          </el-form>
         </template>
       </el-table-column>
       <el-table-column
         label="授课老师"
         align="center"
+        class-name="valiTableStyle"
         show-overflow-tooltip>
         <template scope="scope">
+          <el-form :model="{numberMust:scope.row.teachUserNames}" ref="f" :rules="setSyllabus"  label-width="0" style="display: inline-block">
+            <el-form-item  prop="numberMust">
           <el-input readonly v-model="scope.row.teachUserNames" @focus="addUser(scope.$index)"></el-input>
+            </el-form-item>
+          </el-form>
         </template>
       </el-table-column>
       <el-table-column
         label="授课地点"
         align="center"
+        class-name="valiTableStyle"
         width="160">
         <template scope="scope">
+          <el-form :model="{numberMust:scope.row.courseAddress}" ref="f" :rules="setSyllabus"  label-width="0" style="display: inline-block">
+            <el-form-item  prop="numberMust">
           <el-input v-model="scope.row.courseAddress"></el-input>
+            </el-form-item>
+          </el-form>
         </template>
       </el-table-column>
 
@@ -88,12 +110,15 @@
   /*当前组件必要引入*/
   //引入当前组件字典api
   import api from "../api.js";
+  //引入--验证--组件
+  import {setSyllabus} from "../../rules";
   //当前组件引入全局的util
   let Util = null;
   export default{
     props:["operailityData"],
     data() {
       return {
+        setSyllabus,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         optionData:[{}],
@@ -276,12 +301,33 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
-
+        let isSubmit = this.submitForm();
         if (!isLoadingFun) isLoadingFun = function () {};
-        isLoadingFun(true);
-        this.saveRoomCourseTitle.ajaxParams.data = this.getFormData(this.course);
-        this.ajax(this.saveRoomCourseTitle,isLoadingFun);
+        if(isSubmit) {
+          isLoadingFun(true);
+          this.saveRoomCourseTitle.ajaxParams.data = this.getFormData(this.course);
+          this.ajax(this.saveRoomCourseTitle, isLoadingFun);
+        }
       },
+
+
+      /*
+       * 点击提交按钮 监听是否验证通过
+       * @param formName string  form表单v-model数据对象名称
+       * @return flag boolean   form表单验证是否通过
+       * */
+      submitForm(formName){
+        let flag = true;
+        for(let i =0;i< this.$refs.f.length; i++){
+          this.$refs.f[i].validate((valid) => {
+            if(!valid) {
+              flag= false;
+            }
+          });
+        }
+        return flag;
+      },
+
 
       //选中值发生变化时触发
       change(val){

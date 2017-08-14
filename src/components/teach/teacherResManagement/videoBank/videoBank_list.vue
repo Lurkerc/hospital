@@ -55,7 +55,7 @@
             <el-table-column label="操作" align="center" width="140">
               <template scope="scope">
                 <el-button size="small" @click="show(scope.row)">查看</el-button>
-                <el-button size="small" type="primary" @click="edit(scope.row)">修改</el-button>
+                <el-button v-if="scope.row.auditStatus!='NOT_AUDIT' && scope.row.auditStatus!='AUDIT_SUCCESS' " size="small" type="primary" @click="edit(scope.row)">修改</el-button>
               </template>
             </el-table-column>
             <el-table-column label="名称" prop="name" align="center" show-overflow-tooltip></el-table-column>
@@ -454,6 +454,11 @@
       /*--点击--删除--按钮--*/
       remove(index){
         if(!this.isSelected()) return;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].auditStatus=='NOT_AUDIT' ||this.multipleSelection[i].auditStatus=='AUDIT_SUCCESS'){
+              this.errorMess('只能删除')
+          }
+        }
         this.operailityData = this.multipleSelection;
         this.openModel('remove') ;
       },

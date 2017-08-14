@@ -233,3 +233,11 @@ elementUI 步骤条样式修改
 .el-step__title .is-process{
   color: #20A0FF;
 }
+
+
+
+
+.el-select .el-input {
+  min-width: 110px;
+  width: inherit;
+}

@@ -9,7 +9,7 @@ const stateOption = [{
   label: '待使用'
 }, {
   value: 'UNEVALUATED',
-  label: '待使用'
+  label: '待评分'
 }, {
   value: 'END',
   label: '结束'

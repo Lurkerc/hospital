@@ -61,6 +61,8 @@ export default {
 
   //房间使用情况总分析 GET
   findAllRoomInfo :'/dormitory/bedPerson/findAllRoomInfo',
+  //房间使用情况总分析 GET
+  exportRoomUsingInfo :'/dormitory/bedPerson/export/roomUsingInfo',
 
   /*
   *宿舍管理-人员入住情况
@@ -71,6 +73,9 @@ export default {
 
   //人员入住情况 GET
   userInfo :'/dormitory/bedPerson/listPage/userInfo',
+
+  //人员入住情况 GET
+  exportBedPerson :'/dormitory/bedPerson/export/bedPerson',
 
 
   /*

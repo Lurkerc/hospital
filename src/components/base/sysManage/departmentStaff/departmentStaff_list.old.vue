@@ -4,7 +4,7 @@
   <layout-tree>
     <left-tree slot="left" :clickAddChange="clickAddChange" @setCurrSltNodeId="setTreeDepId" @clickAdd="handleAdd" @tree-click="treeClick"
       @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
-    <div slot="right" id="content" ref="content" class="modal">
+    <div slot="right" id="content" class="defined-t" ref="content" class="modal">
       <div class="listUpAreaBox">
         <div class="listUpArea-menus">
           <div class="add-remove">
@@ -154,7 +154,7 @@
   </layout-tree>
 </template>
 <style>
-  .el-select .el-input {
+  .defined-t .el-select .el-input {
     width: 110px;
   }
 

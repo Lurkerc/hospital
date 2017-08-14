@@ -34,7 +34,7 @@
           type = this.type;
         }
         let typeUrl={
-          dep:'/hospital/dept/list',
+          dep:'/hospital/dept/queryAll',
           role:'/role/list?name=&identify=&type=',
           school:'/schools/queryList',
           allBuild:'/dormitory/build/query/allBuild',   //添加-查询所有大楼(用于添加房间时，选择大楼的下拉框)

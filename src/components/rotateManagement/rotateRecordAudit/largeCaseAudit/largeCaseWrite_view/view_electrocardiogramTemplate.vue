@@ -530,7 +530,11 @@
           SuccessGetCurrData(res){
             let data = res.data;
             if(!data) return;
+            for(let key in data){
+              if(!data[key]&&data[key]!=0)data[key]='';
+            }
             this.formValidate = data;
+
             this.acaMzBegintimeChange(data.acaMzBegintime,data.acaMzEndtime)
 
           },
@@ -603,6 +607,28 @@
                   aidDrugName[i].push('');
                 }
             }
+            ////药物名称/使用的剂量是空数组的话
+            if(mzRecord==0){
+              mzRecord[0] = [];
+              for(let k =0;k<length;k++){
+                mzRecord[0].push('');
+              }
+            }
+            //生命体征是空数组的话，
+            if(mzStatus==0){
+              mzStatus[0] = [];
+              for(let k =0;k<length;k++){
+                mzStatus[0].push('');
+              }
+            }
+            //辅助输入的药品名称是空数组的话，
+            if(aidDrugName==0){
+              aidDrugName[0] = [];
+              for(let k =0;k<length;k++){
+                aidDrugName[0].push('');
+              }
+            }
+
           },
 
           //单击输入框

@@ -1,7 +1,7 @@
 <!--系统管理-->
 <!--部门人员管理-->
 <template>
-  <layout-tree>
+  <layout-tree class="defined-t">
     <left-tree slot="left" @setCurrSltNodeId="setTreeDepId" @tree-click="treeClick" @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults"
       :fromWhereTreeType="fromWhereTree"></left-tree>
     <!-- 住院医人员管理 -->
@@ -11,7 +11,7 @@
   </layout-tree>
 </template>
 <style>
-  .el-select .el-input {
+  .defined-t .el-select .el-input {
     width: 110px;
   }
 

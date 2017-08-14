@@ -4,62 +4,21 @@
 ****--@author   zyc<332533011@qq.com
 ----------------------------------->
 <template>
-  <div class="showContent">
-    <div class="video-type-box">
-      <div class="video-title-left">
-        <a class="videoHome-type">
-          分类
-          <div class="videoHome-type-content">
-            <ul class="videoHome-type-content-list">
-              <li>内科</li>
-              <li>外科</li>
-              <li>儿科</li>
-              <li>妇产科</li>
-              <li>保健</li>
-            </ul>
-          </div>
-        </a>
-      </div>
-      <div class="video-title-right">
-        <el-row>
-          <el-col :span="12">
-            <el-input
-              placeholder="视频资源名称"
-              icon="search"
-              v-model="formValidate.name"
-              :on-icon-click="handleIconClick">
-            </el-input>
-          </el-col>
-          <el-col :span="10" :offset="2">
-            <el-button>记录</el-button>
-            <el-button>收藏</el-button>
-          </el-col>
-        </el-row>
-      </div>
-    </div>
-    <div class="videoHome-list-sort">
-      <el-radio-group v-model="sortFeild">
-        <el-radio-button label="综合排序"></el-radio-button>
-        <el-radio-button label="最新发布"></el-radio-button>
-        <el-radio-button label="最多播放"></el-radio-button>
-      </el-radio-group>
-    </div>
-  </div>
+<div class="showContent">
+  <showList v-if="look == 'index'" @show="show"></showList>
+  <showVideo v-if="look == 'show'" @show="show"></showVideo>
+</div>
 </template>
 <script>
 /*当前组件必要引入*/
-
+import showList from './videoStudy_index.vue';
+import showVideo from './videoStudy_view.vue';
 //当前组件引入全局的util
 let Util = null;
 export default{
   data() {
     return {
-      formValidate: {
-        name: "",
-      },
-
-      //排序
-      sortFeild:"综合排序"
+      look: "index",
     }
   },
   methods: {
@@ -67,17 +26,24 @@ export default{
     init(){
 
     },
-    handleIconClick(ev) {
-      console.log(ev);
+    /**
+     * 要显示那个组件
+     * @param type {String} 要是的组件判断值:index  show
+     * @param obj  {Object} 要传递给显示视频展示页面的值
+     */
+    show(type,obj){
+      this.look=type;
     }
-
   },
   created(){
     this.init();
   },
   mounted(){
   },
-  components: {}
+  components: {
+    showList,
+    showVideo
+  }
 }
 </script>
 <style>

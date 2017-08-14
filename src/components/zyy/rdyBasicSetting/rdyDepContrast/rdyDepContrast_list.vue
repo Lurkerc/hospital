@@ -10,7 +10,7 @@
       <div class="add-remove">
         <el-row>
           <el-col style="width: 125px;">
-            <div class="cal-schoolTit" style="text-align: right;">选择专业：</div>
+            <div class="cal-schoolTit" style="text-align: right;">选择培训标准：</div>
           </el-col>
           <el-col style="width: 200px;">
             <el-select v-model="sltedRtId" placeholder="请选择活动区域">

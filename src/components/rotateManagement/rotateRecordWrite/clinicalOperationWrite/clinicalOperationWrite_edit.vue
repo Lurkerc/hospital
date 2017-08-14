@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="100px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="clinicalOperationWrite"  class="demo-form-inline" label-width="100px" >
 
       <el-row >
         <el-col :span="16" :offset="4">
@@ -64,7 +64,7 @@
 
     <el-row >
       <el-col :span="10" :offset="10">
-        <div style="margin-left: 100px">
+        <div >
           <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
           <el-button  @click="cancel">取消</el-button>
         </div>
@@ -73,12 +73,14 @@
   </div>
 </template>
 <script>
+  import {clinicalOperationWrite} from '../../rules.js'
   //当前组件引入全局的util
   let Util=null;
   export default {
     props:['operailityData','url'],
     data (){
       return{
+        clinicalOperationWrite,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         //form表单bind数据
@@ -142,7 +144,7 @@
         if(isSubmit){
           if(!isLoadingFun) isLoadingFun=function(){};
           isLoadingFun(true);
-          let formValidate = this.formValidate;
+          let formValidate = this.getFormData(this.formValidate);
           formValidate = this.formDate(formValidate,['clinicalTime'],'yyyy-MM-dd');
           this.addMessTitle.ajaxParams.data=formValidate;
           this.ajax(this.addMessTitle,isLoadingFun)

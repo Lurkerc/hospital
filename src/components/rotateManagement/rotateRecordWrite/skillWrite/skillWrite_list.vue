@@ -6,7 +6,7 @@
 ----------------------------------->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  ref="formValidate" inline label-width="100px">
+    <el-form   ref="formValidate" :model="formValidate" :rules="skillWriteList" inline label-width="100px">
       <el-row >
         <el-col :span="24"  >
           <el-form-item  label="技能名称:" prop="skillName">
@@ -95,7 +95,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="fillTime"
+            prop="createTime"
             label="日期"
           >
           </el-table-column>
@@ -189,6 +189,7 @@
   </div>
 </template>
 <script>
+  import {skillWriteList} from '../../rules'
   /*当前组件必要引入*/
   import url from '../api'
   //引入--新建--组件
@@ -203,6 +204,7 @@
   export default{
     data() {
       return {
+        skillWriteList,
         reportedUrl:'',
         url:url,
         //查询表单

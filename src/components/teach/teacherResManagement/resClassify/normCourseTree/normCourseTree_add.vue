@@ -97,7 +97,7 @@
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
-            url: api.treeAdd.path,
+            url: api.courseTreeAdd.path,
             method:'post',
             jsonString:true,
             data:{}

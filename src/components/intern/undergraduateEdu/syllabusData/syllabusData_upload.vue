@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
     <div>
-      <el-form :model="formValidate" :rules="formValidate" ref="formValidate" label-width="10px" class="demo-ruleForm">
+      <el-form :model="formValidate" :rules="syllabusData" ref="formValidate" label-width="10px" class="demo-ruleForm">
         <el-row>
           <el-col :span="3" style="text-align: right;line-height: 30px;">课程名称</el-col>
           <el-col :span="15">
@@ -62,12 +62,14 @@
     /*当前组件必要引入*/
     import selectCourse from './syllabusData_selectCourse.vue';
     import api from '../api';
+    import {syllabusData} from "../../rules"
     //当前组件引入全局的util
     let Util = null;
     export default{
         props:["operailityData"],
         data() {
             return {
+              syllabusData,
               //保存按钮基本信息
               loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
 
@@ -145,6 +147,14 @@
            * */
           listenSubEvent(isLoadingFun){
             let isSubmit = this.submitForm("formValidate");
+            if(this.courseNames==""){
+              this.showMess("请填写课程名称!");
+              return;
+            }
+            if(this.formValidate.fileIds==""){
+              this.showMess("请上传课程资料!");
+              return;
+            }
             isSubmit = true;
             if(isSubmit) {
               if (!isLoadingFun) isLoadingFun = function () {};

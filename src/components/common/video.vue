@@ -4,140 +4,99 @@
 ****--@author   zyc<332533011@qq.com
 ----------------------------------->
 <template>
-  <div id="player" ref="player" style="width: 100%; height: 100%;">
+  <div ref="videoWrapper">
+  <video-player  class="vjs-custom-skin"
+                 ref="videoPlayer"
+                 :options="playerOptions"
+                 :playsinline="true"
+                 @play="onPlayerPlay($event)"
+                 @pause="onPlayerPause($event)"
+                 @ended="onPlayerEnded($event)"
+                 @loadeddata="onPlayerLoadeddata($event)"
+                 @waiting="onPlayerWaiting($event)"
+                 @playing="onPlayerPlaying($event)"
+                 @timeupdate="onPlayerTimeupdate($event)"
+                 @canplay="onPlayerCanplay($event)"
+                 @canplaythrough="onPlayerCanplaythrough($event)"
+                 @ready="playerReadied"
+                 @statechanged="playerStateChanged($event)">
+  </video-player>
   </div>
 </template>
 <script>
-  /*当前组件必要引入*/
-
-  //当前组件引入全局的util
-  let Util = null;
-  export default{
-    props:{
-      type:{  //点播视频的格式:mp4、m3u8、oga、webm、theora、flv、f4v
-        type:String,
-        default:"mp4",
-      },
-      skin:{  //播放器皮肤:
-        type:String,
-        default:"vodWhite",
-      },
-      lang:{  //播放器语言:
-        type:String,
-        default:"zh_CN",
-      },
-      title:{  //播放器皮肤:
-        type:String,
-        default:"6666666",
-      },
-      url:{  //视频服务器所在地址:
-        type:String,
-        default:"http://jackzhang1204.github.io/materials/mov_bbb.mp4",
-      },
-      poster:{  //视频服务器所在地址:
-        type:String,
-        default:"http://jackzhang1204.github.io/materials/poster.png",
-      },
-      videoName:{  //视频服名称:
-        type:String,
-        default:"我在测试呢",
-      },
-      startTime:{  //视频播放开始时间:
-        type:Number,
-        default:0,
-      },
-      isAutoPaly:{  //视频是否自动播放:
-        type:Boolean,
-        default:false,
-      }
-    },
+  export default {
     data() {
-      return {}
-    },
-    beforeDestroy(){
-      if(window.SewisePlayer){
-        SewisePlayer.doStop();
+      return {
+        // videojs options
+        playerOptions: {
+          muted: true,
+          language: 'en',
+          playbackRates: [0.7, 1.0, 1.5, 2.0],
+          sources: [{
+            type: "video/mp4",
+            src: "http://mirror.aarnet.edu.au/pub/TED-talks/911Mothers_2010W-480p.mp4"
+          }],
+          //poster: "http://jackzhang1204.github.io/materials/poster.png",
+          height:100,
+        }
       }
-      this.$refs.player.innerHTML = "";
+    },
+    mounted() {
+      // console.log('this is current player instance object', this.player)
+      setTimeout(() => {
+        // console.log('dynamic change options', this.player)
+        this.player.muted(false)
+      }, 10);
+      this.$nextTick(function(){
+        let videoPlayer = this.$refs.videoWrapper;
+        let parHt = videoPlayer.parentNode.offsetHeight;
+        this.playerOptions.height = parHt;
+      })
+    },
+    computed: {
+      player() {
+        return this.$refs.videoPlayer.player
+      }
     },
     methods: {
-      //初始化请求列表数据
-      init(){
-        this.$nextTick(function(){
-          //播放形式1
-          SewisePlayer.setup({
-
-            server: "vod",
-            type: "mp4",
-            skin: "vodWhite",
-            title: "A-A-A-A-A",
-            lang: 'zh_CN',
-            poster: this.poster,
-          }, "player");
-          setTimeout(()=>{
-
-            SewisePlayer.toPlay(this.url+"?"+Math.random(), this.videoName, this.startTime, this.isAutoPaly);
-            if(window.SewisePlayer){
-              SewisePlayer.doStop();
-            }
-            //SewisePlayer.fullScreen();
-          }, 100)
-          //播放形式1
-          /* SewisePlayer.setup({
-           server: "vod",
-           type: "mp4",
-           videourl: "http://jackzhang1204.github.io/materials/mov_bbb.mp4",
-           poster: "http://jackzhang1204.github.io/materials/poster.png",
-           skin: "vodWhite",
-           title: "Tile 标题",
-           lang: 'zh_CN',
-           fallbackurls:{
-           ogg: "http://jackzhang1204.github.io/materials/mov_bbb.ogg",
-           webm: "http://jackzhang1204.github.io/materials/mov_bbb.webm"
-           }
-           }, "player");*/
-
-        })
+      // listen event
+      onPlayerPlay(player) {
+        // console.log('player play!', player)
       },
-
-      //点播接口调用方法
-      startPlay(){   //开始播放
-        SewisePlayer.doPlay();
+      onPlayerPause(player) {
+        // console.log('player pause!', player)
       },
-      playPause(){  //暂停播放
-        SewisePlayer.doPause();
+      onPlayerEnded(player) {
+        // console.log('player ended!', player)
       },
-      seekTo(n){    //跳转到某个时间点(单位秒)
-        SewisePlayer.doSeek(n);
+      onPlayerLoadeddata(player) {
+        // console.log('player Loadeddata!', player)
       },
-      playStop(){  //停止播放
-        SewisePlayer.doStop();
+      onPlayerWaiting(player) {
+        // console.log('player Waiting!', player)
       },
-      changeVolume(n){  //更改音量调节
-        SewisePlayer.setVolume(n);
+      onPlayerPlaying(player) {
+        // console.log('player Playing!', player)
       },
-      getDuration(){   //获取视频的总时长
-        alert(SewisePlayer.duration());
+      onPlayerTimeupdate(player) {
+        // console.log('player Timeupdate!', player.currentTime())
       },
-      getPlayTime(){   //获取当前播放时间位置、日期  点播返回当前视频播放到的位置（秒）。直播返回当前视频播放到的时间点（日期）
-        alert(SewisePlayer.playTime());
+      onPlayerCanplay(player) {
+        // console.log('player Canplay!', player)
       },
-      switchVideo(){
-        setTimeout(()=>{
-          SewisePlayer.toPlay(this.url, this.videoName, this.startTime, this.isAutoPaly);
-          //SewisePlayer.fullScreen();
-        }, 500)
+      onPlayerCanplaythrough(player) {
+        // console.log('player Canplaythrough!', player)
       },
-      // function switchProgram(){
-      // 	SewisePlayer.playProgram("xqfa3cZn", 0, true);
-      // }
-
-    },
-    created(){
-      this.init();
-    },
-    mounted(){
-    },
-    components: {}
+      // or listen state event
+      playerStateChanged(playerCurrentState) {
+        // console.log('player current update state', playerCurrentState)
+      },
+      // player is ready
+      playerReadied(player) {
+        // seek to 10s
+        player.currentTime(10)
+        // console.log('example 01: the player is readied', player)
+      }
+    }
   }
 </script>

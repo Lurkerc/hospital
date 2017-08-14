@@ -176,6 +176,16 @@
         },
 
 
+        //获取时间段设置的课程
+        courseTimeData:{},
+        getCourseTimeTitle:{
+          ajaxSuccess:'getCourseTimeData',
+          ajaxParams:{
+            url: api.teachCourseTime.path,
+          }
+        },
+
+
         //根据教学周历ID获取每个月课程设置
         getMonthCourseSet:{
           ajaxSuccess:'getMonthCourseData',
@@ -194,6 +204,7 @@
       init(){
         Util = this.$util;
         calendarSet.setCalData([]);
+        this.ajax(this.getCourseTimeTitle);
         this.weekSetId = this.editOperailityData.weekSetId;
       },
 
@@ -207,6 +218,16 @@
       },
 
 
+      //活动时间段获取
+      getCourseTimeData(responseData){
+        let data = responseData.data;
+        for(var i=0,item;i<data.length;i++){
+          item = data[i];
+          this.courseTimeData[item["timeId"]] = item;
+        }
+      },
+
+
       //根据教学周历ID获取每个月课程设置--server回调
       getMonthCourseData(responseData){
         let data = responseData.data;
@@ -217,13 +238,14 @@
           calendarSet.setCalData([]);
           return;
         }
+        //console.log(this.courseTimeData,data);
         let currFormate= ["上","下","晚"];
         for(var i=0,item;i<data.length;i++){
           item = data[i];
-          Util._.forEach(item,function (v,k) {
+          Util._.forEach(item, (v,k)=> {
             let contentArr = v;
             for(var i=0;i<contentArr.length;i++){
-              let num = (i+1);
+              let num = this.courseTimeData[contentArr[i]["timeId"]].courseIndex;//(i+1);
               myData.unshift({
                 title: currFormate[contentArr[i]["timeType"]]+num+":"+contentArr[i]["depName"]+"   "+contentArr[i]["timeStr"],
                 start: k,
@@ -264,10 +286,10 @@
 
 
       goPrev(){
-        this.$children[2].goPrev();
+        this.$children[3].goPrev();
       },
       goNext(){
-        this.$children[2].goNext();
+        this.$children[3].goNext();
       },
       changeMonth(start, end, current,foramatData) {
         this.monthTitle = foramatData(current,'MMMM YYYY');

@@ -1,7 +1,7 @@
 <template>
   <!-- 评测与作业 -->
   <el-row class="nTestTable">
-    <el-form class="editForm" inline ref="item" v-for="(item,index) in planDtoList" :model="item" :rules="rules" :key="index">
+    <el-form inline ref="item" v-for="(item,index) in planDtoList" :model="item" :rules="rules" :key="index">
       <fieldset class="nPlanItem">
         <legend style="font-size:16px">&nbsp;&nbsp;第{{ indexText(index) }}节：{{ item.content || '未填写' }}&nbsp;&nbsp;</legend>
         <el-col :span="4">
@@ -350,6 +350,10 @@
     // padding-left: 16px;
     .el-form-item {
       margin: 4px 0;
+    }
+    .el-select .el-input {
+      min-width: auto;
+      width: 100%;
     }
   }
 

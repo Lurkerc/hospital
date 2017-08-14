@@ -26,8 +26,7 @@
     </el-row>
     <!-- 数据表格 -->
     <div id="tableData" ref="tableData" class="givenTheAppTable">
-      <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%"
-        @selection-change="handleSelectionChange">
+      <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column label="序号" prop="index" width="100"></el-table-column>
         <el-table-column label="操作" width="140">
           <!-- <template scope="scope">
@@ -41,7 +40,7 @@
             <!-- <el-button size="small" type="success" @click="rotary(scope.row)">出科</el-button> -->
             <!-- <el-button size="small" type="warning" @click="show(scope.row)">查看</el-button> -->
             <el-button :disabled="!scope.row.depExaminationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
-            <el-button :disabled="!scope.row.depExaminationId" size="small" type="success" @click="rotary(scope.row)" v-if="scope.row.depQualified === 'QUALIFIED'">出科</el-button>
+            <el-button :disabled="!canRotary(scope.row)" size="small" type="success" @click="rotary(scope.row)">出科</el-button>
           </template>
         </el-table-column>
         <el-table-column label="姓名" prop="userName" show-overflow-tooltip></el-table-column>
@@ -74,8 +73,7 @@
     </div>
     <!-- 分页按钮 -->
     <div style="float: right;margin-top:10px;">
-      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-        :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
+      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
     </div>
     <!-- 模态框 出科 -->
     <Modal :mask-closable="false" v-model="rotaryModal" height="200" class-name="vertical-center-modal" :width="900">
@@ -242,6 +240,19 @@
         let tableData = this.$refs.tableData;
         let paginationHt = 80;
         this.dynamicHt = contentHeight - tableData.offsetTop - paginationHt;
+      },
+      // 是否可出科
+      canRotary(row) {
+        let thisTime = new Date().getTime();
+        let rotaryEndTime = 0;
+        let validTime = 5 * 24 * 3600 * 1000; // 结束出科前后五天
+        let tag = false;
+        if (row.rotaryEndTime) {
+          rotaryEndTime = new Date(row.rotaryEndTime).getTime();
+          // 前五天                                       后五天
+          tag = ((thisTime > (rotaryEndTime - validTime)) && (thisTime < (rotaryEndTime + validTime)));
+        }
+        return tag
       },
       /*************************************** 按钮事件 **********************************/
       // 出科

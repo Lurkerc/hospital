@@ -20,12 +20,10 @@
           </el-form-item>
           <date-group :dateGroup="{text:'',startDate:manageParams.rotaryBeginTime,endDate:manageParams.rotaryEndTime}" style="display:inline-block;">
             <el-form-item label="开始日期：">
-              <el-date-picker v-model="manageParams.rotaryBeginTime" :editable="false" type="date" placeholder="选择入科开始日期" :picker-options="pickerOptions0"
-                @change="handleStartTime"></el-date-picker>
+              <el-date-picker v-model="manageParams.rotaryBeginTime" :editable="false" type="date" placeholder="选择入科开始日期" :picker-options="pickerOptions0" @change="handleStartTime"></el-date-picker>
             </el-form-item>
             <el-form-item label="结束日期：">
-              <el-date-picker v-model="manageParams.rotaryEndTime" :editable="false" type="date" placeholder="选择入科结束日期" :picker-options="pickerOptions1"
-                @change="handleEndTime"></el-date-picker>
+              <el-date-picker v-model="manageParams.rotaryEndTime" :editable="false" type="date" placeholder="选择入科结束日期" :picker-options="pickerOptions1" @change="handleEndTime"></el-date-picker>
             </el-form-item>
           </date-group>
           <el-form-item label="排序字段：">
@@ -44,10 +42,9 @@
     </el-row>
     <!-- 数据表格 -->
     <div id="tableData" ref="tableData" class="givenTheAppTable">
-      <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%"
-        @selection-change="handleSelectionChange">
+      <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column label="序号" prop="index" width="100"></el-table-column>
-        <el-table-column label="操作" width="80">
+        <el-table-column label="操作" width="80" align="center">
           <template scope="scope">
             <el-button :disabled="!scope.row.depExaminationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
           </template>
@@ -80,8 +77,7 @@
     </div>
     <!-- 分页按钮 -->
     <div style="float: right;margin-top:10px;">
-      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-        :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
+      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
     </div>
     <!-- 模态框 查看 -->
     <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="900">

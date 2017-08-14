@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="entityAudit"   class="demo-form-inline" label-width="90px" >
 
 
       <el-row >
@@ -136,7 +136,7 @@
 
       <el-row >
         <el-col :span="16" :offset="2">
-          <el-form-item label="审核意见:" prop="name" >
+          <el-form-item label="审核意见:" prop="reviewMess" >
               <el-input type="textarea"  v-model="reviewMess"></el-input>
             </el-form-item>
           </el-form-item>
@@ -160,12 +160,14 @@
   </div>
 </template>
 <script>
+  import {entityAudit} from '../rules'
   //当前组件引入全局的util
   let Util=null;
   export default {
     props:['operailityData','url'],
     data (){
       return{
+        entityAudit,
         disTitle:[],
 
         reviewMess:"",

@@ -102,7 +102,7 @@
             show-overflow-tooltip>
           </el-table-column>-->
           <el-table-column
-            prop="major"
+            prop="rtProclass"
             label="专业"
             width="160"
             show-overflow-tooltip>
@@ -376,6 +376,9 @@
           option.ajaxParams.params = Object.assign(option.ajaxParams.params,this.queryQptions.params,this.formValidate);
           this.ajax(option);
         }else{
+          let showView = this.showView;
+          this.showView = null;
+          this.showView = showView;
           let dynamicHt = this.changeTabViewParams["dynamicHt"];
           this.changeTabViewParams = {};
           this.changeTabViewParams["dynamicHt"] = dynamicHt;

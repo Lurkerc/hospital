@@ -172,5 +172,10 @@
     height: 100%;
     z-index: 1;
   }
+  /*
+   * 查看时的样式
+   */
+
+  .contentTitleBox {}
 
 </style>

@@ -8,29 +8,63 @@
 
     <div slot="right" id="content" ref="nosocomial" class="table-content ">
       <!--右侧查询-->
-      <div class="add-remove">
+      <el-form  :model="formValidate" ref="formValidate" :rules="contentManagementList"   inline label-width="90px" class="demo-ruleForm">
         <el-row >
-          <el-col :span="6" >
+          <el-col :span="10" >
             <el-button  class="but-col"  @click="add"  type="primary">添加</el-button>
             <el-button  class="but-col"   @click="publish"  type="primary">发布</el-button>
             <el-button  class="but-col"    @click="revocation" type="primary">撤销</el-button>
             <el-button  class="but-col"  @click="remove"  type="primary">删除</el-button>
           </el-col>
-          <el-col :span="10" :offset="2">
-            <el-form ref="ruleForm" label-width="100px" class="demo-ruleForm">
-              <el-form-item  prop="name">
-                <el-input placeholder="输入栏目名称搜索">
-                  <el-button slot="append" icon="search"></el-button>
-                </el-input>
-              </el-form-item>
-            </el-form>
+          <el-col :span="14"  align="right">
+            <el-form-item  prop="title">
+              <el-input v-model="formValidate.title" placeholder="输入标题搜索">
+                <el-button @click="searchEvent" slot="append" icon="search"></el-button>
+              </el-input>
+            </el-form-item>
+            <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
           </el-col>
-        </el-row >
-      </div>
+        </el-row>
+
+        <div v-show="searchMore" ref="searchMore">
+
+          <el-form-item label="内容类型:" prop="contentType">
+            <el-select filterable  v-model="formValidate.contentType" placeholder="请选择">
+              <el-option label="全部" value="">全部</el-option>
+              <el-option label="普通" :value="'ORDINARY'"> </el-option>
+              <el-option label="多媒体" :value="'MULTIMEDIA'"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item  label="置顶顺序:" prop="newsOrder">
+            <el-input v-model="formValidate.newsOrder" placeholder="输入置顶顺序搜索">
+            </el-input>
+          </el-form-item>
+
+          <el-form-item label="发布时间:" prop="publishTime" >
+            <el-date-picker
+              v-model="formValidate.publishTime"
+              type="date"
+              :editable="false"
+              placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
+
+          <el-form-item label="发布状态:" >
+            <el-select filterable  v-model="formValidate.publishStatus" placeholder="请选择">
+              <el-option label="全部" value=""></el-option>
+              <el-option :label="'未发布'" :value="'UNPUBLISH'"></el-option>
+              <el-option :label="'已发布'" :value="'PUBLISH'"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-button type="info" @click="searchEvent">查询</el-button>
+
+        </div>
+      </el-form>
+
       <div
         id="nosocomialTable"
-        ref="nosocomialTable"
-      >
+        ref="nosocomialTable">
         <el-table
           align="center"
           :height="dynamicHt"
@@ -161,7 +195,7 @@
           title="对话框标题"
           class-name="vertical-center-modal"
           :loading="true"
-          :width="800"
+          :width="1000"
         >
           <modal-header slot="header" :parent="self" :content="showId"></modal-header>
           <show v-if="showModal"  @cancel="cancel"   :operaility-data="operailityData" :url="url"></show>
@@ -223,6 +257,7 @@
 </template>
 
 <script >
+  import {contentManagementList} from '../rules'
   /*当前组件必要引入*/
   import url from '../app'
   //引入--修改--组件
@@ -239,6 +274,7 @@
 
     data() {
       return {
+        contentManagementList,
         url:url,
         //tree默认项设置
         treeDefaults:{
@@ -255,9 +291,9 @@
               publishStatus:'PUBLISH'
             }
         },
-
         publishModal:false,
         revocationModal:false,
+        searchMore:false,
         //撤销
         revocationData:{
             url:url.columnModifyStatus,
@@ -309,14 +345,14 @@
         dynamicHt: 100,
         self: this,
         tableData: [
-          {
-            "id":"1",
-            "title":"标题",
-            "contentType":"ORDINARY",
-            "newsOrder":"1",
-            "publishTime":"2016-01-02",
-            "publishStatus":"PUBLISH"
-          }
+//          {
+//            "id":"1",
+//            "title":"标题",
+//            "contentType":"ORDINARY",
+//            "newsOrder":"1",
+//            "publishTime":"2016-01-02",
+//            "publishStatus":"PUBLISH"
+//          }
         ],
         loading:false,
         totalCount:0,
@@ -345,7 +381,7 @@
           curPage: 1,pageSize: Util.pageInitPrams.pageSize
         }
 
-        this.setTableData();
+//        this.setTableData();
       },
 
       //设置表格及分页的位置
@@ -397,29 +433,35 @@
       //搜索监听回调
 
 
+      //搜索监听回调
       searchEvent(isLoading){
-        isLoading(true);
-        this.setTableData(isLoading)
+        //        isLoading(true);
+        let isSubmit = this.handleSubmit('formValidate');
+        if(isSubmit){
+          this.setTableData()
+        }
       },
+
       /*
        * 列表查询方法
        * @param string 查询from的id
        * */
       handleSubmit(name){
+        let flag =false
         this.$refs[name].validate((valid) => {
           if (valid) {
-            this.$Message.success('提交成功!');
+            flag =true;
           } else {
             this.$Message.error('表单验证失败!');
           }
         })
+        return flag
       },
       /*--点击--添加--按钮--
        * 只允许添加二级
        * */
 
       add(){
-
         this.openModel('add') ;
       },
       /*--点击--删除--按钮--*/
@@ -432,6 +474,12 @@
       /*--点击--撤销--按钮--*/
       revocation(){
           if(!this.isSelected(true)) return;
+        for(let i=0 ;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].publishStatus=='UNPUBLISH'){
+            this.showMess('只能对已发布进行撤销');
+            return false;
+          }
+        }
           this.operailityData = this.multipleSelection;
           this.openModel('revocation')
       },
@@ -439,6 +487,12 @@
       /*--点击--发布--按钮--*/
       publish(){
           if(!this.isSelected(true)) return;
+          for(let i=0 ;i<this.multipleSelection.length;i++){
+            if(this.multipleSelection[i].publishStatus=='PUBLISH'){
+                this.showMess('只能对未发布进行发布');
+              return false;
+            }
+          }
           this.operailityData = this.multipleSelection;
           this.openModel('publish')
       },
@@ -520,6 +574,7 @@
 
       //tree
       treeClick(obj,node,self){
+
         this.clickId = obj.id
         store = node.store ;
         this.setTreeId(obj.id,obj);
@@ -531,16 +586,17 @@
 
       //设置treeid
       setTreeId(id,data){
-        if(this.parent == ""){
-          this.formValidate.moduleId = id
+          this.formValidate.moduleId = id;
           this.setTableData();
-        }else{
-          this.formValidate.moduleId = id
-
-        }
       },
 
-
+      // 高级搜索按钮展开搜索表单并重新计算表格高度
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          this.setTableDynHeight()
+        })
+      },
 
     },
     created(){

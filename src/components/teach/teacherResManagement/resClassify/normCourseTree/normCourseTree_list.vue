@@ -154,7 +154,7 @@ export default{
       viewTypes: '', // 视图类型
       //tree默认项设置
       treeDefaults: {
-        getTreeUrl: api.tree.path+"?types="+this.types,
+        getTreeUrl: api.courseTree.path+"?types="+this.types,
         getDataUrl: '',
         isShowMenus: false,
         isShowSearch: false, //是否显示目录树查询
@@ -162,7 +162,7 @@ export default{
       fromWhereTree: "user",
 
       //查询表单
-      deleteUrl: api.treeRemove.path,
+      deleteUrl: api.courseTreeDel.path,
       //当前tree选中的node id
       deptId: 1,
 
@@ -223,7 +223,7 @@ export default{
       listMessTitle:{
         ajaxSuccess:'updateListData',
         ajaxParams:{
-          url: api.treeListPage.path,
+          url: api.courseTreelistPage.path,
           params:{
             "id":"",   //点击的树节点ID
             "name":"",  //节点名称

@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-form  ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form  :model="formValidate" ref="formValidate" :rules="columnManagement"  class="demo-form-inline" label-width="110px" >
 
       <el-row >
         <el-col :span="10" :offset="2">
@@ -19,13 +19,13 @@
       </el-row >
       <el-row >
         <el-col :span="10" :offset="2">
-          <el-form-item label="排列顺序" prop="name" >
-            <el-input v-model.number="formValidate.moduleOrder" type="number" min="0" placeholder="请输入"></el-input>
+          <el-form-item label="排列顺序" prop="moduleOrder" >
+            <el-input v-model="formValidate.moduleOrder" type="number" min="0" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         </el-col >
         <el-col :span="10" :offset="2">
-          <el-form-item label="是否显示" prop="resource">
+          <el-form-item label="是否显示" prop="isDisplay">
             <el-radio-group  v-model.number="formValidate.isDisplay">
               <el-radio :label="1">是</el-radio>
               <el-radio :label="0">否</el-radio>
@@ -33,11 +33,18 @@
           </el-form-item>
         </el-col >
       </el-row >
-
-
-
-      <el-row >
-        <el-col :span="10" :offset="2">
+      <el-row v-if="formValidate.isHome">
+        <el-col :span="20" :offset="2">
+          <el-form-item label="是否首页展示显示:" prop="isHome">
+            <el-radio-group  v-model="formValidate.isHome">
+              <el-radio :label="'YES'">是</el-radio>
+              <el-radio :label="'NO'">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row >
+      <el-row>
+        <el-col :span="20" :offset="2">
           <el-form-item label="url" prop="remark">
             <el-input v-model="formValidate.moduleUrl" placeholder="请输入"></el-input>
           </el-form-item>
@@ -71,21 +78,18 @@
 </template>
 <script>
   //当前组件引入全局的util
+  import {columnManagement} from '../rules'
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['operailityData','url'],
+    props: ['operailityData','url','isRoot'],
     data (){
       return{
+        columnManagement,
     //form表单bind数据
         formValidate: {
-            id:'',
-          name:'',          //栏目名称
-          moduleOrder:'',          //栏目顺序
-          isDisplay:0,          //是否显示
-          moduleUrl:'',          //url
-          remark:'',          //remark
         },
+
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         countDate:0,
@@ -152,7 +156,7 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-          this.formValidate =this.getFormValidate(this.formValidate,responseData.data) ;
+          this.formValidate =responseData.data;
       },
       /*
        * 当前组件发送事件给父组件

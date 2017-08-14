@@ -1,15 +1,18 @@
 <template>
   <div>
-    <layout-tree style="height:500px;">
+    <layout-tree style="height:500px;" ref="selectContent">
       <!-- 左侧目录树 -->
-      <tree-menu slot="left" @tree-click="treeClick" :treeOptions="leftTreeOpt.treeDefaults" :fromWhereTreeType="leftTreeOpt.fromWhereTree"
-        @setCurrSltNodeId="setCurrSltNodeId"></tree-menu>
+      <tree-menu slot="left" @tree-click="treeClick" :treeOptions="leftTreeOpt.treeDefaults" :fromWhereTreeType="leftTreeOpt.fromWhereTree" @setCurrSltNodeId="setCurrSltNodeId"></tree-menu>
       <!-- 右侧内容 -->
       <div slot="right" id="content" ref="content" class="modal" style="padding:0;">
+        <div ref="selSearch">
+          <el-input placeholder="请输入设备名称" v-model="deviceTypeName" style="margin-bottom:18px;">
+            <el-button slot="append" icon="search" @click="setTableData"></el-button>
+          </el-input>
+        </div>
         <!-- 表格数据 -->
         <div id="deviceTable" ref="deviceTable">
-          <el-table align="center" ref="multipleTable" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
-            style="width: 100%" @selection-change="handleSelectionChange">
+          <el-table align="center" ref="multipleTable" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo" style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column label="序号" type="index" width="100" align="center"></el-table-column>
             <el-table-column label="名称" prop="deviceTypeName" show-overflow-tooltip></el-table-column>
@@ -42,7 +45,6 @@
   let Util;
   // API
   import api from './api';
-  import treeApi from '../device/treeApi';
 
   // 左侧菜单树
   import layoutTree from "../../common/layoutTree";
@@ -69,15 +71,15 @@
     data() {
       return {
         // 内容高度
-        dynamicHt: 500,
+        dynamicHt: 446,
         // 默认激活视图
         selectData: [],
         // 左侧菜单
         leftTreeOpt: {
           //tree默认项设置
           treeDefaults: {
-            getTreeUrl: treeApi.tree.path, //目录树结构请求地址
-            baseUrl: treeApi.baseUrl,
+            getTreeUrl: api.tree.path, //目录树结构请求地址
+            baseUrl: api.baseUrl,
             // getDataUrl: '', //获取目录树叶子节点请求数据地址
             isShowSearch: false, // 隐藏搜索
             isShowMenus: false, // 隐藏操作菜单
@@ -134,6 +136,7 @@
        * */
       treeClick(obj, node, self) {
         this.depId = obj.id;
+        this.deviceTypeName = '';
         this.setTableData()
       },
       // 获取内容部分高度
@@ -180,9 +183,9 @@
       },
       //设置表格及分页的位置
       setTableDynHeight() {
-        let deviceTable = this.$refs.deviceTable;
-        let paginationHt = 50 * 2;
-        this.dynamicHt = this.contenHeight - deviceTable.offsetTop - paginationHt;
+        let conHt = this.$refs.selectContent.offsetHeight;
+        let seaHt = this.$refs.selSearch.offsetHeight;
+        this.dynamicHt = conHt - seaHt;
       },
       /*
        * 列表数据只能选择一个
@@ -217,16 +220,13 @@
       layoutTree,
       treeMenu,
     },
-    mounted() {
-      //页面dom稳定后调用
-      this.$nextTick(function () {
-        //初始表格高度及分页位置
-        // this.getContentHeight();
-        //为窗体绑定改变大小事件
-        let Event = this.$util.events;
-        // Event.addHandler(window, "resize", this.getContentHeight);
-      })
-    },
+    // mounted() {
+    //   //页面dom稳定后调用
+    //   this.$nextTick(function () {
+    //     //初始表格高度及分页位置
+    //     // this.setTableDynHeight();
+    //   })
+    // },
     created() {
       this.init()
     }

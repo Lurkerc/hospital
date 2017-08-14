@@ -70,7 +70,7 @@
                     <div class="cell">{{ viewData.theoryExamScore }}</div>
                   </td>
                   <td>
-                    <div class="cell">{{ viewData.skillExamIsMakeup | isNeed }}</div>
+                    <div class="cell">{{ (viewData.theoryExamScore ? viewData.theoryExamIsMakeup : '--') | isNeed }}</div>
                   </td>
                 </tr>
                 <tr class="el-table__row">
@@ -81,7 +81,7 @@
                     <div class="cell">{{ viewData.skillExamScore }}</div>
                   </td>
                   <td>
-                    <div class="cell">{{ viewData.skillExamIsMakeup | isNeed }}</div>
+                    <div class="cell">{{ (viewData.skillExamScore ? viewData.skillExamIsMakeup : '--') | isNeed }}</div>
                   </td>
                 </tr>
                 <tr class="el-table__row">
@@ -168,7 +168,7 @@
         this.ajax({
           ajaxSuccess: res => this.depRequirement = res.data || [],
           ajaxParams: {
-            url: api.getDepRequirementBySXS.path + '--' + this.viewData.podId,
+            url: api.getDepRequirementBySXS.path + '--' + this.operailityData.podId,
             method: api.getDepRequirementBySXS.method
           }
         })
@@ -178,9 +178,9 @@
         this.ajax({
           ajaxSuccess: res => this.depRequirement = res.data || [],
           ajaxParams: {
-            url: api.getDepRequirement.path + (this.operailityData.rdId || '') + '-' + (this.viewData.depId ||
+            url: api.getDepRequirement.path + (this.operailityData.rdId || '') + '-' + (this.operailityData.depId ||
                 '') + '-' +
-              this.viewData.podId,
+              this.operailityData.podId,
             method: api.getDepRequirement.method
           }
         })

@@ -73,6 +73,7 @@
 
               <el-button v-if="scope.row.weekSetState=='NO_SUBMIT'" size="small" @click="edit(scope.$index, scope.row)">修改</el-button>
               <el-button v-if="scope.row.weekSetState=='NO_SUBMIT'" size="small" @click="reported(scope.$index, scope.row)" type="primary">上报</el-button>
+              <el-button v-if="scope.row.weekSetState=='NO_ISSUED'" size="small" @click="noReported(scope.$index, scope.row)" type="primary">取消上报</el-button>
               <el-button v-if="scope.row.weekSetState=='NO_RELEASE'" size="small" @click="publish(scope.$index)" type="primary">发布</el-button>
               <el-button v-if="scope.row.weekSetState=='RELEASE'" size="small" @click="unpublish(scope.$index)" type="danger">取消发布</el-button>
               <el-button v-if="scope.row.weekSetState=='NO_ISSUED'" size="small" @click="modifyStateIssued(scope.$index)" type="primary">下发</el-button>
@@ -280,6 +281,20 @@
       <operate v-if="reportedModal" :type="'reported'" :operateUrl="url.modifySubmit.path"  @operate="subCallback" @cancel="cancel" :operaility-data="operailityData"></operate>
       <div slot="footer"></div>
     </Modal>
+
+    <!--上报周历-->
+    <Modal
+      close-on-click-modal="false"
+      height="200"
+      v-model="noReportedModal"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :loading="loading"
+      :width="500">
+      <modal-header slot="header" :content="noReportedId"></modal-header>
+      <operate v-if="noReportedModal" :type="'noReported'" :operateUrl="url.modifyNoSubmit.path"  @operate="subCallback" @cancel="cancel" :operaility-data="operailityData"></operate>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 
@@ -346,6 +361,10 @@
           id:'reportedId',
           title:'上报周历'
         },
+        noReportedId:{
+          id:'noReportedId',
+          title:'取消上报周历'
+        },
 
 
         //周历下发
@@ -374,7 +393,7 @@
 
         //上报
         reportedModal:false,
-
+        noReportedModal:false,
         editOperailityData:"",
         operailityData:'',
         multipleSelection: [],
@@ -517,9 +536,17 @@
       },
 
 
+      //上报周历
       reported(index){
         this.operailityData = this.tableData1[index];
         this.reportedModal = true;
+      },
+
+
+      //取消上报
+      noReported(index){
+        this.operailityData = this.tableData1[index];
+        this.noReportedModal = true;
       },
 
 

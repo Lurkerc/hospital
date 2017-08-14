@@ -1,8 +1,7 @@
 <template>
   <!-- 课件 -->
   <el-row class="nFileTable">
-    <el-form class="editForm" inline="" ref="item" v-for="(item,index) in planDtoList" :model="item" :rules="rules" label-width="100px"
-      :key="index">
+    <el-form class="editForm" inline="" ref="item" v-for="(item,index) in planDtoList" :model="item" :rules="rules" label-width="100px" :key="index">
       <fieldset class="nPlanItem">
         <legend style="font-size:16px">&nbsp;&nbsp;第{{ indexText(index) }}节：{{ item.content || '未填写' }}&nbsp;&nbsp;</legend>
         <el-col>
@@ -27,14 +26,14 @@
               <el-input v-model="scope.row.title" :readonly="isReadOnly"></el-input>
             </template>
           </el-table-column>
-          <el-table-column property="title" label="文件名称">
+          <el-table-column property="fileName" label="文件名称" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column property="title" label="文件格式">
+          <el-table-column property="fileType" label="文件格式" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column property="title" label="文件大小">
+          <el-table-column property="fileSize" label="文件大小" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column property="title" label="转化状态">
-          </el-table-column>
+          <!-- <el-table-column property="title" label="转化状态">
+          </el-table-column> -->
         </el-table>
         <el-col>
           <el-form-item label="课中资料：">
@@ -58,14 +57,14 @@
               <el-input v-model="scope.row.title" :readonly="isReadOnly"></el-input>
             </template>
           </el-table-column>
-          <el-table-column property="title" label="文件名称">
+          <el-table-column property="fileName" label="文件名称" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column property="title" label="文件格式">
+          <el-table-column property="fileType" label="文件格式" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column property="title" label="文件大小">
+          <el-table-column property="fileSize" label="文件大小" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column property="title" label="转化状态">
-          </el-table-column>
+          <!-- <el-table-column property="title" label="转化状态" >
+          </el-table-column> -->
         </el-table>
         <el-col>
           <el-form-item label="课后资料：">
@@ -89,14 +88,14 @@
               <el-input v-model="scope.row.title" :readonly="isReadOnly"></el-input>
             </template>
           </el-table-column>
-          <el-table-column property="title" label="文件名称">
+          <el-table-column property="fileName" label="文件名称" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column property="title" label="文件格式">
+          <el-table-column property="fileType" label="文件格式" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column property="title" label="文件大小">
+          <el-table-column property="fileSize" label="文件大小" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column property="title" label="转化状态">
-          </el-table-column>
+          <!-- <el-table-column property="title" label="转化状态">
+          </el-table-column> -->
         </el-table>
       </fieldset>
     </el-form>
@@ -129,7 +128,12 @@
           type,
           planIndex,
           list: [{
-            title: '测试' + planIndex
+            title: "", // 课件显示名称
+            fileId: "", // 文件ID
+            fileName: "", //文件名称
+            fileType: "", //文件类型
+            fileSize: "", //文件大小
+            type: type.toUpperCase(), // 类型
           }]
         })
       },

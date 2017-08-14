@@ -291,7 +291,8 @@
         }
         // 获取输入数据
         for (let key in this.numParams) {
-          if (isNaN(this.numParams[key]) || !(this.numParams[key] > -1 && this.numParams[key] < 1000)) {
+          if (!this.numParams[key] || isNaN(this.numParams[key]) || !(this.numParams[key] > -1 && this.numParams[key] <
+              1000)) {
             this.errorMess(`${tips[key]}只能为数字并且在0-999之间！`)
             return
           }

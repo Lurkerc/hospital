@@ -49,6 +49,7 @@
                 <el-col :span="8" >
                   <el-form-item label="出生年月：" prop="birth" >
                     <el-date-picker
+                      :editable="false"
                       v-model="formValidate.birth"
                       type="month"
                       placeholder="选择日期"
@@ -127,6 +128,7 @@
             <el-col :span="12" >
               <el-form-item label="参加工作时间：" prop="jobTime" >
                 <el-date-picker
+                  :editable="false"
                   v-model="formValidate.jobTime"
                   type="month"
                   placeholder="选择日期"

@@ -2,21 +2,57 @@
 <template>
   <div id="content" ref="content" class="modal">
     <steps></steps>
-    <el-form  :model="formValidate" ref="formValidate" :rules="rules.occupancyList" label-width="100px">
+    <el-form  :model="formValidate" inline ref="formValidate" :rules="rules.occupancyList" label-width="100px">
 
-    <el-row >
-      <el-col :span="10" >
-        <!--<el-button  type="info">导出excel</el-button>-->
-      </el-col>
-      <el-col :span="14" :offset="10" align="right">
-          <el-form-item  prop="userName">
-            <input class="hidden">
-            <el-input   v-model="formValidate.userName" placeholder="输入姓名搜索">
-              <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
+      <el-row >
+        <el-row style="margin-bottom:0">
+          <!--&lt;!&ndash;列表操作按钮&ndash;&gt;-->
+          <el-col :span="9" >
+            <el-button @click="derive" type="info">导出excel</el-button>
+          </el-col>
+          <!--搜索项-->
+          <el-col :span="14"  align="right">
+            <el-form-item  prop="userName">
+              <input class="hidden">
+              <el-input   v-model="formValidate.userName" placeholder="输入姓名搜索">
+                <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
+              </el-input>
+            </el-form-item>
+            <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+          </el-col>
+        </el-row>
+        </br>
+        <!--高级搜索项-->
+        <div v-if="searchMore" ref="searchMore">
+          <el-form-item label="大楼名称" prop="buildingName" >
+            <el-input   v-model="formValidate.buildingName" placeholder="输入大楼名称搜索">
             </el-input>
           </el-form-item>
-      </el-col>
-    </el-row>
+          <el-form-item label="迁出时间起始" prop="outDateBegin" >
+            <el-date-picker
+              v-model="formValidate.outDateBegin"
+              type="date"
+              :editable="false"
+              placeholder="选择日期"
+              :picker-options="pickerOptions0"
+              @change="handleStartTime">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="迁出时间结束" prop="outDateEnd" >
+            <el-date-picker
+              v-model="formValidate.outDateEnd"
+              align="right"
+              type="date"
+              :editable="false"
+              placeholder="选择日期"
+              :picker-options="pickerOptions1"
+              @change="handleEndTime">
+            </el-date-picker>
+          </el-form-item>
+          <el-button type="info" @click="searchEvent">查询</el-button>
+
+        </div>
+      </el-row>
     </el-form>
     <!--列表操作按钮-->
     <!--列表数据-->
@@ -140,12 +176,36 @@
       <show v-if="showModal" @cancel="cancel" @show="subCallback" :operaility-data="operailityData" :url="url"></show>
       <div slot="footer"></div>
     </Modal>
+
+    <!--导出弹窗-->
+    <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="deriveModal" title="对话框标题" class-name="vertical-center-modal"
+           :width="500">
+      <modal-header slot="header" :content="deriveId"></modal-header>
+      <div>
+        <div class="remove">确认导出吗</div>
+        <el-row>
+          <el-col :span="10" :offset="14">
+            <!--<a :href="config.urlPrefix+url.exportBedPerson+'?buildingName='+formValidate.buildingName+'&userName='+formValidate.userName+'&outDateBegin='+formValidate.outDateBegin1+'&outDateEnd='+formValidate.outDateEnd1">-->
+              <!--<el-button @click="affirmDerive" type="primary">确定</el-button>-->
+            <!--</a>-->
+            <a :href="config.urlPrefix+url.exportBedPerson">
+            <el-button @click="affirmDerive" type="primary">确定</el-button>
+            </a>
+            <el-button class="but-col" @click="deriveModal=false">取消</el-button>
+          </el-col>
+          </el-col>
+        </el-row>
+      </div>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 <script>
   /*当前组件必要引入*/
   import url from '../app'
   import rules from '../rules.js'
+  import config from "../../../config/config.js";
+
   //引入--查看--组件
   import show from "./occupancy_view.vue";
 
@@ -156,6 +216,7 @@
   export default{
     data() {
       return {
+        config,
         url:url,
         rules:rules,
         //查询表单
@@ -168,7 +229,9 @@
           inDateBegin: '',       //入住时间起始
           inDateEnd: '',       //入住时间结束
           outDateBegin: '',       //迁出时间起始
+          outDateBegin1: '',       //迁出时间起始
           outDateEnd: '',       //迁出时间结束
+          outDateEnd2: '',       //迁出时间结束
           status: '',       //动作
           sortby: '',//排序列
           order: ''     //升序、降序
@@ -195,6 +258,7 @@
           "sort":" ORDER BY ID DESC",
           "limit":" LIMIT 0,20"
         }],
+        searchMore: false,
         loading:false,
         totalCount:0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
@@ -211,6 +275,12 @@
         editId:{id:'editId',title:'修改'},
         removeId:{id:'removeId',title:'删除'},
         viewId:{id:'viewId',title:'查看'},
+
+        deriveModal:false,
+        deriveId: {
+          id: 'deriveId',
+          title: '导出人员入住情况'
+        },
       }
     },
     methods: {
@@ -264,7 +334,8 @@
         this.totalCount = responseData.totalCount || 0;
       },
       setTableData(){
-        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions,this.formValidate);
+        let formValidate = this.formDate(this.getFormData(this.formValidate),['outDateBegin','outDateEnd'],'yyyy-MM-dd');
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions,formValidate);
         this.ajax(this.listMessTitle);
       },
 
@@ -304,6 +375,19 @@
         this.operailityData = data;
         this.openModel("show");
       },
+      //导出
+      derive() {
+        let formValidate = this.formDate(this.getFormData(this.formValidate),['outDateBegin','outDateEnd'],'yyyy-MM-dd');
+        this.formValidate.outDateBegin1 = formValidate.outDateBegin;
+        this.formValidate.outDateEnd1 = formValidate.outDateEnd;
+        this.openModel("derive");
+      },
+      //确定导出
+      affirmDerive() {
+        this.cancel('derive');
+      },
+
+
       /*
        * 监听子组件通讯的方法
        * 作用:根据不同的参数关闭对应的模态
@@ -347,6 +431,23 @@
       openModel(options){
         this[options+'Modal'] = true;
       },
+      // 高级搜索按钮展开搜索表单并重新计算表格高度
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          this.setTableDynHeight()
+        })
+      },
+
+      /*
+       * 获取表单数据
+       * @return string  格式:id=0&name=aa
+       * */
+      getFormData(data){
+        let myData = Util._.defaultsDeep({},data);
+        return myData;
+      },
+
     },
     created(){
       this.init();

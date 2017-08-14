@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="100px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="tubeBedRecordWrite"   class="demo-form-inline" label-width="100px" >
 
       <el-row >
         <el-col :span="16" :offset="4">
@@ -73,12 +73,14 @@
   </div>
 </template>
 <script>
+  import {tubeBedRecordWrite} from '../../rules.js'
   //当前组件引入全局的util
   let Util=null;
   export default {
       props:['operailityData','url'],
     data (){
       return{
+        tubeBedRecordWrite,
         //保存按钮基本信息
         loadBtn:{title:'保存',callParEvent:'listenSubEvent'},
         saveReported:{title:'上报',callParEvent:'listenSubEvent'},
@@ -145,7 +147,7 @@
         if(isSubmit){
           if(!isLoadingFun) isLoadingFun=function(){};
           isLoadingFun(true);
-          let formValidate = this.formValidate;
+          let formValidate = this.getFormData(this.formValidate);
           if(formValidate.podId){
             let deps = formValidate.podId.split('-');
             formValidate.depId = deps[0];

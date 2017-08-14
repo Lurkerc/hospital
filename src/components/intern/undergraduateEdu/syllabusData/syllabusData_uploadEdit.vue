@@ -116,6 +116,10 @@
        * */
       listenSubEvent(isLoadingFun){
         let isSubmit = this.submitForm("formValidate");
+        if(this.formValidate.fileIds==""){
+          this.showMess("请上传课程资料!");
+          return;
+        }
         isSubmit = true;
         if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};

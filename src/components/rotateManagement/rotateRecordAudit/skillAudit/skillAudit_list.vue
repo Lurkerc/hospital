@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  ref="formValidate" inline label-width="90px">
+    <el-form  ref="formValidate" :model="formValidate" :rules="skillWriteList" inline label-width="90px">
       <el-row >
         <el-col :span="24"  >
           <el-form-item label="创建人:" prop="createUserName">
@@ -128,7 +128,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="fillTime"
+            prop="createTime"
             label="创建时间"
           >
           </el-table-column>
@@ -235,6 +235,7 @@
   </div>
 </template>
 <script>
+  import {skillWriteList} from '../rules'
   /*当前组件必要引入*/
   import url from '../api'
   //引入--修改--组件
@@ -247,6 +248,7 @@
   export default{
     data() {
       return {
+        skillWriteList,
         reportedUrl:'',
         url:url,
         passData:{
@@ -402,7 +404,7 @@
             this.errorMess('已通过的数据不能进行再次通过');
             return;
           }
-          operailityData.push(this.multipleSelection[i].diseaseId);
+          operailityData.push(this.multipleSelection[i].skillId);
         }
 
         this.passData.data.diseaseIds = operailityData.join(',');

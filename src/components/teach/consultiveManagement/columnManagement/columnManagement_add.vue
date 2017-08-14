@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-form  ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form  :model="formValidate" ref="formValidate" :rules="columnManagement" class="demo-form-inline" label-width="110px" >
 
       <el-row >
         <el-col :span="10" :offset="2">
@@ -19,13 +19,13 @@
       </el-row >
       <el-row >
         <el-col :span="10" :offset="2">
-          <el-form-item label="排列顺序" prop="name" >
-            <el-input v-model.number="formValidate.moduleOrder" type="number" min="0" placeholder="请输入"></el-input>
+          <el-form-item label="排列顺序" prop="moduleOrder" >
+            <el-input v-model="formValidate.moduleOrder" type="number" min="0" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         </el-col >
         <el-col :span="10" :offset="2">
-          <el-form-item label="是否显示" prop="resource">
+          <el-form-item label="是否显示" prop="isDisplay">
             <el-radio-group  v-model="formValidate.isDisplay">
               <el-radio :label="1">是</el-radio>
               <el-radio :label="0">否</el-radio>
@@ -36,9 +36,21 @@
 
 
 
+      <el-row v-if="!isRoot">
+        <el-col :span="20" :offset="2">
+          <el-form-item label="是否首页展示显示:">
+            <el-radio-group  v-model="isHome">
+              <el-radio :label="'YES'">是</el-radio>
+              <el-radio :label="'NO'">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row >
+
+
       <el-row >
-        <el-col :span="10" :offset="2">
-          <el-form-item label="url" prop="remark">
+        <el-col :span="20" :offset="2">
+          <el-form-item label="url" prop="moduleUrl">
             <el-input v-model="formValidate.moduleUrl" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
@@ -71,11 +83,13 @@
 </template>
 <script>
   //当前组件引入全局的util
+  import {columnManagement} from '../rules'
   let Util=null;
   export default {
-      props:['operailityData','url'],
+      props:['operailityData','url','isRoot'],
     data (){
       return{
+        columnManagement,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         //form表单bind数据
@@ -86,7 +100,9 @@
           isDisplay:0,          //是否显示
           moduleUrl:'',          //url
           remark:'',          //remark
+
         },
+        isHome:'YES',
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle:{
           type:'add',
@@ -122,7 +138,11 @@
 
           this.formValidate.parentId  =this.parentId;
           this.formValidate.isDisplay =  this.formValidate.isDisplay+'';
-          this.addMessTitle.ajaxParams.data=this.getFormData(this.formValidate);
+          let  formValidate = this.getFormData(this.formValidate);
+          if(!this.isRoot){
+            formValidate.isHome = this.isHome;
+          };
+          this.addMessTitle.ajaxParams.data=formValidate;
           this.ajax(this.addMessTitle,isLoadingFun)
         }
       },

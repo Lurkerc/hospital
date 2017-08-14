@@ -1,13 +1,13 @@
 <!-- 住院医 - 报名招录 - 人员管理 -->
 <template>
-  <layout-tree>
+  <layout-tree class="defined-t">
     <left-tree slot="left" @setCurrSltNodeId="setTreeDepId" @tree-click="treeClick" @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults"
       :fromWhereTreeType="fromWhereTree"></left-tree>
     <zyy-content slot="right" :deptId="deptId" :fromWhereTree="fromWhereTree"></zyy-content>
   </layout-tree>
 </template>
 <style>
-  .el-select .el-input {
+  .defined-t .el-select .el-input {
     width: 110px;
   }
 

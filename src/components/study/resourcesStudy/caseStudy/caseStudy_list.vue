@@ -4,31 +4,48 @@
 ****--@author   zyc<332533011@qq.com
 ----------------------------------->
 <template>
-    <div>
-
-    </div>
+  <div class="showContent">
+    <showList v-if="look == 'index'" @show="show"></showList>
+    <showVideo v-if="look == 'show'" @show="show"></showVideo>
+  </div>
 </template>
 <script>
-/*当前组件必要引入*/
-
-//当前组件引入全局的util
-let Util = null;
-export default{
+  /*当前组件必要引入*/
+  import showList from './caseStudy_index.vue';
+  import showVideo from './caseStudy_view.vue';
+  //当前组件引入全局的util
+  let Util = null;
+  export default{
     data() {
-        return {}
+      return {
+        look: "index",
+      }
     },
     methods: {
-        //初始化请求列表数据
-        init(){
+      //初始化请求列表数据
+      init(){
 
-        },
-
+      },
+      /**
+       * 要显示那个组件
+       * @param type {String} 要是的组件判断值:index  show
+       * @param obj  {Object} 要传递给显示视频展示页面的值
+       */
+      show(type,obj){
+        this.look=type;
+      }
     },
     created(){
-        this.init();
+      this.init();
     },
     mounted(){
     },
-    components: {}
-}
+    components: {
+      showList,
+      showVideo
+    }
+  }
 </script>
+<style>
+  @import "../../../../assets/ambuf/css/videoStudy/default.css";
+</style>

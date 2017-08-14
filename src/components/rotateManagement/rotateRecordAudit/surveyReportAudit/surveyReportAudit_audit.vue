@@ -1,9 +1,9 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="120px" >
+    <el-form :model="formValidate" ref="formValidate"  :rules="entityAudit" class="demo-form-inline" label-width="120px" >
       <el-row >
-        <el-col :span="16" :offset="4">
+        <el-col :span="16" :offset="2">
           <el-form-item label="填写人:" prop="diseaseName">
             {{getData.userName}}
           </el-form-item>
@@ -11,7 +11,7 @@
       </el-row >
 
       <el-row >
-        <el-col :span="16" :offset="4">
+        <el-col :span="16" :offset="2">
           <el-form-item label="填写时间:" prop="diseaseName">
             {{getData.createTime}}
           </el-form-item>
@@ -19,15 +19,55 @@
       </el-row >
 
       <el-row >
-        <el-col :span="16" :offset="4">
+        <el-col :span="16" :offset="2">
           <el-form-item label="报告经验与总结:" prop="diseaseName">
-            <div v-html="getData.content" ></div>
+            <viewUEditor style="width: 700px;" :name="'ud2'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
+
           </el-form-item>
         </el-col>
       </el-row >
 
+      <el-row>
+        <el-col :span="20" :offset="2">
+          <el-table
+            v-if="tableData!=0"
+            align="center"
+            :max-height="250"
+            :data="tableData"
+            tooltip-effect="dark"
+            highlight-current-row
+            style="width: 100%;height: 100%">
+            <el-table-column
+              align="center"
+              label="序号"
+              type="index"
+              width="100">
+            </el-table-column>
+            <el-table-column
+              show-overflow-tooltip
+              prop="createTime"
+              label="审核时间">
+            </el-table-column>
+            <el-table-column
+              show-overflow-tooltip
+              prop="reviewMess"
+              label="审核意见">
+            </el-table-column>
+            <el-table-column
+              show-overflow-tooltip
+              prop="spState"
+              label="审核状态">
+              <template scope="scope">
+                {{scope.row.spState | typeText}}
+              </template>
+            </el-table-column>
+
+          </el-table>
+        </el-col>
+      </el-row>
+
       <el-row >
-        <el-col :span="16" :offset="4">
+        <el-col :span="16" :offset="2">
           <el-form-item label="审核结果:" prop="spState">
             <el-radio-group v-model="formValidate.spState">
               <el-radio label="PASS" >通过</el-radio>
@@ -37,51 +77,14 @@
         </el-col>
       </el-row >
       <el-row >
-        <el-col :span="16" :offset="4">
+        <el-col :span="16" :offset="2">
           <el-form-item label="审核意见:" prop="reviewMess">
             <el-input v-model="formValidate.reviewMess" type="textarea" resize="none" :rows="8"></el-input>
           </el-form-item>
         </el-col>
       </el-row >
     </el-form>
-    <el-row>
-      <el-col :span="20" :offset="2">
-        <el-table
-          v-if="tableData!=0"
-          align="center"
-          :max-height="250"
-          :data="tableData"
-          tooltip-effect="dark"
-          highlight-current-row
-          style="width: 100%;height: 100%">
-          <el-table-column
-            align="center"
-            label="序号"
-            type="index"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            show-overflow-tooltip
-            prop="createTime"
-            label="审核时间">
-          </el-table-column>
-          <el-table-column
-            show-overflow-tooltip
-            prop="reviewMess"
-            label="审核意见">
-          </el-table-column>
-          <el-table-column
-            show-overflow-tooltip
-            prop="spState"
-            label="审核状态">
-            <template scope="scope">
-              {{scope.row.spState | typeText}}
-            </template>
-          </el-table-column>
 
-        </el-table>
-      </el-col>
-    </el-row>
     <el-row style="padding-top: 20px">
       <el-col :span="10" :offset="8">
         <div style="margin-left: 100px">
@@ -93,12 +96,16 @@
   </div>
 </template>
 <script>
+  import viewUEditor from '../../../common/showUeditor.vue';
+
   //当前组件引入全局的util
+  import {entityAudit} from '../rules'
   let Util=null;
   export default {
     props:['operailityData','url'],
     data (){
       return{
+        entityAudit,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         //form表单bind数据
@@ -109,6 +116,17 @@
         getData:{
 
         },
+
+
+        UE:{},
+        ueditorVal:{
+          ud2:"",
+        },  //
+        ueditorConfig:{
+          //详细配置参考UEditor 官网api
+          initialFrameHeight:220,  //初始化编辑器高度,默认320
+        },
+
         tableData:[],
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle:{
@@ -147,6 +165,7 @@
       updateListData(res) {
         let data = res.data;
         if (!data) return;
+        this.ueditorVal.ud2 = data.content;
         this.getData = data;
         if(data.reviewMess){
           this.tableData = data.reviewMess
@@ -203,7 +222,59 @@
         this.ajax(this.listMessTitle)
       },
 
-    }
+
+      /**
+       *
+       * 存储编辑器的value值
+       * @param name {string}  编辑器的name
+       *
+       * @param val  {string}  编辑器的内容
+       *
+       */
+      getUeditorVal(name,val){
+        this.ueditorVal[name] = val;
+        if(this.getData.content){
+          this.ueditorVal.ud2 = this.getData.content;
+        }
+      },
+
+      //保存 改变url
+      save(isLoadingFun){
+        this.addMessTitle.ajaxParams.url = this.url.thematicReviewAdd;
+        this.listenSubEvent(isLoadingFun);
+      },
+
+      //保存上报 改变url
+      saveReportedEvent(isLoadingFun){
+        this.addMessTitle.ajaxParams.url = this.url.thematicReviewAddSubmit;
+        this.listenSubEvent(isLoadingFun);
+      },
+
+      /**
+       *
+       * 存储编辑器的UE.editor对象
+       * @param name {string}  编辑器的name
+       *
+       * @param editor {}      编辑器的对象
+       *
+       */
+      storeUE(name,editor){
+        this.UE[name] = editor;
+        editor.setDisabled()
+      },
+
+      setMyVal(name,v){
+        this.UE[name].setContent(v);
+      }
+
+
+
+    },
+
+    components:{
+      //当前组件引入的子组件
+      viewUEditor
+    },
   }
 </script>
 

@@ -235,6 +235,29 @@ let baseRules = {
   },
 
   /**
+   * 必须正整数字且>0
+   */
+  greaterThanZero: function (rule, value, callback) {
+    //检验位的检测
+    if (!/^\+?[1-9]\d*$/.test(value)) {
+      callback(new Error('必须正整数且大于零'));
+    }
+    callback();
+  },
+
+  /**
+   * 必须正整数字且>0
+   */
+  greaterThanZero1: function (rule, value, callback) {
+    //检验位的检测
+    if(value=='')callback();
+    if (!/^\+?[1-9]\d*$/.test(value)) {
+      callback(new Error('必须正整数且大于零'));
+    }
+    callback();
+  },
+
+  /**
    * 必须数字
    */
   float: function (rule, value, callback) {

@@ -1,8 +1,7 @@
 <!-- 基础教务 - 资源库管理 - 标准课程 -->
 <template>
   <layout-tree>
-    <left-tree slot="left" :clickAddChange="clickAddChange" @setCurrSltNodeId="setTreeDepId" @clickAdd="handleAdd" @tree-click="treeClick"
-      @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
+    <left-tree slot="left" :clickAddChange="clickAddChange" @setCurrSltNodeId="setTreeDepId" @clickAdd="handleAdd" @tree-click="treeClick" @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
     <div slot="right" id="content" ref="content" class="modal">
       <div class="listUpAreaBox">
         <div class="listUpArea-menus">
@@ -40,8 +39,7 @@
         </el-form>
       </div>
       <div id="myTable" ref="myTable" class="userDataTable">
-        <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark"
-          style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55">
           </el-table-column>
           <el-table-column label="序号" prop="index" width="70">
@@ -69,34 +67,33 @@
         </el-table>
       </div>
       <div style="margin: 10px;" align="right">
-        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
+        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
         </el-pagination>
       </div>
       <!--弹窗-->
       <div>
         <!--修改弹窗-->
-        <!-- <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1000">
-          <modal-header slot="header" :content="editId"></modal-header>
-          <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
+        <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1000">
+          <modal-header slot="header" :content="headerContent.editId"></modal-header>
+          <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :style="modelStyle"></edit>
           <div slot="footer"></div>
-        </Modal> -->
+        </Modal>
         <!--增加弹窗-->
         <Modal :mask-closable="false" v-model="addModal" class-name="vertical-center-modal" :width="1100">
           <modal-header slot="header" :content="headerContent.addId"></modal-header>
-          <add v-if="addModal" @cancel="cancel" @add="subCallback" :operailityData="operailityData" style="height:650px;"></add>
+          <add v-if="addModal" @cancel="cancel" @add="subCallback" :operailityData="operailityData" :style="modelStyle"></add>
           <div slot="footer"></div>
         </Modal>
         <!-- 查看弹窗 -->
         <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1100">
           <modal-header slot="header" :parent="self" :content="headerContent.showId"></modal-header>
-          <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData" style="height:650px;"></show>
+          <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData" :style="modelStyle"></show>
           <div slot="footer"></div>
         </Modal>
         <!--审核弹窗-->
         <Modal :mask-closable="false" v-model="examineModal" height="200" class-name="vertical-center-modal" :width="1100">
           <modal-header slot="header" :parent="self" :content="headerContent.examineId"></modal-header>
-          <examine v-if="examineModal" @cancel="cancel" @audit="subCallback" :operaility-data="operailityData" style="height:650px;"></examine>
+          <examine v-if="examineModal" @cancel="cancel" @audit="subCallback" :operaility-data="operailityData" :style="modelStyle"></examine>
           <div slot="footer"></div>
         </Modal>
         <!--删除弹窗-->
@@ -110,32 +107,22 @@
     </div>
   </layout-tree>
 </template>
-<style>
-  .el-select .el-input {
-    width: 110px;
-  }
 
-</style>
 <script>
   import api from './api';
   import treeApi from './treeApi';
   /*当前组件必要引入*/
   //引入--修改--组件
-  // import edit from "./usersManagement_edit";
+  import edit from "./normCourse_edit";
   //引入--查看--组件
   import show from "./normCourse_view";
   //引入--添加--组件
   import add from "./normCourse_add";
   //引入--审核--组件
   import examine from "./normCourse_examine";
-  //引入--短信通知--组件
-  // import shortNote from "./usersManagement_shortNote";
 
   import layoutTree from "../../../common/layoutTree";
-  import leftTree from "../../../common/leftTree";
-
-  // import sexOption from './sexOption'; // 性别
-  // import auditStatusOption from './auditStatusOption'; // 审核状态
+  import leftTree from "./_tree/menu";
 
   //当前组件引入全局的util
   let Util = null;
@@ -147,7 +134,7 @@
         treeDefaults: {
           getTreeUrl: treeApi.tree.path,
           getDataUrl: '',
-          isShowMenus: true,
+          isShowMenus: false,
           isShowSearch: false,
         },
         fromWhereTree: "user",
@@ -179,6 +166,10 @@
             id: 'showId',
             title: '查看'
           },
+        },
+        // 弹窗样式
+        modelStyle: {
+          height: '650px'
         },
         //点击add按钮,值发生改变
         clickAddChange: false,
@@ -551,8 +542,8 @@
 
     components: {
       //当前组件引入的子组件
-      // edit,
       add,
+      edit,
       show,
       examine,
       layoutTree,

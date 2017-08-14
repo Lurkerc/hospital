@@ -378,6 +378,49 @@
           </el-col>
         </el-row>
       </el-form>
+
+      <!--审核历史列表-->
+      <el-table
+        v-if="formValidate.review && formValidate.review[0]"
+        align="center"
+        :height="200"
+        :data="formValidate.review"
+        tooltip-effect="dark"
+        highlight-current-row
+        style="width: 100%;height: 100%">
+        <el-table-column
+          align="center"
+          label="序号"
+          type="index"
+          width="100">
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="createUserName"
+          label="审核人"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="审核时间"
+          width="300">
+        </el-table-column>
+        <el-table-column
+          prop="reviewMess"
+          label="审核意见"
+          align="center"
+          width="200"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="spState"
+          label="审核状态"
+        >
+          <template scope="scope">
+            {{ scope.row.spState | typeText}}
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
 </template>
 <script>
@@ -487,6 +530,11 @@
           SuccessGetCurrData(res){
             let data = res.data;
             if(!data) return;
+            for(let key in data){
+              if(data[key]=='null'){
+                  data[key]='';
+              }
+            }
             this.formValidate = data;
             this.acaMzBegintimeChange(data.acaMzBegintime,data.acaMzEndtime)
 
@@ -560,6 +608,30 @@
                   aidDrugName[i].push('');
                 }
             }
+
+            ////药物名称/使用的剂量是空数组的话
+            if(mzRecord==0){
+              mzRecord[0] = [];
+              for(let k =0;k<length;k++){
+                mzRecord[0].push('');
+              }
+            }
+            //生命体征是空数组的话，
+            if(mzStatus==0){
+              mzStatus[0] = [];
+              for(let k =0;k<length;k++){
+                mzStatus[0].push('');
+              }
+            }
+            //辅助输入的药品名称是空数组的话，
+            if(aidDrugName==0){
+              aidDrugName[0] = [];
+              for(let k =0;k<length;k++){
+                aidDrugName[0].push('');
+              }
+            }
+
+
           },
 
           //单击输入框

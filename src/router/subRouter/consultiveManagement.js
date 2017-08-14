@@ -38,8 +38,8 @@ const zxglRouters = {
     }
   },{
     //发布管理
-    path:'releaseManagement',
-    name:'releaseManagement',
+    path:'siteNotice',
+    name:'siteNotice',
     component:resolve=> {
       require.ensure([], () => {
         resolve(require('../../components/teach/consultiveManagement/releaseManagement/releaseManagement_list.vue'));

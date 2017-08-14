@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="100px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="entityAudit"  class="demo-form-inline" label-width="100px" >
 
       <el-row >
         <el-col :span="16" :offset="4">
@@ -50,7 +50,44 @@
           </el-form-item>
         </el-col>
       </el-row >
+      <el-row>
+        <el-col :span="20" :offset="2">
+          <el-table
+            v-if="tableData!=0"
+            align="center"
+            :max-height="250"
+            :data="tableData"
+            tooltip-effect="dark"
+            highlight-current-row
+            style="width: 100%;height: 100%">
+            <el-table-column
+              align="center"
+              label="序号"
+              type="index"
+              width="100">
+            </el-table-column>
+            <el-table-column
+              show-overflow-tooltip
+              prop="createTime"
+              label="审核时间">
+            </el-table-column>
+            <el-table-column
+              show-overflow-tooltip
+              prop="reviewMess"
+              label="审核意见">
+            </el-table-column>
+            <el-table-column
+              show-overflow-tooltip
+              prop="spState"
+              label="审核状态">
+              <template scope="scope">
+                {{scope.row.spState | typeText}}
+              </template>
+            </el-table-column>
 
+          </el-table>
+        </el-col>
+      </el-row>
       <el-row >
         <el-col :span="16" :offset="4">
           <el-form-item label="审核结果:" prop="spState">
@@ -119,11 +156,13 @@
 </template>
 <script>
   //当前组件引入全局的util
+  import {entityAudit} from '../rules'
   let Util=null;
   export default {
     props:['operailityData','url'],
     data (){
       return{
+        entityAudit,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         //form表单bind数据

@@ -6,7 +6,7 @@
 <template>
   <div class="showContent">
     <div class="video-type-box">
-      <div class="video-title-left">
+      <div class="video-title-left" style="padding-top:8px;">
         <el-breadcrumb separator="/">
           <el-breadcrumb-item>内科</el-breadcrumb-item>
           <el-breadcrumb-item>呼吸内科</el-breadcrumb-item>
@@ -15,7 +15,7 @@
       </div>
       <div class="video-title-right">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="10">
             <el-input
               placeholder="视频资源名称"
               icon="search"
@@ -23,14 +23,17 @@
               :on-icon-click="handleIconClick">
             </el-input>
           </el-col>
-          <el-col :span="10" :offset="2">
+          <el-col :span="8" :offset="2">
             <el-button>记录</el-button>
             <el-button>收藏</el-button>
+          </el-col>
+          <el-col :span="4">
+          <el-button type="primary" icon="arrow-left" @click="goBack">返回</el-button>
           </el-col>
         </el-row>
       </div>
     </div>
-    <div style="width: 100%;height: 500px">
+    <div style="width: 100%;height: 500px;margin-top: 10px">
       <showVideo></showVideo>
     </div>
     <introduce :content="formValidate.content"></introduce>
@@ -60,8 +63,10 @@
       },
       handleIconClick(ev) {
         console.log(ev);
+      },
+      goBack(){
+        this.$emit('show', 'index',{});
       }
-
     },
     created(){
       this.init();

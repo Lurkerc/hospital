@@ -29,8 +29,7 @@
         <hr>
         <!--列表数据-->
 
-        <el-table border align="center" max-height="400" show-summary :data="contentDataList.detailsList" tooltip-effect="dark" highlight-current-row
-          :summary-method="getSummaries" style="width: 100%;height: 100%" class="add-scope">
+        <el-table border align="center" max-height="400" show-summary :data="contentDataList.detailsList" tooltip-effect="dark" highlight-current-row :summary-method="getSummaries" style="width: 100%;height: 100%" class="add-scope">
           <el-table-column align="center" prop="classify" label="项目" width="150">
           </el-table-column>
           <el-table-column align="center" prop="content" label="评分标准及要求">
@@ -162,6 +161,7 @@
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
           this.addMessTitle.ajaxParams.data = this.contentDataList;
+          this.addMessTitle.ajaxParams.data.scoreType = 'manage'; // 作为标识使用
           this.ajax(this.addMessTitle, isLoadingFun)
         }
       },

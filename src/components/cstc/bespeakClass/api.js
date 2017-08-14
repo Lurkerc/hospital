@@ -40,6 +40,10 @@ const api = {
   select: { // 获取选择设备列表 
     path: 'reserve/device/select/list',
     method: 'get'
+  },
+  tree: { // 部门树
+    path: '/dept/tree',
+    method: 'get'
   }
 };
 

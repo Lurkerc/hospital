@@ -6,7 +6,7 @@
 ----------------------------------->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  ref="formValidate" inline label-width="100px">
+    <el-form  ref="formValidate" :model="formValidate" :rules="clinicalOperationWriteList" inline label-width="100px">
       <el-row style="margin-bottom:0">
         <!--列表操作按钮-->
         <el-col :span="10" >
@@ -28,10 +28,17 @@
       <div v-show="searchMore"  ref="searchMore">
         <el-form-item label="科室" prop="userType" >
           <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
-            <!---->
-            <select-option :type="'userRotaryDeptlist'" :userType="userType" :userId="userId"  name="depName" id="depId"></select-option>
+            <select-option :type="'byNowUser'" ></select-option>
+            <!--<select-option :type="'userRotaryDeptlist'" :userType="userType" :userId="userId"  name="depName" id="depId"></select-option>-->
           </el-select>
 
+        </el-form-item>
+        <el-form-item label="状态:"  prop="state">
+          <el-select v-model="formValidate.state" placeholder="请选择状态">
+            <el-option label="全部" value=""></el-option>
+            <el-option label="待审核" value="SUBMIT"></el-option>
+            <el-option label="审核通过" value="PASS"></el-option>
+          </el-select>
         </el-form-item>
 
         <el-button type="info" @click="searchEvent">查询</el-button>
@@ -89,6 +96,7 @@
             label="科室"
             width="200">
           </el-table-column>
+
           <el-table-column
             show-overflow-tooltip
             prop="clinicalTime"
@@ -104,6 +112,11 @@
             <template scope="scope">
               {{ scope.row.clinicalType  |typeText}}
             </template>
+          </el-table-column>
+          <el-table-column
+            prop="createUserName"
+            label="创建人"
+          >
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
@@ -187,6 +200,7 @@
   </div>
 </template>
 <script>
+  import {clinicalOperationWriteList} from '../rules'
   /*当前组件必要引入*/
   import url from '../api'
   //引入--新建--组件
@@ -200,6 +214,7 @@
   export default{
     data() {
       return {
+        clinicalOperationWriteList,
         url:url,
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',
@@ -208,7 +223,8 @@
           depId: '',       //科室ID
           name: '',       //操作名称
           sortby: '',    //   排序列
-          order: ''     //升序、降序
+          order: '',     //升序、降序
+          state:'SUBMIT'
         },
 
         operailityData:'',

@@ -36,6 +36,10 @@ const api = {
     path: thisFile + '/end/operation/', // {id}
     method: 'put'
   },
+  select: { // 选择标准课程
+    path: thisFile + '/queryRun',
+    method: 'get'
+  },
 };
 
 export default api

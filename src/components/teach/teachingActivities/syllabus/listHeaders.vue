@@ -6,8 +6,8 @@
             z-index: 2016;
             "
            ref="popover"
-           v-show="popover"
-           :style="{left:offset.left+'px',top:offset.top+'px','max-width':offset.width+'px','max-height':offset.height+'px' ,opacity:opacity}"
+           v-if="popover"
+           :style="{left:offset.left+'px',top:offset.top+'px','max-width':offset.width+'px','min-height':offset.height+'px' ,opacity:opacity}"
       >
         <div class="showCurrMess">
           <div v-for="(item,index) in data">
@@ -34,6 +34,9 @@
               <el-col :span="3"><p><strong>课前预习资料:</strong> </p></el-col>
               <el-col :span="18"><upload-file  :show="true" :uploadFiles="item.fileList"></upload-file></el-col>
             </el-row>
+            </br>
+            <hr>
+            </br>
           </div>
           <div slot="reference" class="name-wrapper">
           </div>

@@ -24,6 +24,7 @@ let todoType = {
   "unpublish": "取消发布",
   "revocation": "撤销",
   "reported": "上报",
+  "noReported": "取消上报",
   "reject": "驳回",
   "pass": "通过",
   "join": "参加",

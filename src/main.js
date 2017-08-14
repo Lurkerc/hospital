@@ -8,6 +8,7 @@ import App from './App';
 import iView from 'iview';
 import VueCookie from 'vue-cookie';
 import VueAwesomeSwiper from 'vue-awesome-swiper';
+import VideoPlayer from 'vue-video-player';
 
 //import VueQuillEditor from 'vue-quill-editor'
 //import $ from 'jquery'
@@ -18,6 +19,8 @@ import './assets/ambuf/css/manage_v1.0/handleExtraUi.css';
 import './assets/ambuf/css/manage_v1.0/message.css';
 import './assets/ambuf/css/manage_v1.0/workbench.css';
 import './assets/ambuf/css/manage_v1.0/daily.scss';
+import 'video.js/dist/video-js.css';
+import 'vue-video-player/src/custom-theme.css';
 
 import ElementUI from 'element-ui';
 
@@ -29,6 +32,7 @@ Vue.use(iView);
 Vue.use(ElementUI);
 Vue.use(VueCookie);
 Vue.use(VueAwesomeSwiper);
+Vue.use(VideoPlayer);
 //Vue.use(VueQuillEditor)
 
 Vue.config.productionTip = false;

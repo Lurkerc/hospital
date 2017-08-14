@@ -1,17 +1,17 @@
 <template>
 
   <div>
-    <el-form ref="formValidate"  class="demo-form-inline" label-width="90px">
+    <el-form :model="formValidate" ref="formValidate" :rules="contentManagement"  class="demo-form-inline" label-width="90px">
       <el-row >
         <el-col :span="8" :offset="2">
-          <el-form-item label="所属栏目" prop="name" >
+          <el-form-item label="所属栏目" prop="moduleId" >
             <el-input  v-model="data.moduleName" readonly placeholder="请输入" @focus="seleColumn"></el-input>
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
         <el-col :span="17" :offset="2">
-          <el-form-item label="标题:" class="feildFontweight">
+          <el-form-item label="标题:"  prop="title"  class="feildFontweight">
             <el-input v-model="formValidate.title" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
@@ -19,13 +19,13 @@
 
       <el-row >
         <el-col :span="8" :offset="2">
-          <el-form-item label="作者:" class="feildFontweight">
+          <el-form-item label="作者:"  prop="authorName"  class="feildFontweight">
             <el-input  v-model="formValidate.authorName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
 
         <el-col :span="8" :offset="1">
-          <el-form-item   label="来源:" class="feildFontweight">
+          <el-form-item   label="来源:" prop="source" class="feildFontweight">
 
             <el-select  v-model="formValidate.source" placeholder="请选择">
               <el-option
@@ -41,15 +41,15 @@
       </el-row >
       <el-row >
         <el-col :span="17" :offset="2">
-          <el-form-item label="URL:" class="feildFontweight">
+          <el-form-item label="URL:" prop="url" class="feildFontweight">
             <el-input  v-model="formValidate.url" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
       </el-row >
       <el-row >
         <el-col :span="8" :offset="2">
-          <el-form-item type="number" label="置顶顺序:" class="feildFontweight">
-            <el-input  v-model.number="formValidate.newsOrder" type="number" placeholder="请输入"></el-input>
+          <el-form-item  label="置顶顺序:" prop="newsOrder" class="feildFontweight">
+            <el-input  v-model="formValidate.newsOrder" type="number" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
 
@@ -70,21 +70,14 @@
       <el-row v-show="formValidate.contentType=='MULTIMEDIA'">
         <el-col :span="17" :offset="2">
           <el-form-item type="附件" label="多媒体文件:" class="feildFontweight">
-            <upload-file  :accept="'mp4'" :size="50000" :uploadFiles="data.multimediaFileList" @setUploadFiles="setMultimediaFileIds">   </upload-file>
+            <upload-file  :accept="'mp4'"  :uploadFiles="data.multimediaFileList" @setUploadFiles="setMultimediaFileIds">   </upload-file>
           </el-form-item>
         </el-col >
       </el-row>
-      <el-row >
+      <el-row v-if="show">
         <el-col :span="17" :offset="2">
-          <el-form-item  class="feildFontweight" label-width="0">
-            <el-row class="lose-margin2">
-              <el-col :span="20" :offset="2">
-                <quill-editor v-model="formValidate.content"
-                              ref="myQuillEditor"
-                >
-                </quill-editor>
-              </el-col>
-            </el-row >
+          <el-form-item label="内容:"  class="feildFontweight">
+                <viewUEditor style="width:700px;" :name="'ud1'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
           </el-form-item>
         </el-col >
 
@@ -123,7 +116,9 @@
 
 </template>
 <script>
+  import {contentManagement} from '../rules'
   //引入当前注册的组件
+  import viewUEditor from '../../../common/showUeditor.vue';
   import selectColumn from './contentManagement_selectColumn.vue'
   //当前组件引入全局的util
   let Util=null;
@@ -132,6 +127,8 @@
     props: ['operailityData','url'],
     data (){
       return{
+        show:false,
+        contentManagement,
         source: [{
           value: 'ORIGINAL',
           label: '原创'
@@ -149,28 +146,35 @@
           value: 'MULTIMEDIA',
           label: '多媒体'
         }],
+
+        UE:{},
+        ueditorVal:{
+          ud1:"",
+        },  //
+        ueditorConfig:{
+          //详细配置参考UEditor 官网api
+          initialFrameHeight:220,  //初始化编辑器高度,默认320
+        },
+
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         //form表单bind数据
         "formValidate":{
           "moduleId":'',      //栏目id
-          "title":"投票项目",                   //标题
-          "authorName":"张三",                  //作者
-          "source":"REPRINTED",                   //来源
-          "url":"**/**.action",                 //newsUrl
-          "newsOrder":"1",                        //置顶顺序
-          "contentType":"MULTIMEDIA",                 //内容类型
-          "content":"测试内容",                 //内容
+          "title":"",                   //标题
+          "authorName":"",                  //作者
+          "source":"",                   //来源
+          "url":"",                 //newsUrl
+          "newsOrder":"",                        //置顶顺序
+          "contentType":"",                 //内容类型
+          "content":"",                 //内容
           multimediaFileIds:'',               //多媒体文件id字符串
-
           fileIds:'',                         //    附件id字符串
         },
         ///获取的数据
-        data:{
-
-        },
+        data:{},
         columnModal:false,
-        columnId:{title:'选择栏目', id:'columnId',},
+        columnId:{title:'选择栏目',id:'columnId',},
 
         //当前组件提交(edit)数据时,ajax处理的 基础信息设置
         editMessTitle:{
@@ -190,7 +194,9 @@
           ajaxParams:{
             url:this.url.columnGet+this.operailityData.id,
           }
-        }
+        },
+
+
       }
     },
     created(){
@@ -211,7 +217,8 @@
         if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {
           };
-          isLoadingFun(true)
+          isLoadingFun(true);
+          this.formValidate.content = this.ueditorVal.ud1;
           if(this.formValidate.contentType!='MULTIMEDIA')this.formValidate.multimediaFileIds='';
           this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
           this.ajax(this.editMessTitle, isLoadingFun)
@@ -237,6 +244,8 @@
        * */
       SuccessGetCurrData(responseData){
         this.data = responseData.data;
+        this.show = true;
+        this.ueditorVal.ud1=responseData.data.content;
         this.formValidate = this.getFormValidate(this.formValidate ,responseData.data) ;
       },
       /*
@@ -287,9 +296,37 @@
       setMultimediaFileIds(ids){
         this.formValidate.multimediaFileIds = ids;
       },
+      /**
+       *
+       * 存储编辑器的UE.editor对象
+       * @param name {string}  编辑器的name
+       *
+       * @param editor {}      编辑器的对象
+       *
+       */
+      storeUE(name,editor){
+        this.UE[name] = editor;
+        this.setMyVal('ud1',this.formValidate.content)
+      },
+
+      setMyVal(name,v){
+        this.UE[name].setContent(v);
+      },
+      /**
+       *
+       * 存储编辑器的value值
+       * @param name {string}  编辑器的name
+       *
+       * @param val  {string}  编辑器的内容
+       *
+       */
+      getUeditorVal(name,val){
+        this.ueditorVal[name] = val;
+      },
+
     },
     components:{
-      selectColumn
+      selectColumn,viewUEditor
     }
   }
 </script>

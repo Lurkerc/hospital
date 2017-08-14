@@ -1,6 +1,6 @@
 <!-- 住院医 - 报名招录 - 人员管理 -->
 <template>
-  <layout-tree>
+  <layout-tree class="defined-t">
     <left-tree slot="left" :clickAddChange="clickAddChange" @setCurrSltNodeId="setTreeDepId" @clickAdd="handleAdd" @tree-click="treeClick"
       @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
     <div slot="right" id="content" ref="content" class="modal">
@@ -161,7 +161,7 @@
   </layout-tree>
 </template>
 <style>
-  .el-select .el-input {
+  .defined-t .el-select .el-input {
     width: 110px;
   }
 
@@ -172,7 +172,7 @@
   import edit from "./rdyPersonnelManagement_edit";
   //引入--查看--组件
   import show from "../../../base/sysManage/departmentStaff/departmentStaff_view";
-  //引入--添加--组件 
+  //引入--添加--组件
   import add from "./rdyPersonnelManagement_add";
   //引入--导入--组件
   import toChannel from "../../../intern/recruitStudent/usersManagement/usersManagement_toChannel";

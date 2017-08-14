@@ -170,7 +170,7 @@
           <thead>
           <tr>
             <th class="cell" v-for="(item,index) in mzRecordHeader">
-              {{item}}
+              {{item}}<span v-if="index==0" style="color: red">*</span>
             </th>
           </tr>
           </thead>
@@ -201,7 +201,7 @@
           <thead>
           <tr>
             <th class="cell" v-for="(item,index) in mzStatusHeader">
-              {{item}}
+              {{item}}<span v-if="index==0" style="color: red">*</span>
             </th>
           </tr>
           </thead>
@@ -232,7 +232,7 @@
           <thead>
           <tr>
             <th class="cell" :colspan="index==0&&2"  v-for="(item,index) in aidDrugNameHeader">
-              {{item}}
+              {{item}}<span v-if="index==0" style="color: red">*</span>
             </th>
           </tr>
           </thead>
@@ -297,8 +297,8 @@
           </colgroup>
           <thead>
           <tr>
-            <th class="cell" >诱导药物名称</th>
-            <th class="cell" >病人从进手术室开始到出手术室的过程记录</th>
+            <th class="cell" >诱导药物名称<span style="color: red">*</span></th>
+            <th class="cell" >病人从进手术室开始到出手术室的过程记录<span style="color: red">*</span></th>
           </tr>
           </thead>
         </table>
@@ -433,11 +433,16 @@
       </el-row>
       </br>
 
-      <div style="margin-left: 100px">
-        <load-btn @saveSubEvent="saveSubEvent" :btnData="saveBtn"></load-btn>
-        <load-btn @appearSubEvent="appearSubEvent" :btnData="loadBtn"></load-btn>
-        <el-button  @click="cancel">取消</el-button>
-      </div>
+      <el-row >
+        <el-col :span="10" :offset="8" >
+          <div >
+            <load-btn @saveSubEvent="saveSubEvent" :btnData="saveBtn"></load-btn>
+            <load-btn @appearSubEvent="appearSubEvent" :btnData="loadBtn"></load-btn>
+            <el-button  @click="cancel">取消</el-button>
+          </div>
+        </el-col>
+      </el-row>
+
 
     </el-form>
   </div>
@@ -528,6 +533,9 @@
       SuccessGetCurrData(res){
         let data = res.data;
         if(!data) return;
+        for(let key in data){
+          if(!data[key]&&data[key]!=0)data[key]='';
+        }
         this.formValidate = data;
         this.getAcaMzBegintimeChange(data.acaMzBegintime,data.acaMzEndtime,data)
 
@@ -579,6 +587,29 @@
             aidDrugName[i].push('');
           }
         }
+
+        ////药物名称/使用的剂量是空数组的话
+        if(mzRecord==0){
+          mzRecord[0] = [];
+          for(let k =0;k<length;k++){
+            mzRecord[0].push('');
+          }
+        }
+        //生命体征是空数组的话，
+        if(mzStatus==0){
+          mzStatus[0] = [];
+          for(let k =0;k<length;k++){
+            mzStatus[0].push('');
+          }
+        }
+        //辅助输入的药品名称是空数组的话，
+        if(aidDrugName == 0){
+          aidDrugName[0] = [];
+          for(let k =0;k<length;k++){
+            aidDrugName[0].push('');
+          }
+        }
+
         return data
       },
 
@@ -590,10 +621,11 @@
         let isSubmit = this.submitForm("formValidate");
         if(isSubmit){
           if(!isLoadingFun) isLoadingFun=function(){};
-          isLoadingFun(true);
           if(!this.conductValidate(this.formValidate)){
+
               return;
           }
+          isLoadingFun(true);
           let formValidate = this.formDate(this.getFormData(this.formValidate),['cjlDate'],'yyyy-MM-dd');
           formValidate = this.formDate(formValidate,['acaSsBegintime','acaSsEndtime','acaMzBegintime','acaMzEndtime'],'yyyy-MM-dd HH:mm:ss');
           this.addMessTitle.ajaxParams.data = formValidate;
@@ -618,6 +650,7 @@
           }];
 
         for(let i=0;i<mess.length;i++){
+          let isSpan = true;//全部为空
             let item = data[mess[i].key];
             for(let k=0;k<item.length;k++){
                 let isHasname = false;  //名字是否为空；
@@ -636,11 +669,21 @@
                 if(isHasname&&isHasCount){
                   flag = false;
                 }
+                if(!isHasname&&!isHasCount){
+                  isSpan =true ;
+                }
+                if(isHasname||isHasCount){
+                  isSpan = false;
+                }
               }
               if(isHasname&&isHasCount){
                 this.errorMess(mess[i].label+'名称必填');
               }
             }
+          if(isSpan){
+            this.errorMess(mess[i].label+'必填')
+            return false;
+          }
         }
 
         return flag;

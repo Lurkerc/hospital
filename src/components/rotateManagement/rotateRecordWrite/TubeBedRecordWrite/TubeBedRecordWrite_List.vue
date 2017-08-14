@@ -6,7 +6,7 @@
 ----------------------------------->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  ref="formValidate" inline label-width="100px">
+    <el-form  ref="formValidate" :model="formValidate" :rules="clinicalOperationWriteList" inline label-width="100px">
       <el-row style="margin-bottom:0">
         <!--列表操作按钮-->
         <el-col :span="10" >
@@ -34,6 +34,8 @@
           </el-select>
 
         </el-form-item>
+
+
 
         <el-button type="info" @click="searchEvent">查询</el-button>
 
@@ -203,6 +205,7 @@
   </div>
 </template>
 <script>
+  import {clinicalOperationWriteList} from '../../rules.js'
   /*当前组件必要引入*/
   import url from '../api'
   //引入--新建--组件
@@ -217,6 +220,7 @@
   export default{
     data() {
       return {
+        clinicalOperationWriteList,
         url:url,
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',

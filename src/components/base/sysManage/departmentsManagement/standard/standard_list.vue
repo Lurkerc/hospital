@@ -81,7 +81,7 @@
             :page-sizes="myPages.pageSizes"
             :page-size="myPages.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="myPages.listTotal">
+            :total="listTotal">
           </el-pagination>
         </div>
         <!--修改弹窗-->

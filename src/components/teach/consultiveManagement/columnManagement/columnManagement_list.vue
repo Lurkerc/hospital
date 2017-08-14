@@ -7,29 +7,54 @@
       <left-tree slot="left" @setCurrSltNodeId="setTreeId"  @tree-click="treeClick" :treeOptions="treeDefaults" ></left-tree>
 
       <div slot="right" id="content" ref="nosocomial" class="table-content ">
+        <el-form  :model="formValidate" ref="formValidate" :rules="columnManagementList"  inline label-width="90px" class="demo-ruleForm">
+          <el-row >
+            <el-col :span="10" >
+              <el-button  class="but-col"  @click="add"  type="primary">添加子栏目</el-button>
+              <el-button  class="but-col"  @click="remove"  type="primary">删除</el-button>
 
-      <!--右侧查询-->
-      <div class="add-remove">
-        <el-row >
-          <el-col :span="5" :offset="1">
-            <el-button  class="but-col"  @click="add"  type="primary">添加子栏目</el-button>
-            <el-button  class="but-col"  @click="remove"  type="primary">删除</el-button>
-          </el-col>
-          <el-col :span="10" :offset="2">
-            <el-form ref="ruleForm" label-width="100px" class="demo-ruleForm">
-              <el-form-item  prop="name">
-                <el-input placeholder="输入栏目名称搜索">
-                  <el-button slot="append" icon="search"></el-button>
+            </el-col>
+            <el-col :span="14"  align="right">
+              <el-form-item label="栏目名称:" prop="name">
+                <el-input v-model="formValidate.name" placeholder="输入栏目名称搜索">
+                  <el-button @click="searchEvent" slot="append" icon="search"></el-button>
                 </el-input>
               </el-form-item>
-            </el-form>
-          </el-col>
-        </el-row >
-      </div>
+              <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+            </el-col>
+          </el-row>
+
+          <div v-show="searchMore" ref="searchMore">
+
+            <!--<el-form-item  label="父栏目名称:" prop="parentName">-->
+              <!--<el-input v-model="formValidate.parentName" placeholder="输入父栏目名称搜索">-->
+              <!--</el-input>-->
+            <!--</el-form-item>-->
+            <el-form-item label="栏目顺序:"  prop="moduleOrder">
+              <el-input v-model="formValidate.moduleOrder" placeholder="输入栏目顺序搜索">
+              </el-input>
+            </el-form-item>
+            <el-form-item label="url:" prop="moduleUrl">
+              <el-input v-model="formValidate.moduleUrl" placeholder="输入url搜索">
+              </el-input>
+            </el-form-item>
+
+            <el-form-item label="是否显示:" >
+              <el-select filterable  v-model="formValidate.isDisplay" placeholder="请选择">
+                <el-option label="全部" value=""></el-option>
+                <el-option :label="'是'" value="1"></el-option>
+                <el-option :label="'否'" value="0"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-button type="info" @click="searchEvent">查询</el-button>
+
+          </div>
+        </el-form>
+
       <div
         id="nosocomialTable"
-        ref="nosocomialTable"
-      >
+        ref="nosocomialTable">
         <el-table
           align="center"
           :height="dynamicHt"
@@ -53,8 +78,7 @@
           <el-table-column
             label="操作"
             align="center"
-            width="200"
-          >
+            width="200">
             <template scope="scope">
               <el-button
                 size="small"
@@ -133,7 +157,7 @@
           <!--<div slot="header"> -->
           <!--</div>-->
           <modal-header slot="header" :content="addId"></modal-header>
-          <add v-if="addModal"  @cancel="cancel" @add="subCallback" :operaility-data="parent" :url="url"></add>
+          <add v-if="addModal" :isRoot="isShow"  @cancel="cancel" @add="subCallback" :operaility-data="parent" :url="url"></add>
           <div slot="footer"></div>
         </Modal>
         <!---->
@@ -175,6 +199,7 @@
 </template>
 
 <script >
+  import {columnManagementList} from '../rules'
   /*当前组件必要引入*/
   import url from '../app'
   //引入--修改--组件
@@ -191,8 +216,10 @@
 
     data() {
       return {
+        columnManagementList,
         url:url,
-        isRoot:false,
+        isRoot:0,
+        isShow:'',
         //查询表单
 
         //tree默认项设置
@@ -210,7 +237,7 @@
           parentId: '',       //父栏目id
           name: '',       //栏目名称
           parentName: '',       //父栏目名称
-          url: '',       //url
+          moduleUrl: '',       //url
           moduleOrder: '',       //栏目顺序
           isDisplay: '',       //是否显示
         },
@@ -246,15 +273,16 @@
         dynamicHt: 100,
         self: this,
         tableData: [
-          {
-            "id":"1",
-            "name":"栏目名称",
-            "moduleUrl":"**/**/**.action",
-            "moduleOrder":"1",
-            "isDisplay":"1"
-          }
+//          {
+//            "id":"1",
+//            "name":"栏目名称",
+//            "moduleUrl":"**/**/**.action",
+//            "moduleOrder":"1",
+//            "isDisplay":"1"
+//          }
         ],
         loading:false,
+        searchMore:false,
         totalCount:0,
         listMessTitle:{
           ajaxSuccess:'listDataSuccess',
@@ -332,31 +360,46 @@
 
       //搜索监听回调
       searchEvent(isLoading){
-        isLoading(true);
-        this.setTableData(isLoading)
+        //        isLoading(true);
+        let isSubmit = this.handleSubmit('formValidate');
+        if(isSubmit){
+          this.setTableData()
+        }
       },
+
       /*
        * 列表查询方法
        * @param string 查询from的id
        * */
       handleSubmit(name){
+        let flag =false
         this.$refs[name].validate((valid) => {
           if (valid) {
-            this.$Message.success('提交成功!');
+            flag =true;
           } else {
             this.$Message.error('表单验证失败!');
-          }
-        })
+      }
+      })
+        return flag
       },
       /*--点击--添加--按钮--
       * 只允许添加二级
       * */
 
       add(){
+          if(!this.parent) {
+            this.$message.error('请选择父节点') ;
+              return;
+          }
         //如果是一级节点则返回，只添加二级节点
-        if(this.isRoot) {
+        if(this.isRoot>=2) {
             this.$message.error('不能添加子栏目') ;
             return;
+        }
+        if(this.isRoot==1){
+          this.isShow = false;
+        }else {
+          this.isShow = true;
         }
         this.openModel('add') ;
       },
@@ -437,7 +480,7 @@
         store = node.store ;
         this.setTreeId(obj.id,obj);
         this.setTableData();
-        this.isRoot = node.parent.level==2;
+        this.isRoot = node.parent.level;
 
       },
 
@@ -457,7 +500,13 @@
 
       },
 
-
+      // 高级搜索按钮展开搜索表单并重新计算表格高度
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          this.setTableDynHeight()
+        })
+      },
     },
     created(){
       this.init();

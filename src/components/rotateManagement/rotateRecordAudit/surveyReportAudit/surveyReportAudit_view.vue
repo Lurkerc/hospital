@@ -21,7 +21,7 @@
       <el-row >
         <el-col :span="16" :offset="2">
           <el-form-item label="报告经验与总结:" prop="diseaseName">
-            <div v-html="formValidate.content" ></div>
+            <viewUEditor style="width: 700px;" :name="'ud2'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
           </el-form-item>
         </el-col>
       </el-row >
@@ -71,6 +71,8 @@
   </div>
 </template>
 <script>
+  import viewUEditor from '../../../common/showUeditor.vue';
+
   //当前组件引入全局的util
   let Util=null;
   export default {
@@ -91,6 +93,15 @@
 //          "note":"备注说明",
 //          "teacherName":"指导老师",
 //          "state":"NO_SUBMIT"
+        },
+
+        UE:{},
+        ueditorVal:{
+          ud2:"",
+        },  //
+        ueditorConfig:{
+          //详细配置参考UEditor 官网api
+          initialFrameHeight:220,  //初始化编辑器高度,默认320
         },
 
         tableData:[],
@@ -117,6 +128,7 @@
       updateListData(res) {
         let data = res.data;
         if (!data) return;
+        this.ueditorVal.ud2 = data.content;
         this.formValidate = data;
         if(data.reviewMess){
           this.tableData = data.reviewMess
@@ -163,9 +175,60 @@
       podIdChange(){
 
 
+      },
 
+
+      /**
+       *
+       * 存储编辑器的value值
+       * @param name {string}  编辑器的name
+       *
+       * @param val  {string}  编辑器的内容
+       *
+       */
+      getUeditorVal(name,val){
+        this.ueditorVal[name] = val;
+
+      },
+
+      //保存 改变url
+      save(isLoadingFun){
+        this.addMessTitle.ajaxParams.url = this.url.thematicReviewAdd;
+        this.listenSubEvent(isLoadingFun);
+      },
+
+      //保存上报 改变url
+      saveReportedEvent(isLoadingFun){
+        this.addMessTitle.ajaxParams.url = this.url.thematicReviewAddSubmit;
+        this.listenSubEvent(isLoadingFun);
+      },
+
+      /**
+       *
+       * 存储编辑器的UE.editor对象
+       * @param name {string}  编辑器的name
+       *
+       * @param editor {}      编辑器的对象
+       *
+       */
+      storeUE(name,editor){
+        this.UE[name] = editor;
+        editor.setDisabled();
+        if(this.formValidate.content){
+          this.ueditorVal.ud2 = this.formValidate.content;
+        }
+      },
+
+      setMyVal(name,v){
+        this.UE[name].setContent(v);
       }
-    }
+
+
+    },
+    components:{
+      //当前组件引入的子组件
+      viewUEditor
+    },
   }
 </script>
 

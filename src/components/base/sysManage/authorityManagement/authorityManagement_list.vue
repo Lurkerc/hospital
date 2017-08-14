@@ -76,16 +76,19 @@
                   label="序号"
                   type="index"
                   width="70">
+                  <template scope="scope">
+                    {{scope.row.index}}
+                  </template>
                 </el-table-column>
                 <el-table-column
                   property="name"
                   label="姓名"
-                  width="120">
+                  width="160">
                 </el-table-column>
                 <el-table-column
                   property="depName"
                   label="部门"
-                  width="120">
+                  width="160">
                 </el-table-column>
                 <el-table-column
                   property="rolesName"
@@ -354,7 +357,7 @@
 
       //查询角色下相关人员
       setTableData(){
-        let params =  Util._.defaultsDeep({roleId:this.rolesItem.id,name:this.formValidate.name,sortby:'',order:'DESC',},this.queryQptions);
+        let params =  Util._.defaultsDeep({roleId:this.rolesItem.id,name:this.formValidate.name,sortby:'',order:'DESC',},this.queryQptions.params);
         let postAjax = {
           ajaxSuccess:(res)=>{
             let responseData = res.data;

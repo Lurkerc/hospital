@@ -30,8 +30,7 @@
                 <div class="bpProjectItem">
                   <el-radio label="SPECIFIC">特定人员</el-radio>
                   <template v-if="formValidate.userType === 'SPECIFIC'">
-                    <el-tag type="success" class="bpUserItem" :closable="true" v-for="(item,index) in formValidate.userList" @close="removeUser(index)"
-                      :key="item.userId">{{ item.userName }}</el-tag>
+                    <el-tag type="success" class="bpUserItem" :closable="true" v-for="(item,index) in formValidate.userList" @close="removeUser(index)" :key="item.userId">{{ item.userName }}</el-tag>
                     <el-button type="info" size="small" style="margin-left:10px;" @click="selectUser">选择人员</el-button>
                   </template>
                 </div>
@@ -168,8 +167,7 @@
     <!-- 模态框 选择设备 -->
     <Modal :mask-closable="false" v-model="selectDeviceModal" class-name="vertical-center-modal" :loading="true" :width="900">
       <modal-header slot="header" :parent="self" :content="contentHeader.selectDeviceId"></modal-header>
-      <select-device v-if="selectDeviceModal" :timeData="{'date':formValidate.openTime.date,reserveTimeSetId:formValidate.openTime.timeSetId}"
-        :select="selectDeviceId" @cancel="cancel" @select="selectDeviceCall"></select-device>
+      <select-device v-if="selectDeviceModal" :timeData="{'date':formValidate.openTime.date,reserveTimeSetId:formValidate.openTime.timeSetId}" :select="selectDeviceId" @cancel="cancel" @select="selectDeviceCall"></select-device>
       <div slot="footer"></div>
     </Modal>
     <!--选择人员-->
@@ -291,7 +289,18 @@
           ajaxSuccess: res => {
             this.tableBody = res.data || {};
             if (res.data.timeSetList.length) {
+              console.log('获取每天对应的时间段')
               this.timeSlot = res.data.timeSetList;
+              // 时间段是否已过期
+              // this.timeSlot.map(item=>)
+              // for(let tsItem in )
+              // 根据日期设置当前时间以前的时间段为不开放
+              // this.days.roomItem.map((roomItem,roomIndex) => {
+              // roomItem.dataList.map((timeItem, index) => {
+              //   let startTime = timeItem.split('-')[0];
+              //   console.log(startTime)
+              // })
+              // })
             }
           },
           ajaxParams: {

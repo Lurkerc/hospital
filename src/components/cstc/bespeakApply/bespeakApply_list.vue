@@ -27,11 +27,9 @@
         </el-form-item>
         <el-form-item label="申请时间:">
           <date-group :dateGroup="{text:'',startDate:searchObj.applicantStarDate,endDate:searchObj.applicantEndDate}">
-            <el-date-picker name="start" v-model="searchObj.applicantStarDate" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
-              @change="handleStartTime"></el-date-picker>
+            <el-date-picker name="start" v-model="searchObj.applicantStarDate" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0" @change="handleStartTime"></el-date-picker>
             <span>-</span>
-            <el-date-picker name="end" v-model="searchObj.applicantEndDate" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
-              @change="handleEndTime"></el-date-picker>
+            <el-date-picker name="end" v-model="searchObj.applicantEndDate" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1" @change="handleEndTime"></el-date-picker>
           </date-group>
         </el-form-item>
         <el-form-item label="开放预约状态:">
@@ -48,8 +46,7 @@
 
     <!-- 表格数据 -->
     <div id="tableView" ref="tableView">
-      <el-table align="center" :height="tableHeight" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
-        style="width: 100%;" @selection-change="handleSelectionChange">
+      <el-table align="center" :height="tableHeight" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo" style="width: 100%;" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="操作" width="200">
           <template scope="scope">
@@ -74,8 +71,7 @@
     </div>
     <!-- 分页 -->
     <div style="float: right;margin-top:10px;">
-      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-        :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
+      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
     </div>
 
     <!-- 增加 -->
@@ -97,8 +93,7 @@
       <div slot="footer"></div>
     </Modal>
     <!-- 上报 -->
-    <Modal close-on-click-modal="false" height="200" v-model="reportModal" class-name="vertical-center-modal" :loading="loading"
-      :width="500">
+    <Modal close-on-click-modal="false" height="200" v-model="reportModal" class-name="vertical-center-modal" :loading="loading" :width="500">
       <modal-header slot="header" :content="contentHeader.reportId"></modal-header>
       <div>
         <p class="remove">确定要上报么？</p>
@@ -110,8 +105,7 @@
       <div slot="footer"></div>
     </Modal>
     <!-- 删除 -->
-    <Modal close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal" :loading="loading"
-      :width="500">
+    <Modal close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal" :loading="loading" :width="500">
       <modal-header slot="header" :content="contentHeader.removeId"></modal-header>
       <remove v-if="removeModal" :deleteUrl="api.delete" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
       <div slot="footer"></div>
@@ -246,7 +240,8 @@
        * @param isLoading Boolean 是否加载
        */
       setTableData(isLoading) {
-        Object.assign(this.queryQptions.params, this.searchObj);
+        let searchObj = this.formDate(this.$util._.defaultsDeep({}, this.searchObj), ['applicantStarDate', 'applicantEndDate']);
+        Object.assign(this.queryQptions.params, searchObj);
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions

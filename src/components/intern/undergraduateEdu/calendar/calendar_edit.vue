@@ -129,7 +129,7 @@
         <el-col :span="24">
           <div class="cal-schoolTit">
             学期起止时间：{{formValidate.weekSetStartTime}} 至 {{formValidate.weekSetEndTime}}
-            ，{{formValidate.gradeNum}}级，{{formValidate.classNum}}班
+            ，{{conductDate(formValidate.gradeNum,'yyyy')}}级，{{formValidate.classNum}}班
           </div>
         </el-col>
       </el-row>
@@ -308,6 +308,16 @@
           }
         },
 
+        //获取时间段设置的课程
+        courseTimeData:{},
+        getCourseTimeTitle:{
+          ajaxSuccess:'getCourseTimeData',
+          ajaxParams:{
+            url: api.teachCourseTime.path,
+          }
+        },
+
+
         //上报教学周历设置
         submitCalendarTitle:{
           type:'edit',
@@ -330,6 +340,19 @@
         calendarSet.setCalData([]);
         this.weekSetId = this.editOperailityData.weekSetId;
 
+        //活动时间段获取
+        this.ajax(this.getCourseTimeTitle);
+      },
+
+
+      //活动时间段获取
+      getCourseTimeData(responseData){
+        let data = responseData.data;
+        for(var i=0,item;i<data.length;i++){
+          item = data[i];
+          this.courseTimeData[item["timeId"]] = item;
+        }
+        console.log(this.courseTimeData);
       },
 
 
@@ -355,10 +378,10 @@
         let currFormate= ["上","下","晚"];
         for(var i=0,item;i<data.length;i++){
           item = data[i];
-          Util._.forEach(item,function (v,k) {
+          Util._.forEach(item, (v,k)=> {
             let contentArr = v;
             for(var i=0;i<contentArr.length;i++){
-              let num = (i+1);
+              let num = this.courseTimeData[contentArr[i]["timeId"]].courseIndex;//(i+1);
               myData.unshift({
                 title: currFormate[contentArr[i]["timeType"]]+num+":"+contentArr[i]["depName"]+"   "+contentArr[i]["timeStr"],
                 start: k,
@@ -493,14 +516,14 @@
       saveMainData(responseData){
         this.stepMaker = "third";
         this.weekSetId = responseData.data;
-        this.$emit("add");
+        this.$emit("edit");
       },
 
 
       //周历设置主表信息修改成功回调
       editMainData(responseData){
         this.stepMaker = "third";
-        this.$emit("add");
+        this.$emit("edit");
       },
 
 

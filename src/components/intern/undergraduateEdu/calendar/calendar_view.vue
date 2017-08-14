@@ -145,6 +145,15 @@
         //当前月
         currMonth:"",
 
+        //获取时间段设置的课程
+        courseTimeData:{},
+        getCourseTimeTitle:{
+          ajaxSuccess:'getCourseTimeData',
+          ajaxParams:{
+            url: api.teachCourseTime.path,
+          }
+        },
+
 
         //获取周历设置主表
         getMainTitle:{
@@ -173,6 +182,7 @@
       init(){
         Util = this.$util;
         //this.ajax(this.getSchoolsTitle);
+        this.ajax(this.getCourseTimeTitle);
         this.weekSetId = this.operailityData.weekSetId;
       },
 
@@ -186,6 +196,14 @@
         this.ajax(this.getMonthCourseSet);
       },
 
+      //活动时间段获取
+      getCourseTimeData(responseData){
+        let data = responseData.data;
+        for(var i=0,item;i<data.length;i++){
+          item = data[i];
+          this.courseTimeData[item["timeId"]] = item;
+        }
+      },
 
       //根据教学周历ID获取每个月课程设置--server回调
       getMonthCourseData(responseData){
@@ -200,10 +218,10 @@
         let currFormate= ["上","下","晚"];
         for(var i=0,item;i<data.length;i++){
           item = data[i];
-          Util._.forEach(item,function (v,k) {
+          Util._.forEach(item, (v,k)=> {
             let contentArr = v;
             for(var i=0;i<contentArr.length;i++){
-              let num = (i+1);
+              let num = this.courseTimeData[contentArr[i]["timeId"]].courseIndex;//(i+1);
               myData.unshift({
                 title: currFormate[contentArr[i]["timeType"]]+num+":"+contentArr[i]["depName"]+"   "+contentArr[i]["timeStr"],
                 start: k,

@@ -79,7 +79,7 @@
                         <div class="cell">{{ item.theoryExamScore }}</div>
                       </td>
                       <td>
-                        <div class="cell">{{ item.skillExamIsMakeup | isNeed }}</div>
+                        <div class="cell">{{ (item.theoryExamScore ? item.theoryExamIsMakeup : '--') | isNeed }}</div>
                       </td>
                     </tr>
                     <tr class="el-table__row">
@@ -90,7 +90,7 @@
                         <div class="cell">{{ item.skillExamScore }}</div>
                       </td>
                       <td>
-                        <div class="cell">{{ item.skillExamIsMakeup | isNeed }}</div>
+                        <div class="cell">{{ (item.skillExamScore ? item.skillExamIsMakeup : '--') | isNeed }}</div>
                       </td>
                     </tr>
                     <tr class="el-table__row">

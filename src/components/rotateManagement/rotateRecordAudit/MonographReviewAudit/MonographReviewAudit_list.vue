@@ -7,7 +7,7 @@
 
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  ref="formValidate" inline label-width="100px">
+    <el-form  ref="formValidate" :model="formValidate" :rules="clinicalOperationWriteList" inline label-width="100px">
       <el-row style="margin-bottom:0">
         <!--列表操作按钮-->
         <el-col :span="10" >
@@ -127,7 +127,7 @@
     </Modal>
     <!--查看弹窗-->
     <Modal
-      width="800"
+      width="1000"
       v-model="showModal"
       title="查看档案管理弹窗"
       class-name="vertical-center-modal"
@@ -165,17 +165,19 @@
 </template>
 <script>
   /*当前组件必要引入*/
-  import url from '../api'
+  import {clinicalOperationWriteList} from '../rules';
+  import url from '../api';
   //引入--修改--组件
   import audit from "./monographReviewAudit_audit.vue";
   //引入--查看--组件
   import show from "./monographReviewAudit_view.vue";
 
   //当前组件引入全局的util
-  let Util=null;
+  let Util = null;
   export default{
     data() {
       return {
+        clinicalOperationWriteList,
         url:url,
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',

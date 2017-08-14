@@ -48,6 +48,13 @@ let inAndOut = {
 let occupancyList = {
   userName: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 名称 - 必填
 };
+/**
+ * 房间使用情况
+ */
+let roomUseingList = {
+  userName: [baseRules.inputLen(0,50),baseRules.illegalChar()],
+  roomNum: [baseRules.inputLen(0,50),baseRules.illegalChar()],
+};
 
 
 
@@ -61,5 +68,6 @@ export default {
   roomMess,
   inAndOutList,
   inAndOut,
-  occupancyList
+  occupancyList,
+  roomUseingList
 };

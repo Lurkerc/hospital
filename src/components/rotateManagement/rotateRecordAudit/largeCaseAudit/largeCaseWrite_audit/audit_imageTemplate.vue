@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
     <div>
-      <el-form  :model="formValidate"  ref="formValidate"   class="demo-form-inline" label-width="130px" >
+      <el-form  :model="formValidate"  ref="formValidate" :rules="entityAudit"  class="demo-form-inline" label-width="130px" >
         <el-row class="table-back-one">
           <el-col :span="24" >
             <el-form-item label="编号:" prop="czyNo" >
@@ -150,7 +150,7 @@
 
         <el-row >
           <el-col :span="16" >
-            <el-form-item label="审核意见:" prop="name" >
+            <el-form-item label="审核意见:" prop="reviewMess" >
               <el-input type="textarea"  v-model="formValidate.reviewMess"></el-input>
             </el-form-item>
             </el-form-item>
@@ -171,6 +171,7 @@
 </template>
 <script>
     /*当前组件必要引入*/
+    import {entityAudit} from '../../rules'
 
     //当前组件引入全局的util
     let Util = null;
@@ -178,6 +179,7 @@
       props:['operailityData','url','podId'],
         data() {
             return {
+               entityAudit ,
               saveBtn: {title: '批注', callParEvent: 'postilSubEvent'},
               loadBtn: {title: '保存', callParEvent: 'saveSubEvent'},
               name:'',

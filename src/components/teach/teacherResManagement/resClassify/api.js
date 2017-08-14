@@ -1,6 +1,30 @@
 /**   --资源分类管理--   **/
 const thisFile = 'resourceType';
 const api = {
+  //标准课程目录树
+  courseTree:{ //todo 后台需要修改
+    path: '/criterionCourseType/tree',
+    method: 'get'
+  },
+  courseTreeAdd:{  //左侧树-添加
+    path: '/criterionCourseType/add',
+    method: 'post'
+  },
+  courseTreeEdit:{  //左侧树-修改 modify/{id}
+    path: '/criterionCourseType/modify',
+    method: 'put'
+  },
+  courseTreeDel:{  //左侧树删除 remove/{ids}
+    path: '/criterionCourseType/remove',
+    method: 'delete'
+  },
+  courseTreelistPage:{  //列表 (点击树，分页查询标准课程列表)
+    path: "/criterionCourse/listPage",
+    method: 'get'
+  },
+
+
+
   tree: { // 左侧树
     path: thisFile + '/tree',
     method: 'get'

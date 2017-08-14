@@ -2,26 +2,35 @@
 <template>
   <div id="content" ref="content" class="modal">
     <steps></steps>
-    <el-form  ref="formValidate" label-width="100px">
-      <el-row >
-        <el-col :span="10" >
-          <!--<el-button  type="info">导出excel</el-button>-->
+    <el-form  :model="formValidate"  ref="formValidate" :rules="rules.roomUseingList" inline label-width="100px">
+      <el-row style="margin-bottom:0">
+        <!--&lt;!&ndash;列表操作按钮&ndash;&gt;-->
+        <el-col :span="9" >
+        <el-button @click="derive" type="info">导出excel</el-button>
         </el-col>
-        <el-col :span="14" :offset="10" align="right">
+        <!--搜索项-->
+        <el-col :span="14"  align="right">
           <el-form-item  prop="buildingName">
             <input class="hidden">
             <el-input   v-model="formValidate.buildingName" placeholder="输入大楼名称搜索">
               <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
             </el-input>
           </el-form-item>
+          <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
         </el-col>
       </el-row>
+      </br>
+      <!--高级搜索项-->
+      <div v-if="searchMore" ref="searchMore">
+        <el-form-item label="房间号" prop="roomNum" >
+          <el-input   v-model="formValidate.roomNum" placeholder="输入房间号搜索">
+          </el-input>
+        </el-form-item>
+        <el-button type="info" @click="searchEvent">查询</el-button>
+
+      </div>
     </el-form>
 
-    <!--列表操作按钮-->
-    <div style="margin-bottom: 20px;">
-
-    </div>
     <el-table
       align="center"
       :context="self"
@@ -162,18 +171,44 @@
         </div>
       </div>
     </div>
-
+    <!--导出弹窗-->
+    <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="deriveModal" title="对话框标题" class-name="vertical-center-modal"
+           :width="500">
+      <modal-header slot="header" :content="deriveId"></modal-header>
+      <div>
+        <div class="remove">确认导出吗</div>
+        <el-row>
+          <el-col :span="10" :offset="14">
+            <a :href="config.urlPrefix+url.exportRoomUsingInfo">
+              <el-button @click="affirmDerive" type="primary">确定</el-button>
+            </a>
+<!--
+            <a :href="config.urlPrefix+url.exportRoomUsingInfo+'?buildingName='+formValidate.buildingName+'&roomNum='+formValidate.roomNum">
+              <el-button @click="affirmDerive" type="primary">确定</el-button>
+            </a>
+-->
+            <el-button class="but-col" @click="deriveModal=false">取消</el-button>
+          </el-col>
+        </el-row>
+      </div>
+      <div slot="footer"></div>
+    </Modal>
+    <!---->
   </div>
 </template>
 <script>
   /*当前组件必要引入*/
+  import config from "../../../config/config.js";
   import url from '../app'
+  import rules from '../rules.js'
   import steps from '../dormitory_common/steps.vue'
   //当前组件引入全局的util
   let Util=null;
   export default{
     data() {
       return {
+        config,
+        rules,
         url:url,
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',
@@ -184,7 +219,7 @@
           sortby: '',//排序列
           order: ''     //升序、降序
         },
-
+        searchMore: false,
         operailityData:'',
         multipleSelection: [],
         dynamicHt: 100,
@@ -200,6 +235,11 @@
             url:url.roomUsingInfo,
             params:{}
           }
+        },
+        deriveModal:false,
+        deriveId: {
+          id: 'deriveId',
+          title: '导出房间使用情况'
         },
         //房间使用情况总分析
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
@@ -299,7 +339,10 @@
         return flag
       },
 
-
+      //导出
+      derive() {
+        this.openModel("derive");
+      },
       /*--点击--添加--按钮--*/
       add(){
         this.openModel("add");
@@ -359,12 +402,24 @@
           this.setTableData();
         }
       },
+      //确定导出
+      affirmDerive() {
+        this.cancel('derive');
+      },
       /*
        * 打开指定的模态窗体
        * @param options string 当前指定的模态:"add"、"edit"
        * */
       openModel(options){
         this[options+'Modal'] = true;
+      },
+
+      // 高级搜索按钮展开搜索表单并重新计算表格高度
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          this.setTableDynHeight()
+        })
       },
     },
     created(){

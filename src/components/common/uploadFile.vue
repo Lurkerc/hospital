@@ -1,6 +1,6 @@
 <template>
   <div :class="{'onlyUploadShow': uploadShow }">
-    <el-upload ref="upload" :multiple="!unMultiple" with-credentials :before-upload="beforeUpload" :on-progress="onProgress"
+    <el-upload ref="upload" :multiple="false" with-credentials :before-upload="beforeUpload" :on-progress="onProgress"
       :on-success="onSuccess" :on-error="onError" :on-preview="onPreview" :on-remove="onRemove" :on-format-error="onFormatError"
       :on-exceeded-size="onExceededSize" :file-list="fileList" :drag="isDrag" :headers="headers" :class="{uploadShow:uploadShow,'picture-card':listType=='picture-card'}"
       :list-type="listType" :action="upUrl">
@@ -195,15 +195,18 @@
       beforeUpload(file) {
         //上传文件之前的钩子，参数为上传的文件，若返回 false 或者 Promise 则停止上传
         //console.log("上传前")
-        this.listLength++; //记录上传图片数量
-        //图片数量多余默认数量则提示
-        const check = this.listLength <= this.data.length;
-        if (!check) {
-          this.$Notice.warning({
-            title: `最多只能上传 ${this.data.length} ${this.listType=='text'?'个文件':'张图片' }。`
-          });
-          return false;
+        //不能上传同名文件；
+        for(let i=0;i<this.fileList.length;i++){
+          if(this.fileList[i].name == file.name){
+            this.$Notice.warning({
+              title: '文件已存在',
+              desc: ` 文件  ${file.name}  已存在。`
+            });
+              return false;
+          }
         }
+
+
         //文件大小超出默认则提示
         if (!this.unSize) {
           let isbeyond = (+this.fileSize) * 1024 > file.size;
@@ -216,6 +219,9 @@
           }
 
         }
+
+
+
         //判断类型
         let type = file.name.split('.');
         type = type[type.length - 1];
@@ -226,11 +232,22 @@
 
           return false;
         }
+        this.listLength++; //记录上传图片数量
+        //图片数量多余默认数量则提示
+        const check = this.listLength <= this.data.length;
+        if (!check) {
+          this.$Notice.warning({
+            title: `最多只能上传 ${this.data.length} ${this.listType=='text'?'个文件':'张图片' }。`
+          });
+          return false;
+        }
       },
       onProgress(event, file, fileList) {
         //文件上传时的钩子，返回字段为 event, file, fileList
       },
       onSuccess(response, file, fileList) {
+
+        this.fileList = fileList;
         //文件上传成功时的钩子，返回字段为 response, file, fileList
         //console.log("上传成功")
         // 因为上传过程为实例，这里模拟添加 url
@@ -270,6 +287,9 @@
         this.dialogVisible = true;
       },
       onRemove(file, fileList) {
+
+        this.fileList = fileList;
+
         //文件列表移除文件时的钩子，返回字段为 file, fileList
         this.listLength--;
         this.uploadList = fileList;

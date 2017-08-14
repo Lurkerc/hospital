@@ -59,7 +59,7 @@
                   <div class="cell">{{ viewData.theoryExamScore }}</div>
                 </td>
                 <td>
-                  <div class="cell">{{ viewData.skillExamIsMakeup | isNeed }}</div>
+                  <div class="cell">{{ (viewData.theoryExamScore ? viewData.theoryExamIsMakeup : '--') | isNeed }}</div>
                 </td>
               </tr>
               <tr class="el-table__row">
@@ -70,7 +70,7 @@
                   <div class="cell">{{ viewData.skillExamScore }}</div>
                 </td>
                 <td>
-                  <div class="cell">{{ viewData.skillExamIsMakeup | isNeed }}</div>
+                  <div class="cell">{{ (viewData.skillExamScore ? viewData.skillExamIsMakeup : '--') | isNeed }}</div>
                 </td>
               </tr>
               <tr class="el-table__row">
@@ -210,7 +210,7 @@
         let fileIds = [];
         this.viewData = res.data;
         this.summaryFileList.comment = res.data.depComment;
-        this.summaryFileList.depQualified = res.data.depQualified;
+        this.summaryFileList.depQualified = res.data.depQualified || "QUALIFIED";
         this.summaryFileList.isMakeupRotary = res.data.isMakeupRotary;
         this.summaryFileList.makeupTs = res.data.makeupTs;
         this.studentUploadFiles.length = 0;

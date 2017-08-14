@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
   <div>
-   <el-form  :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="130px" >
+   <el-form  :model="formValidate" ref="formValidate" :rules="entityAudit" class="demo-form-inline" label-width="130px" >
         <el-row class="table-back-one">
           <el-col :span="6" >
             <el-form-item label="科别:" prop="name" >
@@ -210,7 +210,7 @@
               </colgroup>
               <tbody  class="add-scope">
               <tr v-for="(item,index) in formValidate.aidDrugName">
-                <td v-if="index==0" :rowspan="formValidate.aidDrugName.length">
+                <td v-if="index==0" style="text-align: center" :rowspan="formValidate.aidDrugName.length">
                   出
                 </td>
                 <td v-for="(head,i) in item" :key="i">
@@ -442,7 +442,7 @@
 
      <el-row >
        <el-col :span="16" >
-         <el-form-item label="审核意见:" prop="name" >
+         <el-form-item label="审核意见:" prop="reviewMess" >
            <el-input type="textarea"  v-model="formValidate.reviewMess"></el-input>
          </el-form-item>
          </el-form-item>
@@ -464,13 +464,14 @@
 </template>
 <script>
   /*当前组件必要引入*/
-
+  import {entityAudit} from '../../rules'
   //当前组件引入全局的util
   let Util = null;
   export default{
     props:['operailityData','url','podId'],
     data() {
       return {
+        entityAudit,
         saveBtn: {title: '批注', callParEvent: 'postilSubEvent'},
         loadBtn: {title: '保存', callParEvent: 'saveSubEvent'},
         mzRecordHeader:['药物名称/使用的剂量'],  //药物名称/使用的剂量
@@ -559,8 +560,8 @@
         endDate = this.timestamp(this.parseDate(endDate,'yyyy-MM-dd HH:mm:ss'))
         this.isFirst = true;
         this.mzRecordHeader = ['药物名称/使用的剂量'],  //药物名称/使用的剂量
-          this.mzStatusHeader = ['生命体征'],  //药物名称/使用的剂量
-          this.aidDrugNameHeader = ['辅助输入的药品名称']  //药物名称/使用的剂量
+          this.mzStatusHeader = ['生命体征'],  //生命体征
+          this.aidDrugNameHeader = ['辅助输入的药品名称']  //辅助输入的药品名称
         while (day<=endDate){
           let hm =this.conductDate(day,'HH:mm');
           this.mzRecordHeader.push(hm);
@@ -581,6 +582,9 @@
             mzRecord[i].push('');
           }
         }
+
+
+
         for(let i=0;i<mzStatus.length;i++){
           if( mzStatus[i][0]==''){
             mzStatus.splice(i);
@@ -590,6 +594,9 @@
             mzStatus[i].push('');
           }
         }
+
+
+
         for(let i=0;i<aidDrugName.length;i++){
           if( aidDrugName[i][0]==''){
             aidDrugName.splice(i);
@@ -597,6 +604,28 @@
           }
           for(let k = aidDrugName[i].length;k<length;k++){
             aidDrugName[i].push('');
+          }
+        }
+
+        ////药物名称/使用的剂量是空数组的话
+        if(mzRecord==0){
+          mzRecord[0] = [];
+          for(let k =0;k<length;k++){
+            mzRecord[0].push('');
+          }
+        }
+        //生命体征是空数组的话，
+        if(mzStatus==0){
+          mzStatus[0] = [];
+          for(let k =0;k<length;k++){
+            mzStatus[0].push('');
+          }
+        }
+        //辅助输入的药品名称是空数组的话，
+        if(aidDrugName==0){
+          aidDrugName[0] = [];
+          for(let k =0;k<length;k++){
+            aidDrugName[0].push('');
           }
         }
         return data

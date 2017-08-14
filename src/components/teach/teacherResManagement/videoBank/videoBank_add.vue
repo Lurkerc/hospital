@@ -60,7 +60,7 @@
       <el-row v-if="!unFile">
         <el-col :span="16" :offset="2">
           <el-form-item label="视频文件:" >
-            <upload-file :unSize="true" @setUploadFiles="expenseFileEvent"></upload-file>
+            <upload-file :unSize="true" :uploadUrl="'/file/upload/study'" @setUploadFiles="expenseFileEvent"></upload-file>
           </el-form-item>
         </el-col>
       </el-row>
@@ -274,8 +274,8 @@
 
 
       //上传视频文件
-      expenseFileEvent(){
-
+      expenseFileEvent(ids,files){
+console.log(ids,files);
 
       },
 

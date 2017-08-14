@@ -48,8 +48,8 @@
 <script>
   import api from './api';
   /*当前组件必要引入*/
-  import layout from "./components/layout"; // 基础布局
-  import nmenuItem from './components/menu'; // 菜单项
+  import layout from "./_components/layout"; // 基础布局
+  import nmenuItem from './_components/menu'; // 菜单项
 
   import basicEdit from './basic/basic_edit'; // 课程基本信息
   import introEdit from './intro/intro_edit'; // 课程简介
@@ -60,6 +60,8 @@
   import tqvInfoEdit from './TQVInfo/TQVInfo_edit'; // 教学质量评价表
   // import treInfoEdit from './TREInfo/TREInfo_edit'; // 试运行评估表
 
+  // 测试数据
+  import testData from './getData';
   export default {
     props: ['operailityData'],
     data() {
@@ -95,6 +97,18 @@
         };
         this.ajax(opt)
       },
+      // 获取查看数据
+      getViewData() {
+        this.$store.commit('curriculum/data/updateData', this.$util._.defaultsDeep({}, testData))
+        return
+        this.ajax({
+          ajaxSuccess: res => this.$store.commit('curriculum/data/updateData', res.data),
+          ajaxParams: {
+            url: api.get.path + this.operailityData.id,
+            method: api.get.method
+          }
+        })
+      },
     },
     components: {
       layout,
@@ -110,7 +124,8 @@
     },
     //初始化组件
     created() {
-      this.$store.commit('curriculum/data/init')
+      this.$store.commit('curriculum/data/init');
+      this.getViewData()
     },
 
     // 销毁状态

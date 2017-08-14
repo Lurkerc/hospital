@@ -137,7 +137,7 @@
 
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle:{
-          type:'add',
+          type:'edit',
           successTitle:'添加成功!',
           errorTitle:'添加失败!',
           ajaxSuccess:'ajaxSuccess',
@@ -343,6 +343,7 @@
        * */
       getFormData(data){
         let myData = Util._.defaultsDeep({},data);
+        delete myData.jdStatus;
         return myData;
       },
 

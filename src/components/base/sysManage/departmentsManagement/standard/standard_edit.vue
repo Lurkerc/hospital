@@ -81,7 +81,6 @@
        * */
       listenSubEvent(isLoadingFun){
         let isSubmit = this.submitForm("formValidate");
-        alert(isSubmit)
         if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {
           };

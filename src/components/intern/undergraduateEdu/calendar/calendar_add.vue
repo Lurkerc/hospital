@@ -129,7 +129,7 @@
       <el-col :span="24">
         <div class="cal-schoolTit">
           学期起止时间：{{formValidate.weekSetStartTime}} 至 {{formValidate.weekSetEndTime}}
-          ，{{formValidate.gradeNum}}级，{{formValidate.classNum}}班
+          ，{{conductDate(formValidate.gradeNum,'yyyy')}}级，{{formValidate.classNum}}班
         </div>
       </el-col>
     </el-row>

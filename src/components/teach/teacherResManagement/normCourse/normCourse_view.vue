@@ -45,9 +45,10 @@
 </template>
 
 <script>
+  import api from './api';
   /*当前组件必要引入*/
-  import layout from "./components/layout"; // 基础布局
-  import nmenuItem from './components/menu'; // 菜单项
+  import layout from "./_components/layout"; // 基础布局
+  import nmenuItem from './_components/menu'; // 菜单项
 
   import basicView from './basic/basic_view'; // 课程基本信息
   import noticeView from './notice/notice_view'; // 公告
@@ -59,6 +60,8 @@
   import tqvInfoView from './TQVInfo/TQVInfo_view'; // 教学质量评价表
   import treInfoView from './TREInfo/TREInfo_view'; // 试运行评估表
 
+  // 测试数据
+  import testData from './getData';
   //当前组件引入全局的util
   let Util = null;
   export default {
@@ -72,11 +75,24 @@
     methods: {
       // 初始化
       init() {
+        this.getViewData();
         this.title = this.$store.state.curriculum.data.course.title;
       },
       // 菜单点击
       menuClick(menu) {
         this.menuActive = menu;
+      },
+      // 获取查看数据
+      getViewData() {
+        this.$store.commit('curriculum/data/updateData', this.$util._.defaultsDeep({}, testData))
+        return
+        this.ajax({
+          ajaxSuccess: res => this.$store.commit('curriculum/data/updateData', res.data),
+          ajaxParams: {
+            url: api.get.path + this.operailityData.id,
+            method: api.get.method
+          }
+        })
       },
     },
 

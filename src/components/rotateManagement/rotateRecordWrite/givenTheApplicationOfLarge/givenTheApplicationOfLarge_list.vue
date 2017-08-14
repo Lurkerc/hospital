@@ -14,14 +14,13 @@
               <el-option v-for="item in orderOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-button type="info" @click="search">查看</el-button>
+          <el-button type="info" @click="search">搜索</el-button>
         </el-form>
       </el-col>
     </el-row>
     <!-- 数据表格 -->
     <div id="tableData" ref="tableData" class="givenTheAppTable">
-      <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%"
-        @selection-change="handleSelectionChange">
+      <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column label="序号" prop="index" width="100"></el-table-column>
         <el-table-column label="操作" width="140">
           <template scope="scope">
@@ -32,7 +31,7 @@
             <!-- </template>
             <span v-else>---</span> -->
             <el-button :disabled="!scope.row.examinationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
-            <el-button :disabled="!scope.row.examinationId" size="small" type="success" @click="rotary(scope.row)" v-if="scope.row.depQualified === 'QUALIFIED'">出科</el-button>
+            <el-button :disabled="!canRotary(scope.row)" size="small" type="success" @click="rotary(scope.row)">出科</el-button>
           </template>
         </el-table-column>
         <el-table-column label="姓名" prop="userName" show-overflow-tooltip></el-table-column>
@@ -65,8 +64,7 @@
     </div>
     <!-- 分页按钮 -->
     <div style="float: right;margin-top:10px;">
-      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-        :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
+      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
     </div>
     <!-- 模态框 出科 -->
     <Modal :mask-closable="false" v-model="rotaryModal" height="200" class-name="vertical-center-modal" :width="900">
@@ -190,9 +188,6 @@
        * @param isLoading Boolean 是否加载
        */
       setTableData(isLoading) {
-        if (this.isManage) {
-          this.queryQptions.url = api.managePagelist.path;
-        }
         Object.assign(this.queryQptions.params, this.otherParams);
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
@@ -200,7 +195,7 @@
         }, isLoading)
       },
       // 数据请求成功回调
-      listDataSuccess(res, m, loading) {
+      listDataSuccess(res) {
         this.totalCount = res.totalCount || 0;
         this.tableData = this.addIndex(res.data || []);
       },
@@ -210,6 +205,19 @@
         let tableData = this.$refs.tableData;
         let paginationHt = 50;
         this.dynamicHt = contentHeight - tableData.offsetTop - paginationHt;
+      },
+      // 是否可出科
+      canRotary(row) {
+        let thisTime = new Date().getTime();
+        let rotaryEndTime = 0;
+        let validTime = 5 * 24 * 3600 * 1000; // 结束出科前后五天
+        let tag = false;
+        if (row.rotaryEndTime) {
+          rotaryEndTime = new Date(row.rotaryEndTime).getTime();
+          // 前五天                                       后五天
+          tag = ((thisTime > (rotaryEndTime - validTime)) && (thisTime < (rotaryEndTime + validTime)));
+        }
+        return tag
       },
       /*************************************** 按钮事件 **********************************/
       // 出科
@@ -274,7 +282,6 @@
         this[targer + 'Modal'] = false;
       },
     },
-    watch: {},
     created() {
       this.init();
     },

@@ -299,8 +299,8 @@
             </colgroup>
             <thead>
             <tr>
-              <th class="cell" >诱导药物名称</th>
-              <th class="cell" >病人从进手术室开始到出手术室的过程记录</th>
+              <th class="cell" >诱导药物名称<span style="color: red">*</span></th>
+              <th class="cell" >病人从进手术室开始到出手术室的过程记录<span style="color: red">*</span></th>
             </tr>
             </thead>
           </table>
@@ -434,12 +434,15 @@
           </el-col>
         </el-row>
         </br>
-
-        <div style="margin-left: 100px">
-          <load-btn @saveSubEvent="saveSubEvent" :btnData="saveBtn"></load-btn>
-          <load-btn @appearSubEvent="appearSubEvent" :btnData="loadBtn"></load-btn>
-          <el-button  @click="cancel">取消</el-button>
-        </div>
+        <el-row >
+          <el-col :span="10" :offset="8" >
+            <div >
+              <load-btn @saveSubEvent="saveSubEvent" :btnData="saveBtn"></load-btn>
+              <load-btn @appearSubEvent="appearSubEvent" :btnData="loadBtn"></load-btn>
+              <el-button  @click="cancel">取消</el-button>
+            </div>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
 </template>
@@ -556,6 +559,7 @@
             }];
 
             for(let i=0;i<mess.length;i++){
+              let isSpan = true;//全部为空
               let item = data[mess[i].key];
               for(let k=0;k<item.length;k++){
                 let isHasname = false;  //名字是否为空；
@@ -574,11 +578,22 @@
                   if(isHasname&&isHasCount){
                     flag = false;
                   }
+                  if(!isHasname&&!isHasCount){
+                    isSpan =true ;
+                  }
+                  if(isHasname||isHasCount){
+                    isSpan = false;
+                  }
                 }
-                console.log(isHasname,isHasCount,isHasname&&isHasCount);
+
                 if(isHasname&&isHasCount){
                   this.errorMess(mess[i].label+'名称必填');
                 }
+              }
+
+              if(isSpan){
+                this.errorMess(mess[i].label+'必填')
+                return false;
               }
             }
 

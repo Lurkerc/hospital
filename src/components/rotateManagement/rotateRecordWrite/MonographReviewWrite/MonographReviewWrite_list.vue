@@ -5,7 +5,9 @@
 ****--@author   gx
 ----------------------------------->
 <template>
-    <div >
+    <div id="content" ref="content" >
+      <div id="myTable"
+           ref="myTable" :style="{height:dynamicHt+'px'}" style="overflow: auto">
       <div style="font-size: 22px;text-align: center" v-if="what==''">
         加载中
       </div>
@@ -16,10 +18,11 @@
               {{formValidate.userName}}
             </el-form-item>
           </el-col>
-        </el-row >
+        </el-row>
 
         <el-row >
           <el-col :span="16" :offset="2">
+
             <el-form-item label="填写时间:" prop="diseaseName">
               {{formValidate.createTime}}
             </el-form-item>
@@ -29,13 +32,15 @@
         <el-row >
           <el-col :span="16" :offset="2">
             <el-form-item label="专题综述:" prop="diseaseName">
-             <div v-html="formValidate.content" ></div>
+              <el-form-item label="专题综述:" prop="diseaseName" >
+                <viewUEditor :name="'ud2'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
+              </el-form-item>
             </el-form-item>
           </el-col>
         </el-row >
 
         <el-row>
-          <el-col :span="20" :offset="2">
+          <el-col :span="16" :offset="2">
             <el-table
               v-if="tableData!=0"
               align="center"
@@ -75,8 +80,8 @@
         <el-row >
           <el-col :span="10" :offset="4">
             <div style="margin-left: 100px">
-              <el-button v-if="formValidate.state!='SUBMIT'|| formValidate.state!='REJECT'"  @click="edit">修改</el-button>
-              <el-button  v-if="formValidate.state!='SUBMIT'|| formValidate.state!='REJECT'"   @click="reported">上报</el-button>
+              <el-button v-if="formValidate.state!='SUBMIT' && formValidate.state!='PASS'"  @click="edit">修改</el-button>
+              <el-button  v-if="formValidate.state!='SUBMIT' && formValidate.state!='PASS'"   @click="reported">上报</el-button>
             </div>
           </el-col>
         </el-row >
@@ -95,9 +100,12 @@
         <div slot="footer"></div>
       </Modal>
       <!---->
+      </div>
     </div>
 </template>
 <script>
+  /*当前组件必要引入*/
+  import viewUEditor from '../../../common/showUeditor.vue';
     /*当前组件必要引入*/
     import url from '../api'
     /*当前组件必要引入*/
@@ -110,6 +118,14 @@
             return {
               url,
               what:"",
+              UE:{},
+              ueditorVal:{
+                ud2:"",
+              },  //
+              ueditorConfig:{
+                //详细配置参考UEditor 官网api
+                initialFrameHeight:220,  //初始化编辑器高度,默认320
+              },
               formValidate:{
                 "id":11,
                 "userName":"张三",
@@ -127,7 +143,7 @@
                 ]
               },
               reportedModal:false,
-
+              dynamicHt:100,
               reportedId : {id:'reportedId',title:'上报'},
               listMessTitle:{
                 ajaxSuccess:'SuccessGetCurrData',
@@ -144,7 +160,7 @@
               this.what = 'add';
               return;
             }
-
+            this.ueditorVal.ud2 = data.content;
             this.formValidate = data;
             if(data.id){
               this.what = 'view';
@@ -187,17 +203,76 @@
 
           setTableData(){
             this.ajax(this.listMessTitle)
-          }
+          },
+
+
+          /**
+           *
+           * 存储编辑器的value值
+           * @param name {string}  编辑器的name
+           *
+           * @param val  {string}  编辑器的内容
+           *
+           */
+          getUeditorVal(name,val){
+            this.ueditorVal[name] = val;
+
+          },
+
+          //保存 改变url
+          save(isLoadingFun){
+            this.addMessTitle.ajaxParams.url = this.url.thematicReviewAdd;
+            this.listenSubEvent(isLoadingFun);
+          },
+
+          //保存上报 改变url
+          saveReportedEvent(isLoadingFun){
+            this.addMessTitle.ajaxParams.url = this.url.thematicReviewAddSubmit;
+            this.listenSubEvent(isLoadingFun);
+          },
+
+          /**
+           *
+           * 存储编辑器的UE.editor对象
+           * @param name {string}  编辑器的name
+           *
+           * @param editor {}      编辑器的对象
+           *
+           */
+          storeUE(name,editor){
+            this.UE[name] = editor;
+            editor.setDisabled()
+          },
+
+          setMyVal(name,v){
+            this.UE[name].setContent(v);
+          },
+
+          //设置表格及分页的位置
+          setTableDynHeight(){
+            let content = this.$refs.content;
+            let parHt = content.parentNode.offsetHeight;
+            let myTable = this.$refs.myTable;
+            let paginationHt = 50;
+            this.dynamicHt = parHt - myTable.offsetTop - paginationHt;
+          },
         },
         created(){
            this.setTableData();
         },
         mounted(){
 
-
+        //页面dom稳定后调用
+          this.$nextTick(function () {
+            //初始表格高度及分页位置
+            this.setTableDynHeight();
+            //为窗体绑定改变大小事件
+            let Event = this.$util.events;
+            Event.addHandler(window, "resize", this.setTableDynHeight);
+          })
         },
         components: {
-            add,edit
+            add,edit,viewUEditor
         }
     }
 </script>

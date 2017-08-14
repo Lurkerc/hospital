@@ -24,10 +24,9 @@
     </el-row>
     <!-- 数据表格 -->
     <div id="tableData" ref="tableData" class="givenTheAppTable">
-      <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%"
-        @selection-change="handleSelectionChange">
+      <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column label="序号" prop="index" width="100"></el-table-column>
-        <el-table-column label="操作" width="140">
+        <el-table-column label="操作" width="140" align="center">
           <template scope="scope">
             <el-button :disabled="!scope.row.examinationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
             <el-button :disabled="!scope.row.examinationId" size="small" type="success" @click="rotary(scope.row)">审核</el-button>
@@ -53,8 +52,7 @@
     </div>
     <!-- 分页按钮 -->
     <div style="float: right;margin-top:10px;">
-      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-        :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
+      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
     </div>
     <!-- 模态框 出科 -->
     <Modal :mask-closable="false" v-model="rotaryModal" height="200" class-name="vertical-center-modal" :width="900">

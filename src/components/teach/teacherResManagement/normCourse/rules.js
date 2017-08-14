@@ -2,6 +2,13 @@ import _ from 'lodash';
 import baseRules from '../../../../formRules/base'; // 公共规则
 
 /**
+ * 树节点
+ */
+let tree = {
+  
+};
+
+/**
  * 基本信息
  */
 let basic = {
@@ -27,6 +34,7 @@ let evaluateRules = {
 };
 
 export {
+  tree,
   evaluateRules,
   plan,
   basic

@@ -48,7 +48,7 @@ const api = {
     path: "/hospital/dept/query/allNameId",
     method: 'get'
   },
-  teachCourseTime:{  //获取时间段设置
+  teachCourseTime:{  //活动时间段获取
     path: "/teachCourseTime/list",
     method: 'get'
   },
@@ -56,8 +56,12 @@ const api = {
     path: thisFile + "/monthCourseSet",
     method: 'get'
   },
-  modifySubmit:{ //上报教学周历设置
+  modifySubmit:{ //上报教学周历设置 {id}
     path: thisFile + "/modifySubmit",
+    method: 'put'
+  },
+  modifyNoSubmit:{  //取消上报教学周历 {id}
+    path: thisFile + "/modifyNoSubmit",
     method: 'put'
   },
   dayCourseSet:{  //根据教学周历ID和时间获取一天的教学安排
@@ -81,6 +85,10 @@ const api = {
   },
   monthCourseSetResearchRoom:{  //根据教学周历ID获取每个月课程设置-----教研室人员可看
     path: thisFile + "/monthCourseSetResearchRoom",
+    method: 'get'
+  },
+  teachCourseTime:{
+    path: "/teachCourseTime/list",
     method: 'get'
   },
   userGetCourse:{  //根据教学周历ID获取每个月课程设置-----教研室人员可看

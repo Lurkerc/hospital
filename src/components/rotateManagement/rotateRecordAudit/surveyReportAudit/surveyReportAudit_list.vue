@@ -6,11 +6,12 @@
 ----------------------------------->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  ref="formValidate" inline label-width="110px">
+    <el-form  ref="formValidate"  :model="formValidate" :rules="clinicalOperationWriteList" inline label-width="110px">
       <el-row style="margin-bottom:0">
         <!--列表操作按钮-->
         <el-col :span="10" >
-          &nbsp;
+          <el-button type="primary" @click="pass">批量通过</el-button>
+          <el-button type="danger" @click="reject">批量驳回</el-button>
         </el-col>
         <!--搜索项-->
         <el-col :span="14"  align="right">
@@ -125,7 +126,7 @@
     </Modal>
     <!--查看弹窗-->
     <Modal
-      width="800"
+      width="1000"
       v-model="showModal"
       title="查看档案管理弹窗"
       class-name="vertical-center-modal"
@@ -143,7 +144,7 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="passId"></modal-header>
-      <operate v-if="passModal" :type="'pass'" :operate-url="url.tubeBedRecordingModifySubPass" :methods="'post'"  @cancel="cancel" @operate="subCallback" :operaility-data="operailityData" ></operate>
+      <operate v-if="passModal" :type="'pass'" :operate-url="url.medicalEthicsModifySubPass" :methods="'post'"  @cancel="cancel" @operate="subCallback" :operaility-data="operailityData" ></operate>
       <div slot="footer"></div>
     </Modal>
 
@@ -155,7 +156,7 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="rejectId"></modal-header>
-      <operate v-if="rejectModal" :type="'reject'" :operate-url="url.tubeBedRecordingModifySubReject" :methods="'post'"  @cancel="cancel" @operate="subCallback" :operaility-data="operailityData" ></operate>
+      <operate v-if="rejectModal" :type="'reject'" :operate-url="url.medicalEthicsModifySubReject" :methods="'post'"  @cancel="cancel" @operate="subCallback" :operaility-data="operailityData" ></operate>
       <div slot="footer"></div>
     </Modal>
     <!---->
@@ -163,6 +164,7 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import {clinicalOperationWriteList} from '../rules';
   import url from '../api'
   //引入--修改--组件
   import audit from "./surveyReportAudit_audit.vue";
@@ -174,6 +176,7 @@
   export default{
     data() {
       return {
+        clinicalOperationWriteList,
         url:url,
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',

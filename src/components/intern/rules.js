@@ -1,7 +1,14 @@
 import _ from 'lodash';
 import baseRules from '../../formRules/base'; // 公共规则
 
-/*
+/**
+ * 本科生 - 课程管理 - 课程安排
+ */
+let setSyllabus = {
+  numberMust: [{ required: true, message: '此项不能为空'}], // 收费标准 - 必须为数字
+};
+
+/**
  * 实习生 - 报名招录 - 报名审核
  */
 let internAudit = {
@@ -44,11 +51,11 @@ let handWork = {
 let internOutline = {
   "ts":baseRules.numberMust,
   "greatName":[{ required: true, message: '此项不能为空'}],
-  "rotaryUserNum":baseRules.numberMust,
+  "rotaryUserNum":baseRules.greaterThanZero,
 };
 
 
 
 export {
-  internAudit,chargingStandard,reqDepVal,internOutline
+  setSyllabus,internAudit,chargingStandard,reqDepVal,internOutline
 };

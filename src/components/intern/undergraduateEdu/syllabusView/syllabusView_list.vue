@@ -197,7 +197,7 @@
         this.calculate(this.formValidate.courseBeginTime,this.formValidate.courseEndTime);
 //        this.date.startStamp = this.formValidate.courseBeginTime;
 //        this.date.endStamp =this.formValidate.courseEndTime;
-        let formValidate = this.formDate(this.getFormData(this.formValidate),['courseBeginTime','courseEndTime'],this.yearMonthData);
+        let formValidate = this.formDate(Util._.defaultsDeep({},this.formValidate),['courseBeginTime','courseEndTime'],this.yearMonthData);
         this.tableListMessTitle.ajaxParams.params = Object.assign( this.tableListMessTitle.ajaxParams.params,formValidate);
         this.ajax(this.headerListMessTitle);  //请求头部
         this.ajax(this.tableListMessTitle);     //请求列表数据
@@ -232,14 +232,15 @@
               activityTime:time,
               recordTimeIds:k.split('-')[1],
               activityId :[],
-              activityName :'',
+              activityName :[],
             };
               for(let l=0;l<timeId.length;l++){
                 obj.activityId.push(timeId[l].courseArrangeId);
-                obj.activityName=timeId[l].courseContent
+                obj.activityName.push(timeId[l].courseContent);
               }
             obj.activityId = obj.activityId.join(',');
-            tempArr.push(obj)
+            obj.activityName = obj.activityName.join(';');
+              tempArr.push(obj)
           }
 
         }

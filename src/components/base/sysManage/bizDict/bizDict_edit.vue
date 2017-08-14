@@ -13,7 +13,8 @@
 
         <el-col :span="9" >
           <el-form-item label="字典代码" prop="parentCode" >
-            <el-input v-model="formValidate.parentCode" placeholder="请输入"></el-input>
+            {{formValidate.parentCode}}
+            <!--<el-input v-model="" placeholder="请输入"></el-input>-->
           </el-form-item>
         </el-col>
         </el-col >
@@ -35,7 +36,8 @@
               </el-col>
               <el-col :span="6" >
                 <el-form-item label="字典Code" prop="code" >
-                  <el-input  v-model="value.code" placeholder="请输入"></el-input>
+                  {{value.code}}
+                  <!--<el-input  v-model="value.code" placeholder="请输入"></el-input>-->
                 </el-form-item>
               </el-col>
               <el-col :span="6" >

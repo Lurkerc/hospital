@@ -65,7 +65,7 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="毕业学校：" prop="school">
-                    {{formValidate.school}}
+                    <div class="overflow-txt1" :title="formValidate.school">{{formValidate.school}}</div>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -97,12 +97,17 @@
 
           </el-row>
           <el-row :gutter="10" class="table-back-one">
-            <el-col :span="11">
+            <el-col :span="6">
               <el-form-item label="年级：" prop="grade">
                 {{formValidate.grade}}
               </el-form-item>
             </el-col>
-            <el-col :span="11">
+            <el-col :span="5">
+              <el-form-item label="班级：" prop="grade">
+                {{formValidate.classNum}}
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
               <el-form-item label="籍贯：" prop="origin">
                 {{formValidate.origin}}
               </el-form-item>
@@ -250,7 +255,7 @@
           school: '', //毕业学校
           jobTime: '', //参加工作时间，年月，例如：199011
           grade: '', //年级
-          group: '', //班级
+          classNum: '', //班级
           length: '', //学制
           duties: '', //职务
           doctor: '', //是否职业医师:是、否

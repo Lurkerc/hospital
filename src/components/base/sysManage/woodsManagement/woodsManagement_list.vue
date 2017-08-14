@@ -18,8 +18,8 @@
           <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="90px" >
             <div class="listUpArea-searchLeft">
               <input class="hidden">
-              <el-input placeholder="请输入内容" v-model="formValidate.name">
-                <div slot="prepend">字典名称</div>
+              <el-input placeholder="请输入内容" v-model="formValidate.jdName">
+                <div slot="prepend">基地名称</div>
                 <el-button @click="handleSubmit('formValidate')" slot="append" icon="search"></el-button>
               </el-input>
             </div>

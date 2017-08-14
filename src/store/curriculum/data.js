@@ -10,24 +10,35 @@ const planDtoItem = {
   wareDtoList: [], // 课件对象集合
   wareDtoListTemp: { // 课件对象集合（操作使用）
     before: [], // 课前
-    in_progress: [], // 课前
+    in_progress: [], // 课中
     after: [], // 课后
   },
   testingDtoList: [], // 测评对象集合
   testingDtoListTemp: { // 测评对象集合（操作使用）
     before: { // 课前
       score: '100', // 达标分数
+      type: "BEFORE",
       questionsDtoList: [], // 测评试题对象集合
     },
     in_progress: { // 课中
       score: '100', // 达标分数
+      type: "IN_PROGRESS",
       questionsDtoList: [], // 测评试题对象集合
     },
     after: { // 课后
       score: '100', // 达标分数
+      type: "AFTER",
       questionsDtoList: [], // 测评试题对象集合
     },
   },
+};
+// 课件
+const wareDtoItem = { //课前 课件
+  title: "", // 课件显示名称
+  fileId: "", // 文件ID
+  fileName: "", //文件名称
+  fileType: "", //文件类型
+  fileSize: "" //文件大小
 };
 // 试题
 const questionsDtoItem = { //测评试题对象集合
@@ -115,6 +126,7 @@ const mutations = {
     let questionsDtoList = state.planDtoList[testObj.planIndex].testingDtoListTemp[testObj.type].questionsDtoList;
     let theId = questionsDtoList.length + 1;
     questionsDtoItem.theId = theId; // 唯一标识
+    questionsDtoItem.type = testObj.type.toUpperCase();
     questionsDtoList.push(_.defaultsDeep({}, questionsDtoItem))
   },
   /**
@@ -123,6 +135,39 @@ const mutations = {
    */
   addEvaluate: (state, type) => state.evaluate[type + 'Evaluate'].push(_.defaultsDeep({}, evaluateItem)),
   /**************************** 更新值 *******************************/
+  /**
+   * 更新数据
+   * dataObj Object ajax请求到的数据集
+   */
+  updateData: (state, dataObj) => {
+    // 更新课程基本信息
+    _.mapKeys(state.course, (val, key) => state.course[key] = dataObj[key] || '');
+    // 更新教学质量评价
+    _.mapKeys(state.evaluate, (val, key) => state.evaluate[key] = dataObj.evaluate[key] || '');
+    /* 更新课程计划 */
+    state.planDtoList.length = 0;
+    dataObj.planDtoList.map(item => {
+      // 更新课件对象集合
+      let {
+        before,
+        inProgress: in_progress,
+        after,
+      } = item.wareDtoList;
+      item.wareDtoListTemp = { // 课件对象集合（操作使用）
+        before, // 课前
+        in_progress, // 课中
+        after // 课后
+      };
+      // 更新测评对象集合
+      item.testingDtoList.in_progress = _.defaultsDeep({}, item.testingDtoList.inProgress);
+      delete(item.testingDtoList.inProgress);
+      item.testingDtoListTemp = _.defaultsDeep({}, item.testingDtoList);
+      // 初始化
+      item.wareDtoList = [];
+      item.testingDtoList = [];
+      state.planDtoList.push(item);
+    })
+  },
   /**
    * 更新课程基本信息
    * course Object {key:value}

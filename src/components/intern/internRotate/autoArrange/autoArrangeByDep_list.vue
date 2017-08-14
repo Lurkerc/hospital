@@ -31,6 +31,14 @@
           :width="idx<1?wdt[idx]:otherWdt"
           :render-header="handleRenderHeader"
         >
+          <template scope="scope">
+            <div v-if="idx>0">
+              <div v-html="formatUserName(scope.row[item.prop])"></div>
+            </div>
+            <div v-else>
+              {{scope.row[item.prop]}}
+            </div>
+          </template>
         </el-table-column>
       </el-table-column>
     </el-table>
@@ -133,6 +141,21 @@
       },
 
 
+      //格式化人员展示
+      formatUserName(data){
+        let users = "";
+        if(typeof data!="undefined"){
+          data = data+"";
+          let tempArr = data.split("##");
+          for(var i=0,item;i<tempArr.length;i++){
+            item = tempArr[i];
+            users+= "<div style='padding: 3px 0;'>"+item+"</div>";
+          }
+        }
+        return users;
+      },
+
+
       //格式化排班表数据
       formatTableData(data){
         //this.tableData.thead  this.tableData.tbody
@@ -159,7 +182,11 @@
           for(var k=0,subItem;k<data["rotaryData"].length;k++){
             subItem = data["rotaryData"][k];
             if(item["depId"]==subItem["depId"]){
-              item[subItem["beginTime"]+subItem["endTime"]] = subItem["userName"];
+              if(typeof item[subItem["beginTime"]+subItem["endTime"]]=="undefined"){
+                item[subItem["beginTime"]+subItem["endTime"]] = subItem["userName"];
+              }else{
+                item[subItem["beginTime"]+subItem["endTime"]] += "##"+subItem["userName"];
+              }
             }
           }
         }

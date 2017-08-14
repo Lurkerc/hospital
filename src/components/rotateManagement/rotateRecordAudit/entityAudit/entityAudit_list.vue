@@ -6,7 +6,7 @@
 ----------------------------------->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  ref="formValidate" inline label-width="90px">
+    <el-form  ref="formValidate" :model="formValidate" :rules="entityWriteList" inline label-width="90px">
       <el-row >
         <el-col :span="24"  >
           <el-form-item label="创建人:" prop="createUserName">
@@ -130,7 +130,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="fillTime"
+            prop="createTime"
             label="创建时间"
           >
           </el-table-column>
@@ -237,6 +237,7 @@
   </div>
 </template>
 <script>
+  import {entityWriteList} from '../rules'
   /*当前组件必要引入*/
   import url from '../api'
   //引入--修改--组件
@@ -249,6 +250,7 @@
   export default{
     data() {
       return {
+        entityWriteList,
         reportedUrl:'',
         url:url,
         passData:{

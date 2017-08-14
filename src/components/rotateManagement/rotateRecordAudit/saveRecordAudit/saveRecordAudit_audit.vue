@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="100px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="entityAudit" class="demo-form-inline" label-width="100px" >
 
       <el-row >
         <el-col :span="16" :offset="4">
@@ -120,10 +120,12 @@
 <script>
   //当前组件引入全局的util
   let Util=null;
+  import {entityAudit} from '../rules'
   export default {
     props:['operailityData','url'],
     data (){
       return{
+        entityAudit,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         //form表单bind数据

@@ -3,7 +3,7 @@
   <div class="largeCase">
     <div v-if="!showWhat">
       <el-row>
-        <el-col :span="10" :offset="5">
+        <el-col :span="10" :offset="3">
           <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px">
             <el-form-item label="科室:" prop="dep">
               <el-select v-model="dep" placeholder="请选择">

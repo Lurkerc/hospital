@@ -36,7 +36,7 @@
     </el-row>
     <el-row>
       <el-col :span="24">
-        <p style="text-align: center;color: #FF0000">
+        <p v-if="!isHashGroupIndex" style="text-align: center;color: #FF0000">
           您选择的大纲分组顺序已被删除，不能设置顺序,建议在第三步"勾上跳过顺序设置"!
         </p>
       </el-col>
@@ -78,6 +78,7 @@
           title:'添加分组'},
 
         //大组信息
+        isHashGroupIndex:true,
         currGroupIndex:"",
         bigGroupData:[
           /*{
@@ -144,7 +145,9 @@
 
           //循环大组的数量
           this.bigGroupData = [];
-
+          if(data["outlineGroupIndex"].length==0){
+            this.isHashGroupIndex = false;
+          }
           for(var i=0,item,rotateOrder;i<data["outlineGroupIndex"].length;i++){
             rotateOrder = "";
             item = data["outlineGroupIndex"][i];

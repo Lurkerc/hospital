@@ -53,24 +53,26 @@
           timeRecords:"",  //课程时间段(逗号分隔)  时间段ID
           teachRoomDepId:"",  //大科室ID(逗号分隔)
         },
-        times:[{
-          "timeId":"1",
-          "courseTime":"08:00-08:50",
-          "courseIndex":"1",
-          "courseType":"0"
-        }],
+        times:[
+          /*{
+            "timeId":"1",
+            "courseTime":"08:00-08:50",
+            "courseIndex":"1",
+            "courseType":"0"
+          }*/
+        ],
         saveMess:{
 
         },
         //课程教研室设置ID
         dayCourse:[],
         course:[
-          {
+          /*{
             "timeId":"1",
             "courseTime":"08:00-08:50",
             "courseIndex":"1",
             "courseType":"0"
-          }
+          }*/
         ],
         //获取时间段设置
         getTimesTitle:{
@@ -168,7 +170,11 @@
                 break;
               }
             }
-            recordIds.push(recordId);
+            if(recordId!=""){
+              recordIds.push(recordId);
+            }else{
+              recordIds.push(null);
+            }
           }
           this.formValidate.timeRecords = tempArr.join(",");
           this.formValidate.recordIds = recordIds.join(",");
@@ -182,6 +188,17 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
+        let tempArr = [];
+        for(var i=0,item;i<this.course.length;i++){
+          item = this.course[i];
+          if(item.sltTimeId!=""){
+            tempArr.push(item.sltTimeId)
+          }
+        }
+        if(tempArr.length==0){
+          this.showMess("至少要选择一个科室!");
+          return;
+        }
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true);
         if(this.dayCourse.length==0){
@@ -225,10 +242,17 @@
       getFormData(data){
         let myData = Util._.defaultsDeep({},data);
         let tempArr = [];
+        let timeRecords = [];
         for(var i=0,item;i<this.course.length;i++){
            item = this.course[i];
-          tempArr.push(item.sltTimeId)
+          tempArr.push(item.sltTimeId);
+          if(item.sltTimeId!=""){
+            timeRecords.push(i+1);
+          }else{
+            timeRecords.push(null);
+          }
         }
+        myData.timeRecords = timeRecords.join(",");
         myData.teachRoomDepId = tempArr.join(",");
         return myData;
       },

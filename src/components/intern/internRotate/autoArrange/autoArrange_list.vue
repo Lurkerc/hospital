@@ -356,6 +356,9 @@
           option.ajaxParams.params = Object.assign(option.ajaxParams.params,this.queryQptions.params,this.formValidate);
           this.ajax(option);
         }else{
+          let showView = this.showView;
+          this.showView = null;
+          this.showView = showView;
           let dynamicHt = this.changeTabViewParams["dynamicHt"];
           this.changeTabViewParams = {};
           this.changeTabViewParams["dynamicHt"] = dynamicHt;

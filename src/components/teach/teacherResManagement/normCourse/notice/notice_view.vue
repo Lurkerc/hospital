@@ -1,6 +1,10 @@
 <template>
   <!-- 公告 -->
-  <div>公告</div>
+  <div>
+    <div class="contentTitleBox">
+      公告预览
+    </div>
+  </div>
 </template>
 
 <script>

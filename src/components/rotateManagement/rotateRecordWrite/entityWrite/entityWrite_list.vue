@@ -6,7 +6,7 @@
 ----------------------------------->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  ref="formValidate" inline label-width="100px">
+    <el-form  ref="formValidate" :model="formValidate" :rules="entityWriteList" inline label-width="100px">
       <el-row >
         <el-col :span="24"  >
           <el-form-item  label="病种名称:" prop="diseaseName">
@@ -96,7 +96,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="fillTime"
+            prop="createTime"
             label="日期"
           >
           </el-table-column>
@@ -190,6 +190,7 @@
   </div>
 </template>
 <script>
+  import {entityWriteList} from '../../rules'
   /*当前组件必要引入*/
   import url from '../api'
   //引入--新建--组件
@@ -204,6 +205,7 @@
   export default{
     data() {
       return {
+        entityWriteList,
         reportedUrl:'',
         url:url,
         //查询表单

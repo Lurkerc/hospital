@@ -162,7 +162,7 @@
           :page-sizes="myPages.pageSizes"
           :page-size="myPages.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="myPages.listTotal">
+          :total="listTotal">
         </el-pagination>
       </div>
       <!--修改弹窗-->
@@ -531,7 +531,7 @@
       forbidden(index){
         this.$Modal.confirm({
           title: '禁用',
-          content: '<p>您确定要禁用该账户吗</p>',
+          content: '<p>您确定要禁用该科室吗?</p>',
           loading: true,
           onOk: () => {
             let rowData=this.tableData1[index];
@@ -559,7 +559,7 @@
       startUsing(index){
         this.$Modal.confirm({
           title: '启用',
-          content: '<p>您确定要启用该账户吗</p>',
+          content: '<p>您确定要启用该科室吗?</p>',
           loading: true,
           onOk: () => {
             let rowData=this.tableData1[index];

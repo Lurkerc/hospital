@@ -147,8 +147,7 @@
 
         this.date.weekCount = this.getWeek(this.formValidate.activityBeginTime); //开始时间所在的星期
         this.calculate(this.formValidate.activityBeginTime,this.formValidate.activityEndTime);
-
-        let formValidate = this.formDate(this.getFormData(this.formValidate),['activityBeginTime','activityEndTime'],this.yearMonthData);
+        let formValidate = this.formDate(Util._.defaultsDeep({},this.formValidate),['activityBeginTime','activityEndTime'],this.yearMonthData);
         this.tableListMessTitle.ajaxParams.params = Object.assign( this.tableListMessTitle.ajaxParams.params,formValidate);
         this.ajax(this.headerListMessTitle);  //请求头部
         this.ajax(this.tableListMessTitle);     //请求列表数据
@@ -198,7 +197,6 @@
             ascending = ascending+86400000;
           }
         }
-        console.log(ascending,end);
         //再把第其余对象数据填满
         while (ascending<=end){
           if(weekCount>7){

@@ -7,11 +7,16 @@
           <el-input v-model="course.title" :readonly="isReadOnly"></el-input>
         </el-form-item>
         <el-form-item label="标签：" prop="tags">
-          <el-input v-model="course.tags" :readonly="isReadOnly"></el-input>
+          <el-tag :key="tag" v-for="tag in dynamicTags" :closable="true" :close-transition="false" @close="handleClose(tag)" class="tagItem">
+            {{tag}}
+          </el-tag>
+          <el-input v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="mini" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm" class="tagInput"></el-input>
+          <el-button v-else @click="showInput" size="mini">创建标签</el-button>
         </el-form-item>
       </el-col>
       <el-col :span="4" :offset="1">
-        <img src="//iph.href.lu/180x180" class="nBasicImg">
+        <img :src="course.logo" class="nBasicImg" v-if="isReadOnly">
+        <upload-header v-else @upladSuccess="upladSuccess" :img-file="course.logo" class="uploadBookLogo"></upload-header>
       </el-col>
       <el-col>
         <el-form-item label="应用方向说明：" prop="direction">
@@ -35,12 +40,14 @@
   import {
     basic as rules
   } from '../rules';
+  import uploadHeader from '../../../../common/uploadHeader';
   export default {
     props: ['readOnly'],
     data() {
       return {
         rules, // 验证输入规则
         isReadOnly: false, // 只读
+        dynamicTags: [],
         course: {
           title: "", //课程名称
           tags: "", //标签，多个|分割
@@ -49,7 +56,10 @@
           createUser: "", // 创建人
           createTime: "", // 创建时间
           auditStatus: "NOT_SUBMIT", //审核状态：保存草稿用NOT_SUBMIT，提交审核用NOT_AUDIT
-        }
+        },
+        splStr: '|', // 分隔符
+        inputVisible: false,
+        inputValue: '',
       }
     },
     methods: {
@@ -62,6 +72,10 @@
           this.course[key] = state.curriculum.data.course[key]
         }
 
+        if (this.course.tags) {
+          this.dynamicTags = this.course.tags.split(this.splStr);
+        }
+
         !this.course.createUser && (this.course.createUser = state.userInfo.name); // 创建人
         !this.course.createTime && (this.course.createTime = this.conductDate(new Date(), 'yyyy-MM-dd HH:mm')); // 创建时间
       },
@@ -70,6 +84,9 @@
         if (!this.checkData()) {
           return false;
         }
+
+        this.course.tags = this.dynamicTags.join(this.splStr);
+
         this.$store.commit('curriculum/data/updateCourse', this.course);
         return true
       },
@@ -83,6 +100,33 @@
         });
         return flag;
       },
+      // 移除tag
+      handleClose(tag) {
+        this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+      },
+      // 显示tag输入框
+      showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
+      // 输入数组追加到tag数组中
+      handleInputConfirm() {
+        let inputValue = this.inputValue;
+        if (inputValue) {
+          this.dynamicTags.push(inputValue);
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+      },
+      // 上传封面
+      upladSuccess(res, url) {
+        this.course.logo = url
+      },
+    },
+    components: {
+      uploadHeader
     },
     created() {
       this.init()
@@ -100,6 +144,27 @@
     height: 96px;
     margin: 0 auto;
     display: block;
+  }
+
+  .tagItem {
+    margin-right: 10px;
+  }
+
+  .tagInput {
+    width: 100px;
+  }
+
+  .uploadBookLogo {
+    margin: 0 auto;
+    &,
+    .avatar,
+    .avatar-uploader-icon {
+      width: 96px;
+      height: 96px;
+    }
+    .avatar-uploader-icon {
+      line-height: 96px;
+    }
   }
 
 </style>

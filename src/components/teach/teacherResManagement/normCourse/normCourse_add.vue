@@ -3,6 +3,13 @@
   <layout>
     <!-- 菜单 -->
     <div slot="menu">
+      <!-- 前置菜单 -->
+      <slot name="preMenu">
+        <template scope="props">
+          <!-- <nmenu-item :class="{'active':menuActive === props.name}" :name="props.name" @click="menuClick">{{ props.text }}</nmenu-item> -->
+          <p>{{ props.text }}</p>
+        </template>
+      </slot>
       <nmenu-item :class="{'active':menuActive === 'basic'}" name="basic" @click="menuClick">课程基本信息</nmenu-item>
       <nmenu-item :class="{'active':menuActive === 'intro'}" name="intro" @click="menuClick">课程简介</nmenu-item>
       <nmenu-item :class="{'active':menuActive === 'outline'}" name="outline" @click="menuClick">课程教学大纲</nmenu-item>
@@ -11,6 +18,12 @@
       <nmenu-item :class="{'active':menuActive === 'EO'}" name="EO" @click="menuClick">评测与作业</nmenu-item>
       <nmenu-item :class="{'active':menuActive === 'TQVInfo'}" name="TQVInfo" @click="menuClick">教学质量评价表</nmenu-item>
       <!-- <nmenu-item :class="{'active':menuActive === 'TREInfo'}" name="TREInfo" @click="menuClick">试运行评估表</nmenu-item> -->
+      <!-- 后置菜单 -->
+      <slot name="menu">
+        <template scope="props">
+          <nmenu-item :class="{'active':menuActive === props.name}" :name="props.name" @click="menuClick">{{ props.text }}</nmenu-item>
+        </template>
+      </slot>
     </div>
     <!-- 底部 -->
     <div align="center" slot="footer">
@@ -18,6 +31,8 @@
       <el-button type="success" @click="submitCall">提交审核</el-button>
     </div>
     <!-- 内容 start -->
+    <!-- 前置内容 -->
+    <slot name="preContent"></slot>
     <!-- 课程基本信息 -->
     <basic-edit v-if="menuActive === 'basic'" ref="basic"></basic-edit>
     <!-- 课程简介 -->
@@ -34,14 +49,19 @@
     <tqv-info-edit v-if="menuActive === 'TQVInfo'" ref="TQVInfo"></tqv-info-edit>
     <!-- 试运行评估表 -->
     <!-- <tre-info-edit v-if="menuActive === 'TREInfo'" ref="TREInfo"></tre-info-edit> -->
+    <!-- 后置内容 -->
+    <slot name="content"></slot>
     <!-- 内容 end -->
   </layout>
 </template>
 
 <script>
+  import {
+    getNormCourse
+  } from './dataTool';
   /*当前组件必要引入*/
-  import layout from "./components/layout"; // 基础布局
-  import nmenuItem from './components/menu'; // 菜单项
+  import layout from "./_components/layout"; // 基础布局
+  import nmenuItem from './_components/menu'; // 菜单项
 
   import basicEdit from './basic/basic_edit'; // 课程基本信息
   import introEdit from './intro/intro_edit'; // 课程简介
@@ -55,6 +75,7 @@
   //当前组件引入全局的util
   let Util = null;
   export default {
+    props: ['showMenu'],
     data() {
       return {
         menuActive: 'basic', // 激活菜单
@@ -69,6 +90,9 @@
       // 保存 调用子组件的save方法
       saveCall() {
         // return this.$refs[this.menuActive].submitData()
+        if (this.$refs[this.menuActive].saveToStore()) {
+          console.log(this.getSaveData())
+        }
       },
       // 提交审核
       submitCall() {
@@ -76,12 +100,21 @@
         // if (this.$refs[this.menuActive].submitData('submit')) {
         //   // this.$emit('add')
         // }
-      }
+      },
+      // 获取数据
+      getSaveData() {
+        let theData = this.$store.state.curriculum.data;
+        return getNormCourse(theData.course, theData.evaluate, theData.planDtoList)
+      },
     },
 
     //初始化组件
     created() {
-      this.$store.commit('curriculum/data/init')
+      this.$store.commit('curriculum/data/init');
+      // 外部可显示指定菜单
+      if (this.showMenu) {
+        this.menuActive = this.showMenu
+      }
     },
 
     // 销毁状态

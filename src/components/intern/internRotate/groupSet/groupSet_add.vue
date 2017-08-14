@@ -235,6 +235,11 @@
        * */
       setThreeGroupData(data){
         let myData = Util._.defaultsDeep([],data);
+        let outlineId = this.saveSchoolData.outlineId;
+        for(var i=0,item;i<myData.length;i++){
+          item = myData[i];
+          item.outlineId = outlineId;
+        }
         this.threeGroupData = [];
         this.threeGroupData = myData;
       },

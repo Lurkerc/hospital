@@ -23,8 +23,15 @@ let entityWrite = {
   situation: [{ required: true, message: '此项必填'},baseRules.inputLen(0,1000),baseRules.illegalChar()], // 主要诊断
 };
 
+
+let entityWriteList = {
+  diseaseName: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  patientName: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  patienNo: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+};
+
 /**
- * 实习生 - 病种填写 -
+ * 实习生 - 技能填写 -
  */
 let skillWrite = {
   podId: { required: true, message: '此项必填'}, // 轮转科室
@@ -34,6 +41,12 @@ let skillWrite = {
   fillTime: [{ required: true, message: '此项必填'}], // 日期
   reasonFailure: [{ required: true, message: '此项必填'},baseRules.inputLen(0,1000),baseRules.illegalChar()], // 失败原因
 };
+let skillWriteList = {
+  skillName: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  patientName: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  patienNo: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+};
+
 
 /**
  * 实习生 - 麻醉科 -
@@ -56,6 +69,9 @@ let electrocardiogramTemplate = {
   acaSsEndtime:[{ required: true, message: '此项必填'}],                 //手术终止
 
   acaMzff:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                       //麻醉方法
+  acaShzt:[{ required: true, message: '此项必填'}],                       //术后镇疼方法
+  acaYdyw:[{ required: true, message: '此项必填'}],                       //诱导药物名称
+  acaShjl:[{ required: true, message: '此项必填'}],                       //病人从进手术室开始到出手术室的过程记录
   acaSstw:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                       //手术体位
   acaMzjl:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                       //麻醉剂及剂量(维持):
   acaMzUser:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                     //麻醉者
@@ -182,13 +198,71 @@ let imageTemplate = {
 
 };
 
+let largeCaseWriteList = {
+  cname: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  czyNo: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+}
+
+
+
+/**
+ *  - 临床操作记录 -
+ */
+
+
+let clinicalOperationWriteList = {
+  name: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+}
+
+let clinicalOperationWrite = {
+  clinicalName: [{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  podId: [{ required: true, message: '此项必填'}], // 病人名称
+  clinicalTime: [{ required: true, message: '此项必填'}], // 病人名称
+  clinicalType: [{ required: true, message: '此项必填'}], // 病人名称
+  teacherName: [{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  note: [baseRules.inputLen(0,500),baseRules.illegalChar()], // 病人名称
+}
+
+
+/**
+ *  - 抢救记录 -
+ */
+
+let saveRecordWrite = {
+  diseaseName: [{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  podId: [{ required: true, message: '此项必填'}], // 病人名称
+  tubeTime: [{ required: true, message: '此项必填'}], // 病人名称
+  caseNumber: [{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  teacherName: [{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  note: [baseRules.inputLen(0,500),baseRules.illegalChar()], // 病人名称
+}
+/**
+ *  - 管床记录 -
+ */
+
+let tubeBedRecordWrite = {
+  diseaseName: [{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  podId: [{ required: true, message: '此项必填'}], // 病人名称
+  tubeTime: [{ required: true, message: '此项必填'}], // 病人名称
+  caseNumber: [{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  teacherName: [{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  note: [baseRules.inputLen(0,500),baseRules.illegalChar()], // 病人名称
+}
+
 
 export {
   givenSkillMakeUpAudit,
   entityWrite,
+  entityWriteList,
   skillWrite,
+  skillWriteList,
   electrocardiogramTemplate,
   largeCaseTemplate,
   imageTemplate,
+  largeCaseWriteList,
+  clinicalOperationWriteList,
+  clinicalOperationWrite,
+  saveRecordWrite,
+  tubeBedRecordWrite,
   // largeCaseWrite,
 };

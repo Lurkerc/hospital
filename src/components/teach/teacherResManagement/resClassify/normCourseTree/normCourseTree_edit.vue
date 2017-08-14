@@ -99,8 +99,8 @@
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
-            url: api.treeModify.path+'/'+this.operailityData.id,
-            method: api.treeModify.method,
+            url: api.courseTreeEdit.path+'/'+this.operailityData.id,
+            method: api.courseTreeEdit.method,
             jsonString:true,
           }
         },
@@ -127,7 +127,7 @@
           })
         },
         ajaxParams:{
-          url: api.treeGet.path+"/"+this.operailityData.id,
+          url: api.courseTree.path+"/"+this.operailityData.id,
         }
       }
       //this.ajax(getEditTitle);
@@ -168,8 +168,8 @@
           };
           isLoadingFun(true)
           this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
-          console.log(this.addMessTitle.ajaxParams.data);
-          return;
+          /*console.log(this.addMessTitle.ajaxParams.data);
+          return;*/
           this.ajax(this.editMessTitle, isLoadingFun)
         }
       },

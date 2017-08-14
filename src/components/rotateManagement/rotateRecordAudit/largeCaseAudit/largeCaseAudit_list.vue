@@ -6,14 +6,14 @@
 ----------------------------------->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  ref="formValidate" inline label-width="100px">
+    <el-form   ref="formValidate" :model="formValidate" :rules="largeCaseWriteList" inline label-width="100px">
       <el-row >
         <el-col :span="24"  >
-          <el-form-item  label="姓名:" prop="title">
+          <el-form-item  label="姓名:" prop="cname">
             <el-input   v-model="formValidate.cname" placeholder="输入姓名搜索">
             </el-input>
           </el-form-item>
-          <el-form-item label="住院号:"  prop="title">
+          <el-form-item label="住院号:"  prop="czyNo">
             <el-input   v-model="formValidate.czyNo" placeholder="输入住院号搜索">
             </el-input>
           </el-form-item>
@@ -28,6 +28,7 @@
             <el-select v-model="formValidate.cstate" placeholder="请选择状态">
               <el-option label="待审核" value="NO_PASS"></el-option>
               <el-option label="通过" value="PASS"></el-option>
+              <el-option label="驳回" value="REJECT"></el-option>
             </el-select>
           </el-form-item>
           <el-button @click="searchEvent"    icon="search">搜索</el-button>
@@ -76,8 +77,8 @@
             <template scope="scope">
               <el-button size="small" @click="show(scope.row)">查看</el-button>
               <!--<el-button v-if="scope.row.cstate=='NO_SUBMIT'"  size="small" @click="audit(scope.row)">审核</el-button>-->
-              <el-button v-if="scope.row.cstate != 'PASS'"  size="small" @click="audit(scope.row)">审核</el-button>
-              <el-button v-if="scope.row.cstate != 'PASS'" size="small" @click="postil(scope.row)">批注</el-button>
+              <el-button v-if="scope.row.cstate != 'PASS' && scope.row.cstate != 'REJECT'"  size="small" @click="audit(scope.row)">审核</el-button>
+              <el-button v-if="scope.row.cstate != 'PASS' && scope.row.cstate != 'REJECT' && scope.row.ctype == 'DBL'" size="small" @click="postil(scope.row)">批注</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -205,6 +206,7 @@
   </div>
 </template>
 <script>
+  import {largeCaseWriteList} from '../rules'
   /*当前组件必要引入*/
   import url from '../api'
   //引入--修改--组件
@@ -218,6 +220,7 @@
   export default{
     data() {
       return {
+        largeCaseWriteList,
         url:url,
         //查询表单
         listUrl:'/role/list?name=&identify=&type=',

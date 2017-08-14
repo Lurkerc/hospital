@@ -50,10 +50,10 @@
         </el-col >
       </el-row >
 
-      <el-row >
+      <el-row v-if="show">
         <el-col :span="17" :offset="2">
           <el-form-item type="附件" label="内容:" class="feildFontweight">
-            {{data.content}} 富文本
+            <viewUEditor style="width:700px;" :name="'ud1'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
           </el-form-item>
         </el-col >
       </el-row >
@@ -82,11 +82,13 @@
 <script>
   //当前组件引入全局的util
   let Util=null;
+  import viewUEditor from '../../../common/showUeditor.vue';
   export default {
     //props接收父组件传递过来的数据
     props: ['operailityData','url'],
     data (){
       return{
+        show:false,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         showData:{},
         listMessTitle:{
@@ -97,32 +99,33 @@
           }
         },
 
+        UE:{},
+        ueditorVal:{
+          ud1:"",
+        },  //
+        ueditorConfig:{
+          //详细配置参考UEditor 官网api
+          initialFrameHeight:220,  //初始化编辑器高度,默认320
+        },
+
+
        // 获取到的数据
         "data":{
-          "moduleId":"栏目id",
-          "moduleName":"栏目名称",
-          "id":"1",
-          "title":"投票项目",
-          "authorName":"张三",
-          "source":"REPRINTED",
-          "newsUrl":"**/**.action",
-          "newsOrder":"1",
-          "contentType":"MULTIMEDIA",
-          "content":"测试内容",
+          "moduleId":"",
+          "moduleName":"",
+          "id":"",
+          "title":"",
+          "authorName":"",
+          "source":"",
+          "newsUrl":"",
+          "newsOrder":"",
+          "contentType":"",
+          "content":"",
           "multimediaFileList":[
-            {
-              "fileId":"1",
-              "fileName":"文件名称",
-              "fileType":"MP3",
-              "filePath":"文件路径"
-            }
+
           ],
           "fileList":[
-            {
-              "fileId":"1",
-              "fileName":"文件名称",
-              "fileType":"txt"
-            }
+
           ]
         },
       }
@@ -141,8 +144,10 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-        this.data = responseData.data;
 
+        this.data = responseData.data;
+        this.show = true;
+        this.ueditorVal.ud1=responseData.data.content;
       },
       /*
        * 当前组件发送事件给父组件
@@ -158,6 +163,40 @@
         //默认请求加载数据
         this.ajax(this.listMessTitle);
       },
+
+      /**
+       *
+       * 存储编辑器的UE.editor对象
+       * @param name {string}  编辑器的name
+       *
+       * @param editor {}      编辑器的对象
+       *
+       */
+      storeUE(name,editor){
+        this.UE[name] = editor;
+        editor.setDisabled()
+        if(this.data.content){
+          this.setMyVal('ud1',this.data.content)
+        }
+      },
+
+      setMyVal(name,v){
+        this.UE[name].setContent(v);
+      },
+      /**
+       *
+       * 存储编辑器的value值
+       * @param name {string}  编辑器的name
+       *
+       * @param val  {string}  编辑器的内容
+       *
+       */
+      getUeditorVal(name,val){
+        this.ueditorVal[name] = val;
+      },
+    },
+    components:{
+     viewUEditor
     }
   }
 </script>

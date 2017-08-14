@@ -180,5 +180,10 @@ export default {
   /*调查报告或经验总结查看(教育处人员查看列表) post*/
   medicalEthicsPageList:'/traineeRotary/medicalEthics/pageList',
 
+  /*批量通过 post*/
+  medicalEthicsModifySubPass:'/traineeRotary/medicalEthics/modifySubPass',//{ids}
+
+  /*批量驳回 post*/
+  medicalEthicsModifySubReject:'/traineeRotary/medicalEthics/modifySubReject',//{ids}
 
 }

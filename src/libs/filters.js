@@ -101,12 +101,20 @@ const getVueObj = function (vue) {
       "CHECKBOX": "多选题",
       "JUDGMENT": "判断题",
       "ANSWER": "问答题",
+
+
     },
     /* 特殊描述文本（与公共部分冲突的可以作为特殊处理） */
     unit: { // 单位
       "m": " m",
       "cm": " cm",
       "kg": " kg"
+    },
+    auditStatus:{
+      NOT_SUBMIT:'草稿',
+      NOT_AUDIT:'已上报',
+      AUDIT_FAILURE:'驳回',
+      AUDIT_SUCCESS:'通过',
     },
     roomSex: { // 宿舍
       "BOY": '男宿舍',
@@ -218,7 +226,7 @@ const getVueObj = function (vue) {
       name: "isDefImg",
       call(value) {
         if (value) return value;
-        return '/static/img/physician.ec4c75d.png'
+        return '/static/image/physician.png'
       }
     },
     { // 时间格式化
