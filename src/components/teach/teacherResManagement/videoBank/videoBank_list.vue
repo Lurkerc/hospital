@@ -10,43 +10,47 @@
                  :fromWhereTreeType="fromWhereTree"></left-tree>
       <!-- 标准课程 -->
       <div slot="right" id="content" ref="content">
-        <el-row style="padding-bottom:20px;">
-          <el-col :span="14">
-            <el-button type="primary" @click="add">新建</el-button>
-            <el-button type="danger" @click="remove">删除</el-button>
-            <el-button type="primary" @click="jurisdictionSet">权限设置</el-button>
-            <el-button type="primary" @click="audit">批量审核</el-button>
-            <el-button type="primary" @click="publish">发布</el-button>
-            <el-button type="primary" @click="revocation">撤销</el-button>
-          </el-col>
-          <!-- 搜索框 -->
-          <el-col :span="10" align="right">
-            <el-input placeholder="名称" v-model="searchObj.name" style="width:300px;" :maxlength="20">
-              <el-button slot="append" icon="search" @click="search"></el-button>
-            </el-input>
-            <!--<el-button :icon="getSearchBtnIcon()" @click="openMoreSearch()">筛选</el-button>-->
-          </el-col>
-        </el-row>
-        <!-- 多条件 -->
-        <div style="overflow:hidden;" v-show="showMoreSearch" ref="showMoreSearch" align="right">
-          <el-form :inline="true">
-            <el-form-item label="卡号:">
-              <el-input v-model="searchObj.cardNum"></el-input>
-            </el-form-item>
-            <el-form-item label="申请时间:">
-              <date-group :dateGroup="{text:'',startDate:searchObj.createTimeBegin,endDate:searchObj.createTimeEnd}">
-                <el-date-picker name="start" v-model="searchObj.createTimeBegin" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
-                                @change="handleStartTime"></el-date-picker>
-                <span>-</span>
-                <el-date-picker name="end" v-model="searchObj.createTimeEnd" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
-                                @change="handleEndTime"></el-date-picker>
-              </date-group>
-            </el-form-item>
-            <el-form-item style="margin-right:0;">
-              <el-button @click="search" type="info">查询</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
+        <el-form :model="formValidate" :rules="videoBankList" ref="formValidate" inline label-width="100px" >
+          <el-row style="padding-bottom:20px;">
+            <el-col :span="14">
+              <el-button type="primary" @click="add">新建</el-button>
+              <el-button type="danger" @click="remove">删除</el-button>
+              <el-button type="primary" @click="jurisdictionSet">权限设置</el-button>
+              <el-button type="primary" @click="audit">批量审核</el-button>
+              <el-button type="primary" @click="publish">发布</el-button>
+              <el-button type="primary" @click="revocation">撤销</el-button>
+            </el-col>
+            <!-- 搜索框 -->
+            <el-col :span="10" align="right">
+              <el-form-item label="名称:" prop="name">
+                <el-input placeholder="名称" v-model="formValidate.name" style="width:300px;" :maxlength="51">
+                  <el-button slot="append" icon="search" @click="search"></el-button>
+                </el-input>
+              </el-form-item>
+              <!--<el-button :icon="getSearchBtnIcon()" @click="openMoreSearch()">筛选</el-button>-->
+            </el-col>
+          </el-row>
+          <!-- 多条件 -->
+          <div style="overflow:hidden;" v-show="showMoreSearch" ref="showMoreSearch" align="right">
+            <!--<el-form :inline="true">-->
+              <!--<el-form-item label="卡号:">-->
+                <!--<el-input v-model="searchObj.cardNum"></el-input>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item label="申请时间:">-->
+                <!--<date-group :dateGroup="{text:'',startDate:searchObj.createTimeBegin,endDate:searchObj.createTimeEnd}">-->
+                  <!--<el-date-picker name="start" v-model="searchObj.createTimeBegin" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"-->
+                                  <!--@change="handleStartTime"></el-date-picker>-->
+                  <!--<span>-</span>-->
+                  <!--<el-date-picker name="end" v-model="searchObj.createTimeEnd" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"-->
+                                  <!--@change="handleEndTime"></el-date-picker>-->
+                <!--</date-group>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item style="margin-right:0;">-->
+                <!--<el-button @click="search" type="info">查询</el-button>-->
+              <!--</el-form-item>-->
+            <!--</el-form>-->
+          </div>
+        </el-form>
         <!-- 数据表格 -->
         <div ref="tableView">
           <el-table @selection-change="handleSelectionChange" align="center" :context="self" :height="tableHeight" :data="tableData" tooltip-effect="dark" style="width: 100%">
@@ -55,13 +59,17 @@
             <el-table-column label="操作" align="center" width="140">
               <template scope="scope">
                 <el-button size="small" @click="show(scope.row)">查看</el-button>
-                <el-button v-if="scope.row.auditStatus!='NOT_AUDIT' && scope.row.auditStatus!='AUDIT_SUCCESS' " size="small" type="primary" @click="edit(scope.row)">修改</el-button>
+                <el-button v-if="scope.row.publishStatus!='PUBLISH' " size="small" type="primary" @click="edit(scope.row)">修改</el-button>
               </template>
             </el-table-column>
             <el-table-column label="名称" prop="name" align="center" show-overflow-tooltip></el-table-column>
             <el-table-column label="标签" prop="tags" show-overflow-tooltip></el-table-column>
             <el-table-column label="时长" prop="length" show-overflow-tooltip></el-table-column>
-            <el-table-column label="大小" prop="size" show-overflow-tooltip></el-table-column>
+            <el-table-column label="大小" prop="size" show-overflow-tooltip>
+              <template scope="scope">
+                {{scope.row.size | formatSize}}
+              </template>
+            </el-table-column>
             <el-table-column label="上传时间" prop="createTime" width="200">
               <template scope="scope">
                 <template v-if="scope.row.createTime">
@@ -214,6 +222,8 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import {videoBankList} from '../rules.js';
+
   import layoutTree from "../../../common/layoutTree.vue";
   import leftTree from "../../../common/leftTree.vue";
 
@@ -228,6 +238,7 @@
   export default{
     data() {
       return {
+         videoBankList,
           url : api,
           typeName : "",   // 分类名称
         contenHeight : 0,
@@ -239,7 +250,7 @@
           isShowMenus : false,
           isShowSearch : false, //是否显示目录树查询
         },
-        fromWhereTree : "VIDEO",
+        fromWhereTree : "user",
 
         //查询表单
         deleteUrl : api.videoRemove.path,
@@ -304,33 +315,35 @@
         self: this,
         loading:false,
         totalCount:0,
-        searchObj: { // 搜索
-          name: '', // 名称
+        formValidate: { // 搜索
+          "typeId":"",   //分类ID
+          "name":"",  //标题模糊查
+//          auditStatus:'',
         },
         tableData: [
-          {
-            "id":3,                             //主键ID
-            "typeId":1,                         //资源分类ID
-            "name":"1",                         //视频名称
-            "tags":"1",                         //标签
-            "length":1,                         //时长
-            "size":1,                           //视频大小
-            "count":1,                          //播放次数
-            "remark":"1",                       //简介
-            "fileId":1,                         //视频ID
-            "filePath":"1",                     //视频地址(相对到文件)
-            "logoPath":"1",                     // 封面图
-            "imgsPath":"1",                     //其他图片
-            "likes":1,                          //喜欢
-            "disLikes":3,                       //不喜欢
-            "operatorId":null,                  //上传人ID
-            "operator":'sss',                    // 上传人
-            "createTime":"201",                 //上传时间 Long 时间戳
-            "updateTime":"20121",               // 修改时间 Long 时间戳
-            "auditStatus":"AUDIT_FAILURE",      //发布状态 PUBLISH 已发布 UNPUBLISH 未发布
-            "publishStatus":"UNPUBLISH",        //审核状态
-            "openStatus":"PRIVATE"              //公开状态
-          },
+//          {
+//            "id":3,                             //主键ID
+//            "typeId":1,                         //资源分类ID
+//            "name":"1",                         //视频名称
+//            "tags":"1",                         //标签
+//            "length":1,                         //时长
+//            "size":1,                           //视频大小
+//            "count":1,                          //播放次数
+//            "remark":"1",                       //简介
+//            "fileId":1,                         //视频ID
+//            "filePath":"1",                     //视频地址(相对到文件)
+//            "logoPath":"1",                     // 封面图
+//            "imgsPath":"1",                     //其他图片
+//            "likes":1,                          //喜欢
+//            "disLikes":3,                       //不喜欢
+//            "operatorId":null,                  //上传人ID
+//            "operator":'sss',                    // 上传人
+//            "createTime":"201",                 //上传时间 Long 时间戳
+//            "updateTime":"20121",               // 修改时间 Long 时间戳
+//            "auditStatus":"NOT_AUDIT",      //审核状态
+//            "publishStatus":"PUBLISH",        //发布状态 PUBLISH 已发布 UNPUBLISH 未发布
+//            "openStatus":"PRIVATE"              //公开状态
+//          },
         ],
 
         //当前科室详情
@@ -351,9 +364,7 @@
           ajaxParams:{
             url: api.videoListPage.path,
             params:{
-              "typeId":"",   //分类ID
-              "title":"",  //标题模糊查
-              "auditStatus":"",  //审核状态
+
             }
           }
         },
@@ -419,7 +430,7 @@
           flag = false;
         }
         if(len>1 && isOnly){
-          this.showMess("只能修改一条数据!")
+          this.showMess("只能选择一条数据!")
           flag = false;
         }
         return flag;
@@ -428,11 +439,16 @@
 
       //初始化加载列表数据
       setTableData(){
-        this.listMessTitle.ajaxParams.params["parentId"] = this.deptId;
         this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params,this.formValidate);
         this.postParamToServer(this.listMessTitle);
       },
-
+      //向服务器发送数据
+      postParamToServer(options){
+        if(this.deptId!=""){
+          options["ajaxParams"]["params"]["typeId"] = this.deptId;
+        }
+        this.ajax(options);
+      },
       //通过get请求列表数据
       updateListData(responseData){
         if(!responseData.data)return;
@@ -455,8 +471,9 @@
       remove(index){
         if(!this.isSelected()) return;
         for(let i=0;i<this.multipleSelection.length;i++){
-          if(this.multipleSelection[i].auditStatus=='NOT_AUDIT' ||this.multipleSelection[i].auditStatus=='AUDIT_SUCCESS'){
-              this.errorMess('只能删除')
+          if(this.multipleSelection[i].publishStatus=='PUBLISH'){
+            this.errorMess('不能删除已发布的');
+            return ;
           }
         }
         this.operailityData = this.multipleSelection;
@@ -491,6 +508,12 @@
        * */
       audit(row){
         if(!this.isSelected()) return;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].auditStatus!='NOT_AUDIT' && this.multipleSelection[i].publishStatus!='PUBLISH'){
+            this.errorMess('只能对未发布并待审核的数据进行审核');
+            return ;
+          }
+        }
         this.operailityData = this.multipleSelection;
         this.openModel('audit');
       },
@@ -510,6 +533,12 @@
       /*--点击--发布--按钮--*/
       publish(){
         if(!this.isSelected()) return;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].publishStatus == 'PUBLISH' || this.multipleSelection[i].auditStatus != 'AUDIT_SUCCESS'){
+            this.errorMess('只能对审核通过并未发布的数据进行发布');
+            return ;
+          }
+        }
         this.operailityData = this.multipleSelection;
         this.openModel('publish') ;
       },
@@ -518,6 +547,12 @@
       /*--点击--撤销--按钮--*/
       revocation(){
         if(!this.isSelected()) return;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].publishStatus=='UNPUBLISH'){
+            this.errorMess('只能对已发布的数据进行撤销');
+            return ;
+          }
+        }
         this.operailityData = this.multipleSelection;
         this.openModel('revocation') ;
       },
@@ -553,6 +588,7 @@
         // 记录视图
         this.viewTypes = obj.types;
         this.setTreeDepId(obj.id,obj);
+
       },
 
 
@@ -569,7 +605,8 @@
        *  初始化或者刷新数列表的时候  调用treeClick函数 为deptId赋值
        * */
       treeClickInit(obj) {
-        this.treeClick(obj)
+        this.treeClick(obj);
+
       },
 
       /*
@@ -579,7 +616,8 @@
         if (id) {
           this.deptId = id;
           this.typeName = obj.name;
-        }
+        };
+        this.setTableData()
       },
 
 

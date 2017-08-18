@@ -28,6 +28,10 @@ const api = {
     path: '/rotaryBasis/rulesTraining/getDepRequirement/', // {rdId}_{depId}_{podId}
     method: 'post'
   },
+  skillMakeUpExamAdd: { // 技能补考添加--出科鉴定 技能补考页面保存时调用
+    path: '/rotationProcess/skillMakeUpExam/add',
+    method: 'post'
+  },
 };
 
 export default api

@@ -3,33 +3,96 @@
   <div class="coursesNavMain">
     <el-row>
       <!-- 8 6 4 3 -->
-      <el-col class="coursesNavItem" :lg="2" :md="3" :sm="5" :xs="7" v-for="(item,index) in 10" :key="index">
-        <div class="coursesNavText" :class="{'active': index === 0 }">
-          <p class="overflow-txt1">菜单{{ item }}</p>
+      <el-col class="coursesNavItem" :lg="2" :md="3" :sm="5" :xs="7" v-for="(item,index) in menuData" :key="index">
+        <div class="coursesNavText" :class="{'active': active == item.id }" >
+          <el-tooltip v-if="item.name.length>7" class="item" effect="dark" :content="item.name" placement="top">
+            <p class="overflow-txt1" style="text-align: center" @click="navChange(item.id,index,item.name)">{{ item.name }}</p>
+          </el-tooltip>
+          <p v-else class="overflow-txt1" style="text-align: center" @click="navChange(item.id,index,item.name)">{{ item.name }}</p>
         </div>
       </el-col>
     </el-row>
-    <el-tabs class="coursesNavChild" v-model="navActiveName" type="card" @tab-click="handleClick">
-      <el-tab-pane label="用户管理" name="first"></el-tab-pane>
-      <el-tab-pane label="配置管理" name="second"></el-tab-pane>
-      <el-tab-pane label="角色管理" name="third"></el-tab-pane>
-      <el-tab-pane label="定时任务补偿" name="fourth"></el-tab-pane>
+    <el-tabs v-if="menuData!=0" class="coursesNavChild" v-model="navActiveName"  @tab-click="handleClick">
+      <el-tab-pane label="全部" name="全部"></el-tab-pane>
+      <el-tab-pane v-if="menuData[childIndex].children" v-for="(item,index) in menuData[childIndex].children" :key="index" :label="item.name+''" :name="item.id+''"></el-tab-pane>
     </el-tabs>
   </div>
 </template>
-
 <script>
   export default {
+    props: ['navUrl','operailityData'],
     data() {
       return {
-        navActiveName: ''
+        navActiveName:this.operailityData.id||'',
+        errorNum:'',
+        menuData:[],
+        getMenuUrl: this.navUrl,
+        active:this.operailityData.pid,
+        childIndex:0,
       }
     },
+    created(){
+      this.getMenu();
+    },
     methods: {
-      handleClick() {
+      handleClick(){
 
       },
-    }
+
+      // 获取菜单
+      getMenu() {
+        this.ajax({
+          ajaxSuccess: res => {
+            let menuData;
+            if (res.data.length) {
+              menuData = res.data[0].children;
+              this.menuData = menuData;
+              this.getChildIndex(this.operailityData);
+            }
+
+          },
+          ajaxError: () => { // 获取失败时候重新获取，三次之后不再重试
+            if (this.errorNum < 2) {
+              this.errorNum++;
+              this.getMenu();
+            }
+          },
+          ajaxParams: {
+            url: this.getMenuUrl
+          }
+        })
+      },
+
+      ////通过传过来的pid来找其子项childer
+      getChildIndex(data){
+        for(let i=0;i<this.menuData.length;i++){
+          if(data.pid == this.menuData[i].id){
+            this.childIndex = i;
+          }
+        }
+      },
+
+
+      //导航改变
+      navChange(id,index,name){
+          let obj ={
+            pid:id,
+            id:'',
+            pName:name,
+          } ;
+        this.$emit('navChange',obj);
+        this.childIndex = index;
+        this.navActiveName = '全部';
+        this.active = id;
+      },
+
+    },
+    watch:{
+      operailityData(val){
+        this.getChildIndex(val);
+      }
+
+    },
   }
 
 </script>

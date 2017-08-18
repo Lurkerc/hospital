@@ -1,8 +1,4 @@
 let opt = [{
-    label: "不限",
-    value: ""
-  },
-  {
     label: "入科时间",
     value: "rotaryBeginTime"
   },

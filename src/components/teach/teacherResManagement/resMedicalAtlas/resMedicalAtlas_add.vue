@@ -6,7 +6,7 @@
 
 <template>
   <div>
-    <el-form :model="formValidate" ref="formValidate" label-width="90px">
+    <el-form v-for="item in 1" :key="item"  :model="formValidate" :rules="resMedicalAtlas" ref="formValidate" label-width="90px">
 
       <el-row>
         <el-col :span="20" :offset="2">
@@ -24,7 +24,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="分类:" prop="typeId">
-            <el-input v-model="type.typeId" @focus="typeClick" readonly></el-input>
+            <el-input v-model="type.typeName" @focus="typeClick" readonly></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -34,52 +34,55 @@
             <el-input v-model="formValidate.viewNum" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8" :offset="2">
-          <el-form-item label="大小:" prop="size">
-            {{formValidate.size}}
-          </el-form-item>
-        </el-col>
+        <!--<el-col :span="8" :offset="2">-->
+          <!--<el-form-item label="大小:" prop="size">-->
+            <!--{{  ((formValidate.size||0)/(1024*1024)).toFixed(2) +'Mb'}}-->
+          <!--</el-form-item>-->
+        <!--</el-col>-->
       </el-row>
 
 
       <el-row>
         <el-col :span="20" :offset="2">
-          <el-form-item label="简介:" prop="brief">
-            <el-input type="textarea"  v-model="formValidate.brief" placeholder="请输入"></el-input>
+          <el-form-item label="简介:" prop="remark">
+            <el-input type="textarea"  v-model="formValidate.remark" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-
-
-      <el-row v-if="!unFile">
-        <el-col style="float:right;padding-top: 270px;" :span="6" >
-          <div  v-for="(item,index) in fileList" :key="index" style="height: 92px;line-height:92px;margin-top: 10px;margin-left:-100px">
-            <el-form-item label="简介:" >
-              <el-input v-model="item.remark"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="11" :offset="2">
-          <el-form-item label="资源文件:" >
-            <upload-file :unSize="true" :unMultiple="true" :uploadUrl="'/file/upload/static'" :type="'picture'"   @setUploadFiles="expenseFileEvent"></upload-file>
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <el-row v-if="!unLogo">
-        <el-col :span="16" :offset="2">
-          <el-form-item label="视频封面:" >
-            <img-wall  :onlyOnePic="true" :actionUrl="'/file/upload/static'" @upladSuccess="expenseLogoEvent"></img-wall>
-          </el-form-item>
-        </el-col>
-      </el-row>
-
     </el-form>
 
+      <el-row v-if="!unFile">
+        <el-col :span="11" :offset="2">
+          <el-form label-width="90px">
+            <el-form-item label="资源文件:" class="hide-name">
+              <up-file-new :unSize="true"      :type="'picture'"   @setUploadFiles="expenseFileEvent"></up-file-new>
+            </el-form-item>
+          </el-form>
+        </el-col>
 
+        <el-col style="padding-top: 270px;" :span="6" >
+          <div  v-for="(item,index) in fileList" :key="index" style=" height: 92px;line-height:92px;margin-top: 10px;margin-left:-100px">
+            <el-form  :model="item" :rules="resMedicalAtlas" ref="formValidate" label-width="90px">
+              <el-form-item label="简介:" prop="remark" >
+                <el-input v-model="item.remark"></el-input>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-col>
+      </el-row>
+
+    <el-form label-width="90px"  v-for="item in 1" :key="item" :model="formValidate" :rules="resMedicalAtlas" ref="formValidate">
+      <el-row v-if="!unLogo">
+        <el-col :span="16" :offset="2">
+          <el-form-item label="视频封面:" prop="img">
+            <img-wall  :onlyOnePic="true"  @upladSuccess="expenseLogoEvent"></img-wall>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
     <el-row>
-      <el-col :span="16" :offset="2">
-        <div style="margin-left: 100px">
+      <el-col :span="10" :offset="10">
+        <div >
           <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
           <el-button @click="cancel">取消</el-button>
         </div>
@@ -118,15 +121,18 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import {resMedicalAtlas} from '../rules'
+  import upFileNew from '../../../common/uploadFileNew.vue'
   import api from "./api.js";
   /*--引入--照片墙--*/
-  import imgWall from '../../../common/uploadPhotoWall.vue'
+  import imgWall from '../../../common/uploadPhotoWallNew.vue'
   //当前组件引入全局的util
   let Util = null;
   export default{
   props:['fromWhereTree','unImgs','unLogo','unFile','name','id','url'],
   data() {
       return {
+        resMedicalAtlas,
         contenHeight: 0,
         viewTypes: '', // 视图类型
         //tree默认项设置
@@ -149,11 +155,13 @@
           title:'',         //视频名称
           tags:'',         //标签
           length:'',       //时长
-          viewNum:'',        //播放次数
-          brief:'',       //简介
-          fileId:'',       //视频ID
+          viewNum:'0',        //播放次数
+          remark:'',       //简介
+          img:'',       //
           size:'',
-          atlasImgsDtoList:{},
+          atlasImgsDtoList:[],
+
+
         },
 
         typeId:{
@@ -174,6 +182,7 @@
           ajaxSuccess: 'ajaxSuccess',
           ajaxError: 'ajaxError',
           ajaxParams: {
+            jsonString:true,       //使用Content-Type: application/json
             url: this.url.add.path,
             method: 'post',
             data: {
@@ -191,31 +200,37 @@
 
       },
 
-      //点击数的回调函数
+      //点击树的回调函数
       treeSubEvent(){
         this.type.typeName = this.type.updateTypeName;
+        this.formValidate.typeId = this.deptId;
         this.typeModal = false;
       },
-
       /*
        * 保存或上报按钮会调用这个公共函数
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
         if(!isLoadingFun) isLoadingFun=function(){};
-        isLoadingFun(true);
 
-        let tempArr = [];
-        for(let i =0;i<this.fileList.length;i++){
-          let item = this.fileList[i];
-          if(item.img){
-            tempArr.push(item);
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit) {
+          let tempArr = [];
+          for (let i = 0; i < this.fileList.length; i++) {
+            let item = this.fileList[i];
+            if (item.img) {
+              tempArr.push(item);
+            }
           }
+          if(tempArr==0){
+              this.errorMess('资源文件必传');
+              return;
+          }
+          isLoadingFun(true);
+          this.formValidate.atlasImgsDtoList = tempArr;
+          this.addMessTitle.ajaxParams.data = this.formValidate;
+          this.ajax(this.addMessTitle, isLoadingFun);
         }
-        this.formValidate.atlasImgsDtoList = tempArr;
-        console.log(this.fileList,this.formValidate );
-        this.addMessTitle.ajaxParams.data = this.formValidate;
-        this.ajax(this.addMessTitle,isLoadingFun);
       },
 
       /*
@@ -224,12 +239,15 @@
        * @return flag boolean   form表单验证是否通过
        * */
       submitForm(formName) {
-        let flag = false;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            flag = true;
-          }
-        });
+        let flag = true;
+        for(let i=0;i<this.$refs[formName].length;i++){
+          this.$refs[formName][i].validate((valid) => {
+            if (!valid) {
+              flag = false;
+            }
+          });
+        }
+
         return flag;
       },
 
@@ -279,18 +297,17 @@
 
 
       //上传资源文件
-      expenseFileEvent(ids,file){
+      expenseFileEvent(ids,srcObj,file){
           let fileList = this.fileList;
           let fileUrl = this.fileUrl;
           let temFileList = [];
           let temFileUrl = [];
           for(let i=0;i<file.length;i++){
-            let uid = file[i].uid
             let  obj = {}
-            if(file[i].response){
-                let data = file[i].response.data;
-                let url = data.relativePathFile;
-                let index = fileUrl.indexOf(uid);
+            let data = file[i].response.data;
+            let url = data.path;
+            if(data){
+                let index = fileUrl.indexOf(url);
 
                 if(~index){
                   obj={
@@ -304,7 +321,7 @@
                   }
                 }
                 temFileList.push(obj);
-                temFileUrl.push(uid)
+                temFileUrl.push(url)
 
               }else {
                 obj={
@@ -312,7 +329,7 @@
                   remark:'',
                 }
                 temFileList.push(obj);
-                temFileUrl.push(uid)
+                temFileUrl.push(url)
             }
           }
 
@@ -323,13 +340,11 @@
       },
 
       //封面图
-      expenseLogoEvent(file,len,arr){
-          if(file[0]){
-            this.formValidate.fileId = file[0].src;
-            this.formValidate.size = (arr[0].size/1024).toFixed(2) +'kb';
+      expenseLogoEvent(obj,len,arr){
+          if(obj){
+            this.formValidate.img = obj.path;
           }else {
-            this.formValidate.fileId = '';
-            this.formValidate.size = '';
+            this.formValidate.img = '';
           }
 
       },
@@ -345,6 +360,6 @@
     },
     mounted(){
     },
-    components: {imgWall}
+    components: {imgWall,upFileNew}
   }
 </script>

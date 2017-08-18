@@ -80,16 +80,14 @@
 
         //当前创建时间
         currCreateDate:'2017-08-10 18:20 00',
-
+        userInfo:'',
         //form表单bind数据
         formValidate: {
-          name:'dd',
-          parentId:this.operailityData.parentId,
-          managerId:'2',
-          managerName:'44',
-          types:this.operailityData["types"],
-          createTime:'2017-08-10 18:20 00',
-          operator:"456"
+          name:'',
+          parentId:'',
+          managerId:'',
+          managerName:'',
+          types:'',
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         editMessTitle:{
@@ -101,7 +99,6 @@
           ajaxParams:{
             url: api.treeModify.path+'/'+this.operailityData.id,
             method: api.treeModify.method,
-            jsonString:true,
           }
         },
       }
@@ -112,13 +109,12 @@
       //默认请求加载数据
       let getEditTitle = {
         ajaxSuccess:(res)=>{
-          this.formValidate = res.data;
-          this.formValidate.createTime = this.conductDate(this.formValidate.createTime,"yyyy-MM-dd HH:mm:ss");
-          this.formValidate.parentId = this.operailityData.parentId;
-          this.formValidate.types = this.operailityData.types;
-
-          this.currCreateDate = this.formValidate.createTime;
-
+          res.data.createTime = this.conductDate(res.data.createTime,"yyyy-MM-dd HH:mm:ss");
+          res.data.parentId = this.operailityData.parentId;
+          res.data.types = this.operailityData.types;
+          this.currCreateDate =  res.data.createTime;
+          this.userInfo =  res.data.operator;
+          this.formValidate = this.getFormValidate( this.formValidate ,res.data);
           this.users.push({
             key:this.formValidate.managerId,
             label:this.formValidate.managerName,
@@ -130,17 +126,13 @@
           url: api.treeGet.path+"/"+this.operailityData.id,
         }
       }
-      //this.ajax(getEditTitle);
+      this.ajax(getEditTitle);
     },
     mounted(){
       //初始化
       this.init();
     },
     computed:{
-      userInfo(){
-        let info = this.formValidate.operator || "";
-        return info;
-      }
     },
     methods:{
       /*
@@ -168,8 +160,6 @@
           };
           isLoadingFun(true)
           this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
-          console.log(this.addMessTitle.ajaxParams.data);
-          return;
           this.ajax(this.editMessTitle, isLoadingFun)
         }
       },

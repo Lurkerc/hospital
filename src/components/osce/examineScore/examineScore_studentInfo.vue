@@ -5,8 +5,7 @@
     <div class="exmContentMain">
       <el-form ref="formValidate" label-width="80px">
         <!--列表数据-->
-        <el-table border align="center" max-height="400" show-summary :data="contentDataList.detailsList" tooltip-effect="dark" highlight-current-row
-          :summary-method="getSummaries" style="width: 100%;height: 100%" class="add-scope">
+        <el-table border align="center" max-height="400" show-summary :data="contentDataList.detailsList" tooltip-effect="dark" highlight-current-row :summary-method="getSummaries" style="width: 100%;height: 100%" class="add-scope">
           <el-table-column align="center" prop="classify" label="项目" width="150">
           </el-table-column>
           <el-table-column align="left" prop="content" label="评分标准及要求">
@@ -17,10 +16,8 @@
             <template scope="scope">
               <el-form :model="scope.row" :rules="rules.addScore" :ref="'formValidate'+[scope.$index+'scope']" label-width="80px">
                 <el-form-item prop="mark" error="cuo" label-width="0px">
-                  <el-input v-if="studentInfo.examStatus === 'ONGOING'" @blur="markChange(scope.row,scope.$index)" type="number" @change="scoreInputChange"
-                    :min="0" :max="scope.row.score" v-model.number="scope.row.mark"></el-input>
-                  <el-input v-else @blur="markChange(scope.row)" type="number" @change="scoreInputChange" :min="0" :max="scope.row.score" v-model.number="scope.row.mark"
-                    :disabled="!chgScore"></el-input>
+                  <el-input v-if="studentInfo.examStatus === 'ONGOING'" @blur="markChange(scope.row,scope.$index)" type="number" @change="scoreInputChange" :min="0" :max="scope.row.score" v-model.number="scope.row.mark"></el-input>
+                  <el-input v-else @blur="markChange(scope.row)" type="number" @change="scoreInputChange" :min="0" :max="scope.row.score" v-model.number="scope.row.mark" :disabled="!chgScore"></el-input>
                 </el-form-item>
               </el-form>
             </template>
@@ -56,7 +53,7 @@
       <!-- 操作按钮 -->
       <p align="center" style="margin-top:20px;">
         <!-- <el-button v-if="studentInfo.examStatus === 'NOTEXAM' && studentInfo.contentId" type="danger" @click="idVerification">身份确认并开始考核</el-button> -->
-        <el-button v-if="studentInfo.examStatus === 'NOTEXAM'" type="danger" @click="idVerification">身份确认并开始考核</el-button>
+        <el-button v-if="studentInfo.examStatus === 'NOTEXAM' || studentInfo.examStatus ===  'DRAW'" type="danger" @click="idVerification">身份确认并开始考核</el-button>
         <el-button v-if="studentInfo.examStatus === 'ONGOING'" type="danger" @click="finishAndSub">考核结束提交分数</el-button>
         <el-button v-if="!chgScore && studentInfo.examStatus === 'FINISH'" type="danger" @click="changeScore">修改分数</el-button>
 
@@ -212,6 +209,17 @@
       idVerification() {
         if (!this.checkSceneStatus()) {
           return;
+        }
+        if (this.studentInfo.sceneType === 'STANDARD') { // 规范考核
+          let nowTime = new Date().getTime();
+          if (nowTime < new Date(this.studentInfo.startTime).getTime()) {
+            this.errorMess('该考生还未到达考核时间！');
+            return
+          }
+          // if (nowTime > new Date(this.studentInfo.endTime).getTime()) {
+          //   this.errorMess('该考生已过考核时间！');
+          //   return
+          // }
         }
         let data = this.$util._.defaultsDeep({}, {
           id: this.arrangementId,
@@ -490,9 +498,17 @@
 
       // 检测当前考站是否是考核中
       checkSceneStatus() {
+        let msg = {
+          PUBLISH: '未开始',
+          FINISH: '已结束',
+          SUSPEND: '暂停中'
+        };
         let tag = (this.studentInfo.sceneStatus === 'ONGOING');
         if (!tag) {
-          this.errorMess('考站还未开始考核！')
+          this.errorMess('考站考核' + (msg[this.studentInfo.sceneStatus] || '未开始') + '！');
+        } else if (this.studentInfo.examStatus === 'DRAW') {
+          tag = false;
+          this.errorMess('当前考生还未抽签！')
         }
         return tag;
       },
@@ -536,6 +552,10 @@
       background: #000;
       min-height: 200px;
     }
+  }
+
+  .exmContentMain .el-table__body-wrapper {
+    overflow-x: hidden;
   }
 
 </style>

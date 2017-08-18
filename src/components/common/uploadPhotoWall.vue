@@ -13,6 +13,7 @@
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload"
       :on-error="onError"
+      :headers="headers"
       :on-remove="handleRemove">
       <i class="el-icon-plus"></i>
     </el-upload>
@@ -32,7 +33,9 @@
         dialogImageUrl: '',
         dialogVisible:false,
         idx:0,
-        fileLists:[]
+        fileLists:[],
+        headers: '',
+
       };
     },
     watch:{
@@ -52,6 +55,9 @@
         this.fileLists = this.fileList;
       }
       this.action = config.ajaxUrl+this.action;
+      this.headers = {
+        "Token": this.$util.getCookie("Token")
+      }
     },
     methods: {
       /*

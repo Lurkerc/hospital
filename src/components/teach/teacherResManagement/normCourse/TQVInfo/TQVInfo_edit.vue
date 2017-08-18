@@ -220,6 +220,7 @@
         // if (!this.checkData()) {
         //   return false;
         // }
+        this.$store.commit('curriculum/data/updateEvaluate', this.evaluate);
         return true
       },
       // 检测数据完整性

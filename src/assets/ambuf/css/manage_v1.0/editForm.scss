@@ -9,3 +9,18 @@
         }
     }
 }
+.debugVideoBox{
+  overflow: hidden;
+  margin-bottom: 20px;
+  border: 1px solid #ececec;
+}
+.debugVideoBox-left{
+  width: 500px;
+  height: 500px;
+  float: left;
+}
+.debugVideoBox-right{
+  width: 48%;
+  height: 500px;
+  float: right;
+}

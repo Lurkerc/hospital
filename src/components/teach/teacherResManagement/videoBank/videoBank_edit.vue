@@ -5,11 +5,11 @@
 ----------------------------------->
 <template>
   <div>
-    <el-form :model="formValidate" ref="formValidate" label-width="90px">
+    <el-form :model="formValidate" :rules="videoBank"  ref="formValidate" label-width="90px">
 
       <el-row>
         <el-col :span="20" :offset="2">
-          <el-form-item label="名称:" prop="podId">
+          <el-form-item label="名称:" prop="name">
             <el-input  v-model="formValidate.name" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
@@ -28,22 +28,23 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8" :offset="2">
-          <el-form-item label="时长:" prop="length">
-            <el-input v-model="formValidate.length" placeholder="请输入"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8" :offset="2">
-          <el-form-item label="大小:" prop="size">
-            {{}}
-          </el-form-item>
-        </el-col>
+        <!--<el-col :span="8" :offset="2">-->
+          <!--<el-form-item label="时长:" prop="length">-->
+            <!--<el-input v-model="formValidate.length" placeholder="请输入"></el-input>-->
+          <!--</el-form-item>-->
+        <!--</el-col>-->
+
       </el-row>
 
       <el-row>
         <el-col :span="8" :offset="2">
-          <el-form-item label="播放次数:" prop="count">
-            <el-input v-model="formValidate.count"  placeholder="请输入"></el-input>
+          <el-form-item label="播放次数:" prop="viewNum">
+            <el-input v-model="formValidate.viewNum"  placeholder="请输入"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" :offset="2">
+          <el-form-item label="大小:" prop="size">
+            {{formValidate.size| formatSize}}
           </el-form-item>
         </el-col>
       </el-row>
@@ -58,32 +59,32 @@
 
       <el-row v-if="!unFile">
         <el-col :span="16" :offset="2">
-          <el-form-item label="视频文件:" >
-            <upload-file :unSize="true" @setUploadFiles="expenseFileEvent"></upload-file>
+          <el-form-item label="视频文件:" prop="fileId">
+            <up-file-new :noFirstCallBack="true" :length="1" :uploadFiles="videoFiles" :unSize="true" :accept="'mp4|flv|rmvb|rm|avi'" @setUploadFiles="expenseFileEvent"></up-file-new>
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-row v-if="!unLogo">
-        <el-col :span="16" :offset="2">
+        <el-col :span="16" :offset="2" prop="logoPath" >
           <el-form-item label="视频封面:" >
-            <img-wall  :onlyOnePic="true" @upladSuccess="expenseLogoEvent"></img-wall>
+            <img-wall  :fileList="logoFiles"  :onlyOnePic="true" @upladSuccess="expenseLogoEvent"></img-wall>
           </el-form-item>
         </el-col>
       </el-row>
 
-      <el-row v-if="!unImgs">
-        <el-col :span="16" :offset="2">
-          <el-form-item label="缩略图:">
-            <img-wall  @upladSuccess="expenseImgsEvent"></img-wall>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <!--<el-row v-if="!unImgs">-->
+        <!--<el-col :span="16" :offset="2">-->
+          <!--<el-form-item label="缩略图:">-->
+            <!--<img-wall  :fileList="imgFiles"   @upladSuccess="expenseImgsEvent"></img-wall>-->
+          <!--</el-form-item>-->
+        <!--</el-col>-->
+      <!--</el-row>-->
     </el-form>
 
     <el-row>
-      <el-col :span="16" :offset="2">
-        <div style="margin-left: 100px">
+      <el-col :span="10" :offset="10">
+        <div >
           <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
           <el-button @click="cancel">取消</el-button>
         </div>
@@ -121,16 +122,19 @@
   </div>
 </template>
 <script>
-  /*当前组件必要引入*/
+  import {videoBank} from '../rules'
+  import upFileNew from '../../../common/uploadFileNew.vue';
+
   import api from "./api.js";
   /*--引入--照片墙--*/
-  import imgWall from '../../../common/uploadPhotoWall.vue'
+  import imgWall from '../../../common/uploadPhotoWallNew.vue';
   //当前组件引入全局的util
   let Util = null;
   export default{
     props:['operailityData','fromWhereTree','unImgs','unLogo','unFile','url','name','id'],
     data() {
       return {
+        videoBank,
         contenHeight: 0,
         viewTypes: '', // 视图类型
         //tree默认项设置
@@ -152,9 +156,8 @@
           typeId:this.id,  //资源分类ID
           name:'',         //视频名称
           tags:'',         //标签
-          length:'',       //时长
           size:'',         //视频大小
-          count:'',        //播放次数
+          viewNum:'',        //播放次数
           remark:'',       //简介
           fileId:'',       //视频ID
           filePath:'',     //视频地址(相对到文件)
@@ -162,6 +165,9 @@
           imgsPath:'',     //其他图片
         },
 
+        videoFiles:[],
+        logoFiles:[],
+        imgFiles:[],
         typeId:{
           id:'typeId',
           title:'资源分类'
@@ -177,7 +183,7 @@
           ajaxError: 'ajaxError',
           ajaxParams: {
             url: this.url.modify.path+this.operailityData.id,
-            method: 'post',
+            method: 'put',
             data: {
 
             },
@@ -198,7 +204,6 @@
       //初始化请求列表数据
       init(){
           this.ajax(this.getMessTitle);
-
       },
 
 
@@ -206,13 +211,53 @@
       getListData(res){
         let data = res.data;
         if(!data) return;
-        this.formValidate = data;
+        //视频
+        let env = this.$store.getters.getEnvPath;
+        let http = env['http'];
+
+        if(data.fileId){
+          this.videoFiles = [{
+            fileName:data.fileName,
+            id : data.fileId,
+          }];
+        }
+
+        //封面图
+        if(data.logoPath){
+          this.logoFiles=[{
+            url:http+data.logoPath,
+            response:{data:{
+              path:data.logoPath,
+            }}
+          }];
+        }
+
+        if(data.imgsPath){
+          let imgsPath = data.imgsPath.split(',');
+          //其他图片
+          let imgFiles = []
+          for(let i=0;i<imgsPath.length;i++){
+            imgFiles.push({
+              url:http+data.logoPath,
+              response:{data:{
+                path:imgsPath[i],
+              }}
+            })
+          }
+          this.imgFiles = imgFiles;
+        }
+        for(let i in data){
+          data[i] = data[i]+''
+        }
+        this.formValidate = this.getFormValidate(this.formValidate,data);
       },
-      //点击数的回调函数
+      //点击树的回调函数
       treeSubEvent(){
         this.type.typeName = this.type.updateTypeName;
+        this.formValidate.typeId = this.deptId;
         this.typeModal = false;
       },
+
 
       /*
        * 保存或上报按钮会调用这个公共函数
@@ -220,9 +265,12 @@
        * */
       listenSubEvent(isLoadingFun){
         if(!isLoadingFun) isLoadingFun=function(){};
-        isLoadingFun(true);
-        this.editMessTitle.ajaxParams.data = this.formValidate;
-        this.ajax(this.editMessTitle,isLoadingFun)
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit) {
+          isLoadingFun(true);
+          this.editMessTitle.ajaxParams.data = this.formValidate;
+          this.ajax(this.editMessTitle, isLoadingFun);
+        }
       },
 
       /*
@@ -281,32 +329,30 @@
        * 发送关闭(cancel)模态事件给父组件,请求关闭当前模态窗
        * */
       cancel(){
-        this.$emit('cancel',this.addMessTitle.type);
+        this.$emit('cancel',this.editMessTitle.type);
       },
 
 
       //上传视频文件
-      expenseFileEvent(){
+      expenseFileEvent(ids,srcObj,files){
+        this.formValidate.fileId = ids;
+        this.formValidate.filePath = srcObj.path;
+        if(files[0]){
+          this.formValidate.size = files[0].size;
+        }else {
+          this.formValidate.size = 0;
+        }
 
       },
 
-
       //封面图
-      expenseLogoEvent(file){
-          if(file[0]){
-            this.formValidate.imgsPath = file[0].src;
-          }else {
-            this.formValidate.imgsPath = '';
-          }
+      expenseLogoEvent(obj){
+        this.formValidate.logoPath = obj.path;
       },
 
       //imgsPath
-      expenseImgsEvent(file){
-        let tempArr = [];
-        for(let i=0;i<file[i].length;i++){
-          if(file[i].src)tempArr.push(file[i].src);
-        }
-        this.formValidate.imgsPath = tempArr.join(',');
+      expenseImgsEvent(obj){
+        this.formValidate.imgsPath = obj.path;
       },
 
 
@@ -321,6 +367,6 @@
     },
     mounted(){
     },
-    components: {imgWall}
+    components: {imgWall,upFileNew}
   }
 </script>

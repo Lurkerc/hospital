@@ -158,6 +158,7 @@
     top: 0;
     left: $menuWidth + $padding;
     right: $padding;
+    border-bottom: 1px solid $borderColor;
     &:empty {
       height: 0;
       padding: 0;

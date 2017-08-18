@@ -40,7 +40,7 @@
             <!-- <el-button size="small" type="success" @click="rotary(scope.row)">出科</el-button> -->
             <!-- <el-button size="small" type="warning" @click="show(scope.row)">查看</el-button> -->
             <el-button :disabled="!scope.row.depExaminationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
-            <el-button :disabled="!canRotary(scope.row) && scope.row.graduateAppraisalState==='USER_NOT_REPORT'" size="small" type="success" @click="rotary(scope.row)">出科</el-button>
+            <el-button :disabled="!canRotary(scope.row)" size="small" type="success" @click="rotary(scope.row)">出科</el-button>
           </template>
         </el-table-column>
         <el-table-column label="姓名" prop="userName" show-overflow-tooltip></el-table-column>
@@ -251,6 +251,10 @@
           rotaryEndTime = new Date(row.rotaryEndTime).getTime();
           // 前五天                                       后五天
           tag = ((thisTime > (rotaryEndTime - validTime)) && (thisTime < (rotaryEndTime + validTime)));
+        }
+        // 如果在前后五天，老师都还没有进行审核就可以一直修改
+        if (tag && row.graduateAppraisalState) {
+          tag = row.graduateAppraisalState === 'USER_NOT_REPORT';
         }
         return tag
       },

@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
   <div>
-    <el-form :model="formValidate" ref="formValidate" label-width="90px">
+    <el-form :model="formValidate" :rules="resCaseLibrary" ref="formValidate" label-width="90px">
 
       <el-row>
         <el-col :span="20" :offset="2">
@@ -23,7 +23,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="分类:" prop="typeId">
-            <el-input v-model="type.typeId" @focus="typeClick" readonly></el-input>
+            <el-input v-model="type.typeName" @focus="typeClick" readonly></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -35,7 +35,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="大小:" prop="size">
-            {{formValidate.size}}
+            {{formValidate.size| formatSize}}
           </el-form-item>
         </el-col>
       </el-row>
@@ -52,24 +52,24 @@
 
       <el-row v-if="!unFile">
         <el-col :span="16" :offset="2">
-          <el-form-item label="资源文件:" >
-            <upload-file :unSize="true" :length="1" :accept="'docx'" @setUploadFiles="expenseFileEvent"></upload-file>
+          <el-form-item label="资源文件:" prop="fileId">
+            <up-file-new :noFirstCallBack="true" :uploadFiles="Files" :unSize="true" :length="1" :accept="'doc|docx|xls|xlsx|ppt|pptx|pdf'" @setUploadFiles="expenseFileEvent"></up-file-new>
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-row v-if="!unLogo">
         <el-col :span="16" :offset="2">
-          <el-form-item label="视频封面:"  >
-            <img-wall  :onlyOnePic="true" :fileList="getLogoFile" :actionUrl="'/file/upload/static'" @upladSuccess="expenseLogoEvent"></img-wall>
+          <el-form-item label="视频封面:" prop="logo">
+            <img-wall  :onlyOnePic="true" :fileList="logo"  @upladSuccess="expenseLogoEvent"></img-wall>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
 
     <el-row>
-      <el-col :span="16" :offset="2">
-        <div style="margin-left: 100px">
+      <el-col :span="10" :offset="10">
+        <div >
           <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
           <el-button @click="cancel">取消</el-button>
         </div>
@@ -108,15 +108,19 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import {resCaseLibrary} from '../rules'
+  import upFileNew from '../../../common/uploadFileNew.vue';
+
   import api from "./api.js";
   /*--引入--照片墙--*/
-  import imgWall from '../../../common/uploadPhotoWall.vue'
+  import imgWall from '../../../common/uploadPhotoWallNew.vue';
   //当前组件引入全局的util
   let Util = null;
   export default{
     props:['operailityData','fromWhereTree','unImgs','unLogo','unFile','url','name','id'],
     data() {
       return {
+        resCaseLibrary,
         contenHeight: 0,
         viewTypes: '', // 视图类型
         //tree默认项设置
@@ -145,7 +149,8 @@
           size:'',
           logo:'',
         },
-
+        logo:[],
+        Files:[],
         typeId:{
           id:'typeId',
           title:'资源分类'
@@ -166,12 +171,12 @@
           ajaxSuccess: 'ajaxSuccess',
           ajaxError: 'ajaxError',
           ajaxParams: {
+
             url: this.url.modify.path + this.operailityData.id,
-            method: 'post',
+            method: 'put',
             data: {},
           },
         },
-
         //获取数据
         getMessTitle:{
           ajaxSuccess:'getListData',
@@ -180,8 +185,6 @@
 
           }
         },
-
-
 
       }
     },
@@ -194,39 +197,35 @@
 
       //获取get
       getListData(res){
-//        let env = this.$store.getters.getEnvPath;
-//        let http = env['http'];
-//        let k=1;
-//        let data = res.data;
-//        if(!data) return;
-//        let tempArr = [];
-//        this.fileList = data.atlasImgsDtoList;
-//        for(let i =0;i<data.atlasImgsDtoList.length;i++){
-//            let obj ={};
-//          obj.response.data = {
-//            relativePathFile:env,
-//            staticUrl:data.atlasImgsDtoList[i].img,
-//          }
-//          obj.url = env+data.atlasImgsDtoList[i].img;
-//          obj.uid = k++;
-//          this.fileUrl.push(obj.uid);
-//          tempArr.push(obj);
-//        }
+        let env = this.$store.getters.getEnvPath;
+        let http = env['http'];
+        let k=1;
+        let data = res.data;
+        if(!data) return;
 
-        this.getLogoFile.push({
-          response:{
-            data:{
-              relativePathFile:env,
-              staticUrl:data.img,
+        if(data.fileId){ // 视频
+          this.Files = [{
+            fileId:data.fileId,
+            fileName :data.fileName ,
+          }]
+        }
+        if(data.logo){
+          this.logo = [
+            {
+              url : http + data.logo,
             }
-          }
-        })
-        this.getFileList = tempArr;
-        this.formValidate = data;
+          ];
+        }
+
+        data.size = data.fileSize;
+        this.formValidate = this.getFormValidate(this.formValidate,data);
       },
-      //点击数的回调函数
+
+
+      //点击树的回调函数
       treeSubEvent(){
         this.type.typeName = this.type.updateTypeName;
+        this.formValidate.typeId = this.deptId;
         this.typeModal = false;
       },
 
@@ -236,9 +235,12 @@
        * */
       listenSubEvent(isLoadingFun){
         if(!isLoadingFun) isLoadingFun=function(){};
-        isLoadingFun(true);
-        this.editMessTitle.ajaxParams.data = this.formValidate;
-        this.ajax(this.editMessTitle,isLoadingFun)
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit) {
+          isLoadingFun(true);
+          this.editMessTitle.ajaxParams.data = this.formValidate;
+          this.ajax(this.editMessTitle, isLoadingFun)
+        }
       },
 
       /*
@@ -355,21 +357,23 @@
         this.typeModal = true;
       },
 
-      //上传资源文件
-      expenseFileEvent(ids,file){
+      //上传文档文件
+      expenseFileEvent(ids,srcObj,file){
         if(file.length==1){
-          this.formValidate.size = (file[0].size/1024).toFixed(2) +'kb'
+          this.formValidate.size = file[0].size;
+        }else {
+          this.formValidate.size = 0
         }
         this.formValidate.fileId = ids ;
       },
       //封面图
-      expenseLogoEvent(file,len,arr){
-        if(file[0]){
-          this.formValidate.logo = file[0].src;
+      expenseLogoEvent(obj,len,arr){
+        if(obj){
+          this.formValidate.logo = obj.path;
         }else {
           this.formValidate.logo = '';
-
         }
+
       },
 
     },
@@ -378,6 +382,6 @@
     },
     mounted(){
     },
-    components: {imgWall}
+    components: {imgWall,upFileNew}
   }
 </script>

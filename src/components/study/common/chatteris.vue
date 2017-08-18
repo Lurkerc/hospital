@@ -14,7 +14,7 @@
       <el-col :span="20">&nbsp;</el-col>
       <el-col :span="4">
         <div class="comment-subBtn">
-          <load-btn @listenSubEvent="listenSubEvent" type="warning" :btnData="loadBtn"></load-btn>
+          <load-btn @listenSubEvent="listenSubEvent" :type="'warning'" :btnData="loadBtn"></load-btn>
         </div>
       </el-col>
     </el-row>
@@ -22,26 +22,41 @@
     <el-tabs v-model="activeName">
       <el-tab-pane name="first" label="评论">
 
-        <div class="comment-list" v-for="item in 5">
-          <div class="comment-list-date">2017-08-15</div>
+        <div class="comment-list" v-for="item in commentList">
+          <div class="comment-list-date">{{conductDate(item.createTime,'yyyy-MM-dd HH:mm:ss')}}</div>
           <div class="comment-list-header">
             <div class="uwUserInfo">
-            <div class="userHeadPic"><img :src="userInfo.headPhoto"></div>
+            <div class="userHeadPic"><img :src="http+item.userHeadImg"></div>
             </div>
           </div>
           <div class="comment-user-mess">
-            闫沧(住院医)
+            {{item.userName}}
           </div>
           <div class="comment-list-content">
-            老师讲的不错很棒!
+            {{item.comments}}
           </div>
+          <div v-if="isShowDel" style="padding: 5px 10px;"><el-button @remove="remove(item.id)" type="text">删除</el-button></div>
         </div>
       </el-tab-pane>
     </el-tabs>
-    <div class="showMore">
+    <div v-if="commentList.length>0" class="showMore">
       <el-button @click="queryMore" v-if="isHashMore" type="text">查看更多评论>></el-button>
-      <span v-if="false">已经没有更多评论可查看!</span>
+      <span v-if="!isHashMore">已经没有更多评论可查看!</span>
     </div>
+    <p style="text-align: center;padding: 50px;" v-else>还没有评论!</p>
+    <!--删除弹窗-->
+    <Modal
+      close-on-click-modal="false"
+      height="200"
+      v-model="removeModal"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :loading="loading"
+      :width="500">
+      <modal-header slot="header" :content="removeId"></modal-header>
+      <remove v-if="removeModal" :deleteUrl="deleteUrl" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -62,6 +77,10 @@ export default{
       comments:{  //评论内容
         type:String,
         default:"",
+      },
+      isShowDel:{
+        type:Boolean,
+        default:false,
       }
     },
     data() {
@@ -72,9 +91,16 @@ export default{
           "ATLAS":"评论",
         }
       return {
+        deleteUrl: api.commentListPage.path,
+        operailityData:'',
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
 
+        removeId:{
+          id:'remove',
+          title:'删除'
+        },
+        loading:false,
         activeName: 'first',
         currType:typeOptions[this.types],
         formValidate:{
@@ -87,7 +113,7 @@ export default{
             "id":3,
             "userId":"1",
             "userName":1,
-            "userHeadImg":1,
+            "userHeadImg":"",
             "comments":1,
             "createTime":"1"
           },
@@ -119,12 +145,14 @@ export default{
 
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle:{
+          type:'add',
+          successTitle:'添加成功!',
+          errorTitle:'添加失败!',
           ajaxSuccess:'saveSuccess',
-          ajaxError:'saveError',
+          ajaxError:'ajaxError',
           ajaxParams:{
             url: api.commentAdd.path,
             method: api.commentAdd.method,
-            jsonString:true
           }
         },
       }
@@ -132,8 +160,9 @@ export default{
     methods: {
       //初始化请求列表数据
       init(){
+
         this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.params);
-        //this.ajax(this.listMessTitle);
+        this.ajax(this.listMessTitle);
       },
 
       /*
@@ -141,29 +170,51 @@ export default{
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
-        let isSubmit = this.submitForm("formValidate");
-        isSubmit = true;
+        if(this.formValidate.comments==""){
+            this.showMess("请填写评论内容!");
+            return;
+        }
+        let isSubmit = true //this.submitForm("formValidate");
         if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true)
           this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          this.formValidate.comments = "";
           this.ajax(this.addMessTitle, isLoadingFun)
         }
       },
 
+
+      /*
+       * 获取表单数据
+       * @return string  格式:id=0&name=aa
+       * */
+      getFormData(data){
+        let myData = Util._.defaultsDeep({},data);
+        return myData;
+      },
+
+
       //通过get请求列表数据
       updateListData(responseData){
         let data = responseData.data;
-        if(data.length==0){
+        this.commentList = data//this.commentList.concat();
+        if(this.commentList.length==responseData.totalCount){
           this.isHashMore = false;
         }
-        this.commentList = this.commentList.concat(data);
         this.listTotal = responseData.totalCount || 0;
+      },
+
+      //删除评论
+      remove(id){
+        this.operailityData = [{id:id}];
+        this.openModel('remove') ;
       },
 
       //评论保存成功
       saveSuccess(){
         this.successMess("评论成功!");
+        this.init();
       },
 
       //评论保存失败
@@ -178,21 +229,42 @@ export default{
           curPage: ++num,
           pageSize: 10
         }
-        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.params);
-        this.ajax(this.listMessTitle);
+
+        //this.ajax(this.listMessTitle);
+        //查看更多
+        let showMoreTitle = {
+          ajaxSuccess: (responseData) => {
+            let data = responseData.data;
+            if(this.commentList.length==responseData.totalCount){
+              this.isHashMore = false;
+            }
+            this.listTotal = responseData.totalCount || 0;
+          },
+          errorTitle: '加载更多失败!',
+          ajaxParams: {
+            url: api.commentListPage.path,
+            method: 'get'
+          }
+        }
+        showMoreTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.params);
+        this.ajax(showMoreTitle);
       }
 
     },
     created(){
-        this.init();
+      Util = this.$util;
+      this.init();
     },
     mounted(){
     },
     computed:{
       userInfo(){
         let info = this.$store.getters.getUserInfo || {};
-
         return info;
+      },
+      http(){
+        let http = this.$store.state.envPath.http || "";
+        return http;
       }
     },
     components: {}
@@ -200,10 +272,6 @@ export default{
 </script>
 <style lang="scss">
   /* 用户资料 */
-
   @import "../../../assets/ambuf/css/workbench_v1.0/userInfo";
-
-</style>
-<style>
   @import "../../../assets/ambuf/css/videoStudy/default.css";
 </style>

@@ -14,8 +14,8 @@
     </div>
     <!-- 底部 -->
     <div align="center" slot="footer">
-      <el-button type="info" @click="saveCall">保存草稿</el-button>
-      <el-button type="success" @click="submitCall">提交审核</el-button>
+      <el-button type="info" @click="saveCall('NOT_SUBMIT')">保存草稿</el-button>
+      <el-button type="success" @click="saveCall('NOT_AUDIT')">提交审核</el-button>
     </div>
     <!-- 内容 start -->
     <!-- 课程基本信息 -->
@@ -39,6 +39,10 @@
 </template>
 
 <script>
+  import api from './api';
+  import {
+    getNormCourse
+  } from './dataTool';
   /*当前组件必要引入*/
   import layout from "./_components/layout"; // 基础布局
   import nmenuItem from './_components/menu'; // 菜单项
@@ -52,13 +56,11 @@
   import tqvInfoEdit from './TQVInfo/TQVInfo_edit'; // 教学质量评价表
   // import treInfoEdit from './TREInfo/TREInfo_edit'; // 试运行评估表
 
-  // 测试数据
-  import testData from './getData';
   export default {
     props: ['operailityData'],
     data() {
       return {
-        menuActive: 'basic', // 激活菜单
+        menuActive: 'load', // 激活菜单
       }
     },
     methods: {
@@ -68,27 +70,40 @@
         this.$refs[this.menuActive].saveToStore() && (this.menuActive = menu);
       },
       // 保存 调用子组件的save方法
-      saveCall() {
-        // return this.$refs[this.menuActive].submitData()
-      },
-      // 提交审核
-      submitCall() {
-        // 提交审核成功之后触发父级组件的add事件
-        // if (this.$refs[this.menuActive].submitData('submit')) {
-        //   // this.$emit('add')
-        // }
+      saveCall(auditStatus) {
+        if (this.$refs[this.menuActive].saveToStore()) {
+          this.ajax({
+            type: 'edit',
+            successTitle: '修改成功',
+            errorTitle: '修改失败',
+            ajaxSuccess: 'ajaxSuccess',
+            ajaxError: 'ajaxError',
+            ajaxParams: {
+              jsonString: true,
+              url: api.modify.path + this.operailityData.id,
+              method: api.modify.method,
+              data: this.getSaveData(auditStatus)
+            }
+          })
+        }
       },
       // 获取查看数据
       getViewData() {
-        this.$store.commit('curriculum/data/updateData', this.$util._.defaultsDeep({}, testData))
-        return
         this.ajax({
-          ajaxSuccess: res => this.$store.commit('curriculum/data/updateData', res.data),
+          ajaxSuccess: res => {
+            this.$store.commit('curriculum/data/updateData', res.data);
+            this.menuActive = 'basic';
+          },
           ajaxParams: {
             url: api.get.path + this.operailityData.id,
             method: api.get.method
           }
         })
+      },
+      // 获取数据
+      getSaveData(auditStatus) {
+        let theData = this.$store.state.curriculum.data;
+        return getNormCourse(theData.course, theData.evaluate, theData.planDtoList, auditStatus)
       },
     },
 

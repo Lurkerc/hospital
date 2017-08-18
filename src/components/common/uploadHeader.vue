@@ -8,6 +8,7 @@
     :before-upload="beforeAvatarUpload"
     :on-change="changeHeader"
     :on-progress="uploadProgress"
+    :headers="headers"
     :on-error="uploadError">
     <img v-if="imageUrl!=''" :src="imageUrl" class="avatar">
     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -48,7 +49,8 @@
       return {
         imageUrl: '',
         action:"/file/upload",
-        loading:false
+        loading:false,
+       headers: '',
       };
     },
     created(){
@@ -58,6 +60,9 @@
         this.action = config.ajaxUrl+this.action;
       if(typeof this.imgFile!="undefined"){
         this.imageUrl = this.imgFile;
+      }
+      this.headers = {
+        "Token": this.$util.getCookie("Token")
       }
     },
     watch:{

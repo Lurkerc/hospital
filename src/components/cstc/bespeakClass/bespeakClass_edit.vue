@@ -30,8 +30,7 @@
                 <div class="bpProjectItem">
                   <el-radio label="SPECIFIC">特定人员</el-radio>
                   <template v-if="formValidate.userType === 'SPECIFIC'">
-                    <el-tag type="success" class="bpUserItem" :closable="true" v-for="(item,index) in formValidate.userList" @close="removeUser(index)"
-                      :key="item.userId">{{ item.userName }}</el-tag>
+                    <el-tag type="success" class="bpUserItem" :closable="true" v-for="(item,index) in formValidate.userList" @close="removeUser(index)" :key="item.userId">{{ item.userName }}</el-tag>
                     <el-button type="info" size="small" style="margin-left:10px;" @click="selectUser">选择人员</el-button>
                   </template>
                 </div>
@@ -168,8 +167,7 @@
     <!-- 模态框 选择设备 -->
     <Modal :mask-closable="false" v-model="selectDeviceModal" class-name="vertical-center-modal" :loading="true" :width="900">
       <modal-header slot="header" :parent="self" :content="contentHeader.selectDeviceId"></modal-header>
-      <select-device v-if="selectDeviceModal" :timeData="{'date':formValidate.openTime.date,reserveTimeSetId:formValidate.openTime.timeSetId}"
-        :select="selectDeviceId" @cancel="cancel" @select="selectDeviceCall"></select-device>
+      <select-device v-if="selectDeviceModal" :timeData="{'date':formValidate.openTime.date,reserveTimeSetId:formValidate.openTime.timeSetId}" :select="selectDeviceId" @cancel="cancel" @select="selectDeviceCall"></select-device>
       <div slot="footer"></div>
     </Modal>
     <!--选择人员-->
@@ -506,7 +504,6 @@
         }
         return type[val] || val
       },
-      // 初始化预约数据
       // 初始化预约数据
       initSelectTime(obj) {
         this.selRoomIndex = -1;

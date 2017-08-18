@@ -21,21 +21,13 @@
       </el-form>
         <!--//视频-->
         <div ref="myTable" :style="{height:dynamicHt+'px'}" style="overflow: auto">
-          <keep-alive>
-             <video-bank  fromWhereTree="VIDEO"   @cancel="cancel" @add="subCallback" v-if="type=='VIDEO'" :url="{add:{path:'/video/add'},resourceTypeTree:{ path:'/resourceType/tree'}}"></video-bank>
-          </keep-alive>
+             <video-bank  fromWhereTree="VIDEO"   @cancel="cancel" @add="subCallback" v-if="type=='VIDEO'" :url="{add:{path:'/video/add-stu'},resourceTypeTree:{ path:'/resourceType/tree?types=VIDEO'}}"></video-bank>
           <!--文档文献-->
-          <keep-alive>
-            <res-literature fromWhereTree="LITERATURE"   @cancel="cancel" @add="subCallback" v-if="type=='LITERATURE'" :url="{add:{path:'/literature/add'},resourceTypeTree:{ path:'/resourceType/tree'}}"></res-literature>
-          </keep-alive>
+            <res-literature fromWhereTree="LITERATURE"   @cancel="cancel" @add="subCallback" v-if="type=='LITERATURE'" :url="{add:{path:'/literature/add-stu'},resourceTypeTree:{ path:'/resourceType/tree?types=LITERATURE'}}"></res-literature>
           <!--医学图谱-->
-          <keep-alive>
-             <res-medical-atlas  fromWhereTree="CASES"   @cancel="cancel" @add="subCallback" v-if="type=='CASES'" :url="{add:{path:'/atlas/add'},resourceTypeTree:{ path:'/resourceType/tree'}}"></res-medical-atlas>
-          </keep-alive>
+             <res-medical-atlas  fromWhereTree="CASES"   @cancel="cancel" @add="subCallback" v-if="type=='CASES'" :url="{add:{path:'/atlas/add-stu'},resourceTypeTree:{ path:'/resourceType/tree?types=CASES'}}"></res-medical-atlas>
           <!--经典病例-->
-          <keep-alive>
-            <res-case-library fromWhereTree="ATLAS"   @cancel="cancel" @add="subCallback" v-if="type=='ATLAS'" :url="{add:{path:'/cases/add'},resourceTypeTree:{ path:'/resourceType/tree'}}"></res-case-library>
-          </keep-alive>
+            <res-case-library fromWhereTree="ATLAS"   @cancel="cancel" @add="subCallback" v-if="type=='ATLAS'" :url="{add:{path:'/cases/add-stu'},resourceTypeTree:{ path:'/resourceType/tree?types=ATLAS'}}"></res-case-library>
         </div>
     </div>
 
@@ -71,7 +63,13 @@ export default{
       },
 
       subCallback(){
-
+        this.successMess('保存成功');
+        this.type = '';
+        //页面dom稳定后调用
+        this.$nextTick( ()=> {
+            alert(1)
+          this.type = 'VIDEO';
+        })
 
       },
       //设置表格及分页的位置

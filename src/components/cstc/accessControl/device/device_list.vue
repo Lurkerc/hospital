@@ -21,7 +21,7 @@
           <el-input v-model="searchObj.orther"></el-input>
         </el-form-item>
         <el-form-item label="房间号：" b="roomId">
-          <el-select v-model="searchObj.roomId" placeholder="请选择">
+          <el-select v-model="searchObj.roomId" clearable placeholder="请选择">
             <el-option v-for="item in roomList" :key="item.id" :label="item.roomNum" :value="item.id">
             </el-option>
           </el-select>
@@ -39,8 +39,7 @@
     </div>
     <!-- 数据表格 -->
     <div ref="tableView">
-      <el-table align="center" :context="self" :height="tableHeight" :data="tableData" @selection-change="handleSelectionChange"
-        tooltip-effect="dark" style="width: 100%">
+      <el-table align="center" :context="self" :height="tableHeight" :data="tableData" @selection-change="handleSelectionChange" tooltip-effect="dark" style="width: 100%">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="操作" align="center" width="100">
           <template scope="scope">
@@ -65,8 +64,7 @@
     </div>
     <!-- 分页按钮 -->
     <div style="float: right;margin-top:10px;">
-      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-        :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
+      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
     </div>
     <!-- 模态框 增加（add） -->
     <Modal :mask-closable="false" v-model="addModal" class-name="vertical-center-modal" :width="800">

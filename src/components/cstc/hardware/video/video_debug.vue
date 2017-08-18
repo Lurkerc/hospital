@@ -1,5 +1,6 @@
 <template>
   <div class="editForm">
+    <p style="color: #FF0000">注：登录前请您确认是否安装插件。下载：<el-button @click="downLoad" type="text">海康插件下载</el-button>  <el-button type="text">大华插件下载</el-button></p>
     <el-form :model="formValidate" ref="formValidate" :rules="this.$store.state.rules" label-width="90px">
 
       <el-row>
@@ -57,10 +58,9 @@
         <el-col :span="3" :offset="1">
           <el-button @click="loginService">登录</el-button>
         </el-col>
-
       </el-row>
     </el-form>
-
+    <hkVideo v-if="isShowVideo" width="500" height="360" :count="count" :isShowRight="true" :ip="formValidate.ip" :port="formValidate.port" :nvrIp="formValidate.nvrIp" :loginName="formValidate.loginName" :password="formValidate.password"></hkVideo>
     <el-row>
       <el-col :span="4" :offset="8" align="center">
         <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
@@ -77,6 +77,7 @@
 
   import brand from './brand'; // 品牌
   import api from './api'
+  import hkVideo from "./hkVideo.vue"
 
   export default {
     props: ['id'],
@@ -90,14 +91,14 @@
         },
         //form表单bind数据
         formValidate: {
-          brand: '', // 品牌
-          modelNum: '', // 产品型号
-          ip: '', // 设备ip
+          brand: 'HIKVISION', // 品牌
+          modelNum: 'HIKVISION', // 产品型号
+          ip: '192.168.1.2', // 设备ip
           isConsole: 'YES', // 是否有云台
-          loginName: '', // 登录名
-          password: '', // 密码
-          nvrIp: '', // 所在nvrIp
-          port: '', //通道号
+          loginName: 'admin', // 登录名
+          password: 'admin12345', // 密码
+          nvrIp: '192.168.1.64', // 所在nvrIp
+          port: '80', //通道号
         },
         // 房间列表
         roomSelectList: [],
@@ -123,6 +124,8 @@
             method: api.get.method
           }
         },
+        isShowVideo:false,
+        count:0,
       }
     },
     methods: {
@@ -170,6 +173,10 @@
         return myData;
       },
 
+      downLoad(){
+        window.open("/static/video/hikvision/WebComponents.exe");
+      },
+
       /**
        * 获取房间数据
        * */
@@ -181,8 +188,13 @@
        * 连接测试
        */
       loginService() {
-        console.log('登录设备...')
+        if(this.isShowVideo){
+          ++this.count;
+        }else{
+          this.isShowVideo = true;
+        }
       },
+
       /*
        * 组件初始化入口
        * */
@@ -198,10 +210,12 @@
     mounted() {
       //暂时没有初始化,预留初始化入口
     },
+    components:{
+      hkVideo
+    }
   }
 
 </script>
 <style lang="scss">
   @import'../../../../assets/ambuf/css/manage_v1.0/editForm';
-
 </style>

@@ -217,6 +217,9 @@
           // 前五天                                       后五天
           tag = ((thisTime > (rotaryEndTime - validTime)) && (thisTime < (rotaryEndTime + validTime)));
         }
+        if (tag && row.state) {
+          tag = row.state === 'USER_NOT_REPORT';
+        }
         return tag
       },
       /*************************************** 按钮事件 **********************************/

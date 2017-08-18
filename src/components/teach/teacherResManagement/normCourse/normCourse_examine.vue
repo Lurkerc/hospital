@@ -60,13 +60,11 @@
   import tqvInfoEdit from './TQVInfo/TQVInfo_edit'; // 教学质量评价表
   // import treInfoEdit from './TREInfo/TREInfo_edit'; // 试运行评估表
 
-  // 测试数据
-  import testData from './getData';
   export default {
     props: ['operailityData'],
     data() {
       return {
-        menuActive: 'basic',
+        menuActive: 'load',
         formValidate: {
           auditStatus: "", // 审核结果 AUDIT_FAILURE|驳回  AUDIT_SUCCESS|通过
           reason: "", // 审核意见
@@ -84,7 +82,7 @@
         this.formValidate.auditStatus = type;
         let msg = type === 'AUDIT_FAILURE' ? '驳回' : '通过';
         let opt = {
-          type: 'audit',
+          type: 'examine',
           successTitle: msg + '成功!',
           errorTitle: msg + '失败!',
           ajaxSuccess: 'ajaxSuccess',
@@ -99,10 +97,11 @@
       },
       // 获取查看数据
       getViewData() {
-        this.$store.commit('curriculum/data/updateData', this.$util._.defaultsDeep({}, testData))
-        return
         this.ajax({
-          ajaxSuccess: res => this.$store.commit('curriculum/data/updateData', res.data),
+          ajaxSuccess: res => {
+            this.$store.commit('curriculum/data/updateData', res.data);
+            this.menuActive = 'basic';
+          },
           ajaxParams: {
             url: api.get.path + this.operailityData.id,
             method: api.get.method

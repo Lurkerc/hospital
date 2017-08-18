@@ -10,39 +10,40 @@
                  :fromWhereTreeType="fromWhereTree"></left-tree>
       <!-- 标准课程 -->
       <div slot="right" id="content" ref="content">
-        <el-row style="padding-bottom:20px;">
-          <el-col :span="14">
-            <el-button type="primary" @click="add">新建</el-button>
-            <el-button type="danger" @click="remove">删除</el-button>
-          </el-col>
-          <!-- 搜索框 -->
-          <el-col :span="10" align="right">
-            <el-input placeholder="名称" v-model="searchObj.name" style="width:300px;" :maxlength="20">
-              <el-button slot="append" icon="search" @click="search"></el-button>
-            </el-input>
-            <el-button :icon="getSearchBtnIcon()" @click="openMoreSearch()">筛选</el-button>
-          </el-col>
-        </el-row>
-        <!-- 多条件 -->
-        <div style="overflow:hidden;" v-show="showMoreSearch" ref="showMoreSearch" align="right">
-          <el-form :inline="true">
-            <el-form-item label="卡号:">
-              <el-input v-model="searchObj.cardNum"></el-input>
-            </el-form-item>
-            <el-form-item label="申请时间:">
-              <date-group :dateGroup="{text:'',startDate:searchObj.createTimeBegin,endDate:searchObj.createTimeEnd}">
-                <el-date-picker name="start" v-model="searchObj.createTimeBegin" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
-                                @change="handleStartTime"></el-date-picker>
-                <span>-</span>
-                <el-date-picker name="end" v-model="searchObj.createTimeEnd" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
-                                @change="handleEndTime"></el-date-picker>
-              </date-group>
-            </el-form-item>
-            <el-form-item style="margin-right:0;">
-              <el-button @click="search" type="info">查询</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
+        <el-form :inline="true">
+          <el-row style="padding-bottom:20px;">
+            <el-col :span="14">
+              <el-button type="primary" @click="add">新建</el-button>
+              <el-button type="danger" @click="remove">删除</el-button>
+            </el-col>
+            <!-- 搜索框 -->
+            <el-col :span="10" align="right">
+              <el-input placeholder="名称" v-model="searchObj.name" style="width:300px;" :maxlength="20">
+                <el-button slot="append" icon="search" @click="search"></el-button>
+              </el-input>
+              <!--<el-button :icon="getSearchBtnIcon()" @click="openMoreSearch()">筛选</el-button>-->
+            </el-col>
+          </el-row>
+          <!-- 多条件 -->
+          <div style="overflow:hidden;" v-show="showMoreSearch" ref="showMoreSearch" align="right">
+
+              <el-form-item label="卡号:">
+                <el-input v-model="searchObj.cardNum"></el-input>
+              </el-form-item>
+              <el-form-item label="申请时间:">
+                <date-group :dateGroup="{text:'',startDate:searchObj.createTimeBegin,endDate:searchObj.createTimeEnd}">
+                  <el-date-picker name="start" v-model="searchObj.createTimeBegin" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
+                                  @change="handleStartTime"></el-date-picker>
+                  <span>-</span>
+                  <el-date-picker name="end" v-model="searchObj.createTimeEnd" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
+                                  @change="handleEndTime"></el-date-picker>
+                </date-group>
+              </el-form-item>
+              <el-form-item style="margin-right:0;">
+                <el-button @click="search" type="info">查询</el-button>
+              </el-form-item>
+          </div>
+        </el-form>
         <!-- 数据表格 -->
         <div ref="tableView">
           <el-table @selection-change="handleSelectionChange" align="center" :context="self" :height="tableHeight" :data="tableData" tooltip-effect="dark" style="width: 100%">
@@ -51,7 +52,7 @@
             <el-table-column label="操作" align="center" width="140">
               <template scope="scope">
                 <el-button size="small" @click="show(scope.row)">查看</el-button>
-                <el-button size="small" type="primary" @click="edit(scope.row)">修改</el-button>
+                <el-button v-if="scope.row.auditStatus!='NOT_AUDIT' && scope.row.auditStatus!='AUDIT_SUCCESS' " size="small" type="primary" @click="edit(scope.row)">修改</el-button>
               </template>
             </el-table-column>
             <el-table-column label="名称" prop="name" align="center" show-overflow-tooltip></el-table-column>
@@ -183,7 +184,7 @@
           id:'auditId',
           title:'查看'
         },
-
+        unAdd:false,
         showMoreSearch: false, // 更多筛选
         operailityData:'',
         multipleSelection: [],
@@ -198,14 +199,7 @@
           operator: '', // 操作人
           createTime: '', // 节点创建时间
         },
-        tableData: [{
-          "id":10077,
-          "name":"类型6",
-          "managerId":"10000",
-          "managerName":"张三",
-          "operator":"李四",
-          "createTime":"20"
-        },],
+        tableData: [],
 
         //当前科室详情
         depDetails:{
@@ -298,17 +292,39 @@
         return flag;
       },
 
+      //通过get请求列表数据并渲染表格数据
+      updateListData(responseData){
+        let data = responseData.data;
+        let that = this;
+        this.tableData=[];
+        data = that.addIndex(data);
+        that.tableData= data;
+
+        this.listTotal = responseData.totalCount || 0;
+      },
 
       //初始化加载列表数据
       setTableData(){
-        this.listMessTitle.ajaxParams.params["parentId"] = this.deptId;
-        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params,this.formValidate);
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params,this.searchObj);
         this.postParamToServer(this.listMessTitle);
       },
+
+      //向服务器发送数据
+      postParamToServer(options){
+        if(this.deptId!=""){
+          options["ajaxParams"]["params"]["id"] = this.deptId;
+        }
+        this.ajax(options);
+      },
+
 
 
       /*--点击--添加--按钮--*/
       add(){
+        if(this.unAdd){
+          this.showMess('不能在此节点添加');
+          return;
+        }
         if(this.deptId==""){
           this.errorMess("请选择左侧目录节点!");
           return;
@@ -328,6 +344,7 @@
        * @param row Object  当前行数据对象
        * */
       show(row){
+
         this.operailityData = row;
         this.showModal = true;
       },
@@ -354,7 +371,7 @@
 
       //设置表格及分页的位置
       setTableDynHeight() {
-        this.getContentHeight();
+        this.getContentHeight()
         let tableView = this.$refs.tableView;
         let paginationHt = 45;
         this.dynamicHt = this.contenHeight - tableView.offsetTop - paginationHt;
@@ -374,6 +391,11 @@
        * */
       treeClick(obj, node, self) {
         // 记录视图
+        if(node.level>2){
+          this.unAdd = true;
+        }else {
+          this.unAdd = false;
+        }
         this.viewTypes = obj.types;
         this.setTreeDepId(obj.id);
       },
@@ -401,7 +423,8 @@
       setTreeDepId(id) {
         if (id) {
           this.deptId = id;
-        }
+        };
+        this.setTableData();
       },
 
 

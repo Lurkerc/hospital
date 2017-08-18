@@ -153,11 +153,8 @@
         <template v-for="(item,index) in roomList">
           <template v-for="(cItem,cIndex) in item.children">
             <el-tooltip placement="right-start" :open-delay="1500" effect="light" :key="index + '-' + cIndex">
-              <room-info slot="content" :basicsTime="info.basicsTime" :info="roomData[index]" :room="roomList[index].room[cIndex]" :teacher="roomList[index].teacher[cIndex]"
-                :key="index+'_'+cIndex" style="max-width:400px;"></room-info>
-              <room :option="{hasMore: cIndex > 0,type:'edit'}" :initData="{index: index,cIndex:cIndex,name:roomData[index].stationName,roomNum:item.room[cIndex].roomNum,roomSpecialty:item.room[cIndex].specialty,roomType:roomData[index].stationType === 'SP' ? 'SP' : ''}"
-                :key="index+'_'+cIndex" @roomClick="roomClick" @iconAdd="addRoomChildren(index)" @iconRemove="removeRoomChildren(index,cIndex)"
-                style="width:80px;margin-left:40px;"></room>
+              <room-info slot="content" :basicsTime="info.basicsTime" :info="roomData[index]" :room="roomList[index].room[cIndex]" :teacher="roomList[index].teacher[cIndex]" :key="index+'_'+cIndex" style="max-width:400px;"></room-info>
+              <room :option="{hasMore: cIndex > 0,type:'edit'}" :initData="{index: index,cIndex:cIndex,name:roomData[index].stationName,roomNum:item.room[cIndex].roomNum,roomSpecialty:item.room[cIndex].specialty,roomType:roomData[index].stationType === 'SP' ? 'SP' : ''}" :key="index+'_'+cIndex" @roomClick="roomClick" @iconAdd="addRoomChildren(index)" @iconRemove="removeRoomChildren(index,cIndex)" style="width:80px;margin-left:40px;"></room>
             </el-tooltip>
           </template>
         </template>
@@ -577,7 +574,18 @@
           user: unSelUser
         });
         // 参考人员专业
-        this.$store.commit('examineInterval/room/updateSpecialtyList', specialtyList);
+        this.$store.commit('examineInterval/room/initSpecialtyList', specialtyList);
+        // 参考人员删除同步删除对应房间的专业
+        for (let i = 0, roomList = this.roomList, leng = roomList.length; i < leng; i++) {
+          for (let j = 0, roomItem = roomList[i].room, roomItemLen = roomItem.length; j < roomItemLen; j++) {
+            if (roomItem[j].specialty && !(specialtyList.indexOf(roomItem[j].specialty) > -1)) {
+              this.$store.commit('examineInterval/room/removeRoomSpecialty', {
+                index: i,
+                cIndex: j
+              });
+            }
+          }
+        }
       },
       //关闭选择人员弹窗
       closeSltUser() {

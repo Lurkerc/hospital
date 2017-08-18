@@ -4,9 +4,7 @@
     <!-- 选择课程 -->
     <norm-course-select v-if="courseActiveName === 'select'" @select="selectCourseCall"></norm-course-select>
     <!-- 编辑课程 -->
-    <course-edit v-if="courseActiveName === 'add'" :operaility-data="selectCourse" style="height:100%">
-      <!-- <slot slot="preMenu" name="test" text="测试"></slot> -->
-    </course-edit>
+    <course-input v-if="courseActiveName === 'add'" :operaility-data="selectCourse" :saveUrl="api.add" :getUrl="api.getTemp" style="height:100%"></course-input>
     <!-- 询问弹窗 -->
     <Modal :mask-closable="false" v-model="askModal" class-name="vertical-center-modal" :width="500">
       <modal-header slot="header" :content="askId"></modal-header>
@@ -25,13 +23,14 @@
 </template>
 
 <script>
-  import courseEdit from '../../../teach/teacherResManagement/normCourse/normCourse_edit'; // 基础添加
-  import nmenuItem from '../../../teach/teacherResManagement/normCourse/_components/menu'; // 菜单项
-  import normCourseSelect from '../../../teach/teacherResManagement/normCourse/normCourse_select';
+  import api from './api'; // 基础添加
+  import courseInput from './webCourses_input'; // 基础添加
+  import normCourseSelect from '../../../teach/teacherResManagement/normCourse/normCourse_select'; // 选择标准课程
 
   export default {
     data() {
       return {
+        api,
         askModal: false,
         courseActiveName: 'select',
         askId: {
@@ -62,8 +61,7 @@
       },
     },
     components: {
-      courseEdit,
-      nmenuItem,
+      courseInput,
       normCourseSelect
     }
   }

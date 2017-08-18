@@ -38,7 +38,7 @@
           </td>
           <td v-for="(dataItem,index) in roomItem.dataList" :key="roomItem.roomId + '-' + index" align="center">
             <div class="cell">
-              <template v-if="(selRoomIndex === roomIndex && selTimeSlotIndex === index) || (theRoomIndex === roomIndex && theTimeSlotIndex === index)">
+              <template v-if="selRoomIndex === roomIndex && selTimeSlotIndex === index">
                 <p v-if="dataItem === 'tenancyEnds' && selRoomIndex === -1" class="optional" title="可预约" @click="selectThisTime(roomItem,roomIndex,index,dataItem,true)">预</p>
                 <p v-else class="select" title="已预约" @click="initSelectTime(false)">约</p>
               </template>
@@ -67,12 +67,10 @@
         activeName: '', // 日期视图 
         selRoomIndex: -1, // 房间
         selTimeSlotIndex: -1, // 时间段
-        theRoomIndex: -1, // 房间
-        theTimeSlotIndex: -1, // 时间段
         selDay: '', // 日期
         // 展示数据
         days: [], // 日期
-        projectData: {}, // 可预约项目
+        projectData: [], // 可预约项目
         tableBody: [], // 房间预约
         // 提交数据
         formValidate: {
@@ -101,6 +99,10 @@
             this.showData = res.data;
             this.selDay = res.data.reserveDate;
             this.formValidate.id = this.showData.id;
+            this.projectData[0] = {
+              name: res.data.reservePojectName,
+              reservePojectId: res.data.reserveProjectId
+            };
             this.getProjectList();
           },
           ajaxParams: {
@@ -113,13 +115,13 @@
       getProjectList() {
         this.ajax({
           ajaxSuccess: res => {
-            this.projectData = res.data || [];
-            for (let i in res.data) {
-              if (this.showData.reserveProjectId === res.data[i].reservePojectId) {
-                this.reservePoject = res.data[i];
-                break;
-              }
-            }
+            this.projectData = this.projectData.concat(res.data || []);
+            // for (let i in res.data) {
+            //   if (this.showData.reserveProjectId === res.data[i].reservePojectId) {
+            this.reservePoject = this.projectData[0];
+            //     break;
+            //   }
+            // }
           },
           ajaxParams: {
             url: api.myList.path,
@@ -161,7 +163,6 @@
             for (let i in res.data.timeSetList) {
               if (this.showData.timeSetId === res.data.timeSetList[i].timeSetId) {
                 this.selTimeSlotIndex = +i;
-                this.theTimeSlotIndex = +i;
                 break;
               }
             }
@@ -169,7 +170,6 @@
             for (let j in res.data.roomList) {
               if (this.showData.roomId === res.data.roomList[j].roomId) {
                 this.selRoomIndex = +j;
-                this.theRoomIndex = +j;
                 break;
               }
             }

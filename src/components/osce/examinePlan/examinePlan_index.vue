@@ -37,14 +37,13 @@
     </div>
     <!-- 表格数据 -->
     <div id="tableView" ref="tableView" style="padding-top:10px;">
-      <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo"
-        style="width: 100%;">
+      <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo" style="width: 100%;">
         <el-table-column label="操作" width="200">
           <template scope="scope">
             <el-button size="small" type="success" @click="show(scope.row)" :disabled="scope.row.status === 'NOARRANGED'">查看</el-button>
             <el-button size="small" type="danger" @click="planLogin(scope.row)">签到</el-button>
             <!-- 规范考核、已发布才能抽签 -->
-            <el-button size="small" type="info" @click="openPlanQueue(scope.row.id)" :disabled="canQueue(scope.row)">抽签</el-button>
+            <el-button size="small" type="info" @click="openPlanQueue(scope.row.id,scope.row)" :disabled="canQueue(scope.row)">抽签</el-button>
             <!--<el-button size="small" type="warning" @click="openPlanFix(scope.row.id)" v-else>安排</el-button>-->
           </template>
         </el-table-column>
@@ -67,13 +66,12 @@
     </div>
     <!-- 分页 -->
     <div style="float: right;margin-top:10px;">
-      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-        :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
+      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
     </div>
     <!-- 抽签 -->
     <Modal :mask-closable="false" width="890" v-model="planQueueModal" class-name="vertical-center-modal">
       <modal-header slot="header" :content="contentHeader.planQueueId"></modal-header>
-      <plan-queue v-if="planQueueModal" @cancel="cancel" :sceneId="sceneId"></plan-queue>
+      <plan-queue v-if="planQueueModal" @cancel="cancel" :sceneId="sceneId" :operaility-data="operailityData"></plan-queue>
       <div slot="footer"></div>
     </Modal>
     <!-- 安排 -->
@@ -122,6 +120,7 @@
         },
         totalCount: 0,
         tableData: [],
+        operailityData: '',
         // 模态框提示
         contentHeader: {
           planQueueId: {
@@ -216,8 +215,9 @@
         })
       },
       // 抽签
-      openPlanQueue(id) {
+      openPlanQueue(id, row) {
         this.sceneId = id;
+        this.operailityData = row;
         this.openModel('planQueue')
       },
       // 签到

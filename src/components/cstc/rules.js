@@ -25,6 +25,13 @@ let accessControlDevice = {
   accessIp: [baseRules.required, baseRules.ip], // 控制器IP 必填
 };
 
+// 中心日程
+let centerSchedule = {
+  date: baseRules.requiredNoEvent,
+  startTime: baseRules.requiredNoEvent,
+  endTime: baseRules.requiredNoEvent,
+};
+
 /**
  * 预约上课
  */
@@ -171,6 +178,7 @@ export {
   bespeakClass,
   bespeakSetModel,
   bespeakSetProject,
+  centerSchedule,
   tree,
   roomManage,
   roomUsage,

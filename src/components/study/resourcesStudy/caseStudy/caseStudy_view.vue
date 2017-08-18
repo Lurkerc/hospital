@@ -4,12 +4,12 @@
 ****--@author   zyc<332533011@qq.com
 ----------------------------------->
 <template>
-  <div class="showContent">
-    <div class="video-type-box">
+  <div>
+    <div class="video-type-box" v-if="!isStudyRecords">
       <div class="video-title-left" style="padding-top:8px;">
         <el-breadcrumb separator="/">
-          <el-breadcrumb-item>文档文献</el-breadcrumb-item>
-          <el-breadcrumb-item>picc置管后的维护技术</el-breadcrumb-item>
+          <el-breadcrumb-item @click.native="goBack">首页</el-breadcrumb-item>
+          <el-breadcrumb-item>{{showListItem.title}}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="video-title-right">
@@ -18,7 +18,7 @@
             <el-input
               placeholder="请输入文档文献名称"
               icon="search"
-              v-model="formValidate.name"
+              v-model="formValidate.title"
               :on-icon-click="handleIconClick">
             </el-input>
           </el-col>
@@ -31,36 +31,37 @@
     </div>
     <ppt v-if="docType=='ppt'">
       <div slot="header">
-        <h2 style="text-align: center;">文档温馨名称</h2>
+        <h2 style="text-align: center;">{{showListItem.title}}</h2>
         <div class="downLoadDoc">
           <el-row>
-            <el-col :span="16" style="text-align: left">介绍：文档介绍</el-col>
-            <el-col :span="6" :offset="2">上传人：超级管理员</el-col>
+            <el-col :span="16" style="text-align: left">介绍：{{showListItem.brief}}</el-col>
+            <el-col :span="6" :offset="2">上传人：{{showListItem.operator}}</el-col>
           </el-row>
         </div>
       </div>
     </ppt>
     <doc v-if="docType=='doc'">
       <div slot="header">
-        <h2 style="text-align: center;padding: 15px 0;">文档温馨名称</h2>
+        <h2 style="text-align: center;padding: 15px 0;">{{showListItem.title}}</h2>
       </div>
     </doc>
     <xls v-if="docType=='xls'">
       <div slot="header">
-        <h2 style="text-align: center;padding: 15px 0;">文档温馨名称</h2>
+        <h2 style="text-align: center;padding: 15px 0;">{{showListItem.title}}</h2>
       </div>
     </xls>
-    <pdf v-if="docType=='pdf'">
+    <pdf v-if="docType=='pdf'&&showListItem.pdf!=''" :pdfSrc="showListItem.pdf">
       <div slot="header">
-        <h2 style="text-align: center;padding: 15px 0;">文档温馨名称</h2>
+        <h2 style="text-align: center;padding: 15px 0;">{{showListItem.title}}</h2>
       </div>
     </pdf>
     <div class="downLoadDoc"><el-button type="primary" icon="arrow-down">下载</el-button></div>
-    <chatteris></chatteris>
+    <chatteris v-if="showListItem.id!=''" :resourceId="showListItem.id" :types="'CASES'"></chatteris>
   </div>
 </template>
 <script>
   /*当前组件必要引入*/
+  import api from "../api.js"
   import ppt from "../../common/viewPPT.vue";
   import doc from "../../common/viewDoc.vue";
   import xls from "../../common/view_xls.vue";
@@ -70,28 +71,58 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
-    props:{
-      docType:{
-        type:String,
-        default:"pdf",
-      }
-    },
+    props:["operailityData",'isStudyRecords'],
     data() {
       return {
-
-        formValidate: {
-          name:"",
-          content: "1.Visitors are shown an audio-visual presen-tation before touring the cellars.参观酒窖前，游客们先观看了有声的视频介绍。2.Nearly 60% of our bookings come from repeat business and personal recommendation.我们近60%的订单来自于回头客和熟人介绍。3.Tamar Golan, a Paris-based journalist, profiles the rebel leader.驻巴黎记者塔玛·戈兰对反叛者的首领进行了介绍。"
+        docType:"pdf",
+        formValidate:{
+          title:"",
+        },
+        showListItem: {
+          "id":"",
+          "typeId":"",
+          "title":"",
+          "brief":"",
+          "tags":"",
+          "fileId":"",
+          "pdf":"",
+          "imgs":"",
+          "pageNum":"",
+          "downloadNum":"",
+          "viewNum":"",
+          "operator":"",
+          "operatorId":"",
+          "createTime":"",
+          "updateTime":""
+        },
+        listMessTitle:{
+          ajaxSuccess:'SuccessGetCurrData',
+          ajaxParams:{
+            url: api.casesInfo.path+'/'+this.operailityData.id,
+          }
         }
       }
     },
     methods: {
-      //初始化请求列表数据
-      init(){
-
+      /*
+       * 默认组件第一次请求数据
+       * @param res JSON  数据请求成功后返回的数据
+       * */
+      SuccessGetCurrData(responseData){
+        let data = responseData.data;
+        this.showListItem=data;
+        this.showListItem.pdf = this.$store.state.envPath.http+data["pdf"];
       },
+      /*
+       * 组件初始化入口
+       * */
+      init(){
+        //默认请求加载数据
+        this.ajax(this.listMessTitle);
+      },
+
       handleIconClick(ev) {
-        console.log(ev);
+        this.$emit("search",'index',{name:this.formValidate.title})
       },
       goBack(){
         this.$emit('show', 'index',{});
@@ -99,6 +130,16 @@
     },
     created(){
       this.init();
+    },
+    computed:{
+      http(){
+        let http = this.$store.state.envPath.http || "";
+        return http;
+      },
+      pdfSrc(){
+        let http = this.$store.state.envPath.http || "";
+        return http+this.showListItem.pdf;
+      }
     },
     mounted(){
     },

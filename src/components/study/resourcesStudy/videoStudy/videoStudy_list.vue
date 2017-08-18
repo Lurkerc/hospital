@@ -5,8 +5,8 @@
 ----------------------------------->
 <template>
 <div class="showContent">
-  <showList v-if="look == 'index'" @show="show"></showList>
-  <showVideo v-if="look == 'show'" @show="show"></showVideo>
+  <showList v-if="look == 'index'" :initData="initData" @show="show"></showList>
+  <showVideo v-if="look == 'show'" :operaility-data="operailityData" @search="search" @show="show"></showVideo>
 </div>
 </template>
 <script>
@@ -19,6 +19,10 @@ export default{
   data() {
     return {
       look: "index",
+      operailityData:"",
+      initData:{
+        name:"",
+      }
     }
   },
   methods: {
@@ -32,7 +36,13 @@ export default{
      * @param obj  {Object} 要传递给显示视频展示页面的值
      */
     show(type,obj){
-      this.look=type;
+      this.look = type;
+      this.operailityData = obj;
+    },
+
+    search(type,obj){
+      this.initData = obj;
+      this.look = type;
     }
   },
   created(){

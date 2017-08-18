@@ -59,14 +59,25 @@
       </el-row >
 
       <el-row >
-        <el-col :span="17" :offset="2">
-          <el-form-item v-if="data.contentType=='MULTIMEDIA'" type="附件" label="" class="feildFontweight">
-            多媒体视频
-          </el-form-item>
+        <el-col :span="20" :offset="3">
+            <div  v-if="data.contentType=='MULTIMEDIA'" style="height:300px;">
+              <el-row v-if="data.multimediaFileList">
+                <el-col style="height:300px;background: #000;"  :span="17" >
+                  <myVideo v-if="videoShow" :filePath="file.path" :isAutoPlay="true" :videoType="file.fileType"> </myVideo>
+                </el-col>
+                <el-col :span="7" >
+                  <ul style="height:300px;background: #cecece;overflow: auto">
+                    <li v-for="(item,i) in data.multimediaFileList" :key="i" :class="{'my-video-list':(index==i)}" @click="changeIndex(item,i)" style="color: #fff;height:40px;line-height: 40px;cursor: pointer;" class="overflow-txt1">{{item.fileName}}</li>
+                  </ul>
+                </el-col>
+              </el-row>
+              <div v-else>
+                无视频文件
+              </div>
+            </div>
+
         </el-col >
       </el-row >
-
-
       <el-row >
         <el-col :span="8" :offset="2">
           <el-form-item type="附件" label="附件:" class="feildFontweight">
@@ -81,6 +92,8 @@
 </template>
 <script>
   //当前组件引入全局的util
+  //引入视频组件
+  import myVideo from '../../../common/video.vue';
   let Util=null;
   import viewUEditor from '../../../common/showUeditor.vue';
   export default {
@@ -108,7 +121,9 @@
           initialFrameHeight:220,  //初始化编辑器高度,默认320
         },
 
-
+        index:0,
+        file:{},
+        videoShow:false,
        // 获取到的数据
         "data":{
           "moduleId":"",
@@ -126,7 +141,8 @@
           ],
           "fileList":[
 
-          ]
+          ],
+          videoHttp :'',
         },
       }
     },
@@ -137,6 +153,8 @@
     mounted(){
       //初始化
       this.init();
+      let env = this.$store.getters.getEnvPath;
+      this.videoHttp = env['http']
     },
     methods:{
       /*
@@ -147,6 +165,8 @@
 
         this.data = responseData.data;
         this.show = true;
+
+        this.changeIndex(responseData.data.multimediaFileList[0],0)
         this.ueditorVal.ud1=responseData.data.content;
       },
       /*
@@ -194,9 +214,24 @@
       getUeditorVal(name,val){
         this.ueditorVal[name] = val;
       },
+
+
+      //切换视频
+      changeIndex(item,i){
+        this.index = i;
+        if(this.file.fileId == item.fileId){
+            return;
+        }
+        let env = this.$store.getters.getEnvPath;
+        let http = env['videoHost'];
+        this.videoShow=false;
+        this.file = item;
+        this.file.path = http+this.file.filePath+this.file.fileName;
+        this.videoShow=true;
+      }
     },
     components:{
-     viewUEditor
+     viewUEditor,myVideo
     }
   }
 </script>

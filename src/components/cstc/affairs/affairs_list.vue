@@ -3,33 +3,33 @@
   <div ref="affairs">
     <el-form :inline="true">
       <el-row>
-        <el-col :span="14">
+        <el-col :span="10">
           <el-button type="primary" @click="add">新建事项</el-button>
           <el-button type="success" @click="edit">修改事项</el-button>
           <el-button type="danger" @click="remove">删除事项</el-button>
           <!-- <el-button type="info">导出Excel</el-button> -->
         </el-col>
-        <el-col :span="10" align="right" style="padding-bottom:20px;">
+        <el-col :span="14" align="right">
           <!-- <el-input :maxlength="20" placeholder="请输入姓名" icon="search" v-model="searchObj.userName" :on-icon-click="search" style="width:200px;"></el-input> -->
-          <el-select placeholder="请选择" v-model="searchObj.trainingObject" style="width:200px;">
-            <el-option v-for="item in userOption" :key="item.value" :label="item.value" :value="item.label"></el-option>
-          </el-select>
-          <el-button type="info" @click="search">搜索</el-button>
-          <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+          <el-form-item label="培训/考核对象：">
+            <el-select placeholder="请选择" v-model="searchObj.trainingObject" clearable style="width:200px;">
+              <el-option v-for="item in userOption" :key="item.value" :label="item.value" :value="item.label"></el-option>
+            </el-select>
+            <el-button type="info" @click="search">搜索</el-button>
+            <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+          </el-form-item>
         </el-col>
         <div v-show="searchMore" style="clear:both;" align="right" ref="searchMore">
           <date-group :dateGroup="{text:'',startDate:searchObj.registerStartDate,endDate:searchObj.registerEndDate}" style="display:inline-block;">
             <el-form-item label="日期：">
-              <el-date-picker name="start" v-model="searchObj.registerStartDate" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
-                @change="handleStartTime"></el-date-picker>
+              <el-date-picker name="start" v-model="searchObj.registerStartDate" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0" @change="handleStartTime"></el-date-picker>
             </el-form-item>
             <el-form-item label="-">
-              <el-date-picker name="end" v-model="searchObj.registerEndDate" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
-                @change="handleEndTime"></el-date-picker>
+              <el-date-picker name="end" v-model="searchObj.registerEndDate" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1" @change="handleEndTime"></el-date-picker>
             </el-form-item>
           </date-group>
           <el-form-item label="事务类型：">
-            <el-select placeholder="请选择" v-model="searchObj.affairType">
+            <el-select placeholder="请选择" v-model="searchObj.affairType" clearable>
               <el-option v-for="item in typeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
@@ -37,7 +37,7 @@
             <el-input v-model="searchObj.department"></el-input>
           </el-form-item>
           <el-form-item label="培训/考核对象：">
-            <el-select placeholder="请选择" v-model="searchObj.trainingObject">
+            <el-select placeholder="请选择" v-model="searchObj.trainingObject" clearable>
               <el-option v-for="item in userOption" :key="item.value" :label="item.value" :value="item.label"></el-option>
             </el-select>
           </el-form-item>
@@ -47,8 +47,7 @@
     </el-form>
     <!-- 表格 -->
     <div id="myTable" ref="myTable">
-      <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark"
-        style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="操作" align="center" width="80">
           <template scope="scope">
@@ -81,8 +80,7 @@
     </div>
     <div style="margin: 10px;">
       <div style="float: right;">
-        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </div>
     </div>
@@ -108,8 +106,7 @@
     </Modal>
 
     <!--删除弹窗-->
-    <Modal close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal" :loading="loading"
-      :width="500">
+    <Modal close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal" :loading="loading" :width="500">
       <modal-header slot="header" :content="headerContent.removeId"></modal-header>
       <remove v-if="removeModal" :delete-url="api.delete" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
       <div slot="footer"></div>

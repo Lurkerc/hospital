@@ -6,7 +6,7 @@
 
 <template>
   <div>
-    <el-form :model="formValidate" ref="formValidate" label-width="90px">
+    <el-form :model="formValidate" :rules="resLiterature" ref="formValidate" label-width="90px">
 
       <el-row>
         <el-col :span="20" :offset="2">
@@ -24,7 +24,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="分类:" prop="typeId">
-            <el-input v-model="type.typeId" @focus="typeClick" readonly></el-input>
+            <el-input v-model="type.typeName" @focus="typeClick" readonly></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -36,7 +36,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="大小:" prop="size">
-            {{formValidate.size}}
+            {{formValidate.size| formatSize}}
           </el-form-item>
         </el-col>
       </el-row>
@@ -52,16 +52,16 @@
 
       <el-row v-if="!unFile">
         <el-col :span="16" :offset="2">
-          <el-form-item label="资源文件:" >
-            <upload-file :unSize="true" :length="1" :accept="'docx'" @setUploadFiles="expenseFileEvent"></upload-file>
+          <el-form-item label="资源文件:" prop="fileId">
+            <up-file-new :unSize="true" :length="1" :accept="'doc|docx|xls|xlsx|ppt|pptx|pdf'" @setUploadFiles="expenseFileEvent"></up-file-new>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
 
     <el-row>
-      <el-col :span="16" :offset="2">
-        <div style="margin-left: 100px">
+      <el-col :span="10" :offset="10">
+        <div >
           <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
           <el-button @click="cancel">取消</el-button>
         </div>
@@ -81,7 +81,7 @@
       <modal-header slot="header" :content="typeId"></modal-header>
       <div style="height:500px;">
         <div style="height:450px;">
-        <left-tree  slot="left" @setCurrSltNodeId="setTreeDepId" @tree-click="treeClick" :treeOptions="treeDefaults":fromWhereTreeType="fromWhereTree"></left-tree>
+        <left-tree  slot="left" @setCurrSltNodeId="setTreeDepId" @tree-click="treeClick" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
         </div>
         </br>
         <el-row>
@@ -100,6 +100,10 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import {resLiterature} from '../rules'
+
+  import upFileNew from '../../../common/uploadFileNew.vue'
+
   import api from "./api.js";
   /*--引入--照片墙--*/
   import imgWall from '../../../common/uploadPhotoWall.vue'
@@ -109,6 +113,7 @@
   props:['fromWhereTree','unImgs','unLogo','unFile','name','id','url'],
   data() {
       return {
+        resLiterature,
         contenHeight: 0,
         viewTypes: '', // 视图类型
         //tree默认项设置
@@ -131,7 +136,7 @@
           title:'',         //视频名称
           tags:'',         //标签
           length:'',       //时长
-          viewNum:'',        //播放次数
+          viewNum:'0',        //播放次数
           brief:'',       //简介
           fileId:'',       //视频ID
           size:'',
@@ -171,6 +176,7 @@
       //点击数的回调函数
       treeSubEvent(){
         this.type.typeName = this.type.updateTypeName;
+        this.formValidate.typeId = this.deptId;
         this.typeModal = false;
       },
 
@@ -180,10 +186,12 @@
        * */
       listenSubEvent(isLoadingFun){
         if(!isLoadingFun) isLoadingFun=function(){};
-        isLoadingFun(true);
-
-        this.addMessTitle.ajaxParams.data = this.formValidate;
-        this.ajax(this.addMessTitle,isLoadingFun)
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit){
+          isLoadingFun(true);
+          this.addMessTitle.ajaxParams.data = this.formValidate;
+          this.ajax(this.addMessTitle, isLoadingFun)
+        }
       },
 
       /*
@@ -246,11 +254,13 @@
       },
 
 
-      //上传资源文件
-      expenseFileEvent(ids,file){
-         if(file.length==1){
-             this.formValidate.size = (file[0].size/1024).toFixed(2) +'kb'
-         }
+      //上传文档文件
+      expenseFileEvent(ids,srcObj,file){
+        if(file.length==1){
+          this.formValidate.size = file[0].size
+        }else {
+          this.formValidate.size = 0
+        }
         this.formValidate.fileId = ids ;
       },
 
@@ -266,6 +276,6 @@
     },
     mounted(){
     },
-    components: {imgWall}
+    components: {imgWall,upFileNew}
   }
 </script>

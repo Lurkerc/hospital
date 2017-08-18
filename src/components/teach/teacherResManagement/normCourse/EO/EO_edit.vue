@@ -30,7 +30,7 @@
           </el-table-column>
           <el-table-column property="types" label="试题类型">
             <template scope="scope">
-              <el-select v-if="!isReadOnly" v-model="scope.row.types" size="small">
+              <el-select v-if="!isReadOnly" v-model="scope.row.types" size="small" @change="changeTypes('before',index,scope.$index,scope.row.types)">
                 <el-option v-for="item in testTypeOption" v-if="item.value" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
               <template v-else>
@@ -40,33 +40,44 @@
           </el-table-column>
           <el-table-column property="subject" label="题干">
             <template scope="scope">
-              <el-tooltip effect="light" content="题干内容" placement="bottom">
-                <el-button size="small">编辑</el-button>
+              <el-tooltip effect="light" content="请编辑题干" placement="bottom">
+                <view-subject slot="content" :val="scope.row.subject" v-if="scope.row.subject"></view-subject>
+                <el-button :disabled="isReadOnly" size="small" @click="edit('before',index,scope.$index,'editSubject','subject')">编辑</el-button>
               </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column property="optionsDtoList" label="候选项">
             <template scope="scope">
-              <el-tooltip effect="light" placement="bottom">
-                <div slot="content">
-                  <p>A.选项1</p>
-                  <p>B.选项2</p>
-                  <p>C.选项3</p>
-                </div>
-                <el-button size="small">编辑</el-button>
+              <el-tooltip effect="light" content="请编辑选项" placement="bottom">
+                <view-option slot="content" :val="scope.row.optionsDtoList" v-if="scope.row.optionsDtoList && scope.row.optionsDtoList.length"></view-option>
+                <el-button size="small" @click="edit('before',index,scope.$index,'editOption','optionsDtoList')" :disabled="isReadOnly || ['RADIO','CHECKBOX','JUDGMENT'].indexOf(scope.row.types) < 0">编辑</el-button>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column property="options" label="正确答案">
+          <el-table-column label="正确答案">
             <template scope="scope">
-              <el-tooltip effect="light" content="A" placement="bottom">
-                <el-button size="small">编辑</el-button>
-              </el-tooltip>
+              <!-- 单选\多\判断选题 -->
+              <template v-if="['RADIO','CHECKBOX','JUDGMENT'].indexOf(scope.row.types) > -1 && scope.row.optionsDtoList">
+                <el-tooltip effect="light" content="请选择正确答案" placement="bottom">
+                  <view-answer slot="content" :val="scope.row.options" :the-type="scope.row.types" v-if="scope.row.options"></view-answer>
+                  <el-button size="small" :disabled="isReadOnly || !scope.row.optionsDtoList.length" @click="edit('before',index,scope.$index,'editAnswer','options')">编辑</el-button>
+                </el-tooltip>
+              </template>
+              <!-- 简答题 -->
+              <template v-else-if="scope.row.keyWords">
+                <el-tooltip effect="light" content="请填写正确答案" placement="bottom">
+                  <view-answer slot="content" :val="scope.row.keyWords" :the-type="scope.row.types" v-if="scope.row.keyWords"></view-answer>
+                  <el-button :disabled="isReadOnly" size="small" @click="edit('before',index,scope.$index,'editAnswer','keyWords')">编辑</el-button>
+                </el-tooltip>
+              </template>
             </template>
           </el-table-column>
           <el-table-column property="answerExplain" label="答案解析">
             <template scope="scope">
-              <el-button size="small">编辑</el-button>
+              <el-tooltip effect="light" content="请编辑答案解析" placement="bottom">
+                <view-subject slot="content" :val="scope.row.answerExplain" v-if="scope.row.answerExplain"></view-subject>
+                <el-button :disabled="isReadOnly" size="small" @click="edit('before',index,scope.$index,'editAnswerExplain','answerExplain')">编辑</el-button>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="分数">
@@ -78,7 +89,7 @@
 
         <!-- 课中 -->
         <el-col :span="4">
-          <el-form-item label="课前评测"></el-form-item>
+          <el-form-item label="课中评测"></el-form-item>
         </el-col>
         <el-col :span="20" align="right">
           <el-form-item label="达标分数：">
@@ -103,7 +114,7 @@
           </el-table-column>
           <el-table-column property="types" label="试题类型">
             <template scope="scope">
-              <el-select v-if="!isReadOnly" v-model="scope.row.types" size="small">
+              <el-select v-if="!isReadOnly" v-model="scope.row.types" size="small" @change="changeTypes('in_progress',index,scope.$index,scope.row.types)">
                 <el-option v-for="item in testTypeOption" v-if="item.value" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
               <template v-else>
@@ -113,24 +124,44 @@
           </el-table-column>
           <el-table-column property="subject" label="题干">
             <template scope="scope">
-              <el-tooltip effect="light" content="题干内容" placement="bottom">
-                <el-button size="small">编辑</el-button>
+              <el-tooltip effect="light" content="请编辑题干" placement="bottom">
+                <view-subject slot="content" :val="scope.row.subject" v-if="scope.row.subject"></view-subject>
+                <el-button :disabled="isReadOnly" size="small" @click="edit('in_progress',index,scope.$index,'editSubject','subject')">编辑</el-button>
               </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column property="optionsDtoList" label="候选项">
             <template scope="scope">
-              <el-button size="small">编辑</el-button>
+              <el-tooltip effect="light" content="请编辑选项" placement="bottom">
+                <view-option slot="content" :val="scope.row.optionsDtoList" v-if="scope.row.optionsDtoList && scope.row.optionsDtoList.length"></view-option>
+                <el-button size="small" @click="edit('in_progress',index,scope.$index,'editOption','optionsDtoList')" :disabled="isReadOnly || ['RADIO','CHECKBOX','JUDGMENT'].indexOf(scope.row.types) < 0">编辑</el-button>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column property="options" label="正确答案">
+          <el-table-column label="正确答案">
             <template scope="scope">
-              <el-button size="small">编辑</el-button>
+              <!-- 单选\多\判断选题 -->
+              <template v-if="['RADIO','CHECKBOX','JUDGMENT'].indexOf(scope.row.types) > -1 && scope.row.optionsDtoList">
+                <el-tooltip effect="light" content="请选择正确答案" placement="bottom">
+                  <view-answer slot="content" :val="scope.row.options" :the-type="scope.row.types" v-if="scope.row.options"></view-answer>
+                  <el-button size="small" :disabled="isReadOnly || !scope.row.optionsDtoList.length" @click="edit('in_progress',index,scope.$index,'editAnswer','options')">编辑</el-button>
+                </el-tooltip>
+              </template>
+              <!-- 简答题 -->
+              <template v-else-if="scope.row.keyWords">
+                <el-tooltip effect="light" content="请填写正确答案" placement="bottom">
+                  <view-answer slot="content" :val="scope.row.keyWords" :the-type="scope.row.types" v-if="scope.row.keyWords"></view-answer>
+                  <el-button :disabled="isReadOnly" size="small" @click="edit('in_progress',index,scope.$index,'editAnswer','keyWords')">编辑</el-button>
+                </el-tooltip>
+              </template>
             </template>
           </el-table-column>
           <el-table-column property="answerExplain" label="答案解析">
             <template scope="scope">
-              <el-button size="small">编辑</el-button>
+              <el-tooltip effect="light" content="请编辑答案解析" placement="bottom">
+                <view-subject slot="content" :val="scope.row.answerExplain" v-if="scope.row.answerExplain"></view-subject>
+                <el-button :disabled="isReadOnly" size="small" @click="edit('in_progress',index,scope.$index,'editAnswerExplain','answerExplain')">编辑</el-button>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column property="title" label="分数">
@@ -142,7 +173,7 @@
 
         <!-- 课后 -->
         <el-col :span="4">
-          <el-form-item label="课前评测"></el-form-item>
+          <el-form-item label="课后评测"></el-form-item>
         </el-col>
         <el-col :span="20" align="right">
           <el-form-item label="达标分数：">
@@ -167,7 +198,7 @@
           </el-table-column>
           <el-table-column property="types" label="试题类型">
             <template scope="scope">
-              <el-select v-if="!isReadOnly" v-model="scope.row.types" size="small">
+              <el-select v-if="!isReadOnly" v-model="scope.row.types" size="small" @change="changeTypes('after',index,scope.$index,scope.row.types)">
                 <el-option v-for="item in testTypeOption" v-if="item.value" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
               <template v-else>
@@ -177,24 +208,44 @@
           </el-table-column>
           <el-table-column property="subject" label="题干">
             <template scope="scope">
-              <el-tooltip effect="light" content="题干内容" placement="bottom">
-                <el-button size="small">编辑</el-button>
+              <el-tooltip effect="light" content="请编辑题干" placement="bottom">
+                <view-subject slot="content" :val="scope.row.subject" v-if="scope.row.subject"></view-subject>
+                <el-button :disabled="isReadOnly" size="small" @click="edit('after',index,scope.$index,'editSubject','subject')">编辑</el-button>
               </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column property="optionsDtoList" label="候选项">
             <template scope="scope">
-              <el-button size="small">编辑</el-button>
+              <el-tooltip effect="light" content="请编辑选项" placement="bottom">
+                <view-option slot="content" :val="scope.row.optionsDtoList" v-if="scope.row.optionsDtoList && scope.row.optionsDtoList.length"></view-option>
+                <el-button size="small" @click="edit('after',index,scope.$index,'editOption','optionsDtoList')" :disabled="isReadOnly || ['RADIO','CHECKBOX','JUDGMENT'].indexOf(scope.row.types) < 0">编辑</el-button>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column property="options" label="正确答案">
+          <el-table-column label="正确答案">
             <template scope="scope">
-              <el-button size="small">编辑</el-button>
+              <!-- 单选\多\判断选题 -->
+              <template v-if="['RADIO','CHECKBOX','JUDGMENT'].indexOf(scope.row.types) > -1 && scope.row.optionsDtoList">
+                <el-tooltip effect="light" content="请选择正确答案" placement="bottom">
+                  <view-answer slot="content" :val="scope.row.options" :the-type="scope.row.types" v-if="scope.row.options"></view-answer>
+                  <el-button size="small" :disabled="isReadOnly || !scope.row.optionsDtoList.length" @click="edit('after',index,scope.$index,'editAnswer','options')">编辑</el-button>
+                </el-tooltip>
+              </template>
+              <!-- 简答题 -->
+              <template v-else-if="scope.row.keyWords">
+                <el-tooltip effect="light" content="请填写正确答案" placement="bottom">
+                  <view-answer slot="content" :val="scope.row.keyWords" :the-type="scope.row.types" v-if="scope.row.keyWords"></view-answer>
+                  <el-button :disabled="isReadOnly" size="small" @click="edit('after',index,scope.$index,'editAnswer','keyWords')">编辑</el-button>
+                </el-tooltip>
+              </template>
             </template>
           </el-table-column>
           <el-table-column property="answerExplain" label="答案解析">
             <template scope="scope">
-              <el-button size="small">编辑</el-button>
+              <el-tooltip effect="light" content="请编辑答案解析" placement="bottom">
+                <view-subject slot="content" :val="scope.row.answerExplain" v-if="scope.row.answerExplain"></view-subject>
+                <el-button :disabled="isReadOnly" size="small" @click="edit('after',index,scope.$index,'editAnswerExplain','answerExplain')">编辑</el-button>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column property="title" label="分数">
@@ -205,6 +256,31 @@
         </el-table>
       </fieldset>
     </el-form>
+
+    <!-- 编辑题干 -->
+    <Modal :mask-closable="false" v-model="model.editSubject" height="200" class-name="vertical-center-modal" :width="500">
+      <modal-header slot="header" :parent="self" :content="headerContent.editSubjectId"></modal-header>
+      <edit-subject v-if="model.editSubject" @save="subCallback" :operaility-data="operailityData"></edit-subject>
+      <div slot="footer"></div>
+    </Modal>
+    <!-- 编辑选项 -->
+    <Modal :mask-closable="false" v-model="model.editOption" height="200" class-name="vertical-center-modal" :width="500">
+      <modal-header slot="header" :parent="self" :content="headerContent.editOptionId"></modal-header>
+      <edit-option v-if="model.editOption" @save="subCallback" :operaility-data="operailityData" :the-type="theTypes"></edit-option>
+      <div slot="footer"></div>
+    </Modal>
+    <!-- 编辑答案 -->
+    <Modal :mask-closable="false" v-model="model.editAnswer" height="200" class-name="vertical-center-modal" :width="500">
+      <modal-header slot="header" :parent="self" :content="headerContent.editAnswerId"></modal-header>
+      <edit-answer v-if="model.editAnswer" @save="subCallback" :operaility-data="operailityData" :the-type="theTypes" :row-data="rowData"></edit-answer>
+      <div slot="footer"></div>
+    </Modal>
+    <!-- 编辑答案解析 -->
+    <Modal :mask-closable="false" v-model="model.editAnswerExplain" height="200" class-name="vertical-center-modal" :width="500">
+      <modal-header slot="header" :parent="self" :content="headerContent.editAnswerExplainId"></modal-header>
+      <edit-subject v-if="model.editAnswerExplain" @save="subCallback" :operaility-data="operailityData"></edit-subject>
+      <div slot="footer"></div>
+    </Modal>
   </el-row>
 </template>
 
@@ -213,15 +289,58 @@
     plan as rules
   } from '../rules';
   import testTypeOption from './testTypeOption';
+  import editSubject from './subject/edit'; // 编辑题干
+  import viewSubject from './subject/view'; // 查看题干
+  import editOption from './options/edit'; // 编辑选项
+  import viewOption from './options/view'; // 查看选项
+  import editAnswer from './answer/edit'; // 编辑正确答案
+  import viewAnswer from './answer/view'; // 查看正确答案
+
   export default {
     props: ['readOnly'],
     data() {
       return {
+        self: this,
         rules, // 验证输入规则
         testTypeOption, // 试题类型
         multipleSelection: [],
-        planDtoList: {},
+        rowData: {}, // 当前行数据
+        planDtoList: [],
         isReadOnly: false, // 只读
+        theTypes: '', // 当前操作题目的类型
+        todoObj: { // 操作记录
+          type: '', // 所属类型（课前|课中|课后）
+          types: '', // 题目类型（单选|多选|判断题|问答题）
+          planIndex: -1, // 第几节课的索引
+          todoIndex: -1, // 第几题索引
+          model: '', // 打开的弹窗
+          valKey: '', // 操作值的键名
+        },
+        operailityData: '',
+        model: {
+          editSubject: false,
+          editOption: false,
+          editAnswer: false,
+          editAnswerExplain: false,
+        },
+        headerContent: {
+          editSubjectId: {
+            id: 'editSubjectId',
+            title: '编辑题干'
+          },
+          editOptionId: {
+            id: 'editOptionId',
+            title: '编辑选项'
+          },
+          editAnswerId: {
+            id: 'editAnswerId',
+            title: '编辑答案'
+          },
+          editAnswerExplainId: {
+            id: 'editAnswerExplainId',
+            title: '编辑答案解析'
+          }
+        },
       }
     },
     methods: {
@@ -229,6 +348,62 @@
       init() {
         this.isReadOnly = this.readOnly !== undefined;
         this.planDtoList = this.$store.state.curriculum.data.planDtoList;
+      },
+      /******************************************** 作业操作 ***************************************/
+      // 编辑（参数对应data中的todoObj对象）
+      edit(type, planIndex, todoIndex, model, valKey) {
+        let mustHasType = ['editOption']; // 必须要有题目类型才能打开的弹窗
+        this.todoObj = {
+          type,
+          planIndex,
+          todoIndex,
+          model,
+          valKey
+        };
+        // 取值
+        let theVal = this.todoVal();
+        this.operailityData = theVal.val;
+        if ((mustHasType.indexOf(model) > -1) && !theVal.data.types) {
+          this.errorMess('请先选择题目类型');
+          return
+        }
+        this.rowData = theVal.data;
+        this.theTypes = theVal.data.types; // 记录当前操作的试题类型
+        this.openModel(model);
+      },
+      /******************************************** 弹窗相关 ***************************************/
+      // 打开弹窗
+      openModel(targer) {
+        this.model[targer] = true;
+      },
+      // 关闭弹窗
+      cancel(targer) {
+        this.model[targer] = false;
+      },
+      // 弹窗回调
+      subCallback(valObj) {
+        this.todoVal(valObj);
+        this.rowData = null;
+        this.operailityData = null;
+        console.log(valObj)
+        // 关闭弹窗
+        this.cancel(this.todoObj.model);
+      },
+      // 值操作
+      todoVal(val) {
+        let todoObj = this.todoObj;
+        // 获取操作的数据
+        let data = this.planDtoList[todoObj.planIndex].testingDtoListTemp[todoObj.type].questionsDtoList[todoObj.todoIndex];
+        if (val !== undefined) {
+          // 赋值
+          data[todoObj.valKey] = val;
+        } else {
+          // 取值
+          return {
+            val: data[todoObj.valKey], // 目标值
+            data // 当前操作的题目对象
+          }
+        }
       },
       /******************************************** 按钮事件 ***************************************/
       /*
@@ -243,6 +418,21 @@
       },
       handleSelectionChangeAfter(val) {
         this.multipleSelection = val;
+      },
+      // 改变试题类型
+      changeTypes(type, planIndex, todoIndex, theEQTypes) {
+        let rowData = this.planDtoList[planIndex].testingDtoListTemp[type].questionsDtoList[todoIndex];
+        rowData.subject = ''; //题干
+        rowData.answerExplain = ''; //正确答案解析
+        if (['RADIO', 'CHECKBOX', 'JUDGMENT'].indexOf(theEQTypes) > -1) {
+          rowData.options = ''; //正确答案（多选题，多个正确答案|隔开。问答题，该项赋值null）
+          rowData.optionsDtoList = []; // 单选、多选、判断题，该项不能为空，必须有值。
+          rowData.keyWords = null; //单选、多选、判断题，该项赋值null。问答题该项参见下面格式
+        } else {
+          rowData.options = null;
+          rowData.optionsDtoList = null;
+          rowData.keyWords = [];
+        }
       },
       /**
        * 添加试题
@@ -290,6 +480,7 @@
         // if (!this.checkData()) {
         //   return false;
         // }
+        this.$store.commit('curriculum/data/updatePlanDto', this.planDtoList);
         return true
       },
       // 检测数据完整性
@@ -336,6 +527,14 @@
         }
       },
     },
+    components: {
+      editSubject,
+      viewSubject,
+      editOption,
+      viewOption,
+      editAnswer,
+      viewAnswer,
+    },
     created() {
       this.init()
     },
@@ -363,6 +562,10 @@
       margin-left: 6px;
       color: red;
     }
+  }
+
+  .modelSaveBtn {
+    margin-top: 20px;
   }
 
 </style>

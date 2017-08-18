@@ -15,24 +15,33 @@
         </el-form-item>
       </el-col>
       <el-col :span="4" :offset="1">
-        <img :src="course.logo" class="nBasicImg" v-if="isReadOnly">
-        <upload-header v-else @upladSuccess="upladSuccess" :img-file="course.logo" class="uploadBookLogo"></upload-header>
+        <img :src="getPicUrl(course.logo)" class="nBasicImg" v-if="isReadOnly">
+        <upload-header v-else @upladSuccess="upladSuccess" actionUrl="/file/upload/study" :img-file="getPicUrl(course.logo)" class="uploadBookLogo"></upload-header>
       </el-col>
+
+      <el-col v-if="theTodoType === 'teach'">
+        <el-form-item label="分类：">
+          <el-input v-model="course.typeName" @focus="selectType"></el-input>
+        </el-form-item>
+      </el-col>
+
       <el-col>
         <el-form-item label="应用方向说明：" prop="direction">
           <el-input v-model="course.direction" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" :readonly="isReadOnly"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="8">
-        <el-form-item label="创建人：">{{ course.createUser }}</el-form-item>
+        <el-form-item label="创建人：">{{ course.operator }}</el-form-item>
       </el-col>
       <el-col :span="8">
-        <el-form-item label="创建时间：" label-width="90px">{{ course.createTime }}</el-form-item>
+        <el-form-item label="创建时间：" label-width="90px">{{ course.createTime | formatDate('yyyy-MM-dd hh:mm:ss') }}</el-form-item>
       </el-col>
       <el-col :span="8">
         <el-form-item label="课程状态：">{{ course.auditStatus | curriculum }}</el-form-item>
       </el-col>
     </el-form>
+    <!-- 选择分类 -->
+    <select-tree :getTreeUrl="'/criterionCourseType/tree'" ref="selectTypes" @selectTree="selectTreeCall"></select-tree>
   </el-row>
 </template>
 
@@ -41,32 +50,49 @@
     basic as rules
   } from '../rules';
   import uploadHeader from '../../../../common/uploadHeader';
+  import selectTree from '../../../../common/selectTree';
   export default {
-    props: ['readOnly'],
+    props: ['readOnly', 'operailityData', 'todoType'],
     data() {
       return {
+        self: this,
         rules, // 验证输入规则
         isReadOnly: false, // 只读
         dynamicTags: [],
+        curriculum: {},
         course: {
           title: "", //课程名称
+          typeId: "", // 所属分类
+          typeName: "", // 所属分类名称
           tags: "", //标签，多个|分割
           direction: "", //应用方向说明
           logo: "", //缩略图
-          createUser: "", // 创建人
+          operator: "", // 创建人
           createTime: "", // 创建时间
           auditStatus: "NOT_SUBMIT", //审核状态：保存草稿用NOT_SUBMIT，提交审核用NOT_AUDIT
         },
         splStr: '|', // 分隔符
         inputVisible: false,
         inputValue: '',
+        theTodoType: '', // 是否是创建课程（非标准课程）
+        selectId: {
+          id: 'selectId',
+          title: '选择分类'
+        }
       }
     },
     methods: {
       // 初始化
       init() {
-        let state = this.$store.state;
+        this.curriculum = this.$store.state.curriculum.data.course;
         this.isReadOnly = this.readOnly !== undefined;
+        if (this.todoType) {
+          this.theTodoType = this.todoType
+        }
+      },
+      // 初始化数据
+      initData() {
+        let state = this.$store.state;
         // 只取有用的字段
         for (let key in this.course) {
           this.course[key] = state.curriculum.data.course[key]
@@ -76,8 +102,11 @@
           this.dynamicTags = this.course.tags.split(this.splStr);
         }
 
-        !this.course.createUser && (this.course.createUser = state.userInfo.name); // 创建人
-        !this.course.createTime && (this.course.createTime = this.conductDate(new Date(), 'yyyy-MM-dd HH:mm')); // 创建时间
+        !this.course.operator && (this.course.operator = state.userInfo.name); // 创建人
+        !this.course.createTime && (this.course.createTime = new Date()); // 创建时间
+        if (this.operailityData && this.operailityData.deptId) {
+          !this.course.typeId && (this.course.typeId = this.operailityData.deptId); // 分类          
+        }
       },
       // 保存数据
       saveToStore() {
@@ -86,8 +115,8 @@
         }
 
         this.course.tags = this.dynamicTags.join(this.splStr);
-
-        this.$store.commit('curriculum/data/updateCourse', this.course);
+        let data = this.$util._.defaultsDeep({}, this.course);
+        this.$store.commit('curriculum/data/updateCourse', data);
         return true
       },
       // 检测数据完整性
@@ -99,6 +128,10 @@
           }
         });
         return flag;
+      },
+      // 选择所属分类
+      selectType() {
+        this.$refs.selectTypes.openModal()
       },
       // 移除tag
       handleClose(tag) {
@@ -122,11 +155,33 @@
       },
       // 上传封面
       upladSuccess(res, url) {
-        this.course.logo = url
+        this.course.logo = res.path + res.name
+      },
+      // 获取图片
+      getPicUrl(staticUrl) {
+        let src = '';
+        if (staticUrl) {
+          src = this.$store.state.envPath.http + staticUrl
+        }
+        return src
+      },
+      cancel() {
+        this.selectModal = false
+      },
+      selectTreeCall(id, name) {
+        this.course.typeId = id;
+        this.course.typeName = name;
+        console.log(id, name)
       },
     },
     components: {
-      uploadHeader
+      uploadHeader,
+      selectTree,
+    },
+    watch: {
+      curriculum(val) {
+        this.initData()
+      }
     },
     created() {
       this.init()

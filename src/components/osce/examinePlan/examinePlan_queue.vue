@@ -33,14 +33,13 @@
     <template v-if="!hasSrawList()">
       <el-tabs v-model="queueActive" type="card" style="height:300px;">
         <el-tab-pane :label="'抽签组' + index" :name="index.toString()" v-for="(item,index) in drawList" :key="index" style="overflow:auto;">
-          <queue-room v-for="(cItem,cIndex) in item" :option="{hasAdd:false,hasRemove:false}" :initData="{index:index,cIndex:cIndex,name:cItem.stationName}"
-            :key="index+'-'+cIndex" style="width:80px;margin-right:20px;"></queue-room>
+          <queue-room v-for="(cItem,cIndex) in item" :option="{hasAdd:false,hasRemove:false}" :initData="{index:index,cIndex:cIndex,name:cItem.stationName}" :key="index+'-'+cIndex" style="width:80px;margin-right:20px;"></queue-room>
         </el-tab-pane>
       </el-tabs>
     </template>
     <p v-else-if="queueData.userId" style="line-height:300px;text-align:center;">暂无可抽签的考站</p>
     <p v-else style="line-height:300px;text-align:center;">请先查询</p>
-    <template v-if="!hasSrawList()">
+    <template v-if="!hasSrawList() && this.operailityData.status !== 'FINISH'">
       <p align="center">
         <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
         <!-- <load-btn v-if="drawSuccess" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn> -->
@@ -54,7 +53,7 @@
   import api from './api';
   import queueRoom from '../examineInterval/examineInterval_room'; // 考站
   export default {
-    props: ['sceneId'],
+    props: ['sceneId', 'operailityData'],
     data() {
       return {
         drawSuccess: false,

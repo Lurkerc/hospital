@@ -4,10 +4,9 @@
     <el-row>
       <el-col :span="12">
         <el-breadcrumb separator="/" class="coursesListNavInfo">
-          <!-- <el-breadcrumb-item :to="{ path: '/manage/courses/coursesStudy' }">首页</el-breadcrumb-item> -->
           <el-breadcrumb-item @click.native="show('index')">首页</el-breadcrumb-item>
           <el-breadcrumb-item>全部课程</el-breadcrumb-item>
-          <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+          <el-breadcrumb-item>{{navData.pName}}</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
       <el-col :span="12" align="right">
@@ -17,7 +16,7 @@
       </el-col>
     </el-row>
     <!-- 导航 -->
-    <courses-nav class="coursesListNav"></courses-nav>
+    <courses-nav class="coursesListNav" @navChange="navChange" :operaility-data="operailityData" :navUrl="'criterionCourseType/tree'"></courses-nav>
     <!-- 条件 -->
     <el-row class="coursesListCondition">
       <el-col :span="18">
@@ -65,18 +64,25 @@
   let Util;
   import coursesNav from '../../common/nav';
   export default {
+    props: ['operailityData'],
     data() {
       return {
         totalCount: 0,
+        navData:this.operailityData,
       }
     },
     methods: {
-      init() {
+      init(){
         Util = this.$util;
-
         //ajax请求参数设置
         this.myPages = Util.pageInitPrams;
       },
+
+      //切换选项卡
+      navChange(data){
+        this.navData = data;
+      },
+
       // 视图切换
       show(viewType, data) {
         this.$emit('show', viewType, data)

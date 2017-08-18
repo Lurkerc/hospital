@@ -1,8 +1,7 @@
 <template>
   <!-- 教学计划 -->
   <el-row>
-    <el-form class="editForm" ref="item" v-for="(item,index) in planDtoList" :model="item" :rules="rules" label-width="100px"
-      :key="index">
+    <el-form class="editForm" ref="item" v-for="(item,index) in planDtoList" :model="item" :rules="rules" label-width="100px" :key="index">
       <fieldset class="nPlanItem">
         <legend style="font-size:16px">&nbsp;&nbsp;第{{ indexText(index) }}节&nbsp;&nbsp;</legend>
         <el-col :span="10">
@@ -50,7 +49,7 @@
       return {
         rules, // 验证输入规则
         isReadOnly: false, // 只读
-        planDtoList: {},
+        planDtoList: [],
       }
     },
     methods: {
@@ -74,6 +73,7 @@
         if (!this.checkData()) {
           return false;
         }
+        this.$store.commit('curriculum/data/updatePlanDto', this.planDtoList);
         return true
       },
       // 检测数据完整性

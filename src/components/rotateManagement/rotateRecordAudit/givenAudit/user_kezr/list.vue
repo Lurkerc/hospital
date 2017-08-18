@@ -47,7 +47,7 @@
         <el-table-column label="操作" width="140" align="center">
           <template scope="scope">
             <el-button :disabled="!scope.row.depExaminationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
-            <el-button :disabled="!scope.row.depExaminationId && scope.row.graduateAppraisalState==='EDU_NOT_REPORT'" size="small" type="success" @click="rotary(scope.row)">审核</el-button>
+            <el-button :disabled="scope.row.graduateAppraisalState!=='EDU_NOT_REPORT'" size="small" type="success" @click="rotary(scope.row)">审核</el-button>
             <!-- <el-button size="small" type="success" @click="rotary(scope.row)">审核</el-button> -->
           </template>
         </el-table-column>

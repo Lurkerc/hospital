@@ -1,48 +1,24 @@
 const api = {
-
-  add: { // 建立课程授课
-    path:  '/course/add',
-    method: 'post',
-  },
-
-  get: { // 修改-先查
-    path:  '/course/get/',//{id}
+  myTask: { // 学习任务
+    path: '/course/main/my-task',
     method: 'get',
   },
-
-  query: { // 查看-公告-列表
-    path:  '/courseNotices/query',
-    method: 'get',
+  myStudy: { // 我的必修课
+    path: '/course/main/my-study',
+    method: 'get'
   },
-
-  info: { // 查看-公告-列表
-    path:  '/course/info/', //{id}
-    method: 'get',
+  mainQuery: { // 最新课程
+    path: '/course/main/query',
+    method: 'get'
   },
-
-  modify: { // 修改
-    path:  '/course/modify/', //{id}
-    method: 'put',
+  nextPlay: { // 最近直播
+    path: '/course/main/next-play',
+    method: 'get'
   },
-
-  remove: { // 删除授课
-    path:  '/course/remove/', //{ids}
-    method: 'delete',
+  myHistory: { // 播放记录
+    path: '/course/main/my-history',
+    method: 'get'
   },
-
-  listPage: { // 列表
-    path:  '/course/listPage',
-    method: 'get',
-  },
-
-
-  courseNoticesAdd: { // 管理-公告-发布
-    path:  '/courseNotices/add',
-    method: 'post',
-  },
-
-
-
 };
 
 export default api

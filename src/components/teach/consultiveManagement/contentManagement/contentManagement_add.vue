@@ -70,7 +70,7 @@
       <el-row v-show="formValidate.contentType=='MULTIMEDIA'">
         <el-col :span="17" :offset="2">
           <el-form-item type="附件" label="多媒体文件:" class="feildFontweight">
-            <upload-file :accept="'mp4'"  @setUploadFiles="setMultimediaFileIds">   </upload-file>
+            <upload-file :accept="'mp4,flv,rmvb,rm,avi'" :unSize="true"  @setUploadFiles="setMultimediaFileIds">   </upload-file>
           </el-form-item>
         </el-col >
       </el-row>
@@ -90,7 +90,7 @@
       <el-row >
         <el-col :span="17" :offset="2">
           <el-form-item type="附件" label="附件:" class="feildFontweight">
-            <upload-file    @setUploadFiles="setFiles">   </upload-file>
+            <upload-file :unSize="true"   @setUploadFiles="setFiles">   </upload-file>
           </el-form-item>
         </el-col >
 
@@ -165,7 +165,7 @@
           "moduleId":'',      //栏目id
           "title":"",                   //标题
           "authorName":"",                  //作者
-          "source":"",                   //来源
+          "source":"ORIGINAL",                   //来源
           "url":"",                 //newsUrl
           "newsOrder":"",                        //置顶顺序
           "contentType":"ORDINARY",                 //内容类型
@@ -206,6 +206,12 @@
         let isSubmit = this.submitForm("formValidate");
         if(isSubmit){
           if(!isLoadingFun) isLoadingFun=function(){};
+          if(this.formValidate.contentType=='MULTIMEDIA'){
+            if(!this.formValidate.multimediaFileIds){
+              this.errorMess('请上传多媒体文件');
+              return;
+            }
+          }
           isLoadingFun(true);
           this.formValidate.content = this.ueditorVal.ud1;
           if(this.formValidate.contentType!='MULTIMEDIA')this.formValidate.multimediaFileIds='';

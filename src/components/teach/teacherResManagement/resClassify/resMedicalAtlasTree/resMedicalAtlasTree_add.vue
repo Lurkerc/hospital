@@ -99,7 +99,6 @@
           ajaxParams:{
             url: api.treeAdd.path,
             method:'post',
-            jsonString:true,
             data:{}
           }
         },

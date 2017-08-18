@@ -1,10 +1,10 @@
-<!-- 基础教务 - 资源库管理 - 标准课程 -->
+<!-- 基础教务 - 资源库管理 - 课程 -->
 <template>
   <div ref="content" class="modal">
     <div class="listUpAreaBox">
       <div class="listUpArea-menus">
         <div class="add-remove">
-          <el-button class="but-col" @click="add" type="info">创建标准课程</el-button>
+          <el-button class="but-col" @click="add" type="info">创建课程</el-button>
           <el-button class="but-col" @click="remove" type="danger">删除授课</el-button>
         </div>
       </div>
@@ -40,7 +40,7 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="210">
           <template scope="scope">
-            <el-button size="small" type="info" @click="show(scope.row)">管理
+            <el-button size="small" type="info" @click="manage(scope.row)">管理
             </el-button>
             <el-button size="small" type="info" @click="show(scope.row)">查看
             </el-button>
@@ -49,16 +49,18 @@
           </template>
         </el-table-column>
         <el-table-column prop="title" label="课程名称" align="center" width="200"></el-table-column>
-        <el-table-column prop="operator" label="创建人" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="changeStatu" label="资源转化状态" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="teacher" label="授课教师" show-overflow-tooltip></el-table-column>
         <el-table-column prop="status" label="课程状态" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.status | curriculum | typeText }}
+            {{ scope.row.auditStatus | typeText }}
           </template>
         </el-table-column>
         <el-table-column prop="totalLesson" label="课程包含节数" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="createTime" label="创建日期" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="updateTime" label="最新更新日期" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="updateTime" label="授课时间" show-overflow-tooltip>
+          <template scope="scope">
+            {{scope.row.start+'--'+scope.row.end }}
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div style="margin: 10px;" align="right">
@@ -70,7 +72,7 @@
       <!--修改弹窗-->
       <Modal :mask-closable="false" v-model="editModal" class-name="vertical-center-modal" :width="1000">
         <modal-header slot="header" :content="headerContent.editId"></modal-header>
-        <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :style="modelStyle"></edit>
+        <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :style="modelStyle" :saveUrl="{path:api.modify.path+operailityData.id,method:api.modify.method}" :getUrl="api.getTemp"></edit>
         <div slot="footer"></div>
       </Modal>
       <!--增加弹窗-->
@@ -83,6 +85,12 @@
       <Modal :mask-closable="false" v-model="showModal" class-name="vertical-center-modal" :width="1100">
         <modal-header slot="header" :parent="self" :content="headerContent.showId"></modal-header>
         <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData" :style="modelStyle"></show>
+        <div slot="footer"></div>
+      </Modal>
+      <!-- 管理弹窗 -->
+      <Modal :mask-closable="false" v-model="manageModal" class-name="vertical-center-modal" :width="1100">
+        <modal-header slot="header" :parent="self" :content="headerContent.manageId"></modal-header>
+        <manage v-if="manageModal" @cancel="cancel" :operaility-data="operailityData" :style="modelStyle"></manage>
         <div slot="footer"></div>
       </Modal>
       <!--删除弹窗-->
@@ -101,9 +109,11 @@
   //引入--添加--组件
   import add from "./webCourses_add";
   //引入--修改--组件
-  import edit from "../../../teach/teacherResManagement/normCourse/normCourse_edit";
+  import edit from "./webCourses_input";
   //引入--查看--组件
-  import show from "../../../teach/teacherResManagement/normCourse/normCourse_view";
+  import show from "./webCourses_view";
+  //引入--管理--组件
+  import manage from "./webCourses_manage";
 
 
   //当前组件引入全局的util
@@ -120,19 +130,23 @@
         headerContent: {
           addId: {
             id: 'addId',
-            title: '创建标准课程'
+            title: '创建课程'
           },
           removeId: {
             id: 'removeId',
-            title: '删除标准课程'
+            title: '删除课程'
           },
           editId: {
             id: 'editId',
-            title: '修改标准课程'
+            title: '修改课程'
           },
           showId: {
             id: 'showId',
-            title: '查看标准课程'
+            title: '查看课程'
+          },
+          manageId: {
+            id: 'manageId',
+            title: '管理课程'
           },
         },
         // 弹窗样式
@@ -146,30 +160,14 @@
 
         searchMore: false,
         examineModal: false,
+        manageModal: false,
 
         operailityData: [],
         multipleSelection: [],
         dynamicHt: 100,
         tabHeight: 100,
         self: this,
-        tableData: [{
-          "id": 18,
-          "typeId": 1,
-          "title": "title测试",
-          "tags": "tags",
-          "direction": "direction",
-          "operatorId": 10160,
-          "operator": "闫沧",
-          "logo": "logo",
-          "remark": "remark",
-          "outline": "outline",
-          "totalLesson": 2,
-          "status": "TESTRUN",
-          "auditStatus": "NOT_SUBMIT",
-          "assessmentFileId": null,
-          "createTime": "111",
-          "updateTime": "222"
-        }],
+        tableData: [],
         loading: false,
         listTotal: 0,
 
@@ -198,6 +196,7 @@
             pageSize: Util.pageInitPrams.pageSize
           }
         }
+        this.setTableData();
       },
 
       /*************************************** 表格相关 **********************************************/
@@ -240,7 +239,6 @@
 
       //通过get请求列表数据并渲染表格数据
       updateListData(responseData) {
-        return
         let data = responseData.data;
         this.tableData = [];
         data = this.addIndex(data);
@@ -302,6 +300,14 @@
         this.operailityData = row;
         this.openModel('show');
       },
+      /*
+       * 点击--管理--按钮
+       * @param index string|number  当前行索引
+       * */
+      manage(row) {
+        this.operailityData = row;
+        this.openModel('manage');
+      },
 
 
       /*
@@ -343,20 +349,6 @@
             this.tabHeight = this.dynamicHt
           }
         })
-      },
-
-      /*
-       * 未分配可管理的部门
-       * @return flag blooean
-       * */
-      undistributedDep() {
-        return true
-        let flag = true;
-        if (this.deptId == "") {
-          this.showMess("还没有给您分配部门管理员!暂无部门可管理!");
-          flag = false;
-        }
-        return flag
       },
 
       /****************************************** 弹窗相关 ********************************************/
@@ -430,6 +422,7 @@
       add,
       edit,
       show,
+      manage,
     }
 
   }

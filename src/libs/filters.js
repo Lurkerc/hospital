@@ -110,11 +110,11 @@ const getVueObj = function (vue) {
       "cm": " cm",
       "kg": " kg"
     },
-    auditStatus:{
-      NOT_SUBMIT:'草稿',
-      NOT_AUDIT:'已上报',
-      AUDIT_FAILURE:'驳回',
-      AUDIT_SUCCESS:'通过',
+    auditStatus: {
+      NOT_SUBMIT: '草稿',
+      NOT_AUDIT: '已上报',
+      AUDIT_FAILURE: '驳回',
+      AUDIT_SUCCESS: '通过',
     },
     roomSex: { // 宿舍
       "BOY": '男宿舍',
@@ -188,10 +188,13 @@ const getVueObj = function (vue) {
       "ORTHER": "其他",
     },
     curriculum: { // 课程状态
-      "NOT_SUBMIT": "保存草稿",
-      "NOT_AUDIT": "已上报",
-      "AUDIT_FAILURE": "驳回",
+      "NOT_SUBMIT": "未上报",
+      "NOT_AUDIT": "未审核",
+      "AUDIT_FAILURE": "未通过",
       "AUDIT_SUCCESS": "通过",
+      "DRAFT": "草稿",
+      "TESTRUN": "试运行",
+      "EXIT": "退出",
     },
     casesStatus: { // 基础教务-资源库管理-病历库
       "NOT_SUBMIT": "未上报",
@@ -229,6 +232,37 @@ const getVueObj = function (vue) {
         return '/static/image/physician.png'
       }
     },
+    {
+      name:'formatSize',
+      call(value) {
+        let temp;
+        let init;
+        let float;
+        if(!value)return '0KB';
+        if (value < 1024) {
+          return value + 'B';
+        } else if (value < (1024*1024)){
+          temp = value / 1024;
+          temp = temp.toFixed(2);
+          return temp + 'KB';
+        } else if (value < (1024*1024*1024)) {
+          init = (value / (1024*1024));
+          //float = (value % (1024*1024))/1024;
+          return init.toFixed(2) + 'MB ' //+float.toFixed(2)+'KB';
+        } else {
+          init = (value / (1024*1024*1024));
+          //float = (value % (1024*1024*1024))/(1024*1024);
+          return   init.toFixed(2) + 'GB //'+float.toFixed(2)+'MB';
+        }
+        return ;
+      },
+    },
+    {
+      name:'formatTime',
+      call(value) {
+        return getDateDiff(value);
+      },
+    },
     { // 时间格式化
       name: "formatDate",
       /**
@@ -241,6 +275,43 @@ const getVueObj = function (vue) {
       }
     },
   ];
+
+  function getDateDiff(dateTimeStamp){
+    var minute = 1000 * 60;
+    var hour = minute * 60;
+    var day = hour * 24;
+    var halfamonth = day * 15;
+    var month = day * 30;
+
+    var now = new Date().getTime();
+    var diffValue = now - dateTimeStamp;
+    if(diffValue < 0){
+      //若日期不符则弹出窗口告之
+      //alert("结束日期不能小于开始日期！");
+    }
+    var monthC =diffValue/month;
+    var weekC =diffValue/(7*day);
+    var dayC =diffValue/day;
+    var hourC =diffValue/hour;
+    var minC =diffValue/minute;
+    if(monthC>=1){
+      result="发表于" + parseInt(monthC) + "个月前";
+    }
+    else if(weekC>=1){
+      result="发表于" + parseInt(weekC) + "周前";
+    }
+    else if(dayC>=1){
+      result="发表于"+ parseInt(dayC) +"天前";
+    }
+    else if(hourC>=1){
+      result="发表于"+ parseInt(hourC) +"个小时前";
+    }
+    else if(minC>=1){
+      result="发表于"+ parseInt(minC) +"分钟前";
+    }else
+      result="刚刚发表";
+    return result;
+  }
 
   // 全局注册自定义过滤器
   filters.map(item => vue.filter(item.name, item.call)); // 在应用中直接通过name使用

@@ -20,17 +20,20 @@
           </el-input>
         </el-col>
         <!-- 待选项 -->
-        <el-col class="normCourseSelectItem" :span="5" v-for="item in showData" :key="item.id" :class="{'active':selectId === item.id}" @click.native="selectNormCourse(item.id,item)">
-          <h3 class="normCourseSelectItemTitle overflow-txt1" align="center">这是标题</h3>
-          <img src="//iph.href.lu/180x180" class="normCourseSelectItemImg">
-          <div class="normCourseSelectItemInfo">
-            <div class="normCourseSelectItemInfoText">课程运行方向说明文字</div>
-          </div>
-          <div class="normCourseSelectItemCheck"><i class="el-icon-check"></i></div>
-        </el-col>
+        <template v-if="showData.length">
+          <el-col class="normCourseSelectItem" :span="5" v-for="item in showData" :key="item.id" :class="{'active':selectId === item.id}" @click.native="selectNormCourse(item.id,item)">
+            <h3 class="normCourseSelectItemTitle overflow-txt1" align="center">{{ item.title }}</h3>
+            <img src="//iph.href.lu/180x180" class="normCourseSelectItemImg">
+            <div class="normCourseSelectItemInfo">
+              <div class="normCourseSelectItemInfoText">{{ getTextByHtml(item.direction) }}</div>
+            </div>
+            <div class="normCourseSelectItemCheck"><i class="el-icon-check"></i></div>
+          </el-col>
+        </template>
+        <p v-else class="noNormCourseSelectTips">暂无标准课程可选择</p>
         <!-- 更多 -->
         <el-col align="center">
-          <el-button class="normCourseSelectMoreBtn" type="info" @click="loadMore" v-if="queryQptions.params.curPage < totalCount">更多课程</el-button>
+          <el-button class="normCourseSelectMoreBtn" type="info" @click="loadMore" v-if="queryQptions.params.curPage < parseInt(totalCount/8)">更多课程</el-button>
         </el-col>
       </el-row>
     </div>
@@ -94,6 +97,10 @@
       next() {
         this.$emit('select', this.selectData)
       },
+      // 从html中获取文本
+      getTextByHtml(str = '', length = 50) {
+        return str.replace(/<\/?.+?>/g, "").replace(/ /g, "").substring(0, length);
+      },
       // 获取选择数据
       getSelectData() {
         Object.assign(this.queryQptions.params, this.searchObj);
@@ -101,25 +108,6 @@
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions
         })
-        this.showData = [{
-          "id": 1,
-          "title": "title测试",
-          "typeId": 1,
-          "direction": "direction",
-          "logo": "logo"
-        }, {
-          "id": 2,
-          "title": "title测试",
-          "typeId": 1,
-          "direction": "direction",
-          "logo": "logo"
-        }, {
-          "id": 3,
-          "title": "title测试",
-          "typeId": 1,
-          "direction": "direction",
-          "logo": "logo"
-        }];
       },
       // 获取数据成功
       listDataSuccess(res) {
@@ -235,6 +223,11 @@
 
   .normCourseSelectMoreBtn {
     margin-top: 10px;
+  }
+
+  .noNormCourseSelectTips {
+    line-height: 200px;
+    text-align: center;
   }
 
 </style>

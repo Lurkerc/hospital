@@ -137,10 +137,10 @@
       </el-form>
       <div style="padding-top:16px;clear:both;">
         <el-col :span="6" :offset="6" align="center">
-          <el-button @click="save" type="success">保存</el-button>
+          <el-button @click="save('BC')" type="success">保存</el-button>
         </el-col>
         <el-col :span="6" align="center">
-          <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+          <el-button @click="save('SB')" type="info">上报</el-button>
         </el-col>
       </div>
     </el-row>
@@ -163,13 +163,9 @@
           groupNo: this.operailityData.groupNo || '',
           rtId: this.operailityData.rtId || '',
           examinationId: this.operailityData.examinationId || 0,
+          czType: '',
         },
         uploadFiles: [],
-        //保存按钮基本信息
-        loadBtn: {
-          title: '上报',
-          callParEvent: 'listenSubEvent'
-        },
       }
     },
     methods: {
@@ -214,9 +210,11 @@
       },
 
       // 保存
-      save() {
+      save(type) {
+        let msg = type === 'BC' ? '保存' : '上报';
+        this.summaryFileList.czType = type;
         this.ajax({
-          ajaxSuccess: () => this.$emit('rotary', 'rotary', '保存成功'),
+          ajaxSuccess: () => this.$emit('rotary', 'rotary', msg + '成功'),
           ajaxParams: {
             jsonString: true,
             url: api.addUserComment.path + (this.operailityData.examinationId || 0),
@@ -224,11 +222,6 @@
             data: this.summaryFileList,
           }
         })
-      },
-
-      // 上报
-      listenSubEvent() {
-
       },
     },
     components: {

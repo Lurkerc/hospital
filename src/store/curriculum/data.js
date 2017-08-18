@@ -43,20 +43,11 @@ const wareDtoItem = { //课前 课件
 // 试题
 const questionsDtoItem = { //测评试题对象集合
   "theId": 0, // 唯一标识
-  "types": "", //题型：RADIO单选题、CHECKBOX多选题、JUDGMENT判断题、ANSWER问答题
+  "types": "RADIO", //题型：RADIO单选题、CHECKBOX多选题、JUDGMENT判断题、ANSWER问答题
   "subject": "", //题干
   "options": "", //正确答案（多选题，多个正确答案|隔开。问答题，该项赋值null）
   "answerExplain": "", //正确答案解析
-  "optionsDtoList": [{ // 单选、多选、判断题，该项不能为空，必须有值。
-    "options": "A", //选项
-    "content": "选项的描述情况", //选项描述
-  }, {
-    "options": "B",
-    "content": "选项的描述情况",
-  }, {
-    "options": "C",
-    "content": "选项的描述情况",
-  }],
+  "optionsDtoList": [], // 单选、多选、判断题，该项不能为空，必须有值。
   "keyWords": null //单选、多选、判断题，该项赋值null。问答题该项参见下面格式
 };
 // 评价项
@@ -68,7 +59,18 @@ let evaluateItem = {
   "avg": "", //中 int
   "bad": "" //查  int
 };
-
+// 教学计划
+const teach = {
+  "criterionId": null, //所选择的标准课程ID，如果没选标准课程，赋值null
+  // "typeId": "", //选择的分类
+  "teacherType": "IN", // 本院IN/外院 OUT
+  "teacherId": "", //当teacherType选择的是本院IN，赋值所选择的本院老师ID
+  "teacher": "", //老师姓名，本院为所选姓名，外院为输入。
+  "teachType": "ALL", //授课对象类型：ALL所有人、PART部分人、ROLE指定角色
+  "teachTypeId": '', //授课人，当teachType选择ALL所有人，该项传值[]空数组。当teachType选择PART部分人，该项传值所选的部分人员ID。当teachType选择ROLE指定角色，该项传值所选角色ID。
+  "teachTimeRemark": "", // 授课时间,
+  "userList": [], // 人员列表
+}
 
 const state = {
   // course: {}, // 课程基本信息
@@ -81,6 +83,7 @@ const mutations = {
   init: state => {
     state.course = {
       typeId: "", //所选的类型ID
+      typeName: "", //所选的类型名称
       title: "", //课程名称
       tags: "", //标签，多个|分割
       direction: "", //应用方向说明
@@ -88,7 +91,7 @@ const mutations = {
       remark: "", //课程简介
       outline: "", //教学大纲
       auditStatus: "NOT_SUBMIT", //审核状态：保存草稿用NOT_SUBMIT，提交审核用NOT_AUDIT
-      createUser: "", // 创建人
+      operator: "", // 创建人
       createTime: "", // 创建时间
     };
     state.evaluate = {
@@ -106,6 +109,7 @@ const mutations = {
       _.defaultsDeep({}, planDtoItem)
     ];
   },
+  initTeach: state => _.assign(state.course, _.defaultsDeep({}, teach)),
   /**************************** 添加值 *******************************/
   // 添加课程计划
   addPlanDto: state => {
@@ -141,27 +145,41 @@ const mutations = {
    */
   updateData: (state, dataObj) => {
     // 更新课程基本信息
-    _.mapKeys(state.course, (val, key) => state.course[key] = dataObj[key] || '');
+    _.mapKeys(state.course, (val, key) => dataObj[key] && (state.course[key] = dataObj[key]));
     // 更新教学质量评价
-    _.mapKeys(state.evaluate, (val, key) => state.evaluate[key] = dataObj.evaluate[key] || '');
+    _.mapKeys(state.evaluate, (val, key) => state.evaluate[key] && (state.evaluate[key] = dataObj.evaluate[key]));
     /* 更新课程计划 */
     state.planDtoList.length = 0;
     dataObj.planDtoList.map(item => {
       // 更新课件对象集合
-      let {
-        before,
-        inProgress: in_progress,
-        after,
-      } = item.wareDtoList;
-      item.wareDtoListTemp = { // 课件对象集合（操作使用）
-        before, // 课前
-        in_progress, // 课中
-        after // 课后
+      // let {
+      //   before,
+      //   inProgress: in_progress,
+      //   after,
+      // } = item.wareDtoList;
+      // item.wareDtoListTemp = { // 课件对象集合（操作使用）
+      //   before, // 课前
+      //   in_progress, // 课中
+      //   after // 课后
+      // };
+      // // 更新测评对象集合
+      // item.testingDtoList.in_progress = _.defaultsDeep({}, item.testingDtoList.inProgress);
+      // delete(item.testingDtoList.inProgress);
+      // item.testingDtoListTemp = _.defaultsDeep({}, item.testingDtoList);
+      // 课件
+      item.wareDtoListTemp = {
+        before: [],
+        in_progress: [],
+        after: [],
       };
       // 更新测评对象集合
-      item.testingDtoList.in_progress = _.defaultsDeep({}, item.testingDtoList.inProgress);
-      delete(item.testingDtoList.inProgress);
-      item.testingDtoListTemp = _.defaultsDeep({}, item.testingDtoList);
+      item.testingDtoListTemp = {
+        before: {},
+        in_progress: {},
+        after: {},
+      };
+      item.wareDtoList.map(wareItem => item.wareDtoListTemp[wareItem.type.toLocaleLowerCase()].push(wareItem));
+      item.testingDtoList.map(testItem => item.testingDtoListTemp[testItem.type.toLocaleLowerCase()] = testItem);
       // 初始化
       item.wareDtoList = [];
       item.testingDtoList = [];
@@ -173,9 +191,12 @@ const mutations = {
    * course Object {key:value}
    */
   updateCourse: (state, course) => {
-    for (let item in course) {
-      state.course[item] = course[item]
-    }
+    // for (let item in course) {
+    //   state.course[item] = course[item]
+    // }
+    _.mapKeys(course, (val, key) => {
+      state.course[key] = val
+    })
   },
   /**
    * 更新课程计划
@@ -225,7 +246,7 @@ const mutations = {
     state.course = null;
     state.evaluate = null;
     state.planDtoList = null;
-  }
+  },
 };
 
 export {

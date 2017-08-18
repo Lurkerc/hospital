@@ -256,6 +256,17 @@ let baseRules = {
     }
     callback();
   },
+  /**
+   * 必须正整数字且>0
+   */
+  greaterThanZero2: function (rule, value, callback) {
+    //检验位的检测
+    if(value=='')callback();
+    if (!/^\+?[0-9]\d*$/.test(value)) {
+      callback(new Error('必须正整数且大于等于零'));
+    }
+    callback();
+  },
 
   /**
    * 必须数字

@@ -2,8 +2,8 @@
 <template>
   <div class="coursesStudyViews">
     <!-- 在线学习默认视图 -->
-    <courses-study-index v-if="coursesStudyView === 'index'" @show="show" :operailityData="operailityData"></courses-study-index>
-    <courses-list v-if="coursesStudyView === 'coursesList'" @show="show" :operailityData="operailityData"></courses-list>
+    <courses-study-index v-if="coursesStudyView === 'index'" @show="show" :operaility-data="operailityData"></courses-study-index>
+    <courses-list v-if="coursesStudyView === 'coursesList'" @show="show" :operaility-data="operailityData"></courses-list>
   </div>
 </template>
 <script>

@@ -3,6 +3,7 @@
     <div v-if="isLogin" style="text-align: center">数据加载中!</div>
     <div v-if="!isLogin">
       <h2>南京鼓楼教学管理系统</h2>
+      <!--<h2>实习生管理系统-登录</h2>-->
       <br />
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="name">

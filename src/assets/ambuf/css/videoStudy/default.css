@@ -215,7 +215,7 @@
   position: absolute;
   top: 10px;
   right: 20px;
-  width: 100px;
+  width: 200px;
   text-align: right;
 }
 .comment-user-mess{
@@ -334,8 +334,12 @@
   border-radius: 4px;
   margin: 0 20px 20px 0;
 }
-.card-box .card-img, .card-box .card-img a img {
-  width: 100%;
+.card-box .card-img{
+  width: 260px;
+}
+.card-box .card-img a img {
+  /*width: 100%;*/
+  width: 260px;
   height: 168px;
 }
 .card-box .card-img {
@@ -389,4 +393,55 @@
 }
 
 /*  病理学  */
+.caseListBox{
+  min-height: 120px;
+  border-bottom: 1px solid rgb(224, 230, 237);
+  position: relative;
+  padding: 10px;
+  cursor: pointer;
+}
+.caseListBox:hover{
+  background: #F9FAFC;
+}
+.caseListBox:hover .caseListBox-right-title{
+  color: #FF4949;
+}
+.caseListBox-left{
+  width: 120px;
+  height: 120px;
+}
+.caseListBox-left img{
+  width: 100%;
+  height: 100%;
+}
+.caseListBox-right{
+  position: absolute;
+  top: 10px;
+  left: 140px;
+  right: 10px;
+}
+.caseListBox-right-top{
+  overflow: hidden;
+  width: 95%;
+  padding-bottom: 10px;
+}
+.caseListBox-right-title{
+  float: left;
+  width: 60%;
+  font-weight: 700;
+  font-size: 14px;
+}
+.caseListBox-right-date{
+  float: right;
+  width: 30%;
+  text-align: right;
+}
+.caseListBox-right-text{
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box; /** 将对象作为伸缩盒子模型显示 **/
+  -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+  -webkit-line-clamp: 4; /** 显示的行数 **/
+  overflow: hidden;  /** 隐藏超出的内容 **/
+}
 

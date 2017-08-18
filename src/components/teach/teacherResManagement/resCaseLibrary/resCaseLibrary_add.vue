@@ -6,7 +6,7 @@
 
 <template>
   <div>
-    <el-form :model="formValidate" ref="formValidate" label-width="90px">
+    <el-form :model="formValidate" :rules="resCaseLibrary" ref="formValidate" label-width="90px">
 
       <el-row>
         <el-col :span="20" :offset="2">
@@ -24,7 +24,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="分类:" prop="typeId">
-            <el-input v-model="type.typeId" @focus="typeClick" readonly></el-input>
+            <el-input v-model="type.typeName" @focus="typeClick" readonly></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -36,7 +36,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="大小:" prop="size">
-            {{formValidate.size}}
+            {{formValidate.size| formatSize}}
           </el-form-item>
         </el-col>
       </el-row>
@@ -55,16 +55,16 @@
 
       <el-row v-if="!unFile">
         <el-col :span="16" :offset="2">
-          <el-form-item label="资源文件:" >
-            <upload-file :unSize="true" :length="1" :accept="'docx'" @setUploadFiles="expenseFileEvent"></upload-file>
+          <el-form-item label="资源文件:" prop="fileId">
+            <up-file-new :unSize="true" :length="1" :accept="'doc|docx|xls|xlsx|ppt|pptx|pdf'" @setUploadFiles="expenseFileEvent"></up-file-new>
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-row v-if="!unLogo">
-        <el-col :span="16" :offset="2">
-          <el-form-item label="视频封面:" >
-            <img-wall  :onlyOnePic="true" :actionUrl="'/file/upload/static'" @upladSuccess="expenseLogoEvent"></img-wall>
+        <el-col :span="16" :offset="2" >
+          <el-form-item label="视频封面:" prop="logo">
+            <img-wall  :onlyOnePic="true"  @upladSuccess="expenseLogoEvent"></img-wall>
           </el-form-item>
         </el-col>
       </el-row>
@@ -73,8 +73,8 @@
 
 
     <el-row>
-      <el-col :span="16" :offset="2">
-        <div style="margin-left: 100px">
+      <el-col :span="10" :offset="10">
+        <div >
           <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
           <el-button @click="cancel">取消</el-button>
         </div>
@@ -113,15 +113,19 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import {resCaseLibrary} from '../rules'
+  import upFileNew from '../../../common/uploadFileNew.vue'
+
   import api from "./api.js";
   /*--引入--照片墙--*/
-  import imgWall from '../../../common/uploadPhotoWall.vue'
+  import imgWall from '../../../common/uploadPhotoWallNew.vue'
   //当前组件引入全局的util
   let Util = null;
   export default{
   props:['fromWhereTree','unImgs','unLogo','unFile','name','id','url'],
   data() {
       return {
+        resCaseLibrary,
         contenHeight: 0,
         viewTypes: '', // 视图类型
         //tree默认项设置
@@ -144,7 +148,7 @@
           title:'',         //视频名称
           tags:'',         //标签
           length:'',       //时长
-          viewNum:'',        //播放次数
+          viewNum:'0',        //播放次数
           brief:'',       //简介
           fileId:'',       //视频ID
           size:'',
@@ -189,6 +193,7 @@
       //点击数的回调函数
       treeSubEvent(){
         this.type.typeName = this.type.updateTypeName;
+        this.formValidate.typeId = this.deptId;
         this.typeModal = false;
       },
 
@@ -198,19 +203,12 @@
        * */
       listenSubEvent(isLoadingFun){
         if(!isLoadingFun) isLoadingFun=function(){};
-        isLoadingFun(true);
-
-        let tempArr = [];
-        for(let i =0;i<this.fileList.length;i++){
-          let item = this.fileList[i];
-          if(item.img){
-            tempArr.push(item);
-          }
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit) {
+          isLoadingFun(true);
+          this.addMessTitle.ajaxParams.data = this.formValidate;
+          this.ajax(this.addMessTitle, isLoadingFun);
         }
-        this.formValidate.atlasImgsDtoList = tempArr;
-        console.log(this.fileList,this.formValidate );
-        this.addMessTitle.ajaxParams.data = this.formValidate;
-        this.ajax(this.addMessTitle,isLoadingFun);
       },
 
       /*
@@ -273,17 +271,19 @@
       },
 
 
-      //上传资源文件
-      expenseFileEvent(ids,file){
+      //上传文档文件
+      expenseFileEvent(ids,srcObj,file){
         if(file.length==1){
-          this.formValidate.size = (file[0].size/1024).toFixed(2) +'kb'
+          this.formValidate.size = file[0].size
+        }else {
+          this.formValidate.size = 0
         }
         this.formValidate.fileId = ids ;
       },
       //封面图
-      expenseLogoEvent(file,len,arr){
-          if(file[0]){
-            this.formValidate.logo = file[0].src;
+      expenseLogoEvent(obj,len,arr){
+          if(obj){
+            this.formValidate.logo = obj.path;
           }else {
             this.formValidate.logo = '';
           }
@@ -301,6 +301,6 @@
     },
     mounted(){
     },
-    components: {imgWall}
+    components: {imgWall,upFileNew}
   }
 </script>

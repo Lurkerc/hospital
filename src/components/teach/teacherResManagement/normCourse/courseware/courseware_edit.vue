@@ -27,10 +27,19 @@
             </template>
           </el-table-column>
           <el-table-column property="fileName" label="文件名称" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.fileName || '-' }}
+            </template>
           </el-table-column>
           <el-table-column property="fileType" label="文件格式" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.fileType || '-' }}
+            </template>
           </el-table-column>
           <el-table-column property="fileSize" label="文件大小" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.fileSize | formatSize }}
+            </template>
           </el-table-column>
           <!-- <el-table-column property="title" label="转化状态">
           </el-table-column> -->
@@ -58,10 +67,19 @@
             </template>
           </el-table-column>
           <el-table-column property="fileName" label="文件名称" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.fileName || '-' }}
+            </template>
           </el-table-column>
           <el-table-column property="fileType" label="文件格式" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.fileType || '-' }}
+            </template>
           </el-table-column>
           <el-table-column property="fileSize" label="文件大小" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.fileSize | formatSize }}
+            </template>
           </el-table-column>
           <!-- <el-table-column property="title" label="转化状态" >
           </el-table-column> -->
@@ -89,16 +107,37 @@
             </template>
           </el-table-column>
           <el-table-column property="fileName" label="文件名称" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.fileName || '-' }}
+            </template>
           </el-table-column>
           <el-table-column property="fileType" label="文件格式" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.fileType || '-' }}
+            </template>
           </el-table-column>
           <el-table-column property="fileSize" label="文件大小" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.fileSize | formatSize }}
+            </template>
           </el-table-column>
           <!-- <el-table-column property="title" label="转化状态">
           </el-table-column> -->
         </el-table>
       </fieldset>
     </el-form>
+    <!-- 上传课件 -->
+    <Modal :mask-closable="false" v-model="uploadModal" class-name="vertical-center-modal" :width="500">
+      <modal-header slot="header" :content="uploadId"></modal-header>
+      <courseware-upload v-if="uploadModal" @cancel="cancel" @upload="uploadFileCall" :operaility-data="operailityData"></courseware-upload>
+      <div slot="footer"></div>
+    </Modal>
+    <!-- 选择课件 -->
+    <Modal :mask-closable="false" v-model="selectModal" class-name="vertical-center-modal" :width="1100">
+      <modal-header slot="header" :content="selectId"></modal-header>
+      <courseware-select v-if="selectModal" @cancel="cancel" @select="selectFileCall" :operaility-data="operailityData"></courseware-select>
+      <div slot="footer"></div>
+    </Modal>
   </el-row>
 </template>
 
@@ -106,13 +145,26 @@
   // import {
   //   plan as rules
   // } from '../rules';
+  import coursewareUpload from './courseware_upload';
+  import coursewareSelect from './courseware_select';
   export default {
     props: ['readOnly'],
     data() {
       return {
         rules: {}, // 验证输入规则
+        operailityData: '',
+        uploadModal: false,
+        selectModal: false,
         isReadOnly: false, // 只读
-        planDtoList: {},
+        planDtoList: [],
+        uploadId: {
+          id: 'uploadId',
+          title: '上传课件'
+        },
+        selectId: {
+          id: 'selectId',
+          title: '选择资源'
+        },
       }
     },
     methods: {
@@ -124,22 +176,59 @@
       /******************************************** 按钮事件 ***************************************/
       // 上传
       uploadFile(type, planIndex) {
-        this.$store.commit('curriculum/data/addWareDto', {
+        this.openModel('upload');
+        this.operailityData = {
           type,
-          planIndex,
-          list: [{
-            title: "", // 课件显示名称
-            fileId: "", // 文件ID
-            fileName: "", //文件名称
-            fileType: "", //文件类型
-            fileSize: "", //文件大小
-            type: type.toUpperCase(), // 类型
-          }]
+          planIndex
+        };
+      },
+      // 上传回调
+      uploadFileCall(uploadDataArr) {
+        uploadDataArr.map(item => {
+          item = item[0].id;
+          let fileObj = {
+            title: item.oldName, // 课件显示名称
+            fileId: item.id, // 文件ID
+            fileName: item.oldName, //文件名称
+            fileType: item.type, //文件类型
+            fileSize: item.size, //文件大小
+            resourceId: '', // 资源主键id
+            resourceType: '', // 资源类型
+            type: this.operailityData.type.toUpperCase(), // 类型
+          };
+          this.addFile(fileObj);
         })
+        this.cancel('upload')
       },
       // 选择
       selectFile(type, planIndex) {
-        console.log(type, planIndex)
+        this.openModel('select');
+        this.operailityData = {
+          type,
+          planIndex
+        };
+      },
+      // 选择资源回调
+      selectFileCall(selectArr) {
+        selectArr.map(item => this.addFile(item));
+        this.cancel('select')
+      },
+      // 添加课件
+      addFile(fileObj) {
+        this.$store.commit('curriculum/data/addWareDto', {
+          type: this.operailityData.type,
+          planIndex: this.operailityData.planIndex,
+          list: [{
+            title: fileObj.title, // 课件显示名称
+            fileId: fileObj.fileId, // 文件ID
+            fileName: fileObj.fileName, //文件名称
+            fileType: fileObj.fileType, //文件类型
+            fileSize: fileObj.fileSize, //文件大小
+            resourceId: fileObj.resourceId, // 资源主键id
+            resourceType: fileObj.resourceType, // 资源类型
+            type: this.operailityData.type.toUpperCase(), // 类型
+          }]
+        })
       },
       // 预览
       showFile(row) {
@@ -158,12 +247,30 @@
           delIndex
         })
       },
+      /****************************************** 弹窗相关 ********************************************/
+      /*
+       * 监听子组件通讯的方法
+       * 作用:根据不同的参数关闭对应的模态
+       * @param targer string example:"add"、"edit"
+       * */
+      cancel(targer) {
+        this[targer + 'Modal'] = false;
+      },
+
+      /*
+       * 打开指定的模态窗体
+       * @param options string 当前指定的模态:"add"、"edit"
+       * */
+      openModel(options) {
+        this[options + 'Modal'] = true;
+      },
       /******************************************** 数据提交 ***************************************/
       // 保存
       saveToStore() {
         // if (!this.checkData()) {
         //   return false;
         // }
+        this.$store.commit('curriculum/data/updatePlanDto', this.planDtoList);
         return true
       },
       // 检测数据完整性
@@ -193,6 +300,10 @@
         str[2] = (text[bit - 1]) || '';
         return str.join('')
       },
+    },
+    components: {
+      coursewareUpload,
+      coursewareSelect,
     },
     created() {
       this.init()

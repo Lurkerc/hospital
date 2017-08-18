@@ -7,9 +7,9 @@
         <div class="listUpArea-menus">
           <div class="add-remove">
             <el-button class="but-col" @click="add" type="info">创建标准课程</el-button>
-            <el-button class="but-col" @click="examine" type="success">审核标准课程</el-button>
-            <el-button class="but-col" @click="testRun" type="primary">课程试运行</el-button>
-            <el-button class="but-col" @click="exit" type="danger">课程退出</el-button>
+            <el-button class="but-col" @click="examine" :disabled="canTodo('examine')" type="success">审核标准课程</el-button>
+            <el-button class="but-col" @click="testRun" :disabled="canTodo('testRun')" type="primary">课程试运行</el-button>
+            <el-button class="but-col" @click="exit" :disabled="canTodo('exit')" type="danger">课程退出</el-button>
           </div>
         </div>
         <div class="listUpArea-search">
@@ -49,21 +49,33 @@
             <template scope="scope">
               <el-button size="small" type="info" @click="show(scope.row)">查看
               </el-button>
-              <el-button size="small" type="success" @click="edit(scope.row)">修改
+              <el-button size="small" type="success" @click="edit(scope.row)" :disabled="scope.row.status === 'TESTRUN'">修改
               </el-button>
             </template>
           </el-table-column>
           <el-table-column prop="title" label="课程名称" align="center" width="200"></el-table-column>
           <el-table-column prop="operator" label="创建人" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="changeStatu" label="资源转化状态" show-overflow-tooltip></el-table-column>
           <el-table-column prop="status" label="课程状态" show-overflow-tooltip>
             <template scope="scope">
               {{ scope.row.status | curriculum | typeText }}
             </template>
           </el-table-column>
-          <el-table-column prop="totalLesson" label="课程包含节数" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="createTime" label="创建日期" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="updateTime" label="最新更新日期" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="auditStatus" label="审核状态" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.auditStatus | curriculum | typeText }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="totalLesson" label="课程节数" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="createTime" label="创建日期" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.createTime | formatDate('yyyy-MM-dd hh:mm:ss') }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="updateTime" label="更新日期" show-overflow-tooltip>
+            <template scope="scope">
+              {{ (scope.row.updateTime||'-') | formatDate('yyyy-MM-dd hh:mm:ss') }}
+            </template>
+          </el-table-column>
         </el-table>
       </div>
       <div style="margin: 10px;" align="right">
@@ -81,19 +93,39 @@
         <!--增加弹窗-->
         <Modal :mask-closable="false" v-model="addModal" class-name="vertical-center-modal" :width="1100">
           <modal-header slot="header" :content="headerContent.addId"></modal-header>
-          <add v-if="addModal" @cancel="cancel" @add="subCallback" :operailityData="operailityData" :style="modelStyle"></add>
+          <add v-if="addModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :style="modelStyle"></add>
           <div slot="footer"></div>
         </Modal>
         <!-- 查看弹窗 -->
         <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1100">
           <modal-header slot="header" :parent="self" :content="headerContent.showId"></modal-header>
-          <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData" :style="modelStyle"></show>
+          <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData" :lookUrl="'/criterionCourse/info/' + operailityData.id" :style="modelStyle"></show>
           <div slot="footer"></div>
         </Modal>
         <!--审核弹窗-->
         <Modal :mask-closable="false" v-model="examineModal" height="200" class-name="vertical-center-modal" :width="1100">
           <modal-header slot="header" :parent="self" :content="headerContent.examineId"></modal-header>
-          <examine v-if="examineModal" @cancel="cancel" @audit="subCallback" :operaility-data="operailityData" :style="modelStyle"></examine>
+          <examine v-if="examineModal" @cancel="cancel" @examine="subCallback" :operaility-data="operailityData" :style="modelStyle"></examine>
+          <div slot="footer"></div>
+        </Modal>
+        <!--课程试运行弹窗-->
+        <Modal :mask-closable="false" v-model="testRunModal" height="200" class-name="vertical-center-modal" :width="600">
+          <modal-header slot="header" :parent="self" :content="headerContent.testRunId"></modal-header>
+          <test-run v-if="testRunModal" @cancel="cancel" @testRun="subCallback" :operaility-data="operailityData"></test-run>
+          <div slot="footer"></div>
+        </Modal>
+        <!--退出课程弹窗-->
+        <Modal :mask-closable="false" height="200" v-model="exitModal" title="对话框标题" class-name="vertical-center-modal" :width="500">
+          <modal-header slot="header" :content="headerContent.exitId"></modal-header>
+          <div v-if="exitModal">
+            <div class="remove">课程“{{ operailityData.title }}”确定退出吗？</div>
+            <el-row>
+              <el-col :span="10" :offset="14">
+                <el-button @click="exitSub" type="primary">确定</el-button>
+                <el-button class="but-col" @click="cancel('exit')">取消</el-button>
+              </el-col>
+            </el-row>
+          </div>
           <div slot="footer"></div>
         </Modal>
         <!--删除弹窗-->
@@ -120,6 +152,8 @@
   import add from "./normCourse_add";
   //引入--审核--组件
   import examine from "./normCourse_examine";
+  //引入--试运行--组件
+  import testRun from "./normCourse_testRun";
 
   import layoutTree from "../../../common/layoutTree";
   import leftTree from "./_tree/menu";
@@ -166,6 +200,14 @@
             id: 'showId',
             title: '查看'
           },
+          exitId: {
+            id: "exitId",
+            title: '课程退出'
+          },
+          testRunId: {
+            id: "testRunId",
+            title: '课程试运行'
+          },
         },
         // 弹窗样式
         modelStyle: {
@@ -178,30 +220,15 @@
 
         searchMore: false,
         examineModal: false,
+        exitModal: false,
+        testRunModal: false,
 
         operailityData: [],
         multipleSelection: [],
         dynamicHt: 100,
         tabHeight: 100,
         self: this,
-        tableData: [{
-          "id": 18,
-          "typeId": 1,
-          "title": "title测试",
-          "tags": "tags",
-          "direction": "direction",
-          "operatorId": 10160,
-          "operator": "闫沧",
-          "logo": "logo",
-          "remark": "remark",
-          "outline": "outline",
-          "totalLesson": 2,
-          "status": "TESTRUN",
-          "auditStatus": "NOT_SUBMIT",
-          "assessmentFileId": null,
-          "createTime": "111",
-          "updateTime": "222"
-        }],
+        tableData: [],
         loading: false,
         listTotal: 0,
 
@@ -213,7 +240,6 @@
             params: {}
           }
         },
-
       }
     },
     methods: {
@@ -231,7 +257,25 @@
           }
         }
       },
-
+      // 是否可进行操作
+      canTodo(type) {
+        let data = this.multipleSelection;
+        if (data.length) {
+          if (data.length !== 1) { // 只能操作一个
+            return true
+          }
+          if (type === 'examine' && !(data[0].auditStatus === 'NOT_AUDIT')) { // 未审核的才能进行审核操作
+            return true
+          }
+          if (type === 'testRun' && !(data[0].auditStatus === 'AUDIT_SUCCESS' && data[0].status !== 'TESTRUN')) { // 审核通过的才能进行试运行操作
+            return true
+          }
+          if (type === 'exit' && !(data[0].status === 'TESTRUN')) { // 已经试运行的才能进行退出操作
+            return true
+          }
+        }
+        return false
+      },
       /*************************************** 表格相关 **********************************************/
       //设置表格及分页的位置
       setTableDynHeight() {
@@ -272,7 +316,6 @@
 
       //通过get请求列表数据并渲染表格数据
       updateListData(responseData) {
-        return
         let data = responseData.data;
         this.tableData = [];
         data = this.addIndex(data);
@@ -298,7 +341,7 @@
       postParamToServer() {
         let options = Util._.defaultsDeep({}, this.listMessTitle);
         if (this.deptId != "") {
-          options["ajaxParams"]["params"]["deptIds"] = this.deptId;
+          options["ajaxParams"]["params"]["typeId"] = this.deptId;
         }
         this.ajax(options);
       },
@@ -316,12 +359,12 @@
       // 添加
       add() {
         this.clickAddChange = !this.clickAddChange;
-        this.openModel('add');
+        // this.openModel('add');
       },
 
       // 添加
       handleAdd(isSltedTreeNode) {
-        if (!this.undistributedDep()) return;
+        // if (!this.undistributedDep()) return;
         let isSltedTree = this.isSltedTree(isSltedTreeNode);
         if (isSltedTree) {
           this.operailityData = {
@@ -329,7 +372,7 @@
           };
           this.openModel('add');
         } else {
-          this.$message.error("请选择相应部门目录!")
+          this.$message.error("请选择相应分类!")
         }
       },
 
@@ -363,16 +406,36 @@
       // 审核
       examine() {
         if (this.isSelected(true)) {
+          this.operailityData = this.multipleSelection[0];
           this.openModel('examine')
         }
       },
       // 试运行
       testRun() {
-
+        if (!this.isSelected(true)) return;
+        this.operailityData = this.multipleSelection[0];
+        this.openModel('testRun')
       },
       // 退出
       exit() {
-
+        if (!this.isSelected(true)) return;
+        this.operailityData = this.multipleSelection[0];
+        this.openModel('exit')
+      },
+      // 课程退出
+      exitSub() {
+        this.ajax({
+          ajaxSuccess: res => {
+            this.setTableData();
+            this.successMess('课程退出成功！');
+            this.cancel('exit');
+          },
+          ajaxError: () => this.errorMess('课程退出失败！'),
+          ajaxParams: {
+            url: api.endOperation.path + this.operailityData.id,
+            method: api.endOperation.method
+          }
+        })
       },
 
       // 搜索
@@ -546,6 +609,7 @@
       edit,
       show,
       examine,
+      testRun,
       layoutTree,
       leftTree
     }

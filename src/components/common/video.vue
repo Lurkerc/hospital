@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
   <div ref="videoWrapper">
-  <video-player  class="vjs-custom-skin"
+  <video-player v-if="filePath!=''"  class="vjs-custom-skin"
                  ref="videoPlayer"
                  :options="playerOptions"
                  :playsinline="true"
@@ -25,6 +25,25 @@
 </template>
 <script>
   export default {
+    props:{
+      filePath:{
+        type:String,
+        default:""
+      },
+      videoType:{
+        type:String,
+        default:"mp4"
+      },
+      isAutoPlay:{
+        type:Boolean,
+        default:false,
+      },
+      poster:{
+        type:String,
+        default:""
+      }
+    },
+    //["videoOptions"],
     data() {
       return {
         // videojs options
@@ -33,12 +52,12 @@
           language: 'en',
           playbackRates: [0.7, 1.0, 1.5, 2.0],
           sources: [{
-            type: "video/mp4",
-            src: "http://mirror.aarnet.edu.au/pub/TED-talks/911Mothers_2010W-480p.mp4"
+            type: "video/"+this.videoType,
+            src: this.filePath, //'http://192.168.1.116:8999/3.mp4 '//this.filePath,
           }],
-          //poster: "http://jackzhang1204.github.io/materials/poster.png",
+          poster: this.poster,
           height:100,
-        }
+        },
       }
     },
     mounted() {
@@ -56,7 +75,10 @@
     computed: {
       player() {
         return this.$refs.videoPlayer.player
-      }
+      },
+    },
+
+    created(){
     },
     methods: {
       // listen event

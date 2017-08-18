@@ -62,11 +62,9 @@
         title="新建教学活动"
         class-name="vertical-center-modal">
         <modal-header slot="header" :content="selectUserId"></modal-header>
-        <select-user v-if="selectUserModal" @cancel="openAndColseHost('selectUser',false)" @setUsers="selectUserCallback" :initUser="selectUser"></select-user>
+        <select-user v-if="selectUserModal" @cancel="selectUserModal = false" @setUsers="selectUserCallback" :initUser="selectUser"></select-user>
         <div slot="footer"></div>
       </Modal>
-
-
     </div>
 </template>
 <script>
@@ -121,15 +119,19 @@
            * */
           listenSubEvent(isLoadingFun){
             if(!isLoadingFun) isLoadingFun=function(){};
-            isLoadingFun(true);
+
+
+
             let formValidate = this.getFormData(this.formValidate);
-            formValidate = this.conductData(formValidate);
+            formValidate = this.conductData(formValidate); // 如果验证失败则返回false
+            if(!formValidate)return;
               let ids = [];
               for(let i=0 ;i<this.operailityData.length;i++){
                   ids.push(this.operailityData[i].id)
               }
             this.editMessTitle.ajaxParams.url = this.url.save.path+ids.join(',');
             this.editMessTitle.ajaxParams.data = formValidate;
+            isLoadingFun(true);
             this.ajax(this.editMessTitle,isLoadingFun)
           },
 
@@ -144,8 +146,17 @@
                  userIds.push(selectUser[i].key) ;
                  }
                 data.userIds = userIds.join(',');
+                if(!data.userIds){
+                    this.errorMess('请选择人员');
+                    return false;
+                }
               }else if(data.openStatus=='SOME_ROLE'){ //部分角色
+
                 data.userIds = this.role.join(',');
+                if(!data.userIds){
+                  this.errorMess('请选择角色');
+                  return false;
+                }
               }else {
                   data.userIds = '';
               }

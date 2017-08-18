@@ -40,6 +40,7 @@ const api = {
     path: thisFile + '/queryRun',
     method: 'get'
   },
+  upload: '/file/upload/study', // 上传附件
 };
 
 export default api

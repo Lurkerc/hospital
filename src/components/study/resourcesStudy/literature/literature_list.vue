@@ -5,20 +5,24 @@
 ----------------------------------->
 <template>
   <div class="showContent">
-    <showList v-if="look == 'index'" @show="show"></showList>
-    <showVideo v-if="look == 'show'" @show="show"></showVideo>
+    <showList v-if="look == 'index'" :initData="initData" @show="show"></showList>
+    <showDoc v-if="look == 'show'" :operaility-data="operailityData" @search="search" @show="show"></showDoc>
   </div>
 </template>
 <script>
   /*当前组件必要引入*/
   import showList from './literature_index.vue';
-  import showVideo from './literature_view.vue';
+  import showDoc from './literature_view.vue';
   //当前组件引入全局的util
   let Util = null;
   export default{
     data() {
       return {
         look: "index",
+        operailityData:"",
+        initData:{
+          name:"",
+        }
       }
     },
     methods: {
@@ -33,6 +37,12 @@
        */
       show(type,obj){
         this.look=type;
+        this.operailityData = obj;
+      },
+
+      search(type,obj){
+        this.initData = obj;
+        this.look = type;
       }
     },
     created(){
@@ -42,7 +52,7 @@
     },
     components: {
       showList,
-      showVideo
+      showDoc
     }
   }
 </script>

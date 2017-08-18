@@ -27,14 +27,14 @@
     </div>
     <!-- 底部 -->
     <div align="center" slot="footer">
-      <el-button type="info" @click="saveCall">保存草稿</el-button>
-      <el-button type="success" @click="submitCall">提交审核</el-button>
+      <el-button type="info" @click="saveCall('NOT_SUBMIT')">保存草稿</el-button>
+      <el-button type="success" @click="saveCall('NOT_AUDIT')">提交审核</el-button>
     </div>
     <!-- 内容 start -->
     <!-- 前置内容 -->
     <slot name="preContent"></slot>
     <!-- 课程基本信息 -->
-    <basic-edit v-if="menuActive === 'basic'" ref="basic"></basic-edit>
+    <basic-edit v-if="menuActive === 'basic'" ref="basic" :operailityData="operailityData"></basic-edit>
     <!-- 课程简介 -->
     <intro-edit v-if="menuActive === 'intro'" ref="intro"></intro-edit>
     <!-- 课程教学大纲 -->
@@ -56,6 +56,7 @@
 </template>
 
 <script>
+  import api from './api';
   import {
     getNormCourse
   } from './dataTool';
@@ -75,7 +76,7 @@
   //当前组件引入全局的util
   let Util = null;
   export default {
-    props: ['showMenu'],
+    props: ['showMenu', 'operailityData'],
     data() {
       return {
         menuActive: 'basic', // 激活菜单
@@ -87,24 +88,25 @@
         // 保存数据到store之后才能切到目标菜单
         this.$refs[this.menuActive].saveToStore() && (this.menuActive = menu);
       },
-      // 保存 调用子组件的save方法
-      saveCall() {
-        // return this.$refs[this.menuActive].submitData()
+      // 保存 调用子组件的save方法|提交审核
+      saveCall(auditStatus) {
         if (this.$refs[this.menuActive].saveToStore()) {
-          console.log(this.getSaveData())
+          this.ajax({
+            type: 'add',
+            ajaxSuccess: 'ajaxSuccess',
+            ajaxParams: {
+              jsonString: true,
+              url: api.add.path,
+              method: api.add.method,
+              data: this.getSaveData(auditStatus)
+            }
+          })
         }
       },
-      // 提交审核
-      submitCall() {
-        // 提交审核成功之后触发父级组件的add事件
-        // if (this.$refs[this.menuActive].submitData('submit')) {
-        //   // this.$emit('add')
-        // }
-      },
       // 获取数据
-      getSaveData() {
+      getSaveData(auditStatus) {
         let theData = this.$store.state.curriculum.data;
-        return getNormCourse(theData.course, theData.evaluate, theData.planDtoList)
+        return getNormCourse(theData.course, theData.evaluate, theData.planDtoList, auditStatus)
       },
     },
 

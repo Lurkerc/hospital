@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
   <div>
-    <el-form :model="formValidate" ref="formValidate" label-width="90px">
+    <el-form :model="formValidate" :rules="resLiterature" ref="formValidate" label-width="90px">
 
       <el-row>
         <el-col :span="20" :offset="2">
@@ -23,7 +23,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="分类:" prop="typeId">
-            <el-input v-model="type.typeId" @focus="typeClick" readonly></el-input>
+            <el-input v-model="type.typeName" @focus="typeClick" readonly></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -35,7 +35,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="大小:" prop="size">
-            {{formValidate.size}}
+            {{formValidate.size| formatSize}}
           </el-form-item>
         </el-col>
       </el-row>
@@ -51,16 +51,16 @@
 
       <el-row v-if="!unFile">
         <el-col :span="16" :offset="2">
-          <el-form-item label="资源文件:" >
-            <upload-file :unSize="true" :length="1" :accept="'docx'" @setUploadFiles="expenseFileEvent"></upload-file>
+          <el-form-item label="资源文件:"  prop="fileId" >
+            <up-file-new :unSize="true" :noFirstCallBack="true" :length="1" :uploadFiles="fileList" :accept="'doc|docx|xls|xlsx|ppt|pptx|pdf'" @setUploadFiles="expenseFileEvent"></up-file-new>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
 
     <el-row>
-      <el-col :span="16" :offset="2">
-        <div style="margin-left: 100px">
+      <el-col :span="10" :offset="10">
+        <div >
           <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
           <el-button @click="cancel">取消</el-button>
         </div>
@@ -99,6 +99,9 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import {resLiterature} from '../rules'
+  import upFileNew from '../../../common/uploadFileNew.vue'
+
   import api from "./api.js";
   /*--引入--照片墙--*/
   import imgWall from '../../../common/uploadPhotoWall.vue'
@@ -108,6 +111,7 @@
     props:['operailityData','fromWhereTree','unImgs','unLogo','unFile','url','name','id'],
     data() {
       return {
+        resLiterature,
         contenHeight: 0,
         viewTypes: '', // 视图类型
         //tree默认项设置
@@ -145,6 +149,7 @@
         },
         deptId:'',
         typeModal:false,
+        fileList:[],//存储的文件
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         editMessTitle: {
           type: 'edit',
@@ -154,7 +159,7 @@
           ajaxError: 'ajaxError',
           ajaxParams: {
             url: this.url.modify.path + this.operailityData.id,
-            method: 'post',
+            method: 'put',
             data: {},
           },
         },
@@ -182,11 +187,24 @@
       getListData(res){
         let data = res.data;
         if(!data) return;
+        if(data.fileId){
+          this.fileList =[ {
+            fileId:data.fileId,
+            fileName:data.fileName || ' ',
+            data:{
+              id:data.fileId,
+            }
+          }]
+        }
+        data.size = data.fileSize;
         this.formValidate = data;
       },
-      //点击数的回调函数
+
+
+      //点击树的回调函数
       treeSubEvent(){
         this.type.typeName = this.type.updateTypeName;
+        this.formValidate.typeId = this.deptId;
         this.typeModal = false;
       },
 
@@ -196,9 +214,12 @@
        * */
       listenSubEvent(isLoadingFun){
         if(!isLoadingFun) isLoadingFun=function(){};
-        isLoadingFun(true);
-        this.editMessTitle.ajaxParams.data = this.formValidate;
-        this.ajax(this.editMessTitle,isLoadingFun)
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit) {
+          isLoadingFun(true);
+          this.editMessTitle.ajaxParams.data = this.formValidate;
+          this.ajax(this.editMessTitle, isLoadingFun);
+        }
       },
 
       /*
@@ -260,23 +281,14 @@
         this.$emit('cancel',this.editMessTitle.type);
       },
 
-
-      //上传视频文件
-      expenseFileEvent(){
+      //上传文档文件
+      expenseFileEvent(ids,srcObj,file){
         if(file.length==1){
-          this.formValidate.size = (file[0].size/1024).toFixed(2) +'kb'
+          this.formValidate.size = file[0].size
+        }else {
+          this.formValidate.size = 0
         }
         this.formValidate.fileId = ids ;
-      },
-
-      //封面图
-      expenseLogoEvent(a,b,c){
-        console.log(a,b,c);
-      },
-
-      //imgsPath
-      expenseImgsEvent(a,b,c){
-        console.log(a,b,c);
       },
 
 
@@ -291,6 +303,6 @@
     },
     mounted(){
     },
-    components: {imgWall}
+    components: {imgWall,upFileNew}
   }
 </script>

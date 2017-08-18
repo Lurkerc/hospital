@@ -4,11 +4,13 @@ import _ from "lodash";
  * 获取课程提交数据
  * @param {*} course 
  * @param {*} evaluate 
- * @param {*} planDtoList 
+ * @param {*} planDtoList
+ * @param auditStatus 状态
  */
-const getNormCourse = function (course, evaluate, planDtoList) {
+const getNormCourse = function (course, evaluate, planDtoList, auditStatus) {
   let data = _.defaultsDeep({}, course); // 课程基本信息
   data.evaluate = _.defaultsDeep({}, evaluate); // 教学质量评价对象
+  data.auditStatus = auditStatus;
   data.planDtoList = [];
   planDtoList.map((items, index) => {
     let item = _.defaultsDeep({}, items);
@@ -32,6 +34,7 @@ const getNormCourse = function (course, evaluate, planDtoList) {
     delete(item.testingDtoListTemp);
     data.planDtoList.push(item)
   })
+  delete(data.createTime);
   return data
 }
 

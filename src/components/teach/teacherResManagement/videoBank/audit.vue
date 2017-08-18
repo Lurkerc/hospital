@@ -8,7 +8,7 @@
       <el-form :model="formValidate" ref="formValidate" label-width="90px">
 
         <el-row>
-          <el-col :span="8" :offset="2">
+          <el-col :span="8" :offset="4">
             <el-form-item label="审核结果:" prop="disState" >
               <el-radio-group v-model="formValidate.auditStatus">
                 <el-radio class="radio"  label="AUDIT_SUCCESS">通过</el-radio>
@@ -17,11 +17,11 @@
             </el-form-item>
           </el-col>
 
-        <el-col :span="8" :offset="2">
-          <el-form-item label="资源分类:" >
-            <el-input v-model="type.typeName" @focus="typeClick" readonly></el-input>
-          </el-form-item>
-        </el-col>
+        <!--<el-col :span="8" :offset="2">-->
+          <!--<el-form-item label="资源分类:" >-->
+            <!--<el-input v-model="type.typeName" @focus="typeClick" readonly></el-input>-->
+          <!--</el-form-item>-->
+        <!--</el-col>-->
         </el-row>
 
         <el-row >
@@ -117,7 +117,7 @@
                 ajaxError: 'ajaxError',
                 ajaxParams: {
                   url: this.url.audit.path,
-                  method: 'post',
+                  method: this.url.audit.method,
                   data: {
 
                   },
@@ -147,7 +147,6 @@
             }
             this.addMessTitle.ajaxParams.url = this.url.audit.path+ids.join(',');
             this.addMessTitle.ajaxParams.data = formValidate;
-            console.log(this.addMessTitle);
             this.ajax(this.addMessTitle,isLoadingFun)
           },
           //点击分类

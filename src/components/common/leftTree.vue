@@ -13,9 +13,7 @@
     </div>
 
     <div class="treeContent" :style="defaults.selectUser?'top:36px':''">
-      <el-tree :style="style" highlight-current node-key="id" class="filter-tree" :data="defaults.treeData " :props="defaultProps"
-        @node-click="treeClick" :current-node-key="currentNodeKey" :default-expanded-keys="expandedKeys" :expand-on-click-node="false"
-        :filter-node-method="filterNode" :empty-text="defaults.emptyText" :lazy="defaults.asyn" :render-content="renderContent" :load="loadNode" ref="treeId">
+      <el-tree :style="style" highlight-current node-key="id" class="filter-tree" :data="defaults.treeData " :props="defaultProps" @node-click="treeClick" :current-node-key="currentNodeKey" :default-expanded-keys="expandedKeys" :expand-on-click-node="false" :filter-node-method="filterNode" :empty-text="defaults.emptyText" :lazy="defaults.asyn" :render-content="renderContent" :load="loadNode" ref="treeId">
         <i class="el-icon-delete"></i>
       </el-tree>
     </div>
@@ -94,7 +92,7 @@
   let store = null;
   export default {
     name: "leftTree",
-    props: ['treeOptions', "fromWhereTreeType", 'clickAddChange', 'initSltedNode','currentKey'],
+    props: ['treeOptions', "fromWhereTreeType", 'clickAddChange', 'initSltedNode', 'currentKey'],
     data() {
       return {
         //tree
@@ -108,8 +106,8 @@
           cls: [], //控制目录树布局class
           treeData: [],
           isInitSltedNode: true, //是否需要默认选中tree节点
-          selectUser:false,  // 选择弹窗与有目录树页面
-          emptyText:"暂无数据"
+          selectUser: false, // 选择弹窗与有目录树页面
+          emptyText: "暂无数据"
 
         },
         loadNodeInit: true,
@@ -201,7 +199,7 @@
         if (this.treeOptions.defaultProps) {
           this.defaultProps = Object.assign(this.defaultProps, this.treeOptions.defaultProps);
         }
-        if(this.currentNodeKey){
+        if (this.currentNodeKey) {
           this.currentNodeKey = this.currentKey
         }
 
@@ -214,12 +212,12 @@
       //从server端获取tree数据
       getTreeData(responseData) {
         let defaults = this.defaults;
-        if (!this.valDataType(responseData.data, "Array") || responseData.data.length == 0){
+        if (!this.valDataType(responseData.data, "Array") || responseData.data.length == 0) {
           if (this.fromWhereTree == "user") {
             this.showMess("还没有给您分配部门管理员!暂无部门可管理!");
             this.defaults.emptyText = "您未分配管理的部门";
             return;
-          }else{
+          } else {
             this.defaults.emptyText = "没有可选择部门";
             return;
           }
@@ -472,8 +470,8 @@
               this.sltParentId = obj.id;
             }
           }
-          if(obj.id<0){
-              this.sltParentId = 0;
+          if (obj.id < 0) {
+            this.sltParentId = 0;
           }
         }, 10)
 
@@ -542,7 +540,7 @@
       //新建部门、修改部门、删除部门
       operationTreeData(type) {
         if (this.fromWhereTree == "user") {
-          if(this.defaults.treeData.length==0){
+          if (this.defaults.treeData.length == 0) {
             this.showMess("还没有给您分配部门管理员!暂无部门可管理!");
             return;
           }

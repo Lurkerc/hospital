@@ -14,12 +14,16 @@ const api = {
     path: '/criterionCourseType/modify',
     method: 'put'
   },
+  courseTreeGet:{  //左侧树-查看  modify/{id}
+    path: '/criterionCourseType/get/',
+    method: 'get'
+  },
   courseTreeDel:{  //左侧树删除 remove/{ids}
     path: '/criterionCourseType/remove',
     method: 'delete'
   },
   courseTreelistPage:{  //列表 (点击树，分页查询标准课程列表)
-    path: "/criterionCourse/listPage",
+    path: "/criterionCourseType/listPage",
     method: 'get'
   },
 

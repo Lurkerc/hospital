@@ -4,10 +4,10 @@
       :on-success="onSuccess" :on-error="onError" :on-preview="onPreview" :on-remove="onRemove" :on-format-error="onFormatError"
       :on-exceeded-size="onExceededSize" :file-list="fileList" :drag="isDrag" :headers="headers" :class="{uploadShow:uploadShow,'picture-card':listType=='picture-card'}"
       :list-type="listType" :action="upUrl">
-      <div v-if="listType=='text'" v-show="!uploadShow">
+      <div v-if="listType=='text' && listLength<data.length" v-show="!uploadShow">
         <el-button size="small" type="primary">点击上传</el-button>
       </div>
-      <div v-if="listType=='picture'" style="padding: 20px 0" v-show="!uploadShow">
+      <div v-if="listType=='picture' && listLength<data.length" style="padding: 20px 0" v-show="!uploadShow">
         <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
         <p>点击或将文件拖拽到这里上传</p>
       </div>
@@ -57,8 +57,8 @@
       //        application/vnd.openxmlformats-officedocument.wordprocessingml.document,
       //        application/vnd.ms-powerpoint,
       //          text/plain`;
-      let pictureAccept = 'jpg/png/bmp/gif/psd/tiff/tga';
-      let textAccept = `zip/rar/xlsx/docx/ppt/txt`;
+      let pictureAccept = 'png|jpg|jpeg|bmp|gif';
+      let textAccept = `doc|docx|xls|xlsx|ppt|pptx|pdf`;
       let selectAccept = [];
 
       let listType;
@@ -70,7 +70,7 @@
         accept: this.accept,
         drag: this.drag,
         size: this.size || 500,
-        length: this.length || 50,
+        length: this.length || 500,
         message: this.message,
         show: this.show,
       };
@@ -173,6 +173,7 @@
           arr[i].url = list[i].filePath;
           arr[i].type = list[i].fileType;
         }
+        this.listLength = arr.length;
         return arr
       },
 
@@ -197,7 +198,17 @@
         //console.log("上传前")
         //不能上传同名文件；
         for(let i=0;i<this.fileList.length;i++){
-          if(this.fileList[i].name == file.name){
+          let fileListName = this.fileList[i].name.split('.');
+          let tempFileListName =  (fileListName[fileListName.length - 1]+'').toLowerCase();
+          fileListName[fileListName.length - 1] = tempFileListName;
+          fileListName = fileListName.join('.');
+          //把后缀变成小写
+          let name = file.name.split('.');
+          let temName = (name[name.length - 1]+'').toLowerCase();
+          name[name.length - 1] = temName;
+          name = name.join('.');
+          console.log(fileListName,name);
+          if(fileListName == name){
             this.$Notice.warning({
               title: '文件已存在',
               desc: ` 文件  ${file.name}  已存在。`
@@ -220,11 +231,9 @@
 
         }
 
-
-
         //判断类型
         let type = file.name.split('.');
-        type = type[type.length - 1];
+        type = (type[type.length - 1]+'').toLowerCase();
         if (!(~this.data.accept.indexOf(type))) {
           this.$Notice.warning({
             title: '文件格式不正确',
@@ -241,12 +250,22 @@
           });
           return false;
         }
+
+
+        this.ajaxCreateLoading(true);
+
       },
       onProgress(event, file, fileList) {
         //文件上传时的钩子，返回字段为 event, file, fileList
       },
       onSuccess(response, file, fileList) {
-
+        this.ajaxCreateLoading(false);
+        if(response.status.code!=0){
+          this.errorMess(response.status.msg);
+          this.listLength--
+          fileList.length =  fileList.length-1;
+          return;
+        }
         this.fileList = fileList;
         //文件上传成功时的钩子，返回字段为 response, file, fileList
         //console.log("上传成功")
@@ -263,6 +282,7 @@
         this.$emit('setUploadFiles', this.processorList(fileList), fileList);
       },
       onError(error, file, fileList) {
+        this.ajaxCreateLoading(false);
         this.listLength--;
         //文件上传失败时的钩子，返回字段为 error, file, fileList
         this.$Notice.warning({
@@ -271,13 +291,15 @@
       },
       onPreview(file) {
         //点击已上传的文件链接时的钩子，返回字段为 file， 可以通过 file.response 拿到服务端返回数据
-        if (this.listType != 'text') return;
-        let downloadUrl = this.downUrl + '/' + file.id;
-        //        let http = this.$store.getters.getEnvPath.http;
-        //        if(http){
-        //          downloadUrl =http+ downloadUrl
-        //        }
-        window.open(downloadUrl, "_self");
+        if(this.show){
+          if (this.listType != 'text') return;
+          let downloadUrl = this.downUrl + '/' + file.id;
+          //        let http = this.$store.getters.getEnvPath.http;
+          //        if(http){
+          //          downloadUrl =http+ downloadUrl
+          //        }
+          window.open(downloadUrl, "_self");
+        }
 
 
       },

@@ -44,15 +44,11 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
+    props:["docImages"],
     data() {
+      let that = this;
       return {
-        imagesList:[
-          {src:"/static/swiper-img/nature1.jpg",content:"内容介绍1"},
-          {src:"/static/swiper-img/nature2.jpg",content:"内容介绍2"},
-          {src:"/static/swiper-img/nature3.jpg",content:"内容介绍3"},
-          {src:"/static/swiper-img/nature4.jpg",content:"内容介绍4"},
-          {src:"/static/swiper-img/nature5.jpg",content:"内容介绍5"},
-        ],
+        imagesList:[],
         currIdx:0,
         swiperOption1: {
           // NotNextTick is a component's own property, and if notNextTick is set to true, the component will not instantiate the swiper through NextTick, which means you can get the swiper object the first time (if you need to use the get swiper object to do what Things, then this property must be true)
@@ -70,6 +66,7 @@
           // swiper的各种回调函数也可以出现在这个对象中，和swiper官方一样
           onTransitionStart(swiper){
             //console.log(swiper)
+            that.$emit("showIntro",swiper.activeIndex);
           },
           // more Swiper configs and callbacks...
           // ...
@@ -97,6 +94,7 @@
           // swiper的各种回调函数也可以出现在这个对象中，和swiper官方一样
           onTransitionStart(swiper){
             //console.log(swiper)
+            that.$emit("showIntro",swiper.activeIndex);
           },
           // more Swiper configs and callbacks...
           // ...
@@ -106,6 +104,9 @@
     methods: {
       //初始化请求列表数据
       init(){
+        for(var i=0;i<this.docImages.length;i++){
+          this.imagesList.push({src:this.docImages[i]});
+        }
 
       },
 

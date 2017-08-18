@@ -99,7 +99,6 @@
           ajaxParams:{
             url: api.courseTreeAdd.path,
             method:'post',
-            jsonString:true,
             data:{}
           }
         },

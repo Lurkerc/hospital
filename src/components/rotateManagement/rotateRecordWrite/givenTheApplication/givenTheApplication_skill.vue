@@ -36,7 +36,7 @@
         </el-col>
         <el-col :span="20" :offset="2">
           <el-form-item label="技能操作视频：">
-            <uploadFile @setUploadFiles="setUploadFiles" :uploadFiles="uploadFiles" :size="100*1024" accept="mp4"></uploadFile>
+            <upload-file @setUploadFiles="setUploadFiles" :length="1" :uploadFiles="uploadFiles" :size="100*1024" accept="mp4"></upload-file>
           </el-form-item>
         </el-col>
       </el-form>
@@ -61,7 +61,11 @@
         self: this,
         viewData: [],
         uploadFiles: [],
-        fileIds: '',
+        //form表单bind数据
+        formValidate: {
+          fileIds: '',
+          podId: this.operailityData.podId,
+        },
         //保存按钮基本信息
         loadBtn: {
           title: '提交',
@@ -104,7 +108,7 @@
 
       // 上传附件
       setUploadFiles(ids) {
-        this.fileIds = ids;
+        this.formValidate.fileIds = ids;
       },
 
       // 取消
@@ -113,14 +117,21 @@
       },
 
       // 提交
-      listenSubEvent() {
-        // this.ajax({
-        //   ajaxSuccess: 'getDataSuccess',
-        //   ajaxParams: {
-        //     url: api.get.path + this.operailityData.depExaminationId,
-        //     method: api.get.method
-        //   }
-        // })
+      listenSubEvent(isLoadingFun) {
+        if (!this.formValidate.fileIds) {
+          this.errorMess('请上传技能操作视频')
+          return
+        }
+        if (!isLoadingFun) isLoadingFun = function () {};
+        isLoadingFun(true);
+        this.ajax({
+          ajaxSuccess: 'getDataSuccess',
+          ajaxParams: {
+            url: api.skillMakeUpExamAdd.path,
+            method: api.skillMakeUpExamAdd.method,
+            data: this.formValidate
+          }
+        }, isLoadingFun)
       },
     },
     components: {},

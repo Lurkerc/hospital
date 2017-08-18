@@ -8,9 +8,9 @@
   <!--增加弹窗-->
   <Modal :mask-closable="false" v-model="typeModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="400">
     <modal-header slot="header" :content="typeId"></modal-header>
-    <div style="height:500px;">
+    <div style="height:500px;" v-if="typeModal">
       <div style="height:450px;">
-        <left-tree slot="left" @setCurrSltNodeId="setTreeDepId" @tree-click="treeClick" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
+        <left-tree slot="left" @setCurrSltNodeId="setTreeDepId" @tree-click="treeClick" :treeOptions="treeDefaults" :fromWhereTreeType="'user'"></left-tree>
       </div>
       </br>
       <el-row>
@@ -43,7 +43,7 @@
         typeModal: false,
         //tree默认项设置
         treeDefaults: {
-          getDataUrl: '',
+          getTreeUrl: this.getTreeUrl,
           isShowMenus: false,
           isShowSearch: false, //是否显示目录树查询
         },
@@ -58,10 +58,10 @@
       //初始化请求列表数据
       init() {
         if (this.getTreeUrl) {
-          this.treeDefaults.getDataUrl = this.getTreeUrl;
+          this.treeDefaults.getTreeUrl = this.getTreeUrl;
         }
       },
-      
+
       openModal() {
         this.typeModal = true;
       },

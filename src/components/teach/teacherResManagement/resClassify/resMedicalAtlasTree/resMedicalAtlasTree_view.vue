@@ -5,7 +5,7 @@
 ----------------------------------->
 <template>
   <div >
-    <el-form :model="formValidate" ref="formValidate" class="demo-form-inline" :rules="studyTree" label-width="110px" >
+    <el-form :model="formValidate" ref="formValidate" class="demo-form-inline" label-width="110px" >
 
       <el-row >
         <el-col :span="10" :offset="2">
@@ -58,13 +58,13 @@
 
         //form表单bind数据
         formValidate: {
-          name:'dd',
-          parentId:this.operailityData.parentId,
-          managerId:'2',
-          managerName:'44',
-          types:this.operailityData["types"],
-          createTime:'2017-08-10 18:20 00',
-          operator:"456"
+//          name:'dd',
+//          parentId:this.operailityData.parentId,
+//          managerId:'2',
+//          managerName:'44',
+//          types:this.operailityData["types"],
+//          createTime:'2017-08-10 18:20 00',
+//          operator:"456"
         },
       }
     },
@@ -81,18 +81,12 @@
 
           this.currCreateDate = this.formValidate.createTime;
 
-          this.users.push({
-            key:this.formValidate.managerId,
-            label:this.formValidate.managerName,
-            description: '人员id---' + this.formValidate.managerId + '的描述信息',
-            disabled: false
-          })
         },
         ajaxParams:{
           url: api.treeGet.path+"/"+this.operailityData.id,
         }
       }
-      //this.ajax(getEditTitle);
+      this.ajax(getEditTitle);
     },
     mounted(){
       //初始化

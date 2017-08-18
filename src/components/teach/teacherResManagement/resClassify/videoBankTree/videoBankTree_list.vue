@@ -10,6 +10,7 @@
                  :fromWhereTreeType="fromWhereTree"></left-tree>
       <!-- 标准课程 -->
       <div slot="right" id="content" ref="content">
+        <el-form :inline="true">
         <el-row style="padding-bottom:20px;">
           <el-col :span="14">
             <el-button type="primary" @click="add">新建</el-button>
@@ -17,15 +18,17 @@
           </el-col>
           <!-- 搜索框 -->
           <el-col :span="10" align="right">
-            <el-input placeholder="名称" v-model="searchObj.name" style="width:300px;" :maxlength="20">
-              <el-button slot="append" icon="search" @click="search"></el-button>
-            </el-input>
-            <el-button :icon="getSearchBtnIcon()" @click="openMoreSearch()">筛选</el-button>
+            <el-form-item label="名称:" prop="name">
+              <el-input placeholder="名称" v-model="searchObj.name" style="width:300px;" :maxlength="20">
+                <el-button slot="append" icon="search" @click="search"></el-button>
+              </el-input>
+            </el-form-item>
+            <!--<el-button :icon="getSearchBtnIcon()" @click="openMoreSearch()">筛选</el-button>-->
           </el-col>
         </el-row>
         <!-- 多条件 -->
         <div style="overflow:hidden;" v-show="showMoreSearch" ref="showMoreSearch" align="right">
-          <el-form :inline="true">
+
             <el-form-item label="卡号:">
               <el-input v-model="searchObj.cardNum"></el-input>
             </el-form-item>
@@ -41,8 +44,9 @@
             <el-form-item style="margin-right:0;">
               <el-button @click="search" type="info">查询</el-button>
             </el-form-item>
-          </el-form>
+
         </div>
+        </el-form>
         <!-- 数据表格 -->
         <div ref="tableView">
           <el-table @selection-change="handleSelectionChange" align="center" :context="self" :height="tableHeight" :data="tableData" tooltip-effect="dark" style="width: 100%">
@@ -183,7 +187,7 @@
           id:'auditId',
           title:'查看'
         },
-
+        unAdd:false,
         showMoreSearch: false, // 更多筛选
         operailityData:'',
         multipleSelection: [],
@@ -198,14 +202,7 @@
           operator: '', // 操作人
           createTime: '', // 节点创建时间
         },
-        tableData: [{
-          "id":10077,
-          "name":"类型6",
-          "managerId":"10000",
-          "managerName":"张三",
-          "operator":"李四",
-          "createTime":"20"
-        },],
+        tableData: [],
 
         //当前科室详情
         depDetails:{
@@ -298,17 +295,39 @@
         return flag;
       },
 
+      //通过get请求列表数据并渲染表格数据
+      updateListData(responseData){
+        let data = responseData.data;
+        let that = this;
+        this.tableData=[];
+        data = that.addIndex(data);
+        that.tableData= data;
+
+        this.listTotal = responseData.totalCount || 0;
+      },
 
       //初始化加载列表数据
       setTableData(){
-        this.listMessTitle.ajaxParams.params["parentId"] = this.deptId;
-        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params,this.formValidate);
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params,this.searchObj);
         this.postParamToServer(this.listMessTitle);
       },
+
+      //向服务器发送数据
+      postParamToServer(options){
+        if(this.deptId!=""){
+          options["ajaxParams"]["params"]["id"] = this.deptId;
+        }
+        this.ajax(options);
+      },
+
 
 
       /*--点击--添加--按钮--*/
       add(){
+        if(this.unAdd){
+          this.showMess('不能在此节点添加');
+          return;
+        }
         if(this.deptId==""){
           this.errorMess("请选择左侧目录节点!");
           return;
@@ -328,6 +347,7 @@
        * @param row Object  当前行数据对象
        * */
       show(row){
+
         this.operailityData = row;
         this.showModal = true;
       },
@@ -374,8 +394,14 @@
        * */
       treeClick(obj, node, self) {
         // 记录视图
+        if(node.level>2){
+          this.unAdd = true;
+        }else {
+          this.unAdd = false;
+        }
         this.viewTypes = obj.types;
         this.setTreeDepId(obj.id);
+
       },
 
 
@@ -392,7 +418,7 @@
        *  初始化或者刷新数列表的时候  调用treeClick函数 为deptId赋值
        * */
       treeClickInit(obj) {
-        this.treeClick(obj)
+        this.treeClick(obj);
       },
 
       /*
@@ -402,6 +428,7 @@
         if (id) {
           this.deptId = id;
         }
+        this.setTableData();
       },
 
 

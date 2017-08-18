@@ -987,3 +987,20 @@ ul.sltDepUl li.sltSubDep{
 .select-courses2{
   border-color: rgb(19, 206, 102);
 }
+
+
+//视频列表样式
+.my-video-list{
+  background: #abb19c;
+  color: #b087dc;
+}
+
+//图片文件隐藏名称
+.hide-name {
+  .el-upload-list__item-name{
+    display: none;
+  }
+  .el-upload-list__item {
+    width:125px;
+  }
+}

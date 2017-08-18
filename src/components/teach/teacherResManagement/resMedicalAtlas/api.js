@@ -9,6 +9,11 @@ const api = {
     method: 'get',
   },
 
+  detail: { // 查看
+    path:  '/atlas/info/', //{id}
+    method: 'get',
+  },
+
   listPage: { // 列表
     path:  '/atlas/listPage',
     method: 'get',
@@ -50,7 +55,7 @@ const api = {
   //   4 ATLAS 医学图谱
 
   resourceTypeTree:{ // 左侧树
-    path:  '/resourceType/tree',  //{ids}   //
+    path:  '/resourceType/tree?types=ATLAS',  //{ids}   //
     method: 'delete',
   },
 

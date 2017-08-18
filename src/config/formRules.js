@@ -350,7 +350,7 @@ let rules = {
     school: [baseRules.requiredNoEvent], //学校
     grade: [baseRules.required], //年级
     group: [baseRules.required], //班级
-    idNumber: [baseRules.required], //身份证号码
+    idNumber: [baseRules.required, baseRules.inputLen(15, 18)], //身份证号码
     mobile: [baseRules.required, baseRules.mobile], //手机号
     emgContactMobile: [baseRules.mobile], // 紧急联系人
     postCode: [baseRules.number], // 邮编
