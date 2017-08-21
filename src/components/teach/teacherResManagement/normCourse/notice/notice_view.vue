@@ -5,7 +5,7 @@
       <div v-if="noticeList.length">
         <el-col v-for="item in noticeList" :key="item.id">
           <p class="noticeDate">{{ item.createTime | formatDate('yyyy-MM-dd') }}</p>
-          <div class="noticeCon">{{ item.content }}</div>
+          <div class="noticeCon" v-html="item.content"></div>
         </el-col>
       </div>
       <p v-else class="noNoticeTips">暂无公告</p>
@@ -22,17 +22,16 @@
     data() {
       return {
         noticeList: [],
-        formValidate: {
-          pageSize: 8,
-          courseId: '',
-          curPage: 1,
-        },
         totalCount: 0,
       }
     },
     methods: {
       init() {
-        this.formValidate.courseId = this.$store.state.curriculum.look.course.id;
+        this.formValidate = {
+          pageSize: 8,
+          courseId: this.$store.state.curriculum.look.course.id,
+          curPage: 1,
+        };
         this.getNotice()
       },
       getNotice() {

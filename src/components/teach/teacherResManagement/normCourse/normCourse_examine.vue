@@ -83,8 +83,8 @@
         let msg = type === 'AUDIT_FAILURE' ? '驳回' : '通过';
         let opt = {
           type: 'examine',
-          successTitle: msg + '成功!',
-          errorTitle: msg + '失败!',
+          successTitle: msg + '操作成功!',
+          errorTitle: msg + '操作失败!',
           ajaxSuccess: 'ajaxSuccess',
           ajaxError: 'ajaxError',
           ajaxParams: {

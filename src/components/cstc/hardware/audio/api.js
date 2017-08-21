@@ -8,14 +8,11 @@ const api = {
     path: thisFile + '/debug/intercom/start/', //{boxIds}
     method: 'post'
   },
-  remove: { // 设置网络音箱音量（增大音量、减小音量、设置音量时调用）
-    path: thisFile + '/debug/remove/', // {id}
+  volume: { // 设置网络音箱音量（增大音量、减小音量、设置音量时调用）
+    path: thisFile + '/debug/volume/', // {id}
     method: 'post'
   },
-  taskRemove: { // 删除一条或多条广播任务（删除广播任务提交时调用）
-    path: thisFile + '/debug/task/remove/', // {ids}
-    method: 'post'
-  },
+  taskRemove: thisFile + '/debug/task/remove', // {ids},// 删除一条或多条广播任务（删除广播任务提交时调用）
   taskStop: { // 停止广播任务（停止广播任务时调用）
     path: thisFile + '/debug/task/stop/', // {id}
     method: 'put'
@@ -31,11 +28,11 @@ const api = {
   },
 
   taskAdd: { // 新建广播任务（新建广播任务提交时调用）
-    path: thisFile + 'debug/task/add',
+    path: thisFile + '/debug/task/add',
     method: 'post'
   },
   taskList: { // 广播调试任务列表（调试加载广播任务列表时调用）
-    path: thisFile + 'debug/task/list',
+    path: thisFile + '/debug/task/list',
     method: 'get'
   },
 
@@ -58,6 +55,11 @@ const api = {
 
   roomList: { // 音箱调试房间列表（调试音箱加载设备所在位置列表时调用）
     path: 'room/all/list',
+    method: 'get'
+  },
+
+  getFilePath: { // 获取广播服务器音频文件列表
+    path: thisFile + '/debug/task/file/list',
     method: 'get'
   },
 

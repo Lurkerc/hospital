@@ -1,7 +1,7 @@
 <template>
   <!-- 添加音响设备 -->
   <div class="editForm">
-    <el-form :model="formValidate" ref="formValidate" :rules="this.$store.state.rules" label-width="90px">
+    <el-form :model="formValidate" ref="formValidate" :rules="rules" label-width="100px">
 
       <el-row>
         <el-col :span="8" :offset="2">
@@ -29,17 +29,14 @@
 
           <el-col :span="8" :offset="2">
             <el-form-item label="设备位置：" prop="locationType">
-              <el-radio class="radio" v-model="formValidate.locationType" :label="item.value" v-if="item.value !== ''" v-for="item in locationType"
-                :key="item.value">{{ item.label }}</el-radio>
+              <el-radio class="radio" v-model="formValidate.locationType" :label="item.value" v-if="item.value !== ''" v-for="item in locationType" :key="item.value">{{ item.label }}</el-radio>
             </el-form-item>
           </el-col>
 
           <el-col :span="8" :offset="2" v-if="formValidate.locationType === 'ROOM'">
-            <el-form-item label="房间号：" prop="roomId">
-              <el-select v-model="formValidate.roomId" placeholder="请选择">
-                <el-option v-for="item in roomSelectList" :key="item.id" :value="item.id">
-                  {{ item.roomNum }}
-                </el-option>
+            <el-form-item label="房间号：" prop="roomId" required>
+              <el-select v-model="selectRoomId" placeholder="请选择">
+                <el-option v-for="(item,index) in roomSelectList" :key="item.id" :value="index" :label="item.roomNum"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -53,8 +50,8 @@
         </el-col>
 
         <el-col :span="18" :offset="2">
-          <el-form-item label="设备简介：" prop="abstract">
-            <el-input type="textarea" :autosize="{ minRows: 2}" v-model="formValidate.abstract"></el-input>
+          <el-form-item label="设备简介：" prop="describes">
+            <el-input type="textarea" :autosize="{ minRows: 2}" v-model="formValidate.describes"></el-input>
           </el-form-item>
         </el-col>
 
@@ -74,6 +71,9 @@
 
 <script>
   let Util = null;
+  import {
+    audio as rules
+  } from '../../rules';
   import api from './api';
   import brand from './brand'; // 品牌
   import locationType from '../locationType'; // 所在位置
@@ -81,6 +81,7 @@
     data() {
       return {
         brand,
+        rules,
         locationType,
         //保存按钮基本信息
         loadBtn: {
@@ -89,16 +90,18 @@
         },
         // 表单
         formValidate: {
-          brand: '',
+          brand: 'KAIXI',
           modelNum: '',
           ip: '',
           locationType: 'ROOM',
           roomId: '',
           roomNum: '',
-          abstract: ''
+          other: '',
+          describes: ''
         },
         // 房间列表
-        roomSelectList: [],
+        roomSelectList: {},
+        selectRoomId: '',
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle: {
           type: 'add',
@@ -129,8 +132,8 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun) {
-        let isSubmit = this.submitForm("formValidate");
-        if (true) {
+        let isSubmit = this.submitForm("formValidate") && this.checkData();
+        if (isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
           this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
@@ -150,6 +153,21 @@
           }
         });
         return flag;
+      },
+      // 检测数据是否合法
+      checkData() {
+        let data = this.formValidate;
+        let selRoom = this.selectRoomId;
+        if (data.locationType === 'ROOM') {
+          if (!this.selectRoomId) {
+            this.errorMess('必选选择房间')
+            return false
+          } else {
+            data.roomId = selRoom;
+            data.roomNum = this.roomSelectList[selRoom].roomNum;
+          }
+        }
+        return true
       },
       /*
        * 当前组件发送事件给父组件
@@ -171,7 +189,9 @@
        * 获取选择的房间
        * */
       successGetRoomData(res) {
-        this.roomSelectList = res.data
+        let obj = {};
+        (res.data || []).map(item => obj[item.id] = item);
+        this.roomSelectList = obj
       },
       /**
        * 连接测试

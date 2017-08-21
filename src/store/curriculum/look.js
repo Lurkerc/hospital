@@ -54,6 +54,7 @@ const mutations = {
   /**************************** 初始化 *******************************/
   init: state => {
     state.course = {
+      "id": "",
       "title": "", //课程名称
       "direction": "", //应用方向说明
       "logo": "", //课程LOGO图

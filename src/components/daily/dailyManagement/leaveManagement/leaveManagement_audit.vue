@@ -23,7 +23,9 @@
         <el-col :span="18" :offset="2">
           <p class="center">
             <span class="name">请假时间</span>
-            <span style="padding-right: 25px" ></span>
+            <span style="padding-right: 25px" >
+              {{data.beginDate}}到{{data.endDate}}
+            </span>
             共<span class="border">{{data.timeLength}}</span>天
           </p>
         </el-col >

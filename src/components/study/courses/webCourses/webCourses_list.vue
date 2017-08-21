@@ -20,7 +20,7 @@
               </el-input>
             </div>
             <div class="listUpArea-moreSearch">
-              <el-button @click="showSearchMore" type="text">高级查询</el-button>
+              <!--<el-button @click="showSearchMore" type="text">高级查询</el-button>-->
             </div>
           </el-form>
         </div>
@@ -72,7 +72,7 @@
       <!--修改弹窗-->
       <Modal :mask-closable="false" v-model="editModal" class-name="vertical-center-modal" :width="1000">
         <modal-header slot="header" :content="headerContent.editId"></modal-header>
-        <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :style="modelStyle" :saveUrl="{path:api.modify.path+operailityData.id,method:api.modify.method}" :getUrl="api.getTemp"></edit>
+        <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :style="modelStyle" :saveUrl="{path:api.modify.path+operailityData.id,method:api.modify.method}" :getUrl="api.get"></edit>
         <div slot="footer"></div>
       </Modal>
       <!--增加弹窗-->
@@ -96,7 +96,7 @@
       <!--删除弹窗-->
       <Modal :mask-closable="false" v-model="removeModal" class-name="vertical-center-modal" :width="500">
         <modal-header slot="header" :content="headerContent.removeId"></modal-header>
-        <remove v-if="removeModal" :deleteUrl="api.remove" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
+        <remove v-if="removeModal" :deleteUrl="api.remove.path" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
         <div slot="footer"></div>
       </Modal>
     </div>

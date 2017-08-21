@@ -1,23 +1,19 @@
 <template>
-  <div>
+  <div class="jurisdictionEdit">
     <el-row>
       <el-col :span="12" style="width:48%;">
-        <el-transfer filterable :filter-method="device.filterMethod" filter-placeholder="请输入门禁名称" v-model="selectDevice" :data="device.data"
-          :titles="device.titles"></el-transfer>
+        <el-transfer filterable :filter-method="device.filterMethod" filter-placeholder="请输入门禁名称" v-model="selectDevice" :data="device.data" :titles="device.titles"></el-transfer>
       </el-col>
       <el-col :span="12" style="width:48%;float:right;">
-        <el-transfer filterable :filter-method="user.filterMethod" filter-placeholder="请输入人员名称" v-model="selectUser" :data="user.data"
-          :titles="user.titles"></el-transfer>
+        <el-transfer filterable :filter-method="user.filterMethod" filter-placeholder="请输入人员名称" v-model="selectUser" :data="user.data" :titles="user.titles"></el-transfer>
       </el-col>
       <el-form>
         <el-col>
           <el-form-item label="授权期限：" style="margin-top:20px;">
             <date-group :dateGroup="{text:'',startDate:formValidate.startDate,endDate:formValidate.endDate}">
-              <el-date-picker name="start" v-model="formValidate.startDate" :editable="false" type="date" placeholder="开始日期" :picker-options="pickerOptions0"
-                @change="handleStartTime"></el-date-picker>
+              <el-date-picker name="start" v-model="formValidate.startDate" :editable="false" type="date" placeholder="开始日期" :picker-options="pickerOptions0" @change="handleStartTime"></el-date-picker>
               <span> 至 </span>
-              <el-date-picker name="end" v-model="formValidate.endDate" :editable="false" type="date" placeholder="截止日期" :picker-options="pickerOptions1"
-                @change="handleEndTime"></el-date-picker>
+              <el-date-picker name="end" v-model="formValidate.endDate" :editable="false" type="date" placeholder="截止日期" :picker-options="pickerOptions1" @change="handleEndTime"></el-date-picker>
             </date-group>
           </el-form-item>
         </el-col>
@@ -234,6 +230,10 @@
 <style>
   .ajTimeSlot {
     margin-bottom: 10px;
+  }
+
+  .jurisdictionEdit .el-transfer-panel__list.is-filterable {
+    height: 178px;
   }
 
 </style>

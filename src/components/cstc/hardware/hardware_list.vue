@@ -3,14 +3,10 @@
   <div ref="content" id="content">
     <el-tabs v-model="hardwareActive">
       <el-tab-pane label="摄像机管理" name="video">
-        <keep-alive>
-          <video-module v-if="hardwareActive == 'video'" :contenHeight="contenHeight"></video-module>
-        </keep-alive>
+        <video-module v-if="hardwareActive == 'video'" :contenHeight="contenHeight"></video-module>
       </el-tab-pane>
       <el-tab-pane label="网络音箱管理" name="audio">
-        <keep-alive>
-          <audio-module v-if="hardwareActive == 'audio'" :contenHeight="contenHeight"></audio-module>
-        </keep-alive>
+        <audio-module v-if="hardwareActive == 'audio'" :contenHeight="contenHeight"></audio-module>
       </el-tab-pane>
     </el-tabs>
   </div>

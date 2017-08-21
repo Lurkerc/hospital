@@ -60,8 +60,6 @@
   import tqvInfoView from './TQVInfo/TQVInfo_view'; // 教学质量评价表
   // import treInfoView from './TREInfo/TREInfo_view'; // 试运行评估表
 
-  // 测试数据
-  import testData from './getData';
   //当前组件引入全局的util
   let Util = null;
   export default {
@@ -86,149 +84,15 @@
       getViewData() {
         this.ajax({
           ajaxSuccess: res => {
-            // this.$store.commit('curriculum/data/updateData', res.data);
-            // this.title = this.$store.state.curriculum.data.course.title;
-            // this.logo = this.$store.state.curriculum.data.course.logo;
+            this.$store.commit('curriculum/look/updateData', res.data);
+            this.title = this.$store.state.curriculum.look.course.title;
+            this.logo = this.$store.state.curriculum.look.course.logo;
             this.menuActive = 'intro';
           },
           ajaxParams: {
             url: this.lookUrl,
           }
         })
-
-        this.$store.commit('curriculum/look/updateData', {
-          "id": 1,
-          "title": "title测试",
-          "direction": "direction",
-          "logo": "logo",
-          "remark": "remark",
-          "outline": "outline",
-          "planDtoList": [{
-            "id": 10000,
-            "no": 1,
-            "duration": 1,
-            "content": "content1",
-            "remark": "remark1",
-            "realia": "realia1",
-            "wareDtoList": {
-              "before": [{
-                  "id": 2,
-                  "resourceId": 1,
-                  "resourceType": "VIDEO",
-                  "title": "课件1",
-                  "progress": 20,
-                  "length": 100
-                },
-                {
-                  "id": 2,
-                  "resourceId": 1,
-                  "resourceType": "VIDEO",
-                  "title": "课件1",
-                  "progress": 20,
-                  "length": 100
-                }
-              ],
-              "inProgress": [{
-                  "id": 2,
-                  "resourceId": 1,
-                  "resourceType": "VIDEO",
-                  "title": "课件1",
-                  "progress": 20,
-                  "length": 100
-                },
-                {
-                  "id": 2,
-                  "resourceId": 1,
-                  "resourceType": "VIDEO",
-                  "title": "课件1",
-                  "progress": 20,
-                  "length": 100
-                }
-              ],
-              "after": [{
-                  "id": 2,
-                  "resourceId": 1,
-                  "resourceType": "VIDEO",
-                  "title": "课件1",
-                  "progress": 20,
-                  "length": 100
-                },
-                {
-                  "id": 2,
-                  "resourceId": 1,
-                  "resourceType": "VIDEO",
-                  "title": "课件1",
-                  "progress": 20,
-                  "length": 100
-                }
-              ]
-            },
-            "testingDtoList": {
-              "before": {
-                "expiredTime": "2017-06-08 09:30:00",
-                "validityScore": 90,
-                "totalScore": 100,
-                "validitySubmits": 3,
-                "totalSubmits": 5
-              },
-              "inProgress": {
-                "expiredTime": "2017-06-08 09:30:00",
-                "validityScore": 90,
-                "totalScore": 100,
-                "validitySubmits": 3,
-                "totalSubmits": 5
-              },
-              "after": {
-                "expiredTime": "2017-06-08 09:30:00",
-                "validityScore": 90,
-                "totalScore": 100,
-                "validitySubmits": 3,
-                "totalSubmits": 5
-              }
-            }
-          }],
-          "evaluate": {
-            "studentWeight": 1,
-            "peersWeight": 3,
-            "superiorsWeight": 2,
-            "studentEvaluate": [{
-                "title": "上课活跃度",
-                "remark": "上课是否活跃",
-                "great": "8",
-                "good": "7",
-                "avg": "5",
-                "bad": "3"
-              },
-              {
-                "title": "上课活跃度",
-                "remark": "上课是否活跃",
-                "great": "8",
-                "good": "7",
-                "avg": "5",
-                "bad": "3"
-              }
-            ],
-            "peersEvaluate": [{
-              "title": "上课活跃度",
-              "remark": "上课是否活跃",
-              "great": "8",
-              "good": "7",
-              "avg": "5",
-              "bad": "3"
-            }],
-            "superiorsEvaluate": [{
-              "title": "上课活跃度",
-              "remark": "上课是否活跃",
-              "great": "8",
-              "good": "7",
-              "avg": "5",
-              "bad": "3"
-            }]
-          }
-        })
-        this.menuActive = 'intro';
-        this.title = this.$store.state.curriculum.look.course.title;
-        this.logo = this.$store.state.curriculum.look.course.logo;
       },
       // 获取图片
       getPicUrl(staticUrl) {
@@ -248,7 +112,7 @@
 
     // 销毁状态
     destroyed() {
-      // this.$store.commit('curriculum/data/destroy')
+      this.$store.commit('curriculum/look/destroy')
     },
 
     components: {

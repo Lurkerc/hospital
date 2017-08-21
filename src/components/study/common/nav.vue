@@ -35,9 +35,7 @@
       this.getMenu();
     },
     methods: {
-      handleClick(){
 
-      },
 
       // 获取菜单
       getMenu() {
@@ -77,7 +75,7 @@
       navChange(id,index,name){
           let obj ={
             pid:id,
-            id:'',
+            id:'全部',
             pName:name,
           } ;
         this.$emit('navChange',obj);
@@ -86,6 +84,15 @@
         this.active = id;
       },
 
+      //二级菜单改变
+      handleClick(tab, event){
+        let obj ={
+          pid: this.menuData[this.childIndex].id,
+          id:tab.name,
+          pName:this.menuData[this.childIndex].name,
+        } ;
+        this.$emit('navChange',obj);
+      },
     },
     watch:{
       operailityData(val){

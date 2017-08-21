@@ -9,8 +9,7 @@
     </div>
     <!--表格数据-->
     <div id="myTable" ref="myTable">
-      <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" highlight-current-row
-        style="width: 100%;height: 100%" @selection-change="handleSelectionChange">
+      <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%;height: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55">
         </el-table-column>
         <el-table-column align="center" label="序号" type="index" width="100"></el-table-column>
@@ -38,8 +37,7 @@
     <!--分页-->
     <div style="margin: 10px;">
       <div style="float: right;">
-        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
+        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
         </el-pagination>
       </div>
     </div>
@@ -89,17 +87,7 @@
         multipleSelection: [],
         dynamicHt: 100,
         self: this,
-        tableData: [{
-          "id": "1",
-          "brand": "DAHUA",
-          "modelNum": "HK508-5128",
-          "ip": "192.168.1.1",
-          "locationType": "ROOM",
-          "roomId": "1",
-          "roomNum": "101",
-          "orther": "六层",
-          "status": "OFFLINE"
-        }],
+        tableData: [],
         loading: false,
         debugAudioModal: false,
         listTotal: 1,

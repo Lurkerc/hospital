@@ -49,6 +49,10 @@ export default {
   * 发布通知
   *
   * */
+
+
+
+
   //删除一条或多条通知  DELETE
   noticeRemove:'notice/remove',    //{ids}
 
@@ -70,7 +74,7 @@ export default {
   //添加通知 PUT
   noticeAdd:'notice/add',
 
-  //查看回执信息（查看回执时调用） post
+  //查看回执信息（查看回执时调用） get
   receiptList:'notice/receipt/list'
 
 

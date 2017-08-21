@@ -60,8 +60,6 @@
   import tqvInfoView from './TQVInfo/TQVInfo_view'; // 教学质量评价表
   import treInfoView from './TREInfo/TREInfo_view'; // 试运行评估表
 
-  // 测试数据
-  import testData from './getData';
   //当前组件引入全局的util
   let Util = null;
   export default {

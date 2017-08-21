@@ -31,12 +31,12 @@
           <legend style="font-size:16px">&nbsp;&nbsp;学生评价
             <el-button v-if="!isReadOnly" size="mini" type="info" icon="plus" @click="addEvaluate('student')"></el-button>&nbsp;&nbsp;
           </legend>
-          <el-col>
+          <!-- <el-col>
             <el-form-item>
               <h3 class="ntqvtTitle">评价表:</h3>
               <el-button v-if="!isReadOnly" size="small" type="primary">选择评价表</el-button>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-table ref="singleTable" :data="evaluate.studentEvaluate">
             <el-table-column type="index" label="序号" width="68"></el-table-column>
             <el-table-column v-if="!isReadOnly" label="操作" align="center" width="70">
@@ -82,12 +82,12 @@
           <legend style="font-size:16px">&nbsp;&nbsp;同行评价
             <el-button v-if="!isReadOnly" size="mini" type="info" icon="plus" @click="addEvaluate('peers')"></el-button>&nbsp;&nbsp;
           </legend>
-          <el-col>
+          <!-- <el-col>
             <el-form-item>
               <h3 class="ntqvtTitle">评价表:</h3>
               <el-button v-if="!isReadOnly" size="small" type="primary">选择评价表</el-button>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-table ref="singleTable" :data="evaluate.peersEvaluate">
             <el-table-column type="index" label="序号" width="68"></el-table-column>
             <el-table-column v-if="!isReadOnly" label="操作" align="center" width="70">
@@ -133,12 +133,12 @@
           <legend style="font-size:16px">&nbsp;&nbsp;上级评价
             <el-button v-if="!isReadOnly" size="mini" type="info" icon="plus" @click="addEvaluate('superiors')"></el-button>&nbsp;&nbsp;
           </legend>
-          <el-col>
+          <!-- <el-col>
             <el-form-item>
               <h3 class="ntqvtTitle">评价表:</h3>
               <el-button size="small" type="primary" v-if="!isReadOnly">选择评价表</el-button>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-table ref="singleTable" :data="evaluate.superiorsEvaluate">
             <el-table-column type="index" label="序号" width="68"></el-table-column>
             <el-table-column label="操作" align="center" width="70" v-if="!isReadOnly">

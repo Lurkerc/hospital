@@ -43,17 +43,15 @@
         <el-col :span="17" :offset="2">
           <el-row class="lose-margin2">
             <el-col :span="20" :offset="2">
-              <quill-editor v-model="formValidate.content"
-                            ref="myQuillEditor"
-              >
-              </quill-editor>
+              <viewUEditor style="width:600px;" :name="'ud1'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
+
             </el-col>
           </el-row >
         </el-col >
       </el-row >
       <el-row >
         <el-col :span="17" :offset="2">
-          <el-form-item type="附件" label="置顶顺序:" class="feildFontweight">
+          <el-form-item label="附件:" class="feildFontweight">
             <upload-file  @setUploadFiles="setFiles"></upload-file>
           </el-form-item>
         </el-col >
@@ -72,12 +70,20 @@
 </template>
 <script>
   let Util=null;
+  import viewUEditor from '../../../common/showUeditor.vue';
   export default {
     props: ['operailityData','url'],
     data (){
       return{
 
-
+        UE:{},
+        ueditorVal:{
+          ud1:"",
+        },  //
+        ueditorConfig:{
+          //详细配置参考UEditor 官网api
+          initialFrameHeight:220,  //初始化编辑器高度,默认320
+        },
 
         //保存按钮基本信息
         loadBtn:{title:'确定',callParEvent:'listenSubEvent'},
@@ -125,6 +131,7 @@
         if(isSubmit){
           if(!isLoadingFun) isLoadingFun=function(){};
           isLoadingFun(true);
+          this.formValidate.content = this.ueditorVal.ud1;
           this.addMessTitle.ajaxParams.data=this.getFormData(this.formValidate);
           this.addMessTitle.ajaxParams.data .isReceipt =this.addMessTitle.ajaxParams.data .isReceipt+'';
           this.ajax(this.addMessTitle,isLoadingFun)
@@ -193,6 +200,37 @@
       setFiles(ids){
         this.formValidate.fileIds = ids;
       },
+
+      /**
+       *
+       * 存储编辑器的UE.editor对象
+       * @param name {string}  编辑器的name
+       *
+       * @param editor {}      编辑器的对象
+       *
+       */
+      storeUE(name,editor){
+        this.UE[name] = editor;
+      },
+
+      setMyVal(name,v){
+        this.UE[name].setContent(v);
+      },
+      /**
+       *
+       * 存储编辑器的value值
+       * @param name {string}  编辑器的name
+       *
+       * @param val  {string}  编辑器的内容
+       *
+       */
+      getUeditorVal(name,val){
+        this.ueditorVal[name] = val;
+      },
+
     },
+    components:{
+      viewUEditor
+    }
   }
 </script>

@@ -71,11 +71,12 @@
       },
       // 保存 调用子组件的save方法
       saveCall(auditStatus) {
+        let msg = auditStatus === 'NOT_SUBMIT' ? '保存草稿' : '提交审核';
         if (this.$refs[this.menuActive].saveToStore()) {
           this.ajax({
             type: 'edit',
-            successTitle: '修改成功',
-            errorTitle: '修改失败',
+            successTitle: msg + '成功',
+            errorTitle: msg + '失败',
             ajaxSuccess: 'ajaxSuccess',
             ajaxError: 'ajaxError',
             ajaxParams: {

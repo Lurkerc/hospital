@@ -14,93 +14,94 @@
       </ul>
     </div>
     <!-- 右侧 -->
-    <div class="adContent">
-      <el-tabs v-model="audioDebugActive">
-        <!-- 房间列表 -->
-        <div class="adcBox">
-          <!-- 操作按钮 -->
-          <div class="adcrButtonList">
-            <div class="floatLeft" style="margin-left:12px;">
-              <el-button size="small" type="success" @click="handleCheckedBoxChange(true)">全选</el-button>
-              <el-button size="small" type="warning" @click="handleCheckedBoxChange(false)">反选</el-button>
-            </div>
-            <div class="floatRight">
-              <el-button size="small" type="info" @click="setBoxVol('add')">增大音量</el-button>
-              <el-button size="small" type="info" @click="setBoxVol('red')">减小音量</el-button>
-              <el-input placeholder="音量" size="small" :maxlength="3" v-model="boxVol" class="setVolume">
-                <el-button slot="append" type="info" @click="setBoxVol(false)">设置音量</el-button>
-              </el-input>
-            </div>
+    <div class="adBugContent">
+      <!-- 视图切换 -->
+      <div class="admBtn">
+        <el-button type="text" @click="show('task')" :class="{'active':adView==='task'}">广播</el-button>
+        <el-button type="text" @click="show('intercom')" :class="{'active':adView==='intercom'}">直播</el-button>
+      </div>
+      <!-- 房间列表 -->
+      <div class="adcBox">
+        <!-- 操作按钮 -->
+        <div class="adcrButtonList">
+          <div class="floatLeft" style="margin-left:12px;">
+            <el-button size="small" type="success" @click="handleCheckedBoxChange(true)">全选</el-button>
+            <el-button size="small" type="warning" @click="handleCheckedBoxChange(false)">反选</el-button>
+            <span>（离线的音响不能选择）</span>
           </div>
-          <!-- 设备列表 -->
-          <div class="adcBoxList">
-            <el-checkbox-group v-model="checkBoxs">
-              <div class="adcrBoxItem" v-for="box in boxList" :key="box.id">
-                <el-checkbox :label="box.id"></el-checkbox>
-                <img src="../../../../../assets/ambuf/images/audio.png" class="audioImg">
-                <p class="audioVolume">{{ box.volume }}</p>
-                <p>{{ box.roomNum }}房间</p>
-                <p>{{ box.ip }}</p>
-              </div>
-            </el-checkbox-group>
+          <div class="floatRight">
+            <el-button size="small" type="info" @click="setBoxVol('add')">增大音量</el-button>
+            <el-button size="small" type="info" @click="setBoxVol('red')">减小音量</el-button>
+            <el-input placeholder="音量" size="small" :maxlength="3" v-model="boxVol" class="setVolume">
+              <el-button slot="append" type="info" @click="setBoxVol(false)">设置音量</el-button>
+            </el-input>
           </div>
         </div>
-        <!-- tab 广播 -->
-        <el-tab-pane label="广播" name="task">
-          <div class="taskBox" v-if="audioDebugActive == 'task'">
-            <div class="taskButton">
-              <el-button size="small" type="info" @click="addTask">新建任务</el-button>
-              <el-button size="small" type="danger" @click="removeTask">删除任务</el-button>
+        <!-- 设备列表 -->
+        <div class="adcBoxList">
+          <el-checkbox-group v-model="checkBoxs" v-if="boxList.length">
+            <div class="adcrBoxItem" v-for="box in boxList" :key="box.id">
+              <el-checkbox :label="box.id" v-if="box.id"></el-checkbox>
+              <img src="../../../../../assets/ambuf/images/audio.png" class="audioImg">
+              <p class="audioVolume">{{ box.volume }}</p>
+              <p>{{ box.roomNum }}房间</p>
+              <p>{{ box.ip }}</p>
             </div>
-            <el-table align="center" :height="300" :context="self" :data="taskList" tooltip-effect="dark" highlight-current-row style="width: 100%;height: 100%"
-              @selection-change="handleSelectionTaskChange">
-              <el-table-column type="selection" width="55">
-              </el-table-column>
-              <el-table-column align="center" label="操作" width="80">
-                <template scope="scope">
-                  <el-button size="small" type="success" @click="startTask(scope.row.id,scope.row.$index)" v-if="scope.row.status === 'UNEXECUTED'">执行</el-button>
-                  <el-button size="small" type="warning" @click="stopTask(scope.row.id,scope.row.$index)" v-else>停止</el-button>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" prop="name" label="任务名称"></el-table-column>
-              <el-table-column prop="startTime" label="开始时间">
-                <template scope="scope">{{ scope.row.startTime | formatDate('HH:mm:ss') }}</template>
-              </el-table-column>
-              <el-table-column prop="startDate" label="开始日期" align="center">
-                <template scope="scope">{{ scope.row.startDate | formatDate('yyyy-MM-dd') }}</template>
-              </el-table-column>
-              <el-table-column prop="endDate" label="结束日期">
-                <template scope="scope">{{ scope.row.endDate | formatDate('yyyy-MM-dd') }}</template>
-              </el-table-column>
-              <el-table-column prop="status" label="任务状态">
-                <template scope="scope">{{ scope.row.status | typeText }}</template>
-              </el-table-column>
-              <el-table-column prop="file" label="播放文件">
-                <template scope="scope">{{ scope.row.file }}</template>
-              </el-table-column>
-            </el-table>
+          </el-checkbox-group>
+          <p v-else class="noDebugAudio">暂无音响设备可操作</p>
+        </div>
+      </div>
+      <div v-if="adView==='task'">
+        <div class="taskBox" v-if="audioDebugActive == 'task'">
+          <div class="taskButton">
+            <el-button size="small" type="info" @click="addTask">新建任务</el-button>
+            <el-button size="small" type="danger" @click="removeTask">删除任务</el-button>
           </div>
-        </el-tab-pane>
-        <!-- tab 直播 -->
-        <el-tab-pane label="直播" name="intercom">
-          <template v-if="audioDebugActive == 'intercom'">
-            <!-- 缺少直播状态 -->
-            <el-button type="success" class="intercomBtn" @click="startIntercom">开始直播</el-button>
-            <el-button type="warning" class="intercomBtn" @click="stopIntercom">停止直播</el-button>
-          </template>
-        </el-tab-pane>
-      </el-tabs>
+          <el-table align="center" :height="300" :context="self" :data="taskList" tooltip-effect="dark" highlight-current-row style="width: 100%;height: 100%" @selection-change="handleSelectionTaskChange">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
+            <el-table-column align="center" label="操作" width="80">
+              <template scope="scope">
+                <el-button size="small" type="success" @click="startTask(scope.row.id,scope.$index)" v-if="scope.row.status === 'UNEXECUTED'">执行</el-button>
+                <el-button size="small" type="warning" @click="stopTask(scope.row.id,scope.row.audiotaskId,scope.$index)" v-else>停止</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="name" label="任务名称"></el-table-column>
+            <el-table-column prop="startTime" label="开始时间" align="center">
+              <template scope="scope">{{ scope.row.startTime || '-' }}</template>
+            </el-table-column>
+            <el-table-column prop="startDate" label="开始日期" align="center">
+              <template scope="scope">{{ scope.row.startDate || '-' }}</template>
+            </el-table-column>
+            <el-table-column prop="endDate" label="结束日期" align="center">
+              <template scope="scope">{{ scope.row.endDate || '-' }}</template>
+            </el-table-column>
+            <el-table-column prop="status" label="任务状态">
+              <template scope="scope">{{ scope.row.status | typeText }}</template>
+            </el-table-column>
+            <!-- <el-table-column prop="file" label="播放文件">
+                <template scope="scope">{{ scope.row.file }}</template>
+              </el-table-column> -->
+          </el-table>
+        </div>
+      </div>
+      <!-- tab 直播 -->
+      <div v-else>
+        <el-button type="success" class="intercomBtn" @click="startIntercom">开始直播</el-button>
+        <el-button type="warning" class="intercomBtn" @click="stopIntercom">停止直播</el-button>
+      </div>
+      <!-- </el-tabs> -->
     </div>
+
     <Modal close-on-click-modal="false" width="1000" v-model="addModal" title="对话框标题" class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="addId"></modal-header>
       <add v-if="addModal" @cancel="cancel" @add="subCallback"></add>
       <div slot="footer"></div>
     </Modal>
     <!-- 删除广播任务 -->
-    <Modal close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal" :loading="loading"
-      :width="500">
+    <Modal close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal" :loading="loading" :width="500">
       <modal-header slot="header" :content="removeId"></modal-header>
-      <remove v-if="removeModal" :delete-url="api.delete" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
+      <remove v-if="removeModal" :delete-url="api.taskRemove" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -114,87 +115,19 @@
       return {
         api,
         checkAll: true, // 房间全选
+        adView: 'task',
         checkedRooms: [], // 已选房间
-        roomList: [ // 待选房间列表
-          {
-            "id": "1",
-            "roomNum": "107"
-          },
-          {
-            "id": "2",
-            "roomNum": "108"
-          },
-          {
-            "id": "3",
-            "roomNum": "109"
-          }
-        ],
+        roomList: [], // 待选房间列表
         isIndeterminate: false, // 房间是否已全选
         audioDebugActive: 'task', // 默认显示视图
 
         boxVol: '', // 设备音量
-        boxList: [ // 
-          {
-            "id": 1,
-            "brand": "DAHUA",
-            "modelNum": "HK508-5128",
-            "ip": "192.168.1.1",
-            "locationType": "ROOM",
-            "roomId": "1",
-            "roomNum": "101",
-            "orther": "六层",
-            "status": "OFFLINE",
-            "volume": "50"
-          },
-          {
-            "id": 2,
-            "brand": "DAHUA",
-            "modelNum": "HK508-5128",
-            "ip": "192.168.1.1",
-            "locationType": "ROOM",
-            "roomId": "1",
-            "roomNum": "101",
-            "orther": "六层",
-            "status": "OFFLINE",
-            "volume": "100"
-          },
-          {
-            "id": 3,
-            "brand": "DAHUA",
-            "modelNum": "HK508-5128",
-            "ip": "192.168.1.1",
-            "locationType": "ROOM",
-            "roomId": "1",
-            "roomNum": "101",
-            "orther": "六层",
-            "status": "OFFLINE",
-            "volume": "1"
-          }
-        ], // 所选房间对应的音箱设备列表
+        boxList: [], // 所选房间对应的音箱设备列表
         boxAllId: [], // 所有设备id
         checkBoxs: [], // 已选择的音响设备
 
         self: this,
-        taskList: [ // 
-          {
-            "id": "1",
-            "name": "测试广播",
-            "startTime": "2017-01-01 12:12:20",
-            "startDate": "2017-01-01",
-            "endDate": "2017-01-05",
-            "status": "EXECUTING",
-            "file": '', // 缺少字段
-          },
-          {
-            "id": "2",
-            "name": "测试广播",
-            "startTime": "2017-01-01 12:12:20",
-            "startDate": "2017-01-01",
-            "endDate": "2017-01-05",
-            "status": "UNEXECUTED",
-            "file": '', // 缺少字段
-          }
-        ], // 广播任务列表
+        taskList: [], // 广播任务列表
         taskSelect: [], // 选择的广播任务
 
         operailityData: '',
@@ -212,6 +145,10 @@
       }
     },
     methods: {
+      // 视图切换
+      show(name) {
+        this.adView = name
+      },
       // 全选
       handleCheckAllChange(event) {
         let selectArr = [];
@@ -227,6 +164,7 @@
         let checkedCount = value.length;
         this.checkAll = checkedCount === this.roomList.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.roomList.length;
+
         this.getBoxForSelectRoom();
       },
       // 音响设备选择(全选|反选)
@@ -253,13 +191,13 @@
       successGetRoomData(res) {
         this.roomList = res.data || [];
         if (res.data.length) {
-          this.getAllRoomId();
+          this.checkedRooms = this.getAllRoomId();
           this.getBoxForSelectRoom();
         }
       },
       // 待选设备初始化
       successGetBoxData(res) {
-        this.roomList = res.data || [];
+        this.boxList = res.data || [];
         res.data.length && this.getAllBoxId();
       },
       // 设备任务列表初始化
@@ -276,8 +214,9 @@
         let opt = {
           errorTitle: '任务执行失败!',
           ajaxSuccess: (res) => {
-            this.showMess('任务执行成功');
-            this.taskList[index].status = 'EXECUTING';
+            this.successMess('任务执行成功');
+            // this.taskList[index].status = 'EXECUTING';
+            this.getTaskList();
           },
           ajaxParams: {
             url: api.taskExecuting.path + id,
@@ -291,19 +230,20 @@
         this.ajax(opt);
       },
       // 停止任务
-      stopTask(id, index) {
+      stopTask(id, audiotaskId, index) {
         let opt = {
           errorTitle: '任务停止失败!',
           ajaxSuccess: (res) => {
-            this.showMess('任务停止成功');
-            this.taskList[index].status = 'EXECUTING';
+            this.successMess('任务停止成功');
+            this.getTaskList();
+            // this.taskList[index].status = 'UNEXECUTED';
           },
           ajaxParams: {
             url: api.taskStop.path + id,
             method: api.taskStop.method,
             data: {
               id,
-              audiotaskId: 0, // 该参数不存在
+              audiotaskId, // 该参数不存在
             }
           }
         };
@@ -318,12 +258,11 @@
         }
         let boxIds = this.checkBoxs.join(',');
         let opt = {
-          errorTitle: '直播执行失败!',
-          successTitle: '直播执行成功!',
+          ajaxSuccess: res => this.successMess('直播执行成功'),
           ajaxParams: {
             url: api.intercomStart.path + boxIds,
             method: api.intercomStart.method,
-            params: {
+            data: {
               boxIds
             }
           }
@@ -333,8 +272,7 @@
       // 停止直播
       stopIntercom() {
         let opt = {
-          errorTitle: '停止直播失败!',
-          successTitle: '停止直播成功!',
+          ajaxSuccess: res => this.successMess('停止直播成功'),
           ajaxParams: {
             url: api.intercomStop.path,
             method: api.intercomStop.method,
@@ -397,21 +335,23 @@
       setBoxVol(type) {
         let box = this.boxList;
         let checkBox = this.checkBoxs; // 需要设置音量的设备
-        if (checkBox.length !== 1) {
-          this.errorMess('只能给一个音响设备设置音量');
+        if (!checkBox.length) {
+          this.errorMess('最少需要一个音响设备才能设置音量');
           return;
         }
         let boxVol; // 音量
-        let boxIndex; // 设备索引
-        let boxId = checkBox[0]; // 设备id
-        box.map((item, index) => {
-          if (item.id === boxId) {
-            boxIndex = index;
-            return;
+        let boxIndex = []; // 设备索引
+        let boxId = [];
+        checkBox.map(item => {
+          for (let i = 0; i < box.length; i++) {
+            if (box[i].id === item) {
+              boxId.push(item);
+              boxIndex.push(i);
+            }
           }
         })
         if (type) {
-          boxVol = Number(box[boxIndex].volume); // 获取原来设备的音量
+          boxVol = Number(box[boxIndex[0]].volume); // 获取原来设备的音量
           if (type === 'add') { // 增加音量
             boxVol += 1
           } else { // 减少音量
@@ -424,22 +364,25 @@
           this.errorMess('音量必须在1-100之间');
         } else {
           // 设置音量
-          this.setBoxVolume(boxId, boxVol, boxIndex)
+          this.setBoxVolume(boxId.join(','), boxVol, boxIndex)
         }
       },
       // 音量设置
-      setBoxVolume(id, num, index) {
+      setBoxVolume(ids, num, boxIndex) {
         let opt = {
-          errorTitle: '音量设置失败!',
+          ajaxError: () => this.errorMess('音量设置失败!'),
           ajaxSuccess: (res) => {
-            successMess('音量设置成功');
-            this.boxList[index].volume = num;
+            this.successMess('音量设置成功');
+            boxIndex.map(index => {
+              this.boxList[index].volume = num;
+            })
+            this.boxVol = num;
           },
           ajaxParams: {
-            url: api.remove.path + id,
-            method: api.remove.method,
+            url: api.volume.path + ids,
+            method: api.volume.method,
             data: {
-              id,
+              ids,
               volume: num
             }
           }
@@ -462,6 +405,14 @@
       },
       // 获取所选房间对应的设备
       getBoxForSelectRoom() {
+        // 清空原来的数据
+        this.boxList.length = 0;
+        this.boxAllId.length = 0;
+        this.checkBoxs.length = 0;
+        this.boxVol = '';
+        if (!this.checkedRooms.length) {
+          return
+        }
         let opt = {
           errorTitle: '获取音响设备失败!',
           ajaxSuccess: 'successGetBoxData',
@@ -493,7 +444,7 @@
       init() {
         this.getSelectRoom();
         this.getTaskList();
-        this.getAllBoxId(); // 调试后删除
+        // this.getAllBoxId(); // 调试后删除
       }
     },
     components: {
@@ -521,12 +472,13 @@
       border-right: 1px solid $bodrderColor;
       z-index: 2;
     }
-    .adContent {
+    .adBugContent {
       width: 100%;
       height: 100%;
       max-height: 600px;
       padding-left: 151px;
       z-index: 1;
+      margin-bottom: -16px;
     }
   }
 
@@ -553,7 +505,22 @@
     }
   }
 
-  .adContent {
+  .adBugContent {
+    .admBtn {
+      padding: 10px;
+      border-bottom: 1px solid $bodrderColor;
+      .el-button {
+        color: #1f2d3d;
+        border-radius: 0;
+        margin-right: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        &.active {
+          color: #20a0ff;
+          border-bottom: 2px solid #20a0ff;
+        }
+      }
+    }
     .floatLeft {
       float: left;
     }
@@ -561,6 +528,7 @@
       float: right;
     }
     .adcrButtonList {
+      margin-top: 10px;
       overflow: hidden; // margin-bottom: 10px;
       .setVolume {
         width: 140px;
@@ -613,6 +581,11 @@
     .intercomBtn {
       margin-left: 10px;
     }
+  }
+
+  .noDebugAudio {
+    line-height: 104px;
+    text-align: center;
   }
 
 </style>

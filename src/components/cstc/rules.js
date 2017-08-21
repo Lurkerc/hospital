@@ -21,7 +21,7 @@ let accessControlManage = {
 let accessControlDevice = {
   doorName: baseRules.required, // 门禁名称 必填
   doorNum: baseRules.requiredNoEvent, // 门禁名称 必填
-  accessSn: baseRules.required, // 控制器SN 必填
+  accessSn: [baseRules.greaterThanZero, baseRules.inputLen(1, 20)], // 控制器SN 必填
   accessIp: [baseRules.required, baseRules.ip], // 控制器IP 必填
 };
 
@@ -30,6 +30,18 @@ let centerSchedule = {
   date: baseRules.requiredNoEvent,
   startTime: baseRules.requiredNoEvent,
   endTime: baseRules.requiredNoEvent,
+};
+
+// 声像设备 - 网络音响 - 添加音响设备
+let audio = {
+  brand: baseRules.selectText,
+  modelNum: baseRules.required,
+  ip: baseRules.ip
+};
+
+let audioTask = {
+  name: [baseRules.required, baseRules.inputLen(1, 50)],
+  path: baseRules.selectText,
 };
 
 /**
@@ -172,6 +184,8 @@ let consumablesCount = {
 };
 
 export {
+  audio,
+  audioTask,
   affairs,
   accessControlManage,
   accessControlDevice,

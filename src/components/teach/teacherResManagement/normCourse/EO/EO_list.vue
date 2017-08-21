@@ -1,14 +1,14 @@
 <template>
   <!-- 评测与作业 - 查看 -->
   <div>
-    <el-row>
-      <el-col v-for="(item,index) in planDtoList" :key="index">
+    <el-row v-if="planDtoList!=0">
+      <el-col  v-for="(item,index) in planDtoList" :key="index">
         <h3>第{{ indexText(index) }}节：{{ item.content }}</h3>
         <el-collapse v-model="EQActive" accordion class="eqViewItem">
           <el-collapse-item>
             <template slot="title">
               <span>课前评测</span>
-              <el-button size="small" type="success" @click.stop="gotoTest(index,'before',item)" class="eqTestBtn">前往测验</el-button>
+              <el-button size="small" type="success" @click.stop="gotoTest(index,'BEFORE',item)" class="eqTestBtn">前往测验</el-button>
             </template>
             <el-col>
               <el-form>
@@ -27,7 +27,7 @@
           <el-collapse-item>
             <template slot="title">
               <span>课中评测</span>
-              <el-button size="small" type="success" @click.stop="gotoTest(index,'inProgress',item)" class="eqTestBtn">前往测验</el-button>
+              <el-button size="small" type="success" @click.stop="gotoTest(index,'IN_PROGRESS',item)" class="eqTestBtn">前往测验</el-button>
             </template>
             <el-col>
               <el-form>
@@ -46,7 +46,7 @@
           <el-collapse-item>
             <template slot="title">
               <span>课后评测</span>
-              <el-button size="small" type="success" @click.stop="gotoTest(index,'after',item)" class="eqTestBtn">前往测验</el-button>
+              <el-button size="small" type="success" @click.stop="gotoTest(index,'AFTER',item)" class="eqTestBtn">前往测验</el-button>
             </template>
             <el-col>
               <el-form>
@@ -65,6 +65,7 @@
         </el-collapse>
       </el-col>
     </el-row>
+    <div  v-else style="font-size: 24px;text-align: center;line-height: 200px"> <strong>暂无测评与作业</strong></div>
   </div>
 </template>
 
@@ -74,12 +75,14 @@
       return {
         EQActive: 0,
         planDtoList: [],
+        id:'',
       }
     },
     methods: {
       // 初始化
       init() {
         this.planDtoList = this.$store.state.curriculum.look.planDtoList;
+        this.id = this.$store.state.curriculum.look.course.id;
       },
       // 前往检测
       gotoTest(index, type, itemData) {

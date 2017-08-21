@@ -80,7 +80,9 @@
               noticeId:this.operailityData.id,
             }
           }
-        }
+        },
+
+
       }
     },
     created(){

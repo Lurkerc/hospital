@@ -37,7 +37,8 @@
         if (this.operailityData.length > 2) {
           this.operailityData.length = 2;
         }
-        this.optionsList = this.operailityData;
+        // this.optionsList = this.operailityData;
+        this.optionsList = this.$util._.sortBy(this.operailityData, 'options')
       } else {
         this.optionsList = [{
           "options": "A",

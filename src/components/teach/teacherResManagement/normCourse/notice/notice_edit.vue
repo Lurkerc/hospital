@@ -1,7 +1,7 @@
 <template>
   <!-- 公告 -->
   <div>
-    <show-ueditor name="remark" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig" style="width:100%"></show-ueditor>
+    <show-ueditor name="content" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig" style="width:100%"></show-ueditor>
     <p align="right" class="marginTop20">
       <el-button type="info" @click="addNotice">确定</el-button>
     </p>
@@ -19,7 +19,7 @@
         UE: {}, // 编辑器
         rules: {}, // 验证输入规则
         ueditorVal: {
-          remark: '', // 内容
+          content: '', // 内容
           courseId: '',
         },
         ueditorConfig: {
@@ -52,8 +52,19 @@
         this.ueditorVal[name] = val;
       },
       addNotice() {
+        if (!this.UE.content.hasContents()) {
+          this.$notify({
+            title: '提示',
+            message: '请填写公告内容',
+            type: 'warning'
+          });
+          return
+        }
         let opt = {
-          ajaxSuccess: res => this.$refs.noticeList.init(),
+          ajaxSuccess: res => {
+            this.$refs.noticeList.init();
+            this.UE.content.setContent('');
+          },
           ajaxParams: {
             url: api.add.path,
             method: api.add.method,
@@ -66,6 +77,9 @@
     components: {
       noticeList,
       showUeditor,
+    },
+    created() {
+      this.init()
     },
   }
 

@@ -153,7 +153,7 @@
     text-align: center;
     padding: 26px 0;
     background-color: #fff;
-    z-index: 2;
+    z-index: 10000;
     position: absolute;
     top: 0;
     left: $menuWidth + $padding;
@@ -162,6 +162,7 @@
     &:empty {
       height: 0;
       padding: 0;
+      border: none;
     }
     &:not(:empty)~.tvmInfoContent {
       padding-top: 70px;

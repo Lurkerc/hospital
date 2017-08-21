@@ -574,7 +574,7 @@
           user: unSelUser
         });
         // 参考人员专业
-        this.$store.commit('examineInterval/room/initSpecialtyList', specialtyList);
+        this.$store.commit('examineInterval/room/updateSpecialtyList', specialtyList);
         // 参考人员删除同步删除对应房间的专业
         for (let i = 0, roomList = this.roomList, leng = roomList.length; i < leng; i++) {
           for (let j = 0, roomItem = roomList[i].room, roomItemLen = roomItem.length; j < roomItemLen; j++) {

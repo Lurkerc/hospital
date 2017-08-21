@@ -30,7 +30,7 @@ const api = {
   },
 
   remove: { // 删除授课
-    path: '/course/remove/', //{ids}
+    path: '/course/remove', //{ids}
     method: 'delete',
   },
 

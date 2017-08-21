@@ -38,14 +38,11 @@
         </el-col >
       </el-row >
 
-      <el-row >
+      <el-row v-if="show">
         <el-col :span="17" :offset="2">
           <el-row class="lose-margin2">
             <el-col :span="20" :offset="2">
-              <quill-editor v-model="formValidate.content"
-                            ref="myQuillEditor"
-              >
-              </quill-editor>
+              <viewUEditor style="width:700px;" :name="'ud1'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
             </el-col>
           </el-row >
         </el-col >
@@ -72,6 +69,7 @@
 <script>
   //当前组件引入全局的util
   let Util=null;
+  import viewUEditor from '../../../common/showUeditor.vue';
   export default {
     //props接收父组件传递过来的数据
     props: ['operailityData','url'],
@@ -101,6 +99,17 @@
           fileIds:'',
           fileList:[],
         },
+
+        show:false,
+        UE:{},
+        ueditorVal:{
+          ud1:"",
+        },  //
+        ueditorConfig:{
+          //详细配置参考UEditor 官网api
+          initialFrameHeight:220,  //初始化编辑器高度,默认320
+        },
+
         //当前组件提交(edit)数据时,ajax处理的 基础信息设置
         editMessTitle:{
             type:'edit',
@@ -139,7 +148,7 @@
         if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {
           };
-          isLoadingFun(true)
+          isLoadingFun(true);
           this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
           this.editMessTitle.ajaxParams.data .isReceipt =this.editMessTitle.ajaxParams.data .isReceipt+'';
           this.ajax(this.editMessTitle, isLoadingFun)
@@ -166,6 +175,8 @@
       SuccessGetCurrData(responseData){
 
           this.data = responseData.data;
+          this.show = true;
+          this.ueditorVal.ud1=responseData.data.content;
           this.formValidate = this.getFormValidate(this.formValidate,responseData.data);
       },
       /*
@@ -197,6 +208,38 @@
         this.formValidate.fileIds = ids;
       },
 
+      /**
+       *
+       * 存储编辑器的UE.editor对象
+       * @param name {string}  编辑器的name
+       *
+       * @param editor {}      编辑器的对象
+       *
+       */
+      storeUE(name,editor){
+        this.UE[name] = editor;
+        this.setMyVal('ud1',this.formValidate.content)
+      },
+
+      setMyVal(name,v){
+        this.UE[name].setContent(v);
+      },
+      /**
+       *
+       * 存储编辑器的value值
+       * @param name {string}  编辑器的name
+       *
+       * @param val  {string}  编辑器的内容
+       *
+       */
+      getUeditorVal(name,val){
+        this.ueditorVal[name] = val;
+      },
+
+
+    },
+    components:{
+      viewUEditor
     }
   }
 </script>

@@ -20,7 +20,7 @@
     </div>
     <!-- 内容 start -->
     <!-- 授课安排 -->
-    <teach-edit v-if="menuActive === 'teach'" ref="teach"></teach-edit>
+    <teach-edit v-if="menuActive === 'teach'" ref="teach" :selectCourse="selectCourse"></teach-edit>
     <!-- 课程基本信息 -->
     <basic-edit v-if="menuActive === 'basic'" ref="basic" todoType='teach'></basic-edit>
     <!-- 课程简介 -->
@@ -61,7 +61,7 @@
   // import treInfoEdit from './TREInfo/TREInfo_edit'; // 试运行评估表
 
   export default {
-    props: ['operailityData', 'saveUrl', 'getUrl'],
+    props: ['operailityData', 'selectCourse', 'saveUrl', 'getUrl'],
     data() {
       return {
         menuActive: 'load', // 激活菜单
@@ -75,11 +75,12 @@
       },
       // 保存 调用子组件的save方法
       saveCall(auditStatus) {
+        let msg = auditStatus === 'NOT_SUBMIT' ? '保存草稿' : '提交审核';
         if (this.$refs[this.menuActive].saveToStore()) {
           this.ajax({
             type: 'edit',
-            successTitle: '修改成功',
-            errorTitle: '修改失败',
+            successTitle: msg + '成功',
+            errorTitle: msg + '失败',
             ajaxSuccess: 'ajaxSuccess',
             ajaxError: 'ajaxError',
             ajaxParams: {
@@ -124,7 +125,7 @@
 
     // 销毁状态
     destroyed() {
-      // this.$store.commit('curriculum/teach/destroy');
+      this.$store.commit('curriculum/data/destroy');
     },
 
     mounted() {},

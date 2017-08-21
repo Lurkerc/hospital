@@ -4,7 +4,7 @@
     <!-- 选择课程 -->
     <norm-course-select v-if="courseActiveName === 'select'" @select="selectCourseCall"></norm-course-select>
     <!-- 编辑课程 -->
-    <course-input v-if="courseActiveName === 'add'" :operaility-data="selectCourse" :saveUrl="api.add" :getUrl="api.getTemp" style="height:100%"></course-input>
+    <course-input v-if="courseActiveName === 'add'" :operaility-data="selectCourse" :selectCourse="selectCourse" :saveUrl="api.add" :getUrl="api.getTemp" style="height:100%" @edit="subCallback"></course-input>
     <!-- 询问弹窗 -->
     <Modal :mask-closable="false" v-model="askModal" class-name="vertical-center-modal" :width="500">
       <modal-header slot="header" :content="askId"></modal-header>
@@ -58,6 +58,10 @@
       // 关闭询问窗口
       cancelAsk() {
         this.askModal = false;
+      },
+      // 操作回调
+      subCallback(target, title, updata){
+        this.$emit('add','add', title, updata)
       },
     },
     components: {

@@ -40,7 +40,7 @@
               <div class="thProjectItem">
                 <el-radio label="PART">部分人员</el-radio>
                 <template v-if="teach.teachType === 'PART'">
-                  <el-tag type="success" class="thUserItem" :closable="true" v-for="(item,index) in teach.userList" @close="removeUser(index)" :key="item.userId">{{ item.userName }}</el-tag>
+                  <el-tag type="success" class="thUserItem" :closable="true" v-for="(item,index) in teach.userList" @close="removeUser(index)" :key="item.id">{{ item.name }}</el-tag>
                   <el-button type="info" size="small" style="margin-left:10px;" @click="selectUser('teach')">选择人员</el-button>
                 </template>
               </div>
@@ -67,6 +67,7 @@
     teach as rules
   } from '../rules';
   export default {
+    props: ['selectCourse'],
     data() {
       return {
         rules,
@@ -111,7 +112,13 @@
           this.teach[key] = state.curriculum.data.course[key]
         }
         if (this.teach.teachType === 'ROLE') {
-          this.teachTypeId = this.teach.teachTypeId.split(',');
+          this.teach.userList.length = 0;
+          let dataArr = [];
+          this.teach.teachTypeId.split(',').map(item => item && (dataArr.push(parseInt(item))));
+          this.teachTypeId = dataArr;
+        }
+        if (this.selectCourse) {
+          this.teach.criterionId = this.selectCourse.id;
         }
       },
       // 保存数据
@@ -125,7 +132,7 @@
         if (this.teach.teachType === 'PART') {
           this.teach.teachTypeId = '';
           let userIds = [];
-          this.teach.userList.map(item => userIds.push(item.userId));
+          this.teach.userList.map(item => userIds.push(item.id));
           this.teach.teachTypeId = userIds.join(',');
         }
         let data = this.$util._.defaultsDeep({}, this.teach);
@@ -149,8 +156,8 @@
         if (type === 'teach') {
           this.isOnlyOne = false;
           this.teach.userList.map(item => this.initUser.push({
-            key: item.userId,
-            label: item.userName,
+            key: item.id,
+            label: item.name,
             disabled: false
           }))
         } else {
@@ -170,8 +177,8 @@
         if (this.selectUserType === 'teach') {
           this.teach.userList.length = 0;
           res.map(item => this.teach.userList.push({
-            userId: item.key,
-            userName: item.label
+            id: item.key,
+            name: item.label
           }))
         } else {
           this.teach.teacherId = res[0].key;
@@ -188,6 +195,7 @@
         if (!this.isInitCTR) {
           this.teach.teacherId = '';
           this.teach.teacher = '';
+          this.isInitCTR = true
         } else {
           this.isInitCTR = false
         }
@@ -197,6 +205,7 @@
         if (!this.isInitCT) {
           this.teachTypeId.length = 0;
           this.teach.userList.length = 0;
+          this.isInitCT = true
         } else {
           this.isInitCT = false
         }

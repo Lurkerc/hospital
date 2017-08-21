@@ -73,7 +73,7 @@
       return {
         title: '---', // 课程名称
         logo: '', // 封面
-        menuActive: 'notice', // 激活菜单
+        menuActive: 'load', // 激活菜单
       }
     },
     methods: {
@@ -89,9 +89,10 @@
       getViewData() {
         this.ajax({
           ajaxSuccess: res => {
-            this.$store.commit('curriculum/data/updateData', res.data);
-            this.title = this.$store.state.curriculum.data.course.title;
-            this.logo = this.$store.state.curriculum.data.course.logo;
+            this.$store.commit('curriculum/look/updateData', res.data);
+            this.title = this.$store.state.curriculum.look.course.title;
+            this.logo = this.$store.state.curriculum.look.course.logo;
+            this.menuActive = 'notice';
           },
           ajaxParams: {
             url: api.get.path + this.operailityData.id,
@@ -117,7 +118,7 @@
 
     // 销毁状态
     destroyed() {
-      // this.$store.commit('curriculum/look/destroy')
+      this.$store.commit('curriculum/look/destroy')
     },
 
     components: {

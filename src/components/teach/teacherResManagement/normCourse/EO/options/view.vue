@@ -15,7 +15,7 @@
       }
     },
     created() {
-      this.optionsList = this.val
+      this.optionsList = this.$util._.sortBy(this.val, 'options')
     }
   }
 

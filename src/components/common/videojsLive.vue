@@ -4,16 +4,19 @@
 ****--@author   zyc<332533011@qq.com
 ----------------------------------->
 <template>
-  <video-player class="vjs-custom-skin"
-                :options="playerOptions"
-                @ready="playerReadied">
-  </video-player>
+  <div ref="videoWrapper">
+    <video-player class="vjs-custom-skin"
+                  :options="playerOptions"
+                  @ready="playerReadied">
+    </video-player>
+  </div>
 </template>
 
 <script>
   // hls plugin
   require('videojs-contrib-hls/dist/videojs-contrib-hls')
   export default {
+    props:["liveUrl"],
     data() {
       return {
         playerOptions: {
@@ -21,9 +24,9 @@
           sources: [{
             withCredentials: false,
             type: "application/x-mpegURL",
-            src: "/hls/888.m3u8",
+            src: this.liveUrl,
           }],
-          height:500,
+          height:100,
           controlBar: {
             timeDivider: false,
             durationDisplay: false
@@ -42,6 +45,13 @@
           return options
         }
       }
-    }
+    },
+    mounted() {
+      this.$nextTick(function(){
+        let videoPlayer = this.$refs.videoWrapper;
+        let parHt = videoPlayer.parentNode.offsetHeight;
+        this.playerOptions.height = parHt;
+      })
+    },
   }
 </script>

@@ -23,6 +23,7 @@
         initData:{
           name:"",
         }
+
       }
     },
     methods: {

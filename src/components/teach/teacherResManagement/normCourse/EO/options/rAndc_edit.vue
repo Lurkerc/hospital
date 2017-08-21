@@ -47,7 +47,7 @@
     },
     created() {
       if (this.operailityData && this.operailityData.length) {
-        this.optionsList = this.operailityData
+        this.optionsList = this.$util._.sortBy(this.operailityData, 'options')
       } else {
         this.adds()
       }

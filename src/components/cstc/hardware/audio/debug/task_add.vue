@@ -1,11 +1,11 @@
 <template>
   <!-- 新增广播任务 -->
-  <div class="editForm">
-    <el-form :model="formValidate" ref="formValidate" :rules="this.$store.state.rules" label-width="90px">
+  <div class="editForm audioDebugTask">
+    <el-form :model="formValidate" ref="formValidate" :rules="rules" label-width="100px">
       <el-row>
 
         <el-col :span="8" :offset="2">
-          <el-form-item label="任务名称：">
+          <el-form-item label="任务名称：" prop="name">
             <el-input v-model="formValidate.name"></el-input>
           </el-form-item>
         </el-col>
@@ -21,23 +21,34 @@
         <el-col :span="18" :offset="2">
           <el-form-item label="播放模式：">
             <el-radio-group v-model="formValidate.playMode">
-              <el-radio label="WHENLONG">播放时长
-                <el-select v-model="formValidate.hour" style="width:60px;">
-                  <el-option :key="0" :label="0" :value="0"></el-option>
-                  <el-option v-for="item in 12" :key="item" :label="item" :value="item"></el-option>
-                </el-select> 小时
-                <el-select v-model="formValidate.minute" style="width:65px;">
-                  <el-option :key="0" :label="0" :value="0"></el-option>
-                  <el-option v-for="item in 60" :key="item" :label="item" :value="item"></el-option>
-                </el-select> 分钟
-                <el-select v-model="formValidate.second" style="width:65px;">
-                  <el-option :key="0" :label="0" :value="0"></el-option>
-                  <el-option v-for="item in 60" :key="item" :label="item" :value="item"></el-option>
-                </el-select> 秒
-              </el-radio>
-              <el-radio label="FREQUENCY">播放次数：
-                <el-input v-model="formValidate.frequency" placeholder="0为循环播放" :maxLength="4" style="width:158px;"></el-input>
-              </el-radio>
+              <div class="adtProjectBox">
+                <div class="thProjectItem">
+                  <el-radio label="WHENLONG">
+                    <span>播放时长：</span>
+                    <el-select v-model="formValidate.hour" style="width:60px;">
+                      <el-option :key="0" :label="0" :value="0"></el-option>
+                      <el-option v-for="item in 12" :key="item" :label="item" :value="item"></el-option>
+                    </el-select>
+                    <span class="adtTimeText">小时</span>
+                    <el-select v-model="formValidate.minute" style="width:65px;">
+                      <el-option :key="0" :label="0" :value="0"></el-option>
+                      <el-option v-for="item in 60" :key="item" :label="item" :value="item"></el-option>
+                    </el-select>
+                    <span class="adtTimeText">分钟</span>
+                    <el-select v-model="formValidate.second" style="width:65px;">
+                      <el-option v-for="item in 60" :key="item" :label="item" :value="item"></el-option>
+                    </el-select>
+                    <span class="adtTimeText">秒</span>
+                  </el-radio>
+                </div>
+                <div class="thProjectItem">
+                  <el-radio label="FREQUENCY">
+                    <span>播放次数：</span>
+                    <el-input v-model="formValidate.frequency" placeholder="0为循环播放" :maxLength="4" style="width:158px;"></el-input>
+                    <span>（0为循环播放）</span>
+                  </el-radio>
+                </div>
+              </div>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -48,47 +59,61 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="8" :offset="2">
-          <el-form-item label="开始时间：">
-            <el-date-picker v-model="formValidate.startTime" :editable="false" type="datetime" placeholder="选择日期时间"></el-date-picker>
-          </el-form-item>
-        </el-col>
+        <template v-if="formValidate.isTiming === 'YES'">
+          <el-col :span="8" :offset="2">
+            <el-form-item label="开始时间：">
+              <el-time-picker v-model="formValidate.startTime" :editable="false" placeholder="选择时间"></el-time-picker>
+            </el-form-item>
+          </el-col>
 
-        <el-col :span="8" :offset="2">
-          <el-form-item label="开始日期：">
-            <el-date-picker v-model="formValidate.startDate" type="date" placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
+          <date-group :dateGroup="{text:'',startDate:formValidate.startDate,endDate:formValidate.endDate}">
 
-        <el-col :span="8" :offset="2">
-          <el-form-item label="结束日期：">
-            <el-date-picker v-model="formValidate.endDate" type="date" placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
+            <el-col :span="8" :offset="2">
+              <el-form-item label="开始日期：">
+                <el-date-picker v-model="formValidate.startDate" type="date" placeholder="选择日期" :picker-options="pickerOptions0" @change="handleStartTime">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+
+          </date-group>
+
+        </template>
 
         <el-col :span="8" :offset="2">
           <el-form-item label="循环周期：">
-            <el-checkbox v-model="cycleEveryDay" label="每天" trueLabel="true" falseLabel="false" @chang="changeCycle"></el-checkbox>
-            <el-checkbox-group v-model="cycle" class="audioDebugCheckBox">
-              <el-checkbox label="周一" value="1"></el-checkbox>
-              <el-checkbox label="周二" value="2"></el-checkbox>
-              <el-checkbox label="周三" value="3"></el-checkbox>
-              <el-checkbox label="周四" value="4"></el-checkbox>
-              <el-checkbox label="周五" value="5"></el-checkbox>
-              <el-checkbox label="周六" value="6"></el-checkbox>
-              <el-checkbox label="周日" value="7"></el-checkbox>
+            <el-checkbox v-model="cycleEveryDay" label="每天" trueLabel="1" falseLabel="0" @change="changeCycle(true)"></el-checkbox>
+            <el-checkbox-group v-model="cycle" class="audioDebugCheckBox" @change="changeCycle(false)">
+              <el-checkbox value="" label="1">周一</el-checkbox>
+              <el-checkbox value="" label="2">周二</el-checkbox>
+              <el-checkbox value="" label="3">周三</el-checkbox>
+              <el-checkbox value="" label="4">周四</el-checkbox>
+              <el-checkbox value="" label="5">周五</el-checkbox>
+              <el-checkbox value="" label="6">周六</el-checkbox>
+              <el-checkbox value="" label="7">周日</el-checkbox>
             </el-checkbox-group>
             </el-date-picker>
           </el-form-item>
         </el-col>
 
-        <el-col :span="8" :offset="2">
-          <el-form-item label="播放音频：">
-            <el-input v-model="formValidate.path"></el-input>
+        <el-col :span="8" :offset="2" v-if="formValidate.isTiming === 'YES'">
+          <el-form-item label="结束日期：">
+            <el-date-picker v-model="formValidate.endDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1" @change="handleEndTime">
+            </el-date-picker>
           </el-form-item>
         </el-col>
+
+        <el-col>
+          <el-col :span="8" :offset="2">
+            <el-form-item label="播放音频：" prop="path">
+              <!-- <el-input v-model="formValidate.path"></el-input> -->
+              <el-select v-model="formValidate.path" placeholder="请选择文件">
+                <el-option v-for="(item,index) in filePath" :key="index" :label="item" :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-col>
+
       </el-row>
     </el-form>
     <el-row>
@@ -101,25 +126,29 @@
 
 <script>
   let Util = null;
+  import {
+    audioTask as rules
+  } from '../../../rules';
   import api from '../api';
   import sendMode from './sendMode'; // 播放模式
   export default {
     data() {
       return {
         sendMode,
-
-        cycleEveryDay: false, // 周期
+        rules,
+        cycleEveryDay: '1', // 周期
         cycle: [],
+        filePath: [],
         formValidate: {
           name: '', // 任务名称
-          playMode: 'FREQUENCY', // 播放模式 WHENLONG按时长|FREQUENCY按次数
-          hour: '', // 时
-          minute: '', // 分
-          second: '', // 秒
+          playMode: 'WHENLONG', // 播放模式 WHENLONG按时长|FREQUENCY按次数
+          hour: '0', // 时
+          minute: '0', // 分
+          second: '1', // 秒
           frequency: '', // 次数
-          sendMode: '', // 发送模式 UNICAST单播|MULTICAST组播
-          isTiming: '', // 是否定时 YES是|NO否
-          startTime: '', // 开始时间 YYYY-MM-dd hh:mm:ss
+          sendMode: 'UNICAST', // 发送模式 UNICAST单播|MULTICAST组播
+          isTiming: 'NO', // 是否定时 YES是|NO否
+          startTime: '', // 开始时间 hh:mm:ss
           startDate: '', // 开始日期 YYYY-MM-DD
           endDate: '', // 结束日期 YYYY-MM-DD
           cycle: '', // 周期
@@ -150,12 +179,16 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun) {
-        let isSubmit = this.submitForm("formValidate");
-        if (true) {
+        let isSubmit = this.submitForm("formValidate") && this.checkData();
+        if (isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
-          this.formValidate = this.cycle.join(',');
-          this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          this.formValidate.cycle = this.cycle.join(',');
+          let data = this.getFormData(this.formValidate);
+          data.startTime = this.conductDate(data.startTime, 'hh:mm:ss');
+          data.startDate = this.conductDate(data.startDate, 'yyyy-MM-dd');
+          data.endDate = this.conductDate(data.endDate, 'yyyy-MM-dd');
+          this.addMessTitle.ajaxParams.data = data;
           this.ajax(this.addMessTitle, isLoadingFun)
         }
       },
@@ -173,6 +206,33 @@
         });
         return flag;
       },
+      // 检测数据
+      checkData() {
+        let data = this.formValidate;
+        if (data.playMode === 'FREQUENCY') {
+          if (!(!isNaN(data.frequency) && data.frequency > -1 && data.frequency < 10000)) {
+            this.errorMess('播放次数0-10000之间！');
+            return false
+          } else if (data.frequency < 0 || data.frequency > 10000) {
+            data.frequency = '0';
+          }
+        }
+        if (data.isTiming === 'YES') {
+          if (!data.startTime) {
+            this.errorMess('请设置开始时间');
+            return false
+          }
+          if (!data.startDate) {
+            this.errorMess('请设置开始日期');
+            return false
+          }
+          if (!data.endDate) {
+            this.errorMess('请设置结束日期');
+            return false
+          }
+        }
+        return true
+      },
       /*
        * 获取表单数据
        * @return string  格式:id=0&name=aa
@@ -184,17 +244,30 @@
       /**
        * 周期为每天
        **/
-      changeCycle() {
-        this.cycleEveryDay = !this.cycleEveryDay;
-        if (this.cycleEveryDay) {
-          this.cycle = [1, 2, 3, 4, 5, 6, 7]
-        } else {
-          this.cycle = []
+      changeCycle(type) {
+        if (type) { // 每天
+          if (this.cycleEveryDay > 0) {
+            this.cycle = []
+          }
+        } else { // 指定周期
+          this.cycleEveryDay = '0'
         }
-      }
+      },
+      // 获取文件
+      getFilePath() {
+        let opt = {
+          ajaxSuccess: res => this.filePath = res.data,
+          ajaxError: () => this.errorMess('获取播放文件列表失败，请重试！'),
+          ajaxParams: {
+            url: api.getFilePath.path
+          }
+        };
+        this.ajax(opt)
+      },
     },
     created() {
       Util = this.$util;
+      this.getFilePath()
     }
   }
 
@@ -205,6 +278,34 @@
   .audioDebugCheckBox {
     .el-checkbox:nth-child(3n+1) {
       margin-left: 0;
+    }
+  }
+
+  .el-time-panel {
+    .el-time-spinner__list::after,
+    .el-time-spinner__list::before {
+      height: 72px;
+    }
+  }
+
+  .adtProjectBox {
+    width: 100%;
+    display: inline-block;
+    .thProjectItem {
+      line-height: 36px;
+    }
+    .thUserItem {
+      margin-left: 6px;
+      margin-top: -9px;
+    }
+    .el-select {
+      .el-input {
+        width: 60px;
+        min-width: auto;
+      }
+    }
+    .adtTimeText {
+      margin: 0 4px;
     }
   }
 

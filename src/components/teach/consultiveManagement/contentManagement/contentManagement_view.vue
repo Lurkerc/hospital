@@ -61,7 +61,7 @@
       <el-row >
         <el-col :span="20" :offset="3">
             <div  v-if="data.contentType=='MULTIMEDIA'" style="height:300px;">
-              <el-row v-if="data.multimediaFileList">
+              <el-row v-if="data.multimediaFileList!=0">
                 <el-col style="height:300px;background: #000;"  :span="17" >
                   <myVideo v-if="videoShow" :filePath="file.path" :isAutoPlay="true" :videoType="file.fileType"> </myVideo>
                 </el-col>
@@ -71,8 +71,8 @@
                   </ul>
                 </el-col>
               </el-row>
-              <div v-else>
-                无视频文件
+              <div v-else style="line-height: 200px;text-align: center;font-size: 18px">
+               <strong>无视频文件</strong>
               </div>
             </div>
 
@@ -165,8 +165,10 @@
 
         this.data = responseData.data;
         this.show = true;
+        if(responseData.data.contentType=='MULTIMEDIA'&&responseData.data.multimediaFileList!=0){
 
-        this.changeIndex(responseData.data.multimediaFileList[0],0)
+          this.changeIndex(responseData.data.multimediaFileList[0],0);
+        }
         this.ueditorVal.ud1=responseData.data.content;
       },
       /*

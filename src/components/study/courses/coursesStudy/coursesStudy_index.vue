@@ -13,19 +13,19 @@
         <div class="coursesStudyTask coursesStudyBorder">
           <h3>学习任务</h3>
           <el-row class="coursesStudyTaskMain">
-            <template v-if="myTask.length > 0">
+            <div v-if="myTask.length > 0">
               <el-col class="coursesStudyItem" :span="22" :offset="2" v-for="item in myTask" :key="item.id">
-                <el-col :span="7">
-                  <p class="coursesStudyTitle overflow-txt1">{{ item.title }}</p>
-                </el-col>
-                <el-col :span="12" :offset="1">
-                  <el-progress :text-inside="true" :stroke-width="20" :percentage="item.progress"></el-progress>
-                </el-col>
-                <el-col :span="4" align="right">
-                  <el-button size="small" type="success">快速进入</el-button>
-                </el-col>
+                  <el-col :span="7">
+                    <p class="coursesStudyTitle overflow-txt1">{{ item.title }}</p>
+                  </el-col>
+                  <el-col :span="12" :offset="1">
+                    <el-progress :text-inside="true" :stroke-width="20" :percentage="item.progress"></el-progress>
+                  </el-col>
+                  <el-col :span="4" align="right">
+                    <el-button size="small" @click="videoClick(item)" type="success">快速进入</el-button>
+                  </el-col>
               </el-col>
-            </template>
+            </div>
             <p v-else class="coursesStudyItemTips">暂无学习任务</p>
           </el-row>
           <p class="coursesStudyHours overflow-txt1">
@@ -51,24 +51,26 @@
           </el-col>
           <!-- 视频内容 -->
           <el-col>
-            <template v-if="myStudy.length">
-              <el-col :xs="23" :sm="11" :md="7" :lg="5" class="coursesStudyVideoItem" :offset="1" v-for="item in myStudy" :key="item.id">
-                <img :src="getPicUrl(item.logo)" class="coursesStudyPhoto">
-                <!-- <p class="">视频名称</p> -->
-                <div class="coursesStudyVideoInfo">
-                  <h3 class="overflow-txt1">{{ item.title }}</h3>
-                  <el-row>
-                    <el-col :span="12">
-                      <span>{{ item.teacher }}</span>
-                    </el-col>
-                    <el-col :span="12" align="right">
-                      <span>{{ item.totalLesson }}课时</span>
-                    </el-col>
-                  </el-row>
+            <div v-if="myStudy.length > 0">
+              <el-col  :xs="23" :sm="11" :md="7" :lg="5" class="coursesStudyVideoItem" :offset="1" v-for="item in myStudy" :key="item.id">
+                <div  @click="videoClick(item)" style="cursor: pointer">
+                  <img :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="min-height: 125px;">
+                  <!-- <p class="">视频名称</p> -->
+                  <div class="coursesStudyVideoInfo">
+                    <h3 class="overflow-txt1">{{ item.title }}</h3>
+                    <el-row>
+                      <el-col :span="12">
+                        <p class="overflow-txt1">{{ item.teacher }}</p>
+                      </el-col>
+                      <el-col :span="12" align="right">
+                        <span>{{ item.totalLesson }}课时</span>
+                      </el-col>
+                    </el-row>
+                  </div>
                 </div>
               </el-col>
-            </template>
-            <p e-else class="coursesStudyItemTips">暂无必修课</p>
+            </div>
+            <p v-else class="coursesStudyItemTips">暂无必修课</p>
           </el-col>
         </el-row>
         <!-- 最新课程 -->
@@ -84,24 +86,26 @@
           </el-col>
           <!-- 视频内容 -->
           <el-col>
-            <template v-if="myStudy.length">
+            <div v-if="mainQuery.length > 0">
               <el-col :xs="23" :sm="11" :md="7" :lg="5" class="coursesStudyVideoItem" :offset="1" v-for="item in mainQuery" :key="item.id">
-                <img :src="getPicUrl(item.logo)" class="coursesStudyPhoto">
-                <!-- <p class="">视频名称</p> -->
-                <div class="coursesStudyVideoInfo">
-                  <h3 class="overflow-txt1">{{ item.title }}</h3>
-                  <el-row>
-                    <el-col :span="12">
-                      <span>{{ item.teacher }}</span>
-                    </el-col>
-                    <el-col :span="12" align="right">
-                      <span>{{ item.totalLesson }}课时</span>
-                    </el-col>
-                  </el-row>
+                <div  @click="mainQueryClick(item)" style="cursor: pointer">
+                  <img   :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="min-height: 125px;">
+                  <!-- <p class="">视频名称</p> -->
+                  <div class="coursesStudyVideoInfo">
+                    <h3 class="overflow-txt1">{{ item.title }}</h3>
+                    <el-row>
+                      <el-col :span="12">
+                        <p class="overflow-txt1">{{ item.teacher }}</p>
+                      </el-col>
+                      <el-col :span="12" align="right">
+                        <span>{{ item.totalLesson }}课时</span>
+                      </el-col>
+                    </el-row>
+                  </div>
                 </div>
               </el-col>
-            </template>
-            <p e-else class="coursesStudyItemTips">暂无最新课程</p>
+            </div>
+            <p v-else class="coursesStudyItemTips">暂无最新课程</p>
           </el-col>
         </el-row>
       </el-col>
@@ -112,7 +116,7 @@
             <h4 class="coursesStudyTopTitleText overflow-txt1">最近直播</h4>
           </el-col>
           <el-col class="coursesStudyPadding">
-            <template v-if="nextPlay.length > 0">
+            <div v-if="nextPlay.length > 0">
               <div class="timeBarBox">
                 <div class="timeBarItem" v-for="(item,index) in nextPlay" :key="index">
                   <div class="day" :class="{'active':isToday(item.date)}">
@@ -124,7 +128,7 @@
                   </div>
                 </div>
               </div>
-            </template>
+            </div>
             <p v-else class="coursesStudyItemTips">最近暂无直播</p>
           </el-col>
         </el-row>
@@ -140,16 +144,18 @@
             </el-col>
           </el-col>
           <el-col>
-            <template v-if="myHistory.length">
-              <el-col :xs="23" :sm="23" :md="23" :lg="11" class="coursesStudyVideoItem" :offset="1" v-for="item in myHistory" :key="item.id">
-                <img :src="getPicUrl(item.logo)" class="coursesStudyPhoto">
-                <!-- <p class="">视频名称</p> -->
-                <div class="coursesStudyVideoInfo">
-                  <h3 class="overflow-txt1">{{ item.title }}</h3>
-                </div>
+            <div v-if="myHistory.length > 0">
+              <el-col   :xs="23" :sm="23" :md="23" :lg="11" class="coursesStudyVideoItem" :offset="1" v-for="item in myHistory" :key="item.id">
+                <div @click="videoClick(item)" style="cursor: pointer">
+                  <img :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="min-height: 125px;">
+                  <!-- <p class="">视频名称</p> -->
+                  <div class="coursesStudyVideoInfo">
+                    <h3 class="overflow-txt1">{{item.title}}</h3>
+                  </div>
+              </div>
               </el-col>
-            </template>
-            <p e-else class="coursesStudyItemTips">暂无播放记录</p>
+             </div>
+            <p v-else class="coursesStudyItemTips">暂无播放记录</p>
           </el-col>
         </el-row>
       </el-col>
@@ -157,13 +163,22 @@
 
     <!-- 更多弹窗 -->
     <Modal :mask-closable="false" v-model="moreModal" class-name="vertical-center-modal" :width="1100">
-      <modal-header slot="header"  :content="moreId"></modal-header>
-      <more v-if="moreModal" :operaility-data="operailityData" ></more>
+      <modal-header slot="header" :content="moreId"></modal-header>
+      <more v-if="moreModal" :operaility-data="operailityData"></more>
+      <div slot="footer"></div>
+    </Modal>
+
+    <!-- 详情弹窗 -->
+    <Modal :mask-closable="false" v-model="showModal" class-name="vertical-center-modal" :width="1100">
+      <modal-header slot="header"  :content="showId"></modal-header>
+      <show style="height: 600px;" v-if="showModal" :operaility-data="showData" ></show>
       <div slot="footer"></div>
     </Modal>
   </div>
 </template>
 <script>
+  /*当前组件必要引入*/
+  import show from '../webCourses/webCourses_view.vue'
   import api from './api';
   /*当前组件必要引入*/
   import more from './coursesStudy_more.vue'
@@ -174,26 +189,33 @@
   export default {
     data() {
       return {
-        operailityData:{}, //传到更多的数据
+        operailityData: {}, //传到更多的数据
         myTask: [],
-        myStudy: [],   //我的必修课
-        myStudyTotalCount: 0,   //我的必修课
-        mainQuery: [],   //最新课程
-        mainQueryTotalCount:0,
-        MainQueryPage:1,
-        MainQueryPageSize:8,
+        myStudy: [], //我的必修课
+        myStudyTotalCount: 0, //我的必修课
+        mainQuery: [], //最新课程
+        mainQueryTotalCount: 0,
+        MainQueryPage: 1,
+        MainQueryPageSize: 8,
 
         nextPlay: [],
-        myHistory: [],  //播放记录
-        myHistoryTotalCount: 0,  //播放记录
+        myHistory: [], //播放记录
+        myHistoryTotalCount: 0, //播放记录
         today: 0,
         input5: '',
 
-        moreModal:false,
+        moreModal: false,
         moreId: {
           id: 'addId',
           title: '更多'
         },
+
+        showModal:false,
+        showId: {
+          id: 'showId',
+          title: '查看'
+        },
+
       }
     },
     methods: {
@@ -208,23 +230,23 @@
       },
       // 视图切换
       exChange(type) {
-          let obj = {
-            myStudy:'我的必修课',
-            mainQuery:'最新课程',
-            myHistory:'播放记录',
-          }
-         this.operailityData = {
-             path:api[type].path,
-         };
-          this.moreId.title = obj[type],
-        this.moreModal = true;
+        let obj = {
+          myStudy: '我的必修课',
+          mainQuery: '最新课程',
+          myHistory: '播放记录',
+        }
+        this.operailityData = {
+          path: api[type].path,
+        };
+        this.moreId.title = obj[type],
+          this.moreModal = true;
       },
 
       //换
-      exchange(){
-        if(this.MainQueryPage*this.MainQueryPageSize>=this.mainQueryTotalCount){
-            this.MainQueryPage = 1;
-        }else {
+      exchange() {
+        if (this.MainQueryPage * this.MainQueryPageSize >= this.mainQueryTotalCount) {
+          this.MainQueryPage = 1;
+        } else {
           this.MainQueryPage++;
         }
         this.getMainQuery()
@@ -256,10 +278,10 @@
       // 获取我的必修课
       getMyStudy() {
         this.ajax({
-          ajaxSuccess: res =>{
-          this.myStudy = res.data;
-          this.myStudyTotalCount = res.totalCount||res.data.length||0;
-          } ,
+          ajaxSuccess: res => {
+            this.myStudy = res.data;
+            this.myStudyTotalCount = res.totalCount || res.data.length || 0;
+          },
           ajaxParams: {
             url: api.myStudy.path,
             params: {
@@ -274,12 +296,12 @@
         this.ajax({
           ajaxSuccess: res => {
             this.mainQuery = res.data,
-            this.mainQueryTotalCount = res.totalCount||res.data.length||0;
+              this.mainQueryTotalCount = res.totalCount || res.data.length || 0;
           },
           ajaxParams: {
             url: api.mainQuery.path,
             params: {
-              curPage:this.MainQueryPage,
+              curPage: this.MainQueryPage,
               pageSize: this.MainQueryPageSize
             }
           }
@@ -302,10 +324,10 @@
       // 获取播放记录
       getMyHistory() {
         this.ajax({
-          ajaxSuccess: res =>{
-          this.myHistory = res.data;
-          this.mainQueryTotalCount = res.totalCount||res.data.length||0;
-          } ,
+          ajaxSuccess: res => {
+            this.myHistory = res.data;
+            this.mainQueryTotalCount = res.totalCount || res.data.length || 0;
+          },
           ajaxParams: {
             url: api.myHistory.path,
             params: {
@@ -323,13 +345,25 @@
         }
         return src
       },
+
+      //点击视频
+      videoClick(data){
+        this.showData = data;
+        this.showModal = true;
+      },
+
+      mainQueryClick(){
+          this.showMess('无权限')
+      }
     },
     created() {
       this.init();
     },
     mounted() {},
     components: {
-      classMenu,more
+      classMenu,
+      more,
+      show
     }
   }
 

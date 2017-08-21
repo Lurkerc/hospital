@@ -39,9 +39,9 @@
         </el-col >
         <fieldset class="layui-elem-field">
           <legend>通知内容</legend>
-          <div class="layui-field-box">
-          {{data.content}}
-        </div>
+          <div class="layui-field-box" v-if="show">
+            <viewUEditor style="width:700px;" :name="'ud1'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
+          </div>
         </fieldset>
 
       </el-row >
@@ -74,6 +74,7 @@
 <script>
   //当前组件引入全局的util
   /*   引入--回执--组件*/
+  import viewUEditor from '../../../common/showUeditor.vue';
   import receipt from './releaseManagement_receipt.vue';
   let Util=null;
   export default {
@@ -97,6 +98,16 @@
     }],
     data (){
       return{
+        show:false,
+        UE:{},
+        ueditorVal:{
+          ud1:"",
+        },  //
+        ueditorConfig:{
+          //详细配置参考UEditor 官网api
+          initialFrameHeight:220,  //初始化编辑器高度,默认320
+        },
+
         receiptModal:false,
         receiptId:{
           id:'receiptId',
@@ -143,7 +154,14 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-        this.data = responseData.data;
+          let data = responseData.data;
+          if(!data)return;
+          if(!data.roleName) {
+            data.roleName = '全部'
+          }
+        this.data = data;
+        this.show = true;
+        this.ueditorVal.ud1 = data.content;
       },
       /*
        * 当前组件发送事件给父组件
@@ -163,9 +181,43 @@
       examineReceipt(flag){
           this.receiptModal = flag||false;
       },
+
+
+      /**
+       *
+       * 存储编辑器的UE.editor对象
+       * @param name {string}  编辑器的name
+       *
+       * @param editor {}      编辑器的对象
+       *
+       */
+      storeUE(name,editor){
+        this.UE[name] = editor;
+        editor.setDisabled()
+        if(this.data.content){
+          this.setMyVal('ud1',this.data.content)
+        }
+      },
+
+      setMyVal(name,v){
+        this.UE[name].setContent(v);
+      },
+      /**
+       *
+       * 存储编辑器的value值
+       * @param name {string}  编辑器的name
+       *
+       * @param val  {string}  编辑器的内容
+       *
+       */
+      getUeditorVal(name,val){
+        this.ueditorVal[name] = val;
+      },
+
+
     },
     components:{
-      receipt
+      receipt,viewUEditor
     }
   }
 </script>
