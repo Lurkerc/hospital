@@ -114,9 +114,9 @@
         // console.log('player current update state', playerCurrentState)
       },
       // player is ready
-      playerReadied(player) {
+      playerReadied(player) {  //设置开始播放开始时间(从什么时间开始播放),单位为秒
         // seek to 10s
-        player.currentTime(10)
+        player.currentTime(0)
         // console.log('example 01: the player is readied', player)
       }
     }

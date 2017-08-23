@@ -58,7 +58,6 @@
     created(){
       this.$nextTick(function(){
         let ref=this.$refs.hideColumn;
-        console.log(this.$refs);
         this.theadHtml = ref.innerHTML;
         this.rowObj = ref;
         this.getTbody(this.tableData,ref)
@@ -77,14 +76,11 @@
         for (var i = 1; i < childNode.length; i++) {
           console.log(childNode[i].nodeName);
           if(childNode[i].nodeName == '#text' && !/\S/.test(childNode[i].nodeValue)){//文本节点并且是空的文本节点时，将空文本节点删除
-            console.log(childNode[i].nodeName);
             obj.removeChild(childNode[i]);
           }
         }
-        console.log(childNode.length);
         for(var i=0,item;i<data.length;i++){
           item=data[i];
-          console.log(childNode[i].nodeType);
 //          if(childNode[i].nodeType == '1'){
 //            templateArr.push("<td>"+item.name+"</td>");
 //          }else{

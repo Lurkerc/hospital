@@ -14,7 +14,7 @@ body{min-height:100%;}
 .marBd14{margin:0 10px;}
 .padBd14{padding:10px;}
 body{margin:0;padding:0;background:#ffffff;line-height: 1.7em;font-family: "微软雅黑";}
-div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,blockquote,p,button{padding:0; margin:0;font-family: "微软雅黑";}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,blockquote,p,button{padding:0; margin:0;font-family: "微软雅黑";word-wrap:break-word;}
 ul,ol,li{list-style:none;}
 table{text-align:left;}
 p{line-height:18px;}

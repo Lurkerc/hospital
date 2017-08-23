@@ -1042,7 +1042,7 @@ table.evaluationSheet-content tfoot th{
   -webkit-line-clamp: 1; /** 显示的行数 **/
   overflow: hidden;  /** 隐藏超出的内容 **/
 }
-.overflow-txt1{
+.overflow-txt2{
   word-break: break-all;
   text-overflow: ellipsis;
   display: -webkit-box; /** 将对象作为伸缩盒子模型显示 **/

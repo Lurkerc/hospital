@@ -140,7 +140,16 @@
       }
     },
     created() {
+
       this.init();
+      if (!this.uploadFiles) return;
+      if (this.data.type == 'picture-card') {
+        this.fileList = this.converterPictureList(this.uploadFiles)
+        this.$emit('setUploadFiles', this.processorPictureList(this.fileList), this.fileList);
+      } else {
+        this.fileList = this.converterTextList(this.uploadFiles);
+        this.$emit('setUploadFiles', this.processorList(this.fileList), this.fileList);
+      }
     },
     methods: {
       //初始化
@@ -207,7 +216,6 @@
           let temName = (name[name.length - 1]+'').toLowerCase();
           name[name.length - 1] = temName;
           name = name.join('.');
-          console.log(fileListName,name);
           if(fileListName == name){
             this.$Notice.warning({
               title: '文件已存在',
