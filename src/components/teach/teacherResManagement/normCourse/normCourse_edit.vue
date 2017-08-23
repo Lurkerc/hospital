@@ -14,8 +14,8 @@
     </div>
     <!-- 底部 -->
     <div align="center" slot="footer">
-      <el-button type="info" @click="saveCall('NOT_SUBMIT')">保存草稿</el-button>
-      <el-button type="success" @click="saveCall('NOT_AUDIT')">提交审核</el-button>
+      <el-button type="info" @click="saveCall('DXD')">保存草稿</el-button>
+      <el-button type="success" @click="saveCall('DSH')">提交审核</el-button>
     </div>
     <!-- 内容 start -->
     <!-- 课程基本信息 -->
@@ -41,7 +41,7 @@
 <script>
   import api from './api';
   import {
-    getNormCourse
+    getCourse
   } from './dataTool';
   /*当前组件必要引入*/
   import layout from "./_components/layout"; // 基础布局
@@ -70,8 +70,8 @@
         this.$refs[this.menuActive].saveToStore() && (this.menuActive = menu);
       },
       // 保存 调用子组件的save方法
-      saveCall(auditStatus) {
-        let msg = auditStatus === 'NOT_SUBMIT' ? '保存草稿' : '提交审核';
+      saveCall(status) {
+        let msg = status === 'DXD' ? '保存草稿' : '提交审核';
         if (this.$refs[this.menuActive].saveToStore()) {
           this.ajax({
             type: 'edit',
@@ -83,7 +83,7 @@
               jsonString: true,
               url: api.modify.path + this.operailityData.id,
               method: api.modify.method,
-              data: this.getSaveData(auditStatus)
+              data: this.getSaveData(status)
             }
           })
         }
@@ -102,9 +102,9 @@
         })
       },
       // 获取数据
-      getSaveData(auditStatus) {
+      getSaveData(status) {
         let theData = this.$store.state.curriculum.data;
-        return getNormCourse(theData.course, theData.evaluate, theData.planDtoList, auditStatus)
+        return getCourse(theData.course, theData.evaluate, theData.planDtoList, status)
       },
     },
 

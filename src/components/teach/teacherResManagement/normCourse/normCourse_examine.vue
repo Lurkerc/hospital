@@ -20,8 +20,8 @@
         </el-form-item>
       </el-form>
       <p align="center">
-        <el-button type="success" @click="audit('AUDIT_SUCCESS')">通过</el-button>
-        <el-button type="danger" @click="audit('AUDIT_FAILURE')">驳回</el-button>
+        <el-button type="success" @click="audit('RUN')">通过</el-button>
+        <el-button type="danger" @click="audit('BH')">驳回</el-button>
       </p>
     </div>
     <!-- 内容 start -->
@@ -66,7 +66,7 @@
       return {
         menuActive: 'load',
         formValidate: {
-          auditStatus: "", // 审核结果 AUDIT_FAILURE|驳回  AUDIT_SUCCESS|通过
+          status: "", // 审核结果 BH|驳回  RUN|通过
           reason: "", // 审核意见
         },
       }
@@ -79,8 +79,8 @@
       },
       // 审核
       audit(type) {
-        this.formValidate.auditStatus = type;
-        let msg = type === 'AUDIT_FAILURE' ? '驳回' : '通过';
+        this.formValidate.status = type;
+        let msg = type === 'BH' ? '驳回' : '通过';
         let opt = {
           type: 'examine',
           successTitle: msg + '操作成功!',

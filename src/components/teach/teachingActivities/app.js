@@ -54,7 +54,37 @@ export default {
 
 
 
+  /**
+   * 教学活动计划
+   * */
 
+  //教学活动计划修改发布  put
+  modifyRelease:'/teachActivityPlan/modifyRelease/' ,///{planId}
+
+  //教学活动计划执行情况  get
+  staticPlanImplementation:'/teachActivityPlan/staticPlanImplementation' ,///{}
+
+  //教学活动计划修改  put
+  teachActivityPlanModify:'/teachActivityPlan/modify/' ,///{planId}
+
+  //教学活动计划列表-根据条件筛选  put
+  getList:'/teachActivityPlan/getList' ,///{}
+
+  //查看教学活动计划-非管理员查看 get
+  pageList:'/teachActivityPlan/pageList' ,///{}
+
+  //查看教学活动计划-管理员查看 get
+  pageListManage:'/teachActivityPlan/pageListManage' ,///{}
+
+
+  //教学活动计划删除 delete
+  teachActivityPlanDelete:'/teachActivityPlan/delete' ,///{ids}
+
+  //教学活动计划添加 post
+  teachActivityPlanAdd:'/teachActivityPlan/add' ,///
+
+  //教学活动计划添加 post
+  teachActivityPlanGet:'/teachActivityPlan/get/' ,///planId
 
 
 

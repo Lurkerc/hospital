@@ -40,19 +40,16 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="210">
           <template scope="scope">
-            <el-button size="small" type="primary" @click="manage(scope.row)" :disabled="scope.row.auditStatus !== 'AUDIT_SUCCESS'">管理
-            </el-button>
-            <el-button size="small" type="info" @click="show(scope.row)">查看
-            </el-button>
-            <el-button size="small" type="success" @click="edit(scope.row)" :disabled="scope.row.auditStatus === 'AUDIT_SUCCESS'">修改
-            </el-button>
+            <el-button size="small" type="primary" @click="manage(scope.row)" :disabled="scope.row.status !== 'TG'">管理</el-button>
+            <el-button size="small" type="info" @click="show(scope.row)">查看</el-button>
+            <el-button size="small" type="success" @click="edit(scope.row)" :disabled="scope.row.status === 'TG'">修改</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="title" label="课程名称" align="center" width="200"></el-table-column>
         <el-table-column prop="teacher" label="授课教师" show-overflow-tooltip></el-table-column>
         <el-table-column prop="status" label="课程状态" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.auditStatus | typeText }}
+            {{ scope.row.status | courseStatus }}
           </template>
         </el-table-column>
         <el-table-column prop="totalLesson" label="课程包含节数" show-overflow-tooltip></el-table-column>

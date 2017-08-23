@@ -5,10 +5,10 @@
       <div v-for="(item,index) in getDta" :key="index">
         <div class="eq-font">
           <el-row>
-            <el-col :span="4">
+            <el-col :span="5">
               <span class="eq-index" >{{index+1}}.</span>
               <el-button type="info" size="mini">{{item.types | typeText }}</el-button>
-              <span>{{item.optionScore}}</span>
+              <span>（{{item.optionScore}}分）</span>
             </el-col>
 
             <el-col :span="18" style="line-height: 40px">
@@ -232,6 +232,7 @@
               score +=  weight/countWeight*(item.optionScore).toFixed(2);
             }
         }
+        if(!score)score='0';
         return score;
       },
       /*

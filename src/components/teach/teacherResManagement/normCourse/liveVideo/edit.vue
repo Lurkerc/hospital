@@ -9,7 +9,7 @@
         <div style="height:320px;">
           <!--<videojsLive v-if="getData.liveStream" :liveUrl="'http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8'" ></videojsLive>-->
           <!--<videojsLive  :liveUrl="'http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8'" ></videojsLive>-->
-          <hkVideo :courseId="courseId" :liveList="liveList" :getData="getData" width="540" height="290" :count="count" :isShowRight="true" :ip="formValidate.ip" :port="formValidate.port" :nvrIp="formValidate.nvrIp" :loginName="formValidate.loginName" :password="formValidate.password"></hkVideo>
+          <hkVideo :courseId="courseId" v-if="liveList!=0" :liveList="liveList" :getData="getData" width="540" height="290" :count="count" :isShowRight="true" :ip="formValidate.ip" :port="formValidate.port" :nvrIp="formValidate.nvrIp" :loginName="formValidate.loginName" :password="formValidate.password"></hkVideo>
         </div>
       </div>
 
@@ -18,7 +18,7 @@
       </div>
     </liveBase>
     <no-live style="height:510px;" v-if="hasLive==2"  :courseId="courseId"></no-live>
-    <div v-else style="line-height: 100px;font-size: 25px;text-align: center">
+    <div v-if="hasLive==''" style="line-height: 100px;font-size: 25px;text-align: center">
       加载中
     </div>
   </div>
@@ -46,12 +46,12 @@
         },
         count:0,
         liveList:[
-          {"ip":"192.168.1.2","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},
+        /*  {"ip":"192.168.1.2","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},
           {"ip":"192.168.1.3","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},
           {"ip":"192.168.1.8","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},
           {"ip":"192.168.1.9","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},
           {"ip":"192.168.1.7","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},
-          {"ip":"192.168.1.4","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},
+          {"ip":"192.168.1.4","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},*/
         ],
         formValidate: {
 //          brand: 'HIKVISION', // 品牌

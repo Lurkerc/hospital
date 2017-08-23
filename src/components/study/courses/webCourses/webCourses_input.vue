@@ -15,8 +15,8 @@
     </div>
     <!-- 底部 -->
     <div align="center" slot="footer">
-      <el-button type="info" @click="saveCall('NOT_SUBMIT')">保存草稿</el-button>
-      <el-button type="success" @click="saveCall('NOT_AUDIT')">提交审核</el-button>
+      <el-button type="info" @click="saveCall('DXD')">保存草稿</el-button>
+      <el-button type="success" @click="saveCall('DSH')">提交审核</el-button>
     </div>
     <!-- 内容 start -->
     <!-- 授课安排 -->
@@ -44,14 +44,14 @@
 <script>
   // import api from './api';
   import {
-    getNormCourse
+    getCourse
   } from '../../../teach/teacherResManagement/normCourse/dataTool';
   /*当前组件必要引入*/
   import layout from "../../../teach/teacherResManagement/normCourse/_components/layout"; // 基础布局
   import nmenuItem from '../../../teach/teacherResManagement/normCourse/_components/menu'; // 菜单项
 
   import teachEdit from '../../../teach/teacherResManagement/normCourse/teach/teach_edit'; // 授课安排
-  import basicEdit from '../../../teach/teacherResManagement/normCourse/basic/basic_edit'; // 课程基本信息
+  import basicEdit from '../../../teach/teacherResManagement/normCourse/basic/basic_edit'; // 授课基本信息
   import introEdit from '../../../teach/teacherResManagement/normCourse/intro/intro_edit'; // 课程简介
   import outlineEdit from '../../../teach/teacherResManagement/normCourse/outline/outline_edit'; // 课程教学大纲
   import planEdit from '../../../teach/teacherResManagement/normCourse/plan/plan_edit'; // 教学计划
@@ -74,23 +74,32 @@
         this.$refs[this.menuActive].saveToStore() && (this.menuActive = menu);
       },
       // 保存 调用子组件的save方法
-      saveCall(auditStatus) {
-        let msg = auditStatus === 'NOT_SUBMIT' ? '保存草稿' : '提交审核';
-        if (this.$refs[this.menuActive].saveToStore()) {
-          this.ajax({
-            type: 'edit',
-            successTitle: msg + '成功',
-            errorTitle: msg + '失败',
-            ajaxSuccess: 'ajaxSuccess',
-            ajaxError: 'ajaxError',
-            ajaxParams: {
-              jsonString: true,
-              url: this.saveUrl.path,
-              method: this.saveUrl.method,
-              data: this.getSaveData(auditStatus)
-            }
-          })
+      saveCall(status) {
+        let msg = status === 'NOT_SUBMIT' ? '保存草稿' : '提交审核';
+        if (!this.$refs[this.menuActive].saveToStore()) {
+          return
         }
+        if (!this.$store.state.curriculum.data.course.typeId) {
+          this.$notify({
+            title: '操作提示',
+            message: '请在课程基本信息中选择分类后再操作！',
+            type: 'warning'
+          });
+          return
+        }
+        this.ajax({
+          type: 'edit',
+          successTitle: msg + '成功',
+          errorTitle: msg + '失败',
+          ajaxSuccess: 'ajaxSuccess',
+          ajaxError: 'ajaxError',
+          ajaxParams: {
+            jsonString: true,
+            url: this.saveUrl.path,
+            method: this.saveUrl.method,
+            data: this.getSaveData(status)
+          }
+        })
       },
       // 获取查看数据
       getViewData() {
@@ -106,9 +115,9 @@
         })
       },
       // 获取数据
-      getSaveData(auditStatus) {
+      getSaveData(status) {
         let theData = this.$store.state.curriculum.data;
-        return getNormCourse(theData.course, theData.evaluate, theData.planDtoList, auditStatus)
+        return getCourse(theData.course, theData.evaluate, theData.planDtoList, status)
       },
     },
 

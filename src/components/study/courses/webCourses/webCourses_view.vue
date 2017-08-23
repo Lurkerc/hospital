@@ -64,7 +64,7 @@
   import coursewareView from '../../../teach/teacherResManagement/normCourse/courseware/courseware_view'; // 课件
   import liveVideoView from '../../../teach/teacherResManagement/normCourse/liveVideo/view'; // 直播
   import eoView from '../../../teach/teacherResManagement/normCourse/EO/EO_view'; // 评测与作业
-  import tqvInfoView from '../../../teach/teacherResManagement/normCourse/TQVInfo/TQVInfo_view'; // 教学质量评价表
+  import tqvInfoView from '../../../teach/teacherResManagement/normCourse/TQVInfo/TQVInfo_input'; // 教学质量评价表
   import discussView from '../../../teach/teacherResManagement/normCourse/discuss/edit'; // 讨论区
   // import treInfoView from '../../../teach/teacherResManagement/normCourse/TREInfo/TREInfo_view'; // 试运行评估表
 

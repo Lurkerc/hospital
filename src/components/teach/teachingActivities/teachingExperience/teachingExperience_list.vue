@@ -189,6 +189,7 @@
     </Modal>
     <!--查看档案管理弹窗-->
     <Modal
+      close-on-click-modal="false"
       width="1000"
       v-model="showModal"
       title="查看档案管理弹窗"

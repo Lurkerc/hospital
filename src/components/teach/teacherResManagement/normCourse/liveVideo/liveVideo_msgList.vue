@@ -114,8 +114,7 @@
 
 
           setScoll(){
-              if( this.isSetScoll){
-                  console.log( this.$refs.msgList);
+              if( this.isSetScoll&&this.$refs.msgList){
                 this.$refs.msgList.scrollTop  = this.$refs.msgList.scrollHeight ;
               }
           },
@@ -132,11 +131,16 @@
           },
           //禁止发言或者
           speakClick(flag){
-            let  listMessTitle={
-              ajaxSuccess: res=>this.successMess(flag?'取消禁言成功':'禁言成功'),
+              console.log(flag);
+            let  listMessTitle= {
+              ajaxSuccess: res => {
+                this.successMess(flag ? '取消禁言成功' : '禁言成功');
+                this.speak = flag
+              },
                 ajaxParams: {
                 url: api.speak.path,
-                  params: {
+                  method:'post',
+                  data: {
                   courseId:this.courseId,
                     planId:this.liveData.id,
                     speak:flag,

@@ -95,7 +95,7 @@ const mutations = {
       logo: "", //缩略图
       remark: "", //课程简介
       outline: "", //教学大纲
-      auditStatus: "NOT_SUBMIT", //审核状态：保存草稿用NOT_SUBMIT，提交审核用NOT_AUDIT
+      status: "DXD", // 课程状态  DXD带修订、TESTRUN试运行、DSH待审核、RUN在运行、EXIT已退出、BH驳回、TG通过
       operator: "", // 创建人
       createTime: "", // 创建时间
     };

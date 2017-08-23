@@ -20,7 +20,7 @@
       </el-col>
 
       <el-col v-if="theTodoType === 'teach'">
-        <el-form-item label="分类：">
+        <el-form-item label="分类：" prop="typeName">
           <el-input v-model="course.typeName" @focus="selectType"></el-input>
         </el-form-item>
       </el-col>
@@ -37,7 +37,7 @@
         <el-form-item label="创建时间：" label-width="90px">{{ course.createTime | formatDate('yyyy-MM-dd hh:mm:ss') }}</el-form-item>
       </el-col>
       <el-col :span="8">
-        <el-form-item label="课程状态：">{{ course.auditStatus | curriculum }}</el-form-item>
+        <el-form-item label="课程状态：">{{ course.status | courseStatus }}</el-form-item>
       </el-col>
     </el-form>
     <!-- 选择分类 -->
@@ -69,7 +69,7 @@
           logo: "", //缩略图
           operator: "", // 创建人
           createTime: "", // 创建时间
-          auditStatus: "NOT_SUBMIT", //审核状态：保存草稿用NOT_SUBMIT，提交审核用NOT_AUDIT
+          status: "DXD", // 保存草稿 传  带修订DXD，提交审核 传 待审核DSH
         },
         splStr: '|', // 分隔符
         inputVisible: false,
@@ -127,10 +127,6 @@
             flag = true;
           }
         });
-        if (flag && this.theTodoType === 'teach' && !this.course.typeId) {
-          flag = false;
-          this.errorMess('请选择分类！');
-        }
         return flag;
       },
       // 选择所属分类

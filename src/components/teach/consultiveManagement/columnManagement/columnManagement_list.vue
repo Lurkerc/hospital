@@ -4,7 +4,7 @@
 
 <template>
     <layout-tree>
-      <left-tree slot="left" @setCurrSltNodeId="setTreeId"  @tree-click="treeClick" :treeOptions="treeDefaults" ></left-tree>
+      <left-tree slot="left" @setCurrSltNodeId="setTreeId" :currentKey="formValidate.parentId" @tree-click="treeClick" :treeOptions="treeDefaults" ></left-tree>
 
       <div slot="right" id="content" ref="nosocomial" class="table-content ">
         <el-form  :model="formValidate" ref="formValidate" :rules="columnManagementList"  inline label-width="90px" class="demo-ruleForm">
@@ -481,11 +481,12 @@
         this.setTreeId(obj.id,obj);
         this.setTableData();
         this.isRoot = node.parent.level;
-
       },
 
       //设置treeid
       setTreeId(id,data){
+          console.log(id);
+          console.log(data);
         if(this.parent == ""){
           this.parent = data;
           this.formValidate.parentId = id

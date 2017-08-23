@@ -22,25 +22,25 @@ const planDtoItem = {
   // testingDtoListTemp: { // 测评对象集合（操作使用）
   testingDtoList: {
     before: { // 课前
-      "expiredTime": "2017-06-08 09:30:00", //截止时间
-      "validityScore": 90, //有效分数
-      "totalScore": 100, //总分
-      "validitySubmits": 3, //有效提交次数
-      "totalSubmits": 5 //总提交次数
+      "expiredTime": "", //截止时间
+      "validityScore": '', //有效分数
+      "totalScore": '', //总分
+      "validitySubmits": '', //有效提交次数
+      "totalSubmits": '' //总提交次数
     },
     inProgress: { // 课中
-      "expiredTime": "2017-06-08 09:30:00", //截止时间
-      "validityScore": 80, //有效分数
-      "totalScore": 60, //总分
-      "validitySubmits": 5, //有效提交次数
-      "totalSubmits": 6 //总提交次数
+      "expiredTime": "", //截止时间
+      "validityScore": '', //有效分数
+      "totalScore": '', //总分
+      "validitySubmits": '', //有效提交次数
+      "totalSubmits": '' //总提交次数
     },
     after: { // 课后
-      "expiredTime": "2017-06-08 09:30:00", //截止时间
-      "validityScore": 90, //有效分数
-      "totalScore": 100, //总分
-      "validitySubmits": 3, //有效提交次数
-      "totalSubmits": 5 //总提交次数
+      "expiredTime": "", //截止时间
+      "validityScore": '', //有效分数
+      "totalScore": '', //总分
+      "validitySubmits": '', //有效提交次数
+      "totalSubmits": '' //总提交次数
     },
   },
 };

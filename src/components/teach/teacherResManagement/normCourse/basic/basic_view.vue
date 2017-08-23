@@ -28,7 +28,7 @@
           <el-form-item label="创建时间：" label-width="90px">{{ course.createTime | formatDate('yyyy-MM-dd hh:mm:ss') }}</el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="课程状态：">{{ course.auditStatus | curriculum }}</el-form-item>
+          <el-form-item label="课程状态：">{{ course.status | courseStatus }}</el-form-item>
         </el-col>
       </el-form>
     </el-row>
@@ -47,7 +47,7 @@
           logo: "", //缩略图
           operator: "", // 创建人
           createTime: "", // 创建时间
-          auditStatus: "NOT_SUBMIT", //审核状态：保存草稿用NOT_SUBMIT，提交审核用NOT_AUDIT
+          status: "", //审核状态
         },
         splStr: '|', // 分隔符
       }

@@ -6,6 +6,7 @@ import baseRules from '../../../../formRules/base'; // 公共规则
  */
 let basic = {
   title: baseRules.required,
+  typeName: baseRules.requiredNoEvent,
   // direction: baseRules.illegalChar,
 };
 /**

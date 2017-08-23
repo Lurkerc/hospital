@@ -154,6 +154,7 @@
     </div>
     <!--新建教学活动-->
     <Modal
+      close-on-click-modal="false"
       width="800"
       v-model="addModal"
       title="新建教学活动"
@@ -165,6 +166,7 @@
     </Modal>
     <!--修改角色弹窗-->
     <Modal
+      close-on-click-modal="false"
       :mask-closable="false"
       v-model="editModal"
       height="200"
@@ -179,6 +181,7 @@
     </Modal>
     <!--查看教学活动-->
     <Modal
+      close-on-click-modal="false"
       height="200"
       v-model="showModal"
       title="查看教学活动"

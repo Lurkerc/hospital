@@ -8,8 +8,8 @@
         <el-col>
           <el-form-item label="审核状态：">
             <el-radio-group v-model="formValidate.audit">
-              <el-radio label="AUDIT_SUCCESS">通过</el-radio>
-              <el-radio label="AUDIT_FAILURE">驳回</el-radio>
+              <el-radio label="TG">通过</el-radio>
+              <el-radio label="BH">驳回</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -21,7 +21,7 @@
         </el-col>
 
         <!-- 时间安排 -->
-        <el-col v-if="formValidate.audit === 'AUDIT_SUCCESS'">
+        <el-col v-if="formValidate.audit === 'TG'">
           <el-form-item label="授课时间：">
             <el-col>
               <el-table ref="multipleTable" align="center" :maxHeight="400" :context="self" :data="formValidate.planList" tooltip-effect="dark" style="width: 100%">
@@ -69,7 +69,7 @@
       </el-form>
 
       <p align="center">
-        <el-button type="success" @click="audit">通过</el-button>
+        <el-button type="success" @click="audit">确定</el-button>
         <el-button @click="cancelAdd">取消</el-button>
       </p>
     </el-row>
@@ -96,7 +96,7 @@
         selectData: {}, // 所选时间数据
         formValidate: {
           courseId: this.operailityData.id, // 授课ID
-          audit: "AUDIT_SUCCESS", // 审核状态：通过AUDIT_SUCCESS、驳回AUDIT_FAILURE
+          audit: "TG", // 审核状态：通TG、驳回BH
           reason: "", // 审核原因
           planList: [], // 时间安排
         },
@@ -110,9 +110,9 @@
     methods: {
       // 审核
       audit() {
-        let msg = this.formValidate.audit === 'AUDIT_FAILURE' ? '驳回' : '通过';
+        let msg = this.formValidate.audit === 'BH' ? '驳回' : '通过';
         let data = this.$util._.defaultsDeep({}, this.formValidate);
-        if (data.audit === 'AUDIT_FAILURE') {
+        if (data.audit === 'BH') {
           data.planList.length = 0;
         }
         let opt = {

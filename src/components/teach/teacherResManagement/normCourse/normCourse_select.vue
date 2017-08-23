@@ -99,7 +99,7 @@
       },
       // 从html中获取文本
       getTextByHtml(str = '', length = 50) {
-        return str.replace(/<\/?.+?>/g, "").replace(/ /g, "").substring(0, length);
+        return str ? str.replace(/<\/?.+?>/g, "").replace(/ /g, "").substring(0, length) : '暂无应用方向说明';
       },
       // 获取选择数据
       getSelectData() {

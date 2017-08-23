@@ -4,29 +4,51 @@
   <el-form :model="formValidate" ref="formValidate" :rules="rules.teachingActivitiesSet"  label-width="100px">
     <el-row>
       <el-col :span="12">
-          <el-form-item label="活动名称" prop="activityName">
-            <el-input v-model="formValidate.activityName"></el-input>
-          </el-form-item>
+        <el-form-item label="活动时间" prop="activityTime">
+          <el-date-picker type="date"  :editable="false" placeholder="选择日期"  v-model="formValidate.activityTime" style="width: 100%;"></el-date-picker>
+        </el-form-item>
+
+
+        <el-form-item label="计划" prop="isPlan">
+          <el-radio-group  v-model="formValidate.isPlan">
+            <el-radio label="Y">计划内</el-radio>
+            <el-radio label="N">计划外</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item style="width:284px;" label="类型" prop="activityType">
+          <el-select style="width:284px;" v-model="formValidate.activityType"  placeholder="请选择" >
+            <select-option :unAll="true" :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
+            </el-option>
+          </el-select>
+        </el-form-item>
+
           <el-form-item label="主持人" prop="hostUserName">
             <el-input @focus="openAndColseHost('host')" v-model="formValidate.hostUserName" ></el-input>
           </el-form-item>
-          <el-form-item label="活动时间" prop="activityTime">
-            <el-date-picker type="date"  :editable="false" placeholder="选择日期"  v-model="formValidate.activityTime" style="width: 100%;"></el-date-picker>
-          </el-form-item>
+
       </el-col>
       <el-col :span="12">
-          <el-form-item style="width:284px;" label="类型" prop="activityType">
-            <el-select style="width:284px;" v-model="formValidate.activityType"  placeholder="请选择" >
-              <select-option :unAll="true" :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item style="width:284px;" label="科室" prop="depId">
-            <el-select  style="width:284px;" v-model="formValidate.depId" placeholder="请选择">
-              <!--<select-option  :unAll="true"></select-option>-->
-              <select-option :type="type"  :unAll="true"></select-option>
-            </el-select>
-          </el-form-item>
+        <el-form-item style="width:284px;" label="科室" prop="depId">
+          <el-select  style="width:284px;" v-model="formValidate.depId" placeholder="请选择">
+            <!--<select-option  :unAll="true"></select-option>-->
+            <select-option :type="type"  :unAll="true"></select-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item v-if="formValidate.isPlan=='Y'" style="width:284px;" label="月度计划" prop="activityPlan">
+          <el-select  style="width:284px;" v-model="formValidate.activityPlan" placeholder="请选择">
+            <!--<select-option  :unAll="true"></select-option>-->
+            <select-option :url="' '" :type="type"  :unAll="true" ></select-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="formValidate.isPlan=='N'" style="width:284px;" >
+         &nbsp;
+        </el-form-item>
+
+        <el-form-item label="活动名称" prop="activityName">
+          <el-input v-model="formValidate.activityName"></el-input>
+        </el-form-item>
 
           <el-form-item label="活动地点" prop="activitySite">
             <el-input v-model="formValidate.activitySite"></el-input>
@@ -133,6 +155,7 @@
   </el-form>
     <!--选择人员-->
     <Modal
+      close-on-click-modal="false"
       width="890"
       v-model="selectUserModal"
       title="新建教学活动"
@@ -144,6 +167,7 @@
     </Modal>
     <!--选择主持人-->
     <Modal
+      close-on-click-modal="false"
       width="890"
       v-model="hostModal"
       title="新建教学活动"
@@ -199,10 +223,10 @@
           "timeIds":"",
           "recordTimes":[],
           "activityState":"",
-
+          activityPlan:'',
 
           //新增
-          isPlan:'Y',  //是否计划内
+          isPlan:'N',  //是否计划内
           activityPlanId:'', //月度计划ID
           planDetailId:'', //计划详情ID
         },
@@ -270,7 +294,6 @@
     created(){
       //给当前组件注入全局util
       Util = this.$util;
-
       let userInfo = this.$store.getters.getUserInfo;
       let role = userInfo.roleList[0].identify;
       if(role =='JXMS' ||role =='KEZR'){

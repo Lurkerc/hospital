@@ -7,9 +7,18 @@
         <div class="listUpArea-menus">
           <div class="add-remove">
             <el-button class="but-col" @click="add" type="info">创建标准课程</el-button>
-            <el-button class="but-col" @click="examine" :disabled="canTodo('examine')" type="success">审核标准课程</el-button>
-            <el-button class="but-col" @click="testRun" :disabled="canTodo('testRun')" type="primary">课程试运行</el-button>
-            <el-button class="but-col" @click="exit" :disabled="canTodo('exit')" type="danger">课程退出</el-button>
+            <el-tooltip effect="light" placement="bottom-start">
+              <div slot="content">审核试运行课程</div>
+              <el-button class="but-col" @click="examine" :disabled="canTodo(['DSH','TESTRUN'])" type="success">审核标准课程</el-button>
+            </el-tooltip>
+            <el-tooltip effect="light" placement="bottom-start">
+              <div slot="content">对试运行课程上传评估表并提交审核</div>
+              <el-button class="but-col" @click="testRun" :disabled="canTodo(['DSH'])" type="primary">课程试运行</el-button>
+            </el-tooltip>
+            <el-tooltip effect="light" placement="bottom-start">
+              <div slot="content">退出在运行课程</div>
+              <el-button class="but-col" @click="exit" :disabled="canTodo(['RUN'])" type="danger">课程退出</el-button>
+            </el-tooltip>
           </div>
         </div>
         <div class="listUpArea-search">
@@ -42,14 +51,13 @@
         <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55">
           </el-table-column>
-          <el-table-column label="序号" prop="index" width="70">
-            <template scope="scope">1</template>
-          </el-table-column>
+          <!-- <el-table-column label="序号" prop="index" width="70">
+          </el-table-column> -->
           <el-table-column label="操作" align="center" width="140">
             <template scope="scope">
               <el-button size="small" type="info" @click="show(scope.row)">查看
               </el-button>
-              <el-button size="small" type="success" @click="edit(scope.row)" :disabled="scope.row.status === 'TESTRUN'">修改
+              <el-button size="small" type="success" @click="edit(scope.row)" :disabled="canEdit(scope.row)">修改
               </el-button>
             </template>
           </el-table-column>
@@ -57,14 +65,14 @@
           <el-table-column prop="operator" label="创建人" show-overflow-tooltip></el-table-column>
           <el-table-column prop="status" label="课程状态" show-overflow-tooltip>
             <template scope="scope">
-              {{ scope.row.status | curriculum | typeText }}
+              {{ scope.row.status | courseStatus }}
             </template>
           </el-table-column>
-          <el-table-column prop="auditStatus" label="审核状态" show-overflow-tooltip>
+          <!-- <el-table-column prop="auditStatus" label="审核状态" show-overflow-tooltip>
             <template scope="scope">
               {{ scope.row.auditStatus | curriculum | typeText }}
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column prop="totalLesson" label="课程节数" show-overflow-tooltip></el-table-column>
           <el-table-column prop="createTime" label="创建日期" show-overflow-tooltip>
             <template scope="scope">
@@ -250,7 +258,6 @@
         this.myPages = Util.pageInitPrams;
 
         this.queryQptions = {
-          //url:this.listUrl,
           params: {
             curPage: 1,
             pageSize: Util.pageInitPrams.pageSize
@@ -264,17 +271,15 @@
           if (data.length !== 1) { // 只能操作一个
             return true
           }
-          if (type === 'examine' && !(data[0].auditStatus === 'NOT_AUDIT')) { // 未审核的才能进行审核操作
-            return true
-          }
-          if (type === 'testRun' && !(data[0].auditStatus === 'AUDIT_SUCCESS' && data[0].status !== 'TESTRUN')) { // 审核通过的才能进行试运行操作
-            return true
-          }
-          if (type === 'exit' && !(data[0].status === 'TESTRUN')) { // 已经试运行的才能进行退出操作
+          if (type.indexOf(data[0].status) < 0) {
             return true
           }
         }
         return false
+      },
+      // 是否可修改
+      canEdit(row) {
+        return ['DSH', 'RUN', 'TESTRUN'].indexOf(row.status) > -1
       },
       /*************************************** 表格相关 **********************************************/
       //设置表格及分页的位置

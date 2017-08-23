@@ -50,7 +50,7 @@
         <el-table-column prop="teacher" label="授课教师" show-overflow-tooltip></el-table-column>
         <el-table-column prop="status" label="课程状态" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.auditStatus | typeText }}
+            {{ scope.row.status | courseStatus }}
           </template>
         </el-table-column>
         <el-table-column prop="totalLesson" label="课程包含节数" show-overflow-tooltip></el-table-column>

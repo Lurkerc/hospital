@@ -13,8 +13,8 @@
         <msgList @speak="speak" ref="msgList" style="height:470px;" :courseId="courseId" :liveData="getData"></msgList>
       </div>
     </liveBase>
-    <no-live style="height:470px;" v-else="hasLive==2"  :courseId="courseId"></no-live>
-    <div v-else style="line-height: 100px;font-size: 25px;text-align: center">
+    <no-live style="height:470px;" v-if="hasLive==2"  :courseId="courseId"></no-live>
+    <div v-if="hasLive==''" style="line-height: 100px;font-size: 25px;text-align: center">
       加载中
     </div>
   </div>

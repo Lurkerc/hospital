@@ -1,11 +1,7 @@
 <template>
-  <!-- 教学质量评价表 - 查看 -->
+  <!-- 教学质量评价表 - 填写 -->
   <div>
-    <el-tabs v-model="formValidate.types" @tab-click="initFormValidate">
-      <el-tab-pane label="学生" name="STUDENT"></el-tab-pane>
-      <el-tab-pane label="同行" name="PEERS"></el-tab-pane>
-      <el-tab-pane label="上级" name="SUPERIORS"></el-tab-pane>
-    </el-tabs>
+
     <el-row>
       <el-form>
         <el-col>
@@ -29,28 +25,28 @@
         </el-table-column>
         <el-table-column property="great" label="优">
           <template scope="scope">
-            <el-radio-group v-model="formValidate.optionList[scope.$index].point" @change="getAllScore">
+            <el-radio-group v-model="scope.row.point" @change="getAllScore">
               <el-radio :label="scope.row.great">{{ scope.row.great }}</el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
         <el-table-column property="good" label="良">
           <template scope="scope">
-            <el-radio-group v-model="formValidate.optionList[scope.$index].point" @change="getAllScore">
+            <el-radio-group v-model="scope.row.point" @change="getAllScore">
               <el-radio :label="scope.row.good">{{ scope.row.good }}</el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
         <el-table-column property="avg" label="中">
           <template scope="scope">
-            <el-radio-group v-model="formValidate.optionList[scope.$index].point" @change="getAllScore">
+            <el-radio-group v-model="scope.row.point" @change="getAllScore">
               <el-radio :label="scope.row.avg">{{ scope.row.avg }}</el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
         <el-table-column property="bad" label="差">
           <template scope="scope">
-            <el-radio-group v-model="formValidate.optionList[scope.$index].point" @change="getAllScore">
+            <el-radio-group v-model="scope.row.point" @change="getAllScore">
               <el-radio :label="scope.row.bad">{{ scope.row.bad }}</el-radio>
             </el-radio-group>
           </template>
@@ -59,6 +55,10 @@
       <h3 class="marginTop20">课堂教学评价</h3>
       <el-input type="textarea" :autosize="{ minRows:4, maxRows: 6}" placeholder="请输入内容" v-model="formValidate.fk">
       </el-input>
+      <el-col align="center" class="marginTop20">
+        <!-- 没有评价表则不能进行提交 -->
+        <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn" v-show="formValidate.evaluateId"></load-btn>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -115,27 +115,84 @@
       // 初始化
       init() {
         this.evaluate = this.$store.state.curriculum.look.evaluate;
-        this.initFormValidate()
+        this.getOldData()
+      },
+      // 获取原来评价的数据
+      getOldData() {
+        let opt = {
+          ajaxSuccess: res => this.initFormValidate(res.data),
+          ajaxParams: {
+            url: api.info.path,
+            method: api.info.method,
+            params: {
+              courseId: this.$store.state.curriculum.look.course.id
+            }
+          }
+        };
+        this.ajax(opt)
       },
       // 表单数据初始化
-      initFormValidate() {
-        let tableData = this.evaluate[this.formValidate.types.toLocaleLowerCase() + 'Evaluate']; // 获取对应角色的评价表数据
-        this.formValidate.optionList.length = 0;
-        if (!tableData.length) {
-          return
+      initFormValidate(data) {
+        if (data) {
+          this.formValidate = data
+        } else {
+          let tableData = this.evaluate[this.formValidate.types.toLocaleLowerCase() + 'Evaluate']; // 获取对应角色的评价表数据
+          if (this.tableData.length) {
+            this.formValidate.courseId = this.tableData[0].courseId;
+            this.formValidate.evaluateId = this.tableData[0].evaluateId;
+          }
+          this.tableData.map(item => {
+            let temp = this.$util._.defaultsDeep({}, item);
+            temp.point = '';
+            temp.evaluateOptionsId = temp.id;
+            this.formValidate.optionList.push(temp)
+          })
         }
-        tableData.map(item => {
-          let temp = this.$util._.defaultsDeep({}, item);
-          temp.point = '';
-          temp.evaluateOptionsId = temp.id;
-          this.formValidate.optionList.push(temp)
-        })
+      },
+      /*
+       * 点击提交按钮 监听是否提交数据
+       * @param isLoadingFun boolean  form表单验证是否通过
+       * */
+      listenSubEvent(isLoadingFun) {
+        if (this.checkData()) {
+          if (!isLoadingFun) isLoadingFun = function () {};
+          isLoadingFun(true);
+          this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          this.ajax(this.addMessTitle, isLoadingFun)
+        }
+      },
+      // 检查数据是否合法
+      checkData() {
+        let data = this.formValidate;
+        if (!data.ztyx) {
+          this.errorMess('请选择总体印象')
+          return false
+        }
+        for (let i in data.optionList) {
+          if (!data.optionList[i].point) {
+            this.errorMess('请填写完整评分项目')
+            return false
+          }
+        }
+        return true
+      },
+      /*
+       * 获取表单数据
+       * @return string  格式:id=0&name=aa
+       * */
+      getFormData(data) {
+        let myData = this.$util._.defaultsDeep({}, data);
+        return myData;
       },
       // 获取总体得分
       getAllScore() {
         let score = 0;
         this.formValidate.optionList.map(item => score += (+item.point));
         this.formValidate.ztdf = score;
+      },
+      // 保存成功
+      saveSuccess(res) {
+        this.successMess('提交成功')
       },
     },
     created() {
@@ -146,7 +203,7 @@
 </script>
 
 <style>
-  /* 教学质量评价表 - 查看 */
+  /* 教学质量评价表 - 填写 */
 
   .marginTop20 {
     margin-top: 20px;

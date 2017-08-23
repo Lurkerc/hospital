@@ -130,6 +130,7 @@
 
     <!--查看教学活动-->
     <Modal
+      close-on-click-modal="false"
       height="200"
       v-model="showModal"
       title="查看教学活动"

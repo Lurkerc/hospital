@@ -200,7 +200,7 @@
           this.defaultProps = Object.assign(this.defaultProps, this.treeOptions.defaultProps);
         }
         if (this.currentNodeKey) {
-          this.currentNodeKey = this.currentKey
+          this.currentNodeKey = this.currentKey;
         }
 
         if (!this.defaults.asyn) {
@@ -221,6 +221,9 @@
             this.defaults.emptyText = "没有可选择部门";
             return;
           }
+        }
+        if (this.currentNodeKey) {
+          this.currentNodeKey = this.currentKey
         }
         defaults.treeData = responseData.data;
         if (this.operailityType == "remove") {
@@ -293,7 +296,7 @@
         }
         //是否默认选中tree节点
         if (this.defaults.isInitSltedNode) {
-          this.sltedTreeData = this.recursionTree(defaults.treeData, nodeId);
+          this.sltedTreeData = this.recursionTree(defaults.treeData, nodeId)||defaults.treeData[0];
           this.currentNodeKey = nodeId;
         } else {
           this.sltedTreeData = {}
@@ -313,10 +316,9 @@
             obj = data[i];
             return obj;
           } else {
-            if (typeof data[i].children != "undefined" && data[i].children.length > 0) {
-              return this.recursionTree(data[i].children, id);
-            } else {
-              return data[i]
+            if (typeof data[i][this.defaultProps.children] != "undefined" && data[i][this.defaultProps.children].length > 0) {
+              let  tempData =  this.recursionTree(data[i][this.defaultProps.children], id);
+              if(tempData) return tempData;
             }
           }
         }
@@ -340,6 +342,7 @@
 
       //更新目录树数据
       updataTree() {
+        this.defaults.isInitSltedNode = true;
         this.postParamToServer();
       },
 

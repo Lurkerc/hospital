@@ -6,7 +6,7 @@
         <el-form-item label="课程名称：" prop="title">
           <el-input v-model="teach.title"></el-input>
         </el-form-item>
-        <el-form-item label="授课老师：">
+        <el-form-item label="授课老师：" required>
           <el-radio-group v-model="teach.teacherType" @change="changeTeacherType">
             <div class="thProjectBox">
               <div class="thProjectItem">
@@ -25,7 +25,7 @@
             </div>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="授课对象：">
+        <el-form-item label="授课对象：" required>
           <el-radio-group v-model="teach.teachType" @change="changeTeachType" class="thProjectRedio">
             <div class="thProjectBox">
               <div class="thProjectItem">

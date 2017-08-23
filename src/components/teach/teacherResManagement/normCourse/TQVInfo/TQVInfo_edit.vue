@@ -1,5 +1,5 @@
 <template>
-  <!-- 教学质量评价表 -->
+  <!-- 教学质量评价表 - 创建 -->
   <div class="nTQVTable">
     <div>
       <h2 class="ntqvtTitle">总体评价</h2>

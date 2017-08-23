@@ -56,11 +56,11 @@
         if (data.type == 'IN_PROGRESS') {
           type = 'inProgress';
         }
-        if (data.itemData.testingDtoList[type].validitySubmits) {
-          this.noResidue = false;
-        } else {
-          this.noResidue = true;
-        }
+//        if (data.itemData.testingDtoList[type].validitySubmits) {
+//          this.noResidue = false;
+//        } else {
+//          this.noResidue = true;
+//        }
       },
       //返回
       callBack() {

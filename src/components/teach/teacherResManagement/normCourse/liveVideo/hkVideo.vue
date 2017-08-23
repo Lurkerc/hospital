@@ -35,9 +35,9 @@
           <table cellpadding="0" cellspacing="3" border="0" class="left">
             <tr>
               <td>
-                <el-button size="mini" @mousedown.native="mouseDownPTZControl(5)" @mouseup.native="mouseUpPTZControl()">左上</el-button>
-                <el-button size="mini" @mousedown.native="mouseDownPTZControl(1)" @mouseup.native="mouseUpPTZControl()">上</el-button>
-                <el-button size="mini" @mousedown.native="mouseDownPTZControl(7)" @mouseup.native="mouseUpPTZControl()">右上</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="mouseDownPTZControl(5)" @mouseup.native="mouseUpPTZControl()">左上</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="mouseDownPTZControl(1)" @mouseup.native="mouseUpPTZControl()">上</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="mouseDownPTZControl(7)" @mouseup.native="mouseUpPTZControl()">右上</el-button>
                 <!--<input type="button" class="btn" value="左上" onmousedown="mouseDownPTZControl(5);" onmouseup="mouseUpPTZControl();" />
                 <input type="button" class="btn" value="上" onmousedown="mouseDownPTZControl(1);" onmouseup="mouseUpPTZControl();" />
                 <input type="button" class="btn" value="右上" onmousedown="mouseDownPTZControl(7);" onmouseup="mouseUpPTZControl();" />-->
@@ -45,9 +45,9 @@
             </tr>
             <tr>
               <td>
-                <el-button size="mini" @mousedown.native="mouseDownPTZControl(3)" @mouseup.native="mouseUpPTZControl()">左</el-button>
-                <el-button size="mini" @mousedown.native="mouseDownPTZControl(9)">自动</el-button>
-                <el-button size="mini" @mousedown.native="mouseDownPTZControl(4)" @mouseup.native="mouseUpPTZControl()">右</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="mouseDownPTZControl(3)" @mouseup.native="mouseUpPTZControl()">左</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="mouseDownPTZControl(9)">自动</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="mouseDownPTZControl(4)" @mouseup.native="mouseUpPTZControl()">右</el-button>
                 <!--<input type="button" class="btn" value="左" onmousedown="mouseDownPTZControl(3);" onmouseup="mouseUpPTZControl();" />
                 <input type="button" class="btn" value="自动" onclick="mouseDownPTZControl(9);" />
                 <input type="button" class="btn" value="右" onmousedown="mouseDownPTZControl(4);" onmouseup="mouseUpPTZControl();" />-->
@@ -55,9 +55,9 @@
             </tr>
             <tr>
               <td>
-                <el-button size="mini" @mousedown.native="mouseDownPTZControl(6)" @mouseup.native="mouseUpPTZControl()">左下</el-button>
-                <el-button size="mini" @mousedown.native="mouseDownPTZControl(2)" @mouseup.native="mouseUpPTZControl()">下</el-button>
-                <el-button size="mini" @mousedown.native="mouseDownPTZControl(8)" @mouseup.native="mouseUpPTZControl()">右下</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="mouseDownPTZControl(6)" @mouseup.native="mouseUpPTZControl()">左下</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="mouseDownPTZControl(2)" @mouseup.native="mouseUpPTZControl()">下</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="mouseDownPTZControl(8)" @mouseup.native="mouseUpPTZControl()">右下</el-button>
                 <!--<input type="button" class="btn" value="左下" onmousedown="mouseDownPTZControl(6);" onmouseup="mouseUpPTZControl();" />
                 <input type="button" class="btn" value="下" onmousedown="mouseDownPTZControl(2);" onmouseup="mouseUpPTZControl();" />
                 <input type="button" class="btn" value="右下" onmousedown="mouseDownPTZControl(8);" onmouseup="mouseUpPTZControl();" />-->
@@ -68,7 +68,7 @@
             <tr>
               <td class="tt">云台速度</td>
               <td>
-                <select id="ptzspeed" class="sel">
+                <select  :disabled="!isConsole" id="ptzspeed" class="sel">
                   <option>1</option>
                   <option>2</option>
                   <option>3</option>
@@ -82,13 +82,13 @@
             <tr>
               <td class="tt">预置点号</td>
               <td>
-                <input id="preset" type="text" class="txt" value="1" />
+                <input :disabled="!isConsole" id="preset" type="text" class="txt" value="1" />
               </td>
             </tr>
             <tr>
               <td colspan="2">
-                <el-button size="mini" @click="clickSetPreset">设置</el-button>
-                <el-button size="mini" @click="clickGoPreset">调用</el-button>
+                <el-button :disabled="!isConsole" size="mini" @click="clickSetPreset">设置</el-button>
+                <el-button :disabled="!isConsole" size="mini" @click="clickGoPreset">调用</el-button>
                 <!--<input type="button" class="btn" value="设置" onclick="clickSetPreset();" />
                 <input type="button" class="btn" value="调用" onclick="clickGoPreset();" />-->
               </td>
@@ -97,31 +97,31 @@
           <table cellpadding="0" cellspacing="3" border="0" class="left">
             <tr>
               <td class="tt">
-                <el-button size="mini" @mousedown.native="PTZZoomIn" @mouseup.native="PTZZoomStop">变倍+</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="PTZZoomIn" @mouseup.native="PTZZoomStop">变倍+</el-button>
                 <!--<input type="button" class="btn2" value="变倍+" onmousedown="PTZZoomIn()" onmouseup="PTZZoomStop()">-->
               </td>
               <td>
-                <el-button size="mini" @mousedown.native="PTZZoomout" @mouseup.native="PTZZoomStop">变倍-</el-button>
+                <el-button  :disabled="!isConsole" size="mini" @mousedown.native="PTZZoomout" @mouseup.native="PTZZoomStop">变倍-</el-button>
                 <!--<input type="button" class="btn2" value="变倍-" onmousedown="PTZZoomout()" onmouseup="PTZZoomStop()">-->
               </td>
             </tr>
             <tr>
               <td class="tt">
-                <el-button size="mini" @mousedown.native="PTZFocusIn" @mouseup.native="PTZFoucusStop">变焦+</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="PTZFocusIn" @mouseup.native="PTZFoucusStop">变焦+</el-button>
                 <!--<input type="button" class="btn2" value="变焦+" onmousedown="PTZFocusIn()" onmouseup="PTZFoucusStop()">-->
               </td>
               <td>
-                <el-button size="mini" @mousedown.native="PTZFoucusOut" @mouseup.native="PTZFoucusStop">变焦-</el-button>
+                <el-button  :disabled="!isConsole" size="mini" @mousedown.native="PTZFoucusOut" @mouseup.native="PTZFoucusStop">变焦-</el-button>
                 <!--<input type="button" class="btn2" value="变焦-" onmousedown="PTZFoucusOut()" onmouseup="PTZFoucusStop()">-->
               </td>
             </tr>
             <tr>
               <td class="tt">
-                <el-button size="mini" @mousedown.native="PTZIrisIn" @mouseup.native="PTZIrisStop">光圈+</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="PTZIrisIn" @mouseup.native="PTZIrisStop">光圈+</el-button>
                 <!--<input type="button" class="btn2" value="光圈+" onmousedown="PTZIrisIn()" onmouseup="PTZIrisStop()">-->
               </td>
               <td>
-                <el-button size="mini" @mousedown.native="PTZIrisOut" @mouseup.native="PTZIrisStop">光圈-</el-button>
+                <el-button :disabled="!isConsole" size="mini" @mousedown.native="PTZIrisOut" @mouseup.native="PTZIrisStop">光圈-</el-button>
                 <!--<input type="button" class="btn2" value="光圈-" onmousedown="PTZIrisOut()" onmouseup="PTZIrisStop()">-->
               </td>
             </tr>
@@ -167,6 +167,7 @@ export default{
         loginName:'',//设备账号
         password:'',//设备密码
       },
+      temParams:{},
       cameraIp:'',
       liveType:'stopLive',
       stopLiveMessTitle:{   //终止直播
@@ -199,7 +200,7 @@ export default{
           }
         }
       },
-
+        isConsole:true,
 
       startLiveMessTitle:{   //终止直播
         ajaxSuccess: 'startLiveSuccess',
@@ -236,7 +237,13 @@ export default{
       if(this.liveList!=0){
         this.cameraIp = this.liveList[0].ip;
         this.params=Object.assign( this.params,this.liveList[0]);
-
+        this.isConsole = this.params.isConsole;
+        this.$nextTick(function(){
+          this.initVideo("divPlugin",this.width,this.height);
+          setTimeout(()=>{
+            this.clickLogin(this.params.ip,this.params.port,this.params.loginName,this.params.password);
+          },1);
+        })
       }
 //      this.$nextTick(function(){
 //          this.initVideo("divPlugin",this.width,this.height);
@@ -248,13 +255,28 @@ export default{
 
     //切换直播
     videoChange(val){
-        for(let i=0;i<this.liveList.length;i++){
-            if(this.liveList[i].ip == val){
-              this.params=Object.assign( this.params,this.liveList[i]);
-            }
+      for(let i=0;i<this.liveList.length;i++){
+        if(this.liveList[i].ip == val){
+          this.temParams=Object.assign( this.params,this.liveList[i]);
         }
+        this.isConsole = this.temParams.isConsole;
+      }
         if(this.liveType=='startLive'){ // 如果是开始直播状态切换摄像头，则调用开始直播请求ajax
-          this.startLive();
+
+          this.$nextTick(function(){
+            this.initVideo("divPlugin",this.width,this.height);
+            setTimeout(()=>{
+              this.clickLogin(this.temParams.ip,this.temParams.port,this.temParams.loginName,this.temParams.password,val);
+            },1);
+          })
+        }else {
+          this.params = this.temParams;
+          this.$nextTick(function(){
+            this.initVideo("divPlugin",this.width,this.height);
+            setTimeout(()=>{
+              this.clickLogin(this.temParams.ip,this.temParams.port,this.temParams.loginName,this.temParams.password);
+            },1);
+          })
         }
 
     },
@@ -264,16 +286,17 @@ export default{
     startLive(){
       if(this.liveList!=0){
         this.startLiveMessTitle.ajaxParams.data  = this.params;
-        this.ajax(this.startLiveMessTitle)
+        this.ajax(this.startLiveMessTitle);
+        this.$nextTick(function(){
+          this.initVideo("divPlugin",this.width,this.height);
+          setTimeout(()=>{
+            this.clickLogin(this.params.ip,this.params.port,this.params.loginName,this.params.password);
+          },1);
+        })
       }else{
         this.showMess('当前房间没有摄像头');
       }
-      this.$nextTick(function(){
-        this.initVideo("divPlugin",this.width,this.height);
-        setTimeout(()=>{
-          this.clickLogin(this.params.ip,this.params.port,this.params.loginName,this.params.password);
-        },1);
-      })
+
     },
 
 
@@ -296,12 +319,12 @@ export default{
         let data = res.data;
         this.params.id= data;
         this.liveType = 'startLive';
-      this.$nextTick(function(){
-        this.initVideo("divPlugin",this.width,this.height);
-        setTimeout(()=>{
-          this.clickLogin(this.params.ip,this.params.port,this.params.loginName,this.params.password);
-        },1);
-      })
+//      this.$nextTick(function(){
+//        this.initVideo("divPlugin",this.width,this.height);
+//        setTimeout(()=>{
+//          this.clickLogin(this.params.ip,this.params.port,this.params.loginName,this.params.password);
+//        },1);
+//      })
     },
 
 
@@ -319,7 +342,7 @@ export default{
       this.liveType = 'pauseLive';
     },
 
-    clickStartRealPlay(szIP) {
+    clickStartRealPlay(szIP,val) {
       let WebVideoCtrl = this.webVideoCtrl;
       let oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
         //szIP = $("#loginip").val(),
@@ -346,6 +369,11 @@ export default{
 
       if (0 == iRet) {
         szInfo = "开始预览成功！";
+        if(val){
+          this.params = this.temParams;
+          this.startLiveMessTitle.ajaxParams.data  = this.params;
+          this.ajax(this.startLiveMessTitle);
+        }
       } else {
         szInfo = "开始预览失败！";
       }
@@ -355,7 +383,7 @@ export default{
 
 
     //登录
-    clickLogin(szIP,szPort,szUsername,szPassword) {
+    clickLogin(szIP,szPort,szUsername,szPassword,val) {
       let WebVideoCtrl = this.webVideoCtrl;
       let that = this;
       if ("" == szIP || "" == szPort) {
@@ -365,7 +393,7 @@ export default{
 
         success: function(xmlDoc) {
           that.showOPInfo(szIP + " 登录成功！");
-          that.clickStartRealPlay(szIP);
+          that.clickStartRealPlay(szIP,val);
         },
         error: function() {
           that.showOPInfo(szIP + " 登录失败！");

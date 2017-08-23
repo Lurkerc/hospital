@@ -131,6 +131,7 @@
     </el-row>
     <!--选择人员-->
     <Modal
+      close-on-click-modal="false"
       width="890"
       v-model="selectUserModal"
       title="新建教学活动"
@@ -142,6 +143,7 @@
     </Modal>
     <!--选择主持人-->
     <Modal
+      close-on-click-modal="false"
       width="890"
       v-model="hostModal"
       title="新建教学活动"
@@ -203,7 +205,7 @@
           "recordTimes":[],
           "activityState":"",  //新增
 
-          isPlan:'Y',  //是否计划内
+          isPlan:'',  //是否计划内
           activityPlanId:'', //月度计划ID
           planDetailId:'', //计划详情ID
         },

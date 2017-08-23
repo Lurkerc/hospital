@@ -5,12 +5,12 @@ import _ from "lodash";
  * @param {*} course 
  * @param {*} evaluate 
  * @param {*} planDtoList
- * @param auditStatus 状态
+ * @param status 状态
  */
-const getNormCourse = function (course, evaluate, planDtoList, auditStatus) {
+const getCourse = function (course, evaluate, planDtoList, status) {
   let data = _.defaultsDeep({}, course); // 课程基本信息
   data.evaluate = _.defaultsDeep({}, evaluate); // 教学质量评价对象
-  data.auditStatus = auditStatus;
+  data.status = status;
   data.planDtoList = [];
   planDtoList.map((items, index) => {
     let item = _.defaultsDeep({}, items);
@@ -39,5 +39,5 @@ const getNormCourse = function (course, evaluate, planDtoList, auditStatus) {
 }
 
 export {
-  getNormCourse
+  getCourse
 }
