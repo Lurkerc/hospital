@@ -485,8 +485,6 @@
 
       //设置treeid
       setTreeId(id,data){
-          console.log(id);
-          console.log(data);
         if(this.parent == ""){
           this.parent = data;
           this.formValidate.parentId = id

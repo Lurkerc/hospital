@@ -7,18 +7,9 @@
         <div class="listUpArea-menus">
           <div class="add-remove">
             <el-button class="but-col" @click="add" type="info">创建标准课程</el-button>
-            <el-tooltip effect="light" placement="bottom-start">
-              <div slot="content">审核试运行课程</div>
-              <el-button class="but-col" @click="examine" :disabled="canTodo(['DSH','TESTRUN'])" type="success">审核标准课程</el-button>
-            </el-tooltip>
-            <el-tooltip effect="light" placement="bottom-start">
-              <div slot="content">对试运行课程上传评估表并提交审核</div>
-              <el-button class="but-col" @click="testRun" :disabled="canTodo(['DSH'])" type="primary">课程试运行</el-button>
-            </el-tooltip>
-            <el-tooltip effect="light" placement="bottom-start">
-              <div slot="content">退出在运行课程</div>
-              <el-button class="but-col" @click="exit" :disabled="canTodo(['RUN'])" type="danger">课程退出</el-button>
-            </el-tooltip>
+            <el-button class="but-col" @click="examine" :disabled="canTodo(['DSH','TESTRUN'])" type="success">审核标准课程</el-button>
+            <el-button class="but-col" @click="testRun" type="primary">课程试运行</el-button>
+            <el-button class="but-col" @click="exit" :disabled="canTodo(['RUN'])" type="danger">课程退出</el-button>
           </div>
         </div>
         <div class="listUpArea-search">
@@ -119,7 +110,10 @@
         <!--课程试运行弹窗-->
         <Modal :mask-closable="false" v-model="testRunModal" height="200" class-name="vertical-center-modal" :width="600">
           <modal-header slot="header" :parent="self" :content="headerContent.testRunId"></modal-header>
-          <test-run v-if="testRunModal" @cancel="cancel" @testRun="subCallback" :operaility-data="operailityData"></test-run>
+          <template v-if="testRunModal">
+            <test-run-download v-if="operailityData.assessmentFileId" @cancel="cancel" @down="subCallback" :operaility-data="operailityData"></test-run-download>
+            <test-run-upload v-else @cancel="cancel" @testRun="subCallback" :operaility-data="operailityData"></test-run-upload>
+          </template>
           <div slot="footer"></div>
         </Modal>
         <!--退出课程弹窗-->
@@ -161,7 +155,8 @@
   //引入--审核--组件
   import examine from "./normCourse_examine";
   //引入--试运行--组件
-  import testRun from "./normCourse_testRun";
+  import testRunUpload from "./testRun/upload";
+  import testRunDownload from "./testRun/download";
 
   import layoutTree from "../../../common/layoutTree";
   import leftTree from "./_tree/menu";
@@ -614,7 +609,9 @@
       edit,
       show,
       examine,
-      testRun,
+      // testRun,
+      testRunUpload,
+      testRunDownload,
       layoutTree,
       leftTree
     }

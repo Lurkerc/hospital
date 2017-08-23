@@ -44,6 +44,10 @@ const api = {
     path: thisFile + 'Type/tree-by-manager',
     method: 'get'
   },
+  getFile: { // 根据ID获取文件详情(课程试运行表文件获取)
+    path: '/study/files/get/',
+    method: 'get'
+  },
   upload: '/file/upload/study', // 上传附件
 };
 

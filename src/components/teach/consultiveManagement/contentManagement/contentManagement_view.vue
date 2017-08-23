@@ -33,7 +33,7 @@
       <el-row >
         <el-col :span="8" :offset="2">
           <el-form-item label="URL:" class="feildFontweight">
-            {{data.url}}
+            {{data.newsUrl}}
           </el-form-item>
         </el-col >
 

@@ -16,17 +16,17 @@ const planDtoItem = {
   testingDtoList: [], // 测评对象集合
   testingDtoListTemp: { // 测评对象集合（操作使用）
     before: { // 课前
-      score: '100', // 达标分数
+      score: '0', // 达标分数
       type: "BEFORE",
       questionsDtoList: [], // 测评试题对象集合
     },
     in_progress: { // 课中
-      score: '100', // 达标分数
+      score: '0', // 达标分数
       type: "IN_PROGRESS",
       questionsDtoList: [], // 测评试题对象集合
     },
     after: { // 课后
-      score: '100', // 达标分数
+      score: '0', // 达标分数
       type: "AFTER",
       questionsDtoList: [], // 测评试题对象集合
     },

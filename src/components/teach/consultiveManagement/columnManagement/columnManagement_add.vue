@@ -26,8 +26,8 @@
         </el-col >
         <el-col :span="10" :offset="2">
           <el-form-item label="是否显示" prop="isDisplay">
-            <el-radio-group  v-model="formValidate.isDisplay">
-              <el-radio :label="1">是</el-radio>
+            <el-radio-group @change="isDisplayChange" v-model="formValidate.isDisplay">
+              <el-radio   :label="1">是</el-radio>
               <el-radio :label="0">否</el-radio>
             </el-radio-group>
           </el-form-item>
@@ -40,8 +40,8 @@
         <el-col :span="20" :offset="2">
           <el-form-item label="是否首页展示显示:">
             <el-radio-group  v-model="isHome">
-              <el-radio :label="'YES'">是</el-radio>
-              <el-radio :label="'NO'">否</el-radio>
+              <el-radio :disabled="formValidate.isDisplay==0" :label="'YES'">是</el-radio>
+              <el-radio :disabled="formValidate.isDisplay==0" :label="'NO'">否</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -97,7 +97,7 @@
           name:'',          //栏目名称
           parentId:'',          //父栏目id
           moduleOrder:'',          //栏目顺序
-          isDisplay:0,          //是否显示
+          isDisplay:1,          //是否显示
           moduleUrl:'',          //url
           remark:'',          //remark
 
@@ -196,6 +196,14 @@
       init(){
         //this.ajax(this.listMessTitle)
       },
+
+
+      //是否显示修改
+      isDisplayChange(val){
+          if(val==0){
+            this.isHome = 'NO';
+          }
+      }
     },
     computed:{
       parentId(){

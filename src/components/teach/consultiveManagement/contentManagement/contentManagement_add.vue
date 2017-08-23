@@ -41,8 +41,8 @@
       </el-row >
       <el-row >
         <el-col :span="17" :offset="2">
-          <el-form-item label="URL:" prop="url"  class="feildFontweight">
-            <el-input  v-model="formValidate.url" placeholder="请输入"></el-input>
+          <el-form-item label="URL:" prop="newsUrl"  class="feildFontweight">
+            <el-input  v-model="formValidate.newsUrl" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
       </el-row >
@@ -90,7 +90,7 @@
       <el-row >
         <el-col :span="17" :offset="2">
           <el-form-item type="附件" label="附件:" class="feildFontweight">
-            <upload-file :unSize="true"   @setUploadFiles="setFiles">   </upload-file>
+            <upload-file    @setUploadFiles="setFiles">   </upload-file>
           </el-form-item>
         </el-col >
 
@@ -166,7 +166,7 @@
           "title":"",                   //标题
           "authorName":"",                  //作者
           "source":"ORIGINAL",                   //来源
-          "url":"",                 //newsUrl
+          "newsUrl":"",                 //newsUrl
           "newsOrder":"",                        //置顶顺序
           "contentType":"ORDINARY",                 //内容类型
           "content":"",                 //内容

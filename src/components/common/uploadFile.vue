@@ -13,7 +13,7 @@
       </div>
       <i class="el-icon-plus" v-show="!uploadShow" v-if="listType=='picture-card'"></i>
       <div slot="tip" v-if="!data.message" v-show="!uploadShow" class="el-upload__tip">只能上传<span v-if="length" style="font-size: 16px;vertical-align: inherit;">{{length}}个</span>{{selectAccept}}文件
-        <span v-if="!unSize" style="vertical-align: inherit;">，且不超过{{+this.fileSize/1000}}M</span>
+        <span v-if="!unSize" style="vertical-align: inherit;">，且不超过{{+this.fileSize | formatUploadSize}}</span>
       </div>
       <div slot="tip" v-if="data.message" v-show="!uploadShow" class="el-upload__tip">{{data.message}}</div>
     </el-upload>
@@ -69,7 +69,7 @@
         type: this.type,
         accept: this.accept,
         drag: this.drag,
-        size: this.size || 500,
+        size: this.size || 1024*50,
         length: this.length || 500,
         message: this.message,
         show: this.show,
@@ -232,7 +232,7 @@
           if (!isbeyond) {
             this.$Notice.warning({
               title: '超出文件大小限制',
-              desc: ` 文件  ${file.name}  太大，不能超过 ${+this.fileSize/1000}M。`
+              desc: ` 文件  ${file.name}  太大，不能超过 ${+this.formatUploadSize(+this.fileSize) }。`
             });
             return false;
           }
@@ -265,6 +265,26 @@
       },
       onProgress(event, file, fileList) {
         //文件上传时的钩子，返回字段为 event, file, fileList
+      },
+
+      formatUploadSize(value){
+        let temp;
+        let init;
+        let float;
+        if (!value) return '0KB';
+        if (value < 1024) {
+          return value + 'kB';
+        } else if (value < (1024 * 1024)) {
+          temp = value / 1024;
+          temp = temp.toFixed(2);
+          return temp + 'MB';
+        } else if (value < (1024 * 1024 * 1024)) {
+          init = (value / (1024 * 1024));
+          //float = (value % (1024*1024))/1024;
+          return init.toFixed(2) + 'GB ' //+float.toFixed(2)+'KB';
+        }
+        return;
+
       },
       onSuccess(response, file, fileList) {
         this.ajaxCreateLoading(false);

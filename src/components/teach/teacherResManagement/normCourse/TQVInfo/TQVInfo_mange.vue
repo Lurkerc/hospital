@@ -1,8 +1,38 @@
 <template>
   <!-- 教学质量评价表 - 管理 -->
-  <div>
+  <div class="tqviMange">
     <el-row>
       <el-col>
+        <el-form :inline="true" class="tqviMangeScore">
+          <el-form-item label="总体得分：">{{ viewData.ztdf }}</el-form-item>
+          <el-form-item label="最高得分：">{{ viewData.zgdf }}</el-form-item>
+          <el-form-item label="最低得分：">{{ viewData.zddf }}</el-form-item>
+        </el-form>
+      </el-col>
+      <el-col class="tqviMangeItem">
+        <h3>分数组成</h3>
+        <el-table :data="scoreData" style="width: 100%">
+          <el-table-column prop="user" label="打分">
+
+          </el-table-column>
+          <el-table-column prop="df" label="打分">
+            <template scope="scope">
+              {{ scope.row.df || '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="dfrs" label="打分人数">
+            <template scope="scope">
+              {{ scope.row.dfrs || '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="qz" label="权重">
+            <template scope="scope">
+              {{ scope.row.qz || '-' }}
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col class="tqviMangeItem">
         <el-tabs v-model="showTypes" @tab-click="initViewData">
           <el-tab-pane label="学生" name="xs"></el-tab-pane>
           <el-tab-pane label="同行" name="th"></el-tab-pane>
@@ -10,51 +40,129 @@
         </el-tabs>
       </el-col>
       <el-col>
-        <el-form :inline="true">
-          <el-form-item label="总体得分：">{{ viewData.ztdf }}</el-form-item>
-          <el-form-item label="最高得分：">{{ viewData.zgdf }}</el-form-item>
-          <el-form-item label="最低得分：">{{ viewData.zddf }}</el-form-item>
-        </el-form>
+        <h3>意见或者建议</h3>
+        <template v-if="viewData[showTypes].fkList.length">
+          <el-col v-for="(item,index) in viewData[showTypes].fkList" :key="index">{{ item }}</el-col>
+        </template>
+        <p v-else class="tqviMangeTips">暂无</p>
+      </el-col>
+      <el-col class="tqviMangeItem">
+        <h3>各项分数</h3>
+        <el-table ref="singleTable" :data="viewData[showTypes].optionList" style="width: 100%">
+          <el-table-column type="index" label="编号" width="70">
+          </el-table-column>
+          <el-table-column property="title" label="项目" oshow-overflow-tooltip>
+          </el-table-column>
+          <el-table-column property="remark" label="内容" width="120">
+          </el-table-column>
+          <el-table-column property="great" label="优">
+            <template scope="scope">
+              <el-radio-group v-model="scope.row.point" @change="getAllScore">
+                <el-radio :label="scope.row.great">{{ scope.row.great }}</el-radio>
+              </el-radio-group>
+            </template>
+          </el-table-column>
+          <el-table-column property="good" label="良">
+            <template scope="scope">
+              <el-radio-group v-model="scope.row.point" @change="getAllScore">
+                <el-radio :label="scope.row.good">{{ scope.row.good }}</el-radio>
+              </el-radio-group>
+            </template>
+          </el-table-column>
+          <el-table-column property="avg" label="中">
+            <template scope="scope">
+              <el-radio-group v-model="scope.row.point" @change="getAllScore">
+                <el-radio :label="scope.row.avg">{{ scope.row.avg }}</el-radio>
+              </el-radio-group>
+            </template>
+          </el-table-column>
+          <el-table-column property="bad" label="差">
+            <template scope="scope">
+              <el-radio-group v-model="scope.row.point" @change="getAllScore">
+                <el-radio :label="scope.row.bad">{{ scope.row.bad }}</el-radio>
+              </el-radio-group>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
+  import api from './api';
   export default {
     data() {
       return {
         showTypes: 'xs',
-        score: [],
+        scoreData: [],
         viewData: {
           "ztdf": "50", // 总体得分
           "zgdf": "100", // 最高得分
           "zddf": "50", // 最低得分
-          "xsdf": "10", // 学生打分
-          "xsqz": 100, // 学生权重
-          "xsdfrs": 20, // 学生打分人数
-          "thdf": 10, // 同行打分
-          "thqz": 20, // 同行权重
-          "thdfrs": 20, // 同行打分人数
-          "sjdf": 20, // 上级打分
-          "sjqz": 20, // 上级权重
-          "sjdfrs": 20, // 上级打分人数
-          "xsyjList": [], // 学生的意见或建议
-          "thyjList": [], // 同行的意见或建议
-          "sjyjList": [], // 上级的意见或建议
-          "optionList": [], // optionList
+          "xs": { // 学生
+            "df": "", // 打分
+            "qz": '', // 权重
+            "dfrs": '', // 打分人数
+            "fkList": [], // 意见或建议 的集合
+            "optionList": [] // 评价项 集合
+          },
+          "th": { // 同行
+            "df": "", // 打分
+            "qz": '', // 权重
+            "dfrs": '', // 打分人数
+            "fkList": [], // 意见或建议 的集合
+            "optionList": [] // 评价项 集合
+          },
+          "sj": { // 上级
+            "df": "", // 打分
+            "qz": '', // 权重
+            "dfrs": '', // 打分人数
+            "fkList": [], // 意见或建议 的集合
+            "optionList": [] // 评价项 集合
+          },
         }
       }
     },
     methods: {
       init() {
+        this.initView();
+        this.initScoreData()
+      },
+      // 初始化数据
+      initView() {
+        let opt = {
+          ajaxSuccess: res => {
 
+          },
+          ajaxParams: {
+            url: api.get.path,
+            params: {
+              courseId: this.$store.state.curriculum.look.course.id
+            }
+          }
+        };
+        this.ajax(opt)
       },
       // 初始化查看数据
       initViewData() {
 
       },
-
+      // 初始化打分组成
+      initScoreData() {
+        let temp = [];
+        let user = ['xs', 'th', 'sj'];
+        let userText = ['学生', '同行', '上级'];
+        this.$util._.mapKeys(user, (val, index) => {
+          temp.push({
+            user: userText[index], // 用户角色
+            df: this.viewData[val].df, // 打分
+            dfrs: this.viewData[val].dfrs, // 打分人数
+            qz: this.viewData[val].qz, // 权重
+          })
+        })
+        this.scoreData = temp;
+      }
     },
     created() {
       this.init()
@@ -63,7 +171,21 @@
 
 </script>
 
-<style>
+<style lang="scss">
   /* 教学质量评价表管理 */
+
+  .tqviMangeScore {
+    .el-form-item {
+      margin-bottom: 0;
+    }
+  }
+
+  .tqviMangeItem {
+    margin-top: 16px;
+  }
+
+  .tqviMangeTips {
+    line-height: 32px;
+  }
 
 </style>

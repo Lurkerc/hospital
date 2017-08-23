@@ -10,7 +10,7 @@
         <el-col :span="20" align="right">
           <el-form-item label="达标分数：">
             <el-input :readonly="isReadOnly" class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.before.score"></el-input>
-            <span>(系统可自动根据试题数量折算满分100)</span>
+            <!-- <span>(系统可自动根据试题数量折算满分100)</span> -->
           </el-form-item>
         </el-col>
         <el-col>
@@ -82,7 +82,8 @@
           </el-table-column>
           <el-table-column label="分数">
             <template scope="scope">
-              {{ getScoreByTable(item.testingDtoListTemp.before.questionsDtoList,scope.$index) }}
+              <el-input v-model="scope.row.optionScore"></el-input>
+              <!-- {{ getScoreByTable(item.testingDtoListTemp.before.questionsDtoList,scope.$index) }} -->
             </template>
           </el-table-column>
         </el-table>
@@ -94,7 +95,7 @@
         <el-col :span="20" align="right">
           <el-form-item label="达标分数：">
             <el-input :readonly="isReadOnly" class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.in_progress.score"></el-input>
-            <span>(系统可自动根据试题数量折算满分100)</span>
+            <!-- <span>(系统可自动根据试题数量折算满分100)</span> -->
           </el-form-item>
         </el-col>
         <el-col>
@@ -166,7 +167,8 @@
           </el-table-column>
           <el-table-column property="title" label="分数">
             <template scope="scope">
-              {{ getScoreByTable(item.testingDtoListTemp.in_progress.questionsDtoList,scope.$index) }}
+              <el-input v-model="scope.row.optionScore"></el-input>
+              <!-- {{ getScoreByTable(item.testingDtoListTemp.in_progress.questionsDtoList,scope.$index) }} -->
             </template>
           </el-table-column>
         </el-table>
@@ -178,7 +180,7 @@
         <el-col :span="20" align="right">
           <el-form-item label="达标分数：">
             <el-input :readonly="isReadOnly" class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.after.score"></el-input>
-            <span>(系统可自动根据试题数量折算满分100)</span>
+            <!-- <span>(系统可自动根据试题数量折算满分100)</span> -->
           </el-form-item>
         </el-col>
         <el-col>
@@ -248,9 +250,10 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column property="title" label="分数">
+          <el-table-column property="optionScore" label="分数">
             <template scope="scope">
-              {{ getScoreByTable(item.testingDtoListTemp.after.questionsDtoList,scope.$index) }}
+              <el-input v-model="scope.row.optionScore"></el-input>
+              <!-- {{ getScoreByTable(item.testingDtoListTemp.after.questionsDtoList,scope.$index) }} -->
             </template>
           </el-table-column>
         </el-table>

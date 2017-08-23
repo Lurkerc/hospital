@@ -26,7 +26,7 @@
         </el-col >
         <el-col :span="10" :offset="2">
           <el-form-item label="是否显示" prop="isDisplay">
-            <el-radio-group  v-model.number="formValidate.isDisplay">
+            <el-radio-group @change="isDisplayChange" v-model.number="formValidate.isDisplay">
               <el-radio :label="1">是</el-radio>
               <el-radio :label="0">否</el-radio>
             </el-radio-group>
@@ -37,8 +37,8 @@
         <el-col :span="20" :offset="2">
           <el-form-item label="是否首页展示显示:" prop="isHome">
             <el-radio-group  v-model="formValidate.isHome">
-              <el-radio :label="'YES'">是</el-radio>
-              <el-radio :label="'NO'">否</el-radio>
+              <el-radio :disabled="formValidate.isDisplay==0" :label="'YES'">是</el-radio>
+              <el-radio :disabled="formValidate.isDisplay==0" :label="'NO'">否</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -157,6 +157,7 @@
        * */
       SuccessGetCurrData(responseData){
           this.formValidate =responseData.data;
+        this.isDisplayChange(this.formValidate.isDisplay)
       },
       /*
        * 当前组件发送事件给父组件
@@ -180,6 +181,12 @@
         //默认请求加载数据
         this.ajax(this.listMessTitle);
       },
+      //是否显示修改
+      isDisplayChange(val){
+        if(val==0){
+          this.formValidate.isHome = 'NO';
+        }
+      }
     }
   }
 </script>

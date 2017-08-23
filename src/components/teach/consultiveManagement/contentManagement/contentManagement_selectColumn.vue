@@ -68,7 +68,7 @@
           if(this.nodeData){
             this.$emit('selectCoumn',this.nodeData)
           }else{
-              this.errorMess('请选择叶节点')
+              this.errorMess('请选择二级节点')
           }
       },
 
@@ -83,7 +83,7 @@
       //tree
       treeClick(obj,node,self){
         this.clickId = obj.id;
-        if(node.isLeaf){
+        if(node.level==3){
           this.nodeData = obj;
         }else {
           this.nodeData = '';

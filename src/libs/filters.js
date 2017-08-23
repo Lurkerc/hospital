@@ -187,7 +187,7 @@ const getVueObj = function (vue) {
       "EXAM": "练习",
       "ORTHER": "其他",
     },
-    courseStatus: { // 标准课程状态
+    courseStatus: { // 课程状态(标准|授课)
       "DXD": "待修订",
       "TESTRUN": "试运行",
       "DSH": "待审核",
@@ -195,16 +195,6 @@ const getVueObj = function (vue) {
       "TG": "通过",
       "BH": "驳回",
       "EXIT": "已退出",
-    },
-    curriculum: { // 课程状态
-      "NOT_SUBMIT": "未上报",
-      "NOT_AUDIT": "未审核",
-      "AUDIT_FAILURE": "未通过",
-      "AUDIT_SUCCESS": "通过",
-      "DRAFT": "待修订",
-      "TESTRUN": "试运行",
-      "RUN": "在运行",
-      "EXIT": "退出",
     },
     casesStatus: { // 基础教务-资源库管理-病历库
       "NOT_SUBMIT": "未上报",
@@ -263,6 +253,27 @@ const getVueObj = function (vue) {
           init = (value / (1024 * 1024 * 1024));
           //float = (value % (1024*1024*1024))/(1024*1024);
           return init.toFixed(2) + 'GB //' + float.toFixed(2) + 'MB';
+        }
+        return;
+      },
+    },
+    {
+      name: 'formatUploadSize',
+      call(value) {
+        let temp;
+        let init;
+        let float;
+        if (!value) return '0KB';
+        if (value < 1024) {
+          return value + 'kB';
+        } else if (value < (1024 * 1024)) {
+          temp = value / 1024;
+          temp = temp.toFixed(2);
+          return temp + 'MB';
+        } else if (value < (1024 * 1024 * 1024)) {
+          init = (value / (1024 * 1024));
+          //float = (value % (1024*1024))/1024;
+          return init.toFixed(2) + 'GB ' //+float.toFixed(2)+'KB';
         }
         return;
       },

@@ -15,8 +15,8 @@
 </template>
 
 <script>
-  import api from './api';
-  import uploadFile from '../../../common/uploadFile';
+  import api from '../api';
+  import uploadFile from '../../../../common/uploadFile';
   export default {
     props: ['operailityData'],
     data() {
