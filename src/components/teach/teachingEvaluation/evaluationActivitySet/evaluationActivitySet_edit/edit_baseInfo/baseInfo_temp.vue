@@ -342,7 +342,6 @@
                 this.tempData = this.tableData[i]
               }
           }
-          console.log(11);
 
       },
 

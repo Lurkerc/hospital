@@ -153,7 +153,7 @@
     text-align: center;
     padding: 26px 0;
     background-color: #fff;
-    z-index: 10000;
+    z-index: 100;
     position: absolute;
     top: 0;
     left: $menuWidth + $padding;

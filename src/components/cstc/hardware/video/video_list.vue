@@ -203,7 +203,6 @@
        * */
       handleSubmit(name) {
         let formData = Util._.defaultsDeep({}, this.formValidate);
-        console.log(formData)
       },
       /*--点击--添加--按钮--*/
       add() {

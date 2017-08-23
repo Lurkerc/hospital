@@ -166,7 +166,7 @@
       return {
         //tree默认项设置
         treeDefaults: {
-          getTreeUrl: treeApi.tree.path,
+          getTreeUrl: api.tree.path,
           getDataUrl: '',
           isShowMenus: false,
           isShowSearch: false,

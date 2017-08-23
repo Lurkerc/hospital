@@ -76,9 +76,9 @@
       </el-row>
       <el-row >
         <el-col :span="17" :offset="2">
-          <el-form-item label="内容:" label-width="50px" class="feildFontweight">
+          <el-form-item label="内容:"  class="feildFontweight">
             <el-row class="lose-margin2">
-              <el-col :span="20" :offset="3">
+              <el-col :span="20" >
                 <viewUEditor style="width:600px;" :name="'ud1'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
               </el-col>
             </el-row >

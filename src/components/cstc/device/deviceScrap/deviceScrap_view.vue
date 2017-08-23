@@ -64,7 +64,6 @@
     methods: {
       /**************************** 从服务器获取编辑的数据 *****************************************/
       getDataForServer() {
-        console.log(this.id);
         let roomId = this.id,
           urlParams = this.urlParams; // props
         this.ajax({

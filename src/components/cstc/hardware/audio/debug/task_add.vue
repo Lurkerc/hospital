@@ -185,7 +185,7 @@
           isLoadingFun(true);
           this.formValidate.cycle = this.cycle.join(',');
           let data = this.getFormData(this.formValidate);
-          data.startTime = this.conductDate(data.startTime, 'hh:mm:ss');
+          data.startTime = this.conductDate(data.startTime, 'HH:mm:ss');
           data.startDate = this.conductDate(data.startDate, 'yyyy-MM-dd');
           data.endDate = this.conductDate(data.endDate, 'yyyy-MM-dd');
           this.addMessTitle.ajaxParams.data = data;

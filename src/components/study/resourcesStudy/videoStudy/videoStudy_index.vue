@@ -71,9 +71,9 @@
   </div>
   <div class="videoHome-list-sort">
     <el-radio-group @change="sort" v-model="sortFeild">
-      <el-radio-button label="综合排序"></el-radio-button>
-      <el-radio-button label="最新发布"></el-radio-button>
-      <el-radio-button label="最多播放"></el-radio-button>
+      <el-radio-button label="DEFAULT">综合排序</el-radio-button>
+      <el-radio-button label="NEWS">最新发布</el-radio-button>
+      <el-radio-button label="VIEWNUM">最多播放</el-radio-button>
     </el-radio-group>
   </div>
   <div class="videoHome-list">
@@ -121,7 +121,8 @@ export default{
 
       //视频列表、及分页属性
       isHashMore:true,
-      tableData1:[{
+      tableData1:[
+          /*{
         "id":3,
         "name":"1",
         "length":100,
@@ -134,7 +135,8 @@ export default{
         "operator":"张三",
         "progress":55.66,
         "updateTime":"2017-05-02 2:2:2"
-      }],
+      }*/
+      ],
       listTotal:0,
       listMessTitle:{
         ajaxSuccess:'updateListData',

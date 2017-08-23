@@ -67,7 +67,6 @@ export default{
         this.type = '';
         //页面dom稳定后调用
         this.$nextTick( ()=> {
-            alert(1)
           this.type = 'VIDEO';
         })
 

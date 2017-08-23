@@ -349,7 +349,6 @@
         this.searchObj.statrEndTime = '';
         this.resetForm('searchObj');
         this.setTableData()
-        console.log(this.depId);
       }
     },
     created() {

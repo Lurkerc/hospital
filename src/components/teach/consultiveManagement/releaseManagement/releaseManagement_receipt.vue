@@ -63,13 +63,9 @@
       return{
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         "data":{
-          "totalNum":"50",
-          "readNum":"47",
+          "totalNum":"",
+          "readNum":"",
           "userList":[
-            {
-              "userId":"1",
-              "userName":"张三"
-            }
           ]
         },
         listMessTitle:{

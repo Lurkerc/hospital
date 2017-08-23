@@ -45,6 +45,15 @@ const zxglRouters = {
         resolve(require('../../components/teach/consultiveManagement/releaseManagement/releaseManagement_list.vue'));
       }, 'consultive');
     }
+  },{
+    //页面静态化
+    path:'pagesStaticize',
+    name:'pagesStaticize',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/teach/consultiveManagement/pagesStaticize/pagesStaticize_list.vue'));
+      }, 'consultive');
+    }
   }
   ]
 }

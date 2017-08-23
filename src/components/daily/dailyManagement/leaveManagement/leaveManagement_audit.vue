@@ -2,7 +2,7 @@
 
   <div class="leaveManagement-show" >
     <div >
-    <!--<div class="qjxx">-->
+      <!--<div class="qjxx">-->
       <el-row >
         <el-col :span="9" :offset="2">
           <p class="center"><span class="name">姓名</span><span>{{data.userName}}</span></p>
@@ -43,34 +43,34 @@
     <!--<div class="shxx">-->
     <div >
       <!--<el-row class="step">-->
-        <!--<el-col :span="20" :offset="2">-->
-          <!--<el-steps :space="350" :active="2">-->
-            <!--<el-step title="带教老师" description="已审批"></el-step>-->
-            <!--<el-step title="教学秘书" description="审批中"></el-step>-->
-            <!--<el-step title="教育处" description="待审批"></el-step>-->
-          <!--</el-steps>-->
-        <!--</el-col >-->
+      <!--<el-col :span="20" :offset="2">-->
+      <!--<el-steps :space="350" :active="2">-->
+      <!--<el-step title="带教老师" description="已审批"></el-step>-->
+      <!--<el-step title="教学秘书" description="审批中"></el-step>-->
+      <!--<el-step title="教育处" description="待审批"></el-step>-->
+      <!--</el-steps>-->
+      <!--</el-col >-->
       <!--</el-row >-->
 
       <!--<el-row class="lose-margin2">-->
-        <!--<el-col :span="18" :offset="2">-->
-          <!--<el-row >-->
-            <!--<fieldset class="layui-elem-field">-->
-              <!--<legend>审核</legend>-->
-              <!--<div class="layui-field-box">-->
-                <!--<el-col :span="8" >-->
-                  <!--<p class="center"><span class="name">审核人</span><span>张三</span></p>-->
-                <!--</el-col >-->
-                <!--<el-col :span="8" >-->
-                  <!--<p class="center"><span class="name">审核时间</span><span>2017/12/29   12：00</span></p>-->
-                <!--</el-col >-->
-                <!--<el-col :span="8" >-->
-                  <!--<p class="center"><span class="name">审核时间</span><span>2017/12/29   12：00</span></p>-->
-                <!--</el-col >-->
-              <!--</div>-->
-            <!--</fieldset>-->
-          <!--</el-row >-->
-        <!--</el-col>-->
+      <!--<el-col :span="18" :offset="2">-->
+      <!--<el-row >-->
+      <!--<fieldset class="layui-elem-field">-->
+      <!--<legend>审核</legend>-->
+      <!--<div class="layui-field-box">-->
+      <!--<el-col :span="8" >-->
+      <!--<p class="center"><span class="name">审核人</span><span>张三</span></p>-->
+      <!--</el-col >-->
+      <!--<el-col :span="8" >-->
+      <!--<p class="center"><span class="name">审核时间</span><span>2017/12/29   12：00</span></p>-->
+      <!--</el-col >-->
+      <!--<el-col :span="8" >-->
+      <!--<p class="center"><span class="name">审核时间</span><span>2017/12/29   12：00</span></p>-->
+      <!--</el-col >-->
+      <!--</div>-->
+      <!--</fieldset>-->
+      <!--</el-row >-->
+      <!--</el-col>-->
       <!--</el-row>-->
 
       <el-form  :model="formValidate" ref="formValidate" :rules="rules.leaveManagement"  label-width="80px">

@@ -40,7 +40,6 @@
           }
         }
 
-        console.log('当前登录查看的视图与角色：', defView, this.userInfo.roleList[0].identify)
 
         this.userView = defView;
 

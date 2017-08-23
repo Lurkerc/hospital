@@ -95,7 +95,6 @@
           this.docImages.push(this.$store.state.envPath.http+item.img);
           this.imgIntro.push(item.remark);
         }
-        console.log(this.docImages);
       },
       /*
        * 组件初始化入口

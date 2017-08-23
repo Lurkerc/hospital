@@ -21,7 +21,7 @@ const api = {
 
   commentAdd: { // 查看-评论-畅言一下
     path: '/comment/add',
-    method: 'POST',
+    method: 'post',
   },
 
   audit: { // 批量审核
@@ -64,7 +64,7 @@ const api = {
   //   4 ATLAS 医学图谱
 
   resourceTypeTree: { // 左侧树
-    path: '/resourceType/tree?types=VIDEO', //{ids}   //
+    path: '/resourceType/tree-by-manager?types=VIDEO', //{ids}   //
     method: 'get',
   },
 

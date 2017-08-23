@@ -49,7 +49,7 @@
       </el-row >
       <el-row >
         <el-col :span="17" :offset="2">
-          <el-form-item type="附件" label="置顶顺序:" class="feildFontweight">
+          <el-form-item  label="附件:" class="feildFontweight">
             <upload-file :uploadFiles="formValidate.fileList" @setUploadFiles="setFiles"></upload-file>
           </el-form-item>
         </el-col >
@@ -78,12 +78,12 @@
 
         "data":
           {
-            "id":"1",
-            "title":"标题",
-            "publisher":"教育处",
-            "isReceipt":"1",
-            "publishDate":"2016-01-02",
-            "publishStatus":"PUBLISH"
+            "id":"",
+            "title":"",
+            "publisher":"",
+            "isReceipt":"",
+            "publishDate":"",
+            "publishStatus":""
           }
         ,
         //保存按钮基本信息
@@ -173,9 +173,17 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
+          let data =  responseData.data;
 
-          this.data = responseData.data;
+          if(!data) return;
+          this.data = data;
           this.show = true;
+          if(!data.roleId){
+            data.roleId = '';
+          }
+        if(!data.content){
+          data.content = '';
+        }
           this.ueditorVal.ud1=responseData.data.content;
           this.formValidate = this.getFormValidate(this.formValidate,responseData.data);
       },

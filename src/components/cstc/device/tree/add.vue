@@ -94,7 +94,6 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun) {
-        console.log(this.formValidate.name)
         let isSubmit = this.submitForm("formValidate");
         if (isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};

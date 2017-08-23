@@ -1,7 +1,7 @@
 <template>
   <!-- 分类菜单 -->
   <div class="classMenuBox" :class="[theUseType]" @mouseleave="mouseleave">
-    <div class="classMenuName">
+      <div class="classMenuName">
       课程分类
     </div>
     <!-- 一级菜单 -->
@@ -71,6 +71,7 @@
         this.ajax({
           ajaxSuccess: res => {
             if (res.data.length) {
+              if(!res.data[0].children) return;
               this.menuData = res.data[0].children;
             }
           },

@@ -34,7 +34,7 @@
     <!-- 教学计划 -->
     <plan-view v-if="menuActive === 'plan'"></plan-view>
     <!-- 课件 -->
-    <courseware-view v-if="menuActive === 'courseware'"></courseware-view>
+    <courseware-view v-if="menuActive === 'courseware'" :showProgress="true"></courseware-view>
     <!-- 课程直播 -->
     <live-video-view v-if="menuActive === 'liveVideo'"></live-video-view>
     <!-- 评测与作业 -->
@@ -61,7 +61,7 @@
   import coursewareView from '../../../teach/teacherResManagement/normCourse/courseware/courseware_view'; // 课件
   import liveVideoView from '../../../teach/teacherResManagement/normCourse/liveVideo/edit'; // 直播
   import eoView from '../../../teach/teacherResManagement/normCourse/EO/EO_view'; // 评测与作业
-  import tqvInfoView from '../../../teach/teacherResManagement/normCourse/TQVInfo/TQVInfo_view'; // 教学质量评价表
+  import tqvInfoView from '../../../teach/teacherResManagement/normCourse/TQVInfo/TQVInfo_mange'; // 教学质量评价表
   // import treInfoView from '../../../teach/teacherResManagement/normCourse/TREInfo/TREInfo_view'; // 试运行评估表
 
   // 测试数据
@@ -95,8 +95,8 @@
             this.menuActive = 'notice';
           },
           ajaxParams: {
-            url: api.get.path + this.operailityData.id,
-            method: api.get.method
+            url: api.info.path + this.operailityData.id,
+            method: api.info.method
           }
         })
       },
@@ -118,7 +118,7 @@
 
     // 销毁状态
     destroyed() {
-      this.$store.commit('curriculum/look/destroy')
+      // this.$store.commit('curriculum/look/destroy')
     },
 
     components: {

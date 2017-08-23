@@ -37,14 +37,19 @@ const wareDtoItem = { //课前 课件
   title: "", // 课件显示名称
   fileId: "", // 文件ID
   fileName: "", //文件名称
+  filePath: "", // 文件路径
   fileType: "", //文件类型
-  fileSize: "" //文件大小
+  fileSize: "", //文件大小
+  resourceId: "", // 资源主键id
+  resourceType: "", // 资源类型
+  type: "", // 类型
 };
 // 试题
 const questionsDtoItem = { //测评试题对象集合
   "theId": 0, // 唯一标识
   "types": "RADIO", //题型：RADIO单选题、CHECKBOX多选题、JUDGMENT判断题、ANSWER问答题
   "subject": "", //题干
+  "optionScore": "", // 该项分数
   "options": "", //正确答案（多选题，多个正确答案|隔开。问答题，该项赋值null）
   "answerExplain": "", //正确答案解析
   "optionsDtoList": [], // 单选、多选、判断题，该项不能为空，必须有值。
@@ -147,7 +152,7 @@ const mutations = {
     // 更新课程基本信息
     _.mapKeys(state.course, (val, key) => dataObj[key] && (state.course[key] = dataObj[key]));
     // 更新教学质量评价
-    _.mapKeys(state.evaluate, (val, key) => state.evaluate[key] && (state.evaluate[key] = dataObj.evaluate[key]));
+    _.mapKeys(state.evaluate, (val, key) => state.evaluate[key] = dataObj.evaluate[key]);
     /* 更新课程计划 */
     state.planDtoList.length = 0;
     dataObj.planDtoList.map(item => {

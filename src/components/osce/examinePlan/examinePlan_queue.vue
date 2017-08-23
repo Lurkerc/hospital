@@ -194,7 +194,6 @@
       },
       // 关闭抽签
       close() {
-        console.log(this.addMessTitle.type)
         this.$emit('cancel', this.addMessTitle.type)
       },
       // 获取头像地址

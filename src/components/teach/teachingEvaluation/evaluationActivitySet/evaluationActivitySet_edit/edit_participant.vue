@@ -526,7 +526,6 @@
       setAppraiserRole(val){
         let tempArr=[];
         for(let i=0;i<this.optionData.length;i++){
-            console.log(111);
           if(val.includes(this.optionData[i].id)){
             tempArr.push({
               key:this.optionData[i].id,

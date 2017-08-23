@@ -55,7 +55,7 @@ const api = {
   //   4 cases 医学图谱
 
   resourceTypeTree:{ // 左侧树
-    path:  '/resourceType/tree?types=CASES',  //{ids}   //
+    path:  '/resourceType/tree-by-manager?types=CASES',  //{ids}   //
     method: 'delete',
   },
 

@@ -157,7 +157,6 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-        console.log(responseData);
       },
       /*
        * 当前组件发送事件给父组件

@@ -397,7 +397,6 @@
       dayClick(day, jsEvent) {
         let date = (this.conductDate(day, "yyyy-MM-dd")).toString();
         let allDayTimeSlot = this.allDayTimeSlot;
-        console.log(allDayTimeSlot)
         if (this.openTimeList[date] && !this.allDayTimeSlot.length) {
           delete this.openTimeList[date] // 如果当前日期没有选择时间段则删除此日期
         } else if (this.allDayTimeSlot.length) {

@@ -181,7 +181,6 @@
         tableData[index].BeginTime = this.getDate(ascending);
         tableData[index].EndTime = this.countDate(ascending,weekCount);
         tableData[index].weekIndex = this.theWeek(ascending);
-        console.log(ascending,end);
         let cell ='';
         while (weekCount<8){
           if(data[0]&& data[0].activityTime.replace(/(^\s*)|(\s*$)/g, "")== this.getDate(ascending).replace(/(^\s*)|(\s*$)/g, "")){
@@ -190,7 +189,7 @@
             for(let i=0;i<recordTimeIds.length;i++){
               key = weekCount+'-'+recordTimeIds[i];
               tableData[index][key] = cell.activityName;  //为tableData添加内容
-              tableData[index][key+'Id'] = cell.activityId;
+              tableData[index][key+'-id'] = cell.activityId;
             }
           }else {
             weekCount++;
@@ -226,7 +225,6 @@
             this.tableData = tableData
           }
         }
-        console.log(ascending,end);
         return tableData
       },
       //鼠标进入单元格

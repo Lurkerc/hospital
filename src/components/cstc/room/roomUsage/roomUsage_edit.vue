@@ -103,7 +103,7 @@
           startTime: '', // 开始时间
           endTime: '', // 结束时间
           purpose: '', // 用途
-          imageIds: '' // 房间图片 | 多个id以逗号分隔 ---> 1,2        
+          imageIds: '' // 房间图片 | 多个id以逗号分隔 ---> 1,2
         },
         // 静态资源
         staticPath: '',
@@ -187,7 +187,6 @@
       },
       /**************************** 从服务器获取编辑的数据 *****************************************/
       getDataForServer() {
-        console.log(this.id);
         let roomId = this.id;
         this.ajax({
           ajaxSuccess: res => {

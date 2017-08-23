@@ -28,6 +28,7 @@ let reqDepVal = {
   "disTitle": baseRules.required,
   "disNum": baseRules.numberMust,
   specialty: [baseRules.required],
+  "ts":[baseRules.requiredNoEvent, baseRules.float, multiple2, baseRules.inputLen(0, 20), baseRules.illegalChar()]
 };
 
 /**
@@ -36,6 +37,15 @@ let reqDepVal = {
 let handWork = {
   "depId": [baseRules.required],
   "ts": baseRules.numberMust,
+};
+
+/**
+ * 暂停轮转,恢复轮转
+ */
+let pauseRotate = {
+  pauseTime:[{ required: true, message: '此项不能为空'}],
+  restoreTime:[{ required: true, message: '此项不能为空'}],
+  stopMess:[baseRules.required],
 };
 
 /**
@@ -118,4 +128,5 @@ export {
   rdyTrainingStandardsSecond,
   rdyPersonnelManagement,
   rdyDepContrast,
+  pauseRotate,
 };

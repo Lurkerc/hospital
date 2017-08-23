@@ -91,7 +91,7 @@
         rules,
         selectIndex: '', // 选中的设备名称索引
         selectTypeIndex: '', // 选中的设备类型索引
-        selectObj: [], // 选择设备 
+        selectObj: [], // 选择设备
         //保存按钮基本信息
         loadBtn: {
           title: '提交',
@@ -107,7 +107,7 @@
           // purpose: '', // 用途
           startTime: '', // 借出时间
           endTime: '', // 归还时间
-          remark: '', // 备注        
+          remark: '', // 备注
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle: {
@@ -127,7 +127,6 @@
       //给当前组件注入全局util
       Util = this.$util;
       this.init();
-      console.log(this.depId);
     },
     methods: {
       /*

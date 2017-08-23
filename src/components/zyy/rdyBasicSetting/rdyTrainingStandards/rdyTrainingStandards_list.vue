@@ -106,12 +106,12 @@
             width="200"
           >
           </el-table-column>
-          <el-table-column
+          <!--<el-table-column
             prop="rtSchlength"
             label="学历"
             show-overflow-tooltip
           >
-          </el-table-column>
+          </el-table-column>-->
           <el-table-column
             prop="rtState"
             label="状态"

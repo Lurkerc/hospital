@@ -299,7 +299,6 @@
         this.searchObj.scrapEndTime = '';
         this.resetForm('searchObj');
         this.setTableData();
-        console.log(val)
       }
     },
     created() {

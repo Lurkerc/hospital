@@ -107,7 +107,7 @@
           type: 'debugVideo',
           successTitle: '保存成功!',
           errorTitle: '保存失败!',
-          ajaxSuccess: 'ajaxSuccess',
+          ajaxSuccess: 'saveSuccess',
           ajaxError: 'ajaxError',
           ajaxParams: {
             url: api.modify.path + this.id,
@@ -135,13 +135,14 @@
        * */
       listenSubEvent(isLoadingFun) {
         let isSubmit = this.submitForm("formValidate");
-        if (false) {
+        isSubmit = true;
+        if (isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
           this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
           this.ajax(this.editMessTitle, isLoadingFun)
         }
-        this.showMess("暂不可保存调试信息!");
+        //this.showMess("暂不可保存调试信息!");
       },
       /*
        * 点击提交按钮 监听是否验证通过
@@ -156,6 +157,9 @@
           }
         });
         return flag;
+      },
+      saveSuccess(res){
+        this.successMess("保存成功!");
       },
       /*
        * 当前组件发送事件给父组件

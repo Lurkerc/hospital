@@ -24,7 +24,7 @@
           <el-form-item style="width:284px;" label="科室" prop="depId">
             <el-select  style="width:284px;" v-model="formValidate.depId" placeholder="请选择">
               <!--<select-option  :unAll="true"></select-option>-->
-              <select-option :type="type"  :unAll="unAll"></select-option>
+              <select-option :type="type"  :unAll="true"></select-option>
             </el-select>
           </el-form-item>
 
@@ -199,6 +199,12 @@
           "timeIds":"",
           "recordTimes":[],
           "activityState":"",
+
+
+          //新增
+          isPlan:'Y',  //是否计划内
+          activityPlanId:'', //月度计划ID
+          planDetailId:'', //计划详情ID
         },
         getRecordTimes:'', //获取到的时间段
         //轮转科室

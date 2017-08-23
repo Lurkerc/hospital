@@ -61,7 +61,6 @@
     },
     methods: {
       getDataForServer() {
-        console.log(this.id);
         let roomId = this.id,
           urlParams = this.urlParams; // props
         this.ajax({

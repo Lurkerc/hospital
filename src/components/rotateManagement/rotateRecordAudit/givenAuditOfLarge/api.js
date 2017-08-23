@@ -9,7 +9,7 @@ const api = {
     method: 'post'
   },
   get: { // 查看出科鉴定
-    path: thisFile + '/get/', // {examinationId}
+    path: thisFile + '/get/_', // {examinationId}
     method: 'get'
   },
 };

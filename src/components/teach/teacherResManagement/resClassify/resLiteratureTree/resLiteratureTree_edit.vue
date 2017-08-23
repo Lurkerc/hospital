@@ -115,12 +115,14 @@
           this.currCreateDate =  res.data.createTime;
           this.userInfo =  res.data.operator;
           this.formValidate = this.getFormValidate( this.formValidate ,res.data);
-          this.users.push({
-            key:this.formValidate.managerId,
-            label:this.formValidate.managerName,
-            description: '人员id---' + this.formValidate.managerId + '的描述信息',
-            disabled: false
-          })
+          if (this.formValidate.managerId) {
+            this.users.push({
+              key: this.formValidate.managerId,
+              label: this.formValidate.managerName,
+              description: '人员id---' + this.formValidate.managerId + '的描述信息',
+              disabled: false
+            })
+          }
         },
         ajaxParams:{
           url: api.treeGet.path+"/"+this.operailityData.id,

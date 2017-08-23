@@ -72,7 +72,6 @@
       //处理server返回的数据
       handleResData(fileList) {
         this.ids = [];
-        console.log(fileList)
         for (let i = 0; i < fileList.length; i++) {
           if (fileList[i].response) {
             fileList[i].name = fileList[i].response.data;

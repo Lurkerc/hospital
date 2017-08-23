@@ -56,7 +56,6 @@
       // 初始化
       init() {
         this.course = this.$store.state.curriculum.data.course;
-        console.log(this.course)
         this.dynamicTags = this.course.tags.split(this.splStr);
       },
       // 获取图片

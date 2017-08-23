@@ -1,7 +1,7 @@
 <template>
   <!-- 课件上传 -->
   <div>
-    <upload-file @setUploadFiles="setUploadFiles" :uploadUrl="api.upload"></upload-file>
+    <upload-file @setUploadFiles="setUploadFiles" :uploadUrl="api.upload" :size="2097152"></upload-file>
     <el-row style="margin-top:20px;">
       <el-col :span="6" :offset="6" align="center">
         <el-button type="info" @click="save">确定</el-button>

@@ -12,9 +12,40 @@
         </el-form-item>
       </el-col>
       <el-col :span="2">
-        <div class="cal-schoolTit" style="text-align: left;">/月</div>
+        <div class="cal-schoolTit" style="text-align: left;">元/月</div>
       </el-col>
-      <el-col :span="3">
+    </el-row>
+    <el-row :gutter="10">
+      <el-col style="width:120px;">
+        <div class="cal-schoolTit" style="text-align: right;">住宿费：</div>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item prop="configValue" required>
+          <el-input style="width: 95%" v-model.trim="accommodationData.configValue" placeholder="必填项-只能填写数字"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="2">
+        <div class="cal-schoolTit" style="text-align: left;">元/月</div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="10">
+      <el-col style="width:120px;">
+        <div class="cal-schoolTit" style="text-align: right;">住宿押金：</div>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item prop="configValue" required>
+          <el-input style="width: 95%" v-model.trim="depositData.configValue" placeholder="必填项-只能填写数字"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="2">
+        <div class="cal-schoolTit" style="text-align: left;">元</div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="10">
+      <el-col style="width:120px;">
+        <div class="cal-schoolTit" style="text-align: right;">&nbsp;</div>
+      </el-col>
+      <el-col :span="4">
         <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
       </el-col>
     </el-row>
@@ -43,6 +74,16 @@
         formValidate:{
           configValue:""
         },
+        //押金数据存储
+        depositData:{
+          configValue:""
+        },
+
+        //获取实习生住宿费
+        accommodationData:{
+          configValue:""
+        },
+
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
 
@@ -52,6 +93,22 @@
           ajaxSuccess:'getChargingStandardData',
           ajaxParams:{
             url: api.chargingStandard.path,
+          }
+        },
+
+        //获取住宿费
+        getAccommodation:{
+          ajaxSuccess:'getAccommodationData',
+          ajaxParams:{
+            url: api.accommodation.path,
+          }
+        },
+
+        //获取住宿押金
+        getDeposit:{
+          ajaxSuccess:'getDepositData',
+          ajaxParams:{
+            url: api.deposit.path,
           }
         },
 
@@ -73,6 +130,8 @@
       //初始化请求列表数据
       init(){
         this.ajax(this.getChargingStandard);
+        this.ajax(this.getAccommodation);
+        this.ajax(this.getDeposit);
       },
 
 
@@ -80,6 +139,20 @@
       getChargingStandardData(responseData){
         let data = responseData.data;
         this.formValidate=data
+      },
+
+
+      //获取住宿费
+      getAccommodationData(responseData){
+        let data = responseData.data;
+        this.accommodationData = data;
+      },
+
+
+      //获取住宿押金
+      getDepositData(responseData){
+        let data = responseData.data;
+        this.depositData = data;
       },
 
 
@@ -96,6 +169,18 @@
           saveHargingStandard.ajaxParams.url += this.formValidate.configId;
           saveHargingStandard.ajaxParams.data = this.getFormData(this.formValidate);
           this.ajax(saveHargingStandard, isLoadingFun);
+
+          let saveAccommodation = Util._.defaultsDeep({},this.saveHargingStandard)
+          saveAccommodation.ajaxParams.url += this.accommodationData.configId;
+          saveAccommodation.ajaxParams.data = this.getFormData(this.accommodationData);
+          this.ajax(saveAccommodation, isLoadingFun);
+
+
+          let saveDeposit = Util._.defaultsDeep({},this.saveHargingStandard)
+          saveDeposit.ajaxParams.url += this.depositData.configId;
+          saveDeposit.ajaxParams.data = this.getFormData(this.depositData);
+          this.ajax(saveDeposit, isLoadingFun);
+
         }
       },
 

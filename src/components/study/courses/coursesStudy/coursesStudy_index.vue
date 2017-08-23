@@ -6,24 +6,25 @@
       <class-menu @menuClick="menuClick" :types="'VIDEO'" menuUrl="/criterionCourseType/tree"></class-menu>
       <div class="coursesStudyInfo">
         <p align="right">
-          <el-input class="searchStudy" placeholder="搜索课程" v-model="input5">
-            <el-button slot="append" icon="search"></el-button>
-          </el-input>
+          <div style="height: 36px;"></div>
+          <!--<el-input class="searchStudy" placeholder="搜索课程" v-model="input5">-->
+          <!--<el-button slot="append" icon="search"></el-button>-->
+          <!--</el-input>-->
         </p>
         <div class="coursesStudyTask coursesStudyBorder">
           <h3>学习任务</h3>
           <el-row class="coursesStudyTaskMain">
             <div v-if="myTask.length > 0">
               <el-col class="coursesStudyItem" :span="22" :offset="2" v-for="item in myTask" :key="item.id">
-                  <el-col :span="7">
-                    <p class="coursesStudyTitle overflow-txt1">{{ item.title }}</p>
-                  </el-col>
-                  <el-col :span="12" :offset="1">
-                    <el-progress :text-inside="true" :stroke-width="20" :percentage="item.progress"></el-progress>
-                  </el-col>
-                  <el-col :span="4" align="right">
-                    <el-button size="small" @click="videoClick(item)" type="success">快速进入</el-button>
-                  </el-col>
+                <el-col :span="7">
+                  <p class="coursesStudyTitle overflow-txt1">{{ item.title }}</p>
+                </el-col>
+                <el-col :span="12" :offset="1">
+                  <el-progress :text-inside="true" :stroke-width="20" :percentage="item.progress"></el-progress>
+                </el-col>
+                <el-col :span="4" align="right">
+                  <el-button size="small" @click="videoClick(item)" type="success">快速进入</el-button>
+                </el-col>
               </el-col>
             </div>
             <p v-else class="coursesStudyItemTips">暂无学习任务</p>
@@ -52,8 +53,8 @@
           <!-- 视频内容 -->
           <el-col>
             <div v-if="myStudy.length > 0">
-              <el-col  :xs="23" :sm="11" :md="7" :lg="5" class="coursesStudyVideoItem" :offset="1" v-for="item in myStudy" :key="item.id">
-                <div  @click="videoClick(item)" style="cursor: pointer">
+              <el-col :xs="23" :sm="11" :md="7" :lg="5" class="coursesStudyVideoItem" :offset="1" v-for="item in myStudy" :key="item.id">
+                <div @click="videoClick(item)" style="cursor: pointer">
                   <img :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="min-height: 125px;">
                   <!-- <p class="">视频名称</p> -->
                   <div class="coursesStudyVideoInfo">
@@ -88,8 +89,8 @@
           <el-col>
             <div v-if="mainQuery.length > 0">
               <el-col :xs="23" :sm="11" :md="7" :lg="5" class="coursesStudyVideoItem" :offset="1" v-for="item in mainQuery" :key="item.id">
-                <div  @click="mainQueryClick(item)" style="cursor: pointer">
-                  <img   :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="min-height: 125px;">
+                <div @click="mainQueryClick(item)" style="cursor: pointer">
+                  <img :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="min-height: 125px;">
                   <!-- <p class="">视频名称</p> -->
                   <div class="coursesStudyVideoInfo">
                     <h3 class="overflow-txt1">{{ item.title }}</h3>
@@ -145,16 +146,16 @@
           </el-col>
           <el-col>
             <div v-if="myHistory.length > 0">
-              <el-col   :xs="23" :sm="23" :md="23" :lg="11" class="coursesStudyVideoItem" :offset="1" v-for="item in myHistory" :key="item.id">
+              <el-col :xs="23" :sm="23" :md="23" :lg="11" class="coursesStudyVideoItem" :offset="1" v-for="item in myHistory" :key="item.id">
                 <div @click="videoClick(item)" style="cursor: pointer">
                   <img :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="min-height: 125px;">
                   <!-- <p class="">视频名称</p> -->
                   <div class="coursesStudyVideoInfo">
                     <h3 class="overflow-txt1">{{item.title}}</h3>
                   </div>
-              </div>
+                </div>
               </el-col>
-             </div>
+            </div>
             <p v-else class="coursesStudyItemTips">暂无播放记录</p>
           </el-col>
         </el-row>
@@ -170,8 +171,8 @@
 
     <!-- 详情弹窗 -->
     <Modal :mask-closable="false" v-model="showModal" class-name="vertical-center-modal" :width="1100">
-      <modal-header slot="header"  :content="showId"></modal-header>
-      <show style="height: 600px;" v-if="showModal" :operaility-data="showData" ></show>
+      <modal-header slot="header" :content="showId"></modal-header>
+      <show style="height: 600px;" v-if="showModal" :operaility-data="showData" :showType="showType"></show>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -204,13 +205,15 @@
         today: 0,
         input5: '',
 
+        showType: '', // 最新课程查看
+
         moreModal: false,
         moreId: {
           id: 'addId',
           title: '更多'
         },
 
-        showModal:false,
+        showModal: false,
         showId: {
           id: 'showId',
           title: '查看'
@@ -347,13 +350,25 @@
       },
 
       //点击视频
-      videoClick(data){
+      videoClick(data) {
+        this.showType = '';
         this.showData = data;
         this.showModal = true;
       },
-
-      mainQueryClick(){
-          this.showMess('无权限')
+      // 最新课程查看
+      mainQueryClick(data) {
+        let opt = {
+          ajaxSuccess: res => {
+            this.showType = 'main';
+            this.showData = data;
+            this.showModal = true;
+          },
+          ajaxParams: {
+            url: api.mainInfo.path + data.id,
+            method: api.mainInfo.method
+          }
+        }
+        this.ajax(opt)
       }
     },
     created() {

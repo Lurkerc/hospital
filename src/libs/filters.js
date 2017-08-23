@@ -192,7 +192,7 @@ const getVueObj = function (vue) {
       "NOT_AUDIT": "未审核",
       "AUDIT_FAILURE": "未通过",
       "AUDIT_SUCCESS": "通过",
-      "DRAFT": "草稿",
+      "DRAFT": "未运行",
       "TESTRUN": "试运行",
       "EXIT": "退出",
     },
@@ -233,32 +233,32 @@ const getVueObj = function (vue) {
       }
     },
     {
-      name:'formatSize',
+      name: 'formatSize',
       call(value) {
         let temp;
         let init;
         let float;
-        if(!value)return '0KB';
+        if (!value) return '0KB';
         if (value < 1024) {
           return value + 'B';
-        } else if (value < (1024*1024)){
+        } else if (value < (1024 * 1024)) {
           temp = value / 1024;
           temp = temp.toFixed(2);
           return temp + 'KB';
-        } else if (value < (1024*1024*1024)) {
-          init = (value / (1024*1024));
+        } else if (value < (1024 * 1024 * 1024)) {
+          init = (value / (1024 * 1024));
           //float = (value % (1024*1024))/1024;
           return init.toFixed(2) + 'MB ' //+float.toFixed(2)+'KB';
         } else {
-          init = (value / (1024*1024*1024));
+          init = (value / (1024 * 1024 * 1024));
           //float = (value % (1024*1024*1024))/(1024*1024);
-          return   init.toFixed(2) + 'GB //'+float.toFixed(2)+'MB';
+          return init.toFixed(2) + 'GB //' + float.toFixed(2) + 'MB';
         }
-        return ;
+        return;
       },
     },
     {
-      name:'formatTime',
+      name: 'formatTime',
       call(value) {
         return getDateDiff(value);
       },
@@ -276,7 +276,7 @@ const getVueObj = function (vue) {
     },
   ];
 
-  function getDateDiff(dateTimeStamp){
+  function getDateDiff(dateTimeStamp) {
     var minute = 1000 * 60;
     var hour = minute * 60;
     var day = hour * 24;
@@ -285,31 +285,27 @@ const getVueObj = function (vue) {
 
     var now = new Date().getTime();
     var diffValue = now - dateTimeStamp;
-    if(diffValue < 0){
+    if (diffValue < 0) {
       //若日期不符则弹出窗口告之
       //alert("结束日期不能小于开始日期！");
     }
-    var monthC =diffValue/month;
-    var weekC =diffValue/(7*day);
-    var dayC =diffValue/day;
-    var hourC =diffValue/hour;
-    var minC =diffValue/minute;
-    if(monthC>=1){
-      result="发表于" + parseInt(monthC) + "个月前";
-    }
-    else if(weekC>=1){
-      result="发表于" + parseInt(weekC) + "周前";
-    }
-    else if(dayC>=1){
-      result="发表于"+ parseInt(dayC) +"天前";
-    }
-    else if(hourC>=1){
-      result="发表于"+ parseInt(hourC) +"个小时前";
-    }
-    else if(minC>=1){
-      result="发表于"+ parseInt(minC) +"分钟前";
-    }else
-      result="刚刚发表";
+    var monthC = diffValue / month;
+    var weekC = diffValue / (7 * day);
+    var dayC = diffValue / day;
+    var hourC = diffValue / hour;
+    var minC = diffValue / minute;
+    if (monthC >= 1) {
+      result = "发表于" + parseInt(monthC) + "个月前";
+    } else if (weekC >= 1) {
+      result = "发表于" + parseInt(weekC) + "周前";
+    } else if (dayC >= 1) {
+      result = "发表于" + parseInt(dayC) + "天前";
+    } else if (hourC >= 1) {
+      result = "发表于" + parseInt(hourC) + "个小时前";
+    } else if (minC >= 1) {
+      result = "发表于" + parseInt(minC) + "分钟前";
+    } else
+      result = "刚刚发表";
     return result;
   }
 

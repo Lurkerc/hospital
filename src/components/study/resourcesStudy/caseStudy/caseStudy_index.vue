@@ -63,7 +63,7 @@
               {{item.title}}
             </div>
             <div class="caseListBox-right-date">
-              {{item.updateTime}}
+              浏览{{item.viewNum}}次 | {{conductDate(item.updateTime,'yyyy-MM-dd HH:mm:ss')}}
             </div>
           </div>
           <div class="caseListBox-right-text">

@@ -1,8 +1,16 @@
-const thisFile = 'criterionCourseTestingQuestions';
 const api = {
+  get: { // 获取授课试题
+    path: '/courseTestingQuestions/query',
+    method: 'get'
+  },
+  getCT: { // 获取标准课程试题
+    path: '/criterionCourseTestingQuestions/query',
+    method: 'get'
+  },
 
-  get: { // 选择标准课程
-    path: thisFile + '/query/',
+
+  submit: { // 测评-提交分数
+    path: '/courseTestingQuestions/submit',
     method: 'get'
   },
 };

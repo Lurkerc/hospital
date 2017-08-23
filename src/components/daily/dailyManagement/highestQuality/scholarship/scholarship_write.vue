@@ -477,7 +477,6 @@
           }
         this.formValidate = this.getFormValidate(this.formValidate,data) ;
         this.basicBySelf = this.getFormValidate(this.basicBySelf,data) ;
-        console.log(this.formValidate.isComprehensive);
 
       },
       setTableData(isLoading){

@@ -20,7 +20,7 @@
 </template>
 <script>
   export default {
-    props: ['navUrl','operailityData'],
+    props: ['navUrl','operailityData','count'],
     data() {
       return {
         navActiveName:this.operailityData.id||'',
@@ -43,7 +43,10 @@
           ajaxSuccess: res => {
             let menuData;
             if (res.data.length) {
+              this.$emit('getRoot', res.data[0]);  //传给父组件根节点id；
+              if(!res.data[0].children) return;
               menuData = res.data[0].children;
+
               this.menuData = menuData;
               this.getChildIndex(this.operailityData);
             }
@@ -97,6 +100,10 @@
     watch:{
       operailityData(val){
         this.getChildIndex(val);
+      },
+      count(){
+          this.navActiveName = ''
+            this.active = ''
       }
 
     },

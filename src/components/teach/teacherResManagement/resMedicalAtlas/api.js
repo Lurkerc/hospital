@@ -55,7 +55,7 @@ const api = {
   //   4 ATLAS 医学图谱
 
   resourceTypeTree:{ // 左侧树
-    path:  '/resourceType/tree?types=ATLAS',  //{ids}   //
+    path:  '/resourceType/tree-by-manager?types=ATLAS',  //{ids}   //
     method: 'delete',
   },
 

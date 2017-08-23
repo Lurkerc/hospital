@@ -193,7 +193,7 @@
         self: this,
         // 临时数据
         reservePoject: "", // 项目
-        activeName: "", // 日期视图 
+        activeName: "", // 日期视图
         selRoomIndex: -1, // 房间
         selTimeSlotIndex: -1, // 时间段
         // 展示数据
@@ -289,7 +289,6 @@
           ajaxSuccess: res => {
             this.tableBody = res.data || {};
             if (res.data.timeSetList.length) {
-              console.log('获取每天对应的时间段')
               this.timeSlot = res.data.timeSetList;
               // 时间段是否已过期
               // this.timeSlot.map(item=>)

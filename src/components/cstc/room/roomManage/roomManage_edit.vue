@@ -89,7 +89,7 @@
           roomName: '', // 房间名称
           summary: '', // 简介
           address: '', // 房间位置
-          imgIds: '', // 房间图片 | 多个id以逗号分隔 ---> 1,2         
+          imgIds: '', // 房间图片 | 多个id以逗号分隔 ---> 1,2
           imageList: []
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
@@ -155,7 +155,6 @@
       },
       /**************************** 从服务器获取编辑的数据 *****************************************/
       getDataForServer() {
-        console.log(this.id);
         let roomId = this.id,
           urlParams = this.getUrlParams; // props
         this.ajax({

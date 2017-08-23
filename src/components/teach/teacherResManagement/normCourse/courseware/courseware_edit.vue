@@ -129,13 +129,21 @@
     <!-- 上传课件 -->
     <Modal :mask-closable="false" v-model="uploadModal" class-name="vertical-center-modal" :width="500">
       <modal-header slot="header" :content="uploadId"></modal-header>
-      <courseware-upload v-if="uploadModal" @cancel="cancel" @upload="uploadFileCall" :operaility-data="operailityData"></courseware-upload>
+      <courseware-upload v-if="uploadModal" @cancel="cancel" @upload="uploadFileCall" :operaility-data="operailityData" :accept="'doc|docx|xls|xlsx|ppt|pptx|pdf|mp4'"></courseware-upload>
       <div slot="footer"></div>
     </Modal>
     <!-- 选择课件 -->
     <Modal :mask-closable="false" v-model="selectModal" class-name="vertical-center-modal" :width="1100">
       <modal-header slot="header" :content="selectId"></modal-header>
       <courseware-select v-if="selectModal" @cancel="cancel" @select="selectFileCall" :operaility-data="operailityData"></courseware-select>
+      <div slot="footer"></div>
+    </Modal>
+    <!-- 查看弹窗 -->
+    <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1100">
+      <modal-header slot="header" :content="showId"></modal-header>
+      <video-view v-if="resourceType === 'video'" :filePath="viewData.filePath" :videoType="viewData.videoType" style="height:600px"></video-view>
+      <pdf-view v-if="resourceType === 'pdf'" :pdfSrc="viewData.pdfSrc"></pdf-view>
+      <atlas-view v-if="resourceType === 'atlas'" :operaility-data="viewData"></atlas-view>
       <div slot="footer"></div>
     </Modal>
   </el-row>
@@ -147,6 +155,12 @@
   // } from '../rules';
   import coursewareUpload from './courseware_upload';
   import coursewareSelect from './courseware_select';
+
+  // 预览
+  import videoView from '../../../../common/video'; // 视频
+  import pdfView from '../../../../study/common/view_pdf'; // pdf
+  import atlasView from '../../../teacherResManagement/resMedicalAtlas/resMedicalAtlas_view'; // 图谱
+
   export default {
     props: ['readOnly'],
     data() {
@@ -165,6 +179,18 @@
           id: 'selectId',
           title: '选择资源'
         },
+        showId: {
+          id: 'showId',
+          title: '课件预览'
+        },
+
+        viewData: {},
+        resourceType: '', // 查看资源类型
+        playerType: ['video', 'pdf', 'atlas'], // 预览类型
+        playerRules: [ // 文件后缀对应的预览类型
+          ["mp4", "ogg", "webm"],
+          ['pdf'],
+        ],
       }
     },
     methods: {
@@ -190,10 +216,11 @@
             title: item.oldName, // 课件显示名称
             fileId: item.id, // 文件ID
             fileName: item.oldName, //文件名称
+            filePath: item.pdfPath || item.path || '', //文件名称
             fileType: item.type, //文件类型
             fileSize: item.size, //文件大小
             resourceId: '', // 资源主键id
-            resourceType: '', // 资源类型
+            resourceType: null, // 资源类型
             type: this.operailityData.type.toUpperCase(), // 类型
           };
           this.addFile(fileObj);
@@ -222,6 +249,7 @@
             title: fileObj.title, // 课件显示名称
             fileId: fileObj.fileId, // 文件ID
             fileName: fileObj.fileName, //文件名称
+            filePath: fileObj.filePath, //文件路径
             fileType: fileObj.fileType, //文件类型
             fileSize: fileObj.fileSize, //文件大小
             resourceId: fileObj.resourceId, // 资源主键id
@@ -232,7 +260,54 @@
       },
       // 预览
       showFile(row) {
-        console.log(row)
+        let fileType = '';
+        if (row.filePath) { // 根据文件路径的后缀获取预览类型
+          this.resourceType = '';
+          fileType = row.filePath.split('.').pop();
+          fileType = fileType ? fileType.toLocaleLowerCase() : null;
+          for (let i in this.playerRules) {
+            if (this.playerRules[i].indexOf(fileType) > -1) {
+              this.resourceType = this.playerType[i];
+              break;
+            }
+          }
+          if (!this.resourceType) { // 检测是否支持预览
+            this.$notify({
+              title: '提示',
+              message: '该文件不支持预览',
+              type: 'warning'
+            });
+          } else { // 根据类型进行预览数据初始化
+            switch (this.resourceType) {
+              case "video":
+                this.viewData = {
+                  filePath: this.getPath(row.filePath),
+                  videoType: fileType
+                };
+                break;
+              case "pdf":
+                this.viewData = {
+                  pdfSrc: this.getPath(row.filePath)
+                };
+                break;
+              default:
+                this.viewData = {}
+            }
+            this.openModel('show');
+          }
+        } else if (row.resourceType === 'ATLAS') { // 是否是医学图谱
+          this.resourceType = 'atlas';
+          this.viewData = {
+            id: row.resourceId
+          };
+          this.openModel('show');
+        } else {
+          this.$notify({
+            title: '提示',
+            message: '该文件不支持预览',
+            type: 'warning'
+          });
+        }
       },
       /** 
        * 删除
@@ -246,6 +321,10 @@
           planIndex,
           delIndex
         })
+      },
+      // 获取路径
+      getPath(staticUrl) {
+        return staticUrl ? (this.$store.state.envPath.http + staticUrl) : staticUrl;
       },
       /****************************************** 弹窗相关 ********************************************/
       /*
@@ -304,6 +383,17 @@
     components: {
       coursewareUpload,
       coursewareSelect,
+
+      videoView,
+      pdfView,
+      atlasView,
+    },
+    watch: {
+      showModal(val) {
+        if (!val) {
+          this.resourceType = ''
+        }
+      }
     },
     created() {
       this.init()

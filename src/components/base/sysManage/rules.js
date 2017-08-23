@@ -2,7 +2,7 @@ import _ from 'lodash';
 import baseRules from '../../../formRules/base'; // 公共规则
 
 /**
- * 住院医 - 基地管理
+ * 住院医 - 专业基地
  **/
 let jdManagement = {
   jdName: baseRules.required,        //基地名称

@@ -133,7 +133,6 @@
       oneDataSuccess(responseData){
         let data = responseData.data;
         if(!data)return;
-        console.log(data);
         this.data = data;
       },
       add(data){

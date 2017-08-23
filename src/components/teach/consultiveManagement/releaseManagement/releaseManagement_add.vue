@@ -92,7 +92,7 @@
         formValidate: {
           title:'',     //标题
           publisher:'',     //发布人
-          isReceipt:'',     //是否需要回执
+          isReceipt:0,     //是否需要回执
           roleId:'',     //浏览人角色Id
           content:'',
           fileIds:'',

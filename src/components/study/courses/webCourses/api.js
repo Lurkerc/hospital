@@ -19,9 +19,14 @@ const api = {
     method: 'get',
   },
 
-  info: { // 查看-公告-列表
+  info: { // 课程-查看
     path: '/course/info/', //{id}
     method: 'get',
+  },
+
+  mainInfo: { // 最新课程-查看
+    path: '/course/main/info/',
+    method: 'get'
   },
 
   modify: { // 修改

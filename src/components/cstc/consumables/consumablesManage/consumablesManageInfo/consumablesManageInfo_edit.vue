@@ -147,7 +147,6 @@
       },
       /**************************** 从服务器获取编辑的数据 *****************************************/
       getDataForServer() {
-        console.log(this.id); // 当前获取信息的id
         this.ajax({
           ajaxSuccess: 'getDataSuccess',
           ajaxParams: {

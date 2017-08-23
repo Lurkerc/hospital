@@ -12,11 +12,11 @@
         </div>
         <div v-if="!isManagement" style="height: 130px;border-top:1px solid #535353;">
           <el-row>
-            <el-col :span="18" :offset="1" style="padding: 20px">
-              <el-input v-model="mes" :rows="5" resize="none" type="textarea"></el-input>
+            <el-col :span="18"  :offset="1" style="padding: 20px">
+              <el-input :readonly="!isSpeak" v-model="mes" :rows="5" resize="none" type="textarea"></el-input>
             </el-col>
             <el-col :span="5" style="line-height: 130px">
-              <el-button @click="sendMes"  type="primary">发送</el-button>
+              <el-button  :disabled="!isSpeak"  @click="sendMes"  type="primary">发送</el-button>
             </el-col>
           </el-row>
         </div>
@@ -45,7 +45,7 @@
     //当前组件引入全局的util
     let Util = null;
     export default{
-        props:['isManagement','courseId','liveData'],
+        props:['isManagement','courseId','liveData','speakData'],
         data() {
             return {
               isHasHeight:false,
@@ -54,14 +54,14 @@
                 ajaxSuccess: 'updateListData',
                 ajaxParams: {
                   url: api.sendMsg.path,
-                  params: {
+                  method:'post',
+                  data: {
                     courseId:this.courseId,
                     planId:this.liveData.id,
                     msg:'',
                   }
                 }
               },
-
             }
         },
         methods: {
@@ -72,8 +72,16 @@
 
 
           sendMes(){
-              this.listMessTitle.ajaxParams.params.msg = this.mes;
-              this.ajax(this.listMessTitle);
+              //如果为禁言，则不允许发言，管理员能发言
+              if(this.isSpeak){
+                  let mes = this.mes.trim();
+                  if(mes === '') return;
+                this.listMessTitle.ajaxParams.data.msg = this.mes;
+                this.ajax(this.listMessTitle);
+              }else {
+                  this.showMess('全体禁言中!')
+              }
+
           },
 
           updateListData(){
@@ -87,6 +95,22 @@
         created(){
             this.init();
         },
+
+
+        computed:{
+            //是否允许发言
+          isSpeak(){
+              if(this.isManagement||this.speakData.speak){
+                  return true;
+              }else {
+                  return false;
+              }
+
+          }
+
+        },
+
+
         mounted(){
         },
         components: {}

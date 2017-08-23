@@ -213,7 +213,6 @@
             filePath: '/api/file/download/' + item.id
           })
         });
-        console.log(this.studentUploadFiles)
         // 老师附件
         res.data.teacherCommentFileList.map(item => {
           fileIds.push(item.id);

@@ -78,7 +78,6 @@
       this.formValidate.sceneIds = ids.join(',');
       this.formValidate.sceneNames = sceneNames.join(',');
 
-console.log(ids, this.formValidate);
     },
     methods:{
       /*

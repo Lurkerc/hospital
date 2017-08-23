@@ -1,21 +1,19 @@
 <template>
-  <!-- 评测与作业 - 查看 -->
+  <!-- 课件 - 查看 -->
   <div>
-    <cw-list v-if="cwView === 'list'" @show="show"></cw-list>
+    <cw-list v-if="cwView === 'list'" @show="show" :showProgress="showProgress"></cw-list>
     <div v-if="cwView === 'player'">
-      <!-- <div style="text-align: right">
-        <el-button type="primary" @click="callBack">返回</el-button>
-      </div> -->
       <cw-player :cwData="cwData" @show="show"></cw-player>
     </div>
-
   </div>
 </template>
 
 <script>
-  import cwList from './view/list'; // 试题列表
-  import cwPlayer from './view/player'; // 试题
+  import cwList from './view/list'; // 课件列表
+  import cwPlayer from './view/player'; // 课件查看
   export default {
+    // 是否显示进度条
+    props: ['showProgress'],
     data() {
       return {
         cwView: 'list',

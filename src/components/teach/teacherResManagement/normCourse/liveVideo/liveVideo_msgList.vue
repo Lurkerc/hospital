@@ -5,15 +5,17 @@
 ****--@author   gx
 ----------------------------------->
 <template>
-    <div class="msg-right" >
+    <div @mouseover="mouseover" @onmouseout="onmouseout " class="msg-right" >
       <div class="right-commonality" >
-        公共聊天
+        公共聊天 &nbsp;  &nbsp;  &nbsp;  &nbsp;
+        <el-button type="info" style="position: relative;top:-5px"  @click="speakClick(false)" v-if="isManagement&&speak"> 全体禁言</el-button>
+        <el-button style="position: relative;top:-5px"   @click="speakClick(true)" v-if="isManagement&&!speak" type="info">取消禁言</el-button>
       </div>
       <!--聊天列表-->
-      <div v-if="tableData!=0" class="msg-list-wrap">
+      <div v-if="tableData!=0" ref="msgList" class="msg-list-wrap">
         <div class="msg-list" v-for="(item,index) in tableData" :key="index">
           <div>
-            <span style="float: left;">{{item.name}}</span>
+            <span style="float: left;"><strong>{{item.name}}</strong></span>
             <span style="float: right;">{{item.times | formatDate('yy-MM-dd HH:mm:ss')}}</span>
             <div style="clear: both;padding-top: 15px">
               {{item.msg}}
@@ -30,13 +32,16 @@
     //当前组件引入全局的util
     let Util = null;
     export default{
-        props:['courseId','liveData'],
+        props:['courseId','liveData','isManagement'],
         data() {
             return {
               tableData:[],
               unBeforeDestroy:true,
               lastTime:0,
               setTime:'',
+              speak:true,
+              isSetScoll:true,
+
             }
         },
         methods: {
@@ -51,6 +56,7 @@
             //处理服务数据
             let myPromise = this.$util.queryData({
               url: api.queryMsg.path,
+
               params: {
                 courseId:this.courseId,
                 planId:this.liveData.id,
@@ -94,12 +100,53 @@
           updateListData(res){
             let data = res.data;
             if(!data)return ;
+            //禁言或者允许发言
+            this.$emit('speak',data);
+            this.speak = data.speak;
             this.lastTime = data.lastTime;
-            this.tableData = data.msgList;
+            this.tableData =this.tableData.concat(data.msgList);
+            this.setScoll();
             if(this.unBeforeDestroy){
               this.getData()
             }
-          }
+          },
+
+
+
+          setScoll(){
+              if( this.isSetScoll){
+                  console.log( this.$refs.msgList);
+                this.$refs.msgList.scrollTop  = this.$refs.msgList.scrollHeight ;
+              }
+          },
+
+
+          mouseover(){
+            this.isSetScoll = false;
+
+          },
+
+          onmouseout(){
+            this.isSetScoll = true;
+
+          },
+          //禁止发言或者
+          speakClick(flag){
+            let  listMessTitle={
+              ajaxSuccess: res=>this.successMess(flag?'取消禁言成功':'禁言成功'),
+                ajaxParams: {
+                url: api.speak.path,
+                  params: {
+                  courseId:this.courseId,
+                    planId:this.liveData.id,
+                    speak:flag,
+                }
+              }
+            }
+
+            this.ajax(listMessTitle)
+
+          },
         },
         beforeDestroy(){
           this.unBeforeDestroy = false;

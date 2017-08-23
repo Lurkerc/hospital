@@ -300,7 +300,6 @@
 
       //搜索监听回调
       searchEvent(isLoading){
-          console.log(1);
           let isSubmit = this.handleSubmit('formValidate')
 //        isLoading(true);
         if(isSubmit){

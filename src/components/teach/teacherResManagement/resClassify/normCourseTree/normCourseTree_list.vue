@@ -196,7 +196,6 @@
       }
     },
     methods: {
-
       //初始化请求列表数据
       init() {
         Util = this.$util;

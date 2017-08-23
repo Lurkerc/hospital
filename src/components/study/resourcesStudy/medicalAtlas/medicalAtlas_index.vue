@@ -35,6 +35,7 @@
             <p class="card-info-title">
               <a @click="showImgListItem(item)" href="javascript:void(0)" :title="item.title" class="title-content" target="_blank" z-st="home_main_card_title" style="width: 228px;">{{item.title}}</a>
             </p>
+            <p class="card-info-item">浏览次数：{{item.viewNum}}</p>
             <!--<p class="card-info-item">
               <span class="statistics-view">标签1</span>
               <span class="statistics-comment">标签2</span>
@@ -106,13 +107,15 @@
 
         //列表、及分页属性
         isHashMore:true,
-        tableData1:[{
+        tableData1:[
+            /*{
           "id":1,
           "title":"测试标题1",
           "img":"www",
           "remark":"eee",
           "viewNum":2
-        }],
+        }*/
+        ],
         listTotal:0,
         listMessTitle:{
           ajaxSuccess:'updateListData',

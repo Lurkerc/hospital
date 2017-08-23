@@ -52,7 +52,7 @@
           floor: '-',
           address: "-",
           summary: "-",
-          imageList: [ // 
+          imageList: [ //
             // {
             //   "imageId": "1",
             //   "imageType": "jpg",
@@ -64,7 +64,6 @@
     },
     methods: {
       getDataForServer() {
-        console.log(this.id);
         // return
         let roomId = this.id; // props
         this.ajax({

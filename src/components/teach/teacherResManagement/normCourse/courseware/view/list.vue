@@ -12,14 +12,19 @@
               <h4>课前资料：</h4>
               <div v-if="item.wareDtoList.before.length">
                 <el-col v-for="(cItem,cIndex) in item.wareDtoList.before" :key="cIndex" class="coursewareViewItem">
-                  <el-col :span="6">
-                    <p> {{ cIndex + 1 }}.{{ cItem.title }}</p>
-                  </el-col>
-                  <el-col :span="14">
-                    <el-progress :text-inside="true" :stroke-width="18" :percentage="cItem.progress" class="coursewareParogress"></el-progress>
+                  <template v-if="showProgress">
+                    <el-col :span="6">
+                      <p class="overflow-txt1"> {{ cIndex + 1 }}.{{ cItem.title }}</p>
+                    </el-col>
+                    <el-col :span="14">
+                      <el-progress :text-inside="true" :stroke-width="18" :percentage="cItem.progress" class="coursewareParogress"></el-progress>
+                    </el-col>
+                  </template>
+                  <el-col :span="20" v-else>
+                    <p class="overflow-txt1"> {{ cIndex + 1 }}.{{ cItem.title }}</p>
                   </el-col>
                   <el-col :span="4" align="center">
-                    <span class="viewCoursewareBtn" :class="[cItem.fileType]" @click="goPlayer(item.id,'BEFORE')"></span>
+                    <span class="viewCoursewareBtn" :class="[cItem.fileType]" @click="goPlayer(index,cIndex,'BEFORE')"></span>
                   </el-col>
                 </el-col>
               </div>
@@ -28,14 +33,19 @@
               <h4>课中资料：</h4>
               <div v-if="item.wareDtoList.inProgress.length">
                 <el-col v-for="(cItem,cIndex) in item.wareDtoList.inProgress" :key="cIndex" class="coursewareViewItem">
-                  <el-col :span="6">
-                    <p> {{ cIndex + 1 }}.{{ cItem.title }}</p>
-                  </el-col>
-                  <el-col :span="14">
-                    <el-progress :text-inside="true" :stroke-width="18" :percentage="cItem.progress" class="coursewareParogress"></el-progress>
+                  <template v-if="showProgress">
+                    <el-col :span="6">
+                      <p class="overflow-txt1"> {{ cIndex + 1 }}.{{ cItem.title }}</p>
+                    </el-col>
+                    <el-col :span="14">
+                      <el-progress :text-inside="true" :stroke-width="18" :percentage="cItem.progress" class="coursewareParogress"></el-progress>
+                    </el-col>
+                  </template>
+                  <el-col :span="20" v-else>
+                    <p class="overflow-txt1"> {{ cIndex + 1 }}.{{ cItem.title }}</p>
                   </el-col>
                   <el-col :span="4" align="center">
-                    <span class="viewCoursewareBtn" :class="[cItem.fileType]" @click="goPlayer(item.id,'IN_PROGRESS')"></span>
+                    <span class="viewCoursewareBtn" :class="[cItem.fileType]" @click="goPlayer(index,cIndex,'IN_PROGRESS')"></span>
                   </el-col>
                 </el-col>
               </div>
@@ -44,14 +54,19 @@
               <h4>课后资料：</h4>
               <div v-if="item.wareDtoList.after.length">
                 <el-col v-for="(cItem,cIndex) in item.wareDtoList.after" :key="cIndex" class="coursewareViewItem">
-                  <el-col :span="6">
-                    <p> {{ cIndex + 1 }}.{{ cItem.title }}</p>
-                  </el-col>
-                  <el-col :span="14">
-                    <el-progress :text-inside="true" :stroke-width="18" :percentage="cItem.progress" class="coursewareParogress"></el-progress>
+                  <template v-if="showProgress">
+                    <el-col :span="6">
+                      <p class="overflow-txt1"> {{ cIndex + 1 }}.{{ cItem.title }}</p>
+                    </el-col>
+                    <el-col :span="14">
+                      <el-progress :text-inside="true" :stroke-width="18" :percentage="cItem.progress" class="coursewareParogress"></el-progress>
+                    </el-col>
+                  </template>
+                  <el-col :span="20" v-else>
+                    <p class="overflow-txt1"> {{ cIndex + 1 }}.{{ cItem.title }}</p>
                   </el-col>
                   <el-col :span="4" align="center">
-                    <span class="viewCoursewareBtn" :class="[cItem.fileType]" @click="goPlayer(item.id,'AFTER')"></span>
+                    <span class="viewCoursewareBtn" :class="[cItem.fileType]" @click="goPlayer(index,cIndex,'AFTER')"></span>
                   </el-col>
                 </el-col>
               </div>
@@ -66,6 +81,8 @@
 
 <script>
   export default {
+    // 是否显示进度条
+    props: ['showProgress'],
     data() {
       return {
         coursewareActive: 0,
@@ -91,12 +108,14 @@
       },
       /**
        * 播放
-       * planId 第几节课的主键id
+       * planIndex 第几节课索引
+       * viewIndex 课件索引
        * types 课件类型（课前中后）
        */
-      goPlayer(planId, types) {
+      goPlayer(planIndex, viewIndex, types) {
         this.$emit('show', 'player', {
-          planId,
+          planIndex,
+          viewIndex,
           types
         })
       },
@@ -114,6 +133,7 @@
   .coursewareViewItem {
     margin-bottom: 10px;
     p {
+      text-indent: 2em;
       line-height: 30px;
     }
   }

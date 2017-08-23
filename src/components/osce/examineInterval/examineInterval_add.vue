@@ -713,7 +713,6 @@
             unSelArr = unSelArr.concat(arr)
           }
         })
-        console.log(type, unSelArr)
         return unSelArr
       },
 

@@ -2,8 +2,8 @@
 const thisFile = 'resourceType';
 const api = {
   //标准课程目录树
-  courseTree:{ //todo 后台需要修改
-    path: '/criterionCourseType/tree',
+  courseTree:{
+    path: '/criterionCourseType/tree-by-manager',
     method: 'get'
   },
   courseTreeAdd:{  //左侧树-添加
@@ -30,7 +30,7 @@ const api = {
 
 
   tree: { // 左侧树
-    path: thisFile + '/tree',
+    path: thisFile + '/tree-by-manager',
     method: 'get'
   },
   treeListPage:{  //目录树列表

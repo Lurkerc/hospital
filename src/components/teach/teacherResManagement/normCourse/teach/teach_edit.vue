@@ -147,6 +147,10 @@
             flag = true;
           }
         });
+        if (flag && !this.teach.teacher) {
+          flag = false;
+          this.errorMess('请输入或者选择授课老师！');
+        }
         return flag;
       },
       // 选择人员

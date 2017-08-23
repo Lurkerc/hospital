@@ -196,7 +196,6 @@
        * */
       submitForm(formName){
         let flag = false;
-        console.log();
         this.$refs[formName].validate((valid) => {
           if (valid) {
             flag= true;

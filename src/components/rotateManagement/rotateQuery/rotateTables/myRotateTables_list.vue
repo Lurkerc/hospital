@@ -80,7 +80,7 @@
             width="120"
           >
             <template scope="scope">
-              {{scope.row.ts}}周
+              {{scope.row.ts}}{{scope.row.podClass=='ZYY'?'月':'周'}}
             </template>
           </el-table-column>
           <el-table-column

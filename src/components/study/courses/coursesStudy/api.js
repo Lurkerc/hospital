@@ -11,6 +11,10 @@ const api = {
     path: '/course/main/query',
     method: 'get'
   },
+  mainInfo: { // 最新课程查看
+    path: '/course/main/info/',
+    method: 'get'
+  },
   nextPlay: { // 最近直播
     path: '/course/main/next-play',
     method: 'get'

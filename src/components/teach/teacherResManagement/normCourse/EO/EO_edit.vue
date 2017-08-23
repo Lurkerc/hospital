@@ -18,8 +18,8 @@
             <template v-if="!isReadOnly">
               <el-button size="small" type="success" @click="addTestingDto('before',index)">添加试题</el-button>
               <el-button size="small" type="danger" @click="removeTestingDto('before',index)">删除试题</el-button>
-              <el-button size="small" type="warning" @click="importTestingDto('before',index)">导入试题</el-button>
-              <el-button size="small" type="info" @click="exportTestingDto('before',index)">导出试题</el-button>
+              <!-- <el-button size="small" type="warning" @click="importTestingDto('before',index)">导入试题</el-button>
+              <el-button size="small" type="info" @click="exportTestingDto('before',index)">导出试题</el-button> -->
             </template>
             <el-button size="small" type="primary" @click="showTestingDto('before',index)">整体预览</el-button>
           </el-form-item>
@@ -102,8 +102,8 @@
             <template v-if="!isReadOnly">
               <el-button size="small" type="success" @click="addTestingDto('in_progress',index)">添加试题</el-button>
               <el-button size="small" type="danger" @click="removeTestingDto('in_progress',index)">删除试题</el-button>
-              <el-button size="small" type="warning" @click="importTestingDto('in_progress',index)">导入试题</el-button>
-              <el-button size="small" type="info" @click="exportTestingDto('in_progress',index)">导出试题</el-button>
+              <!-- <el-button size="small" type="warning" @click="importTestingDto('in_progress',index)">导入试题</el-button>
+              <el-button size="small" type="info" @click="exportTestingDto('in_progress',index)">导出试题</el-button> -->
             </template>
             <el-button size="small" type="primary" @click="showTestingDto('in_progress',index)">整体预览</el-button>
           </el-form-item>
@@ -186,8 +186,8 @@
             <template v-if="!isReadOnly">
               <el-button size="small" type="success" @click="addTestingDto('after',index)">添加试题</el-button>
               <el-button size="small" type="danger" @click="removeTestingDto('after',index)">删除试题</el-button>
-              <el-button size="small" type="warning" @click="importTestingDto('after',index)">导入试题</el-button>
-              <el-button size="small" type="info" @click="exportTestingDto('after',index)">导出试题</el-button>
+              <!-- <el-button size="small" type="warning" @click="importTestingDto('after',index)">导入试题</el-button>
+              <el-button size="small" type="info" @click="exportTestingDto('after',index)">导出试题</el-button> -->
             </template>
             <el-button size="small" type="primary" @click="showTestingDto('after',index)">整体预览</el-button>
           </el-form-item>
@@ -281,6 +281,12 @@
       <edit-subject v-if="model.editAnswerExplain" @save="subCallback" :operaility-data="operailityData"></edit-subject>
       <div slot="footer"></div>
     </Modal>
+    <!-- 试题预览 -->
+    <Modal :mask-closable="false" v-model="model.eqLook" height="200" class-name="vertical-center-modal" :width="900">
+      <modal-header slot="header" :parent="self" :content="headerContent.eqLookId"></modal-header>
+      <eq-look v-if="model.eqLook" :show-data="viewTestData"></eq-look>
+      <div slot="footer"></div>
+    </Modal>
   </el-row>
 </template>
 
@@ -295,6 +301,7 @@
   import viewOption from './options/view'; // 查看选项
   import editAnswer from './answer/edit'; // 编辑正确答案
   import viewAnswer from './answer/view'; // 查看正确答案
+  import eqLook from './EO_look'; // 试题预览
 
   export default {
     props: ['readOnly'],
@@ -322,6 +329,7 @@
           editOption: false,
           editAnswer: false,
           editAnswerExplain: false,
+          eqLook: false,
         },
         headerContent: {
           editSubjectId: {
@@ -339,8 +347,13 @@
           editAnswerExplainId: {
             id: 'editAnswerExplainId',
             title: '编辑答案解析'
-          }
+          },
+          eqLookId: {
+            id: 'eqLookId',
+            title: '试题预览'
+          },
         },
+        viewTestData: {}, // 试题整体预览数据
       }
     },
     methods: {
@@ -385,7 +398,6 @@
         this.todoVal(valObj);
         this.rowData = null;
         this.operailityData = null;
-        console.log(valObj)
         // 关闭弹窗
         this.cancel(this.todoObj.model);
       },
@@ -460,19 +472,26 @@
           planIndex,
           delTheId
         })
-        console.log('删除试题：', type, planIndex)
+        // console.log('删除试题：', type, planIndex)
       },
       // 导入试题
       importTestingDto(type, planIndex) {
-        console.log('倒入试题：', type, planIndex)
+        // console.log('倒入试题：', type, planIndex)
       },
       // 导出试题
       exportTestingDto(type, planIndex) {
-        console.log('倒出试题：', type, planIndex)
+        // console.log('倒出试题：', type, planIndex)
       },
       // 整体预览
       showTestingDto(type, planIndex) {
-        console.log('整体预览：', type, planIndex)
+        let rowData = this.planDtoList[planIndex].testingDtoListTemp[type].questionsDtoList;
+        this.viewTestData = null;
+        if (rowData.length) {
+          this.viewTestData = rowData;
+          this.openModel('eqLook')
+        } else {
+          this.errorMess('请先添加试题才能预览')
+        }
       },
       /******************************************** 数据提交 ***************************************/
       // 保存
@@ -518,13 +537,16 @@
         let m = weight % len;
         let num = parseInt(weight / len);
         let arr = [];
+        let optionScore = 0;
         if (m === 0) { // 整除
-          return parseInt(num)
+          optionScore = parseInt(num)
         } else if (m - index > 0) { // 有余平均+1
-          return num + 1
+          optionScore = num + 1
         } else { // 整数
-          return num
+          optionScore = num
         }
+        data[index].optionScore = optionScore;
+        return optionScore
       },
     },
     components: {
@@ -534,6 +556,7 @@
       viewOption,
       editAnswer,
       viewAnswer,
+      eqLook,
     },
     created() {
       this.init()

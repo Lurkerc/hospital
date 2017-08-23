@@ -72,36 +72,7 @@
         //查询表单
         listUrl: '',
         url:api.teachCourseTime.path,
-        tableData: [{
-          "activityId":33,
-          "activityName":"活动名称",
-          "activityType":"活动类型",
-          "hostUserId":"主讲人id",
-          "hostUserName":"张老师",
-          "activityTime":"2017-04-12",
-          "activitySite":"活动地点",
-          "activityUserCounts":"签到人员数量",
-          "recordTimes":"8:00-9:00,9:00-10:00",
-          "recordTimeIds":"1,2",
-          "week":"星期一",
-          "weekIndex":1,
-          "activityTipsCounts":"总结份数"
-        },
-          {
-            "activityId":33,
-            "activityName":"活动名称",
-            "activityType":"活动类型",
-            "hostUserId":"主讲人id",
-            "hostUserName":"张老师",
-            "activityTime":"2017-04-13",
-            "activitySite":"活动地点",
-            "activityUserCounts":"签到人员数量",
-            "recordTimes":"9:00-10:00",
-            "recordTimeIds":"3",
-            "week":"星期一",
-            "weekIndex":1,
-            "activityTipsCounts":"总结份数"
-          }],
+        tableData: [],
         tableHeader: [
 
         ],
@@ -220,13 +191,26 @@
       //转换数据
       convertData(data){
           if(data==0)return data;
+          let convertArr = [];
         let tempArr = [];
-
         for(let i in data){
-          let time= i;
-          let day = data[i];
+           data[i].time= i ;
+          convertArr.push(data[i]);
+        }
+
+        if(tempArr.length>1){
+          tempArr.sort(function(a,b){
+            let lost = this.timestamp(a.time);
+            let next = this.timestamp(b.time);
+            return b-a;
+          });
+        }
+        for(let i =0;i< convertArr.length;i++){
+          let time= convertArr[i].time;
+          let day = convertArr[i];
 
           for(let k in day){
+              if(typeof day[k]=='string')continue;
             let timeId = day[k];
             let obj= {
               activityTime:time,
@@ -240,9 +224,9 @@
               }
             obj.activityId = obj.activityId.join(',');
             obj.activityName = obj.activityName.join(';');
+
               tempArr.push(obj)
           }
-
         }
           return tempArr
       },
@@ -273,7 +257,7 @@
             for(let i=0;i<recordTimeIds.length;i++){
               key = weekCount+'-'+recordTimeIds[i];
               tableData[index][key] = cell.activityName;  //为tableData添加内容
-              tableData[index][key+'Id'] = cell.activityId;
+              tableData[index][key+'-id'] = cell.activityId;
             }
           }else {
             weekCount++;
@@ -310,7 +294,6 @@
             this.tableData = tableData
           }
         }
-
 
         return tableData
       },

@@ -4,25 +4,51 @@
 
 <template>
   <div id="nosocomial" ref="nosocomial" class="modal">
-      <div class="add-remove">
-        <el-row >
-          <el-col :span="6" >
-            <el-button  class="but-col"  @click="add"  type="primary">添加</el-button>
-            <el-button  class="but-col"    @click="publish" type="primary">发布</el-button>
-            <el-button  class="but-col"   @click="revocation"   type="primary">撤销</el-button>
-            <el-button  class="but-col"  @click="remove"  type="primary">删除</el-button>
-          </el-col>
-          <el-col :span="10" :offset="2">
-            <el-form ref="ruleForm" label-width="100px" class="demo-ruleForm">
-              <el-form-item  prop="name">
-                <el-input placeholder="输入栏目名称搜索">
-                  <el-button slot="append" icon="search"></el-button>
-                </el-input>
-              </el-form-item>
-            </el-form>
-          </el-col>
-        </el-row >
+    <el-form  :model="formValidate" ref="formValidate" :rules="releaseManagementList"   inline label-width="90px" class="demo-ruleForm">
+      <el-row >
+        <el-col :span="10" >
+          <el-button  class="but-col"  @click="add"  type="primary">添加</el-button>
+          <el-button  class="but-col"    @click="publish" type="primary">发布</el-button>
+          <el-button  class="but-col"   @click="revocation"   type="primary">撤销</el-button>
+          <el-button  class="but-col"  @click="remove"  type="primary">删除</el-button>
+        </el-col>
+        <el-col :span="14"  align="right">
+          <el-form-item  prop="title">
+            <el-input v-model="formValidate.title" placeholder="输入标题搜索">
+              <el-button @click="searchEvent" slot="append" icon="search"></el-button>
+            </el-input>
+          </el-form-item>
+          <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+        </el-col>
+      </el-row>
+
+      <div v-show="searchMore" ref="searchMore">
+
+        <el-form-item label="发布人:" prop="publisher">
+          <el-input v-model="formValidate.publisher" placeholder="输入发布人搜索">
+          </el-input>
+        </el-form-item>
+
+        <el-form-item label="发布时间:" prop="publishTime" >
+          <el-date-picker
+            v-model="formValidate.publishTime"
+            type="date"
+            :editable="false"
+            placeholder="选择日期">
+          </el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="是否需要回执:" >
+          <el-select filterable  v-model="formValidate.isReceipt" placeholder="请选择">
+            <el-option label="全部" value=""></el-option>
+            <el-option :label="'未发布'" :value="0"></el-option>
+            <el-option :label="'已发布'" :value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-button type="info" @click="searchEvent">查询</el-button>
+
       </div>
+    </el-form>
       <div
         id="nosocomialTable"
         ref="nosocomialTable"
@@ -223,7 +249,7 @@
   import show from "./releaseManagement_view.vue";
   //引入--添加--组件
   import add from "./releaseManagement_add.vue";
-
+  import {releaseManagementList} from '../rules'
 
   //当前组件引入全局的util
   let Util=null;
@@ -232,6 +258,7 @@
 
     data() {
       return {
+        releaseManagementList,
           url:url,
         //查询表单
         revocationUrl:'/role/remove',
@@ -324,6 +351,8 @@
           }
         },
 
+        searchMore:false,
+
       }
 
 
@@ -391,24 +420,32 @@
       },
       //搜索监听回调
 
-
+      //搜索监听回调
       searchEvent(isLoading){
-        isLoading(true);
-        this.setTableData(isLoading)
+        //        isLoading(true);
+        let isSubmit = this.handleSubmit('formValidate');
+        if(isSubmit){
+          this.setTableData()
+        }
       },
+
       /*
        * 列表查询方法
        * @param string 查询from的id
        * */
       handleSubmit(name){
+        let flag =false
         this.$refs[name].validate((valid) => {
           if (valid) {
-            this.$Message.success('提交成功!');
+            flag =true;
           } else {
             this.$Message.error('表单验证失败!');
-          }
-        })
+      }
+      })
+        return flag
       },
+
+
       /*--点击--添加--按钮--
        * 只允许添加二级
        * */
@@ -508,6 +545,14 @@
       getFormData(data){
         let myData = Util._.defaultsDeep({},data);
         return myData;
+      },
+
+      // 高级搜索按钮展开搜索表单并重新计算表格高度
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          this.setTableDynHeight()
+        })
       },
 
     },

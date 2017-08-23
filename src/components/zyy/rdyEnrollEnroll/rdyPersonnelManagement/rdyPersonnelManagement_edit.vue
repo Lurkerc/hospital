@@ -492,7 +492,6 @@
        * @param val string || number  选中毕业学校的id
        * */
       setSltOptionValue(val, id) {
-        console.log(val, id)
         this.formValidate.schoolId = id;
         this.formValidate.school = val;
       },

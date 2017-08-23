@@ -123,7 +123,7 @@
           purpose: '', // 用途
           borrowTime: '', // 借出时间
           returnTime: '', // 归还时间
-          remark: '', // 备注        
+          remark: '', // 备注
         },
         //当前组件提交(edit)数据时,ajax处理的 基础信息设置
         editMessTitle: {
@@ -204,7 +204,6 @@
       },
       /**************************** 从服务器获取编辑的数据 *****************************************/
       getDataForServer() {
-        console.log(this.id);
         this.ajax({
           ajaxSuccess: 'getDataSuccess',
           ajaxParams: {

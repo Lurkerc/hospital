@@ -318,7 +318,6 @@
             endDay && (text += ' - ' + dateText[dateType].end)
           }
         }
-        console.log(dateType, text)
         return text
       },
       /*

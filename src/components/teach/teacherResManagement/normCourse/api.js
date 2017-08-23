@@ -40,6 +40,10 @@ const api = {
     path: thisFile + '/queryRun',
     method: 'get'
   },
+  tree: { // 左侧树-查树
+    path: thisFile + 'Type/tree-by-manager',
+    method: 'get'
+  },
   upload: '/file/upload/study', // 上传附件
 };
 

@@ -26,6 +26,7 @@
           </el-form-item>-->
           <el-form-item label="状态:"  prop="title">
             <el-select v-model="formValidate.cstate" placeholder="请选择状态">
+              <el-option label="全部" value=""></el-option>
               <el-option label="待审核" value="NO_PASS"></el-option>
               <el-option label="通过" value="PASS"></el-option>
               <el-option label="驳回" value="REJECT"></el-option>
@@ -372,8 +373,8 @@
         if(!this.isSelected()) return;
         let operailityData =[];
         for(let i=0;i<this.multipleSelection.length;i++){
-          if(this.multipleSelection[i].cstate == 'PASS'){
-            this.errorMess('已通过的数据不能进行再次通过');
+          if(this.multipleSelection[i].cstate == 'PASS' || this.multipleSelection[i].cstate == 'REJECT'){
+            this.errorMess('已通过或驳回的数据不能进行通过');
             return;
           }
           operailityData.push({id:this.multipleSelection[i].cid});
@@ -388,8 +389,8 @@
         if(!this.isSelected()) return;
         let operailityData =[];
         for(let i=0;i<this.multipleSelection.length;i++){
-          if(this.multipleSelection[i].cstate == 'PASS'){
-            this.errorMess('已通过的不能驳回');
+          if(this.multipleSelection[i].cstate == 'PASS'  || this.multipleSelection[i].cstate == 'REJECT'){
+            this.errorMess('已通过或驳回的数据不能进行驳回');
             return;
           }
           operailityData.push({id:this.multipleSelection[i].cid});

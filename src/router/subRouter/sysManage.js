@@ -98,7 +98,7 @@ const sysManageRouters = {
       }
     },
     {
-      //基地管理
+      //专业基地
       path:'woodsManagement',
       name:'woodsManagement',
       component:resolve=> {

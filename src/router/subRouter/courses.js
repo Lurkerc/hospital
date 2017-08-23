@@ -8,9 +8,9 @@ const courses = {
   path: 'courses',
   name: 'courses',
   meta: {
-    requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+    requireAuth: true, // 添加该字段，表示进入这个路由是需要登录的
   },
-  component:resolve=> {
+  component: resolve => {
     require.ensure([], () => {
       resolve(require('@/components/common/rightMain'));
     }, 'courses');
@@ -18,28 +18,38 @@ const courses = {
   redirect: to => {
     return '/manage/courses/coursesStudy'
   },
-  children:[{
-    //课程学习
-    path:'coursesStudy',
-    name:'coursesStudy',
-    component:resolve=> {
-      require.ensure([], () => {
-        resolve(require('../../components/study/courses/coursesStudy/coursesStudy_list.vue'));
-      }, 'courses');
-    }
-  },
+  children: [{
+      //课程学习
+      path: 'coursesStudy',
+      name: 'coursesStudy',
+      component: resolve => {
+        require.ensure([], () => {
+          resolve(require('../../components/study/courses/coursesStudy/coursesStudy_list.vue'));
+        }, 'courses');
+      }
+    },
     {
       //课程学习
-      path:'webCourses',
-      name:'webCourses',
-      component:resolve=> {
+      path: 'webCourses',
+      name: 'webCourses',
+      component: resolve => {
         require.ensure([], () => {
           resolve(require('../../components/study/courses/webCourses/webCourses_list.vue'));
         }, 'courses');
       }
-    }
+    },
+    {
+      //课程授课审核
+      path: 'webCoursesAudit',
+      name: 'webCoursesAudit',
+      component: resolve => {
+        require.ensure([], () => {
+          resolve(require('../../components/study/courses/coursesExamine/coursesExamine_list.vue'));
+        }, 'courses');
+      }
+    },
+
   ]
 }
 
 export default courses;
-

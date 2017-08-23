@@ -94,6 +94,14 @@ const api = {
     path: '/rotaryConfig/getByKey/rotary_charging_standard-SXS',
     method: 'get'
   },
+  deposit: { // 获取实习押金
+    path: '/rotaryConfig/getByKey/rotary_deposit-SXS',
+    method: 'get'
+  },
+  accommodation: { // 获取实习生住宿费
+    path: '/rotaryConfig/getByKey/rotary_accommodation-SXS',
+    method: 'get'
+  },
   bigcaseIscopy: { // 黏贴查询是否黏贴
     path: '/rotaryConfig/getByKey/rotary_bigcase_iscopy-SXS',
     method: 'get'

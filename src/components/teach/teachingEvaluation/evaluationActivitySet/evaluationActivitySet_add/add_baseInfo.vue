@@ -275,7 +275,6 @@
           this.cancel();
           return;
         }
-        console.log(data);
         this.formValidate.tempName = data.name;
         this.formValidate.tempId = data.id;
         this.cancel();

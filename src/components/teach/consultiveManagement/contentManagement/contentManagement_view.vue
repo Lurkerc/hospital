@@ -53,7 +53,7 @@
       <el-row v-if="show">
         <el-col :span="17" :offset="2">
           <el-form-item type="附件" label="内容:" class="feildFontweight">
-            <viewUEditor style="width:700px;" :name="'ud1'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
+            <viewUEditor style="width:600px;" :name="'ud1'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
           </el-form-item>
         </el-col >
       </el-row >
@@ -169,6 +169,7 @@
 
           this.changeIndex(responseData.data.multimediaFileList[0],0);
         }
+        if(!responseData.data.content)responseData.data.content='';
         this.ueditorVal.ud1=responseData.data.content;
       },
       /*

@@ -79,7 +79,6 @@
     created() {
       //给当前组件注入全局util
       Util = this.$util;
-      console.log(this.operailityData)
     },
     mounted() {
       //初始化

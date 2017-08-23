@@ -132,11 +132,14 @@
       },
       // 切换分类
       handleClick() {
+        if (this.treeType == this.viewType) {
+          return
+        }
         this.formValidate.name = '';
         this.formValidate.title = '';
+        this.tableData.length = 0;
         this.treeDefaults.getTreeUrl = api.resourceTypeTree.path + this.viewType.toLocaleUpperCase();
         this.treeType = this.viewType;
-        this.tableData = [];
       },
 
       // 确定
@@ -176,15 +179,16 @@
        * @param val Array 存在所有的选择每一个行数据
        */
       handleSelectionChange(val) {
-        this.multipleSelection = val;
         if (!val.length) {
           return
         }
         let selArr = [];
         val.map(item => selArr.push({
+          "number": this.viewType + item.id, // 排重使用
           "fileId": item.fileId || '', // 文件ID
           "title": item.name || item.title, // 课件显示名称
           "fileName": item.fileName || '', //文件名称
+          "filePath": item.pdf || item.filePath || '', //文件路径
           "fileType": item.fileType || '', //文件类型
           "fileSize": item.size || '', //文件大小
           "viewNum": item.viewNum || 0, // 播放次数
@@ -192,7 +196,7 @@
           "resourceType": this.viewType.toLocaleUpperCase(), // 资源类型
         }))
         let oldArr = this.$util._.defaultsDeep([], this.selectTableData, selArr);
-        let temp = this.$util._.uniq(oldArr, "fileId");
+        let temp = this.$util._.uniq(oldArr, "number");
         this.selectTableData = this.$util._.defaultsDeep([], temp);
         this.$nextTick(() => {
           // 默认选中全部

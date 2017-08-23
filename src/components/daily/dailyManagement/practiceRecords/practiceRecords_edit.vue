@@ -183,7 +183,6 @@
       let userInfo = this.$store.getters.getUserInfo;
       this.data.userId = userInfo.id;
       this.name = userInfo.name;
-      console.log(this.name );
       this.init();
     },
     methods:{

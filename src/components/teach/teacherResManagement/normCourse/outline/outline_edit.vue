@@ -2,8 +2,7 @@
   <!-- 课程教学大纲 -->
   <div class="nUeditorBox" ref="nUeditorBox">
     <div v-if="isReadOnly" v-html="ueditorVal.outline"></div>
-    <show-ueditor v-else name="outline" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"
-      style="width:100%;"></show-ueditor>
+    <show-ueditor v-else name="outline" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig" style="width:100%;"></show-ueditor>
   </div>
 </template>
 
@@ -21,6 +20,7 @@
         },
         ueditorConfig: {
           //详细配置参考UEditor 官网api
+          zIndex: 9,
           initialFrameHeight: 390 //初始化编辑器高度,默认320
         },
         isReadOnly: false, // 只读

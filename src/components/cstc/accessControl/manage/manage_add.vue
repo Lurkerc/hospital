@@ -137,11 +137,11 @@
         let str3 = num.substring(4, 6);
         let head = parseInt("0x"+str3,16);
         let last = parseInt("0x"+str2+str1,16);
-        if(head < 100){
-          num = parseInt(head+"0"+last);
-        }else {
+        //if(head < 100){
+          //num = parseInt(head+"0"+last);
+        //}else {
           num = parseInt(head+""+last);
-        }
+        //}
         return num;
       },
 

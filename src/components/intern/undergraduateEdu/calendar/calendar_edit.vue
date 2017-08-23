@@ -352,7 +352,6 @@
           item = data[i];
           this.courseTimeData[item["timeId"]] = item;
         }
-        console.log(this.courseTimeData);
       },
 
 

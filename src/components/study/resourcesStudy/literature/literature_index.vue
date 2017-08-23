@@ -31,7 +31,7 @@
       {{item.brief}}
     </div>
     <div class="f13">
-      <em>{{conductDate(item.updateTime)}}</em> | <em>共{{item.pageNum}}页</em> | <em>{{!item.downloadNum?0:item.downloadNum}}次下载</em> | <em>贡献者：{{item.operator}}</em>
+      <em>{{conductDate(item.updateTime)}}</em> | <em>共{{item.pageNum}}页</em> | <em>浏览{{!item.viewNum?0:item.viewNum}}次</em> | <em>贡献者：{{item.operator}}</em>
     </div>
   </div>
   <p v-if="tableData1.length==0" style="padding-top: 50px;text-align: center;">

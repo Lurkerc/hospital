@@ -135,7 +135,6 @@
           let data = this.editMessTitle.ajaxParams.data;
           data.inventoryTime = this.conductDate(data.inventoryTime, 'yyyy-MM-dd hh:mm:ss');
           data.differenceNum = (data.expectNum - data.actualNum) || '0';
-          console.log(data.differenceNum)
           this.ajax(this.editMessTitle, isLoadingFun)
         }
       },

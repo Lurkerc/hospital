@@ -3,6 +3,10 @@ const api = {
     path: '/course/main/query-by-type',
     method: 'get',
   },
+  mainInfo: { // 最新课程-查看
+    path: '/course/main/info/',
+    method: 'get'
+  },
 
 };
 

@@ -90,7 +90,6 @@
     },
     created(){
       this.init();
-      console.log(this.operailityData);
     },
     mounted(){
     },

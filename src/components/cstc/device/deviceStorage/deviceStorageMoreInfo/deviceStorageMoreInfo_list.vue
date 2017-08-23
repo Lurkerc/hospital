@@ -188,7 +188,6 @@
       formatRMB(item) {
         if (!isNaN(item.price)) {
           item.price = (+item.price).toFixed(2)
-          console.log(item.price)
         } else {
           item.price = '0.00'
         }

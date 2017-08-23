@@ -3,14 +3,14 @@
   <div>
       <!--<div style="font-size: 18px;text-align: center"><el-button v-if="hasLive==1">正在上课时间</el-button><el-button v-if="hasLive==2">非授课时间</el-button></div>-->
     <!--有直播-->
-    <liveBase v-if="hasLive==1" @sendMes="getList"  :courseId="courseId" :liveData="getData"  :isManagement="false"  style="height:470px;">
+    <liveBase :speakData="speakData" v-if="hasLive==1" @sendMes="getList"  :courseId="courseId" :liveData="getData"  :isManagement="false"  style="height:470px;">
       <div slot="left" >
         <div style="height:280px;">
           <videojsLive v-if="getData.liveStream" :liveUrl="getData.liveStream" ></videojsLive>
         </div>
       </div>
       <div slot="right">
-        <msgList ref="msgList" style="height:470px;" :courseId="courseId" :liveData="getData"></msgList>
+        <msgList @speak="speak" ref="msgList" style="height:470px;" :courseId="courseId" :liveData="getData"></msgList>
       </div>
     </liveBase>
     <no-live style="height:470px;" v-else="hasLive==2"  :courseId="courseId"></no-live>
@@ -39,6 +39,7 @@
             }
           }
         },
+        speakData:'',  // 获取禁言的数据
         hasLive:'',  //当前是否有直播 1 有 2 没有
         getData:{},
       }
@@ -71,8 +72,14 @@
       getList(){
 
 //        this.$refs.msgList.getData()
-      }
+      },
 
+
+      //获取是否禁止发言的数据
+      speak(data){
+        this.speakData = data;
+
+      }
     },
     created(){
       this.init();

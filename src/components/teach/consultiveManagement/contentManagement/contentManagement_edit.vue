@@ -77,7 +77,7 @@
       <el-row v-if="show">
         <el-col :span="17" :offset="2">
           <el-form-item label="内容:"  class="feildFontweight">
-                <viewUEditor style="width:700px;" :name="'ud1'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
+                <viewUEditor style="width:600px;" :name="'ud1'" @storeUE="storeUE" @getUeditorVal="getUeditorVal" :ueditor-val="ueditorVal" :ueditor-config="ueditorConfig"></viewUEditor>
           </el-form-item>
         </el-col >
 
@@ -252,6 +252,7 @@
       SuccessGetCurrData(responseData){
         this.data = responseData.data;
         this.show = true;
+        if(!responseData.data.content)responseData.data.content='';
         this.ueditorVal.ud1=responseData.data.content;
         this.formValidate = this.getFormValidate(this.formValidate ,responseData.data) ;
       },

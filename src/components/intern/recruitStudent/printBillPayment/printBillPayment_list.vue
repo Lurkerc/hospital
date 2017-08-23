@@ -51,9 +51,14 @@
         <el-table-column prop="schoolName" label="学校" show-overflow-tooltip></el-table-column>
         <el-table-column prop="major" label="专业" show-overflow-tooltip></el-table-column>
         <el-table-column prop="mobile" label="手机号" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="totalCost" label="费用" show-overflow-tooltip>
+        <el-table-column prop="totalCost" label="实习总费用" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.totalCost }}
+            {{ scope.row.totalCost}}元
+          </template>
+        </el-table-column>
+        <el-table-column prop="totalZsCost" label="住宿总费用" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.totalZsCost?scope.row.totalZsCost+'元':'——'}}
           </template>
         </el-table-column>
         <el-table-column prop="isPrint" label="状态" show-overflow-tooltip>
@@ -159,7 +164,7 @@
       search() {
         this.setTableData()
       },
-      // 筛选 
+      // 筛选
       showSearchMore() {
         this.searchMore = !this.searchMore;
         this.$nextTick(function () {

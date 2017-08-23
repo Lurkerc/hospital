@@ -24,6 +24,7 @@
         },
         ueditorConfig: {
           //详细配置参考UEditor 官网api
+          zIndex: 9,
           initialFrameHeight: 200 //初始化编辑器高度,默认320
         },
         // formValidate: {

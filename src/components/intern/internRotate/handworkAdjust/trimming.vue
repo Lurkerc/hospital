@@ -28,6 +28,8 @@
       <el-col :span="1">&nbsp;</el-col>
       <el-col :span="22">
         <el-table
+          v-for="item in 1"
+          :key="item"
           align="center"
           :data="formValidate.rotaryData"
           :height="500"
@@ -72,9 +74,14 @@
             prop="ts"
             label="周期"
             align="center"
-            width="100">
+            class-name="valiTableStyle"
+            width="105">
             <template scope="scope">
-              <el-input v-model="scope.row.ts"></el-input>
+              <el-form :model="scope.row" ref="f" :rules="rules"  label-width="0" class="demo-ruleForm">
+                <el-form-item prop="ts">
+                  <el-input  v-model="scope.row.ts" placeholder="请输入内容" style="width: 85px"> <template slot="append">周</template></el-input>
+                </el-form-item>
+              </el-form>
             </template>
           </el-table-column>
           <el-table-column
@@ -334,8 +341,7 @@
          * @param isLoadingFun boolean  form表单验证是否通过
          * */
         listenSubEvent(isLoadingFun){
-          let isSubmit; //= this.submitForm("formValidate");
-          isSubmit = true;
+          let isSubmit = this.submitForm("formValidate");
           if(isSubmit) {
             if (!isLoadingFun) isLoadingFun = function () {};
             isLoadingFun(true);
@@ -351,12 +357,14 @@
          * @return flag boolean   form表单验证是否通过
          * */
         submitForm(formName){
-          let flag = false;
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
-              flag= true;
+          let flag = true;
+          for(let i =0;i< this.$refs.f.length; i++){
+            this.$refs.f[i].validate((valid) => {
+              if(!valid) {
+              flag= false;
             }
           });
+          }
           return flag;
         },
 

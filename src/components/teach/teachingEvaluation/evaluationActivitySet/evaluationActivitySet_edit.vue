@@ -306,7 +306,6 @@
           if(this.count<this.active){
             this.count=this.active;
           }
-        console.table(this.formValidate);
 
       },
 

@@ -247,7 +247,6 @@
         changePageSize (n){
           this.queryQptions.params.pageSize = n;
           this.setTableData();
-          console.log("changePageSize")
         },
         changePage (n) {
             console.log("changePage"+n)

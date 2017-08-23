@@ -156,7 +156,7 @@
             //   "roomNum": "101"
             // }
           ],
-          userList: [ // 
+          userList: [ //
             // {
             //   userId: 1,
             //   userName: '666'
@@ -331,7 +331,6 @@
       // 选择人员
       setUsers(res) {
         this.users = res;
-        console.log(res)
         this.cancel('selectUser')
         // let tempArr = [];
         // for (var i = 0, item; i < this.users.length; i++) {

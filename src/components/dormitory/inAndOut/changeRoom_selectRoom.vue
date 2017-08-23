@@ -93,7 +93,6 @@
     methods: {
       //初始化请求列表数据
       init() {
-          console.log(this.selectRoomData);
         Util = this.$util;
         //ajax请求参数设置
         this.ajax(this.buildMessTitle)

@@ -59,7 +59,7 @@
             <el-table-column label="操作" align="center" width="140">
               <template scope="scope">
                 <el-button size="small" @click="show(scope.row)">查看</el-button>
-                <el-button v-if="scope.row.publishStatus!='PUBLISH'  " size="small" type="primary" @click="edit(scope.row)">修改</el-button>
+                <el-button :disabled="scope.row.auditStatus != 'NOT_SUBMIT' && scope.row.auditStatus != 'NOT_AUDIT'" size="small" type="primary" @click="edit(scope.row)">修改</el-button>
               </template>
             </el-table-column>
             <el-table-column label="名称" prop="title" align="center" show-overflow-tooltip></el-table-column>
@@ -506,8 +506,8 @@
       audit(row){
         if(!this.isSelected()) return;
         for(let i=0;i<this.multipleSelection.length;i++){
-          if(this.multipleSelection[i].publishStatus=='PUBLISH'){
-            this.errorMess('不能删除已发布的');
+          if(this.multipleSelection[i].auditStatus!='NOT_AUDIT' || this.multipleSelection[i].publishStatus=='PUBLISH'){
+            this.errorMess('只能对未发布并待审核的数据进行审核');
             return ;
           }
         }

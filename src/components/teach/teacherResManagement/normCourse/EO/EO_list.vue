@@ -2,10 +2,10 @@
   <!-- 评测与作业 - 查看 -->
   <div>
     <el-row v-if="planDtoList!=0">
-      <el-col  v-for="(item,index) in planDtoList" :key="index">
+      <el-col v-for="(item,index) in planDtoList" :key="index">
         <h3>第{{ indexText(index) }}节：{{ item.content }}</h3>
-        <el-collapse v-model="EQActive" accordion class="eqViewItem">
-          <el-collapse-item>
+        <el-collapse v-if="showInfo" v-model="EQActive" accordion class="eqViewItem">
+          <el-collapse-item v-if="item.testingDtoList.before">
             <template slot="title">
               <span>课前评测</span>
               <el-button size="small" type="success" @click.stop="gotoTest(index,'BEFORE',item)" class="eqTestBtn">前往测验</el-button>
@@ -24,7 +24,7 @@
               </el-form>
             </el-col>
           </el-collapse-item>
-          <el-collapse-item>
+          <el-collapse-item v-if="item.testingDtoList.inProgress">
             <template slot="title">
               <span>课中评测</span>
               <el-button size="small" type="success" @click.stop="gotoTest(index,'IN_PROGRESS',item)" class="eqTestBtn">前往测验</el-button>
@@ -43,7 +43,7 @@
               </el-form>
             </el-col>
           </el-collapse-item>
-          <el-collapse-item>
+          <el-collapse-item v-if="item.testingDtoList.after">
             <template slot="title">
               <span>课后评测</span>
               <el-button size="small" type="success" @click.stop="gotoTest(index,'AFTER',item)" class="eqTestBtn">前往测验</el-button>
@@ -63,19 +63,47 @@
             </el-col>
           </el-collapse-item>
         </el-collapse>
+        <!-- 不显示详情信息 -->
+        <template v-else>
+          <el-col>
+            <el-col :span="12">
+              <p class="eqListTitle">课前评测</p>
+            </el-col>
+            <el-col :span="12">
+              <el-button size="small" type="success" @click.stop="lookTest(index,'BEFORE',item)" class="eqTestBtn">查看</el-button>
+            </el-col>
+          </el-col>
+          <el-col>
+            <el-col :span="12">
+              <p class="eqListTitle">课中评测</p>
+            </el-col>
+            <el-col :span="12">
+              <el-button size="small" type="success" @click.stop="lookTest(index,'IN_PROGRESS',item)" class="eqTestBtn">查看</el-button>
+            </el-col>
+          </el-col>
+          <el-col>
+            <el-col :span="12">
+              <p class="eqListTitle">课后评测</p>
+            </el-col>
+            <el-col :span="12">
+              <el-button size="small" type="success" @click.stop="lookTest(index,'AFTER',item)" class="eqTestBtn">查看</el-button>
+            </el-col>
+          </el-col>
+        </template>
       </el-col>
     </el-row>
-    <div  v-else style="font-size: 24px;text-align: center;line-height: 200px"> <strong>暂无测评与作业</strong></div>
+    <div v-else style="font-size: 24px;text-align: center;line-height: 200px"> <strong>暂无测评与作业</strong></div>
   </div>
 </template>
 
 <script>
   export default {
+    props: ['showInfo'],
     data() {
       return {
         EQActive: 0,
         planDtoList: [],
-        id:'',
+        id: '',
       }
     },
     methods: {
@@ -87,6 +115,13 @@
       // 前往检测
       gotoTest(index, type, itemData) {
         this.$emit('show', 'subject', {
+          type,
+          itemData
+        })
+      },
+      // 查看检测
+      lookTest(index, type, itemData) {
+        this.$emit('show', 'look', {
           type,
           itemData
         })
@@ -121,6 +156,11 @@
   .eqTestBtn {
     float: right;
     margin: 6px;
+  }
+
+  .eqListTitle {
+    text-indent: 2em;
+    line-height: 42px;
   }
 
 </style>

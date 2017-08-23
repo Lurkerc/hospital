@@ -54,6 +54,7 @@
               <el-option label="全部" value=""></el-option>
               <el-option label="待审核" value="NO_PASS"></el-option>
               <el-option label="通过" value="PASS"></el-option>
+              <el-option label="驳回" value="REJECT"></el-option>
             </el-select>
           </el-form-item>
           <el-button @click="searchEvent"    icon="search">搜索</el-button>
@@ -101,7 +102,7 @@
             width="200">
             <template scope="scope">
               <el-button size="small" @click="show(scope.row)">查看</el-button>
-              <el-button v-if="scope.row.disState!='PASS'" size="small" @click="audit(scope.row)">审核</el-button>
+              <el-button v-if="scope.row.disState!='PASS' && scope.row.disState!='REJECT'" size="small" @click="audit(scope.row)">审核</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -265,7 +266,7 @@
           createBeginTime: '',      //创建开始时间
           createEndTime: '',        //创建结束时间
           userType:'SXS',             //生源类型
-          state: '',                //状态
+          state: 'NO_PASS',                //状态
           patienNo: '',             //病历号
           sortby: '',               //排序列
           order: ''                 //升序、降序
@@ -402,8 +403,8 @@
         if(!this.isSelected()) return;
         let operailityData =[];
         for(let i=0;i<this.multipleSelection.length;i++){
-          if(this.multipleSelection[i].disState == 'PASS'){
-            this.errorMess('已通过的数据不能进行再次通过');
+          if(this.multipleSelection[i].disState == 'PASS' || this.multipleSelection[i].disState == 'REJECT'){
+            this.errorMess('已通过或驳回的数据不能进行通过');
             return;
           }
           operailityData.push(this.multipleSelection[i].diseaseId);
@@ -419,8 +420,8 @@
         if(!this.isSelected()) return;
         let operailityData =[];
         for(let i=0;i<this.multipleSelection.length;i++){
-          if(this.multipleSelection[i].disState == 'PASS'){
-            this.errorMess('已通过的不能驳回');
+          if(this.multipleSelection[i].disState == 'PASS' || this.multipleSelection[i].disState == 'REJECT'){
+            this.errorMess('已通过或驳回的数据不能进行驳回');
             return;
           }
           operailityData.push(this.multipleSelection[i].diseaseId);

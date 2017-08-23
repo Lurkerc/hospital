@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item  style="width:284px;" label="科室" prop="depId">
             <el-select style="width:284px;"  v-model="formValidate.depId" placeholder="请选择">
-              <select-option :type="type"  :unAll="unAll"></select-option>
+              <select-option :type="type"  :unAll="true"></select-option>
             </el-select>
           </el-form-item>
 
@@ -201,7 +201,11 @@
           "actuallyUserCount":'',
           "timeIds":"",
           "recordTimes":[],
-          "activityState":"",
+          "activityState":"",  //新增
+
+          isPlan:'Y',  //是否计划内
+          activityPlanId:'', //月度计划ID
+          planDetailId:'', //计划详情ID
         },
 
         "data":{

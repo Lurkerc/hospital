@@ -7,7 +7,7 @@
 <!---设置轮转科室-添加--->
 <template>
   <div>
-    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px" >
+    <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="120px" >
       <el-row >
         <el-col :span="18" :offset="3">
           <el-form-item label="培训标准名称:" prop="rtName">
@@ -16,16 +16,16 @@
         </el-col >
       </el-row >
       <el-row >
-        <el-col :span="9" :offset="3">
+        <el-col :span="18" :offset="3">
           <el-form-item label="基地名称:" prop="jdName">
             {{formValidate.jdName}}
           </el-form-item>
         </el-col >
-        <el-col :span="9"  >
+        <!--<el-col :span="9"  >
           <el-form-item label="学历:" prop="rtSchlength">
             {{formValidate.rtSchlength}}
           </el-form-item>
-        </el-col >
+        </el-col >-->
       </el-row >
       <el-row >
         <el-col  :span="18" :offset="3">

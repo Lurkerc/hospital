@@ -2,7 +2,7 @@
   <!-- 课程试运行 -->
   <div>
     <h3>请给课程“{{ operailityData.title }}”上传试运行评估表</h3>
-    <upload-file :length="1" @setUploadFiles="setUploadFiles" :uploadUrl="api.upload" style="margin-top:20px;"></upload-file>
+    <upload-file :length="1" @setUploadFiles="setUploadFiles" :uploadUrl="api.upload" :size="2097152" style="margin-top:20px;"></upload-file>
     <el-row style="margin-top:20px;">
       <el-col :span="6" :offset="6" align="center">
         <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>

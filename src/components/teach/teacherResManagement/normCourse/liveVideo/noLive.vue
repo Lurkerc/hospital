@@ -8,7 +8,8 @@
   <div class="live-container">
     <div class="live-left" style="height:100%;">
       <!--todo 点播的路径-->
-      <myVideo v-if="isShowVideo" style="height:100%;" :poster="picture" :filePath="clickHistoryData.id||'  '"></myVideo>
+      <myVideo  v-if="isShowVideo" style="height:100%;" filePath="" :poster="picture" :filePath="historyInfo.filePath||' '"></myVideo>
+      <div v-else style="font-size: 18px;text-align: center;line-height: 200px;"> <strong>正在加载中</strong></div>
       <!--<myVideo ></myVideo>-->
     </div>
     <div class="live-right">
@@ -32,9 +33,8 @@
         <p v-else   style="font-size: 24px;text-align: center;line-height: 200px">暂无直播</p>
       </div>
 
-
       <div class="nolive-container">
-        <div class="right-commonality" >
+        <div class="right-commonality">
           历史点播
         </div>
         <!--聊天列表-->
@@ -65,17 +65,28 @@
       return {
         nextPlayData:[],
         historyPlay:[],
-        index:0,
+        index:'',
+        historyInfo:{}, // 历史点播详情
         clickHistoryData:{},
 //        picture:'http://pic1.ooopic.cn/uploadfilepic/ziku/2008-08-12/OOOPIC_vipvip4_200808121222168b83104fc4bfa31c143.jpg"',
         picture:'',
-        isShowVideo:true,
+        isShowVideo:false,
         historyPlayMessTitle:{   //历史点播
           ajaxSuccess: 'updateListData',
           ajaxParams: {
             url: api.historyPlay.path,
             params: {
               courseId:this.courseId,
+            }
+          }
+        },
+        historyInfoMessTitle:{   //历史点播详情
+          ajaxSuccess: 'historyInfoData',
+          ajaxParams: {
+            url: api.historyInfo.path,
+            params: {
+              courseId:this.courseId,
+              planId:'',
             }
           }
         },
@@ -104,9 +115,8 @@
         let data = res.data;
         if(!data||data==0)return;
         this.historyPlay = data;
-        this.clickHistoryData = data[0]||{};
         this.picture = '';
-        this.change();
+        this.changeHistory(data[0]||{},0)
       },
 
 
@@ -117,14 +127,27 @@
         this.nextPlayData = data;
       },
 
+      //点播详情
+      historyInfoData(res){
+        let data = res.data;
+        if(!data||data==0)return;
+        this.historyInfo = data;
+        this.change();
+
+      },
+
+
       //点击历史点播
       changeHistory(item,index){
-
-        if(index==this.index)return;
+        if(index===this.index)return;
+        this.clickHistoryData = item;
         this.index = index;
         this.clickHistoryData = item;
-        this.change();
+        this.historyInfoMessTitle.ajaxParams.params.planId = item.id;
+        this.ajax(this.historyInfoMessTitle);
+
       },
+
 
       //
       change(){
@@ -188,7 +211,7 @@
   }
 
   .history-list-bac{
-    background: #c0fff1;
+    background: #ff8ea4;
     color: #fff;
   }
 

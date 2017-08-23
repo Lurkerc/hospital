@@ -82,14 +82,14 @@
         prop="createTime"
         label="开始时间">
         <template scope="scope">
-          {{scope.row.createTime}}
+          {{scope.row.createTime | formatDate('yyyy-MM-dd')}}
         </template>
       </el-table-column>
       <el-table-column
         prop="updateTime"
         label="结束时间">
         <template scope="scope">
-          {{scope.row.updateTime}}
+          {{scope.row.updateTime  | formatDate('yyyy-MM-dd')}}
         </template>
       </el-table-column>
       <el-table-column
@@ -123,7 +123,7 @@
     title="对话框标题"
     class-name="vertical-center-modal"
     :loading="true"
-    :width="800"
+    :width="1100"
   >
     <modal-header slot="header" :parent="self" :content="showId"></modal-header>
     <show v-if="showModal"  @cancel="cancel" :operaility-data="operailityData"></show>

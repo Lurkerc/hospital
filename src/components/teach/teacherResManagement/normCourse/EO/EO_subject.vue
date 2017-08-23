@@ -8,7 +8,7 @@
             <el-col :span="4">
               <span class="eq-index" >{{index+1}}.</span>
               <el-button type="info" size="mini">{{item.types | typeText }}</el-button>
-              <span>(2分)</span>
+              <span>{{item.optionScore}}</span>
             </el-col>
 
             <el-col :span="18" style="line-height: 40px">
@@ -59,7 +59,7 @@
       </div>
       <el-row>
         <el-col :span="10" :offset="10">
-          <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+          <load-btn :disabled="isShowBut"  @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
         </el-col>
       </el-row>
     </el-form>
@@ -70,7 +70,7 @@
 <script>
   import api from './api'
   export default {
-      props:['eqData'],
+      props:['eqData','isShow','noResidue'],
     data() {
       return {
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
@@ -82,19 +82,31 @@
         getDta :[],
         score:'',
       //todo 提交分数（还未有接口）
-        addMessTitle:{
-          ajaxSuccess:'ajaxSuccess',
-          ajaxParams:{
-            url: '',
-            method: '',
-            jsonString:true,
-          }
-        },
+        addMessTitle:{},
       }
     },
     methods: {
       // 初始化
       init() {
+
+          let courseId = this.$store.state.curriculum.look.course.id;
+          let planId = this.eqData.itemData.id||'' ;
+          let type=this.eqData.type;
+          this.addMessTitle ={
+            ajaxSuccess:'svaeScore',
+            ajaxParams:{
+              url: api.submit.path,
+              method: 'post',
+              data:{
+                courseId:courseId,   //授课课程ID
+                planId:planId,      //教学计划ID（每节课对应的ID）
+                testingId:'',   //测评ID
+                type:type,        //上课类型
+                score:'',         //总得分
+              }
+            }
+          },
+
           this.listMessTitle= {
           ajaxSuccess: 'updateListData',
             ajaxParams: {
@@ -113,6 +125,7 @@
       updateListData(responseData) {
          let data = responseData.data;
          if(!data)return;
+          this.addMessTitle.ajaxParams.data.testingId = data.testingId;
          this.getDta = this.conductData(data.questionsDtoList);
          this.tableData = [];
          this.score = data.score;
@@ -144,31 +157,46 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
-        let isSubmit = this.submitForm("formValidate");
-        if(isSubmit){
+          // this.$emit('updateView')
           if(!isLoadingFun) isLoadingFun=function(){};
+          let score =  this.disposeData(this.getFormData(this.getDta));  //返回的只是分数或者'error'
+          if(score=='error'){
+              return;
+          }
           isLoadingFun(true);
-          this.addMessTitle.ajaxParams.data=this.disposeData(this.getFormData(this.getDta));
+          this.addMessTitle.ajaxParams.data.score = score;
           this.ajax(this.addMessTitle,isLoadingFun);
-        }
       },
 
+      //保存分数成功
+      svaeScore(res){
+        this.successMess('提交成功');
+        this.$emit('updateView');
+        this.$emit('callBack');
+      },
 
       //处理要提交的数据
       disposeData(data){
-          //todo 未完善
         let temArr = [];
         let score = 0;
         for (let i=0;i<data.length;i++){
             let item = data[i];
-
+          if(!item.optionScore)item.optionScore=0;
            let type = item.types;
             if(type=='RADIO' || type == 'JUDGMENT'){ //如果是判断题或者单选题
+              if(!(item.select.trim())){
+                this.errorMess(`第${i+1}道题不能为空`);
+                return 'error';
+              }
               if(item.select == item.options){  //答题正确
-
+                score += item.optionScore;
               }
 
             }else if(type=='CHECKBOX') {  //多选题
+              if(item.select==0){
+                this.errorMess(`第${i+1}道题不能为空`);
+                return 'error'
+              }
               let error = false;
               let selects = item.select;  //用户选择的
               let len = selects.length
@@ -176,26 +204,35 @@
               if(options.length!=len){
                   continue;
               }
-              for(let k=0;K<len;k++){
-                let select = selects[k];
+              for(let h=0;h<len;h++){
+                let select = selects[h];
                 if(!item.options.includes(select)){  //其中一项答案错误
                   error = true;
                 }
               }
+              if(!error){
+                score += item.optionScore;
+              }
 
             }else {  //问答题
+              if(!(item.select.trim())){
+                this.errorMess(`第${i+1}道题不能为空`)
+                return 'error'
+              }
+              let countWeight=0;
+              let weight = 0;
               for (let l=0;l<item.keyWords.length;l++){
-                  let keyWord = keyWords[l];
+                  let keyWord = item.keyWords[l];
+                if(!keyWord.weight)keyWord.weight=1;
+                   countWeight += keyWord.weight;
                   if(item.select.includes(keyWord.tag)){  //如果里面有其中的一项，则本次正确
-//                    keyWord.weight   //权重
-
+                    weight += keyWord.weight;
                   }
               }
+              score +=  weight/countWeight*(item.optionScore).toFixed(2);
             }
-
         }
-
-        return data;
+        return score;
       },
       /*
        * 点击提交按钮 监听是否验证通过
@@ -222,8 +259,28 @@
       },
 
     },
+
+
+
+    computed:{
+      isShowBut(){
+          if(this.isShow){
+             return true ;
+          }else {
+
+             return this.noResidue;
+          }
+      }
+
+
+
+    },
+
+
+
+
     created() {
-      this.init()
+      this.init();
     }
   }
 

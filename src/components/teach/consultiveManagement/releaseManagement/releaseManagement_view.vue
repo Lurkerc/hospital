@@ -116,20 +116,20 @@
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         "data":
           {
-            "id":"1",
-            "title":"标题",
-            "publisher":"教育处",
-            "roleId":"",
-            "roleName":"",
-            "isReceipt":"1",
-            "content":"通知内容",
-            "fileList":[
-              {
-                "fileId":"1",
-                "fileName":"文件名称",
-                "fileType":"txt"
-              }
-            ]
+//            "id":"1",
+//            "title":"标题",
+//            "publisher":"教育处",
+//            "roleId":"",
+//            "roleName":"",
+//            "isReceipt":"1",
+//            "content":"通知内容",
+//            "fileList":[
+//              {
+//                "fileId":"1",
+//                "fileName":"文件名称",
+//                "fileType":"txt"
+//              }
+//            ]
           },
         showData:{},
         listMessTitle:{
@@ -158,6 +158,9 @@
           if(!data)return;
           if(!data.roleName) {
             data.roleName = '全部'
+          }
+          if(!data.content){
+            data.content = '';
           }
         this.data = data;
         this.show = true;

@@ -16,7 +16,7 @@
         </el-col >
       </el-row >
       <el-row >
-        <el-col :span="9" :offset="3">
+        <el-col :span="18" :offset="3">
           <el-form-item  style="width:300px" label="基地名称:" prop="jdName"  >
             <el-select style="width:300px" v-model="formValidate.jdName" placeholder="请选择">
               <el-option
@@ -29,7 +29,7 @@
             </el-select>
           </el-form-item>
         </el-col >
-        <el-col :span="9"  >
+        <!--<el-col :span="9"  >
           <el-form-item  style="width:350px" label="学历:" prop="rtSchlength">
             <el-select  style="width:348px" v-model="formValidate.rtSchlength" placeholder="请选择">
               <el-option
@@ -41,7 +41,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-        </el-col >
+        </el-col >-->
       </el-row >
       <el-row >
         <el-col  :span="18" :offset="3">

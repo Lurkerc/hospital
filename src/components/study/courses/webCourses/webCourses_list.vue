@@ -40,11 +40,11 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="210">
           <template scope="scope">
-            <el-button size="small" type="info" @click="manage(scope.row)">管理
+            <el-button size="small" type="primary" @click="manage(scope.row)" :disabled="scope.row.auditStatus !== 'AUDIT_SUCCESS'">管理
             </el-button>
             <el-button size="small" type="info" @click="show(scope.row)">查看
             </el-button>
-            <el-button size="small" type="success" @click="edit(scope.row)">修改
+            <el-button size="small" type="success" @click="edit(scope.row)" :disabled="scope.row.auditStatus === 'AUDIT_SUCCESS'">修改
             </el-button>
           </template>
         </el-table-column>

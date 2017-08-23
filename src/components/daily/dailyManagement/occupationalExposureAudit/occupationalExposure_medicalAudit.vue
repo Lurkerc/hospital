@@ -149,7 +149,6 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-          console.log(responseData.data);
           this.data = responseData.data;
       },
       /*

@@ -141,7 +141,7 @@
           borrowStartTime: '', // 借用开始时间
           borrowEndTime: '', // 借用结束时间
         },
-        // 
+        //
         startPickerOptions: {
           disabledDate(time) {
             // console.log(this)
@@ -198,7 +198,6 @@
       },
       // 重置
       resetForm(formName) {
-        console.log(formName);
         this.$refs[formName].resetFields();
       },
       //*----------- 表格 ------------*//

@@ -5,16 +5,18 @@
 ----------------------------------->
 <template>
   <div>
-    <el-row>
-      <el-col :span="6"><div class="cal-schoolTit" style="text-align: right;">恢复时间：</div></el-col>
-      <el-col :span="18">
+    <el-form :model="formValidate" :rules="rules" ref="formValidate" label-width="140px">
+      <el-form-item label="恢复时间：" prop="restoreTime">
         <el-date-picker
           v-model="formValidate.restoreTime"
           type="date"
-          placeholder="选择日期">
+          placeholder="选择日期"
+          :editable="false"
+        >
         </el-date-picker>
-      </el-col>
-    </el-row>
+      </el-form-item>
+    </el-form>
+
     <br />
     <el-row>
       <el-col :span="3">&nbsp;</el-col>
@@ -28,6 +30,7 @@
   /*当前组件必要引入*/
   //引入当前组件字典api
   import api from "../api.js";
+  import {pauseRotate as rules} from "../../rules.js";
   //当前组件引入全局的util
   let Util = null;
   export default{
@@ -35,6 +38,7 @@
     props: ['operailityData'],
     data() {
       return {
+        rules,
         /*pickerOptions0: {
           disabledDate(time) {
             return time.getTime() < Date.now() - 8.64e7;
@@ -74,14 +78,30 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
-        //let isSubmit = this.submitForm("formValidate");
-        //if(isSubmit) {
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
           let option = Util._.defaultsDeep({},this.saveMessTitle)
           option.ajaxParams.url += "?"+Util.serializeParams(this.getFormData(this.formValidate));
           this.ajax(option, isLoadingFun);
-        //}
+        }
+      },
+
+
+      /*
+       * 点击提交按钮 监听是否验证通过
+       * @param formName string  form表单v-model数据对象名称
+       * @return flag boolean   form表单验证是否通过
+       * */
+      submitForm(formName){
+        let flag = false;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            flag= true;
+          }
+        });
+        return flag;
       },
 
 

@@ -28,6 +28,38 @@ const api = {
     method: 'get'
   },
 
+  speak: { // 课程直播-禁言/发言
+    path: '/live/speak',
+    method: 'get'
+  },
+
+
+  camera: { // 获取房间内的摄像机列表
+    path: 'video/room/camera/list/',//{id}
+    method: 'get'
+  },
+
+  startLive: { // 老师：开始直播/切换摄像头
+    path: '/live/startLive',//{id}
+    method: 'post'
+  },
+
+  pauseLive: { //老师：暂停直播
+    path: '/live/pauseLive',//{id}
+    method: 'post'
+  },
+
+
+  stopLive: { // 老师：终止直播
+    path: '/live/stopLive',//{id}
+    method: 'post'
+  },
+
+  historyInfo: { // 老师：终止直播
+    path: '/live/history-info',//{id}
+    method: 'post'
+  },
+
 
 };
 

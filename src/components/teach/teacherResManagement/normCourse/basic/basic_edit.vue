@@ -105,7 +105,7 @@
         !this.course.operator && (this.course.operator = state.userInfo.name); // 创建人
         !this.course.createTime && (this.course.createTime = new Date()); // 创建时间
         if (this.operailityData && this.operailityData.deptId) {
-          !this.course.typeId && (this.course.typeId = this.operailityData.deptId); // 分类          
+          !this.course.typeId && (this.course.typeId = this.operailityData.deptId); // 分类
         }
       },
       // 保存数据
@@ -127,6 +127,10 @@
             flag = true;
           }
         });
+        if (flag && this.theTodoType === 'teach' && !this.course.typeId) {
+          flag = false;
+          this.errorMess('请选择分类！');
+        }
         return flag;
       },
       // 选择所属分类
@@ -155,7 +159,7 @@
       },
       // 上传封面
       upladSuccess(res, url) {
-        this.course.logo = res.path + res.name
+        this.course.logo = res.path
       },
       // 获取图片
       getPicUrl(staticUrl) {
@@ -171,7 +175,6 @@
       selectTreeCall(id, name) {
         this.course.typeId = id;
         this.course.typeName = name;
-        console.log(id, name)
       },
     },
     components: {
