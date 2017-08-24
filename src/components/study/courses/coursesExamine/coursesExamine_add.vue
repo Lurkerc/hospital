@@ -58,7 +58,7 @@
                 </el-table-column>
                 <el-table-column prop="deviceList" label="所需设备" show-overflow-tooltip>
                   <template scope="scope">
-                    {{ scope.row.deviceList.join('、') || '-' }}
+                    {{ getDeviceInfo(scope.row.deviceList) || '-' }}
                   </template>
                 </el-table-column>
               </el-table>
@@ -154,13 +154,19 @@
       // 选择时间回调
       selectTimeCall(res) {
         let data = this.formValidate.planList[this.planIndex];
+        let deviceList = [];
         data.roomId = res.reservePojectRoom.roomId || '';
         data.roomNum = res.reservePojectRoom.roomNum || '';
-        data.deviceList = res.deviceList || [];
         data.dates = res.openTime.date || '';
         data.timeId = res.openTime.timeSetId || '';
         data.startTime = (res.openTime.time || '-').split('-')[0];
         data.endTime = (res.openTime.time || '-').split('-')[1];
+        res.deviceList.map(item => deviceList.push({
+          deviceId: item.derviceTypeId,
+          nums: item.reserveNum || 0,
+          name: item.deviceTypeName,
+        }));
+        data.deviceList = deviceList;
         this.cancel('selectTime')
       },
       // 索引数字转换
@@ -174,6 +180,12 @@
         index > 9 && (str[1] = text[9]);
         str[2] = (text[bit - 1]) || '';
         return str.join('')
+      },
+      // 获取设备信息
+      getDeviceInfo(arr) {
+        let temp = [];
+        arr.map(item => temp.push(`${item.name}（${item.nums}）`));
+        return temp.join('、')
       },
       /****************************************** 弹窗相关 ********************************************/
       /*

@@ -246,7 +246,6 @@
         if (!this.checkSub()) {
           return
         }
-        console.log(this.formValidate)
         this.$emit('select', this.formValidate)
       },
       // 取消
@@ -270,7 +269,8 @@
           this.selectDeviceId.push(item.id);
           temp.push({
             derviceTypeId: item.id,
-            reserveNum: ""
+            reserveNum: "",
+            deviceTypeName: item.deviceTypeName,
           })
         })
         this.formValidate.deviceList = temp;

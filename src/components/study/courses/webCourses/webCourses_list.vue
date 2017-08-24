@@ -5,7 +5,7 @@
       <div class="listUpArea-menus">
         <div class="add-remove">
           <el-button class="but-col" @click="add" type="info">创建课程</el-button>
-          <el-button class="but-col" @click="remove" type="danger">删除授课</el-button>
+          <el-button class="but-col" @click="remove" type="danger" :disabled="cantRemove">删除授课</el-button>
         </div>
       </div>
       <div class="listUpArea-search">
@@ -42,7 +42,7 @@
           <template scope="scope">
             <el-button size="small" type="primary" @click="manage(scope.row)" :disabled="scope.row.status !== 'TG'">管理</el-button>
             <el-button size="small" type="info" @click="show(scope.row)">查看</el-button>
-            <el-button size="small" type="success" @click="edit(scope.row)" :disabled="scope.row.status === 'TG'">修改</el-button>
+            <el-button size="small" type="success" @click="edit(scope.row)" :disabled="canEdit(scope.row)">修改</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="title" label="课程名称" align="center" width="200"></el-table-column>
@@ -150,6 +150,7 @@
         modelStyle: {
           height: '650px'
         },
+        cantRemove: false, // 禁止删除
         //点击add按钮,值发生改变
         clickAddChange: false,
         //当前tree选中的node id
@@ -213,6 +214,7 @@
        */
       handleSelectionChange(val) {
         this.multipleSelection = val;
+        this.canRemove()
       },
 
       /*
@@ -348,6 +350,21 @@
         })
       },
 
+      // 是否可以删除
+      canRemove() {
+        let data = this.multipleSelection;
+        for (let i in data) { // 选项中有通过的课程不允许删除
+          if (data[i].status === 'TG') {
+            this.cantRemove = true;
+            return
+          }
+        }
+        this.cantRemove = false;
+      },
+      // 是否可修改
+      canEdit(row) {
+        return ['TG', 'DSH'].indexOf(row.status) > -1
+      },
       /****************************************** 弹窗相关 ********************************************/
       /*
        * 监听子组件通讯的方法

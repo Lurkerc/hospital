@@ -156,13 +156,13 @@
       //点击全部
       allClick() {
         this.navData = {
-          pid: this.rootId,
+          pid: '',
           id: '',
           pName: ''
         };
         this.count++;
         let formValidate = {
-          typeId: this.rootId, //分类ID
+          typeId: '', //分类ID
           type: 'ALL', //分类
         }
         this.formValidate = formValidate;
