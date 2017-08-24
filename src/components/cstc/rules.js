@@ -36,7 +36,7 @@ let centerSchedule = {
 let audio = {
   brand: baseRules.selectText,
   modelNum: baseRules.required,
-  ip: baseRules.ip
+  ip: [baseRules.required, baseRules.ip]
 };
 
 // 声像设备 - 网络音响 - 任务
@@ -48,12 +48,12 @@ let audioTask = {
 // 声像设备 - 网络音响 - 任务
 let video = {
   brand: baseRules.selectText,
-  modelNum: baseRules.required,
+  modelNum: baseRules.requiredNoEvent,
   ip: [baseRules.required, baseRules.ip],
-  loginName: baseRules.required,
-  password: baseRules.required,
-  nvrIp: baseRules.required,
-  port: baseRules.required,
+  loginName: baseRules.requiredNoEvent,
+  password: baseRules.requiredNoEvent,
+  nvrIp: baseRules.requiredNoEvent,
+  port: baseRules.requiredNoEvent,
 };
 
 /**

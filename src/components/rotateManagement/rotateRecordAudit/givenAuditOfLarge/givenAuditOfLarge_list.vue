@@ -41,8 +41,8 @@
             {{ scope.row.rotaryEndTime || '---' }}
           </template>
         </el-table-column>
-        <el-table-column label="理论考核成绩" prop="theoryScore" show-overflow-tooltip></el-table-column>
-        <el-table-column label="技能考核成绩" prop="skillScore" show-overflow-tooltip></el-table-column>
+        <!-- <el-table-column label="理论考核成绩" prop="theoryScore" show-overflow-tooltip></el-table-column>
+        <el-table-column label="技能考核成绩" prop="skillScore" show-overflow-tooltip></el-table-column> -->
         <el-table-column label="出科是否合格" prop="depQualified" show-overflow-tooltip>
           <template scope="scope">
             {{ (scope.row.depQualified || '-') | typeText }}

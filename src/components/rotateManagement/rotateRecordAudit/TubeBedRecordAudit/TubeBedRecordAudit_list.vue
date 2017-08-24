@@ -39,7 +39,8 @@
           <el-select v-model="formValidate.state" placeholder="请选择状态">
             <el-option label="全部" value=""></el-option>
             <el-option label="待审核" value="SUBMIT"></el-option>
-            <el-option label="审核通过" value="PASS"></el-option>
+            <el-option label="通过" value="PASS"></el-option>
+            <el-option label="驳回" value="REJECT"></el-option>
           </el-select>
         </el-form-item>
 
@@ -82,7 +83,7 @@
             width="200">
             <template scope="scope">
               <el-button size="small" @click="show(scope.row)">查看</el-button>
-              <el-button v-if="scope.row.state!='PASS'" size="small" @click="audit(scope.row)">审核</el-button>
+              <el-button v-if="scope.row.state!='PASS' && scope.row.state != 'REJECT'" size="small" @click="audit(scope.row)">审核</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -370,8 +371,8 @@
       pass(){
         if(!this.isSelected()) return;
         for(let i=0;i<this.multipleSelection.length;i++){
-          if(this.multipleSelection[i].state == 'PASS'){
-            this.errorMess('已通过的数据不能进行再次通过');
+          if(this.multipleSelection[i].state == 'PASS' ||this.multipleSelection[i].state == 'REJECT'){
+            this.errorMess('已通过或者已驳回的数据不能进行通过');
             return;
           }
         }
@@ -388,8 +389,8 @@
       reject(){
         if(!this.isSelected()) return;
         for(let i=0;i<this.multipleSelection.length;i++){
-          if(this.multipleSelection[i].state == 'PASS'){
-            this.errorMess('已通过的不能驳回');
+          if(this.multipleSelection[i].state == 'PASS' ||this.multipleSelection[i].state == 'REJECT'){
+            this.errorMess('已通过或者已驳回的数据不能进行驳回');
             return;
           }
         }

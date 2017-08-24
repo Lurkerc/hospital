@@ -54,7 +54,7 @@
         <el-table-column label="理论考核成绩" prop="theoryScore" width="120px">
           <template scope="scope">
             {{ scope.row.theoryScore || '---' }}
-            <el-button type="info" size="mini" @click="theory(scope.row)" v-if="!isManage && scope.row.theoryScore && scope.row.theoryIsMakeup">补考</el-button>
+            <!-- <el-button type="info" size="mini" @click="theory(scope.row)" v-if="!isManage && scope.row.theoryScore && scope.row.theoryIsMakeup">补考</el-button> -->
           </template>
         </el-table-column>
         <el-table-column label="技能考核成绩" prop="skillScore" width="120px">

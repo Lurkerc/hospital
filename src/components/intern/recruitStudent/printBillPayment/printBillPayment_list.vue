@@ -38,8 +38,7 @@
     </el-form>
     <!-- 表格 -->
     <div id="myTable" ref="myTable">
-      <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark"
-        style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="序号" type="index" width="70"></el-table-column>
         <el-table-column label="操作" align="center" width="80">
@@ -53,12 +52,12 @@
         <el-table-column prop="mobile" label="手机号" show-overflow-tooltip></el-table-column>
         <el-table-column prop="totalCost" label="实习总费用" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.totalCost}}元
+            {{ scope.row.totalCost ? scope.row.totalCost + '元' : '——'}}
           </template>
         </el-table-column>
         <el-table-column prop="totalZsCost" label="住宿总费用" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.totalZsCost?scope.row.totalZsCost+'元':'——'}}
+            {{ scope.row.totalZsCost ? scope.row.totalZsCost + '元' : '——'}}
           </template>
         </el-table-column>
         <el-table-column prop="isPrint" label="状态" show-overflow-tooltip>
@@ -70,8 +69,7 @@
     </div>
     <div style="margin: 10px;">
       <div style="float: right;">
-        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </div>
     </div>

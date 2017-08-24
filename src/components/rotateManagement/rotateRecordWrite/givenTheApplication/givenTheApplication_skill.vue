@@ -36,7 +36,7 @@
         </el-col>
         <el-col :span="20" :offset="2">
           <el-form-item label="技能操作视频：">
-            <upload-file @setUploadFiles="setUploadFiles" :length="1" :uploadFiles="uploadFiles" :size="100*1024" accept="mp4"></upload-file>
+            <upload-file @setUploadFiles="setUploadFiles" :length="1" :uploadFiles="uploadFiles" :size="2048*1024" accept="mp4"></upload-file>
           </el-form-item>
         </el-col>
       </el-form>

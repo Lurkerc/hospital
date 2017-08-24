@@ -20,7 +20,7 @@
       <el-row >
         <el-col :span="10" :offset="2">
           <el-form-item label="排列顺序" prop="moduleOrder" >
-            <el-input v-model="formValidate.moduleOrder" type="number" min="0" placeholder="请输入"></el-input>
+            <el-input v-model="formValidate.moduleOrder"  min="0" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         </el-col >
@@ -132,8 +132,9 @@
           if (!isLoadingFun) isLoadingFun = function () {
           };
           isLoadingFun(true)
-          this.formValidate.isDisplay =  this.formValidate.isDisplay+'';
-          this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          let  formValidate = this.getFormData(this.formValidate);
+          formValidate.isDisplay =  formValidate.isDisplay+'';
+          this.editMessTitle.ajaxParams.data = formValidate
           this.ajax(this.editMessTitle, isLoadingFun)
         }
       },

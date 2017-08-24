@@ -97,9 +97,9 @@
         showTypes: 'xs',
         scoreData: [],
         viewData: {
-          "ztdf": "50", // 总体得分
-          "zgdf": "100", // 最高得分
-          "zddf": "50", // 最低得分
+          "ztdf": "-", // 总体得分
+          "zgdf": "-", // 最高得分
+          "zddf": "-", // 最低得分
           "xs": { // 学生
             "df": "", // 打分
             "qz": '', // 权重
@@ -133,7 +133,7 @@
       initView() {
         let opt = {
           ajaxSuccess: res => {
-
+            // this.viewData = res.data
           },
           ajaxParams: {
             url: api.get.path,

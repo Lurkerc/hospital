@@ -166,11 +166,10 @@
         this.data = responseData.data;
         this.show = true;
         if(responseData.data.contentType=='MULTIMEDIA'&&responseData.data.multimediaFileList!=0){
-
           this.changeIndex(responseData.data.multimediaFileList[0],0);
         }
         if(!responseData.data.content)responseData.data.content='';
-        this.ueditorVal.ud1=responseData.data.content;
+        this.ueditorVal.ud1=responseData.data.content||'';
       },
       /*
        * 当前组件发送事件给父组件
@@ -226,10 +225,11 @@
             return;
         }
         let env = this.$store.getters.getEnvPath;
-        let http = env['videoHost'];
+        let http = env['http'];
         this.videoShow=false;
         this.file = item;
         this.file.path = http+this.file.filePath+this.file.fileName;
+        console.log(this.file.path);
         this.videoShow=true;
       }
     },

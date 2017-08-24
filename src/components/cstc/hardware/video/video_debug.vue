@@ -4,7 +4,7 @@
       <el-button @click="downLoad" type="text">海康插件下载</el-button>
       <el-button type="text">大华插件下载</el-button>
     </p>
-    <el-form :model="formValidate" ref="formValidate" :rules="this.$store.state.rules" label-width="90px">
+    <el-form :model="formValidate" ref="formValidate" :rules="rules" label-width="100px">
 
       <el-row>
         <el-col :span="8" :offset="2">
@@ -78,6 +78,10 @@
   //当前组件引入全局的util
   let Util = null;
 
+  import {
+    video as rules
+  } from '../../rules';
+
   import brand from './brand'; // 品牌
   import api from './api'
   import hkVideo from "./hkVideo.vue"
@@ -86,6 +90,7 @@
     props: ['operailityData'],
     data() {
       return {
+        rules,
         brand,
         //保存按钮基本信息
         loadBtn: {
@@ -138,7 +143,6 @@
        * */
       listenSubEvent(isLoadingFun) {
         let isSubmit = this.submitForm("formValidate");
-        isSubmit = true;
         if (isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
@@ -195,6 +199,9 @@
        * 连接测试
        */
       loginService() {
+        if (!this.submitForm("formValidate")) {
+          return
+        }
         if (this.isShowVideo) {
           ++this.count;
         } else {

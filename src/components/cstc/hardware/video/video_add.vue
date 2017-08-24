@@ -67,9 +67,7 @@
         <el-col :span="8" :offset="2" v-if="formValidate.locationType === 'ROOM'">
           <el-form-item label="房间号：" prop="roomId">
             <el-select v-model="formValidate.roomId" placeholder="请选择">
-              <el-option v-for="item in roomSelectList" :key="item.id" :value="item.id">
-                {{ item.roomNum }}
-              </el-option>
+              <el-option v-for="item in roomSelectList" :key="item.id" :label="item.roomNum" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -171,7 +169,7 @@
        * */
       listenSubEvent(isLoadingFun) {
         let isSubmit = this.submitForm("formValidate");
-        if (true) {
+        if (isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
           this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);

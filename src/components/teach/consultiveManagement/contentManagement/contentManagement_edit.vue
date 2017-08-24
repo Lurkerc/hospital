@@ -49,7 +49,7 @@
       <el-row >
         <el-col :span="8" :offset="2">
           <el-form-item  label="置顶顺序:" prop="newsOrder" class="feildFontweight">
-            <el-input  v-model="formValidate.newsOrder" type="number" placeholder="请输入"></el-input>
+            <el-input  v-model="formValidate.newsOrder"  placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
 
@@ -183,6 +183,7 @@
             errorTitle:'修改失败',
             ajaxSuccess:'ajaxSuccess',
             ajaxParams:{
+              jsonString:true,
               url:this.url.columnModify+this.operailityData.id,
               method:'put',
             }

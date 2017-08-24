@@ -35,7 +35,7 @@
           ajaxParams: {
             url: api.get.path,
             params: {
-              courseId:this.courseId,
+              courseId:'',
             }
           }
         },
@@ -49,7 +49,7 @@
       init(){
         let id =  this.$store.state.curriculum.look.course.id;
         this.courseId = id;
-        this.listMessTitle.ajaxParams.courseId = this.$store.state.curriculum.look.course.id;
+        this.listMessTitle.ajaxParams.params.courseId = this.$store.state.curriculum.look.course.id;
         this.ajax(this.listMessTitle);
 //        this.updateListData();
       },
@@ -63,6 +63,9 @@
             this.hasLive = '2';
           }
           if(data.live){
+//            http://192.168.1.116:8999/
+            data.live.liveStream = data.live.liveStream.replace(/\w+:\/\/\d+.\d+.\d+.\d+:\d+/,'');
+            console.log(data.liveStream);
             this.getData =data.live;
           }
 

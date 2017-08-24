@@ -15,7 +15,7 @@
     <el-row>
       <!-- 住宿信息 -->
       <el-form class="editForm internAuditExamine" ref="formValidate" :model="formValidate" :rules="rules" label-width="120px">
-        <!-- <el-col :span="11" :offset="1">
+        <el-col :span="11" :offset="1">
           <el-form-item label="是否需要住宿：">
             <el-radio class="radio" v-model="formValidate.isDormitory" label="1">需要</el-radio>
             <el-radio class="radio" v-model="formValidate.isDormitory" label="0">不需要</el-radio>
@@ -33,7 +33,7 @@
               <el-button type="info" size="small" @click="selectRoomEvn">选择宿舍</el-button>
             </el-form-item>
           </el-col>
-        </template> -->
+        </template>
 
         <!-- 审核信息 -->
         <el-col :span="22" :offset="1">
@@ -47,7 +47,7 @@
                 </el-radio-group>
               </el-form-item>
             </el-col>
-            <!-- <template v-if="formValidate.spState === 'PASS'">
+            <template v-if="formValidate.spState === 'PASS'">
               <el-col :span="12">
                 <el-form-item label="收费标准：" prop="chargeStandard">
                   <el-input v-model="formValidate.chargeStandard" :maxlength="5"></el-input>
@@ -67,7 +67,7 @@
                   </el-form-item>
                 </el-col>
               </date-group>
-            </template> -->
+            </template>
             <el-form-item label="审核意见：" style="margin-bottom:0;clear:both;">
               <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}" :maxlength="200" placeholder="请输入审核意见" v-model="formValidate.reviewMess"></el-input>
             </el-form-item>
@@ -118,19 +118,16 @@
         },
         chargeStandard: {}, // 费用
         formValidate: {
-          spState: 'PASS', // PASS通过|REJECT不通过
-          reviewMess: '', // 审核意见
-          chargeStandard: '', // 收费标准
-          buildId: '', // 大楼ID
-          roomId: '', // 房间ID
-          // objectName: this.operailityData.userName, // 被审核名称
-          objectName: '', // 被审核名称
-          isFreeSelect: '', // 是否自由选择(1自由 0 服从安排)
-          isDormitory: '', // 是否需要住宿(1是 0否),
+          spState: 'PASS',
+          chargeStandard: '',
+          reviewMess: '',
+          buildId: 0, // 大楼ID
+          roomId: 0, // 房间ID
+          objectName: this.operailityData.userName, // 被审核名称
+          isFreeSelect: '1', // 是否自由选择(1自由 0 服从安排)
+          isDormitory: '1', // 是否需要住宿(1是 0否),
           sxBeginTime: '', // 实习开始时间(yyyy-MM-dd)
           sxEndTime: '', // 实习结束时间(yyyy-MM-dd)
-          zsCost: '', // 住宿费标准
-          deposit: '', // 押金
         },
         selectData: { // 选中的宿舍信息
           buildId: 0, // 大楼
@@ -167,25 +164,24 @@
       init() {
         Util = this.$util;
         this.getPhoto();
-        this.getCost();
-        // this.getChargeStandard();
+        this.getChargeStandard();
       },
       /*
        * 点击提交按钮 监听是否提交数据
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun) {
-        // let isSubmit = this.submitForm("formValidate");
-        // if (isSubmit && this.checkRoomHasSelect()) {
-        if (!isLoadingFun) isLoadingFun = function () {};
-        isLoadingFun(true);
-        this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
-        // let data = this.addMessTitle.ajaxParams.data;
-        // data.sxBeginTime = this.conductDate(data.sxBeginTime, 'yyyy-MM-dd') || '';
-        // data.sxEndTime = this.conductDate(data.sxEndTime, 'yyyy-MM-dd') || '';
-        this.ajax(this.addMessTitle, isLoadingFun)
-        // console.log(this.addMessTitle)
-        // }
+        let isSubmit = this.submitForm("formValidate");
+        if (isSubmit && this.checkRoomHasSelect()) {
+          if (!isLoadingFun) isLoadingFun = function () {};
+          isLoadingFun(true);
+          this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          let data = this.addMessTitle.ajaxParams.data;
+          data.sxBeginTime = this.conductDate(data.sxBeginTime, 'yyyy-MM-dd') || '';
+          data.sxEndTime = this.conductDate(data.sxEndTime, 'yyyy-MM-dd') || '';
+          this.ajax(this.addMessTitle, isLoadingFun)
+          // console.log(this.addMessTitle)
+        }
       },
       /*
        * 点击提交按钮 监听是否验证通过
@@ -258,28 +254,9 @@
             this.formValidate.chargeStandard = res.data.configValue
           },
           ajaxParams: {
-            url: api.getByKey.path + 'rotary_charging_standard-SXS'
+            url: api.getByKey.path
           }
         })
-      },
-
-      // 获取相关费用
-      getCost() {
-        let cost = {
-          "rotary_deposit": "deposit", // 押金 
-          "rotary_accommodation": "zsCost", // 住宿费
-          "rotary_charging_standard": "chargeStandard" // 收费标准
-        };
-        this.$util._.mapKeys(cost, (value, key) =>
-          this.ajax({
-            ajaxSuccess: res => {
-              this.formValidate[value] = res.data.configValue
-            },
-            ajaxParams: {
-              url: api.getByKey.path + key + '-SXS'
-            }
-          })
-        )
       },
 
       // 取消

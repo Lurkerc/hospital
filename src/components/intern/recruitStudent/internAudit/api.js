@@ -16,6 +16,10 @@ const api = {
     path: thisFile + '/trialSxUser/', // {userId}
     method: 'post'
   },
+  trialAdd: { // 添加审核意见
+    path: thisFile + '/trial/add', // {userId}
+    method: 'post'
+  },
 
   /************************ 选择宿舍 *********************************/
   allBuild: { // 获取所有宿舍大楼
@@ -28,7 +32,7 @@ const api = {
   },
   /************************* 收费标准 *********************************/
   getByKey: {
-    path: '/rotaryConfig/getByKey/rotary_charging_standard-SXS',
+    path: '/rotaryConfig/getByKey/',
     method: 'get'
   },
 };

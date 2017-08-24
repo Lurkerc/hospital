@@ -66,9 +66,9 @@
         toChannelId:{id:'toChannelId',title:'培训细则'},
         convertedData:{},
         format :{
-          "规则名称":"rtName",
-          "是否住院医师":"rtrulesType",
-          "细则类型":"rtModelType",
+          "培训标准名称":"rtName",
+          "是否住院医师":"rtModelType",
+          "细则类型":"rtrulesType",
           "学历":"rtSchlength",
           "专业":"rtProclass",
           "培训方法":"rtMethod",
@@ -79,7 +79,7 @@
           "教学、科研能力培训":"rtChechRea",
           "轮转科室":"cdepName",
           "轮转目的":"depsetPurpose",
-          "轮转周期":"rtTs",
+          "培训周期":"rtTs",
           "是否必须轮转":"isMustRotaryDep",
           "任选其几":"depRandomNum",
           "任选分组号":"depGroupNo",
@@ -185,7 +185,7 @@
 
 
       cancel(){
-        this.$emit('cancel','score');
+        this.$emit('cancel','toChannel');
       },
       /*
        * 获取表单数据

@@ -232,7 +232,7 @@
           if (!isbeyond) {
             this.$Notice.warning({
               title: '超出文件大小限制',
-              desc: ` 文件  ${file.name}  太大，不能超过 ${+this.formatUploadSize(+this.fileSize) }。`
+              desc: ` 文件  ${file.name}  太大，不能超过 ${this.formatUploadSize(this.fileSize) }。`
             });
             return false;
           }
@@ -271,6 +271,8 @@
         let temp;
         let init;
         let float;
+        console.log(value);
+
         if (!value) return '0KB';
         if (value < 1024) {
           return value + 'kB';

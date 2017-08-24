@@ -250,7 +250,7 @@ let baseRules = {
    */
   greaterThanZero1: function (rule, value, callback) {
     //检验位的检测
-    if(value=='')callback();
+    if(value==''||value==null)callback();
     if (!/^\+?[1-9]\d*$/.test(value)) {
       callback(new Error('必须正整数且大于零'));
     }

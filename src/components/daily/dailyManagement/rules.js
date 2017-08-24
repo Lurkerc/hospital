@@ -24,7 +24,7 @@ let myLeave = {
   depId: [{ required: true, message: '此项不能为空'}], // 名称 - 必填
   beginDate: [{ required: true, message: '此项不能为空'}], // 名称 - 必填
   endDate: [{ required: true, message: '此项不能为空'}],// 名称 - 必填
-  explains: [baseRules.inputLen(0,500)] ,// 名称 - 必填
+  explains: [baseRules.inputLen(0,200)] ,// 名称 - 必填
 };
 
 

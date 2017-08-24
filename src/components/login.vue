@@ -2,7 +2,7 @@
   <div class="loginBox" v-loading.fullscreen.lock="isLogin">
     <div v-if="isLogin" style="text-align: center">数据加载中!</div>
     <div v-if="!isLogin">
-      <h2>南京鼓楼教学管理系统</h2>
+      <h2>{{ hospitalName }}教学管理系统</h2>
       <!--<h2>实习生管理系统-登录</h2>-->
       <br />
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
@@ -39,6 +39,7 @@
   export default {
     data() {
       return {
+        hospitalName: '',
         isLogin: false,
         loginUrl: '',
         routerPath: {},
@@ -71,7 +72,6 @@
     created() {
       Util = this.$util;
       let index = this.$store.getters.getIndexUrl;
-
       if (this.$cookie.get('Token') != null) {
         if (index != "") {
           this.$router.push(index);
@@ -79,6 +79,8 @@
           this.isLogin = true;
           this.myPromise();
         }
+      } else {
+        this.getHospitalName()
       }
       /*if (this.$cookie.get('Token') != null) {
         this.isLogin = true;
@@ -87,35 +89,35 @@
     },
     methods: {
       setMeusData(responseData) {
-        let data = responseData.data||[];
-          if(data.length>0){
-            data = data[0].children;
-          }
+        let data = responseData.data || [];
+        if (data.length > 0) {
+          data = data[0].children;
+        }
 
         data.unshift({
-          expand:true,
-          icon:"",
-          id:-100,
-          leaf:true,
-          modName:"work",
-          name:"工作台",
-          url:"",
-          children:[{
-            expand:true,
-            icon:"",
-            id:-101,
-            leaf:true,
-            modName:"workbench",
-            name:"工作台",
-            url:"",
-            children:[{
-              expand:true,
-              icon:"",
-              id:-102,
-              leaf:true,
-              modName:"work",
-              name:"工作台",
-              url:"",
+          expand: true,
+          icon: "",
+          id: -100,
+          leaf: true,
+          modName: "work",
+          name: "工作台",
+          url: "",
+          children: [{
+            expand: true,
+            icon: "",
+            id: -101,
+            leaf: true,
+            modName: "workbench",
+            name: "工作台",
+            url: "",
+            children: [{
+              expand: true,
+              icon: "",
+              id: -102,
+              leaf: true,
+              modName: "work",
+              name: "工作台",
+              url: "",
             }]
           }]
         })
@@ -146,7 +148,6 @@
 
         setTimeout(() => {
           this.$store.commit("setUserInfo", this);
-          // 系统常量
           this.$store.commit("setEnvPath", this);
         }, 100)
 
@@ -227,7 +228,20 @@
           }
         }
       },
-    }
+      // 动态获取结构名称
+      getHospitalName() {
+        let options = {
+          ajaxSuccess: (res) => {
+            // this.hospitalName = res.data.hospitalName;
+          },
+          ajaxParams: {
+            url: '/envs'
+          }
+        };
+        // this.ajax(options);
+        this.hospitalName = "中南大学湘雅三医院";
+      },
+    },
   }
 
 </script>

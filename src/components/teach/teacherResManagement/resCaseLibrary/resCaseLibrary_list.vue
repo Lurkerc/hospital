@@ -64,8 +64,7 @@
             </el-table-column>
             <el-table-column label="名称" prop="title" align="center" show-overflow-tooltip></el-table-column>
             <el-table-column label="标签" prop="tags" show-overflow-tooltip></el-table-column>
-            <el-table-column label="时长" prop="length" show-overflow-tooltip></el-table-column>
-            <el-table-column label="大小" prop="size" show-overflow-tooltip></el-table-column>
+            <el-table-column label="浏览次数" prop="viewNum" show-overflow-tooltip></el-table-column>
             <el-table-column label="上传时间" prop="createTime" width="200">
               <template scope="scope">
                 <template v-if="scope.row.createTime">

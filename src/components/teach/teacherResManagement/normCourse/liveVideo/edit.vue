@@ -40,18 +40,18 @@
           ajaxParams: {
             url: api.get.path,
             params: {
-              courseId:this.courseId,
+              courseId:'',
             }
           }
         },
         count:0,
         liveList:[
-        /*  {"ip":"192.168.1.2","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},
-          {"ip":"192.168.1.3","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},
-          {"ip":"192.168.1.8","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},
-          {"ip":"192.168.1.9","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},
-          {"ip":"192.168.1.7","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},
-          {"ip":"192.168.1.4","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0,"width":100,"height":100},*/
+//         {"ip":"192.168.1.2","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0},
+//          {"ip":"192.168.1.3","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0},
+//          {"ip":"192.168.1.8","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0},
+//          {"ip":"192.168.1.9","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0},
+//          {"ip":"192.168.1.7","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0},
+//          {"ip":"192.168.1.4","port":80,"loginName":'admin',"password":'admin12345',"isShowRight":false,"count":0},
         ],
         formValidate: {
 //          brand: 'HIKVISION', // 品牌
@@ -83,7 +83,7 @@
       init(){
         let id =  this.$store.state.curriculum.look.course.id;
         this.courseId = id;
-        this.listMessTitle.ajaxParams.courseId = this.$store.state.curriculum.look.course.id;
+        this.listMessTitle.ajaxParams.params.courseId = this.$store.state.curriculum.look.course.id;
         this.ajax(this.listMessTitle);
 //        this.updateListData();
       },
@@ -113,7 +113,7 @@
           this.showMess('当前房间没有摄像头')
         }
 
-//          this.liveList = data;
+          this.liveList = data;
 
       },
 

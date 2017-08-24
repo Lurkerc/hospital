@@ -57,7 +57,7 @@ let electrocardiogramTemplate = {
   cjlDate:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                      //住院号
   cname:[{ required: true, message: '此项必填'},baseRules.sectionVal(),baseRules.illegalChar()],   //姓名
   cage:[{ required: true, message: '此项必填'}, baseRules.numbers,baseRules.inputLen(0,20),baseRules.illegalChar()],                         //年龄
-  acaTz:[{ required: true, message: '此项必填'},baseRules.inputLen(0,20),baseRules.illegalChar()],                        //体重
+  acaTz:[{ required: true, message: '此项必填'},baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],                        //体重
   acaXgn:[baseRules.inputLen(0,50),baseRules.illegalChar()],                        //体重
   acaSszd:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                      //手术后诊断
   acaYsss:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                      //已施手术
@@ -67,7 +67,8 @@ let electrocardiogramTemplate = {
   acaMzEndtime:[{ required: true, message: '此项必填'}],                 //麻醉终止
   acaSsBegintime:[{ required: true, message: '此项必填'}],                //手术开始
   acaSsEndtime:[{ required: true, message: '此项必填'}],                 //手术终止
-
+  acaCxl:[baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],  //出血量
+  acaCnl:[baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],  //出尿量（ML单位
   acaMzff:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                       //麻醉方法
   acaShzt:[{ required: true, message: '此项必填'}],                       //术后镇疼方法
   acaYdyw:[{ required: true, message: '此项必填'}],                       //诱导药物名称
@@ -78,13 +79,13 @@ let electrocardiogramTemplate = {
   acaSsUser:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                     //手术者(维持):
   acaXs:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                        //洗手
   acaXh:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                        //巡回
-  acaQx:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                        //全血
-  acaCfxl:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                      //成分输血
-  acaDxj:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                      //代 血 浆
-  acaZsyl:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                      //总输入量
-  acaCxlo:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                      //出 血 量
-  acaNl:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                      //尿    量
-  acaQt:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                      //其 他
+  acaQx:[{ required: true, message: '此项必填'},baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],                        //全血
+  acaCfxl:[{ required: true, message: '此项必填'},baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],                      //成分输血
+  acaDxj:[{ required: true, message: '此项必填'},baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],                      //代 血 浆
+  acaZsyl:[{ required: true, message: '此项必填'},baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],                      //总输入量
+  acaCxlo:[{ required: true, message: '此项必填'},baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],                      //出 血 量
+  acaNl:[{ required: true, message: '此项必填'},baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],                      //尿    量
+  acaQt:[{ required: true, message: '此项必填'},baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],                      //其 他
 
 };
 

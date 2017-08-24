@@ -10,7 +10,7 @@
         </el-col>
         <!--搜索项-->
         <el-col :span="14"  align="right">
-          <el-form-item  prop="buildingName">
+          <el-form-item  prop="buildingName" >
             <input class="hidden">
             <el-input   v-model="formValidate.buildingName" placeholder="输入大楼名称搜索">
               <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>

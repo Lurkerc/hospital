@@ -52,7 +52,7 @@ let occupancyList = {
  * 房间使用情况
  */
 let roomUseingList = {
-  userName: [baseRules.inputLen(0,50),baseRules.illegalChar()],
+  buildingName: [baseRules.inputLen(0,50),baseRules.illegalChar()],
   roomNum: [baseRules.inputLen(0,50),baseRules.illegalChar()],
 };
 

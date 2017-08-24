@@ -41,8 +41,7 @@
     </el-form>
     <!-- 表格 -->
     <div id="myTable" ref="myTable">
-      <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark"
-        style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="序号" prop="index" width="100"></el-table-column>
         <el-table-column label="操作" align="center" width="80">
@@ -50,13 +49,13 @@
             <el-button size="small" type="success" @click="show(scope.row)">查看</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="姓名" align="center"></el-table-column>
+        <el-table-column prop="userName" label="姓名" show-overflow-tooltip></el-table-column>
         <el-table-column prop="schoolName" label="学校" show-overflow-tooltip></el-table-column>
         <el-table-column prop="major" label="专业" show-overflow-tooltip></el-table-column>
         <el-table-column prop="mobile" label="手机号" show-overflow-tooltip></el-table-column>
         <el-table-column prop="totalCost" label="实习总费用" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.totalCost}}元
+            {{ scope.row.totalCost?scope.row.totalCost+'元':'——'}}
           </template>
         </el-table-column>
         <el-table-column prop="totalZsCost" label="住宿总费用" show-overflow-tooltip>
@@ -83,8 +82,7 @@
     </div>
     <div style="margin: 10px;">
       <div style="float: right;">
-        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </div>
     </div>
@@ -95,8 +93,7 @@
       <div slot="footer"></div>
     </Modal>
     <!--导出弹窗-->
-    <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="deriveModal" class-name="vertical-center-modal"
-      :width="500">
+    <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="deriveModal" class-name="vertical-center-modal" :width="500">
       <modal-header slot="header" :content="headerContent.deriveId"></modal-header>
       <div>
         <div class="remove">确认导出吗？</div>
@@ -113,8 +110,7 @@
       <div slot="footer"></div>
     </Modal>
     <!--确认缴费弹窗-->
-    <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="payCnfModal" class-name="vertical-center-modal"
-      :width="500">
+    <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="payCnfModal" class-name="vertical-center-modal" :width="500">
       <modal-header slot="header" :content="headerContent.payCnfId"></modal-header>
       <div>
         <div class="modalTips">确认“{{ payCnfTips.userNames.join('，') }}”等{{ payCnfTips.userNames.length }}人已经缴费吗？</div>

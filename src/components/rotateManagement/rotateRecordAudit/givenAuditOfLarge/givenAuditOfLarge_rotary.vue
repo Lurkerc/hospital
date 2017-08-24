@@ -192,7 +192,11 @@
           ajaxSuccess: 'getDataSuccess',
           ajaxParams: {
             url: api.get.path + this.operailityData.examinationId,
-            method: api.get.method
+            method: api.get.method,
+            params: {
+              rtId: this.operailityData.rtId,
+              groupNo: this.operailityData.groupNo,
+            }
           }
         })
       },

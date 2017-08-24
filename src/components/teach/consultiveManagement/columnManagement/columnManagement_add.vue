@@ -20,7 +20,7 @@
       <el-row >
         <el-col :span="10" :offset="2">
           <el-form-item label="排列顺序" prop="moduleOrder" >
-            <el-input v-model="formValidate.moduleOrder" type="number" min="0" placeholder="请输入"></el-input>
+            <el-input v-model="formValidate.moduleOrder"  min="0" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
         </el-col >
@@ -137,8 +137,8 @@
           isLoadingFun(true);
 
           this.formValidate.parentId  =this.parentId;
-          this.formValidate.isDisplay =  this.formValidate.isDisplay+'';
           let  formValidate = this.getFormData(this.formValidate);
+          formValidate.isDisplay =  formValidate.isDisplay+'';
           if(!this.isRoot){
             formValidate.isHome = this.isHome;
           };

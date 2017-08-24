@@ -14,8 +14,8 @@ let columnManagementList = {
 let columnManagement = {
   name: [baseRules.requiredNoEvent, baseRules.inputLen(0,50),baseRules.illegalChar()],  //栏目名称
   moduleOrder: [baseRules.greaterThanZero1,baseRules.inputLen(0,20),baseRules.illegalChar()],  //栏目顺序
-  moduleUrl: [baseRules.inputLen(0,50),baseRules.illegalChar()],  //url
-  remark: [baseRules.inputLen(0,500),baseRules.illegalChar()],  //栏目简介
+  moduleUrl: [baseRules.inputLen(0,300),baseRules.illegalChar()],  //url
+  remark: [baseRules.inputLen(0,100),baseRules.illegalChar()],  //栏目简介
 };
 
 
