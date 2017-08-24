@@ -39,9 +39,21 @@ let audio = {
   ip: baseRules.ip
 };
 
+// 声像设备 - 网络音响 - 任务
 let audioTask = {
   name: [baseRules.required, baseRules.inputLen(1, 50)],
   path: baseRules.selectText,
+};
+
+// 声像设备 - 网络音响 - 任务
+let video = {
+  brand: baseRules.selectText,
+  modelNum: baseRules.required,
+  ip: [baseRules.required, baseRules.ip],
+  loginName: baseRules.required,
+  password: baseRules.required,
+  nvrIp: baseRules.required,
+  port: baseRules.required,
 };
 
 /**
@@ -184,6 +196,7 @@ let consumablesCount = {
 };
 
 export {
+  video,
   audio,
   audioTask,
   affairs,

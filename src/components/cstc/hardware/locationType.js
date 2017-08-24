@@ -6,7 +6,7 @@ const option = [{
   value: 'ROOM',
   label: '房间内'
 }, {
-  value: 'ORTHER',
+  value: 'OTHER',
   label: '其他'
 }];
 

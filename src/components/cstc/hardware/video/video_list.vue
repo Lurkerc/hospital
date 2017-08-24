@@ -8,15 +8,14 @@
     </div>
     <!--表格数据-->
     <div id="myTable" ref="myTable">
-      <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" highlight-current-row
-        style="width: 100%;height: 100%" @selection-change="handleSelectionChange">
+      <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%;height: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55">
         </el-table-column>
         <el-table-column align="center" label="序号" type="index" width="100"></el-table-column>
         <el-table-column align="center" label="操作" width="140">
           <template scope="scope">
-            <el-button size="small" @click="edit(scope.row.id)">修改</el-button>
-            <el-button size="small" @click="debugDevice(scope.row.id)">调试</el-button>
+            <el-button size="small" type="info" @click="edit(scope.row)">修改</el-button>
+            <el-button size="small" type="success" @click="debugDevice(scope.row)">调试</el-button>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="brand" label="品牌" width="120">
@@ -38,8 +37,7 @@
     <!--分页-->
     <div style="margin: 10px;">
       <div style="float: right;">
-        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
+        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
         </el-pagination>
       </div>
     </div>
@@ -53,13 +51,13 @@
     <!--修改-->
     <Modal :mask-closable="false" width="1000" v-model="editModal" class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="editId"></modal-header>
-      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :id="operailityData.id"></edit>
+      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
       <div slot="footer"></div>
     </Modal>
     <!--调试-->
     <Modal :mask-closable="false" width="1000" v-model="debugVideoModal" class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="debugId"></modal-header>
-      <debug-video v-if="debugVideoModal" @cancel="cancel" @edit="subCallback" :id="operailityData.id"></debug-video>
+      <debug-video v-if="debugVideoModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></debug-video>
       <div slot="footer"></div>
     </Modal>
     <!--删除弹窗-->
@@ -209,13 +207,13 @@
         this.openModel("add");
       },
       /*--点击--修改--按钮--*/
-      edit(id) {
-        this.operailityData = id;
+      edit(row) {
+        this.operailityData = row;
         this.openModel("edit");
       },
       /********* 调试 ***********/
-      debugDevice(id) {
-        this.operailityData = id;
+      debugDevice(row) {
+        this.operailityData = row;
         this.openModel("debugVideo");
       },
       /*--点击--删除--按钮--*/

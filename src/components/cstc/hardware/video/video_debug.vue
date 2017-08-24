@@ -1,6 +1,9 @@
 <template>
   <div class="editForm">
-    <p style="color: #FF0000">注：登录前请您确认是否安装插件。下载：<el-button @click="downLoad" type="text">海康插件下载</el-button>  <el-button type="text">大华插件下载</el-button></p>
+    <p style="color: #FF0000">注：登录前请您确认是否安装插件。下载：
+      <el-button @click="downLoad" type="text">海康插件下载</el-button>
+      <el-button type="text">大华插件下载</el-button>
+    </p>
     <el-form :model="formValidate" ref="formValidate" :rules="this.$store.state.rules" label-width="90px">
 
       <el-row>
@@ -80,7 +83,7 @@
   import hkVideo from "./hkVideo.vue"
 
   export default {
-    props: ['id'],
+    props: ['operailityData'],
     data() {
       return {
         brand,
@@ -110,7 +113,7 @@
           ajaxSuccess: 'saveSuccess',
           ajaxError: 'ajaxError',
           ajaxParams: {
-            url: api.modify.path + this.id,
+            url: api.modify.path + this.operailityData.id,
             method: api.modify.method
           }
         },
@@ -120,12 +123,12 @@
           ajaxSuccess: 'getDataForServer',
           ajaxError: 'ajaxError',
           ajaxParams: {
-            url: api.get.path + this.id,
+            url: api.get.path + this.operailityData.id,
             method: api.get.method
           }
         },
-        isShowVideo:false,
-        count:0,
+        isShowVideo: false,
+        count: 0,
       }
     },
     methods: {
@@ -158,7 +161,7 @@
         });
         return flag;
       },
-      saveSuccess(res){
+      saveSuccess(res) {
         this.successMess("保存成功!");
       },
       /*
@@ -177,7 +180,7 @@
         return myData;
       },
 
-      downLoad(){
+      downLoad() {
         window.open("/static/video/hikvision/WebComponents.exe");
       },
 
@@ -192,9 +195,9 @@
        * 连接测试
        */
       loginService() {
-        if(this.isShowVideo){
+        if (this.isShowVideo) {
           ++this.count;
-        }else{
+        } else {
           this.isShowVideo = true;
         }
       },
@@ -214,7 +217,7 @@
     mounted() {
       //暂时没有初始化,预留初始化入口
     },
-    components:{
+    components: {
       hkVideo
     }
   }
@@ -222,4 +225,5 @@
 </script>
 <style lang="scss">
   @import'../../../../assets/ambuf/css/manage_v1.0/editForm';
+
 </style>

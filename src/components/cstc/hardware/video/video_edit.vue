@@ -1,6 +1,6 @@
 <template>
   <div class="editForm">
-    <el-form :model="formValidate" ref="formValidate" :rules="this.$store.state.rules" label-width="90px">
+    <el-form :model="formValidate" ref="formValidate" :rules="rules" label-width="100px">
 
       <el-row>
         <el-col :span="8" :offset="2">
@@ -54,14 +54,13 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="3" :offset="1">
+        <!-- <el-col :span="3" :offset="1">
           <el-button @click="testService">连接测试</el-button>
-        </el-col>
+        </el-col> -->
 
         <el-col :span="8" :offset="2">
           <el-form-item label="设备位置：" prop="locationType">
-            <el-radio class="radio" v-model="formValidate.locationType" :label="item.value" v-if="item.value !== ''" v-for="item in locationType"
-              :key="item.value">{{ item.label }}</el-radio>
+            <el-radio class="radio" v-model="formValidate.locationType" :label="item.value" v-if="item.value !== ''" v-for="item in locationType" :key="item.value">{{ item.label }}</el-radio>
           </el-form-item>
         </el-col>
 
@@ -75,7 +74,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="8" :offset="2" v-if="formValidate.locationType === 'ORTHER'">
+        <el-col :span="8" :offset="2" v-if="formValidate.locationType === 'OTHER'">
           <el-form-item label="" prop="orther" labelWidth="0">
             <el-input v-model="formValidate.orther" placeholder="请输入所在位置"></el-input>
           </el-form-item>
@@ -104,14 +103,19 @@
   //当前组件引入全局的util
   let Util = null;
 
+  import {
+    video as rules
+  } from '../../rules';
+
   import api from './api';
   import brand from './brand'; // 品牌
   import locationType from '../locationType'; // 所在位置
 
   export default {
-    props: ['id'],
+    props: ['operailityData'],
     data() {
       return {
+        rules,
         brand,
         locationType,
         //保存按钮基本信息
@@ -145,7 +149,7 @@
           ajaxSuccess: 'ajaxSuccess',
           ajaxError: 'ajaxError',
           ajaxParams: {
-            url: api.modify.path + this.id,
+            url: api.modify.path + this.operailityData.id,
             method: api.modify.method
           }
         },
@@ -155,7 +159,7 @@
           ajaxSuccess: 'getDataForServer',
           ajaxError: 'ajaxError',
           ajaxParams: {
-            url: api.get.path + this.id,
+            url: api.get.path + this.operailityData.id,
             method: api.get.method
           }
         },
@@ -232,8 +236,7 @@
       /**
        * 连接测试
        */
-      testService() {
-      },
+      testService() {},
       /*
        * 组件初始化入口
        * */
