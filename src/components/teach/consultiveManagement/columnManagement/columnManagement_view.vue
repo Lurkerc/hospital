@@ -5,7 +5,7 @@
 
       <el-row >
         <el-col :span="10" :offset="2">
-          <el-form-item  label="通知公告:" class="feildFontweight">
+          <el-form-item  label="名称:" class="feildFontweight">
             {{data.name}}
           </el-form-item>
         </el-col >

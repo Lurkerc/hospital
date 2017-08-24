@@ -99,6 +99,7 @@
               <el-button
                 size="small"
                 type="warning"
+                :disabled="scope.row.publishStatus == 'PUBLISH'"
                 @click="edit(scope.row)">修改
               </el-button>
             </template>
@@ -468,18 +469,24 @@
       remove(){
           if(!this.isSelected()) return;
           this.operailityData = this.multipleSelection;
+        for(let i=0 ;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].publishStatus=='PUBLISH'){
+            this.showMess('只能对未发布进行删除');
+            return false;
+          }
+        }
           this.openModel('remove')
       },
 
       /*--点击--撤销--按钮--*/
       revocation(){
           if(!this.isSelected(true)) return;
-        for(let i=0 ;i<this.multipleSelection.length;i++){
-          if(this.multipleSelection[i].publishStatus=='UNPUBLISH'){
-            this.showMess('只能对已发布进行撤销');
-            return false;
+          for(let i=0 ;i<this.multipleSelection.length;i++){
+            if(this.multipleSelection[i].publishStatus=='UNPUBLISH'){
+              this.showMess('只能对已发布进行撤销');
+              return false;
+            }
           }
-        }
           this.operailityData = this.multipleSelection;
           this.openModel('revocation')
       },

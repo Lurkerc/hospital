@@ -70,7 +70,7 @@
       <el-row v-show="formValidate.contentType=='MULTIMEDIA'">
         <el-col :span="17" :offset="2">
           <el-form-item type="附件" label="多媒体文件:" class="feildFontweight">
-            <upload-file :accept="'mp4,flv,rmvb,rm,avi'"  :unSize="true" :uploadFiles="data.multimediaFileList" @setUploadFiles="setMultimediaFileIds">   </upload-file>
+            <upload-file :accept="'mp4,flv,rmvb,rm,avi'"  :size="500*1024" :uploadFiles="data.multimediaFileList" @setUploadFiles="setMultimediaFileIds">   </upload-file>
           </el-form-item>
         </el-col >
       </el-row>
