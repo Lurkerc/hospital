@@ -15,6 +15,15 @@ const api = {
     path: 'reserve/room/time/select/list',
     method: 'get'
   },
+  info: { // 课程-查看
+    path: '/course/info/', //{id}
+    method: 'get',
+  },
+
+  mainInfo: { // 最新课程-查看
+    path: '/course/main/info/',
+    method: 'get'
+  },
 };
 
 export default api

@@ -19,6 +19,8 @@
       <el-button type="success" @click="saveCall('DSH')">提交审核</el-button>
     </div>
     <!-- 内容 start -->
+    <!-- 加载动画 -->
+    <loading v-if="menuActive === 'load'" ref="load"></loading>
     <!-- 授课安排 -->
     <teach-edit v-if="menuActive === 'teach'" ref="teach" :selectCourse="selectCourse"></teach-edit>
     <!-- 课程基本信息 -->
@@ -49,6 +51,8 @@
   /*当前组件必要引入*/
   import layout from "../../../teach/teacherResManagement/normCourse/_components/layout"; // 基础布局
   import nmenuItem from '../../../teach/teacherResManagement/normCourse/_components/menu'; // 菜单项
+
+  import loading from "../../../teach/teacherResManagement/normCourse/load/loading"; // 加载动画
 
   import teachEdit from '../../../teach/teacherResManagement/normCourse/teach/teach_edit'; // 授课安排
   import basicEdit from '../../../teach/teacherResManagement/normCourse/basic/basic_edit'; // 授课基本信息
@@ -106,7 +110,7 @@
         this.ajax({
           ajaxSuccess: res => {
             this.$store.commit('curriculum/data/updateData', res.data);
-            this.menuActive = 'teach';
+            setTimeout(() => this.menuActive = 'teach', 1000)
           },
           ajaxParams: {
             url: this.getUrl.path + this.operailityData.id,
@@ -140,6 +144,7 @@
     mounted() {},
 
     components: {
+      loading,
       layout,
       nmenuItem,
       teachEdit,

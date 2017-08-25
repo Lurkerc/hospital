@@ -58,7 +58,7 @@
         </div>
       </div>
     </el-form>
-    <div v-else style="font-size: 24px;text-align: center;line-height: 200px"> <strong>暂无试题</strong></div>
+    <div v-else style="text-align: center;line-height: 480px"> <strong>暂无试题</strong></div>
   </div>
 </template>
 

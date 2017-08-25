@@ -172,6 +172,7 @@
   .tvmInfoContent {
     // 内容区域
     height: 100%;
+    position: relative;
     z-index: 1;
   }
   /*

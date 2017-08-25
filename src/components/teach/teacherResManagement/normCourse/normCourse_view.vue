@@ -22,6 +22,8 @@
       <slot></slot>
     </div>
     <!-- 内容 start -->
+    <!-- 加载动画 -->
+    <loading v-if="menuActive === 'load'" ref="load"></loading>
     <!-- 课程基本信息 -->
     <!-- <basic-view v-if="menuActive === 'basic'"></basic-view> -->
     <!-- 公告 -->
@@ -49,6 +51,8 @@
   /*当前组件必要引入*/
   import layout from "./_components/layout"; // 基础布局
   import nmenuItem from './_components/menu'; // 菜单项
+
+  import loading from "./load/loading"; // 加载动画
 
   // import basicView from './basic/basic_view'; // 课程基本信息
   // import noticeView from './notice/notice_view'; // 公告
@@ -87,7 +91,7 @@
             this.$store.commit('curriculum/look/updateData', res.data);
             this.title = this.$store.state.curriculum.look.course.title;
             this.logo = this.$store.state.curriculum.look.course.logo;
-            this.menuActive = 'intro';
+            setTimeout(() => this.menuActive = 'intro', 1000)
           },
           ajaxParams: {
             url: this.lookUrl,
@@ -116,6 +120,7 @@
     },
 
     components: {
+      loading,
       layout,
       nmenuItem,
       // basicView,

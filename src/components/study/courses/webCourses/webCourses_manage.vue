@@ -23,6 +23,8 @@
       <slot></slot>
     </div>
     <!-- 内容 start -->
+    <!-- 加载动画 -->
+    <loading v-if="menuActive === 'load'"></loading>
     <!-- 课程基本信息 -->
     <basic-view v-if="menuActive === 'basic'"></basic-view>
     <!-- 公告 -->
@@ -34,7 +36,9 @@
     <!-- 教学计划 -->
     <plan-view v-if="menuActive === 'plan'"></plan-view>
     <!-- 课件 -->
-    <courseware-view v-if="menuActive === 'courseware'" :showProgress="true"></courseware-view>
+    <keep-alive>
+      <courseware-view v-if="menuActive === 'courseware'" :showProgress="true"></courseware-view>
+    </keep-alive>
     <!-- 课程直播 -->
     <live-video-view v-if="menuActive === 'liveVideo'"></live-video-view>
     <!-- 评测与作业 -->
@@ -52,6 +56,8 @@
   /*当前组件必要引入*/
   import layout from "../../../teach/teacherResManagement/normCourse/_components/layout"; // 基础布局
   import nmenuItem from '../../../teach/teacherResManagement/normCourse/_components/menu'; // 菜单项
+
+  import loading from "../../../teach/teacherResManagement/normCourse/load/loading"; // 加载动画
 
   import basicView from '../../../teach/teacherResManagement/normCourse/basic/basic_view'; // 课程基本信息
   import noticeView from '../../../teach/teacherResManagement/normCourse/notice/notice_edit'; // 公告
@@ -92,7 +98,7 @@
             this.$store.commit('curriculum/look/updateData', res.data);
             this.title = this.$store.state.curriculum.look.course.title;
             this.logo = this.$store.state.curriculum.look.course.logo;
-            this.menuActive = 'notice';
+            setTimeout(() => this.menuActive = 'notice', 1000)
           },
           ajaxParams: {
             url: api.info.path + this.operailityData.id,
@@ -122,6 +128,7 @@
     },
 
     components: {
+      loading,
       layout,
       nmenuItem,
       basicView,

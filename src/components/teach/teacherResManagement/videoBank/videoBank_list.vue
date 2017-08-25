@@ -59,12 +59,12 @@
             <el-table-column label="操作" align="center" width="140">
               <template scope="scope">
                 <el-button size="small" @click="show(scope.row)">查看</el-button>
-                <el-button :disabled="scope.row.auditStatus != 'NOT_SUBMIT' && scope.row.auditStatus != 'NOT_AUDIT'" size="small" type="primary" @click="edit(scope.row)">修改</el-button>
+                <el-button :disabled="scope.row.publishStatus == 'PUBLISH' " size="small" type="primary" @click="edit(scope.row)">修改</el-button>
               </template>
             </el-table-column>
             <el-table-column label="名称" prop="name" align="center" show-overflow-tooltip></el-table-column>
             <el-table-column label="标签" prop="tags" show-overflow-tooltip></el-table-column>
-            <el-table-column label="时长" prop="length" show-overflow-tooltip></el-table-column>
+            <el-table-column label="时长" prop="length" show-overflow-tooltip><template scope="scope">{{scope.row.length |formatLength}}</template></el-table-column>
             <el-table-column label="大小" prop="size" show-overflow-tooltip>
               <template scope="scope">
                 {{scope.row.size | formatSize}}

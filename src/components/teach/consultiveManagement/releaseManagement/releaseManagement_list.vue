@@ -4,7 +4,7 @@
 
 <template>
   <div id="nosocomial" ref="nosocomial" class="modal">
-    <el-form  :model="formValidate" ref="formValidate" :rules="releaseManagementList"   inline label-width="90px" class="demo-ruleForm">
+    <el-form  :model="formValidate" ref="formValidate" :rules="releaseManagementList"   inline label-width="100px" class="demo-ruleForm">
       <el-row >
         <el-col :span="10" >
           <el-button  class="but-col"  @click="add"  type="primary">添加</el-button>
@@ -29,9 +29,9 @@
           </el-input>
         </el-form-item>
 
-        <el-form-item label="发布时间:" prop="publishTime" >
+        <el-form-item label="发布时间:" prop="publishDate" >
           <el-date-picker
-            v-model="formValidate.publishTime"
+            v-model="formValidate.publishDate"
             type="date"
             :editable="false"
             placeholder="选择日期">
@@ -41,8 +41,8 @@
         <el-form-item label="是否需要回执:" >
           <el-select filterable  v-model="formValidate.isReceipt" placeholder="请选择">
             <el-option label="全部" value=""></el-option>
-            <el-option :label="'未发布'" :value="0"></el-option>
-            <el-option :label="'已发布'" :value="1"></el-option>
+            <el-option :label="'不需要'" :value="'0'"></el-option>
+            <el-option :label="'需要'" :value="'1'"></el-option>
           </el-select>
         </el-form-item>
         <el-button type="info" @click="searchEvent">查询</el-button>
@@ -88,6 +88,7 @@
               <el-button
                 size="small"
                 type="warning"
+                :disabled="scope.row.publishStatus =='PUBLISH'"
                 @click="edit(scope.row)">修改
               </el-button>
             </template>
@@ -194,7 +195,7 @@
 
           <!--删除弹窗-->
           <Modal
-            close-on-click-modal="false"
+            :mask-closable="false"
             height="200"
             v-model="removeModal"
             title="对话框标题"
@@ -207,7 +208,7 @@
           </Modal>
           <!--发布弹窗-->
           <Modal
-            close-on-click-modal="false"
+            :mask-closable="false"
             height="200"
             v-model="publishModal"
             title="对话框标题"
@@ -222,7 +223,7 @@
           <!---->
           <!--撤销弹窗-->
           <Modal
-            close-on-click-modal="false"
+            :mask-closable="false"
             height="200"
             v-model="revocationModal"
             title="对话框标题"
@@ -264,21 +265,21 @@
         revocationUrl:'/role/remove',
         formValidate: {
           title: '',      //标题
-          isReceipt:0,  //是否需要回执
+          isReceipt:'0',  //是否需要回执
           publisher:'',  //发布人
           publishDate:'',  //发布时间
         },
 
         //获取到的数据
         "tableData":[
-          {
-            "id":"1",
-            "title":"标题",
-            "publisher":"教育处",
-            "isReceipt":"0",
-            "publishDate":"2016-01-02",
-            "publishStatus":"PUBLISH"
-          }
+//          {
+//            "id":"1",
+//            "title":"标题",
+//            "publisher":"教育处",
+//            "isReceipt":"0",
+//            "publishDate":"2016-01-02",
+//            "publishStatus":"PUBLISH"
+//          }
         ],
         totalCount:0,
 
@@ -459,11 +460,25 @@
       remove(){
           if(!this.isSelected()) return;
           this.operailityData = this.multipleSelection;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].publishStatus == 'PUBLISH'){
+            this.showMess('不能删除已发布的');
+            return;
+          }
+
+        }
           this.openModel('remove')
       },
       publish(){
         if(!this.isSelected(true)) return;
         this.operailityData = this.multipleSelection;
+        for(let i=0;i<this.multipleSelection.length;i++){
+            if(this.multipleSelection[i].publishStatus == 'PUBLISH'){
+              this.showMess('已发布的不能再次发布');
+              return;
+            }
+
+        }
         this.openModel('publish')
       },
 
@@ -474,6 +489,12 @@
       revocation(){
         if(!this.isSelected(true)) return;
         this.operailityData = this.multipleSelection;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].publishStatus == 'UNPUBLISH'){
+            this.showMess('未发布的不能撤销');
+            return;
+          }
+        }
         this.openModel('revocation')
       },
       /*

@@ -41,14 +41,16 @@
       </el-col>
       <el-col>
         <h3>意见或者建议</h3>
-        <template v-if="viewData[showTypes].fkList.length">
-          <el-col v-for="(item,index) in viewData[showTypes].fkList" :key="index">{{ item }}</el-col>
+        <template v-if="fkList.length">
+          <el-col v-for="(item,index) in fkList" :key="index">
+            <p class="tqvijkItem">{{ index + 1 }}. {{ item }}</p>
+          </el-col>
         </template>
         <p v-else class="tqviMangeTips">暂无</p>
       </el-col>
       <el-col class="tqviMangeItem">
         <h3>各项分数</h3>
-        <el-table ref="singleTable" :data="viewData[showTypes].optionList" style="width: 100%">
+        <el-table ref="singleTable" :data="optionList" style="width: 100%">
           <el-table-column type="index" label="编号" width="70">
           </el-table-column>
           <el-table-column property="title" label="项目" oshow-overflow-tooltip>
@@ -57,28 +59,28 @@
           </el-table-column>
           <el-table-column property="great" label="优">
             <template scope="scope">
-              <el-radio-group v-model="scope.row.point" @change="getAllScore">
+              <el-radio-group v-model="scope.row.pjdf">
                 <el-radio :label="scope.row.great">{{ scope.row.great }}</el-radio>
               </el-radio-group>
             </template>
           </el-table-column>
           <el-table-column property="good" label="良">
             <template scope="scope">
-              <el-radio-group v-model="scope.row.point" @change="getAllScore">
+              <el-radio-group v-model="scope.row.pjdf">
                 <el-radio :label="scope.row.good">{{ scope.row.good }}</el-radio>
               </el-radio-group>
             </template>
           </el-table-column>
           <el-table-column property="avg" label="中">
             <template scope="scope">
-              <el-radio-group v-model="scope.row.point" @change="getAllScore">
+              <el-radio-group v-model="scope.row.pjdf">
                 <el-radio :label="scope.row.avg">{{ scope.row.avg }}</el-radio>
               </el-radio-group>
             </template>
           </el-table-column>
           <el-table-column property="bad" label="差">
             <template scope="scope">
-              <el-radio-group v-model="scope.row.point" @change="getAllScore">
+              <el-radio-group v-model="scope.row.pjdf">
                 <el-radio :label="scope.row.bad">{{ scope.row.bad }}</el-radio>
               </el-radio-group>
             </template>
@@ -96,30 +98,32 @@
       return {
         showTypes: 'xs',
         scoreData: [],
+        fkList: [],
+        optionList: [],
         viewData: {
-          "ztdf": "-", // 总体得分
-          "zgdf": "-", // 最高得分
-          "zddf": "-", // 最低得分
-          "xs": { // 学生
-            "df": "", // 打分
-            "qz": '', // 权重
-            "dfrs": '', // 打分人数
-            "fkList": [], // 意见或建议 的集合
-            "optionList": [] // 评价项 集合
+          ztdf: "-", // 总体得分
+          zgdf: "-", // 最高得分
+          zddf: "-", // 最低得分
+          xs: { // 学生
+            df: "", // 打分
+            qz: '', // 权重
+            dfrs: '', // 打分人数
+            fkList: [], // 意见或建议 的集合
+            optionList: [] // 评价项 集合
           },
-          "th": { // 同行
-            "df": "", // 打分
-            "qz": '', // 权重
-            "dfrs": '', // 打分人数
-            "fkList": [], // 意见或建议 的集合
-            "optionList": [] // 评价项 集合
+          th: { // 同行
+            df: "", // 打分
+            qz: '', // 权重
+            dfrs: '', // 打分人数
+            fkList: [], // 意见或建议 的集合
+            optionList: [] // 评价项 集合
           },
-          "sj": { // 上级
-            "df": "", // 打分
-            "qz": '', // 权重
-            "dfrs": '', // 打分人数
-            "fkList": [], // 意见或建议 的集合
-            "optionList": [] // 评价项 集合
+          sj: { // 上级
+            df: "", // 打分
+            qz: '', // 权重
+            dfrs: '', // 打分人数
+            fkList: [], // 意见或建议 的集合
+            optionList: [] // 评价项 集合
           },
         }
       }
@@ -127,13 +131,13 @@
     methods: {
       init() {
         this.initView();
-        this.initScoreData()
       },
       // 初始化数据
       initView() {
         let opt = {
           ajaxSuccess: res => {
-            // this.viewData = res.data
+            this.viewData = res.data[0]
+            this.initViewData()
           },
           ajaxParams: {
             url: api.get.path,
@@ -146,7 +150,9 @@
       },
       // 初始化查看数据
       initViewData() {
-
+        this.initScoreData()
+        this.fkList = this.viewData[this.showTypes].fkList;
+        this.optionList = this.viewData[this.showTypes].optionList;
       },
       // 初始化打分组成
       initScoreData() {
@@ -156,9 +162,9 @@
         this.$util._.mapKeys(user, (val, index) => {
           temp.push({
             user: userText[index], // 用户角色
-            df: this.viewData[val].df, // 打分
-            dfrs: this.viewData[val].dfrs, // 打分人数
-            qz: this.viewData[val].qz, // 权重
+            df: this.viewData[val].df || '', // 打分
+            dfrs: this.viewData[val].dfrs || 0, // 打分人数
+            qz: this.viewData[val].qz || '', // 权重
           })
         })
         this.scoreData = temp;
@@ -184,7 +190,8 @@
     margin-top: 16px;
   }
 
-  .tqviMangeTips {
+  .tqviMangeTips,
+  .tqvijkItem {
     line-height: 32px;
   }
 

@@ -13,7 +13,7 @@
             </el-form-item>
           </el-form>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="5" :offset="1">
           <el-button @click="podIdChange(dep)">确定</el-button>
         </el-col>
       </el-row>

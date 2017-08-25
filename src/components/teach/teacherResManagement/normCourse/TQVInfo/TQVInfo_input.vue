@@ -10,7 +10,7 @@
         <el-col>
           <el-form-item label="总体印象：">
             <el-radio-group v-model="formValidate.ztyx">
-              <el-radio v-for="(item,index) in tqvAllData" :key="index" :label="item.text" :disabled="!!formValidate.evaluateId">{{ item.text }}</el-radio>
+              <el-radio v-for="(item,index) in tqvAllData" :key="index" :label="item.text" :disabled="formValidate.evaluateId === -1">{{ item.text }}</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -26,38 +26,38 @@
         <el-table-column property="great" label="优">
           <template scope="scope">
             <el-radio-group v-model="scope.row.point" @change="getAllScore">
-              <el-radio :label="scope.row.great" :disabled="!!formValidate.evaluateId">{{ scope.row.great }}</el-radio>
+              <el-radio :label="scope.row.great" :disabled="formValidate.evaluateId === -1">{{ scope.row.great }}</el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
         <el-table-column property="good" label="良">
           <template scope="scope">
             <el-radio-group v-model="scope.row.point" @change="getAllScore">
-              <el-radio :label="scope.row.good" :disabled="!!formValidate.evaluateId">{{ scope.row.good }}</el-radio>
+              <el-radio :label="scope.row.good" :disabled="formValidate.evaluateId === -1">{{ scope.row.good }}</el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
         <el-table-column property="avg" label="中">
           <template scope="scope">
             <el-radio-group v-model="scope.row.point" @change="getAllScore">
-              <el-radio :label="scope.row.avg" :disabled="!!formValidate.evaluateId">{{ scope.row.avg }}</el-radio>
+              <el-radio :label="scope.row.avg" :disabled="formValidate.evaluateId === -1">{{ scope.row.avg }}</el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
         <el-table-column property="bad" label="差">
           <template scope="scope">
             <el-radio-group v-model="scope.row.point" @change="getAllScore">
-              <el-radio :label="scope.row.bad" :disabled="!!formValidate.evaluateId">{{ scope.row.bad }}</el-radio>
+              <el-radio :label="scope.row.bad" :disabled="formValidate.evaluateId === -1">{{ scope.row.bad }}</el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
       </el-table>
       <h3 class="marginTop20">课堂教学评价</h3>
-      <el-input type="textarea" :autosize="{ minRows:4, maxRows: 6}" :readonly="!!formValidate.evaluateId" placeholder="请输入内容" v-model="formValidate.fk">
+      <el-input type="textarea" :autosize="{ minRows:4, maxRows: 6}" :readonly="formValidate.evaluateId === -1" placeholder="请输入内容" v-model="formValidate.fk">
       </el-input>
       <el-col align="center" class="marginTop20">
         <!-- 没有评价表则不能进行提交 -->
-        <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn" v-show="!formValidate.evaluateId"></load-btn>
+        <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn" v-show="formValidate.evaluateId !== -1"></load-btn>
       </el-col>
     </el-row>
   </div>
@@ -136,12 +136,14 @@
       initFormValidate(data) {
         if (data.ztyx) {
           this.formValidate = data;
-          this.formValidate.evaluateId = 1;
+          this.formValidate.evaluateId = -1; // 标记使用
         } else {
           let tableData = this.evaluate[this.formValidate.types.toLocaleLowerCase() + 'Evaluate']; // 获取对应角色的评价表数据
           if (tableData.length) {
             this.formValidate.courseId = tableData[0].courseId;
             this.formValidate.evaluateId = tableData[0].evaluateId;
+          } else {
+            this.formValidate.evaluateId = -1; // 标记使用
           }
           tableData.map(item => {
             let temp = this.$util._.defaultsDeep({}, item);

@@ -4,11 +4,11 @@
     <!-- 课件选择 -->
     <el-row>
       <el-col>
-        <el-select v-model="selectObj.planIndex" placeholder="请选择" @change="getCWData">
+        <el-select v-model="selectObj.planIndex" placeholder="请选择" @change="getCWData(true)">
           <el-option v-for="(item,index) in planDtoList" :key="item.id" :label="'第'+indexText(index)+'节'" :value="index">
           </el-option>
         </el-select>
-        <el-select v-model="selectObj.types" placeholder="请选择" @change="getCWData">
+        <el-select v-model="selectObj.types" placeholder="请选择" @change="getCWData(true)">
           <el-option v-for="item in theCWTypes" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -20,8 +20,8 @@
       </el-col>
     </el-row>
     <div class="cmPlayerBox" v-if="cwSelectList.length">
-      <video-view v-if="resourceType === 'video'" :filePath="viewData.filePath" :videoType="viewData.videoType"></video-view>
-      <pdf-view v-if="resourceType === 'pdf'" :pdfSrc="viewData.pdfSrc"></pdf-view>
+      <video-view v-if="resourceType === 'video' && changePlayer" :filePath="viewData.filePath" :videoType="viewData.videoType"></video-view>
+      <pdf-view v-if="resourceType === 'pdf' && changePlayer" :pdfSrc="viewData.pdfSrc"></pdf-view>
       <!-- <atlas-view v-if="resourceType === 'atlas'" :operaility-data="viewData"></atlas-view> -->
       <p v-if="resourceType === 'error'" class="coursewareViewError">该课件不支持预览</p>
     </div>
@@ -58,10 +58,11 @@
 
         // 查看数据
         viewData: {},
+        changePlayer: true,
         resourceType: '', // 查看资源类型
         playerType: ['video', 'pdf', 'atlas'], // 预览类型
         playerRules: [ // 文件后缀对应的预览类型
-          ["mp4", "ogg", "webm"],
+          ["mp4", "ogg", "webm"], // MP4|FLV|RMVB|RM|AVI
           ['pdf'],
         ],
       }
@@ -70,17 +71,17 @@
       // 初始化
       init() {
         this.planDtoList = this.$store.state.curriculum.look.planDtoList;
-        if (this.cwData.planIndex instanceof Array) {
+        if (this.cwData.types) {
           this.selectObj.planIndex = this.cwData.planIndex;
-          this.selectObj.types = this.cwData.types === "IN_PROGRESS" ? 'inProgress' : this.cwData.types;
+          this.selectObj.types = this.cwData.types;
           this.activeName = this.cwData.viewIndex.toString();
         }
-        console.log(this.cwData)
         this.getCWData()
       },
       // 选择资源
       handleClick() {
-        this.showFile(this.cwSelectList[this.activeName])
+        this.changePlayer = false;
+        setTimeout(() => this.showFile(this.cwSelectList[this.activeName]), 10)
       },
       // 预览
       showFile(row) {
@@ -89,7 +90,6 @@
           this.resourceType = '';
           fileType = row.filePath.split('.').pop();
           fileType = fileType ? fileType.toLocaleLowerCase() : null;
-          console.log(fileType)
           for (let i in this.playerRules) {
             if (this.playerRules[i].indexOf(fileType) > -1) {
               this.resourceType = this.playerType[i];
@@ -121,9 +121,11 @@
           //   id: row.resourceId
           // };
           // this.openModel('show');
+          this.resourceType = 'error';
         } else {
           this.resourceType = 'error';
         }
+        this.changePlayer = true;
       },
       // 索引数字转换
       indexText(index) {
@@ -138,21 +140,20 @@
         return str.join('')
       },
       // 获取课件
-      getCWData() {
+      getCWData(init) {
+        this.changePlayer = false;
+        if (init) {
+          this.activeName = '0'
+        }
         this.cwSelectList = this.planDtoList[this.selectObj.planIndex].wareDtoList[this.selectObj.types] || [];
         if (this.cwSelectList.length) {
-          this.showFile(this.cwSelectList[0])
+          setTimeout(() => this.showFile(this.cwSelectList[0]), 10)
         }
       },
       // 获取路径
       getPath(staticUrl) {
         return staticUrl ? (this.$store.state.envPath.http + staticUrl) : staticUrl;
       },
-    },
-    watch: {
-      // selectCWObj(val) {
-      //   console.log('加载对应的播放器')
-      // }
     },
     components: {
       videoView,

@@ -11,8 +11,7 @@
         </div>
       </el-col>
       <el-col :span="12" align="right">
-        <el-date-picker v-model="selDay" type="date" placeholder="选择日期" @change="getDaysForServer">
-        </el-date-picker>
+        <el-date-picker v-model="selDay" type="date" placeholder="选择日期" @change="getDaysForServer"></el-date-picker>
       </el-col>
     </el-row>
 
@@ -39,7 +38,16 @@
           </td>
           <td v-for="(dataItem,index) in roomItem.dataList" :key="roomItem.roomId + '-' + index" align="center">
             <div class="cell">
-              <p v-if="selRoomIndex === roomIndex && selTimeSlotIndex === index" class="select" title="已预约" @click="initSelectTime(false)">约</p>
+              <!-- 过期的时间段 -->
+              <p v-if="isObsolete(tableBody.timeSetList[index].courseTime)" class="NO" title="未开放">X</p>
+              <!-- 已经被预约了 -->
+              <p v-else-if="isOccupy(roomIndex,index)" class="tenancyEnds" title="已约满">满</p>
+              <!-- 进行时间排序 -->
+              <p v-else-if="isTimeOrder(index)" class="NO" title="未开放">X</p>
+              <!-- 当前预约 -->
+              <p v-else-if="isReservation(roomIndex,index)" class="select" title="已预约" @click="initSelectTime(false)">约</p>
+              <!-- <p v-else-if="selRoomIndex === roomIndex && selTimeSlotIndex === index" class="select" title="已预约" @click="initSelectTime(false)">约</p> -->
+              <!-- 系统数据 -->
               <p v-else :class="dataItem" :title="getTitle(dataItem)" @click="selectThisTime(roomItem,roomIndex,index,dataItem)">{{ dataItem | dataListType }}</p>
             </div>
           </td>
@@ -88,7 +96,11 @@
   import api from './api';
   import selectDevice from '../../../cstc/bespeakClass/bespeakClass_selectDevice'; // 选择设备
   export default {
-    props: ['operailityData'],
+    /**
+     * selectData [日期_房间id_时间段id] 已经选择的时间数组
+     * timeOrder 布尔值 是否进行时间顺序处理（所选的时间必须大于已选的时间）
+     */
+    props: ['selectData', 'timeOrder'],
     data() {
       return {
         self: this,
@@ -148,7 +160,7 @@
         /* 加载日期数据 */
         this.getDaysForServer();
       },
-      /*********************************************** 数据获取 ***********************************/
+      /************************************* 数据获取 **********************************/
       // 获取日期
       getDaysForServer(selDate) {
         let date = this.conductDate(selDate || new Date(), 'yyyy-MM-dd');
@@ -213,6 +225,40 @@
         // this.initSelectTime(data);
         this.initSelectTime();
         this.getRoomInfoByDay();
+      },
+      /************************************* 时间有效性判断 ****************************/
+      // 时间段在当前时间内是否已过期
+      isObsolete(dataItem) {
+        let selectTime = new Date(this.activeName + ' ' + dataItem.split('-')[0]).getTime();
+        let now = new Date().getTime();
+        return now > selectTime
+      },
+      // 是否被占用(当前时间段在该房间的指定日期被之前的课程预约了)
+      isOccupy(roomIndex, timeIndex) {
+        if (this.selectData && this.selectData.length) {
+          // 日期-房间id-时间段id
+          let str = this.activeName + '_' + this.tableBody.roomList[roomIndex].roomId + '_' + this.tableBody.timeSetList[timeIndex].timeSetId;
+          return this.selectData.indexOf(str) > -1
+        }
+        return false
+      },
+      // 进行时间排序处理
+      isTimeOrder(timeIndex) {
+        if (this.timeOrder && this.selectData && this.selectData.length) {
+          let lastData = this.selectData[this.selectData.length - 1].split('_');
+          let lastTime = new Date(lastData[0]); // 日期
+          let thisTime = new Date(this.activeName); // 选中的日期
+          // 日期的时间戳 + 时间段id 进行大小比较（时间段的id递增）得到时间段是否保持在所选时间大于已选时间
+          return (lastTime + lastData[2] + 1) > (thisTime + this.tableBody.timeSetList[timeIndex].timeSetId)
+        }
+        return false
+      },
+      // 刚刚预约了
+      isReservation(roomIndex, timeIndex) {
+        if (this.selRoomIndex === roomIndex && this.selTimeSlotIndex === timeIndex) {
+          return true
+        }
+        return false
       },
       /************************************* 按钮事件 **********************************/
       // 日期选择
@@ -309,11 +355,11 @@
       // 检测是否可提交
       checkSub() {
         if (!this.formValidate.openTime.date) {
-          this.errorMess('请选择预约项目日期');
+          this.errorMess('请选择日期');
           return false
         }
         if (!this.formValidate.openTime.timeSetId) {
-          this.errorMess('请选择预约项目时间段');
+          this.errorMess('请选择时间段');
           return false
         }
         if (!this.formValidate.timeModel) {
@@ -322,7 +368,7 @@
           //   return false
           // }
           if (!this.formValidate.reservePojectRoom.roomId) {
-            this.errorMess('请选择预约项目房间');
+            this.errorMess('请选择房间');
             return false
           }
           for (let i in this.formValidate.deviceList) {

@@ -126,7 +126,8 @@
             </td>
             <td v-for="(dataItem,index) in roomItem.dataList" :key="roomItem.roomId + '-' + index" align="center">
               <div class="cell">
-                <p v-if="selRoomIndex === roomIndex && selTimeSlotIndex === index" class="select" title="已预约" @click="initSelectTime(false)">约</p>
+                <p v-if="isObsolete(tableBody.timeSetList[index].courseTime)" class="NO" title="未开放">X</p>
+                <p v-else-if="selRoomIndex === roomIndex && selTimeSlotIndex === index" class="select" title="已预约" @click="initSelectTime(false)">约</p>
                 <p v-else :class="dataItem" :title="getTitle(dataItem)" @click="selectThisTime(roomItem,roomIndex,index,dataItem)">{{ dataItem | dataListType }}</p>
               </div>
             </td>
@@ -451,6 +452,12 @@
         this.formValidate.openTime.timeSetId = "";
         this.formValidate.deviceList.length = 0;
         this.selectDeviceId.length = 0;
+      },
+      // 时间段在今天是否已过期
+      isObsolete(dataItem) {
+        let selectTime = new Date(this.activeName + ' ' + dataItem.split('-')[0]).getTime();
+        let now = new Date().getTime();
+        return now > selectTime
       },
       // 检测是否可提交
       checkSub() {

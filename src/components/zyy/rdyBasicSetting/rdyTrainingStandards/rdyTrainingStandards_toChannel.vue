@@ -180,7 +180,7 @@
        * 发送关闭(cancel)模态事件给父组件,请求关闭当前模态窗
        * */
       success(){
-        this.$emit('score','score',`导入${this.totalNumber}条数据`);
+        this.$emit('show','toChannel',`导入${this.totalNumber}条数据`);
       },
 
 
@@ -198,7 +198,6 @@
       },
       //下一步
       next(){
-
         this.active = this.active+1
       },
       load(){

@@ -18,6 +18,8 @@
       <el-button type="success" @click="saveCall('DSH')">提交审核</el-button>
     </div>
     <!-- 内容 start -->
+    <!-- 加载动画 -->
+    <loading v-if="menuActive === 'load'" ref="load"></loading>
     <!-- 课程基本信息 -->
     <basic-edit v-if="menuActive === 'basic'" ref="basic"></basic-edit>
     <!-- 课程简介 -->
@@ -46,6 +48,8 @@
   /*当前组件必要引入*/
   import layout from "./_components/layout"; // 基础布局
   import nmenuItem from './_components/menu'; // 菜单项
+
+  import loading from "./load/loading"; // 加载动画
 
   import basicEdit from './basic/basic_edit'; // 课程基本信息
   import introEdit from './intro/intro_edit'; // 课程简介
@@ -93,7 +97,7 @@
         this.ajax({
           ajaxSuccess: res => {
             this.$store.commit('curriculum/data/updateData', res.data);
-            this.menuActive = 'basic';
+            setTimeout(() => this.menuActive = 'intro', 1000)
           },
           ajaxParams: {
             url: api.get.path + this.operailityData.id,
@@ -122,6 +126,7 @@
     mounted() {},
 
     components: {
+      loading,
       layout,
       nmenuItem,
       basicEdit,

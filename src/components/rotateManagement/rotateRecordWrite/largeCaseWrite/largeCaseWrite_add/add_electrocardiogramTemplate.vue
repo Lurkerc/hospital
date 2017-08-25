@@ -146,6 +146,8 @@
                 type="datetime"
                 :clearable="false"
                 :editable="false"
+                :picker-options="pickerOptions0"
+                @change="handleStartTime"
                 placeholder="选择日期时间">
               </el-date-picker>
             </el-form-item>
@@ -158,6 +160,8 @@
                 type="datetime"
                 :clearable="false"
                 :editable="false"
+                :picker-options="pickerOptions1"
+                @change="handleEndTime"
                 placeholder="选择日期时间">
               </el-date-picker>
             </el-form-item>
@@ -510,6 +514,7 @@
                 "acaCxlo":"",
                 "acaNl":"",
                 "acaQt":"",
+                fId:'',
               }
             }
 
@@ -668,7 +673,7 @@
 
           //上传文件
           expenseFileEvent(ids){
-            this.formValidate.fileIds = ids;
+            this.formValidate.fId = ids;
           },
 
 

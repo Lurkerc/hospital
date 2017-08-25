@@ -74,9 +74,9 @@
       </p>
     </el-row>
     <!-- 模态框 选择时间 -->
-    <Modal :mask-closable="false" v-model="selectTimeModal" class-name="vertical-center-modal" :loading="true" :width="1100">
+    <Modal :mask-closable="false" v-model="selectTimeModal" class-name="vertical-center-modal" :loading="true" :width="1000">
       <modal-header slot="header" :parent="self" :content="selectTimeId"></modal-header>
-      <select-time v-if="selectTimeModal" :select-data="selectData" :time-order="true" @cancel="cancel" @select="selectTimeCall"></select-time>
+      <select-time v-if="selectTimeModal" :operailityData="selectData" : @cancel="cancel" @select="selectTimeCall"></select-time>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -93,15 +93,18 @@
       return {
         self: this,
         planIndex: -1, // 第几节课索引
-        selectData: [ // 所选时间数据
-          // |---日期----|-房间id-|-时间段id-|
-          // 2017-10-03_10_20
-        ],
         formValidate: {
           courseId: this.operailityData.id, // 授课ID
           audit: "TG", // 审核状态：通TG、驳回BH
           reason: "", // 审核原因
           planList: [], // 时间安排
+        },
+        selectData: { // 已经选过的日期
+          // '110': { // 房间id
+          // "2017-10-10":[ // 日期
+          // "08:00-09:00", // 时间段
+          // ],            
+          // }
         },
         selectTimeModal: false,
         selectTimeId: {
@@ -113,9 +116,6 @@
     methods: {
       // 审核
       audit() {
-        if (!this.checkData()) {
-          return
-        }
         let msg = this.formValidate.audit === 'BH' ? '驳回' : '通过';
         let data = this.$util._.defaultsDeep({}, this.formValidate);
         if (data.audit === 'BH') {
@@ -155,25 +155,12 @@
       // 选择时间
       selectDayAndTime(row, index) {
         this.planIndex = index;
-        this.selectData.length = 0;
-        // 安排当前课程的前提是上一节课已经安排时间（不允许跳着安排）
-        if (index > 0 && !this.formValidate.planList[index - 1].roomId) {
-          this.errorMess('请先安排上一节课的上课时间');
-          return
-        }
-        // 只进行当前安排的课程时间有效性处理
-        for (let i = 0, data = this.formValidate.planList; i < index; i++) {
-          data[i].dates && (this.selectData.push(data[i].dates + '_' + data[i].roomId + '_' + data[i].timeId))
-        }
         this.openModel('selectTime')
       },
       // 选择时间回调
       selectTimeCall(res) {
-        let planList = this.formValidate.planList;
-        let data = planList[this.planIndex];
-        let nextData = planList[this.planIndex + 1];
+        let data = this.formValidate.planList[this.planIndex];
         let deviceList = [];
-
         data.roomId = res.reservePojectRoom.roomId || '';
         data.roomNum = res.reservePojectRoom.roomNum || '';
         data.dates = res.openTime.date || '';
@@ -186,20 +173,12 @@
           name: item.deviceTypeName,
         }));
         data.deviceList = deviceList;
-
-        if (nextData && new Date(data.dates + ' ' + data.endTime).getTime() > new Date(nextData.dates + ' ' + nextData.startTime).getTime()) { // 如何选择的下课时间大于下一节课的上课时间
-          for (let i = this.planIndex + 1; i < planList.length; i++) { // 清除以后课程的安排信息
-            planList[i].roomId = '';
-            planList[i].roomNum = '';
-            planList[i].dates = '';
-            planList[i].timeId = '';
-            planList[i].startTime = '';
-            planList[i].endTime = '';
-            planList[i].deviceList.length = 0;
-          }
-        }
-
-        this.cancel('selectTime');
+        this.addSelectTimeData(res);
+        this.cancel('selectTime')
+      },
+      // 把选择的房间的日期及时间段都加入到选择记录中
+      addSelectTimeData(res) {
+        console.log(res)
       },
       // 索引数字转换
       indexText(index) {
@@ -216,21 +195,8 @@
       // 获取设备信息
       getDeviceInfo(arr) {
         let temp = [];
-        arr.map(item => temp.push(`${item.name}（${item.nums}）`));
+        // arr.map(item => temp.push(`${item.name}（${item.nums}）`));
         return temp.join('、')
-      },
-      // 检测数据是否合法
-      checkData() {
-        let data = this.formValidate;
-        if (data.audit === 'TG') {
-          for (let i in data.planList) { // 课程是否都进行安排
-            if (!data.planList[i].roomId) {
-              this.errorMess('请安排全部课程之后再操作')
-              return false
-            }
-          }
-        }
-        return true
       },
       /****************************************** 弹窗相关 ********************************************/
       /*
@@ -258,7 +224,7 @@
     components: {
       webCoursesView,
       selectTime,
-    },
+    }
   }
 
 </script>

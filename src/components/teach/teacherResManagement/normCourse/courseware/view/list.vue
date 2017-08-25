@@ -24,7 +24,7 @@
                     <p class="overflow-txt1"> {{ cIndex + 1 }}.{{ cItem.title }}</p>
                   </el-col>
                   <el-col :span="4" align="center">
-                    <span class="viewCoursewareBtn" :class="[cItem.fileType]" @click="goPlayer(index,cIndex,'BEFORE')"></span>
+                    <span class="viewCoursewareBtn" :class="[cItem.fileType]" @click="goPlayer(index,cIndex,'before')"></span>
                   </el-col>
                 </el-col>
               </div>
@@ -45,7 +45,7 @@
                     <p class="overflow-txt1"> {{ cIndex + 1 }}.{{ cItem.title }}</p>
                   </el-col>
                   <el-col :span="4" align="center">
-                    <span class="viewCoursewareBtn" :class="[cItem.fileType]" @click="goPlayer(index,cIndex,'IN_PROGRESS')"></span>
+                    <span class="viewCoursewareBtn" :class="[cItem.fileType]" @click="goPlayer(index,cIndex,'inProgress')"></span>
                   </el-col>
                 </el-col>
               </div>
@@ -66,7 +66,7 @@
                     <p class="overflow-txt1"> {{ cIndex + 1 }}.{{ cItem.title }}</p>
                   </el-col>
                   <el-col :span="4" align="center">
-                    <span class="viewCoursewareBtn" :class="[cItem.fileType]" @click="goPlayer(index,cIndex,'AFTER')"></span>
+                    <span class="viewCoursewareBtn" :class="[cItem.fileType]" @click="goPlayer(index,cIndex,'after')"></span>
                   </el-col>
                 </el-col>
               </div>

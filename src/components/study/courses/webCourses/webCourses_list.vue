@@ -11,13 +11,15 @@
       <div class="listUpArea-search">
         <div class="listUpArea-searchWrapper">
           <!--右侧查询-->
-          <el-form ref="formValidate" :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px">
+          <el-form ref="formValidate" :inline="true" :rules="webCoursesList" :model="formValidate" class="form-inline lose-margin" label-width="60px">
             <div class="listUpArea-searchLeft">
-              <input class="hidden">
-              <el-input placeholder="请输入课程名称" v-model="formValidate.title">
-                <div slot="prepend">课程名称</div>
-                <el-button slot="append" @click="handleSubmit('formValidate')" icon="search"></el-button>
-              </el-input>
+              <el-form-item  prop="title" >
+                <input class="hidden">
+                <el-input placeholder="请输入课程名称" v-model="formValidate.title">
+                  <div slot="prepend">课程名称</div>
+                  <el-button slot="append" @click="searchEvent('formValidate')" icon="search"></el-button>
+                </el-input>
+              </el-form-item>
             </div>
             <div class="listUpArea-moreSearch">
               <!--<el-button @click="showSearchMore" type="text">高级查询</el-button>-->
@@ -31,7 +33,7 @@
         <el-form-item label="课程名称：">
           <el-input v-model="formValidate.title"></el-input>
         </el-form-item>
-        <el-button type="info" @click="search">查询</el-button>
+        <el-button type="info" @click="searchEvent">查询</el-button>
       </el-form>
     </div>
     <div id="myTable" ref="myTable" class="userDataTable">
@@ -112,13 +114,14 @@
   //引入--管理--组件
   import manage from "./webCourses_manage";
 
-
+import {webCoursesList} from './rules.js'
   //当前组件引入全局的util
   let Util = null;
   let store = null;
   export default {
     data() {
       return {
+        webCoursesList,
         api,
         formValidate: {
           title: '', // 课程名称
@@ -333,10 +336,32 @@
 
       },
 
-      // 搜索
-      search() {
-        this.setTableData();
+      //搜索监听回调
+      searchEvent(isLoading){
+        //        isLoading(true);
+        let isSubmit = this.handleSubmit('formValidate');
+        if(isSubmit){
+          this.setTableData()
+        }
       },
+
+
+      /*
+       * 列表查询方法
+       * @param string 查询from的id
+       * */
+      handleSubmit(name){
+        let flag =false
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            flag =true;
+          } else {
+            this.$Message.error('表单验证失败!');
+          }
+        })
+        return flag
+      },
+
 
       // 高级搜索按钮
       showSearchMore() {

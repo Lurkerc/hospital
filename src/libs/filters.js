@@ -279,6 +279,27 @@ const getVueObj = function (vue) {
       },
     },
     {
+      name: 'formatLength',//格式化时长
+      call(value) {
+        let temp;
+        let init;
+        if (!value) return '0秒';
+        if (value < 60) {
+          return value + '秒';
+        } else if (value < (60*60)) {
+          init = parseInt(value /60);
+          temp = (value %60);
+          return init + '分'+temp+'秒';
+        } else if (value < (60*60*60)) {
+          init = parseInt(value /60*60);
+          temp =  parseInt(value %(60*60)/60);
+          //float = (value % (1024*1024))/1024;
+          return init + '时'+temp+'分';
+        }
+        return;
+      },
+    },
+    {
       name: 'formatTime',
       call(value) {
         return getDateDiff(value);

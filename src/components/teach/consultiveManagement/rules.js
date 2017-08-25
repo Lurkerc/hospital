@@ -12,7 +12,7 @@ let columnManagementList = {
 };
 
 let columnManagement = {
-  name: [baseRules.requiredNoEvent, baseRules.inputLen(0,50),baseRules.illegalChar()],  //栏目名称
+  name: [baseRules.requiredNoEvent, baseRules.inputLen(0,6),baseRules.illegalChar()],  //栏目名称
   moduleOrder: [baseRules.greaterThanZero1,baseRules.inputLen(0,20),baseRules.illegalChar()],  //栏目顺序
   moduleUrl: [baseRules.inputLen(0,300),baseRules.illegalChar()],  //url
   remark: [baseRules.inputLen(0,100),baseRules.illegalChar()],  //栏目简介
@@ -39,15 +39,12 @@ let contentManagement = {
  */
 let releaseManagementList = {
   title: [baseRules.inputLen(0,50),baseRules.illegalChar()],  //栏目名称
-  newsOrder: [baseRules.greaterThanZero1,baseRules.inputLen(0,20),baseRules.illegalChar()],  //置顶顺序
+  publisher: [baseRules.inputLen(0,50),baseRules.illegalChar()],  //栏目名称
 };
 
 let releaseManagement = {
-  moduleId: [baseRules.requiredNoEvent],  //栏目id
-  title: [baseRules.requiredNoEvent, baseRules.inputLen(0,50),baseRules.illegalChar()],  //栏目名称
-  authorName: [ baseRules.inputLen(0,50),baseRules.illegalChar()],  //作者
-  newsUrl: [ baseRules.inputLen(0,50),baseRules.illegalChar()],  //url
-  newsOrder: [baseRules.greaterThanZero1,baseRules.inputLen(0,20),baseRules.illegalChar()],  //置顶顺序
+  title: [baseRules.requiredNoEvent, baseRules.inputLen(0,50),baseRules.illegalChar()],  //标题
+  publisher: [ baseRules.inputLen(0,50),baseRules.illegalChar()],  //发布人
 };
 
 export {

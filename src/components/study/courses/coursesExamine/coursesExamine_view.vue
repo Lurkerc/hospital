@@ -13,10 +13,10 @@
       <nmenu-item :class="{'active':menuActive === 'outline'}" name="outline" @click="menuClick">课程教学大纲</nmenu-item>
       <nmenu-item :class="{'active':menuActive === 'plan'}" name="plan" @click="menuClick">教学计划</nmenu-item>
       <nmenu-item :class="{'active':menuActive === 'courseware'}" name="courseware" @click="menuClick">课件</nmenu-item>
-      <nmenu-item :class="{'active':menuActive === 'liveVideo'}" name="liveVideo" @click="menuClick">课程直播</nmenu-item>
+      <!-- <nmenu-item :class="{'active':menuActive === 'liveVideo'}" name="liveVideo" @click="menuClick">课程直播</nmenu-item> -->
       <nmenu-item :class="{'active':menuActive === 'EO'}" name="EO" @click="menuClick">评测与作业</nmenu-item>
       <nmenu-item :class="{'active':menuActive === 'TQVInfo'}" name="TQVInfo" @click="menuClick">教学质量评价表</nmenu-item>
-      <nmenu-item :class="{'active':menuActive === 'discuss'}" name="discuss" @click="menuClick">讨论区</nmenu-item>
+      <!-- <nmenu-item :class="{'active':menuActive === 'discuss'}" name="discuss" @click="menuClick">讨论区</nmenu-item> -->
       <!-- <nmenu-item :class="{'active':menuActive === 'TREInfo'}" name="TREInfo" @click="menuClick">试运行评估表</nmenu-item> -->
     </div>
     <!-- 底部 -->
@@ -37,15 +37,15 @@
     <!-- 教学计划 -->
     <plan-view v-if="menuActive === 'plan'"></plan-view>
     <!-- 课件 -->
-    <courseware-view v-if="menuActive === 'courseware'" :showProgress="true"></courseware-view>
+    <courseware-view v-if="menuActive === 'courseware'" :showProgress="false"></courseware-view>
     <!-- 课程直播 -->
     <live-video-view v-if="menuActive === 'liveVideo'"></live-video-view>
     <!-- 评测与作业 (提交试题之后重新获取最新的数据并打开EQ菜单) -->
-    <eo-view v-if="menuActive === 'EO'" :showInfo="true" @updateView="getViewData('EO')"></eo-view>
+    <eo-view v-if="menuActive === 'EO'" :showInfo="false"></eo-view>
     <!-- 教学质量评价表 -->
     <tqv-info-view v-if="menuActive === 'TQVInfo'"></tqv-info-view>
     <!-- 讨论区 -->
-    <discuss-view v-if="menuActive === 'discuss'"></discuss-view>
+    <!-- <discuss-view v-if="menuActive === 'discuss'"></discuss-view> -->
     <!-- 试运行评估表 -->
     <!-- <tre-info-view v-if="menuActive === 'TREInfo'"></tre-info-view> -->
     <!-- 内容 end -->
@@ -66,10 +66,10 @@
   import outlineView from '../../../teach/teacherResManagement/normCourse/outline/outline_view'; // 课程教学大纲
   import planView from '../../../teach/teacherResManagement/normCourse/plan/plan_view'; // 教学计划
   import coursewareView from '../../../teach/teacherResManagement/normCourse/courseware/courseware_view'; // 课件
-  import liveVideoView from '../../../teach/teacherResManagement/normCourse/liveVideo/view'; // 直播
+  // import liveVideoView from '../../../teach/teacherResManagement/normCourse/liveVideo/view'; // 直播
   import eoView from '../../../teach/teacherResManagement/normCourse/EO/EO_view'; // 评测与作业
-  import tqvInfoView from '../../../teach/teacherResManagement/normCourse/TQVInfo/TQVInfo_input'; // 教学质量评价表
-  import discussView from '../../../teach/teacherResManagement/normCourse/discuss/edit'; // 讨论区
+  import tqvInfoView from '../../../teach/teacherResManagement/normCourse/TQVInfo/TQVInfo_view'; // 教学质量评价表
+  // import discussView from '../../../teach/teacherResManagement/normCourse/discuss/edit'; // 讨论区
   // import treInfoView from '../../../teach/teacherResManagement/normCourse/TREInfo/TREInfo_view'; // 试运行评估表
 
   // 测试数据
@@ -98,7 +98,7 @@
         this.menuActive = menu;
       },
       // 获取查看数据
-      getViewData(menu) {
+      getViewData() {
         let urls = {
           "main": api.mainInfo, // 最新课程查看（进行权限检测）
         };
@@ -111,7 +111,7 @@
             this.$store.commit('curriculum/look/updateData', res.data);
             this.title = this.$store.state.curriculum.look.course.title;
             this.logo = this.$store.state.curriculum.look.course.logo;
-            setTimeout(() => this.menuActive = menu || 'notice', 1000)
+            setTimeout(() => this.menuActive = 'notice', 1000)
             this.$emit('getViewData', res.data)
           },
           ajaxParams: {
@@ -151,10 +151,10 @@
       outlineView,
       planView,
       coursewareView,
-      liveVideoView,
+      // liveVideoView,
       eoView,
       tqvInfoView,
-      discussView,
+      // discussView,
       // treInfoView,
     }
 

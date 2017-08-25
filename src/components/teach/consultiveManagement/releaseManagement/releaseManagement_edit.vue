@@ -1,10 +1,10 @@
 <template>
 
   <div>
-    <el-form ref="formValidate"  class="demo-form-inline" label-width="90px">
+    <el-form  ref="formValidate" :model="formValidate" :rules="releaseManagement"  class="demo-form-inline" label-width="90px">
       <el-row >
         <el-col :span="17" :offset="2">
-          <el-form-item label="标题:" prop="name" class="feildFontweight">
+          <el-form-item label="标题:" prop="title" class="feildFontweight">
             <el-input v-model="formValidate.title"  placeholder="请输入" ></el-input>
           </el-form-item>
         </el-col >
@@ -12,13 +12,13 @@
 
       <el-row >
         <el-col :span="8" :offset="2">
-          <el-form-item label="发布人:" class="feildFontweight">
+          <el-form-item label="发布人:" class="feildFontweight" prop="publisher" >
             <el-input  v-model="formValidate.publisher"  placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
 
         <el-col :span="8" :offset="1">
-          <el-form-item label="是否需要回执:" label-width="110px" class="feildFontweight">
+          <el-form-item label="是否需要回执:" prop="isReceipt" label-width="110px" class="feildFontweight">
             <el-radio-group  v-model="formValidate.isReceipt"  >
               <el-radio  :label="1">是</el-radio>
               <el-radio :label="0">否</el-radio>
@@ -29,7 +29,7 @@
 
       <el-row >
         <el-col :span="17" :offset="2">
-          <el-form-item label="浏览权限:" class="feildFontweight">
+          <el-form-item label="浏览权限:" prop="roleId"  class="feildFontweight">
             <el-select  v-model="formValidate.roleId"  placeholder="请选择">
               <select-option :type="'role'">
               </select-option>
@@ -69,13 +69,14 @@
 <script>
   //当前组件引入全局的util
   let Util=null;
+  import {releaseManagement} from '../rules'
   import viewUEditor from '../../../common/showUeditor.vue';
   export default {
     //props接收父组件传递过来的数据
     props: ['operailityData','url'],
     data (){
       return{
-
+        releaseManagement,
         "data":
           {
             "id":"",
@@ -149,6 +150,7 @@
           if (!isLoadingFun) isLoadingFun = function () {
           };
           isLoadingFun(true);
+          this.formValidate.content = this.ueditorVal.ud1;
           this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
           this.editMessTitle.ajaxParams.data .isReceipt =this.editMessTitle.ajaxParams.data .isReceipt+'';
           this.ajax(this.editMessTitle, isLoadingFun)

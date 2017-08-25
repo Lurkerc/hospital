@@ -89,7 +89,7 @@
   //引入--添加--组件
   import add from "./coursesExamine_add";
   //引入--查看--组件
-  import show from "../webCourses/webCourses_view";
+  import show from "./coursesExamine_view";
 
 
   //当前组件引入全局的util
