@@ -21,7 +21,9 @@ let teach = {
  */
 let plan = {
   duration: [baseRules.requiredNoEvent, baseRules.numbers, baseRules.numberSection(1, 24)],
-  content: baseRules.requiredNoEvent,
+  content: [baseRules.requiredNoEvent, baseRules.inputLen(1, 50)],
+  remark: baseRules.inputLen(0, 250),
+  realia: baseRules.inputLen(0, 250),
 };
 
 /**

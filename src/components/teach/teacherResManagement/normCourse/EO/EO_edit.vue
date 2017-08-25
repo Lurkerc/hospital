@@ -28,7 +28,7 @@
           <el-table-column v-if="!isReadOnly" type="selection" width="55"></el-table-column>
           <el-table-column type="index" label="序号" width="68">
           </el-table-column>
-          <el-table-column property="types" label="试题类型">
+          <el-table-column property="types" label="试题类型" width="122">
             <template scope="scope">
               <el-select v-if="!isReadOnly" v-model="scope.row.types" size="small" @change="changeTypes('before',index,scope.$index,scope.row.types)">
                 <el-option v-for="item in testTypeOption" v-if="item.value" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -113,7 +113,7 @@
           <el-table-column v-if="!isReadOnly" type="selection" width="55"></el-table-column>
           <el-table-column type="index" label="序号" width="68">
           </el-table-column>
-          <el-table-column property="types" label="试题类型">
+          <el-table-column property="types" label="试题类型" width="122">
             <template scope="scope">
               <el-select v-if="!isReadOnly" v-model="scope.row.types" size="small" @change="changeTypes('in_progress',index,scope.$index,scope.row.types)">
                 <el-option v-for="item in testTypeOption" v-if="item.value" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -198,7 +198,7 @@
           <el-table-column v-if="!isReadOnly" type="selection" width="55"></el-table-column>
           <el-table-column type="index" label="序号" width="68">
           </el-table-column>
-          <el-table-column property="types" label="试题类型">
+          <el-table-column property="types" label="试题类型" width="122">
             <template scope="scope">
               <el-select v-if="!isReadOnly" v-model="scope.row.types" size="small" @change="changeTypes('after',index,scope.$index,scope.row.types)">
                 <el-option v-for="item in testTypeOption" v-if="item.value" :key="item.value" :label="item.label" :value="item.value"></el-option>

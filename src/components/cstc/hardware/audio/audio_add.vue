@@ -41,7 +41,7 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="8" :offset="2" v-if="formValidate.locationType === 'ORTHER'">
+          <el-col :span="8" :offset="2" v-if="formValidate.locationType === 'OTHER'">
             <el-form-item label="" prop="orther" labelWidth="0">
               <el-input v-model="formValidate.orther" placeholder="请输入所在位置"></el-input>
             </el-form-item>
@@ -196,8 +196,7 @@
       /**
        * 连接测试
        */
-      testService() {
-      },
+      testService() {},
       /*
        * 组件初始化入口
        * */

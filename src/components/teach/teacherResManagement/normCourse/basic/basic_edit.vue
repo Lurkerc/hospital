@@ -7,11 +7,21 @@
           <el-input v-model="course.title" :readonly="isReadOnly"></el-input>
         </el-form-item>
         <el-form-item label="标签：" prop="tags">
-          <el-tag :key="tag" v-for="tag in dynamicTags" :closable="true" :close-transition="false" @close="handleClose(tag)" class="tagItem">
-            {{tag}}
-          </el-tag>
-          <el-input v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="mini" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm" class="tagInput"></el-input>
-          <el-button v-else @click="showInput" size="mini">创建标签</el-button>
+          <template v-if="isReadOnly">
+            <template v-if="dynamicTags.length > 0">
+              <el-tag :key="tag" v-for="tag in dynamicTags">
+                {{tag}}
+              </el-tag>
+            </template>
+            <span v-else>暂无标签</span>
+          </template>
+          <template v-else>
+            <el-tag :key="tag" v-for="tag in dynamicTags" :closable="true" :close-transition="false" @close="handleClose(tag)">
+              {{tag}}
+            </el-tag>
+            <el-input v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="mini" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm" class="tagInput"></el-input>
+            <el-button v-else @click="showInput" size="mini">创建标签</el-button>
+          </template>
         </el-form-item>
       </el-col>
       <el-col :span="4" :offset="1">

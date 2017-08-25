@@ -23,7 +23,7 @@
         <template v-if="showData.length">
           <el-col class="normCourseSelectItem" :span="5" v-for="item in showData" :key="item.id" :class="{'active':selectId === item.id}" @click.native="selectNormCourse(item.id,item)">
             <h3 class="normCourseSelectItemTitle overflow-txt1" align="center">{{ item.title }}</h3>
-            <img src="//iph.href.lu/180x180" class="normCourseSelectItemImg">
+            <img :src="getPicUrl(item.logo)" class="normCourseSelectItemImg">
             <div class="normCourseSelectItemInfo">
               <div class="normCourseSelectItemInfoText">{{ getTextByHtml(item.direction) }}</div>
             </div>
@@ -122,6 +122,14 @@
         let contenHeight = this.$refs.ncsMain.parentNode.offsetHeight;
         let ncsTop = this.$refs.ncsTop.offsetHeight;
         this.ncsHt = contenHeight - ncsTop;
+      },
+      // 获取图片
+      getPicUrl(staticUrl) {
+        let src = '';
+        if (staticUrl) {
+          src = this.$store.state.envPath.http + staticUrl
+        }
+        return src
       },
     },
     created() {

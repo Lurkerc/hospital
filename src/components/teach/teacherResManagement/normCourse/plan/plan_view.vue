@@ -7,7 +7,7 @@
           <legend style="font-size:16px">&nbsp;&nbsp;第{{ indexText(index) }}节&nbsp;&nbsp;</legend>
           <el-col>
             <el-form-item label="课时：" prop="duration">
-              {{ item.duration }}课时
+              {{ item.duration }}小时
             </el-form-item>
           </el-col>
           <el-col>

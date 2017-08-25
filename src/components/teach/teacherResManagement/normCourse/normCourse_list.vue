@@ -67,12 +67,12 @@
           <el-table-column prop="totalLesson" label="课程节数" show-overflow-tooltip></el-table-column>
           <el-table-column prop="createTime" label="创建日期" show-overflow-tooltip>
             <template scope="scope">
-              {{ scope.row.createTime | formatDate('yyyy-MM-dd hh:mm:ss') }}
+              {{ scope.row.createTime | formatDate('yyyy-MM-dd HH:mm:ss') }}
             </template>
           </el-table-column>
           <el-table-column prop="updateTime" label="更新日期" show-overflow-tooltip>
             <template scope="scope">
-              {{ (scope.row.updateTime||'-') | formatDate('yyyy-MM-dd hh:mm:ss') }}
+              {{ (scope.row.updateTime||'-') | formatDate('yyyy-MM-dd HH:mm:ss') }}
             </template>
           </el-table-column>
         </el-table>
@@ -84,7 +84,7 @@
       <!--弹窗-->
       <div>
         <!--修改弹窗-->
-        <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1000">
+        <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1100">
           <modal-header slot="header" :content="headerContent.editId"></modal-header>
           <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :style="modelStyle"></edit>
           <div slot="footer"></div>

@@ -82,14 +82,14 @@
         prop="createTime"
         label="开始时间">
         <template scope="scope">
-          {{scope.row.createTime | formatDate('yyyy-MM-dd')}}
+          {{scope.row.createTime | formatDate('yyyy-MM-dd HH:mm:ss')}}
         </template>
       </el-table-column>
       <el-table-column
         prop="updateTime"
         label="结束时间">
         <template scope="scope">
-          {{scope.row.updateTime  | formatDate('yyyy-MM-dd')}}
+          {{scope.row.updateTime  | formatDate('yyyy-MM-dd HH:mm:ss')}}
         </template>
       </el-table-column>
       <el-table-column

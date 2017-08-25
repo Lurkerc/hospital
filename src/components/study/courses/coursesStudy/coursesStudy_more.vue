@@ -11,7 +11,9 @@
         <el-col v-if="tableData!=0" style="max-height: 600px;overflow: auto">
             <el-col :xs="23" :sm="11" :md="7" :lg="5" class="coursesStudyVideoItem"  :offset="1" v-for="item in tableData" :key="item.id">
               <div @click="videoClick(item)" style="cursor: pointer">
-                <img :src="getPicUrl(item.logo)"  class="coursesStudyPhoto" style="height: 170px;">
+                <div style="width: 100% ;height: 125px;">
+                  <img :src="getPicUrl(item.logo)"  class="coursesStudyPhoto" style="height: 125px">
+                </div>
                 <!-- <p class="">视频名称</p> -->
                 <div class="coursesStudyVideoInfo" >
                   <h3 class="overflow-txt1" style="text-align: center">{{ item.title }}</h3>

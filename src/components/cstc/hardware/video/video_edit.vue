@@ -79,8 +79,8 @@
         </el-col>
 
         <el-col :span="18" :offset="2">
-          <el-form-item label="设备简介：" prop="abstract">
-            <el-input type="textarea" :autosize="{ minRows: 2}" v-model="formValidate.abstract"></el-input>
+          <el-form-item label="设备简介：" prop="describes">
+            <el-input type="textarea" :autosize="{ minRows: 2}" v-model="formValidate.describes"></el-input>
           </el-form-item>
         </el-col>
 
@@ -135,7 +135,7 @@
           roomId: '', // 房间id
           roomNum: '', // 房间号
           orther: '', // 其他
-          abstract: '', // 简介
+          describes: '', // 简介
         },
         // 房间列表
         roomSelectList: [],

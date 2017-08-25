@@ -45,7 +45,7 @@
       </el-row >
       <el-row>
         <el-col :span="20" :offset="2">
-          <el-form-item label="url" prop="remark">
+          <el-form-item label="url" prop="moduleUrl">
             <el-input v-model="formValidate.moduleUrl" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
@@ -185,7 +185,9 @@
       //是否显示修改
       isDisplayChange(val){
         if(val==0){
-          this.formValidate.isHome = 'NO';
+            if(this.formValidate.isHome){
+              this.formValidate.isHome = 'NO';
+            }
         }
       }
     }

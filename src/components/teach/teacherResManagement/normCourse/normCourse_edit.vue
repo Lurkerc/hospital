@@ -97,7 +97,7 @@
         this.ajax({
           ajaxSuccess: res => {
             this.$store.commit('curriculum/data/updateData', res.data);
-            setTimeout(() => this.menuActive = 'intro', 1000)
+            setTimeout(() => this.menuActive = 'basic', 1000)
           },
           ajaxParams: {
             url: api.get.path + this.operailityData.id,

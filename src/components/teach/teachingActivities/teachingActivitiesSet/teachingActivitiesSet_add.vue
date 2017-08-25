@@ -5,12 +5,12 @@
     <el-row>
       <el-col :span="12">
         <el-form-item label="活动时间" prop="activityTime">
-          <el-date-picker type="date"  :editable="false" placeholder="选择日期"  v-model="formValidate.activityTime" style="width: 100%;"></el-date-picker>
+          <el-date-picker @change="upDataIsplan" type="date"  :editable="false" placeholder="选择日期"  v-model="formValidate.activityTime" style="width: 100%;"></el-date-picker>
         </el-form-item>
 
 
         <el-form-item label="计划" prop="isPlan">
-          <el-radio-group  v-model="formValidate.isPlan">
+          <el-radio-group  @change="isPlanChange"  v-model="formValidate.isPlan">
             <el-radio label="Y">计划内</el-radio>
             <el-radio label="N">计划外</el-radio>
           </el-radio-group>
@@ -30,19 +30,19 @@
       </el-col>
       <el-col :span="12">
         <el-form-item style="width:284px;" label="科室" prop="depId">
-          <el-select  style="width:284px;" v-model="formValidate.depId" placeholder="请选择">
+          <el-select @change="upDataIsplan" style="width:284px;" v-model="formValidate.depId" placeholder="请选择">
             <!--<select-option  :unAll="true"></select-option>-->
             <select-option :type="type"  :unAll="true"></select-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item v-if="formValidate.isPlan=='Y'" style="width:284px;" label="月度计划" prop="activityPlan">
+        <el-form-item v-if="isPlan" style="width:284px;" label="月度计划" prop="activityPlan">
           <el-select  style="width:284px;" v-model="formValidate.activityPlan" placeholder="请选择">
             <!--<select-option  :unAll="true"></select-option>-->
             <select-option :url="' '" :type="type"  :unAll="true" ></select-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="formValidate.isPlan=='N'" style="width:284px;" >
+        <el-form-item v-if="!isPlan" style="width:284px;" >
          &nbsp;
         </el-form-item>
 
@@ -203,6 +203,7 @@
         countDate:0,
         options: [],
 
+        isPlan:false,
         "formValidate":{
           "depId":'',
           "activityName":"",
@@ -256,18 +257,8 @@
         partPer:true,
         //指定人员控制
         designatedPer:false,
-        //当前组件提交(add)数据时,ajax处理的 基础信息设置
-        addMessTitle:{
-          type:'add',
-          successTitle:'添加成功!',
-          errorTitle:'添加失败!',
-          ajaxSuccess:'ajaxSuccess',
-          ajaxError:'ajaxError',
-          ajaxParams:{
-            url:this.url.teachctivityAdd,
-            method:'post'
-          }
-        },
+
+
         //选择人员
         selectUserModal:false,
         selectUserId:{
@@ -280,13 +271,35 @@
             title:"选择主持人",
             usersData:''
         },
-
         //当前组件默认请求(头部)数据时,ajax处理的 基础信息设置
        timeListMessTitle: {
           ajaxSuccess: 'updateHeaderList',
           ajaxParams: {
             url: this.url.teachCourseTime,
             params: {},
+          }
+        },
+        //计划
+        isPlanMessTitle:{
+          ajaxSuccess:'isPlanSuccess',
+          ajaxParams:{
+            url:this.url.getList,
+            params:{
+              activityPlanTime:'',
+              activityPlanDepId:'',
+            }
+          }
+        },
+        //当前组件提交(add)数据时,ajax处理的 基础信息设置
+        addMessTitle:{
+          type:'add',
+          successTitle:'添加成功!',
+          errorTitle:'添加失败!',
+          ajaxSuccess:'ajaxSuccess',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url:this.url.teachctivityAdd,
+            method:'post'
           }
         },
       }
@@ -302,8 +315,6 @@
       }else {
         this.type = 'dep';
       }
-
-
     },
     mounted(){
       //暂时没有初始化,预留初始化入口
@@ -322,6 +333,22 @@
           let data = res.data;
           if(!data)return;
          this.getRecordTimes = data
+      },
+
+      //获取计划（ajax）——
+      getIsPlan(){
+        this.isPlanMessTitle.ajaxParams.params ={
+          activityPlanTime:this.yearMonthData(this.formValidate.activityTime),
+          activityPlanDepId:this.formValidate.depId,
+        }
+        this.ajax(this.isPlanMessTitle);
+      },
+
+
+      //获取计划成功
+      isPlanSuccess(res){
+        let data = res.data;
+        if(!data)return;
 
       },
       //点击选择人员按钮触发
@@ -476,7 +503,39 @@
       //选择科室
       selectDpeID(val){
           this.formValidate.depId= val;
-      }
+      },
+
+
+      //改变计划
+      isPlanChange(val){
+          if(val=='Y'){
+              if(! this.formValidate.activityTime ){
+                this.showMess('请选择活动时间')
+              }else if(!this.formValidate.depId){
+                this.showMess('请选择科室')
+              }else {
+                this.isPlan = true;
+                return;
+              }
+            this.formValidate.isPlan = 'N';
+          }else {
+            this.isPlan = false;
+          }
+
+      },
+
+
+      //时间和科室改变更新计划
+      upDataIsplan(){
+          if(this.isPlan){
+            if(this.formValidate.activityTime && this.formValidate.depId ){
+              this.getIsPlan();
+              }
+          }
+      },
+
+
+
     },
     components:{
       selectUser

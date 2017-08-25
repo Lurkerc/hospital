@@ -46,7 +46,7 @@
               <h4 class="coursesStudyTopTitleText overflow-txt1">我的必修课</h4>
             </el-col>
             <el-col :span="12" align="right">
-              <el-button v-if="myStudyTotalCount > myStudy.length" type="text" @click="showExChange('coursesList')">更多<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+              <el-button v-if="myStudyTotalCount > myStudy.length" type="text" @click="showExChange('myStudy')">更多<i class="el-icon-arrow-right el-icon--right"></i></el-button>
               <!--<el-button  type="text" @click="showExChange('myStudy')">更多<i class="el-icon-arrow-right el-icon&#45;&#45;right"></i></el-button>-->
             </el-col>
           </el-col>
@@ -55,7 +55,9 @@
             <div v-if="myStudy.length > 0">
               <el-col  :xs="23" :sm="11" :md="7" :lg="5" class="coursesStudyVideoItem" :offset="1" v-for="item in myStudy" :key="item.id">
                 <div  @click="videoClick(item)" style="cursor: pointer">
-                  <img :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="min-height: 125px;">
+                  <div style="width: 100% ;height: 125px;">
+                    <img v-if="getPicUrl(item.logo)" :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="height: 125px;">
+                  </div>
                   <!-- <p class="">视频名称</p> -->
                   <div class="coursesStudyVideoInfo">
                     <h3 class="overflow-txt1">{{ item.title }}</h3>
@@ -90,7 +92,9 @@
             <div v-if="mainQuery.length > 0">
               <el-col :xs="23" :sm="11" :md="7" :lg="5" class="coursesStudyVideoItem" :offset="1" v-for="item in mainQuery" :key="item.id">
                 <div  @click="mainQueryClick(item)" style="cursor: pointer">
-                  <img   :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="min-height: 125px;">
+                  <div style="width: 100% ;height: 125px;">
+                   <img v-if="getPicUrl(item.logo)"  :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="height: 125px;">
+                  </div>
                   <!-- <p class="">视频名称</p> -->
                   <div class="coursesStudyVideoInfo">
                     <h3 class="overflow-txt1">{{ item.title }}</h3>
@@ -148,7 +152,9 @@
             <div v-if="myHistory.length > 0">
               <el-col :xs="23" :sm="23" :md="23" :lg="11" class="coursesStudyVideoItem" :offset="1" v-for="item in myHistory" :key="item.id">
                 <div @click="videoClick(item)" style="cursor: pointer">
-                  <img :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="min-height: 125px;">
+                  <div style="width: 100% ;height: 125px;">
+                   <img v-if="getPicUrl(item.logo)" :src="getPicUrl(item.logo)" class="coursesStudyPhoto" style="height: 125px;">
+                  </div>
                   <!-- <p class="">视频名称</p> -->
                   <div class="coursesStudyVideoInfo">
                     <h3 class="overflow-txt1">{{item.title}}</h3>
@@ -232,7 +238,7 @@
         this.getNextPlay();
       },
       // 视图切换
-      exChange(type) {
+      showExChange(type) {
         let obj = {
           myStudy: '我的必修课',
           mainQuery: '最新课程',
@@ -241,8 +247,8 @@
         this.operailityData = {
           path: api[type].path,
         };
-        this.moreId.title = obj[type],
-          this.moreModal = true;
+        this.moreId.title = obj[type];
+        this.moreModal = true;
       },
 
       //换

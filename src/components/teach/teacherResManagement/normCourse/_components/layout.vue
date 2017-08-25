@@ -89,7 +89,7 @@
       left: $menuWidth - 1;
       top: 0;
       bottom: 0;
-      z-index: 2;
+      z-index: 1;
     }
     &::after {
       content: ' ';
@@ -141,7 +141,7 @@
     top: 0;
     left: 0;
     bottom: 0;
-    z-index: 3;
+    z-index: 1;
   }
 
   .tvmInfoTitle {

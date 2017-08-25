@@ -87,13 +87,13 @@
 
       sendMes() {
         //如果为禁言，则不允许发言，管理员能发言
-        if (!this.isSpeak) {
+        if (this.isManagement || !this.isSpeak) {
           let mes = this.mes.trim();
           if (mes === '') return;
           this.listMessTitle.ajaxParams.data.msg = this.mes;
           this.ajax(this.listMessTitle);
         } else {
-          this.showMess('全体禁言中!')
+          this.showMess('全体禁言中!');
         }
 
       },

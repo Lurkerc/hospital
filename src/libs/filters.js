@@ -45,6 +45,8 @@ const getVueObj = function (vue) {
       // 设备品牌
       "HIKVISION": "海康威视",
       "DAHUA": "大华",
+      "KAIXI": "凯熙",
+      "SPON": "世邦",
       // 设备位置
       "ROOM": "房间内",
       // 设备状态
@@ -252,7 +254,7 @@ const getVueObj = function (vue) {
         } else {
           init = (value / (1024 * 1024 * 1024));
           //float = (value % (1024*1024*1024))/(1024*1024);
-          return init.toFixed(2) + 'GB //' + float.toFixed(2) + 'MB';
+          return init.toFixed(2) + 'GB ' //+ float.toFixed(2) + 'MB';
         }
         return;
       },
@@ -279,22 +281,22 @@ const getVueObj = function (vue) {
       },
     },
     {
-      name: 'formatLength',//格式化时长
+      name: 'formatLength', //格式化时长
       call(value) {
         let temp;
         let init;
         if (!value) return '0秒';
         if (value < 60) {
           return value + '秒';
-        } else if (value < (60*60)) {
-          init = parseInt(value /60);
-          temp = (value %60);
-          return init + '分'+temp+'秒';
-        } else if (value < (60*60*60)) {
-          init = parseInt(value /60*60);
-          temp =  parseInt(value %(60*60)/60);
+        } else if (value < (60 * 60)) {
+          init = parseInt(value / 60);
+          temp = (value % 60);
+          return init + '分' + temp + '秒';
+        } else  {
+          init = parseInt(value/(60*60));
+          temp =  parseInt((value %(60*60))/60);
           //float = (value % (1024*1024))/1024;
-          return init + '时'+temp+'分';
+          return init + '时' + temp + '分';
         }
         return;
       },

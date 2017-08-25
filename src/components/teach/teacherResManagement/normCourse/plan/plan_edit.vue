@@ -6,7 +6,8 @@
         <legend style="font-size:16px">&nbsp;&nbsp;第{{ indexText(index) }}节&nbsp;&nbsp;</legend>
         <el-col :span="10">
           <el-form-item label="课时：" prop="duration">
-            <el-input v-model="item.duration"></el-input>
+            <el-input v-model="item.duration" class="planHoursInput"></el-input>
+            <span>小时</span>
           </el-form-item>
         </el-col>
         <el-col :span="4" :offset="10" align="right">
@@ -18,12 +19,12 @@
           </el-form-item>
         </el-col>
         <el-col>
-          <el-form-item label="详细介绍：">
+          <el-form-item label="详细介绍：" prop="remark">
             <el-input v-model="item.remark" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" :readonly="isReadOnly"></el-input>
           </el-form-item>
         </el-col>
         <el-col>
-          <el-form-item label="所需道具：">
+          <el-form-item label="所需道具：" prop="realia">
             <el-input v-model="item.realia" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" :readonly="isReadOnly"></el-input>
           </el-form-item>
         </el-col>
@@ -117,6 +118,10 @@
   @import"../../../../../assets/ambuf/css/manage_v1.0/editForm";
   .nPlanItem {
     margin-bottom: 20px;
+  }
+
+  .planHoursInput {
+    width: 160px;
   }
 
 </style>
