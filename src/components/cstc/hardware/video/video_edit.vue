@@ -65,16 +65,16 @@
         </el-col>
 
         <el-col :span="8" :offset="2" v-if="formValidate.locationType === 'ROOM'">
-          <el-form-item label="房间号：" prop="roomId">
-            <el-select v-model="formValidate.roomId" placeholder="请选择">
-              <el-option v-for="item in roomSelectList" :key="item.id" :label="item.roomNum" :value="item.id"></el-option>
+          <el-form-item label="房间号：" prop="roomId" required>
+            <el-select v-model="selectRoomId" placeholder="请选择">
+              <el-option v-for="item in roomSelectList" :key="item.id" :value="item.id" :label="item.roomNum"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
 
         <el-col :span="8" :offset="2" v-if="formValidate.locationType === 'OTHER'">
           <el-form-item label="" prop="orther" labelWidth="0">
-            <el-input v-model="formValidate.orther" placeholder="请输入所在位置"></el-input>
+            <el-input v-model="formValidate.orther" :maxlength="25" placeholder="请输入所在位置"></el-input>
           </el-form-item>
         </el-col>
 
@@ -138,7 +138,8 @@
           describes: '', // 简介
         },
         // 房间列表
-        roomSelectList: [],
+        roomSelectList: {},
+        selectRoomId: '',
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         editMessTitle: {
           type: 'edit',
@@ -179,7 +180,7 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun) {
-        let isSubmit = this.submitForm("formValidate");
+        let isSubmit = this.submitForm("formValidate") && this.checkData();
         if (isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
@@ -201,6 +202,21 @@
         });
         return flag;
       },
+      // 检测数据是否合法
+      checkData() {
+        let data = this.formValidate;
+        let selRoom = this.selectRoomId;
+        if (data.locationType === 'ROOM') {
+          if (!this.selectRoomId) {
+            this.errorMess('必选选择房间')
+            return false
+          } else {
+            data.roomId = selRoom;
+            data.roomNum = this.roomSelectList[selRoom].roomNum;
+          }
+        }
+        return true
+      },
       /*
        * 当前组件发送事件给父组件
        * 发送关闭(cancel)模态事件给父组件,请求关闭当前模态窗
@@ -221,14 +237,19 @@
        * 获取选择的房间
        * */
       successGetRoomData(res) {
-        this.roomSelectList = res.data
+        let obj = {};
+        (res.data || []).map(item => obj[item.id] = item);
+        this.roomSelectList = obj
       },
 
       /**
        * 获取房间数据
        * */
       getDataForServer(res) {
-        this.formValidate = res.data
+        this.formValidate = res.data;
+        if (res.data.roomId) {
+          this.selectRoomId = parseInt(res.data.roomId);
+        }
       },
 
       /**

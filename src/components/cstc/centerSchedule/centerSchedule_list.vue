@@ -1,6 +1,6 @@
 <template>
   <!-- 中心日程 -->
-  <div>
+  <div ref="roomContent">
     <el-form label-width="80px" :inline="true" :model="formValidate" ref="formValidate" :rules="rules">
       <el-form-item label="日期：" prop="date" required>
         <el-date-picker v-model="formValidate.date" type="date" placeholder="选择日期">
@@ -17,26 +17,28 @@
         <el-button type="info" @click="search">搜索</el-button>
       </el-form-item>
     </el-form>
-    <el-row>
-      <el-col class="cRoomType">
-        <span class="PRACTISE">练习</span>
-        <span class="EXAM">考核</span>
-        <span class="OTHER">其他</span>
-      </el-col>
-      <p v-if="noDataTips" class="cRoomNoDataTips">暂无相关日程</p>
-      <div v-else>
-        <el-col v-for="(item,index) in showData" class="cRoomItem" :key="index">
-          <el-col :span="2" class="cRoomFloor">
-            {{ index }}楼
-          </el-col>
-          <el-col :span="22" class="cRoomList">
-            <div class="cRoomIconItem" v-for="(room,rIndex) in item" :key="rIndex" :class="[room.employType]">
-              <p>{{ room.roomNum }}</p>
-            </div>
+    <div class="cRoomType">
+      <span class="PRACTISE">练习</span>
+      <span class="EXAM">考核</span>
+      <span class="OTHER">其他</span>
+    </div>
+    <div ref="roomBox" class="cRoomBox" :style="{height:roomContentHeight + 'px'}">
+      <el-row>
+        <p v-if="noDataTips" class="cRoomNoDataTips">暂无相关日程</p>
+        <el-col v-else>
+          <el-col v-for="(item,index) in showData" class="cRoomItem" :key="index">
+            <el-col :span="2" class="cRoomFloor">
+              {{ index }}楼
+            </el-col>
+            <el-col :span="22" class="cRoomList">
+              <div class="cRoomIconItem" v-for="(room,rIndex) in item" :key="rIndex" :class="[room.employType]">
+                <p>{{ room.roomNum }}</p>
+              </div>
+            </el-col>
           </el-col>
         </el-col>
-      </div>
-    </el-row>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -48,6 +50,7 @@
     data() {
       return {
         rules,
+        roomContentHeight: 0,
         //form表单bind数据
         formValidate: {
           date: new Date(), // 日期
@@ -132,9 +135,25 @@
         });
         return flag;
       },
+      //设置表格及分页的位置
+      setTableDynHeight() {
+        let roomContent = this.$refs.roomContent.parentNode.offsetHeight;
+        let roomBox = this.$refs.roomBox.offsetTop;
+        this.roomContentHeight = roomContent - roomBox - 16;
+      },
     },
     created() {
       this.init()
+    },
+    mounted() {
+      //页面dom稳定后调用
+      this.$nextTick(function () {
+        //初始表格高度及分页位置
+        this.setTableDynHeight();
+        //为窗体绑定改变大小事件
+        let Event = this.$util.events;
+        Event.addHandler(window, "resize", this.setTableDynHeight);
+      })
     },
   }
 
@@ -150,6 +169,10 @@
   .cRoomList {
     padding: 20px;
     border-left: 1px solid #bfcbd9;
+  }
+
+  .cRoomBox {
+    overflow: auto;
   }
 
   .cRoomType {

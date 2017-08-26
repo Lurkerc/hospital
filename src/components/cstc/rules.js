@@ -36,7 +36,7 @@ let centerSchedule = {
 let audio = {
   brand: baseRules.selectText,
   modelNum: baseRules.required,
-  ip: [baseRules.required, baseRules.ip]
+  ip: [baseRules.required, baseRules.ip],
 };
 
 // 声像设备 - 网络音响 - 任务

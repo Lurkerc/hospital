@@ -15,17 +15,17 @@
         <el-table-column align="center" label="序号" type="index" width="100"></el-table-column>
         <el-table-column align="center" label="操作" width="80">
           <template scope="scope">
-            <el-button size="small" @click="edit(scope.row.id)">修改</el-button>
+            <el-button size="small" type="info" @click="edit(scope.row.id)">修改</el-button>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="brand" label="品牌" width="120">
           <template scope="scope">{{ scope.row.brand | typeText }}</template>
         </el-table-column>
-        <el-table-column prop="modelNum" label="设备型号" width="120">
+        <el-table-column prop="modelNum" label="设备型号" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="ip" label="设备IP" align="center">
+        <el-table-column prop="ip" label="设备IP" align="center" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="locationType" label="设备所在位置">
+        <el-table-column prop="locationType" label="设备所在位置" show-overflow-tooltip>
           <template scope="scope">{{ scope.row.locationType | typeText }}</template>
         </el-table-column>
         <el-table-column prop="status" label="设备状态">

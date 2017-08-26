@@ -36,14 +36,14 @@
           <el-col :span="8" :offset="2" v-if="formValidate.locationType === 'ROOM'">
             <el-form-item label="房间号：" prop="roomId" required>
               <el-select v-model="selectRoomId" placeholder="请选择">
-                <el-option v-for="(item,index) in roomSelectList" :key="item.id" :value="index" :label="item.roomNum"></el-option>
+                <el-option v-for="item in roomSelectList" :key="item.id" :value="item.id" :label="item.roomNum"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
 
           <el-col :span="8" :offset="2" v-if="formValidate.locationType === 'OTHER'">
-            <el-form-item label="" prop="orther" labelWidth="0">
-              <el-input v-model="formValidate.orther" placeholder="请输入所在位置"></el-input>
+            <el-form-item label="" prop="other" labelWidth="0">
+              <el-input v-model="formValidate.other" :maxlength="25" placeholder="请输入所在位置"></el-input>
             </el-form-item>
           </el-col>
 

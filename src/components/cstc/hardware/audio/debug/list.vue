@@ -6,6 +6,7 @@
       <p class="adrTitle">房间列表</p>
       <el-checkbox class="adrChkAll" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
       <ul class="adrList">
+        <!-- 房间 -->
         <el-checkbox-group v-model="checkedRooms" @change="handleCheckedRoomsChange">
           <li class="adrItem" v-for="room in roomList" :key="room.id">
             <el-checkbox :label="room.id">{{ room.roomNum }}</el-checkbox>
@@ -44,7 +45,8 @@
               <el-checkbox :label="box.id" v-if="box.id"></el-checkbox>
               <img src="../../../../../assets/ambuf/images/audio.png" class="audioImg">
               <p class="audioVolume">{{ box.volume }}</p>
-              <p>{{ box.roomNum }}房间</p>
+              <p class="overflow-txt1" v-if="box.roomId">{{ box.roomNum }}房间</p>
+              <p class="overflow-txt1" v-else>{{ box.other || '未知位置' }}</p>
               <p>{{ box.ip }}</p>
             </div>
           </el-checkbox-group>
@@ -66,14 +68,14 @@
                 <el-button size="small" type="warning" @click="stopTask(scope.row.id,scope.row.audiotaskId,scope.$index)" v-else>停止</el-button>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="name" label="任务名称"></el-table-column>
-            <el-table-column prop="startTime" label="开始时间" align="center">
+            <el-table-column align="center" prop="name" label="任务名称" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="startTime" label="开始时间" align="center" show-overflow-tooltip>
               <template scope="scope">{{ scope.row.startTime || '-' }}</template>
             </el-table-column>
-            <el-table-column prop="startDate" label="开始日期" align="center">
+            <el-table-column prop="startDate" label="开始日期" align="center" show-overflow-tooltip>
               <template scope="scope">{{ scope.row.startDate || '-' }}</template>
             </el-table-column>
-            <el-table-column prop="endDate" label="结束日期" align="center">
+            <el-table-column prop="endDate" label="结束日期" align="center" show-overflow-tooltip>
               <template scope="scope">{{ scope.row.endDate || '-' }}</template>
             </el-table-column>
             <el-table-column prop="status" label="任务状态">
@@ -116,6 +118,7 @@
         api,
         checkAll: true, // 房间全选
         adView: 'task',
+        locationType: 'ROOM', // 设备所在位置
         checkedRooms: [], // 已选房间
         roomList: [], // 待选房间列表
         isIndeterminate: false, // 房间是否已全选
@@ -162,6 +165,7 @@
       // 房间选择
       handleCheckedRoomsChange(value) {
         let checkedCount = value.length;
+
         this.checkAll = checkedCount === this.roomList.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.roomList.length;
 
@@ -190,7 +194,11 @@
       // 待选房间初始化
       successGetRoomData(res) {
         this.roomList = res.data || [];
-        if (res.data.length) {
+        this.roomList.push({
+          id: -1,
+          roomNum: '其他'
+        });
+        if (this.roomList) {
           this.checkedRooms = this.getAllRoomId();
           this.getBoxForSelectRoom();
         }
@@ -236,7 +244,6 @@
           ajaxSuccess: (res) => {
             this.successMess('任务停止成功');
             this.getTaskList();
-            // this.taskList[index].status = 'UNEXECUTED';
           },
           ajaxParams: {
             url: api.taskStop.path + id,
@@ -397,8 +404,7 @@
           ajaxSuccess: 'successGetRoomData',
           ajaxParams: {
             url: api.roomList.path,
-            method: api.roomList.method,
-            params: {}
+            method: api.roomList.method
           }
         };
         this.ajax(opt);
@@ -413,6 +419,20 @@
         if (!this.checkedRooms.length) {
           return
         }
+        let checkedRooms = this.$util._.defaultsDeep([], this.checkedRooms);
+        // 选项中是否有“其他”
+        let otherIndex = checkedRooms.indexOf(-1);
+        if (otherIndex > -1) {
+          this.locationType = 'OTHER';
+          checkedRooms.splice(otherIndex, 1);
+        } else {
+          this.locationType = 'ROOM';
+        }
+        // 全部
+        if (this.checkedRooms.length === this.roomList.length) {
+          checkedRooms.length = 0;
+          this.locationType = '';
+        }
         let opt = {
           errorTitle: '获取音响设备失败!',
           ajaxSuccess: 'successGetBoxData',
@@ -420,8 +440,8 @@
             url: api.debuglist.path,
             method: api.debuglist.method,
             params: {
-              roomIds: this.checkedRooms.join(','), // 房间id字符串
-              locationType: '', // 音箱所在位置 ROOM|ORTHER
+              roomIds: checkedRooms.join(','), // 房间id字符串
+              locationType: this.locationType, // 音箱所在位置 ROOM|ORTHER
             }
           }
         };

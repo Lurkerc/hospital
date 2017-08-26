@@ -21,11 +21,11 @@
         <el-table-column align="center" prop="brand" label="品牌" width="120">
           <template scope="scope">{{ scope.row.brand | typeText }}</template>
         </el-table-column>
-        <el-table-column prop="modelNum" label="设备型号" width="120">
+        <el-table-column prop="modelNum" label="设备型号" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="ip" label="设备IP" align="center">
+        <el-table-column prop="ip" label="设备IP" align="center" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="isConsole" label="是否带有云台" width="120">
+        <el-table-column prop="isConsole" label="是否带有云台">
           <template scope="scope">{{ scope.row.isConsole | typeText }}</template>
         </el-table-column>
         <el-table-column prop="locationType" label="设备所在位置">
