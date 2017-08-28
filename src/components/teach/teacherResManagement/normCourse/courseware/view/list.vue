@@ -163,7 +163,7 @@
       background-position: -377px -160px;
     }
     &.PPT,
-    &.pptx {
+    &.PPTX {
       background-position: -329px -184px;
     }
     &.PDF {

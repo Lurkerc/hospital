@@ -346,25 +346,50 @@
       /******************************************** 数据提交 ***************************************/
       // 保存
       saveToStore() {
-        // if (!this.checkData()) {
-        //   return false;
-        // }
+        if (!this.checkData()) {
+          return false;
+        }
         this.$store.commit('curriculum/data/updatePlanDto', this.planDtoList);
         return true
       },
       // 检测数据完整性
       checkData() {
-        let flag = true;
-        if (this.$refs.item) {
-          for (let i = 0; i < this.$refs.item.length; i++) {
-            this.$refs.item[i].validate((valid) => {
-              if (!valid) {
-                flag = false;
-              }
-            });
+        // let flag = true;
+        // if (this.$refs.item) {
+        //   for (let i = 0; i < this.$refs.item.length; i++) {
+        //     this.$refs.item[i].validate((valid) => {
+        //       if (!valid) {
+        //         flag = false;
+        //       }
+        //     });
+        //   }
+        // }
+        let data = this.planDtoList;
+        for (let i in data) {
+          // 课前
+          for (let b in data[i].wareDtoListTemp.before) {
+            if (!data[i].wareDtoListTemp.before[b].title) {
+              this.errorMess(`第${this.indexText(i)}节课的课前第${(+b+1)}个资料未填写显示名称`)
+              return false
+            }
+          }
+          // 课中
+          for (let p in data[i].wareDtoListTemp.in_progress) {
+            if (!data[i].wareDtoListTemp.in_progress[p].title) {
+              this.errorMess(`第${this.indexText(i)}节课的课中第${(+p+1)}个资料未填写显示名称`)
+              return false
+            }
+          }
+          // 课后
+          for (let a in data[i].wareDtoListTemp.after) {
+            if (!data[i].wareDtoListTemp.after[a].title) {
+              this.errorMess(`第${this.indexText(i)}节课的课后第${(+a+1)}个资料未填写显示名称`)
+              return false
+            }
           }
         }
-        return flag;
+        // return flag;
+        return true;
       },
 
       // 索引数字转换

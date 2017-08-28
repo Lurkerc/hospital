@@ -40,7 +40,9 @@
             <!-- <el-button size="small" type="success" @click="rotary(scope.row)">出科</el-button> -->
             <!-- <el-button size="small" type="warning" @click="show(scope.row)">查看</el-button> -->
             <el-button :disabled="!scope.row.depExaminationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
-            <el-button :disabled="!canRotary(scope.row)" size="small" type="success" @click="rotary(scope.row)">出科</el-button>
+            <el-tooltip effect="light" content="出科时间前5天、后5天可填出科申请" placement="bottom-start">
+              <el-button :disabled="!canRotary(scope.row)" size="small" type="success" @click="rotary(scope.row)">出科</el-button>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column label="姓名" prop="userName" show-overflow-tooltip></el-table-column>

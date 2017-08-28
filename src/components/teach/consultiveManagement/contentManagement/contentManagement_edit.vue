@@ -41,8 +41,8 @@
       </el-row >
       <el-row >
         <el-col :span="17" :offset="2">
-          <el-form-item label="URL:" prop="newsUrl" class="feildFontweight">
-            <el-input  v-model="formValidate.newsUrl" placeholder="请输入"></el-input>
+          <el-form-item label="URL:" prop="url" class="feildFontweight">
+            <el-input  v-model="formValidate.url" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
       </el-row >

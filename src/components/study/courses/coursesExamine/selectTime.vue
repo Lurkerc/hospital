@@ -94,7 +94,8 @@
 
 <script>
   import api from './api';
-  import selectDevice from '../../../cstc/bespeakClass/bespeakClass_selectDevice'; // 选择设备
+  // import selectDevice from '../../../cstc/bespeakClass/bespeakClass_selectDevice'; // 选择设备
+  import selectDevice from '../../../cstc/device/device_select'; // 选择设备
   export default {
     /**
      * selectData [日期_房间id_时间段id] 已经选择的时间数组

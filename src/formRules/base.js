@@ -97,7 +97,7 @@ let baseRules = {
     // 长度检测
     return (rule, value = '', callback) => {
       let msg;
-      if (!value) value = '';
+      if (value === null || value === undefined) value = '';
       if (min === 0 && max && value.length > max) {
         msg = `最多输入${max}个字符`;
       } else {
@@ -250,7 +250,7 @@ let baseRules = {
    */
   greaterThanZero1: function (rule, value, callback) {
     //检验位的检测
-    if(value==''||value==null)callback();
+    if (value == '' || value == null) callback();
     if (!/^\+?[1-9]\d*$/.test(value)) {
       callback(new Error('必须正整数且大于零'));
     }
@@ -261,7 +261,7 @@ let baseRules = {
    */
   greaterThanZero2: function (rule, value, callback) {
     //检验位的检测
-    if(value=='')callback();
+    if (value == '') callback();
     if (!/^\+?[0-9]\d*$/.test(value)) {
       callback(new Error('必须正整数且大于等于零'));
     }

@@ -33,6 +33,10 @@
     <!-- 内容 start -->
     <!-- 前置内容 -->
     <slot name="preContent"></slot>
+    <!-- 加载动画 -->
+    <keep-alive>
+      <loading v-if="menuActive === 'load'" ref="load"></loading>
+    </keep-alive>
     <!-- 课程基本信息 -->
     <basic-edit v-if="menuActive === 'basic'" ref="basic" :operailityData="operailityData"></basic-edit>
     <!-- 课程简介 -->
@@ -64,6 +68,8 @@
   import layout from "./_components/layout"; // 基础布局
   import nmenuItem from './_components/menu'; // 菜单项
 
+  import loading from "./load/loading"; // 加载动画
+
   import basicEdit from './basic/basic_edit'; // 课程基本信息
   import introEdit from './intro/intro_edit'; // 课程简介
   import outlineEdit from './outline/outline_edit'; // 课程教学大纲
@@ -86,7 +92,10 @@
       // 菜单点击
       menuClick(menu) {
         // 保存数据到store之后才能切到目标菜单
-        this.$refs[this.menuActive].saveToStore() && (this.menuActive = menu);
+        if (this.$refs[this.menuActive].saveToStore()) {
+          this.menuActive = 'load';
+          setTimeout(() => this.menuActive = menu, 500)
+        }
       },
       // 保存 调用子组件的save方法|提交审核
       saveCall(status) {
@@ -131,6 +140,7 @@
     mounted() {},
 
     components: {
+      loading,
       layout,
       nmenuItem,
       basicEdit,

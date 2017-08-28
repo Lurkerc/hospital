@@ -38,8 +38,8 @@
 
         <el-form-item v-if="isPlan" style="width:284px;" label="月度计划" prop="activityPlan">
           <el-select  style="width:284px;" v-model="formValidate.activityPlan" placeholder="请选择">
-            <!--<select-option  :unAll="true"></select-option>-->
-            <select-option :url="' '" :type="type"  :unAll="true" ></select-option>
+
+
           </el-select>
         </el-form-item>
         <el-form-item v-if="!isPlan" style="width:284px;" >
@@ -341,6 +341,8 @@
           activityPlanTime:this.yearMonthData(this.formValidate.activityTime),
           activityPlanDepId:this.formValidate.depId,
         }
+        console.log(this.isPlanMessTitle);
+
         this.ajax(this.isPlanMessTitle);
       },
 
@@ -515,6 +517,7 @@
                 this.showMess('请选择科室')
               }else {
                 this.isPlan = true;
+                this.upDataIsplan()
                 return;
               }
             this.formValidate.isPlan = 'N';

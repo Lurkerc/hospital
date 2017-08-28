@@ -26,7 +26,9 @@
     </div>
     <!-- 内容 start -->
     <!-- 加载动画 -->
-    <loading v-if="menuActive === 'load'" ref="load"></loading>
+    <keep-alive>
+      <loading v-if="menuActive === 'load'" ref="load"></loading>
+    </keep-alive>
     <!-- 课程基本信息 -->
     <basic-edit v-if="menuActive === 'basic'" ref="basic" read-only></basic-edit>
     <!-- 课程简介 -->
@@ -79,7 +81,8 @@
       // 菜单点击
       menuClick(menu) {
         // 保存数据到store之后才能切到目标菜单
-        this.menuActive = menu;
+        this.menuActive = 'load';
+        setTimeout(() => this.menuActive = menu, 500)
       },
       // 审核
       audit(type) {

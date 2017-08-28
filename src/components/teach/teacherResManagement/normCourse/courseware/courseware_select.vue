@@ -103,6 +103,7 @@
         tableData: [],
         selectTableData: [],
         selectTableDataArr: [],
+        selectTableDataId: [],
 
         formValidate: {
           name: '',
@@ -169,9 +170,8 @@
       //通过get请求列表数据
       updateListData(responseData) {
         if (!responseData.data) return;
-        this.tableData = responseData.data;
-        if (!responseData.totalCount) return;
-        this.totalCount = responseData.totalCount;
+        this.tableData = responseData.data || [];
+        this.totalCount = responseData.totalCount || 0;
       },
 
       /*
@@ -183,26 +183,29 @@
           return
         }
         let selArr = [];
-        val.map(item => selArr.push({
-          "number": this.viewType + item.id, // 排重使用
-          "fileId": item.fileId || '', // 文件ID
-          "title": item.name || item.title, // 课件显示名称
-          "fileName": item.fileName || '', //文件名称
-          "filePath": item.pdf || item.filePath || '', //文件路径
-          "fileType": item.fileType || '', //文件类型
-          "fileSize": item.size || '', //文件大小
-          "viewNum": item.viewNum || 0, // 播放次数
-          "resourceId": item.id, // 原资源id
-          "resourceType": this.viewType.toLocaleUpperCase(), // 资源类型
-        }))
-        let oldArr = this.$util._.defaultsDeep([], this.selectTableData, selArr);
-        let temp = this.$util._.uniq(oldArr, "number");
-        this.selectTableData = this.$util._.defaultsDeep([], temp);
-        this.$nextTick(() => {
-          // 默认选中全部
-          this.selectTableData.forEach(row => {
-            this.$refs.selectTableData.toggleRowSelection(row);
-          });
+        val.map(item => {
+          let temp = {
+            "number": this.viewType + item.id, // 排重使用
+            "fileId": item.fileId || '', // 文件ID
+            "title": item.name || item.title, // 课件显示名称
+            "fileName": item.fileName || '', //文件名称
+            "filePath": item.pdf || item.filePath || '', //文件路径
+            "fileType": item.fileType || '', //文件类型
+            "fileSize": item.size || '', //文件大小
+            "viewNum": item.viewNum || 0, // 播放次数
+            "resourceId": item.id, // 原资源id
+            "resourceType": this.viewType.toLocaleUpperCase(), // 资源类型
+          };
+          if (this.selectTableDataId.indexOf(temp.number) > -1) {
+            temp = null;
+            return
+          }
+          this.selectTableDataId.push(temp.number);
+          this.selectTableData.push(temp);
+          this.$nextTick(() => {
+            // 默认选中
+            this.$refs.selectTableData.toggleRowSelection(temp);
+          })
         })
       },
 

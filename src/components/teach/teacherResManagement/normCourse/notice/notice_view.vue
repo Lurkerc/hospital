@@ -37,7 +37,9 @@
       getNotice() {
         let opt = {
           ajaxSuccess: res => {
-            this.noticeList = res.data;
+            if (res.data && res.data.length) {
+              this.noticeList.push(res.data)
+            }
             this.totalCount = res.totalCount;
           },
           ajaxParams: {

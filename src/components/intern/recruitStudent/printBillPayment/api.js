@@ -16,9 +16,22 @@ const api = {
     path: thisFile + '/paymentSliplistByMajor',
     method: 'get'
   },
+  paymentMergeByUserIds: { // 合并打印学员缴费详情
+    path: thisFile + '/paymentMergeByUserIds',
+    method: 'get'
+  },
+  paymentZslistByUsers: { // 单个或者批量用户打印住宿单
+    path: thisFile + '/paymentZslistByUsers',
+    method: 'get'
+  },
   modifyPrint: { // 更新用户缴费单打印状态
     path: thisFile + '/modifyPrint/', // {userIds}
     method: 'put'
+  },
+  /************************* 收费标准 *********************************/
+  getByKey: {
+    path: '/rotaryConfig/getByKey/',
+    method: 'get'
   },
 };
 

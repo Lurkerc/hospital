@@ -108,6 +108,16 @@ const jxhdRouters = {
         resolve(require('../../components/teach/teachingActivities/manageUsersyllabus/manageUsersyllabus_list.vue'));
       }, 'jxhd');
     }
+  },
+  {
+    //教学计划
+    path:'teachplan',
+    name:'teachplan',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/teach/teachingActivities/teachplan/teachplan_list.vue'));
+      }, 'jxhd');
+    }
   }
   ]
 }

@@ -108,7 +108,7 @@
     @page {
       size: auto;
       /* 边距 */
-      margin: 5mm 16mm;
+      margin: 2mm 10mm;
     }
   }
 

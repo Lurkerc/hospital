@@ -3,13 +3,15 @@
   <div ref="internAuditListMain">
     <el-form :inline="true" class="internAuditList">
       <el-row>
-        <el-col :span="10">
-          <el-button type="success" @click="printData('school')">按学校打印</el-button>
-          <el-button type="info" @click="printData('major')">按专业打印</el-button>
-          <el-button type="danger" @click="printData('batch')">批量打印</el-button>
+        <el-col :span="16">
+          <el-button type="info" @click="printData('school')">按学校打印</el-button>
+          <el-button type="primary" @click="printData('major')">按专业打印</el-button>
+          <el-button type="warning" @click="printData('batch')">批量打印</el-button>
+          <el-button type="danger" @click="printData('merge')">合并打印</el-button>
+          <el-button type="success" @click="printData('dorm')">住宿费打印</el-button>
         </el-col>
-        <el-col :span="14" align="right" style="padding-bottom:20px;">
-          <el-input :maxlength="20" placeholder="请输入姓名" icon="search" v-model="searchObj.userName" :on-icon-click="search" style="width:300px;"></el-input>
+        <el-col :span="8" align="right" style="padding-bottom:20px;">
+          <el-input :maxlength="20" placeholder="请输入姓名" icon="search" v-model="searchObj.userName" :on-icon-click="search" style="width:200px;"></el-input>
           <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
         </el-col>
         <div v-show="searchMore" style="clear:both;" align="right" ref="searchMore">
@@ -41,9 +43,10 @@
       <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="序号" type="index" width="70"></el-table-column>
-        <el-table-column label="操作" align="center" width="80">
+        <el-table-column label="操作" align="center" width="220">
           <template scope="scope">
-            <el-button size="small" type="success" @click="printData('user',scope.row)">打印</el-button>
+            <el-button size="small" :plain="true" type="primary" @click="printData('user',scope.row)">实习费打印</el-button>
+            <el-button size="small" :plain="true" type="success" @click="printData('zsf',scope.row)">住宿费打印</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="userName" label="姓名" align="center" width="200"></el-table-column>
@@ -77,25 +80,56 @@
     <Modal :mask-closable="false" v-model="printDataModal" height="200" class-name="vertical-center-modal" :width="1000">
       <modal-header slot="header" :parent="self" :content="headerContent.printDataId"></modal-header>
       <print-data v-if="printDataModal" @cancel="cancel" @print="printDone">
-        <div class="printMain" v-for="(item,index) in printDatas" :key="index">
-          <p>财务处：</p>
-          <div class="printCon">
-            请收
-            <div>{{ item.schoolName }}</div>学校
-            <div>{{ item.majors || item.major }}</div>专业
-            <template v-if="printType == 'user' || printType == 'batch'">
-              <!-- 个人/批量 -->
-              <div>{{ item.userName }}</div>实习费/住宿费
-            </template>
-            <template v-else>
-              <!-- 学校/专业 -->
-              <div>{{ item.userNames.replace(/,/g,'，') }}</div>等{{ item.userNames.split(',').length }}人实习费/住宿费
-            </template>
-            <div>{{ item.totalCost }}</div>元。
+        <div class="printBPMain" v-for="(item,index) in printDatas" :key="index">
+          <div class="printBPItem">
+            <div class="printMain">
+              <p>财务处：</p>
+              <div class="printCon">
+                请收
+                <div>{{ item.schoolName }}</div>学校
+                <div>{{ item.majors || item.major }}</div>专业
+                <template v-if="['user','zsf','batch'].indexOf(printType) > -1">
+                  <!-- 个人/批量 -->
+                  <div>{{ item.userName }}</div>同学{{ ['zsf','dorm'].indexOf(printType) > -1 ? '住宿费' : '实习费' }}
+                </template>
+                <template v-else>
+                  <!-- 学校/专业 -->
+                  <div>{{ (item.userNames || item.userName).split(',').slice(0,3).join('，') }}</div>等{{ (item.userNames || item.userName).split(',').length }}人{{ ['zsf','dorm'].indexOf(printType) > -1 ? '住宿费' : '实习费' }}
+                </template>
+                <template v-if="['zsf','dorm'].indexOf(printType) > -1">
+                  <div>{{ item.totalCost }}</div>元及押金
+                  <div>{{ item.deposit }}</div>
+                </template>
+                <div v-else>{{ item.totalCost }}</div>元。
+              </div>
+              <div class="signature">
+                <p>教育处</p>
+                <p>日期：</p>
+              </div>
+            </div>
           </div>
-          <div class="signature">
-            <p>教育处</p>
-            <p>日期：</p>
+          <div class="printBPItem">
+            <div class="printMain">
+              <p>教育处：</p>
+              <div class="printCon">
+                已收
+                <div>{{ item.schoolName }}</div>学校
+                <div>{{ item.majors || item.major }}</div>专业
+                <template v-if="printType == 'user' || printType == 'batch'">
+                  <!-- 个人/批量 -->
+                  <div>{{ item.userName }}</div>同学{{ ['zsf','dorm'].indexOf(printType) > -1 ? '住宿费' : '实习费' }}
+                </template>
+                <template v-else>
+                  <!-- 学校/专业 -->
+                  <div>{{ (item.userNames || item.userName).split(',').slice(0,3).join('，') }}</div>等{{ (item.userNames || item.userName).split(',').length }}人{{ ['zsf','dorm'].indexOf(printType) > -1 ? '住宿费' : '实习费' }}
+                </template>
+                <div>{{ item.totalCost }}</div>元。
+              </div>
+              <div class="signature">
+                <p>财务处</p>
+                <p>日期：</p>
+              </div>
+            </div>
           </div>
         </div>
       </print-data>
@@ -132,6 +166,7 @@
         tableData: [],
         totalCount: 0,
         printType: '',
+
         printDataModal: false,
         headerContent: {
           printDataId: {
@@ -155,7 +190,8 @@
           }
         }
 
-        this.setTableData()
+        this.setTableData();
+        // this.getDeposit();
       },
       /********************************* 按钮事件 *****************************/
       // 搜索
@@ -233,22 +269,35 @@
       // 分类打印
       printData(type, row) {
         let get = {
-          user: 'paymentSliplistByUsers',
-          school: 'paymentSliplistBySchool',
-          major: 'paymentSliplistByMajor',
-          batch: 'paymentSliplistByUsers'
+          user: 'paymentSliplistByUsers', // 单人实习
+          school: 'paymentSliplistBySchool', // 学校
+          major: 'paymentSliplistByMajor', // 专业
+          batch: 'paymentSliplistByUsers', // 批量
+          merge: 'paymentMergeByUserIds', // 合并
+          dorm: 'paymentZslistByUsers', // 住宿
+          zsf: 'paymentZslistByUsers', // 住宿（单人）
         };
         let params;
         this.printType = type;
-        if (type === 'user' || type === 'batch') { // 批量或者单人打印
+        if (['user', 'zsf', 'dorm', 'batch', 'merge'].indexOf(type) > -1) { // 批量或者单人打印
           this.userIds.length = 0;
-          if (type === 'batch') { // 批量打印时
+          if (['dorm', 'batch', 'merge'].indexOf(type) > -1) { // 批量\合并\住宿打印
             if (this.multipleSelection.length < 1) {
               this.errorMess('至少选择一人才能打印！');
               return;
             }
-            for (let i = 0, d = this.multipleSelection, l = d.length; i < l; i++) {
-              this.userIds.push(d[i].userId)
+            for (let i = 0, schoolName, d = this.multipleSelection, l = d.length; i < l; i++) {
+              this.userIds.push(d[i].userId);
+              // 住宿费打印（按学校）
+              if (type === 'dorm') {
+                if (!schoolName) {
+                  schoolName = d[0].schoolName
+                }
+                if (schoolName !== d[i].schoolName) {
+                  this.errorMess(`选择的人员中有非“${schoolName}”的人员！`);
+                  return
+                }
+              }
             }
           } else { // 单人打印
             this.userIds = [row.userId];
@@ -281,6 +330,17 @@
             params
           }
         })
+      },
+      // 获取押金
+      getDeposit() {
+        let opt = {
+          ajaxSuccess: res => this.deposit = res.data.configValue,
+          ajaxParams: {
+            url: api.getByKey.path + 'rotary_deposit-SXS',
+            method: api.getByKey.method,
+          }
+        };
+        this.ajax(opt)
       },
       // 获取打印的人
       getPrintUser(data) {
@@ -350,6 +410,31 @@
       text-align: right;
       p {
         padding-right: 120px;
+      }
+    }
+  } // .printBPMain {
+  //   // position: relative;
+  //   // &:before {
+  //   //   content: ' ';
+  //   //   width: 0;
+  //   //   position: absolute;
+  //   //   top: 0;
+  //   //   bottom: 0;
+  //   //   left: 50%;
+  //   //   border-right: 1px dashed #666;
+  //   // }
+  //   .printBPItem {
+  //     // width: 48%;
+  //   }
+  // }
+  @media print {
+    .printBPMain {
+      .printBPItem {
+        margin-top: 150px;
+        &:nth-child(2n) {
+          margin-top: 350px;
+          page-break-after: always;
+        }
       }
     }
   }

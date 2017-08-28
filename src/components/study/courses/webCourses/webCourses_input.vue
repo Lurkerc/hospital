@@ -20,7 +20,9 @@
     </div>
     <!-- 内容 start -->
     <!-- 加载动画 -->
-    <loading v-if="menuActive === 'load'" ref="load"></loading>
+    <keep-alive>
+      <loading v-if="menuActive === 'load'" ref="load"></loading>
+    </keep-alive>
     <!-- 授课安排 -->
     <teach-edit v-if="menuActive === 'teach'" ref="teach" :selectCourse="selectCourse"></teach-edit>
     <!-- 课程基本信息 -->
@@ -75,7 +77,10 @@
       // 菜单点击
       menuClick(menu) {
         // 保存数据到store之后才能切到目标菜单
-        this.$refs[this.menuActive].saveToStore() && (this.menuActive = menu);
+        if (this.$refs[this.menuActive].saveToStore()) {
+          this.menuActive = 'load';
+          setTimeout(() => this.menuActive = menu, 500)
+        }
       },
       // 保存 调用子组件的save方法
       saveCall(status) {

@@ -24,7 +24,9 @@
     </div>
     <!-- 内容 start -->
     <!-- 加载动画 -->
-    <loading v-if="menuActive === 'load'"></loading>
+    <keep-alive>
+      <loading v-if="menuActive === 'load'"></loading>
+    </keep-alive>
     <!-- 课程基本信息 -->
     <basic-view v-if="menuActive === 'basic'"></basic-view>
     <!-- 公告 -->
@@ -89,7 +91,8 @@
       },
       // 菜单点击
       menuClick(menu) {
-        this.menuActive = menu;
+        this.menuActive = 'load';
+        setTimeout(() => this.menuActive = menu, 500)
       },
       // 获取查看数据
       getViewData() {

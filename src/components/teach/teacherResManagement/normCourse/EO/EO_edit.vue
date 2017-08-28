@@ -1,17 +1,19 @@
 <template>
   <!-- 评测与作业 -->
   <el-row class="nTestTable">
-    <el-form inline ref="item" v-for="(item,index) in planDtoList" :model="item" :rules="rules" :key="index">
+    <el-form inline ref="item" v-for="(item,index) in planDtoList" :key="index">
       <fieldset class="nPlanItem">
         <legend style="font-size:16px">&nbsp;&nbsp;第{{ indexText(index) }}节：{{ item.content || '未填写' }}&nbsp;&nbsp;</legend>
         <el-col :span="4">
           <el-form-item label="课前评测"></el-form-item>
         </el-col>
         <el-col :span="20" align="right">
-          <el-form-item label="达标分数：">
-            <el-input :readonly="isReadOnly" class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.before.score"></el-input>
-            <!-- <span>(系统可自动根据试题数量折算满分100)</span> -->
-          </el-form-item>
+          <el-form :model="item.testingDtoListTemp.before" :rules="rules" ref="score">
+            <el-form-item label="达标分数：" prop="score">
+              <el-input :readonly="isReadOnly" class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.before.score"></el-input>
+              <!-- <span>(系统可自动根据试题数量折算满分100)</span> -->
+            </el-form-item>
+          </el-form>
         </el-col>
         <el-col>
           <el-form-item>
@@ -93,10 +95,12 @@
           <el-form-item label="课中评测"></el-form-item>
         </el-col>
         <el-col :span="20" align="right">
-          <el-form-item label="达标分数：">
-            <el-input :readonly="isReadOnly" class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.in_progress.score"></el-input>
-            <!-- <span>(系统可自动根据试题数量折算满分100)</span> -->
-          </el-form-item>
+          <el-form :model="item.testingDtoListTemp.in_progress" :rules="rules" ref="score">
+            <el-form-item label="达标分数：" prop="score">
+              <el-input :readonly="isReadOnly" class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.in_progress.score"></el-input>
+              <!-- <span>(系统可自动根据试题数量折算满分100)</span> -->
+            </el-form-item>
+          </el-form>
         </el-col>
         <el-col>
           <el-form-item>
@@ -178,10 +182,12 @@
           <el-form-item label="课后评测"></el-form-item>
         </el-col>
         <el-col :span="20" align="right">
-          <el-form-item label="达标分数：">
-            <el-input :readonly="isReadOnly" class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.after.score"></el-input>
-            <!-- <span>(系统可自动根据试题数量折算满分100)</span> -->
-          </el-form-item>
+          <el-form :model="item.testingDtoListTemp.after" :rules="rules" ref="score">
+            <el-form-item label="达标分数：" prop="score">
+              <el-input :readonly="isReadOnly" class="tdlbScoreInput" size="small" v-model="item.testingDtoListTemp.after.score"></el-input>
+              <!-- <span>(系统可自动根据试题数量折算满分100)</span> -->
+            </el-form-item>
+          </el-form>
         </el-col>
         <el-col>
           <el-form-item>
@@ -295,7 +301,7 @@
 
 <script>
   import {
-    plan as rules
+    eq as rules
   } from '../rules';
   import testTypeOption from './testTypeOption';
   import editSubject from './subject/edit'; // 编辑题干
@@ -499,18 +505,18 @@
       /******************************************** 数据提交 ***************************************/
       // 保存
       saveToStore() {
-        // if (!this.checkData()) {
-        //   return false;
-        // }
+        if (!this.checkData()) {
+          return false;
+        }
         this.$store.commit('curriculum/data/updatePlanDto', this.planDtoList);
         return true
       },
       // 检测数据完整性
       checkData() {
         let flag = true;
-        if (this.$refs.item) {
-          for (let i = 0; i < this.$refs.item.length; i++) {
-            this.$refs.item[i].validate((valid) => {
+        if (this.$refs.score) {
+          for (let i = 0; i < this.$refs.score.length; i++) {
+            this.$refs.score[i].validate((valid) => {
               if (!valid) {
                 flag = false;
               }
@@ -583,7 +589,7 @@
   }
 
   .tdlbScoreInput {
-    width: 100px;
+    width: 130px;
     &~span {
       margin-left: 6px;
       color: red;
