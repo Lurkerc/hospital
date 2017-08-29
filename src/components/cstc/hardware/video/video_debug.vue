@@ -63,7 +63,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <hkVideo v-if="isShowVideo" width="500" height="360" :count="count" :isShowRight="true" :ip="formValidate.ip" :port="formValidate.port" :nvrIp="formValidate.nvrIp" :loginName="formValidate.loginName" :password="formValidate.password"></hkVideo>
+    <hkVideo v-if="isShowVideo" width="500" height="360" :count="count" :isShowRight="formValidate.isConsole=='YES'?true:false" :ip="formValidate.ip" :port="formValidate.port" :nvrIp="formValidate.nvrIp" :loginName="formValidate.loginName" :password="formValidate.password"></hkVideo>
     <el-row>
       <el-col :span="4" :offset="8" align="center">
         <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
@@ -167,6 +167,7 @@
       },
       saveSuccess(res) {
         this.successMess("保存成功!");
+        this.$emit("edit")
       },
       /*
        * 当前组件发送事件给父组件

@@ -14,7 +14,20 @@
         </el-breadcrumb>
       </div>
       <div class="video-title-right">
-        <el-row>
+        <el-popover
+          ref="popover"
+          placement="bottom"
+          width="200"
+          trigger="hover">
+          <Timeline pending v-if="recordData.length>0">
+            <Timeline-item v-for="(item,index) in recordData" :key="index">{{item.updateTime | formatTime('') }}：<el-button type="text">{{item.title}}</el-button>({{item.status==0?'学习中':'完成'}})</Timeline-item>
+            <!--<Timeline-item>1分钟前：<el-button type="text">内科视频</el-button></Timeline-item>
+            <Timeline-item>3小时前：<el-button type="text">内科视频</el-button></Timeline-item>
+            <Timeline-item>2天前：<el-button type="text">内科视频</el-button></Timeline-item>-->
+          </Timeline>
+          <p style="text-align: center;padding: 30px 0;" v-else>还没有学习记录!</p>
+        </el-popover>
+        <el-row style="float: right">
           <el-col :span="10">
             <el-input
               placeholder="视频资源名称"
@@ -24,7 +37,7 @@
             </el-input>
           </el-col>
           <el-col :span="8" :offset="2">
-            <el-button>记录</el-button>
+            <el-button v-popover:popover>记录</el-button>
             <el-button>收藏</el-button>
           </el-col>
           <el-col :span="4">
@@ -94,6 +107,27 @@
           videoType:"mp4"
         },
 
+        //查询学习记录
+        recordData:[
+          /*{
+           "id":18,
+           "title":"title测试",
+           "types":"VIDEO",
+           "createTime":"",
+           "updateTime":"",
+           "status":0
+           },*/
+        ],
+        searchRecordsTitle:{
+          ajaxSuccess:'getRecordsData',
+          ajaxParams:{
+            url: api.userHistoryInfo.path,
+            params:{
+              types:'VIDEO',curPage:1,pageSize:5,
+            }
+          }
+        },
+
         listMessTitle:{
           ajaxSuccess:'SuccessGetCurrData',
           ajaxParams:{
@@ -118,6 +152,15 @@
         this.videoOptions.videoType = suffix;
         this.videoOptions.filePath = this.$store.state.envPath.videoHost+data.filePath;
       },
+
+      //获取学习记录
+      getRecordsData(responseData){
+        let data = responseData.data;
+        this.recordData=[];
+        //最多显示5条播放记录
+        this.recordData = data.splice(0,5);
+      },
+
       getFileName(o){
         let len = o.lastIndexOf(".");
         let str = o.substring(len+1,o.length);
@@ -130,6 +173,7 @@
       init(){
         //默认请求加载数据
         this.ajax(this.listMessTitle);
+        this.ajax(this.searchRecordsTitle);
       },
 
       handleIconClick(ev) {

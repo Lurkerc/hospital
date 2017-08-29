@@ -57,7 +57,7 @@
     <!--调试-->
     <Modal :mask-closable="false" width="1000" v-model="debugVideoModal" class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="debugId"></modal-header>
-      <debug-video v-if="debugVideoModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></debug-video>
+      <debug-video v-if="debugVideoModal" @cancel="cancel" @edit="setTableData" :operaility-data="operailityData"></debug-video>
       <div slot="footer"></div>
     </Modal>
     <!--删除弹窗-->

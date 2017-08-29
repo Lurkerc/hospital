@@ -24,7 +24,7 @@
         </el-form-item>
 
           <el-form-item label="主持人" prop="hostUserName">
-            <el-input @focus="openAndColseHost('host')" v-model="formValidate.hostUserName" ></el-input>
+            <el-input readonly @focus="openAndColseHost('host')" v-model="formValidate.hostUserName" ></el-input>
           </el-form-item>
 
       </el-col>
@@ -36,10 +36,14 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item v-if="isPlan" style="width:284px;" label="月度计划" prop="activityPlan">
-          <el-select  style="width:284px;" v-model="formValidate.activityPlan" placeholder="请选择">
-
-
+        <el-form-item v-show="isPlan" style="width:284px;" label="月度计划" prop="planDetailId">
+          <el-select  @change="planChange" style="width:284px;" v-model="activityPlan" placeholder="请选择">
+            <el-option
+              v-for="item in planData"
+              :key="item.id"
+              :label="item.planActivityTitle"
+              :value="item.planDetailId+'-'+item.activityPlanId">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item v-if="!isPlan" style="width:284px;" >
@@ -202,7 +206,7 @@
         operailityData:'',
         countDate:0,
         options: [],
-
+        activityPlan:'',  //计划绑定的数据
         isPlan:false,
         "formValidate":{
           "depId":'',
@@ -290,6 +294,7 @@
             }
           }
         },
+        planData:[],   //计划数据
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle:{
           type:'add',
@@ -337,20 +342,49 @@
 
       //获取计划（ajax）——
       getIsPlan(){
+        this.activityPlan = ''
+        this.formValidate.planDetailId = '';
+        this.formValidate.activityPlanId ='';
         this.isPlanMessTitle.ajaxParams.params ={
           activityPlanTime:this.yearMonthData(this.formValidate.activityTime),
           activityPlanDepId:this.formValidate.depId,
         }
-        console.log(this.isPlanMessTitle);
-
         this.ajax(this.isPlanMessTitle);
       },
 
 
       //获取计划成功
       isPlanSuccess(res){
+          this.activityPlan = '';
+          this.planData = [];
         let data = res.data;
         if(!data)return;
+
+       /* data = [
+          {
+            "planDetailId":"活动详情ID",
+            "activityPlanId":111,
+            "activityPlanDepId":"计划科室ID",
+            "activityPlanDepName":"计划科室名称",
+            "planActivityTitle":"活动名称",
+            "planActivityType":"活动类型",
+            "planActivityHostUserId":"主持人ID",
+            "planActivityHostUserName":"主持人姓名",
+            "planActivityTime":"活动时间(yyyy-MM-dd)",
+            "planActivityTimeids":"1,2,3",
+            "planActivitySite":"活动地点",
+            "planActivityContent":"活动内容",
+            "planActivityFiles":[
+              {
+                "id":11,
+                "fileUrl":"http://www.baidu.com",
+                "fileName":"附件",
+                "fileType":"txt"
+              }
+            ]
+          }
+        ]*/
+        this.planData = data;
 
       },
       //点击选择人员按钮触发
@@ -510,6 +544,9 @@
 
       //改变计划
       isPlanChange(val){
+        this.activityPlan = ''
+        this.formValidate.planDetailId = '';
+        this.formValidate.activityPlanId ='';
           if(val=='Y'){
               if(! this.formValidate.activityTime ){
                 this.showMess('请选择活动时间')
@@ -532,11 +569,95 @@
       upDataIsplan(){
           if(this.isPlan){
             if(this.formValidate.activityTime && this.formValidate.depId ){
+
               this.getIsPlan();
               }
           }
       },
 
+
+      //计划选项发生改变
+      planChange(val){
+          if(!val)return;
+          let selectPlanData = {};
+        for(let i=0;i<this.planData.length;i++){
+            let item = this.planData[i];
+            let value = item.planDetailId+'-'+item.activityPlanId
+            if(value==this.activityPlan){
+              selectPlanData = item;
+              continue;
+            }
+        }
+
+//        "formValidate":{
+//          "depId":'',
+//            "activityName":"",
+//            "activityType":"",
+//            "hostUserId":'',
+//            "hostUserName":"",
+//            "activityTime":"",
+//            "activitySite":"",
+//            "activityUser":"",
+//            "whetherNeedCases":"YES",
+//            "casesName":"",
+//            "activityContent":"",
+//            "activityUserType":"ALLUSER",
+//            "activityUserTypeValue":",",
+//            "activityDepUserType":"",
+//            "shouldUserCount":'',
+//            "actuallyUserCount":'',
+//            "timeIds":"",
+//            "recordTimes":[],
+//            "activityState":"",
+//            activityPlan:'',
+//
+//            //新增
+//            isPlan:'N',  //是否计划内
+//            activityPlanId:'', //月度计划ID
+//            planDetailId:'', //计划详情ID
+//        }
+        let formValidate = this.formValidate
+        formValidate.activityName = selectPlanData.planActivityTitle ; //活动名称
+        formValidate.activityType = selectPlanData.planActivityType  ;//活动类型
+
+        //todo 主持人  主持人只能选择一个计划要修改
+        formValidate.hostUserId = selectPlanData.planActivityHostUserId;
+        formValidate.hostUserName = selectPlanData.planActivityHostUserName;
+          this.selectHost = [{
+            key:selectPlanData.planActivityHostUserId,
+            label:selectPlanData.planActivityHostUserName,
+            disabled: false,
+          }];
+
+          //活动时间
+//        formValidate.activityTime = selectPlanData.planActivityTime;
+        //活动时间段
+//        item.courseTime+'/'+item.timeId
+        let times = []
+        if(!selectPlanData.planActivityTimeids)selectPlanData.planActivityTimeids='';
+        let planActivityTimeids = selectPlanData.planActivityTimeids.split(',');
+        for(let k=0;k<planActivityTimeids.length;k++){
+            let item = planActivityTimeids[k];
+            for(let l=0;l<this.getRecordTimes.length;l++){
+                let time = this.getRecordTimes[l];
+                if(time.timeId == item){
+                  times.push(time.courseTime+'/'+time.timeId)
+                    continue;
+                }
+            }
+        }
+        formValidate.recordTimes = times;
+        //活动地点
+        formValidate.activitySite =selectPlanData.planActivitySite;
+        //活动内容
+        formValidate.activityContent =selectPlanData.planActivityContent;
+
+        formValidate.planDetailId = selectPlanData.planDetailId;
+        formValidate.activityPlanId = selectPlanData.activityPlanId;
+
+
+
+      }
 
 
     },

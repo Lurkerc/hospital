@@ -31,7 +31,7 @@
           <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
             <!---->
             <!--<select-option :type="'userRotaryDeptlist'" :userType="userType" :userId="userId"  name="depName" id="depId"></select-option>-->
-            <select-option :type="'byNowUser'" ></select-option>
+            <select-option :type="type"></select-option>
           </el-select>
 
         </el-form-item>
@@ -271,8 +271,6 @@
         userId:'',
         userType:'',
       }
-
-
     },
     methods: {
       //初始化请求列表数据
@@ -280,9 +278,12 @@
         Util = this.$util;
         //ajax请求参数设置
         let userInfo = this.$store.getters.getUserInfo;
-        this.userType = userInfo.studentTypes;
-        this.userId = userInfo.id;
-
+        let identify = userInfo.roleList[0].identify;
+        if(identify=='JXMS'||identify=='KEZR'|| identify==''){
+          this.type = 'byNowUser';
+        }else {
+          this.type = 'dep';
+        }
         this.myPages =  Util.pageInitPrams;
 
         this.queryQptions = {

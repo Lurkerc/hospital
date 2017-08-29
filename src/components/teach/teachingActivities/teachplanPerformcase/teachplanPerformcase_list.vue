@@ -1,64 +1,54 @@
+<!----------------------------------
+****--@name     教学计划
+****--@role     ${*}
+****--@date     2017/8/25
+****--@author   gx
+----------------------------------->
 <template>
   <div id="content" ref="content" class="modal">
-    <el-form  :model="formValidate" ref="formValidate" :rules="rules.teachingExperienceList"  inline label-width="90px" class="demo-ruleForm">
-      <el-row >
+    <el-form  ref="formValidate" inline label-width="100px">
+      <el-row style="margin-bottom:0">
+        <!--列表操作按钮-->
         <el-col :span="10" >
 
         </el-col>
+        <!--搜索项-->
         <el-col :span="14" :offset="10" align="right">
-          <el-form-item label="课程名称" prop="activityName" >
-            <el-input style="width:300px;"   v-model="formValidate.activityName" placeholder="输入活动名称搜索">
-              <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
-            </el-input>
+          <el-form-item label="计划时间:" prop="userType" >
+            <el-date-picker
+              v-model="formValidate.planTime"
+              align="right"
+              type="month"
+              :editable="false"
+              placeholder="选择时间">
+            </el-date-picker>
           </el-form-item>
+          <el-button @click="searchEvent"   icon="search"></el-button>
           <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
         </el-col>
       </el-row>
-
-      <div v-if="searchMore" ref="searchMore">
-        <el-form-item label="课程类型" prop="user">
-          <el-select v-model="formValidate.activityType" label="活动状态" placeholder="请选择活动类型">
-            <select-option  :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="时间" prop="activityBeginTime" >
-          <el-date-picker
-            v-model="formValidate.activityBeginTime"
-            type="date"
-            :editable="false"
-            placeholder="选择日期"
-            :picker-options="pickerOptions0"
-            @change="handleStartTime">
-          </el-date-picker>
-          到
-          <el-date-picker
-            v-model="formValidate.activityEndTime"
-            align="right"
-            type="date"
-            :editable="false"
-            placeholder="选择日期"
-            :picker-options="pickerOptions1"
-            @change="handleEndTime">
-          </el-date-picker>
-        </el-form-item>
-
-        <el-form-item label="状态" prop="status" >
-          <el-select filterable  v-model="formValidate.activityState" placeholder="请选择">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="未上报" value="NO_RELEASE"></el-option>
-            <el-option label="已上报" value="RELEASE"></el-option>
-            <el-option label="结束" value="STOP"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="科室" prop="depId" >
-          <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
-            <select-option ></select-option>
+      </br>
+      <!--高级搜索项-->
+      <div v-show="searchMore" ref="searchMore">
+        <!--<el-form-item label="计划月份:" prop="userType" >-->
+          <!--<el-date-picker-->
+            <!--v-model="formValidate.activityPlanMonth"-->
+            <!--align="right"-->
+            <!--format="MM"-->
+            <!--type="month"-->
+            <!--:editable="false"-->
+            <!--placeholder="选择月">-->
+          <!--</el-date-picker>-->
+        <!--</el-form-item>-->
+        <el-form-item label="科室:" prop="userType" >
+          <el-select v-model="formValidate.activityPlanDepId" placeholder="科室">
+            <select-option  :type="'dep'"></select-option>
           </el-select>
         </el-form-item>
         <el-button type="info" @click="searchEvent">查询</el-button>
-
       </div>
     </el-form>
+
     <!--列表数据-->
     <div>
       <!--表格数据-->
@@ -75,6 +65,10 @@
           highlight-current-row
           style="width: 100%;height: 100%"
           @selection-change="handleSelectionChange">
+          <!--<el-table-column-->
+            <!--type="selection"-->
+            <!--width="55">-->
+          <!--</el-table-column>-->
           <el-table-column
             align="center"
             label="序号"
@@ -84,67 +78,50 @@
               <span>{{scope.row.index}}</span>
             </template>
           </el-table-column>
+          <!--<el-table-column-->
+            <!--label="操作"-->
+            <!--width="160">-->
+            <!--<template scope="scope">-->
+              <!--<el-button size="small"  type="info" @click="show(scope.row)">查看</el-button>-->
+              <!--<el-button size="small" @click="edit(scope.row)">修改</el-button>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
           <el-table-column
-            label="操作"
-            width="260">
-            <template scope="scope">
-              <el-button size="small" @click="xdth(scope.row)">心得体会</el-button>
-              <el-button size="small" @click="uploadingCourseware(scope.row)">上传课件</el-button>
-              <el-button size="small" @click="show(scope.row)">查看</el-button>
-            </template>
+            show-overflow-tooltip
+            align="center"
+            prop="activityPlanDepName"
+            label="计划科室名称">
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
             align="center"
-            prop="activityName"
-            label="课程名称"
-            width="120">
+            prop="planActivityTitle"
+            label="活动名称">
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
-            prop="activityType"
-            label="课程类型"
-            width="120">
+            prop="planActivityType"
+            label="活动类型">
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
-            prop="activitySite"
-            label="授课地点"
+            prop="planActivityHostUserName"
+            label="主持人姓名"
             align="center"
           >
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
-            prop="hostUserName"
-            label="授课老师"
-            width="120"
+            prop="activityPlanTime"
+            label="活动时间"
           >
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
-            prop="activityUser"
-            label="参加人"
-          >
+            prop="planPerformCount"
+            label="执行次数">
           </el-table-column>
-          <el-table-column
-            show-overflow-tooltip
-            prop="actuallyUserCount"
-            label="签到人数"
-            width="120"
-          >
-          </el-table-column>
-          <el-table-column
-            show-overflow-tooltip
-            prop="activityTime"
-            label="日期"
-            width="120">
-          </el-table-column>
-          <el-table-column
-            show-overflow-tooltip
-            prop="recordTimes"
-            label="时间"
-            width="120">
-          </el-table-column>
+
         </el-table>
       </div>
       <!--分页-->
@@ -157,40 +134,15 @@
             :page-sizes="myPages.pageSizes"
             :page-size="myPages.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="listTotal">
+            :total="totalCount">
           </el-pagination>
         </div>
       </div>
     </div>
-    <!--心得体会-->
+    <!--查看弹窗-->
     <Modal
       :mask-closable="false"
-      width="1000"
-      v-model="xdthModal"
-      title="对话框标题"
-      class-name="vertical-center-modal"
-      :loading="loading">
-      <modal-header slot="header" :content="xdthId"></modal-header>
-      <xdth v-if="xdthModal" @cancel="cancel" @xdth="subCallback" :url="url" :operaility-data="operailityData"></xdth>
-      <div slot="footer"></div>
-    </Modal>
-
-    <!-- 上传课件-->
-    <Modal
-      :mask-closable="false"
-      width="1000"
-      v-model="uploadingCoursewareModal"
-      title="对话框标题"
-      class-name="vertical-center-modal"
-      :loading="loading">
-      <modal-header slot="header" :content="uploadingCoursewareId"></modal-header>
-      <uploadingCourseware v-if="uploadingCoursewareModal" @cancel="cancel" @uploadingCourseware="subCallback" :url="url" :operaility-data="operailityData"></uploadingCourseware>
-      <div slot="footer"></div>
-    </Modal>
-    <!--查看档案管理弹窗-->
-    <Modal
-      :mask-closable="false"
-      width="1000"
+      width="1300"
       v-model="showModal"
       title="查看档案管理弹窗"
       class-name="vertical-center-modal"
@@ -199,79 +151,91 @@
       <show v-if="showModal" @cancel="cancel" @show="subCallback" :operaility-data="operailityData" :url="url"></show>
       <div slot="footer"></div>
     </Modal>
+
+
+
   </div>
 </template>
 <script>
-  import rules from '../../rules.js'
   /*当前组件必要引入*/
   import url from '../app'
-  //引入--新建--组件
-  import show from "./teachingExperience_view.vue";
-  //引入--选择人员--组件
-  import xdth from "./teachingExperience_xdth.vue";
-  //引入--选择人员--组件
-  import uploadingCourseware from "./teachingExperience_uploadingCourseware.vue";
+  //引入--查看--组件
+  import show from "./teachplanPerformcase_view.vue";
+
   //当前组件引入全局的util
   let Util=null;
   export default{
     data() {
       return {
-        rules,
-        searchMore:'',
-        //查询表单
         url:url,
+        //查询表单
         listUrl:'/role/list?name=&identify=&type=',
         deleteUrl:'/role/remove',
         formValidate: {
-          activityName: '', //获得名称
-          activityType: '', //活动类型
-          activityBeginTime: '', //活动时间(开始)
-          activityEndTime: '', //活动时间(开始)
-          activityState: '', //活动状态
-          depId: '', //科室ID
-          userId:'',
+          planTime: '',       //计划时间(yyyy-MM)
+          activityPlanDepId:'' ,     //科室ID
+          sortby: '',//排序列
+          order: ''     //升序、降序
         },
 
-        "tableData":[
-//          {
-//            "id":1,
-//            "activityName":"教学查房",
-//            "activityType":"理论",
-//            "hostUserName":"张三",
-//            "activityTime":"2017-03-31",
-//            "activitySite":"教学楼三楼301室",
-//            "activityUser":"呼吸科-住院医师",
-//            "shouldUserCount":30,
-//            "actuallyUserCount":30,
-//            "recordTimes":"9:00-10:00,10:10-11:00",
-//            "activityState":"nosubmit"
-//          }
-        ],
-        //窗口开关
-        uploadingCoursewareModal:false,
-        xdthModal:false,
-
-        uploadingCoursewareId:{id:'uploadingCoursewareId',title:'上传课件'},
-        xdthId:{id:'xdthId',title:'心得体会'},
-
+        //发布
+        publishData:{
+          method:'put',
+          url: url.modifyRelease,
+          data:{
+            type:'release'
+          }
+        },
+        //撤销
+        revocationData:{
+          method:'put',
+          url: url.modifyRelease,
+          data:{
+            type:'noRelease'
+          }
+        },
         operailityData:'',
         multipleSelection: [],
         dynamicHt: 100,
         self: this,
+        tableData: [
+          {
+            "planDetailId":"活动详情ID",
+            "activityPlanId":111,
+            "activityPlanDepId":"计划科室ID",
+            "activityPlanDepName":"计划科室名称",
+            "planActivityTitle":"活动名称",
+            "planActivityType":"活动类型",
+            "planActivityHostUserId":"主持人ID",
+            "planActivityHostUserName":"主持人姓名",
+            "planActivityTime":"活动时间(yyyy-MM-dd)",
+            "planPerformCount":"执行次数"
+          }
+        ],
+        //发布
+        publishModal:false,
+        //撤销发布
+        revocationModal:false,
+        searchMore: false,
         loading:false,
-        listTotal:0,
+        totalCount:0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle:{
           paramsData:'listUrl',
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:url.hostUserList,
+            url:url.staticPlanImplementation,
             params:{}
           }
         },
         /*--按钮button--*/
-        viewId:{id:'view',title:'查看'},
-        auditId:{id:'audit',title:'审核'},
+        addId:{id:'addId',title:'新建'},
+        editId:{id:'editId',title:'修改'},
+        removeId:{id:'removeId',title:'删除'},
+        viewId:{id:'viewId',title:'查看'},
+        publishId:{id:'publishId',title:'发布'},
+        revocationId:{id:'revocationId',title:'撤销'},
+
       }
     },
     methods: {
@@ -280,9 +244,9 @@
         Util = this.$util;
         //ajax请求参数设置
         this.myPages =  Util.pageInitPrams;
-        let userInfo = this.$store.getters.getUserInfo;
-        this.formValidate.userId = userInfo.id;
-        this.queryQptions = {curPage: 1,pageSize: Util.pageInitPrams.pageSize
+
+        this.queryQptions = {
+          curPage: 1,pageSize: Util.pageInitPrams.pageSize
         }
 
         this.setTableData();
@@ -314,7 +278,7 @@
           flag = false;
         }
         if(len>1 && isOnly){
-          this.showMess("只能修改一条数据!")
+          this.showMess("只能选择一条数据!")
           flag = false;
         }
         return flag;
@@ -322,33 +286,25 @@
 
       //通过get请求列表数据
       updateListData(responseData){
-        let data = responseData.data;
-        if(!data)return;
-        this.tableData = this.addIndex(data);
-        this.listTotal = data.listTotal||0;
+        if(!responseData.data)return;
+        this.tableData = this.addIndex(responseData.data);
+        if(!responseData.totalCount) return;
+        this.totalCount = responseData.totalCount;
       },
       setTableData(){
-        let  formSearch = this.formDate(this.getFormData(this.formValidate),['activityBeginTime','activityEndTime'],this.yearMonthData);
-        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions,formSearch);
+          let formValidate =this.$util._.defaultsDeep({},this.formValidate);
+        formValidate.planTime = this.conductDate(formValidate.planTime,'yyyy-MM');
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions,formValidate);
         this.ajax(this.listMessTitle);
       },
+
       //搜索监听回调
       searchEvent(isLoading){
         //        isLoading(true);
         let isSubmit = this.handleSubmit('formValidate');
         if(isSubmit){
-          this.setTableData(isLoading)
+          this.setTableData()
         }
-      },
-
-
-      /*
-       * 获取表单数据
-       * @return string  格式:id=0&name=aa
-       * */
-      getFormData(data){
-        let myData = Util._.defaultsDeep({},data);
-        return myData;
       },
 
 
@@ -363,30 +319,77 @@
             flag =true;
           } else {
             this.$Message.error('表单验证失败!');
-        }
+          }
         })
         return flag
       },
-      /*--点击--心得体会--按钮--*/
-      xdth(data){
+
+
+      /*--点击--添加--按钮--*/
+      add(){
+        this.openModel("add");
+      },
+      /*--点击--修改--按钮--*/
+      edit(data){
         this.operailityData = data;
-        this.openModel("xdth");
+        this.openModel("edit");
+      },
+      /*--点击--删除--按钮--*/
+      remove(){
+        if(!this.isSelected()) return;
+        this.operailityData = this.multipleSelection;
+        for(let i=0;i< this.multipleSelection.length;i++){
+
+          let item = this.multipleSelection[i];
+          if(item.activityPlanState  == 'RELEASE' ){
+            this.errorMess('只能对未发布的数据进行删除');
+            return;
+          }else {
+            item.id = item.activityPlanId
+          }
+
+
+        }
+        this.openModel('remove') ;
       },
       /*
        * 点击--查看--按钮
        * @param index string|number  当前行索引
        * */
-      show(data,type){
-          this.operailityData= data;
+      show(data){
+        this.operailityData = data;
         this.openModel("show");
       },
-      /*
-       * 点击--查看--按钮
-       * @param index string|number  当前行索引
-       * */
-      uploadingCourseware(data,type){
-          this.operailityData= data;
-        this.openModel("uploadingCourseware");
+
+      /*--点击--发布--按钮--*/
+      publish(){
+        if(!this.isSelected(true)) return;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].activityPlanState  == 'RELEASE' ){
+            this.errorMess('只能对未发布的数据进行发布');
+            return ;
+          }else {
+            this.multipleSelection[i].id = this.multipleSelection[i].activityPlanId
+          }
+        }
+        this.operailityData = this.multipleSelection;
+        this.openModel('publish') ;
+      },
+
+
+      /*--点击--撤销--按钮--*/
+      revocation(){
+        if(!this.isSelected(true)) return;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          if(this.multipleSelection[i].activityPlanState =='NO_RELEASE'){
+            this.errorMess('只能对已发布的数据进行撤销');
+            return ;
+          }else {
+            this.multipleSelection[i].id = this.multipleSelection[i].activityPlanId
+          }
+        }
+        this.operailityData = this.multipleSelection;
+        this.openModel('revocation') ;
       },
       /*
        * 监听子组件通讯的方法
@@ -431,6 +434,8 @@
       openModel(options){
         this[options+'Modal'] = true;
       },
+
+
       // 高级搜索按钮展开搜索表单并重新计算表格高度
       showSearchMore() {
         this.searchMore = !this.searchMore;
@@ -438,6 +443,8 @@
           this.setTableDynHeight()
         })
       },
+
+
     },
     created(){
       this.init();
@@ -454,7 +461,7 @@
     },
     components:{
       //当前组件引入的子组件
-      show,xdth,uploadingCourseware
+      show
     }
   }
 </script>

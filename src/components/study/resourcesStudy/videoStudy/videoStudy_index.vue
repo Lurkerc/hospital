@@ -45,7 +45,7 @@
         width="200"
         trigger="hover">
         <Timeline pending v-if="recordData.length>0">
-          <Timeline-item v-for="(index,item) in recordData" :key="index"><el-button type="text">{{item.title}}</el-button></Timeline-item>
+          <Timeline-item v-for="(item,index) in recordData" :key="index">{{item.updateTime | formatTime('') }}：<el-button type="text">{{item.title}}</el-button>({{item.status==0?'学习中':'完成'}})</Timeline-item>
           <!--<Timeline-item>1分钟前：<el-button type="text">内科视频</el-button></Timeline-item>
           <Timeline-item>3小时前：<el-button type="text">内科视频</el-button></Timeline-item>
           <Timeline-item>2天前：<el-button type="text">内科视频</el-button></Timeline-item>-->
@@ -119,6 +119,9 @@ export default{
         name: this.initData.name,
       },
 
+      //当前时间
+      currTime:0,
+
       //视频列表、及分页属性
       isHashMore:true,
       tableData1:[
@@ -180,6 +183,7 @@ export default{
     //初始化请求列表数据
     init(){
       Util = this.$util;
+      this.currTime = this.parseTimestamp(new Date());
       //ajax请求参数设置
       this.myPages =  Util.pageInitPrams;
 
@@ -196,7 +200,8 @@ export default{
     getRecordsData(responseData){
       let data = responseData.data;
       this.recordData=[];
-      this.recordData= data;
+      //最多显示5条播放记录
+      this.recordData = data.splice(0,5);
     },
 
     setTableData(params){

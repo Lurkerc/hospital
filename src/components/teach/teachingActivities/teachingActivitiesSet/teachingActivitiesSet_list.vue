@@ -363,7 +363,7 @@
         let content = this.$refs.content;
         let parHt = content.parentNode.offsetHeight;
         let myTable = this.$refs.myTable;
-        let paginationHt = 100;
+        let paginationHt = 50;
         this.dynamicHt = parHt - myTable.offsetTop - paginationHt;
       },
       /*

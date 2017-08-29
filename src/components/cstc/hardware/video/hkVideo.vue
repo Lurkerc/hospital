@@ -8,6 +8,12 @@
     <div class="debugVideoBox-left">
       <div id="divPlugin" class="plugin" style="margin-top:5px;margin-left:5px;"></div>
     </div>
+    <div v-show="!showRight" class="debugVideoBox-right">
+      <fieldset class="ptz">
+        <legend>云台控制</legend>
+        <p style="padding: 50px 0;text-align: center;">没有云台控制信息</p>
+      </fieldset>
+    </div>
     <div v-show="showRight" class="debugVideoBox-right">
       <fieldset class="ptz">
         <legend>云台控制</legend>
@@ -115,7 +121,6 @@
         <div ref="cbinfo" class="cbinfo"></div>
       </fieldset>
     </div>
-
   </div>
 </template>
 
@@ -128,7 +133,7 @@ let Util = null;
 // 全局保存当前选中窗口
 let g_iWndIndex = 0; //可以不用设置这个变量，有窗口参数的接口中，不用传值，开发包会默认使用当前选
 export default{
-  props:["ip","port","loginName","password","isShowRight","count","width","height"],
+  props:["ip","port","loginName","password","isShowRight","count","width","height","isHasConsole"],
   data() {
     return {
       g_bPTZAuto:false,
@@ -143,7 +148,10 @@ export default{
           this.clickLogin(this.ip,this.port,this.loginName,this.password)
         },1);
       })
-    }
+    },
+    isShowRight(val){
+      this.showRight = val
+    },
   },
   methods: {
     //初始化请求列表数据

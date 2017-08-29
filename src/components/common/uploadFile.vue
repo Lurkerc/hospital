@@ -44,7 +44,7 @@
 
 
     props: ["uploadUrl", 'downloadUrl', 'type', 'accept', 'show', 'unSize', 'drag', 'size', 'message', 'length',
-      'uploadFiles',
+      'uploadFiles','noFirstCallBack',
       'params', 'unMultiple'
     ],
     data() {
@@ -144,10 +144,12 @@
       this.init();
       if (!this.uploadFiles) return;
       if (this.data.type == 'picture-card') {
-        this.fileList = this.converterPictureList(this.uploadFiles)
+        this.fileList = this.converterPictureList(this.uploadFiles);
+        if(this.noFirstCallBack)return
         this.$emit('setUploadFiles', this.processorPictureList(this.fileList), this.fileList);
       } else {
         this.fileList = this.converterTextList(this.uploadFiles);
+        if(this.noFirstCallBack)return
         this.$emit('setUploadFiles', this.processorList(this.fileList), this.fileList);
       }
     },
@@ -178,7 +180,11 @@
           } else {
             arr[i].id = list[i].id;
           }
-          arr[i].name = list[i].fileName;
+          if (list[i].fileName) {
+            arr[i].name = list[i].fileName;
+          } else {
+            arr[i].name = list[i].name;
+          }
           arr[i].url = list[i].filePath;
           arr[i].type = list[i].fileType;
         }
@@ -394,10 +400,12 @@
       uploadFiles(val) { //todo 待完善  初始化数据
         if (!val) return;
         if (this.data.type == 'picture-card') {
-          this.fileList = this.converterPictureList(val)
+          this.fileList = this.converterPictureList(val);
+          if(this.noFirstCallBack)return
           this.$emit('setUploadFiles', this.processorPictureList(this.fileList), this.fileList);
         } else {
           this.fileList = this.converterTextList(val);
+          if(this.noFirstCallBack)return
           this.$emit('setUploadFiles', this.processorList(this.fileList), this.fileList);
         }
       }

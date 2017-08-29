@@ -25,7 +25,7 @@
   </div>
   <div v-if="tableData1.length>0" v-for="(item,index) in tableData1" :key="index" class="c-container">
     <h3 class="t">
-      <span class="c-icon c-icon-xls c-gap-icon-right-small"></span><a @click="showDoc(item)" class="docTitleA" href="javascript:void(0)">{{item.title}}</a>
+      <span class="c-icon c-gap-icon-right-small" :class="[api.fileType(item.fileType)]"></span><a @click="showDoc(item)" class="docTitleA" href="javascript:void(0)">{{item.title}}</a>
     </h3>
     <div class="c-abstract overflow-txt">
       {{item.brief}}
@@ -95,6 +95,7 @@
     props:["initData"],
     data() {
       return {
+        api,
         formValidate: {
           title: this.initData.name,
         },

@@ -118,6 +118,26 @@ const jxhdRouters = {
         resolve(require('../../components/teach/teachingActivities/teachplan/teachplan_list.vue'));
       }, 'jxhd');
     }
+  },
+  {
+    //教学计划查看
+    path:'teachplanlook',
+    name:'teachplanlook',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/teach/teachingActivities/teachplanlook/teachplanlook_list.vue'));
+      }, 'jxhd');
+    }
+  },
+  {
+    //教学计划执行情况
+    path:'teachplanPerformcase',
+    name:'teachplanPerformcase',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/teach/teachingActivities/teachplanPerformcase/teachplanPerformcase_list.vue'));
+      }, 'jxhd');
+    }
   }
   ]
 }

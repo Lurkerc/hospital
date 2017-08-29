@@ -294,7 +294,7 @@
                   schoolName = d[0].schoolName
                 }
                 if (schoolName !== d[i].schoolName) {
-                  this.errorMess(`选择的人员中有非“${schoolName}”的人员！`);
+                  this.errorMess(`选择的人员必须是同一所学校才能打印！`);
                   return
                 }
               }

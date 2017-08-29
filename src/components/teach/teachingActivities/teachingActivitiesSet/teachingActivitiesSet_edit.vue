@@ -3,43 +3,70 @@
   <el-form  :model="formValidate" ref="formValidate" :rules="rules.teachingActivitiesSet"  label-width="100px">
     <el-row>
       <el-col :span="12">
-          <el-form-item label="活动名称" prop="activityName">
-            <el-input v-model="formValidate.activityName"></el-input>
-          </el-form-item>
-          <el-form-item label="主持人" prop="hostUserName">
-            <el-input @focus="openAndColseHost('host')" v-model="formValidate.hostUserName" ></el-input>
-          </el-form-item>
-          <el-form-item label="活动时间" prop="activityTime">
-            <el-date-picker type="date" :editable="false" placeholder="选择日期"  v-model="formValidate.activityTime" style="width: 100%;"></el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item style="width:284px;" label="类型" prop="activityType">
-            <el-select style="width:284px;" v-model="formValidate.activityType"  placeholder="请选择" >
-              <select-option :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item  style="width:284px;" label="科室" prop="depId">
-            <el-select style="width:284px;"  v-model="formValidate.depId" placeholder="请选择">
-              <select-option :type="type"  :unAll="true"></select-option>
-            </el-select>
-          </el-form-item>
+        <el-form-item label="活动时间" prop="activityTime">
+          <el-date-picker @change="upDataIsplan" type="date"  :editable="false" placeholder="选择日期"  v-model="formValidate.activityTime" style="width: 100%;"></el-date-picker>
+        </el-form-item>
 
-          <el-form-item label="活动地点" prop="activitySite">
-            <el-input v-model="formValidate.activitySite"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="时间段" prop="recordTimes">
-            <el-checkbox-group v-model="formValidate.recordTimes">
-              <el-checkbox v-for="(item,index) in getRecordTimes" :key="index" :label="item.courseTime+'/'+item.timeId" >{{item.courseTime}}-{{item.timeId}}</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-        </el-col>
-      </el-row>
+
+        <el-form-item label="计划" prop="isPlan">
+          <el-radio-group  @change="isPlanChange"  v-model="formValidate.isPlan">
+            <el-radio label="Y">计划内</el-radio>
+            <el-radio label="N">计划外</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item style="width:284px;" label="类型" prop="activityType">
+          <el-select style="width:284px;" v-model="formValidate.activityType"  placeholder="请选择" >
+            <select-option :unAll="true" :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="主持人" prop="hostUserName">
+          <el-input readonly @focus="openAndColseHost('host')" v-model="formValidate.hostUserName" ></el-input>
+        </el-form-item>
+
+      </el-col>
+      <el-col :span="12">
+        <el-form-item style="width:284px;" label="科室" prop="depId">
+          <el-select @change="upDataIsplan" style="width:284px;" v-model="formValidate.depId" placeholder="请选择">
+            <!--<select-option  :unAll="true"></select-option>-->
+            <select-option :type="type"  :unAll="true"></select-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item v-show="isPlan" style="width:284px;" label="月度计划" prop="planDetailId">
+          <el-select  @change="planChange" style="width:284px;" v-model="activityPlan" placeholder="请选择">
+            <el-option
+              v-for="item in planData"
+              :key="item.id"
+              :label="item.planActivityTitle"
+              :value="item.planDetailId+'-'+item.activityPlanId">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="!isPlan" style="width:284px;" >
+          &nbsp;
+        </el-form-item>
+
+        <el-form-item label="活动名称" prop="activityName">
+          <el-input v-model="formValidate.activityName"></el-input>
+        </el-form-item>
+
+        <el-form-item label="活动地点" prop="activitySite">
+          <el-input v-model="formValidate.activitySite"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24">
+        <el-form-item label="时间段" prop="recordTimes">
+          <el-checkbox-group v-model="formValidate.recordTimes">
+            <el-checkbox v-for="(item,index) in getRecordTimes" :key="index" :label="item.courseTime+'/'+item.timeId" >{{item.courseTime}}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+      </el-col>
+    </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="病例" prop="whetherNeedCases">
@@ -169,7 +196,7 @@
         type:'',  //科室类型
         unAll:false,  //是否全部不显示
 
-
+        isPlan:false,
         selectHost:[],
         selectUser:[],
         //保存按钮基本信息
@@ -298,7 +325,19 @@
         },
         loading :false,
 
-
+        //计划
+        isPlanMessTitle:{
+          ajaxSuccess:'isPlanSuccess',
+          ajaxParams:{
+            url:this.url.getList,
+            params:{
+              activityPlanTime:'',
+              activityPlanDepId:'',
+            }
+          }
+        },
+        isFirst:true,
+        planData:[],   //计划数据
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle: {
           ajaxSuccess: 'oneDataSuccess',
@@ -360,7 +399,53 @@
         if(typeof flag == "undefined") flag = true;
         this[targer+'Modal'] = flag;
       },
+      //获取计划（ajax）——
+      getIsPlan(){
+        this.activityPlan = ''
+        this.formValidate.planDetailId = '';
+        this.formValidate.activityPlanId ='';
+        this.isPlanMessTitle.ajaxParams.params ={
+          activityPlanTime:this.yearMonthData(this.formValidate.activityTime),
+          activityPlanDepId:this.formValidate.depId,
+        }
+        this.ajax(this.isPlanMessTitle);
+      },
 
+
+      //获取计划成功
+      isPlanSuccess(res){
+        this.activityPlan = '';
+        this.planData = [];
+        let data = res.data;
+        if(!data)return;
+
+        /* data = [
+         {
+         "planDetailId":"活动详情ID",
+         "activityPlanId":111,
+         "activityPlanDepId":"计划科室ID",
+         "activityPlanDepName":"计划科室名称",
+         "planActivityTitle":"活动名称",
+         "planActivityType":"活动类型",
+         "planActivityHostUserId":"主持人ID",
+         "planActivityHostUserName":"主持人姓名",
+         "planActivityTime":"活动时间(yyyy-MM-dd)",
+         "planActivityTimeids":"1,2,3",
+         "planActivitySite":"活动地点",
+         "planActivityContent":"活动内容",
+         "planActivityFiles":[
+         {
+         "id":11,
+         "fileUrl":"http://www.baidu.com",
+         "fileName":"附件",
+         "fileType":"txt"
+         }
+         ]
+         }
+         ]*/
+        this.planData = data;
+
+      },
 
       /*
        * 点击提交按钮 监听是否提交数据
@@ -499,7 +584,16 @@
           }
         )
         this.formValidate =  this.disposeGetData(data);
+        if(this.formValidate.isPlan=='Y'){
+          this.getIsPlan();
+        }
         this.data = data;
+        this.$nextTick(function () {
+          setTimeout(() => {
+            this.isFirst = false;
+        }, 1);
+        })
+
       },
 
 
@@ -575,7 +669,125 @@
       selectDpeID(val){
         this.formValidate.depId= val;
 
+      },
+
+      //改变计划
+      isPlanChange(val){
+          if(this.isFirst)return;
+        this.activityPlan = ''
+        this.formValidate.planDetailId = '';
+        this.formValidate.activityPlanId ='';
+        if(val=='Y'){
+          if(! this.formValidate.activityTime ){
+            this.showMess('请选择活动时间')
+          }else if(!this.formValidate.depId){
+            this.showMess('请选择科室')
+          }else {
+            this.isPlan = true;
+            this.upDataIsplan()
+            return;
+          }
+          this.formValidate.isPlan = 'N';
+        }else {
+          this.isPlan = false;
+        }
+
+      },
+
+
+      //时间和科室改变更新计划
+      upDataIsplan(){
+        if(this.isPlan){
+          if(this.formValidate.activityTime && this.formValidate.depId ){
+            if(this.isFirst)return;
+            this.getIsPlan();
+          }
+        }
+      },
+
+
+      //计划选项发生改变
+      planChange(val){
+        if(!val)return;
+        let selectPlanData = {};
+        for(let i=0;i<this.planData.length;i++){
+          let item = this.planData[i];
+          let value = item.planDetailId+'-'+item.activityPlanId
+          if(value==this.activityPlan){
+            selectPlanData = item;
+            continue;
+          }
+        }
+
+//        "formValidate":{
+//          "depId":'',
+//            "activityName":"",
+//            "activityType":"",
+//            "hostUserId":'',
+//            "hostUserName":"",
+//            "activityTime":"",
+//            "activitySite":"",
+//            "activityUser":"",
+//            "whetherNeedCases":"YES",
+//            "casesName":"",
+//            "activityContent":"",
+//            "activityUserType":"ALLUSER",
+//            "activityUserTypeValue":",",
+//            "activityDepUserType":"",
+//            "shouldUserCount":'',
+//            "actuallyUserCount":'',
+//            "timeIds":"",
+//            "recordTimes":[],
+//            "activityState":"",
+//            activityPlan:'',
+//
+//            //新增
+//            isPlan:'N',  //是否计划内
+//            activityPlanId:'', //月度计划ID
+//            planDetailId:'', //计划详情ID
+//        }
+        let formValidate = this.formValidate
+        formValidate.activityName = selectPlanData.planActivityTitle ; //活动名称
+        formValidate.activityType = selectPlanData.planActivityType  ;//活动类型
+
+        //todo 主持人  主持人只能选择一个计划要修改
+        formValidate.hostUserId = selectPlanData.planActivityHostUserId;
+        formValidate.hostUserName = selectPlanData.planActivityHostUserName;
+        this.selectHost = [{
+          key:selectPlanData.planActivityHostUserId,
+          label:selectPlanData.planActivityHostUserName,
+          disabled: false,
+        }];
+
+        //活动时间
+//        formValidate.activityTime = selectPlanData.planActivityTime;
+        //活动时间段
+//        item.courseTime+'/'+item.timeId
+        let times = []
+        if(!selectPlanData.planActivityTimeids)selectPlanData.planActivityTimeids='';
+        let planActivityTimeids = selectPlanData.planActivityTimeids.split(',');
+        for(let k=0;k<planActivityTimeids.length;k++){
+          let item = planActivityTimeids[k];
+          for(let l=0;l<this.getRecordTimes.length;l++){
+            let time = this.getRecordTimes[l];
+            if(time.timeId == item){
+              times.push(time.courseTime+'/'+time.timeId)
+              continue;
+            }
+          }
+        }
+        formValidate.recordTimes = times;
+        //活动地点
+        formValidate.activitySite =selectPlanData.planActivitySite;
+        //活动内容
+        formValidate.activityContent =selectPlanData.planActivityContent;
+
+        formValidate.planDetailId = selectPlanData.planDetailId;
+        formValidate.activityPlanId = selectPlanData.activityPlanId;
       }
+
+
+
     }
   }
 </script>

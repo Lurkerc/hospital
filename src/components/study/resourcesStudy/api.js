@@ -4,12 +4,26 @@ const options={
   CASES:"典型病例",
   ATLAS:"医学图谱",
 }
+function fileType(type){
+  type = type.toLowerCase();
+  let obj = {
+    doc:"c-icon-doc",
+    docx:"c-icon-doc",
+    xls:"c-icon-xls",
+    xlsx:"c-icon-xls",
+    ppt:"c-icon-ppt",
+    pptx:"c-icon-ppt",
+    pdf:"c-icon-pdf",
+  }
+  return obj[type];
+}
 //资源学习-学习记录
 const studyRecord = {
   "0":"学习中",
   "1":"学习完成"
 }
 const api={
+  fileType:fileType,
   types:options,
   studyRecord:studyRecord,
 

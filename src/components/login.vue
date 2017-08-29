@@ -232,14 +232,13 @@
       getHospitalName() {
         let options = {
           ajaxSuccess: (res) => {
-            // this.hospitalName = res.data.hospitalName;
+            this.hospitalName = res.data.hospitalName;
           },
           ajaxParams: {
             url: '/envs'
           }
         };
-        // this.ajax(options);
-        this.hospitalName = "中南大学湘雅三医院";
+        this.ajax(options);
       },
     },
   }

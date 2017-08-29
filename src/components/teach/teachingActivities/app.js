@@ -59,7 +59,7 @@ export default {
    * */
 
   //教学活动计划修改发布  put
-  modifyRelease:'/teachActivityPlan/modifyRelease/' ,///{planId}
+  modifyRelease:'/teachActivityPlan/modifyRelease' ,///{planId}
 
   //教学活动计划执行情况  get
   staticPlanImplementation:'/teachActivityPlan/staticPlanImplementation' ,///{}
@@ -83,7 +83,7 @@ export default {
   //教学活动计划添加 post
   teachActivityPlanAdd:'/teachActivityPlan/add' ,///
 
-  //教学活动计划添加 post
+  //教学活动计划详情 post
   teachActivityPlanGet:'/teachActivityPlan/get/' ,///planId
 
 
