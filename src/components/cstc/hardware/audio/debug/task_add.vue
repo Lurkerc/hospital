@@ -77,30 +77,29 @@
 
           </date-group>
 
+          <el-col :span="8" :offset="2">
+            <el-form-item label="循环周期：">
+              <el-checkbox v-model="cycleEveryDay" label="每天" trueLabel="1" falseLabel="0" @change="changeCycle(true)"></el-checkbox>
+              <el-checkbox-group v-model="cycle" class="audioDebugCheckBox" @change="changeCycle(false)">
+                <el-checkbox value="" label="1">周一</el-checkbox>
+                <el-checkbox value="" label="2">周二</el-checkbox>
+                <el-checkbox value="" label="3">周三</el-checkbox>
+                <el-checkbox value="" label="4">周四</el-checkbox>
+                <el-checkbox value="" label="5">周五</el-checkbox>
+                <el-checkbox value="" label="6">周六</el-checkbox>
+                <el-checkbox value="" label="7">周日</el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8" :offset="2">
+            <el-form-item label="结束日期：">
+              <el-date-picker v-model="formValidate.endDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1" @change="handleEndTime">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
         </template>
 
-        <el-col :span="8" :offset="2">
-          <el-form-item label="循环周期：">
-            <el-checkbox v-model="cycleEveryDay" label="每天" trueLabel="1" falseLabel="0" @change="changeCycle(true)"></el-checkbox>
-            <el-checkbox-group v-model="cycle" class="audioDebugCheckBox" @change="changeCycle(false)">
-              <el-checkbox value="" label="1">周一</el-checkbox>
-              <el-checkbox value="" label="2">周二</el-checkbox>
-              <el-checkbox value="" label="3">周三</el-checkbox>
-              <el-checkbox value="" label="4">周四</el-checkbox>
-              <el-checkbox value="" label="5">周五</el-checkbox>
-              <el-checkbox value="" label="6">周六</el-checkbox>
-              <el-checkbox value="" label="7">周日</el-checkbox>
-            </el-checkbox-group>
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="8" :offset="2" v-if="formValidate.isTiming === 'YES'">
-          <el-form-item label="结束日期：">
-            <el-date-picker v-model="formValidate.endDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1" @change="handleEndTime">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
 
         <el-col>
           <el-col :span="8" :offset="2">
