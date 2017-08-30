@@ -5,9 +5,9 @@
 
     <el-form ref="formValidate"  class="demo-form-inline" label-width="90px">
       <el-row>
-        <el-col :span="10" :offset="5">
-          <el-form-item  prop="title">
-            <el-input   v-model="formValidate.name" placeholder="请输入姓名">
+        <el-col :span="10" :offset="7">
+          <el-form-item  prop="title" label="类型名称">
+            <el-input   v-model="formValidate.name" placeholder="请输入名称">
             </el-input>
           </el-form-item>
         </el-col>
@@ -15,10 +15,8 @@
     </el-form>
     <el-row >
       <el-col :span="10" :offset="10">
-        <div style="margin-top: 20px">
           <load-btn @listenSubEvent="listenSubEvent" :btnData="saveBtn"></load-btn>
           <el-button  @click="cancel">取消</el-button>
-        </div>
       </el-col>
     </el-row >
   </div>
@@ -45,7 +43,6 @@
 
           ajaxSuccess:'ajaxSuccess',
           ajaxParams:{
-            jsonString:true,
             url:this.url.templateTypeAdd,
             method:'post',
           }

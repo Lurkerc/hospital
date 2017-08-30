@@ -40,7 +40,7 @@
               <el-row :gutter="10" class="table-back-two">
                 <el-col :span="8">
                   <el-form-item label="出生年月：" prop="birth">
-                    <el-date-picker v-model="formValidate.birth" type="month" placeholder="选择日期" style="width: 127px;">
+                    <el-date-picker v-model="formValidate.birth" type="month" placeholder="选择日期" style="width: 158px;">
                     </el-date-picker>
                   </el-form-item>
                 </el-col>
@@ -99,7 +99,7 @@
 
             <el-col :span="5" class="table-back-header">
               <div style="text-align: center">
-                <up-header @upladSuccess="setUploadHeaderSuccessUrl" :actionUrl="uploadHeaderUrl"></up-header>
+                <up-header @upladSuccess="setUploadHeaderSuccessUrl" :imgFile="imgSrc" :actionUrl="uploadHeaderUrl"></up-header>
               </div>
             </el-col>
 
@@ -284,7 +284,8 @@
           headPhoto: '' //头像地址
         },
         //上传头像
-        uploadHeaderUrl: '/file/upload/static',
+        uploadHeaderUrl: '/file/upload/headImg',
+        imgSrc: '',
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle: {
           type: 'add',
@@ -390,7 +391,10 @@
        * @param imgUrl {}   {"relativePathFile":"img/2017/04/28/20170428093435979.png","staticUrl":"http://ip:port/static/"}
        * */
       setUploadHeaderSuccessUrl(imgUrl) {
-        this.formValidate.headPhoto = imgUrl["relativePathFile"];
+        // this.formValidate.headPhoto = imgUrl["relativePathFile"];
+        this.formValidate.headPhoto = resData;
+
+        this.imgSrc = this.$store.state.envPath.http + resData;
       },
 
 

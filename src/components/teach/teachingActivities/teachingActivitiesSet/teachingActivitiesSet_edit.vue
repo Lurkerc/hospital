@@ -3,39 +3,39 @@
   <el-form  :model="formValidate" ref="formValidate" :rules="rules.teachingActivitiesSet"  label-width="100px">
     <el-row>
       <el-col :span="12">
-        <el-form-item label="活动时间" prop="activityTime">
+        <el-form-item label="活动时间 :" prop="activityTime">
           <el-date-picker @change="upDataIsplan" type="date"  :editable="false" placeholder="选择日期"  v-model="formValidate.activityTime" style="width: 100%;"></el-date-picker>
         </el-form-item>
 
 
-        <el-form-item label="计划" prop="isPlan">
+        <el-form-item label="计划 :" prop="isPlan">
           <el-radio-group  @change="isPlanChange"  v-model="formValidate.isPlan">
             <el-radio label="Y">计划内</el-radio>
             <el-radio label="N">计划外</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item style="width:284px;" label="类型" prop="activityType">
+        <el-form-item style="width:284px;" label="类型 :" prop="activityType">
           <el-select style="width:284px;" v-model="formValidate.activityType"  placeholder="请选择" >
             <select-option :unAll="true" :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
             </el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="主持人" prop="hostUserName">
+        <el-form-item label="主持人 :" prop="hostUserName">
           <el-input readonly @focus="openAndColseHost('host')" v-model="formValidate.hostUserName" ></el-input>
         </el-form-item>
 
       </el-col>
       <el-col :span="12">
-        <el-form-item style="width:284px;" label="科室" prop="depId">
+        <el-form-item style="width:284px;" label="科室 :" prop="depId">
           <el-select @change="upDataIsplan" style="width:284px;" v-model="formValidate.depId" placeholder="请选择">
             <!--<select-option  :unAll="true"></select-option>-->
             <select-option :type="type"  :unAll="true"></select-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item v-show="isPlan" style="width:284px;" label="月度计划" prop="planDetailId">
+        <el-form-item v-if="isPlan" style="width:284px;" label="月度计划 :" prop="planDetailId">
           <el-select  @change="planChange" style="width:284px;" v-model="activityPlan" placeholder="请选择">
             <el-option
               v-for="item in planData"
@@ -45,22 +45,22 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="!isPlan" style="width:284px;" >
+        <el-form-item v-show="!isPlan" style="width:284px;" >
           &nbsp;
         </el-form-item>
 
-        <el-form-item label="活动名称" prop="activityName">
+        <el-form-item label="活动名称 :" prop="activityName">
           <el-input v-model="formValidate.activityName"></el-input>
         </el-form-item>
 
-        <el-form-item label="活动地点" prop="activitySite">
+        <el-form-item label="活动地点 :" prop="activitySite">
           <el-input v-model="formValidate.activitySite"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="24">
-        <el-form-item label="时间段" prop="recordTimes">
+        <el-form-item label="时间段 :" prop="recordTimes">
           <el-checkbox-group v-model="formValidate.recordTimes">
             <el-checkbox v-for="(item,index) in getRecordTimes" :key="index" :label="item.courseTime+'/'+item.timeId" >{{item.courseTime}}</el-checkbox>
           </el-checkbox-group>
@@ -69,7 +69,7 @@
     </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="病例" prop="whetherNeedCases">
+          <el-form-item label="病例 :" prop="whetherNeedCases">
             <el-radio-group v-model="formValidate.whetherNeedCases">
               <el-radio :label="'YES'">需要</el-radio>
               <el-radio :label="'NO'">不需要</el-radio>
@@ -77,14 +77,14 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="病例名称" prop="casesName"  v-show="formValidate.whetherNeedCases=='YES'">
+          <el-form-item label="病例名称 :" prop="casesName"  v-show="formValidate.whetherNeedCases=='YES'">
             <el-input v-model="formValidate.casesName" ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="活动内容" prop="name8">
+          <el-form-item label="活动内容 :" prop="name8">
             <div class="grid-content">
               <el-input type="textarea" :rows="6" resize="none" v-model="formValidate.activityContent"></el-input>
             </div>
@@ -93,7 +93,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="参加人" prop="name9">
+          <el-form-item label="参加人 :" prop="name9">
             <el-radio-group v-model="formValidate.activityUserType" >
               <el-row>
                 <el-col :span="24">
@@ -195,8 +195,7 @@
         //科室需要的数据
         type:'',  //科室类型
         unAll:false,  //是否全部不显示
-
-        isPlan:false,
+        isPlan:true,
         selectHost:[],
         selectUser:[],
         //保存按钮基本信息
@@ -208,7 +207,7 @@
           label: '暂无'
         }],
 
-
+        activityPlan:'',
         getRecordTimes:'',
 
         "formValidate":{
@@ -444,6 +443,16 @@
          }
          ]*/
         this.planData = data;
+        if( this.isFirst){
+
+          this.activityPlan = this.formValidate.planDetailId+'-'+this.formValidate.activityPlanId;
+          this.isPlan = true;
+          this.$nextTick(function () {
+            setTimeout(() => {
+              this.isFirst = false;
+          }, 1);
+          })
+        }
 
       },
 
@@ -585,14 +594,17 @@
         )
         this.formValidate =  this.disposeGetData(data);
         if(this.formValidate.isPlan=='Y'){
-          this.getIsPlan();
+          this.isPlanMessTitle.ajaxParams.params ={
+            activityPlanTime:this.yearMonthData(this.formValidate.activityTime),
+            activityPlanDepId:this.formValidate.depId,
+          }
+          this.ajax(this.isPlanMessTitle);
+        }else {
+          this.isFirst = false;
+          this.isPlan = false;
         }
         this.data = data;
-        this.$nextTick(function () {
-          setTimeout(() => {
-            this.isFirst = false;
-        }, 1);
-        })
+
 
       },
 
@@ -674,7 +686,7 @@
       //改变计划
       isPlanChange(val){
           if(this.isFirst)return;
-        this.activityPlan = ''
+        this.activityPlan = '';
         this.formValidate.planDetailId = '';
         this.formValidate.activityPlanId ='';
         if(val=='Y'){
@@ -708,6 +720,7 @@
 
       //计划选项发生改变
       planChange(val){
+
         if(!val)return;
         let selectPlanData = {};
         for(let i=0;i<this.planData.length;i++){
@@ -781,9 +794,9 @@
         formValidate.activitySite =selectPlanData.planActivitySite;
         //活动内容
         formValidate.activityContent =selectPlanData.planActivityContent;
-
         formValidate.planDetailId = selectPlanData.planDetailId;
         formValidate.activityPlanId = selectPlanData.activityPlanId;
+
       }
 
 

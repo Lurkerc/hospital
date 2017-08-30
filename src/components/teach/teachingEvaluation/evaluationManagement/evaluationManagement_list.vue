@@ -115,7 +115,7 @@
         height="200"
         title="对话框标题"
         class-name="vertical-center-modal"
-        :width="1100">
+        :width="600">
         <!--<div slot="header"> -->
         <!--</div>-->
         <modal-header slot="header" :content="editTypeId"></modal-header>
@@ -130,7 +130,7 @@
         height="200"
         title="对话框标题"
         class-name="vertical-center-modal"
-        :width="1000">
+        :width="600">
         <!--<div slot="header"> -->
         <!--</div>-->
         <modal-header slot="header" :content="addTypeId"></modal-header>
@@ -177,7 +177,7 @@
         <!--<div slot="header"> -->
         <!--</div>-->
         <modal-header slot="header" :content="editId"></modal-header>
-        <edit v-if="editModal"  @cancel="cancel" :url="url" :operaility-data="operailityData"   @add="subCallback" ></edit>
+        <edit v-if="editModal"  @cancel="cancel" :url="url" :operaility-data="operailityData"   @edit="subCallback" ></edit>
         <div slot="footer"></div>
       </Modal>
       <!--查看右侧评分模板弹窗-->
@@ -302,16 +302,8 @@
         this.queryQptions = {
           curPage: 1,pageSize: Util.pageInitPrams.pageSize
         }
-
         this.ajax(this.treeMessTitle)
-        this.treeList({data:[
-          {
-            "id":1000,
-            "name":"住院医师使用",
-            "remark":"备注",
-            "type":0
-          }
-        ]})
+
       },
 
 
@@ -323,32 +315,10 @@
           this.treeData = data;
         this.treeOperailityData = data[0];
         this.setTableData();
-        this.updateList({ "data":[
-          {
-            "id":1000,
-            "name":"住院医师使用",
-            "typeName":"住院医专用",
-            "typeId":"1000",
-            "score":"1000",
-            "createTime":"1000",
-            "updateTime":"1000",
-            "remark":"备注"
-          },
-          {
-            "id":1000,
-            "name":"住院医师使用",
-            "typeName":"住院医专用",
-            "typeId":"1000",
-            "score":"1000",
-            "createTime":"1000",
-            "updateTime":"1000",
-            "remark":"备注"
-          }
-        ]}) //todo 模拟请求成功
 
       },
       //点击查询按钮调用
-      onSubmitSearch() {
+      onSubmitSearch(){
 //        console.log(this.getFormData(this.formSearch))
         //查询成功后 this.setTableData()
       },
@@ -439,11 +409,13 @@
        * */
       edit(data){
         this.operailityData = data;
+        this.operailityData.treeName = this.treeOperailityData.name;
         this.openModel('edit')
       },
       /*--点击--查看--按钮--*/
       show(data){
         this.operailityData = data;
+        this.operailityData.treeName = this.treeOperailityData.name;
         this.openModel('show');
 
       },
@@ -545,28 +517,6 @@
         if(this.treeOperailityData.id == obj.id)return;
         this.treeOperailityData = obj ;
         this.setTableData();
-        this.updateList({ "data":[
-          {
-            "id":1000,
-            "name":"住院医师使用",
-            "typeName":"住院医专用",
-            "typeId":"1000",
-            "score":"1000",
-            "createTime":"1000",
-            "updateTime":"1000",
-            "remark":"备注"
-          },
-          {
-            "id":1000,
-            "name":"住院医师使用",
-            "typeName":"住院医专用",
-            "typeId":"1000",
-            "score":"1000",
-            "createTime":"1000",
-            "updateTime":"1000",
-            "remark":"备注"
-          }
-        ]}) //todo 模拟请求成功
       },
 
       //tree操作的回调函数

@@ -13,7 +13,7 @@
         </el-col>
         <el-col :span="10" >
           <el-form-item label="分类 :" prop="title">
-            {{operailityData.name}}
+            {{operailityData.treeName}}
           </el-form-item>
         </el-col>
       </el-row>
@@ -223,15 +223,14 @@
         },
         //当前组件提交(edit)数据时,ajax处理的 基础信息设置
         addMessTitle:{
-          type:'add',
-          successTitle:'保存成功',
-          errorTitle:'保存失败',
-
+          type:'edit',
+          successTitle:'修改成功',
+          errorTitle:'修改失败',
           ajaxSuccess:'ajaxSuccess',
           ajaxParams:{
             jsonString:true,
             url:this.url.templateModify+this.operailityData.id,
-            method:'post',
+            method:'put',
             data:{},
           }
         },
@@ -262,13 +261,12 @@
       init(){
         //默认请求加载数据
         this.ajax(this.listMessTitle);
-        this.SuccessGetCurrData()
       },
 
       //初始请求数据
       SuccessGetCurrData(res){
-        //let data = res.data;
-        let data = {
+        let data = res.data;
+       /* let data = {
           "id":1000,
           "typeId":1000,
           "name":"住院医专用的评分模板01",
@@ -277,7 +275,7 @@
           "hasGroup":"Y",
           "hasGroupScore":"Y",
           "hasRemark":"Y",
-          "scoreType":"SELECT",
+          "scoreType":"INPUT",
           "hasScoreLevel":"Y",
           "scoreLevel":"优|良|中|差",
           "templateItemList":[
@@ -379,11 +377,9 @@
             },
 
           ]
-        }
+        }*/
         if(!data) return;
-
         this.formValidate =data;
-        alert(11)
         this.formValidate = this.conductData(data);
       },
 
@@ -409,10 +405,10 @@
         }else {
           _scoreLevel = [{label:'',key:'select1'}];
           this.select = ['select1'];
-          scoreTypeArr = {
+          scoreTypeArr = [{
             key :'score',
             label :'标准分',
-          }
+          }]
         }
         data._scoreLevel =_scoreLevel;
 
@@ -464,16 +460,29 @@
         if(data.hasGroupScore == 'Y'){
           isScore = true
         }
+        //如果是选择的，为返回的选择的数据进行排序和匹配
+        let scoreLevelObj={}
+        for(let l=0;l<data._scoreLevel.length;l++){
+          scoreLevelObj[data._scoreLevel[l].label] = data._scoreLevel[l].key;
+        }
         let obj;
         let parentId;
+        let flag=true;//如果不是否按照分类评分的，则k=0时是true，只允许进一次;如果是否按照分类评分的，则此项为true,判断条件是，是否是hasScore为‘Y’；
         let templateItemList = data.templateItemList;  //传过来的内容主体
         for(let i=0;i<templateItemList.length;i++){
           let child=templateItemList[i].child;
           if(!child) continue;
+          let tempArr = [];//临时放置处理的当前child的子项
           for(let k=0;k<child.length;k++){
-            if(k==0){
-              parentId = ++this.idCount;
-              this.constructionMerge[parentId] = child.length;
+              if(k==0){
+                parentId = ++this.idCount;
+                this.constructionMerge[parentId] = child.length;
+              }
+            if(!isScore){
+              flag = k==0;
+            }
+            if(flag && child[k].hasScore=='Y'){
+              if(isScore)child[k].templateItemOptionList = templateItemList[i].templateItemOptionList; //
               obj = {
                 parentTitle:templateItemList[i].title||'',
                 parentTitleRow:child.length,
@@ -489,11 +498,18 @@
                 select1:'',
                 select1Row:isScore?child.length:1,
               }
-
-              for(let l=0;l<this.select.length;l++){
-                obj[this.select[l]] = child[k].templateItemOptionList[l].val
+              if(child[k].templateItemOptionList!=0){
+//                for(let l=0;l<this.select.length;l++){
+//                  obj[this.select[l]] = child[k].templateItemOptionList[l].val
+//                }
+                for(let j=0;j<child[k].templateItemOptionList.length;j++){
+                  let title = child[k].templateItemOptionList[j].title;
+                  let label = child[k].templateItemOptionList[j].val;
+                  obj[scoreLevelObj[title]] = label;
+                }
               }
-              body.push(obj);
+
+              tempArr.unshift(obj);
             }else {
               obj = {
                 titleSub:child[k].title||'',
@@ -504,13 +520,22 @@
                 operateSub:'',
                 select1:'',
               }
-              for(let l=0;l<this.select.length;l++){
-                obj[this.select[l]] = child[k].templateItemOptionList[l].val
+              if(child[k].templateItemOptionList!=0) {
+//                for (let l = 0; l < this.select.length; l++) {
+//                  obj[this.select[l]] = child[k].templateItemOptionList[l].val
+//                }
+                for(let j=0;j<child[k].templateItemOptionList.length;j++){
+                  let title = child[k].templateItemOptionList[j].title;
+                  let label = child[k].templateItemOptionList[j].val;
+                  obj[scoreLevelObj[title]] = label;
+                }
               }
-              body.push(obj)
+              tempArr.push(obj)
             }
-
           }
+
+          body = body.concat(tempArr);
+          tempArr = [];
         }
 
         this.body = body;
@@ -546,6 +571,12 @@
         if(data.hasGroupScore == 'Y'){
           isScore = true
         }
+        //如果是选择的，为返回的选择的数据进行排序和匹配
+        let scoreLevelObj={}
+        for(let l=0;l<data._scoreLevel.length;l++){
+          scoreLevelObj[data._scoreLevel[l].label] = data._scoreLevel[l].key;
+        }
+
         let parentId;
         let obj;
         let templateItemList = data.templateItemList;  //传过来的内容主体
@@ -566,8 +597,15 @@
             select1:'',
             select1Row:1,
           }
-          for(let l=0;l<this.select.length;l++){
-            obj[this.select[l]] =  templateItemList[i].templateItemOptionList[l].val
+          if(templateItemList[i].templateItemOptionList!=0) {
+//            for (let l = 0; l < this.select.length; l++) {
+//              obj[this.select[l]] = templateItemList[i].templateItemOptionList[l].val
+//            }
+            for(let j=0;j<templateItemList[i].templateItemOptionList.length;j++){
+              let title = templateItemList[i].templateItemOptionList[j].title;
+              let label = templateItemList[i].templateItemOptionList[j].val;
+              obj[scoreLevelObj[title]] = label;
+            }
           }
           body.push(obj)
         }
@@ -615,7 +653,7 @@
           }
           this.formValidate.scoreLevel =tempArr2.join('|');
         }else {
-          this.formValidate.scoreLevel =[];
+          this.formValidate.scoreLevel ='';
         }
         let tempArr = [];
 
@@ -650,18 +688,19 @@
               "title":item.parentTitle,
               "hasRemark":this.formValidate.hasRemark,
               "remark":item.remark,
-              "maxScore":maxScore,
+              "maxScore":maxScore||'0',
               "score":item.score,
-              "hasScore":this.formValidate.hasScore,
+              "hasScore":'Y',
               "scoreType":this.formValidate.scoreType,
+              templateItemOptionList:item.templateItemOptionList,
               child:[
                 {
                   "title":item.titleSub,
                   "hasRemark":this.formValidate.hasRemark,
                   "remark":item.remark,
-                  "maxScore":item.maxScore,
+                  "maxScore":item.maxScore||'0',
                   "score":item.score,
-                  "hasScore":this.formValidate.hasScore,
+                  "hasScore":'Y',
                   "scoreType":this.formValidate.scoreType,
                   templateItemOptionList:item.templateItemOptionList,
                 }
@@ -680,9 +719,9 @@
               "title":item.titleSub,
               "hasRemark":this.formValidate.hasRemark,
               "remark":item.remark,
-              "maxScore":item.maxScore,
-              "score":item.score,
-              "hasScore":this.formValidate.hasScore,
+              "maxScore":item.maxScore||'0',
+              "score":'0',
+              "hasScore":'N',
               "scoreType":this.formValidate.scoreType,
               templateItemOptionList:item.templateItemOptionList,
             })
@@ -729,7 +768,7 @@
             "remark":item.remark,
             "maxScore":item.maxScore,
             "score":item.score,
-            "hasScore":this.formValidate.hasScore,
+            "hasScore":'Y',
             "scoreType":this.formValidate.scoreType,
             child:[],
             templateItemOptionList:item.templateItemOptionList,

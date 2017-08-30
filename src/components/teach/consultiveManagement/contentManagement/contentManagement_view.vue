@@ -63,7 +63,7 @@
             <div  v-if="data.contentType=='MULTIMEDIA'" style="height:300px;">
               <el-row v-if="data.multimediaFileList!=0">
                 <el-col style="height:300px;background: #000;"  :span="17" >
-                  <myVideo v-if="videoShow" :filePath="file.path" :isAutoPlay="true" :videoType="file.fileType"> </myVideo>
+                  <myVideo v-if="videoShow" :filePath="file.path" :isAutoPlay="true" :videoType="file.type"> </myVideo>
                 </el-col>
                 <el-col :span="7" >
                   <ul style="height:300px;background: #cecece;overflow: auto">
@@ -229,6 +229,8 @@
         this.videoShow=false;
         this.file = item;
         this.file.path = http+this.file.filePath+this.file.fileName;
+        let type = this.file.fileType.split('/');
+        this.file.type = type[type.length-1];
         console.log(this.file.path);
         this.videoShow=true;
       }

@@ -198,14 +198,14 @@
         formValidate: {
           name:"",   //类型名称
           "typeId":this.operailityData.id,               //所属类型ID
-          "remark":"住院医用的",                           //评分表用途、描述
+          "remark":"",                           //评分表用途、描述
           "score":"0",                                  //评分表总分 int
           "hasGroup":"Y",                                 //是否包含分类 取值范围：是（Y），否（N） 。
           "hasGroupScore":"Y",                            //是否按照分类评分 取值范围：是（Y），否（N）。
           "hasRemark":"Y",                                //是否有备注 取值范围：是（Y），否（N）。
           "scoreType":"INPUT",                           //评分方式：输入分数/选择 取值范围：输入（INPUT），选择（SELECT）。
           "hasScoreLevel":"Y",                            //是否有分值等级 取值范围：是（Y），否（N）。 当scoreType取值SELECT，该字段必须有值
-          "scoreLevel":"优|良|中|差",                     //分值等级 当hasScoreLevel取值Y，该字段必须有值
+          "scoreLevel":"",                     //分值等级 当hasScoreLevel取值Y，该字段必须有值
           _scoreLevel:[{label:'',key:'select1'}]  ,                              //候选项数组
           "templateItemList":[
 
@@ -237,12 +237,12 @@
         idCount:50, //累计数，防止重复
         body:[
           {
-            parentTitle:'11',
+            parentTitle:'',
             parentTitleRow:2,
-            titleSub:'11',
+            titleSub:'',
             _isParent:true,
             _id:1,
-            score:'22',
+            score:'',
             scoreRow:'2',
             remark:'',
             operateSub:'',
@@ -252,10 +252,10 @@
             select1Row:2,
           }  ,
           {
-            titleSub:'33',
+            titleSub:'',
             _isParent:false,
             _parentId:1,
-            score:'33',
+            score:'',
             remark:'',
             operateSub:'',
             select1:'',
@@ -317,7 +317,7 @@
             }
             this.formValidate.scoreLevel =tempArr.join('|');
           }else {
-            this.formValidate.scoreLevel =[];
+            this.formValidate.scoreLevel ='';
           }
 
           this.addMessTitle.ajaxParams.data  =  this.formValidate;
@@ -343,6 +343,7 @@
 
       //分类等于Y
       conductParamsHasGroup(data){
+          let hasGroupScore = this.formValidate.hasGroupScore=='N';
         let tempArr = [];
         let tempIndex=-1;
         let maxScore=0;   //最大分
@@ -363,16 +364,17 @@
               "remark":item.remark,
               "maxScore":maxScore,
               "score":item.score,
-              "hasScore":this.formValidate.hasScore,
+              "hasScore":'Y',
               "scoreType":this.formValidate.scoreType,
+              templateItemOptionList:item.templateItemOptionList,
               child:[
                 {
                   "title":item.titleSub,
                   "hasRemark":this.formValidate.hasRemark,
                   "remark":item.remark,
-                  "maxScore":item.maxScore,
+                  "maxScore":item.maxScore||'0',
                   "score":item.score,
-                  "hasScore":this.formValidate.hasScore,
+                  "hasScore":'Y',
                   "scoreType":this.formValidate.scoreType,
                   templateItemOptionList:item.templateItemOptionList,
                 }
@@ -387,13 +389,15 @@
                tempArr[tempIndex].maxScore = maxScore;
                Total += +maxScore;
              }
+            console.log(data.hasGroupScore,hasGroupScore,hasGroupScore?item.score:'0',item.score);
+
             tempArr[tempIndex].child.push({
               "title":item.titleSub,
               "hasRemark":this.formValidate.hasRemark,
               "remark":item.remark,
-              "maxScore":item.maxScore,
-              "score":item.score,
-              "hasScore":this.formValidate.hasScore,
+              "maxScore":item.maxScore||'0',
+              "score":hasGroupScore?item.score:'0',
+              "hasScore":hasGroupScore?'Y':'N',
               "scoreType":this.formValidate.scoreType,
               templateItemOptionList:item.templateItemOptionList,
             })
@@ -439,9 +443,9 @@
               "title":item.titleSub,
               "hasRemark":this.formValidate.hasRemark,
               "remark":item.remark,
-              "maxScore":item.maxScore,
+              "maxScore":item.maxScore||'0',
               "score":item.score,
-              "hasScore":this.formValidate.hasScore,
+              "hasScore":'Y',
               "scoreType":this.formValidate.scoreType,
               child:[],
               templateItemOptionList:item.templateItemOptionList,

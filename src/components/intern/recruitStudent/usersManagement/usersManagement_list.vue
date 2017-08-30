@@ -1,8 +1,7 @@
 <!-- 实习生 - 报名招录 - 人员管理 -->
 <template>
   <layout-tree class="defined-t">
-    <left-tree slot="left" :clickAddChange="clickAddChange" @setCurrSltNodeId="setTreeDepId" @clickAdd="handleAdd" @tree-click="treeClick"
-      @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
+    <left-tree slot="left" :clickAddChange="clickAddChange" @setCurrSltNodeId="setTreeDepId" @clickAdd="handleAdd" @tree-click="treeClick" @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
     <div slot="right" id="content" ref="content" class="modal">
       <div class="listUpAreaBox">
         <div class="listUpArea-menus">
@@ -12,6 +11,9 @@
             <el-button class="but-col" @click="toChannel" type="primary">导入</el-button>
             <el-button class="but-col" @click="derive" type="primary">导出</el-button>
             <el-button class="but-col" @click="shortNote" type="primary">短信通知</el-button>
+            <a :href="downUserPortraitUrl" style="margin-left:10px;">
+              <el-button class="but-col" type="success">头像下载</el-button>
+            </a>
           </div>
         </div>
         <div class="listUpArea-search">
@@ -68,8 +70,7 @@
         </el-form>
       </div>
       <div id="myTable" ref="myTable" class="userDataTable">
-        <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData1" tooltip-effect="dark"
-          style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData1" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55">
           </el-table-column>
           <el-table-column label="序号" prop="index" width="70"></el-table-column>
@@ -92,48 +93,44 @@
       </div>
       <div style="margin: 10px;">
         <div style="float: right;">
-          <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-            :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
+          <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
           </el-pagination>
         </div>
       </div>
       <!--弹窗-->
       <div>
         <!--修改弹窗-->
-        <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1000">
+        <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="800">
           <modal-header slot="header" :content="editId"></modal-header>
           <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
           <div slot="footer"></div>
         </Modal>
         <!--增加弹窗-->
-        <Modal :mask-closable="false" v-model="addModal" height="200" class-name="vertical-center-modal" :width="1000">
+        <Modal :mask-closable="false" v-model="addModal" height="200" class-name="vertical-center-modal" :width="800">
           <modal-header slot="header" :content="addId"></modal-header>
           <add v-if="addModal" @cancel="cancel" @add="subCallback" :operailityData="operailityData"></add>
           <div slot="footer"></div>
         </Modal>
         <!--查看弹窗-->
-        <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1000">
+        <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1100">
           <modal-header slot="header" :parent="self" :content="showId"></modal-header>
           <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData"></show>
           <div slot="footer"></div>
         </Modal>
         <!--删除弹窗-->
-        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal"
-          :width="500">
+        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal" :width="500">
           <modal-header slot="header" :content="removeId"></modal-header>
           <remove v-if="removeModal" :deleteUrl="deleteUrl" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
           <div slot="footer"></div>
         </Modal>
         <!--导入弹窗-->
-        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="toChannelModal" class-name="vertical-center-modal"
-          :width="800">
+        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="toChannelModal" class-name="vertical-center-modal" :width="800">
           <modal-header slot="header" :content="toChannelId"></modal-header>
           <toChannel v-if="toChannelModal" :deptId="deptId" @toChannel="subCallback" @cancel="cancel" :operaility-data="operailityData"></toChannel>
           <div slot="footer"></div>
         </Modal>
         <!--导出弹窗-->
-        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="deriveModal" class-name="vertical-center-modal"
-          :width="500">
+        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="deriveModal" class-name="vertical-center-modal" :width="500">
           <modal-header slot="header" :content="deriveId"></modal-header>
           <div>
             <div class="remove">确认导出吗</div>
@@ -144,14 +141,12 @@
                 </a>
                 <el-button class="but-col" @click=" deriveModal=false">取消</el-button>
               </el-col>
-              </el-col>
             </el-row>
           </div>
           <div slot="footer"></div>
         </Modal>
         <!--短信通知弹窗-->
-        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="shortNoteModal" class-name="vertical-center-modal"
-          :width="800">
+        <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="shortNoteModal" class-name="vertical-center-modal" :width="800">
           <modal-header slot="header" :content="shortNoteId"></modal-header>
           <shortNote v-if="shortNoteModal" @shortNote="subCallback" @cancel="cancel" :operaility-data="operailityData"></shortNote>
           <div slot="footer"></div>
@@ -161,19 +156,20 @@
   </layout-tree>
 </template>
 <style>
-  .defined-t .el-select .el-input {
-    width: 110px;
+   .defined-t .el-select .el-input {
+    width: 158px;
   }
 
 </style>
 <script>
+  import api from './api';
   /*当前组件必要引入*/
   //引入--修改--组件
-  import edit from "./usersManagement_edit";
+  import edit from "./usersManagement_editByTeacher.vue";
   //引入--查看--组件
   import show from "../../../base/sysManage/departmentStaff/departmentStaff_view";
   //引入--添加--组件
-  import add from "./usersManagement_add";
+  import add from "./usersManagement_addByTeacher";
   //引入--导入--组件
   import toChannel from "./usersManagement_toChannel";
   //引入--短信通知--组件
@@ -266,6 +262,8 @@
         //当前tree选中的node id
         deptId: '',
 
+        downUserPortraitUrl: 'javascript:;', // 下载头像Url
+
         searchMore: false,
         deriveModal: false,
         toChannelModal: false,
@@ -303,7 +301,7 @@
             curPage: 1,
             pageSize: Util.pageInitPrams.pageSize
           }
-        }
+        };
       },
 
       //设置表格及分页的位置
@@ -322,6 +320,11 @@
        */
       handleSelectionChange(val) {
         this.multipleSelection = val;
+        let userIds = [];
+        if (val.length) {
+          val.map(item => userIds.push(item.id));
+        }
+        this.downUserPortrait(userIds)
       },
 
       /*
@@ -467,6 +470,11 @@
           this.operailityData = this.tableData1[index];
           this.openModel('edit')
         }
+      },
+
+      // 下载头像
+      downUserPortrait(userIds = []) {
+        this.downUserPortraitUrl = api.downloadImg + '?deptId=' + this.deptId + '&ids=' + userIds.join(',');
       },
 
 
@@ -736,6 +744,7 @@
         if (id != "") {
           this.deptId = id;
           this.setTableData();
+          this.downUserPortrait();
         }
       }
     },

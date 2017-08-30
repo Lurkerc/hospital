@@ -17,6 +17,7 @@ let teachingActivitiesSet = {
   activityType: [{ required: true, message: '此项不能为空'}], //, // 场次名称 - 必填
   recordTimes: [{ required: true, message: '此项不能为空'}], //, // 场次名称 - 必填
   whetherNeedCases: [{ required: true, message: '此项不能为空'},baseRules.inputLen(0,50),baseRules.illegalChar()], //, // 场次名称 - 必填
+  casesName: [{ required: true, message: '此项不能为空'},baseRules.inputLen(0,50),baseRules.illegalChar()], //, // 场次名称 - 必填
 }
 /**
  * 教学经历

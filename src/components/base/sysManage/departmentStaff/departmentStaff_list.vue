@@ -12,7 +12,7 @@
 </template>
 <style>
   .defined-t .el-select .el-input {
-    width: 110px;
+    width: 158px;
   }
 
 </style>

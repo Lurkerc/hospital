@@ -65,8 +65,7 @@
       </el-form>
     </div>
     <div id="myTable" ref="myTable" class="userDataTable">
-      <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark"
-        style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55">
         </el-table-column>
         <el-table-column label="序号" prop="index" width="70"></el-table-column>
@@ -89,48 +88,44 @@
     </div>
     <div style="margin: 10px;">
       <div style="float: right;">
-        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-          :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
+        <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
         </el-pagination>
       </div>
     </div>
     <!--弹窗-->
     <div>
       <!--修改弹窗-->
-      <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1000">
+      <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="1100">
         <modal-header slot="header" :content="editId"></modal-header>
         <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
         <div slot="footer"></div>
       </Modal>
       <!--增加弹窗-->
-      <Modal :mask-closable="false" v-model="addModal" height="200" class-name="vertical-center-modal" :width="1000">
+      <Modal :mask-closable="false" v-model="addModal" height="200" class-name="vertical-center-modal" :width="1100">
         <modal-header slot="header" :content="addId"></modal-header>
         <add v-if="addModal" @cancel="cancel" @add="subCallback" :operailityData="operailityData"></add>
         <div slot="footer"></div>
       </Modal>
       <!--查看弹窗-->
-      <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1000">
+      <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1100">
         <modal-header slot="header" :parent="self" :content="showId"></modal-header>
         <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData" studentType="ZYY"></show>
         <div slot="footer"></div>
       </Modal>
       <!--删除弹窗-->
-      <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal"
-        :width="500">
+      <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="removeModal" class-name="vertical-center-modal" :width="500">
         <modal-header slot="header" :content="removeId"></modal-header>
         <remove v-if="removeModal" :deleteUrl="deleteUrl" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
         <div slot="footer"></div>
       </Modal>
       <!--导入弹窗-->
-      <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="toChannelModal" class-name="vertical-center-modal"
-        :width="800">
+      <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="toChannelModal" class-name="vertical-center-modal" :width="800">
         <modal-header slot="header" :content="toChannelId"></modal-header>
         <toChannel v-if="toChannelModal" :deptId="deptId" @toChannel="subCallback" @cancel="cancel" :operaility-data="operailityData"></toChannel>
         <div slot="footer"></div>
       </Modal>
       <!--导出弹窗-->
-      <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="deriveModal" class-name="vertical-center-modal"
-        :width="500">
+      <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="deriveModal" class-name="vertical-center-modal" :width="500">
         <modal-header slot="header" :content="deriveId"></modal-header>
         <div>
           <div class="remove">确认导出吗</div>
@@ -147,8 +142,7 @@
         <div slot="footer"></div>
       </Modal>
       <!--短信通知弹窗-->
-      <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="shortNoteModal" class-name="vertical-center-modal"
-        :width="800">
+      <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="shortNoteModal" class-name="vertical-center-modal" :width="800">
         <modal-header slot="header" :content="shortNoteId"></modal-header>
         <shortNote v-if="shortNoteModal" @shortNote="subCallback" @cancel="cancel" :operaility-data="operailityData"></shortNote>
         <div slot="footer"></div>

@@ -42,7 +42,7 @@
               <el-row :gutter="10" class="table-back-two">
                 <el-col :span="8">
                   <el-form-item label="出生年月：" prop="birth">
-                    <el-date-picker v-model="formValidate.birth" type="month" placeholder="选择日期" style="width: 127px;">
+                    <el-date-picker v-model="formValidate.birth" type="month" placeholder="选择日期" style="width: 158px;">
                     </el-date-picker>
                   </el-form-item>
                 </el-col>
@@ -301,7 +301,7 @@
           headPhotoHttp: '' //头像全地址
         },
         //上传头像
-        uploadHeaderUrl: '/file/upload/static',
+        uploadHeaderUrl: '/file/upload/headImg',
         //是否显示头像
         imgSrc: '',
 
@@ -385,7 +385,7 @@
         let data = responseData.data;
         this.formValidate = this.formDate(data, ['birth', 'jobTime'], this.yearMonth);
         let env = this.$store.getters.getEnvPath;
-        if (data.headPhoto === null || data.headPhoto=="") {
+        if (data.headPhoto === null || data.headPhoto == "") {
           this.imgSrc = "";
         } else {
           this.imgSrc = env["http"] + data.headPhoto;
@@ -423,9 +423,10 @@
        * @param imgSrc  string  头像路径
        * */
       setUploadHeaderSuccessUrl(resData, imgSrc) {
-        this.formValidate.headPhoto = resData["relativePathFile"];
-
-        this.imgSrc = resData["staticUrl"] + this.formValidate.headPhoto;
+        // this.formValidate.headPhoto = resData["relativePathFile"];
+        // this.imgSrc = resData["staticUrl"] + this.formValidate.headPhoto;
+        this.formValidate.headPhoto = resData;
+        this.imgSrc = this.$store.state.envPath.http + resData;
       },
 
 

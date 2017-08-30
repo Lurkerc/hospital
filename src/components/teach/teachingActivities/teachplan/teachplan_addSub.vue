@@ -168,13 +168,14 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          width="200">
-          <template scope="scope">
+          width="200"
+          >
+          <template scope="scope" >
             <el-tooltip  v-show="scope.row.planActivityFileName!=0" class="item" effect="dark"  placement="bottom">
               <div slot="content"><div v-for="(item,index) in scope.row.planActivityFileName" :key="index">{{item}}</div></div>
               <el-button size="small" @click="files(scope.row)" type="info">附件管理</el-button>
             </el-tooltip>
-            <el-button v-show="scope.row.planActivityFileName==0" size="small" @click="files(scope.row)" >附件管理</el-button>
+            <el-button style="margin-left: 0" v-show="scope.row.planActivityFileName==0" size="small" @click="files(scope.row)" >附件管理</el-button>
             <el-button size="small" @click="remove(scope.$index)" type="danger">删除</el-button>
           </template>
         </el-table-column>
@@ -487,8 +488,3 @@
   }
 </script>
 
-<style>
-  .my-tooltip-button .el-button+.el-button{
-    margin-left: 0;
-  }
-</style>

@@ -12,7 +12,7 @@
         </el-col>
         <el-col :span="10" >
           <el-form-item label="分类 :" prop="title">
-            {{operailityData.name}}
+            {{operailityData.treeName}}
           </el-form-item>
         </el-col>
       </el-row>
@@ -264,7 +264,7 @@
       SuccessGetCurrData(res){
         let data = res.data;
         if(!data) return;
-        data = {
+       /* data = {
           "id":1000,
           "typeId":1000,
           "name":"住院医专用的评分模板01",
@@ -375,7 +375,7 @@
             },
 
           ]
-        }
+        }*/
         this.formValidate =data;//使基础数据显示
         this.formValidate = this.conductData(data);
       },
@@ -450,16 +450,34 @@
         if(data.hasGroupScore == 'Y'){
           isScore = true
         }
+
+
+        //如果是选择的，为返回的选择的数据进行排序和匹配
+        let scoreLevelObj={}
+        for(let l=0;l<data._scoreLevel.length;l++){
+          scoreLevelObj[data._scoreLevel[l].label] = data._scoreLevel[l].key;
+        }
+
         let obj;
         let parentId;
-        let templateItemList = data.templateItemList;  //传过来的内容主体
+        let flag=true;//如果不是否按照分类评分的，则k=0时是true，只允许进一次;如果是否按照分类评分的，则此项为true,判断条件是，是否是hasScore为‘Y’；
+          let templateItemList = data.templateItemList;  //传过来的内容主体
         for(let i=0;i<templateItemList.length;i++){
           let child=templateItemList[i].child;
           if(!child) continue;
+          let tempArr = [];//临时放置处理的当前child的子项
           for(let k=0;k<child.length;k++){
             if(k==0){
               parentId = ++this.idCount;
               this.constructionMerge[parentId] = child.length;//父元素要合并的单元格数
+            }
+            if(!isScore){
+                flag = k==0;
+            }else {
+              flag=true;
+            }
+            if(flag && child[k].hasScore=='Y') {
+              if(isScore)child[k].templateItemOptionList = templateItemList[i].templateItemOptionList;
               obj = {
                 parentTitle:templateItemList[i].title||'',
                 parentTitleRow:child.length,
@@ -475,11 +493,18 @@
                 select1:'',
                 select1Row:isScore?child.length:1,
               }
-
-              for(let l=0;l<this.select.length;l++){
-                obj[this.select[l]] = child[k].templateItemOptionList[l].val
+              if(child[k].templateItemOptionList!=0) {
+//                for (let l = 0; l < this.select.length; l++) {
+//                  obj[this.select[l]] = child[k].templateItemOptionList[l].val
+//                }
+                for(let j=0;j<child[k].templateItemOptionList.length;j++){
+                  let title = child[k].templateItemOptionList[j].title;
+                  let label = child[k].templateItemOptionList[j].val;
+                  obj[scoreLevelObj[title]] = label;
+                }
               }
-              body.push(obj);
+
+              tempArr.unshift(obj);
             }else {
               obj = {
                   titleSub:child[k].title||'',
@@ -490,15 +515,23 @@
                   operateSub:'',
                   select1:'',
                 }
-              for(let l=0;l<this.select.length;l++){
-                obj[this.select[l]] = child[k].templateItemOptionList[l].val
+              if(child[k].templateItemOptionList!=0) {
+                //                for (let l = 0; l < this.select.length; l++) {
+//                  obj[this.select[l]] = child[k].templateItemOptionList[l].val
+//                }
+
+                for(let j=0;j<child[k].templateItemOptionList.length;j++){
+                  let title = child[k].templateItemOptionList[j].title;
+                  let label = child[k].templateItemOptionList[j].val;
+                  obj[scoreLevelObj[title]] = label;
+                }
               }
-              body.push(obj)
+              tempArr.push(obj)
             }
-
           }
+          body = body.concat(tempArr);
+          tempArr = [];
         }
-
         this.body = body;
         //根据当前评分分组决定评分项是否合并单元格
         this.groupScoreChange(this.formValidate.hasGroupScore);
@@ -529,6 +562,13 @@
         if(data.hasGroupScore == 'Y'){
           isScore = true
         }
+
+        //如果是选择的，为返回的选择的数据进行排序和匹配
+        let scoreLevelObj={}
+        for(let l=0;l<data._scoreLevel.length;l++){
+          scoreLevelObj[data._scoreLevel[l].label] = data._scoreLevel[l].key;
+        }
+
         let parentId;
         let obj;
         let templateItemList = data.templateItemList;  //传过来的内容主体
@@ -549,9 +589,17 @@
             select1:'',
             select1Row:1,
           }
-          for(let l=0;l<this.select.length;l++){
-            obj[this.select[l]] =  templateItemList[i].templateItemOptionList[l].val
+          if(templateItemList[i].templateItemOptionList!=0){
+//            for(let l=0;l<this.select.length;l++){
+//              obj[this.select[l]] =  templateItemList[i].templateItemOptionList[l].val
+//            }
+            for(let j=0;j<templateItemList[i].templateItemOptionList.length;j++){
+              let title = templateItemList[i].templateItemOptionList[j].title;
+              let label = templateItemList[i].templateItemOptionList[j].val;
+              obj[scoreLevelObj[title]] = label;
+            }
           }
+
           body.push(obj)
         }
 
@@ -560,8 +608,6 @@
         //根据当前评分分组决定评分项是否合并单元格
         this.groupScoreChange(this.formValidate.hasGroupScore);
       },
-
-
 
 
 
@@ -593,7 +639,7 @@
       scoreCol(){
         let scoreCol = this.formValidate.hasScoreLevel=='Y'?this.select.length:1;
         if(this.formValidate.hasGroup=='Y'){
-          return this.header.length-(2+scoreCol)
+          return this.header.length-(+scoreCol)
         }else {
           return this.header.length-(1+scoreCol)
 

@@ -251,7 +251,6 @@
       this.ajax(this.planActivityTypeMessTitle)
       this.ajax(this.timeIdsMessTitle);
       this.ajax(this.listMessTitle) //获取详情
-      this.SuccessGetCurrData()
     },
     mounted(){
       //暂时没有初始化,预留初始化入口
@@ -317,36 +316,7 @@
 
       //获取到详情数据
       SuccessGetCurrData(res){
-//        let data = res.data;
-        let data = {
-          "activityPlanId":111,
-          "activityPlanYear":"计划对应年份",
-          "activityPlanMonth":"计划对应月份",
-          "activityPlanDepId":"计划科室ID",
-          "activityPlanDepName":"计划科室名称",
-          "activityPlanState":"计划状态",
-          "activityDetails":[
-            {
-              "planDetailId":"活动详情ID",
-              "planActivityTitle":"活动名称",
-              "planActivityType":"活动类型",
-              "planActivityHostUserId":"主持人ID",
-              "planActivityHostUserName":"主持人姓名",
-              "planActivityTime":"1992-01-01",
-              "planActivityTimeids":"1",
-              "planActivitySite":"活动地点",
-              "planActivityContent":"活动内容",
-              "planActivityFiles":[
-                {
-                  "id":11,
-                  "fileUrl":"http://www.baidu.com",
-                  "fileName":"附件",
-                  "fileType":"txt"
-                }
-              ]
-            }
-          ]
-        }
+        let data = res.data;
         if(!data) return;
 
         this.formValidate =  this.conductGetData(data)
@@ -363,7 +333,7 @@
           item.planActivityTimeids = item.planActivityTimeids.split(',');  //
           //处理主持人
           item.planActivityHost = [];
-          let planActivityHostUserIds = item.planActivityHostUserId.split(',');
+          let planActivityHostUserIds = (item.planActivityHostUserId+'').split(',');
           let planActivityHostUserNames = item.planActivityHostUserName.split(',');
           for(let k=0;k<planActivityHostUserIds.length;k++){
             item.planActivityHost.push({

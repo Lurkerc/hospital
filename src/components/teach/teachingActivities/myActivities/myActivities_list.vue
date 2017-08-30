@@ -243,8 +243,8 @@
       //初始化请求列表数据
       init(){
 
-        let userInfo = this.$store.getters.getUserInfo;
-        this.formValidate.userId = userInfo.id;
+//        let userInfo = this.$store.getters.getUserInfo;
+//        this.formValidate.userId = userInfo.id;
         Util = this.$util;
         //ajax请求参数设置
         this.myPages =  Util.pageInitPrams;

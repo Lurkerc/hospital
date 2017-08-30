@@ -59,7 +59,7 @@
                       v-model="formValidate.birth"
                       type="month"
                       placeholder="选择日期"
-                      style="width: 127px;"
+                      style="width: 158px;"
                     >
                     </el-date-picker>
                   </el-form-item>

@@ -95,10 +95,6 @@ const mutations = {
     let options = {
       ajaxSuccess: (res) => {
         state.envPath = res.data;
-        // 乱码解决后删除
-        state.envPath.chinaAddress = "湖南省长沙市河西岳麓区桐梓坡路138号";
-        state.envPath.chinaName = "临床技能训练中心";
-        state.envPath.hospitalName = "中南大学湘雅三医院";
       },
       errorTitle: '获取系统常量失败!',
       ajaxParams: {

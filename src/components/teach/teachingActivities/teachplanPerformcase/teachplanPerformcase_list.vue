@@ -199,18 +199,18 @@
         dynamicHt: 100,
         self: this,
         tableData: [
-          {
-            "planDetailId":"活动详情ID",
-            "activityPlanId":111,
-            "activityPlanDepId":"计划科室ID",
-            "activityPlanDepName":"计划科室名称",
-            "planActivityTitle":"活动名称",
-            "planActivityType":"活动类型",
-            "planActivityHostUserId":"主持人ID",
-            "planActivityHostUserName":"主持人姓名",
-            "planActivityTime":"活动时间(yyyy-MM-dd)",
-            "planPerformCount":"执行次数"
-          }
+//          {
+//            "planDetailId":"活动详情ID",
+//            "activityPlanId":111,
+//            "activityPlanDepId":"计划科室ID",
+//            "activityPlanDepName":"计划科室名称",
+//            "planActivityTitle":"活动名称",
+//            "planActivityType":"活动类型",
+//            "planActivityHostUserId":"主持人ID",
+//            "planActivityHostUserName":"主持人姓名",
+//            "planActivityTime":"活动时间(yyyy-MM-dd)",
+//            "planPerformCount":"执行次数"
+//          }
         ],
         //发布
         publishModal:false,

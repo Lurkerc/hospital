@@ -105,12 +105,12 @@
         <el-table-column
           label="操作"
           width="100">
-          <template scope="scope">
+          <template scope="scope" >
             <el-tooltip  v-show="scope.row.planActivityFileName!=0" class="item" effect="dark"  placement="bottom">
               <div slot="content"><div v-for="(item,index) in scope.row.planActivityFileName" :key="index">{{item}}</div></div>
               <el-button size="small" @click="files(scope.row)" type="info">附件管理</el-button>
             </el-tooltip>
-            <el-button v-show="scope.row.planActivityFileName==0" size="small" @click="files(scope.row)" >附件管理</el-button>
+            <el-button style="margin-left: 0"  v-show="scope.row.planActivityFileName==0" size="small" @click="files(scope.row)" >附件管理</el-button>
             <!--<el-button size="small" @click="remove(scope.$index)" type="danger">删除</el-button>-->
           </template>
         </el-table-column>
@@ -317,36 +317,8 @@
 
       //获取到详情数据
       SuccessGetCurrData(res){
-//        let data = res.data;
-        let data = {
-          "activityPlanId":111,
-          "activityPlanYear":"计划对应年份",
-          "activityPlanMonth":"计划对应月份",
-          "activityPlanDepId":"计划科室ID",
-          "activityPlanDepName":"计划科室名称",
-          "activityPlanState":"计划状态",
-          "activityDetails":[
-            {
-              "planDetailId":"活动详情ID",
-              "planActivityTitle":"活动名称",
-              "planActivityType":"活动类型",
-              "planActivityHostUserId":"主持人ID",
-              "planActivityHostUserName":"主持人姓名",
-              "planActivityTime":"1992-01-01",
-              "planActivityTimeids":"1",
-              "planActivitySite":"活动地点",
-              "planActivityContent":"活动内容",
-              "planActivityFiles":[
-                {
-                  "id":11,
-                  "fileUrl":"http://www.baidu.com",
-                  "fileName":"附件",
-                  "fileType":"txt"
-                }
-              ]
-            }
-          ]
-        }
+        let data = res.data;
+
         if(!data) return;
 
         this.formValidate =  this.conductGetData(data)
@@ -363,7 +335,7 @@
           item.planActivityTimeids = item.planActivityTimeids.split(',');  //
           //处理主持人
           item.planActivityHost = [];
-          let planActivityHostUserIds = item.planActivityHostUserId.split(',');
+          let planActivityHostUserIds = (item.planActivityHostUserId+'').split(',');
           let planActivityHostUserNames = item.planActivityHostUserName.split(',');
           for(let k=0;k<planActivityHostUserIds.length;k++){
             item.planActivityHost.push({
@@ -500,8 +472,3 @@
   }
 </script>
 
-<style>
-  .my-tooltip-button .el-button+.el-button{
-    margin-left: 0;
-  }
-</style>
