@@ -128,15 +128,15 @@
           label: 'name'
         },
         date:{
-          startDay:this.operailityData.startDay,
-          endDay:this.operailityData.endDay,
-          startWeek:this.operailityData.startDay,
-          endWeek:this.operailityData.endDay,
-          startMonth:this.operailityData.startDay,
-          endMonth:this.operailityData.endDay,
+          startDay:'',
+          endDay:'',
+          startWeek:'',
+          endWeek:'',
+          startMonth:'',
+          endMonth:'',
         },
         formValidate:{
-          dateType:'',      //评价时间   1 2 3 4 5 6 7 8
+          dateType:this.operailityData.dateType+'',      //评价时间   1 2 3 4 5 6 7 8
           startDay:''  ,    //该项的取值，因评价时间(dateType) 取值不同而不同. 前X天(int)、每周X(int)、每月X日(int)、开始时间YMD(date)
           endDay:'',        //该项的取值，因评价时间(dateType) 取值不同而不同. 后X天(int)、到周X(int)、到每月X日(int)、结束时间YMD(date)
           startDate:'' ,    //该项的取值，因评价时间(dateType) 取值不同而不同. 后X天(int)、到周X(int)、到每月X日(int)、结束时间YMD(date)
@@ -172,6 +172,33 @@
 
     },
     created(){
+        //根据不同的时间类型来填充时间
+      console.log(this.operailityData);
+      switch (this.operailityData.dateType){
+        case 1:
+          this.date.startDay = this.operailityData.startDay ;
+          this.date.endDay = this.operailityData.endDay;
+          break;
+        case 2:
+           this.date.startWeek = this.operailityData.startDay ;
+            this.date.endWeek = this.operailityData.endDay ;
+          break;
+        case 3:
+          this.date.startMonth = this.operailityData.startDay ;
+          this.date.endMonth = this.operailityData.endDay ;
+          break;
+        case 4:
+            console.log(this.operailityData.startDate,this.operailityData.endDate);
+          this.formValidate.startDate  = this.operailityData.startDate;
+          this.formValidate.endDate = this.operailityData.endDate;
+          break;
+      }
+
+
+
+
+
+
     },
     methods:{
       //初始化请求列表数据

@@ -51,7 +51,7 @@
                    allow-create
                    @change="setAppraiserRole"
 
-                   v-model="appraiserRole"
+                   v-model="appraiserRoles"
                    placeholder="请选择角色">
                    <el-option
                      v-for="item in optionData"
@@ -104,7 +104,7 @@
                   multiple
                   style="width: 100%"
                   allow-create
-                  v-model="evaluatedRole"
+                  v-model="evaluatedRoles"
                   @change="setEvaluatedRole"
                   placeholder="请选择角色">
                   <el-option
@@ -123,9 +123,9 @@
       <el-row v-if="relationship=='LOOP'">
         <el-col :span="20"  :offset="3">
             <el-radio-group v-model="formValidate.loopType">
-              <div style="height:50px;line-height: 50px"><el-radio label="1">学生评价老</el-radio></div>
-              <div style="height:50px;line-height: 50px"><el-radio label="2">老师评价学生</el-radio></div>
-              <div style="height:50px;line-height: 50px"><el-radio label="3">学生评价科室</el-radio></div>
+              <div style="height:50px;line-height: 50px"><el-radio label="1">学生评价老师</el-radio></div>
+              <div style="height:50px;line-height: 50px"><el-radio label="2">学生评价科室</el-radio></div>
+              <div style="height:50px;line-height: 50px"><el-radio label="3">老师评价学生</el-radio></div>
             </el-radio-group>
         </el-col>
       </el-row>
@@ -200,7 +200,8 @@
     data() {
       return {
         treeOptions:{
-            url:'/hospital/dept/list'
+          url:'/hQospital/dept/list',
+          isInitSltedNode:false,
         },
         treeData: [],
         defaultProps: {
@@ -211,8 +212,8 @@
           appraiserPart:[],   //
           evaluatedPart:[],   //
         },
-        appraiserRole:this.appraiserRole,
-        evaluatedRole:this.evaluatedRole,
+        appraiserRoles:this.appraiserRole,
+        evaluatedRoles:this.evaluatedRole,
         formValidate:{
           curAppraiserDept:this.operailityData.curAppraiserDept,
           curEvaluatedDept:this.operailityData.curEvaluatedDept,
@@ -264,7 +265,7 @@
 
     },
     created(){
-        this.ajax(this.listMessTitle)
+        this.ajax(this.listMessTitle);
     },
     methods:{
       //初始化请求列表数据
@@ -440,7 +441,7 @@
         }
 
         if(this.relationship=='DEPT'){
-          this.formValidate.appraiser=this.formValidate.appraiserDept;
+          this.formValidate.appraiser = this.formValidate.appraiserDept;
           this.formValidate.evaluated=this.formValidate.evaluatedDept;
         }
 
@@ -492,18 +493,19 @@
 
       //评价人点击选择的树节点
       appraiserTree(obj, node, self, isLeaf){
-        this.formValidate.evaluatedDept=[obj];
+        this.formValidate.appraiserDept=[{key:obj.id,label:obj.name}];
 
       },
       //被评价人点击选择的树节点
       evaluatedTree(obj, node, self, isLeaf){
-          this.formValidate.evaluatedDept=[obj];
+
+          this.formValidate.evaluatedDept=[{key:obj.id,label:obj.name}];
 
       },
 
       //被评价人默认选中的节点node
       evaluatedCurrSltNodeId(id,sltedTreeData){
-        this.formValidate.appraiserDept= [{key:id,label:sltedTreeData.name}];
+        this.formValidate.evaluatedDept= [{key:id,label:sltedTreeData.name}];
 
       },
 

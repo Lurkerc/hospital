@@ -27,12 +27,12 @@
       </el-row>
       <el-row>
         <el-col :span="20" :offset="1">
-            <el-form-item label="类别:">
+            <el-form-item label="用途:">
               <el-input type="textarea" readonly v-model="operailityData.remark"></el-input>
             </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row >
         <el-col :span="20" :offset="1">
             <el-form-item label="评价人与被评价对象关系:" label-width="200px">
               {{operailityData.relationship | relation}}
@@ -40,24 +40,36 @@
         </el-col>
 
       </el-row>
-      <el-row>
+      <el-row v-if="operailityData.relationship=='LOOP'">
+        <el-col :span="20" :offset="1"  >
+          <el-form-item v-if="operailityData.appraiserType=='ALL'" label-width="200px" label="评价人与被评价对象:">
+            <el-tag type="primary">{{operailityData.loopType | loopType}}
+              </el-tag>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-if="operailityData.relationship!='LOOP'">
         <el-col :span="20" :offset="1">
-            <el-form-item label="评价人:">
+            <el-form-item v-if="operailityData.relationship=='NO'&&operailityData.appraiserType=='ALL'" label="评价人:">
+              <el-tag type="primary">所有人</el-tag>
+            </el-form-item>
+            <el-form-item v-else label="评价人:">
               <el-tag
                 v-for="item in operailityData.appraiser"
                 :key="item.id"
                 type="success"
-                style="margin:0 5px"
-              >
+                style="margin:0 5px">
                 {{item.label}}
               </el-tag>
             </el-form-item>
         </el-col>
-
       </el-row>
-      <el-row>
+      <el-row v-if="operailityData.relationship!='LOOP'">
         <el-col :span="20" :offset="1">
-            <el-form-item label="被评价对象:" label-width="100px">
+          <el-form-item v-if="operailityData.relationship=='NO'&&operailityData.evaluatedType=='ALL'" label="被评价对象:">
+            <el-tag type="primary" >所有人</el-tag>
+          </el-form-item>
+            <el-form-item v-else label="被评价对象:" label-width="100px">
               <el-tag
                 v-for="item in operailityData.evaluated"
                 :key="item.id"
@@ -94,12 +106,12 @@
   export default {
 
     props:['url','operailityData'],
-
+    created(){
+        console.log(this.operailityData);
+    },
     methods:{
 
       success(){
-
-
         let query = this.$util._.defaultsDeep({},this.operailityData);
         let appraiser = []
         for (let i=0;i<query.appraiser.length;i++){
@@ -119,13 +131,12 @@
           errorTitle:'保存失败',
           ajaxSuccess:'ajaxSuccess',
           ajaxParams:{
-            jsonString:true,
             url:this.url.activityAdd,
             method:'post',
             data:query,
           }
         };
-          this.ajax(addMessTitle)
+          this.ajax(addMessTitle);
       },
       //列表的评价时间处理
       conductDateType({dateType,startDay,endDay,startDate,endDate}){

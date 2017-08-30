@@ -123,9 +123,9 @@
       <el-row v-if="relationship=='LOOP'">
         <el-col :span="20"  :offset="3">
             <el-radio-group v-model="formValidate.loopType">
-              <div style="height:50px;line-height: 50px"><el-radio label="1">学生评价老</el-radio></div>
-              <div style="height:50px;line-height: 50px"><el-radio label="2">老师评价学生</el-radio></div>
-              <div style="height:50px;line-height: 50px"><el-radio label="3">学生评价科室</el-radio></div>
+              <div style="height:50px;line-height: 50px"><el-radio label="1">学生评价老师</el-radio></div>
+              <div style="height:50px;line-height: 50px"><el-radio label="2">学生评价科室</el-radio></div>
+              <div style="height:50px;line-height: 50px"><el-radio label="3">老师评价学生</el-radio></div>
             </el-radio-group>
         </el-col>
       </el-row>
@@ -439,7 +439,7 @@
 
         if(this.relationship=='DEPT'){
           this.formValidate.appraiser=this.formValidate.appraiserDept;
-          this.formValidate.appraiser=this.formValidate.appraiserDept;
+          this.formValidate.evaluated=this.formValidate.evaluatedDept;
         }
 
 
@@ -490,18 +490,18 @@
 
       //评价人点击选择的树节点
       appraiserTree(obj, node, self, isLeaf){
-        this.formValidate.evaluatedDept=[obj];
+        this.formValidate.appraiserDept=[{key:obj.id,label:obj.name}];
 
       },
       //被评价人点击选择的树节点
       evaluatedTree(obj, node, self, isLeaf){
-          this.formValidate.evaluatedDept=[obj];
+          this.formValidate.evaluatedDept=[{key:obj.id,label:obj.name}];
 
       },
 
       //被评价人默认选中的节点node
       evaluatedCurrSltNodeId(id,sltedTreeData){
-        this.formValidate.appraiserDept= [{key:id,label:sltedTreeData.name}];
+        this.formValidate.evaluatedDept= [{key:id,label:sltedTreeData.name}];
 
       },
 
@@ -531,7 +531,6 @@
             })
           }
         }
-
         this.formValidate.appraiserRole=tempArr;
       }
     },

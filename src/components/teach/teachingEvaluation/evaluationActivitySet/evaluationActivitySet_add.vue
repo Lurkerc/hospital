@@ -32,7 +32,7 @@
     <date  v-if="count>=3" v-show="active==3" :url="url" @next="next" @last="last" :operaility-data="formValidate"></date>
 
     <!--第五步预览-->
-    <show  v-if="count>=4"  v-show="active==4" :url="url" @next="next" @last="last" :operaility-data="formValidate"></show>
+    <show  v-if="count>=4"  v-show="active==4" @add="addCallBack" :url="url" @next="next" @last="last" :operaility-data="formValidate"></show>
 
 
 
@@ -255,6 +255,11 @@
           if(this.active==0) return;
         this.active--
       },
+
+      addCallBack(type,tag){
+          this.$emit(type,type,tag)
+
+      }
 
     },
     mounted(){

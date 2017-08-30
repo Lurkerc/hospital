@@ -161,35 +161,6 @@
     },
     created(){
       this.init();
-      this.updateList({
-        "status":{
-          "code":"0",
-          "msg":""
-        },
-        "totalCount":20,
-        "data":[
-          {
-            "id":'1',
-            "name":"住院医师使用",
-            "typeName":"住院医专用",
-            "typeId":"1000",
-            "score":"1000",
-            "createTime":"1000",
-            "updateTime":"1000",
-            "remark":"备注"
-          },
-          {
-            "id":'2',
-            "name":"住院医师使用",
-            "typeName":"住院医专用",
-            "typeId":"1000",
-            "score":"1000",
-            "createTime":"1000",
-            "updateTime":"1000",
-            "remark":"备注"
-          }
-        ]
-      })
     },
     components:{
     },
@@ -201,8 +172,10 @@
         this.myPages =  Util.pageInitPrams;
 
         this.queryQptions = {
-          curPage: 1,pageSize: Util.pageInitPrams.pageSize
-        }
+          curPage: 1,pageSize: Util.pageInitPrams.pageSize,
+        };
+
+        this.setTableData()
 
       },
 

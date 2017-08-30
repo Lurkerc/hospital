@@ -19,7 +19,6 @@
           </el-form-item>
         </el-col>
         <el-col :span="10">
-
           <el-form-item label="评价表:">
             {{formValidate.tempName}}
           </el-form-item>
@@ -40,24 +39,36 @@
         </el-col>
 
       </el-row>
-      <el-row>
+      <el-row v-if="formValidate.relationship=='LOOP'">
+        <el-col :span="20" :offset="1"  >
+          <el-form-item v-if="formValidate.appraiserType=='ALL'" label-width="200px" label="评价人与被评价对象:">
+            <el-tag type="primary">{{formValidate.loopType | loopType}}
+            </el-tag>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-if="formValidate.relationship!='LOOP'">
         <el-col :span="20" :offset="1">
-          <el-form-item label="评价人:">
+          <el-form-item v-if="formValidate.relationship=='NO'&&formValidate.appraiserType=='ALL'" label="评价人:">
+            <el-tag type="primary">所有人</el-tag>
+          </el-form-item>
+          <el-form-item v-else label="评价人:">
             <el-tag
               v-for="item in formValidate.appraiser"
               :key="item.id"
               type="success"
-              style="margin:0 5px"
-            >
+              style="margin:0 5px">
               {{item.label}}
             </el-tag>
           </el-form-item>
         </el-col>
-
       </el-row>
-      <el-row>
+      <el-row v-if="formValidate.relationship!='LOOP'">
         <el-col :span="20" :offset="1">
-          <el-form-item label="被评价对象:" label-width="100px">
+          <el-form-item v-if="formValidate.relationship=='NO'&&formValidate.evaluatedType=='ALL'" label="被评价对象:">
+            <el-tag type="primary" >所有人</el-tag>
+          </el-form-item>
+          <el-form-item v-else label="被评价对象:" label-width="100px">
             <el-tag
               v-for="item in formValidate.evaluated"
               :key="item.id"
@@ -68,7 +79,6 @@
             </el-tag>
           </el-form-item>
         </el-col>
-
       </el-row>
       <el-row>
         <el-col :span="20" :offset="1">
@@ -91,7 +101,6 @@
       return {
 
         formValidate:{
-
           name:'',                //名称
           type:'',                //类别
           tempId:'',              //评价表ID
@@ -136,9 +145,10 @@
       },
       updateList(responseData){
         let data = responseData.data;
-        this.formValidate.appraiser=this.conductRelationship(data.appraiser);
-        this.formValidate.evaluated=this.conductRelationship(data.evaluated);
-        this.formValidate = Object.assign(data,this.formValidate);
+        if(!data)return;
+        data.appraiser=this.conductRelationship(data.appraiser);
+        data.evaluated=this.conductRelationship(data.evaluated);
+        this.formValidate = data;
       },
 
       //类型不同，做不同处理
@@ -153,9 +163,7 @@
             }
           }
         }
-
         return data;
-
       },
       //列表的评价时间处理
       conductDateType({dateType,startDay,endDay,startDate,endDate}){

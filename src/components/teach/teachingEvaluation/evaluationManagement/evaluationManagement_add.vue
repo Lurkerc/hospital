@@ -619,7 +619,16 @@
               }
             }
           }else {
-              //改变是否按照分组评分为N,并调用方法
+            let undefined;
+            //清除数据的分类信息
+            for(let k=0;k<this.body.length;k++){
+              let item = this.body[k];
+              if(item.parentTitle!=undefined){   // 只有每一个项目的第一行有，并清除
+                item.parentTitle = '';
+              }
+            }
+
+            //改变是否按照分组评分为N,并调用方法
             this.formValidate.hasGroupScore='N'; //评分变成N
             this.groupScoreChange('N')
             //更改头部
@@ -635,8 +644,16 @@
 
       //改变是否按照分组评分
       groupScoreChange(val){
-        if(val=='Y'){
+        //清除数据的分值信息
+        for(let k=0;k<this.body.length;k++){
+          let item = this.body[k];
+          item.score = '';
+          for(let k=0;k<this.select.length;k++){
+            item[this.select[k]] = '';
+          }
+        }
 
+        if(val=='Y'){
           for(let i=0;i<this.body.length;i++){
               let _id=this.body[i]._id;
             if(_id){//存在id为父元素 评分项单元格
@@ -666,8 +683,8 @@
       //改变是否有备注
       hasRemarkChange(val){
         if(val=='Y'){
+          //控制界面显示效果
           for (let i=0;i<this.header.length;i++){
-
             if(this.header[i].key =='titleSub'){
               this.header.splice(i+1,0,{
                   key:'remark',
@@ -676,8 +693,16 @@
             }
           }
         }else {
-          for (let i=0;i<this.header.length;i++){
+            //清除数据的备注信息
+          for(let k=0;k<this.body.length;k++){
+              let item = this.body[k];
+              item.remark = '';
 
+          }
+
+
+          //控制界面显示效果
+          for (let i=0;i<this.header.length;i++){
             if(this.header[i].key =='remark'){
               this.header.splice(i,1)
             }
@@ -688,6 +713,15 @@
 
       //评分方式
       scoreTypeChange(val){
+        //清除数据的分值信息
+        for(let k=0;k<this.body.length;k++){
+          let item = this.body[k];
+          item.score = '';
+          for(let k=0;k<this.select.length;k++){
+            item[this.select[k]] = '';
+          }
+        }
+
           this.formValidate.scoreType =val;
         this.ceelClick('score')
         if(val=='INPUT'){

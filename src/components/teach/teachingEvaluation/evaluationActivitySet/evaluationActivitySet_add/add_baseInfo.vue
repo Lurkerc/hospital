@@ -18,9 +18,9 @@
 
             <el-form-item  prop="title" label="类别">
               <el-select v-model="formValidate.type" placeholder="请选择活动区域">
-                <el-option label="学评教" value="shanghai"></el-option>
-                <el-option label="教评学" value="beijing"></el-option>
-                <el-option label="第三方评价" value="beijing"></el-option>
+                <el-option label="学评教" value="学评教"></el-option>
+                <el-option label="教评学" value="教评学"></el-option>
+                <el-option label="第三方评价" value="第三方评价"></el-option>
               </el-select>
             </el-form-item>
 
@@ -64,7 +64,7 @@
       <!--<div slot="header"> -->
       <!--</div>-->
       <modal-header slot="header" :content="selectTempId"></modal-header>
-      <temp v-if="selectTempModal"   @cancel="cancel" :url="url"  @selectTemp="selectTempCallBack" ></temp>
+      <temp   @cancel="cancel" :url="url"  @selectTemp="selectTempCallBack" ></temp>
       <div slot="footer"></div>
       </Modal>
 

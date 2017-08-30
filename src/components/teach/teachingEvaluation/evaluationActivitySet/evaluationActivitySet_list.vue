@@ -276,7 +276,6 @@
     },
     created(){
       this.init()
-      this.updateList()//todo 模拟成功
     },
     methods:{
       //初始化请求列表数据
@@ -288,6 +287,7 @@
         this.queryQptions = {
           curPage: 1,pageSize: Util.pageInitPrams.pageSize
         }
+        this.setTableData()
 
       },
 
@@ -360,59 +360,6 @@
        * @param JSON 后台返回的data
        */
       updateList(responseData){
-          responseData={
-            "status":{
-              "code":"0",
-              "msg":""
-            },
-            "totalCount":100,
-            "data":[
-              {
-                "id":10,
-                "type":"教评学",
-                "name":"我是一个活动",
-                "relationship":"",
-                "loopType":"",
-                "appraiserType":"",
-                "appraiser":"",
-                "appraiserCount":"",
-                "evaluatedType":"",
-                "evaluated":"",
-                "evaluatedCount":"",
-                "counts":"",
-                "dateType":"",
-                "startDay":"",
-                "endDay":"",
-                "startDate":"",
-                "endDate":"",
-                "publishStatus":"",
-                "createTime":"",
-                "updateTime":""
-              },
-              {
-                "id":110,
-                "type":"教评学",
-                "name":"我是一个活动",
-                "relationship":"",
-                "loopType":"",
-                "appraiserType":"",
-                "appraiser":"",
-                "appraiserCount":"",
-                "evaluatedType":"",
-                "evaluated":"",
-                "evaluatedCount":"",
-                "counts":"",
-                "dateType":"",
-                "startDay":"",
-                "endDay":"",
-                "startDate":"",
-                "endDate":"",
-                "publishStatus":"",
-                "createTime":"",
-                "updateTime":""
-              }
-            ]
-          }
         let data = responseData.data;
         if(!data) return;
         this.tableData = data;

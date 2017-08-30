@@ -217,6 +217,7 @@
         body:[
 
         ],
+        isFirst:true,
         select:[],
         constructionMerge:{ //项目合并数，key为ID
           '1':2,
@@ -381,6 +382,12 @@
         if(!data) return;
         this.formValidate =data;
         this.formValidate = this.conductData(data);
+        this.$nextTick(function () {
+          setTimeout(() => {
+            this.isFirst = false;
+        }, 1);
+        })
+//        isFirst:true
       },
 
 
@@ -581,13 +588,14 @@
         let obj;
         let templateItemList = data.templateItemList;  //传过来的内容主体
         for(let i=0;i<templateItemList.length;i++){
+          parentId = ++this.idCount;
           this.constructionMerge[parentId] = 1;
           obj= {
             parentTitle:'',
             parentTitleRow:1,
             titleSub:templateItemList[i].title||'',
             _isParent:true,
-            _id:++this.idCount,
+            _id:parentId,
             score:templateItemList[i].score||'',
             scoreRow:1,
             remark:templateItemList[i].remark||'',
@@ -928,6 +936,18 @@
             }
           }
         }else {
+          if(!this.isFirst){
+            let undefined;
+            //清除数据的分类信息
+            for(let k=0;k<this.body.length;k++){
+              let item = this.body[k];
+              if(item.parentTitle!=undefined){   // 只有每一个项目的第一行有，并清除
+                item.parentTitle = '';
+              }
+            }
+          }
+
+
           //改变是否按照分组评分为N,并调用方法
           this.formValidate.hasGroupScore='N'; //评分变成N
           this.groupScoreChange('N')
@@ -944,8 +964,18 @@
 
       //改变是否按照分组评分
       groupScoreChange(val){
-        if(val=='Y'){
 
+        //清除数据的分值信息
+        if(!this.isFirst) {
+          for (let k = 0; k < this.body.length; k++) {
+            let item = this.body[k];
+            item.score = '';
+            for (let k = 0; k < this.select.length; k++) {
+              item[this.select[k]] = '';
+            }
+          }
+        }
+        if(val=='Y'){
           for(let i=0;i<this.body.length;i++){
             let _id=this.body[i]._id;
             if(_id){//存在id为父元素 评分项单元格
@@ -956,7 +986,6 @@
             }
           }
           this.ceelClick('score',val)
-
         }else {
           for(let i=0;i<this.body.length;i++){
             if(this.body[i]._id){//存在id为父元素 评分项不合并单元格
@@ -985,8 +1014,17 @@
             }
           }
         }else {
-          for (let i=0;i<this.header.length;i++){
+          //清除数据的备注信息
+          if(!this.isFirst) {
+            for (let k = 0; k < this.body.length; k++) {
+              let item = this.body[k];
+              item.remark = '';
 
+            }
+          }
+
+
+          for (let i=0;i<this.header.length;i++){
             if(this.header[i].key =='remark'){
               this.header.splice(i,1)
             }
@@ -997,6 +1035,17 @@
 
       //评分方式
       scoreTypeChange(val){
+        //清除数据的分值信息
+        if(!this.isFirst) {
+          for (let k = 0; k < this.body.length; k++) {
+            let item = this.body[k];
+            item.score = '';
+            for (let k = 0; k < this.select.length; k++) {
+              item[this.select[k]] = '';
+            }
+          }
+        }
+
         this.formValidate.scoreType =val;
         this.ceelClick('score')
         if(val=='INPUT'){

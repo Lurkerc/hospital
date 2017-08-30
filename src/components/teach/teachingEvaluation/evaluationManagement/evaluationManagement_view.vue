@@ -573,13 +573,14 @@
         let obj;
         let templateItemList = data.templateItemList;  //传过来的内容主体
         for(let i=0;i<templateItemList.length;i++){
+          parentId = ++this.idCount;
           this.constructionMerge[parentId] = 1;
           obj= {
             parentTitle:'',
             parentTitleRow:1,
             titleSub:templateItemList[i].title||'',
             _isParent:true,
-            _id:++this.idCount,
+            _id:parentId,
             score:templateItemList[i].score||'',
             scoreRow:1,
             remark:templateItemList[i].remark||'',

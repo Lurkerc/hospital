@@ -162,35 +162,7 @@
     },
     created(){
       this.init();
-      this.updateList({
-        "status":{
-          "code":"0",
-          "msg":""
-        },
-        "totalCount":20,
-        "data":[
-          {
-            "id":'1',
-            "name":"住院医师使用",
-            "typeName":"住院医专用",
-            "typeId":"1000",
-            "score":"1000",
-            "createTime":"1000",
-            "updateTime":"1000",
-            "remark":"备注"
-          },
-          {
-            "id":'2',
-            "name":"住院医师使用",
-            "typeName":"住院医专用",
-            "typeId":"1000",
-            "score":"1000",
-            "createTime":"1000",
-            "updateTime":"1000",
-            "remark":"备注"
-          }
-        ]
-      })
+      this.setTableData()
     },
     components:{
     },
@@ -265,6 +237,7 @@
         let data = responseData.data;
         if(!data) return;
         this.tableData = data;
+        this.totalCount = responseData.totalCount||0;
       },
       setTableData(){
         this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions,this.formValidate);

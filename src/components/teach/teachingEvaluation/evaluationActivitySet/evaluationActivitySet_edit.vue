@@ -35,8 +35,6 @@
     <show v-if="count>=4"   v-show="active==4" :url="url" @next="next" @last="last" :operaility-data="formValidate"></show>
 
 
-
-
   </div>
 </template>
 <script>
@@ -64,7 +62,6 @@
         appraiserRole:[],
         evaluatedRole:[],
         formValidate:{
-
           name:'',                //名称
           type:'',                //类别
           tempId:'',              //评价表ID
@@ -182,28 +179,35 @@
 
         if(data.relationship=='NO'){
           if(data.appraiserType == 'PART'){//类型为部分人
-            this.formValidate.appraiserPart=this.conductRelationship(data.appraiser);
-          }else if(this.formValidate.appraiserType == 'ROLE') {//类型为指定角色
-            this.formValidate.appraiserRole=this.conductRelationship(data.appraiser);
+            data.appraiserPart=this.conductRelationship(data.appraiser);
+          }else if(data.appraiserType == 'ROLE') {//类型为指定角色
+            data.appraiserRole=this.conductRelationship(data.appraiser);
             this.appraiserRole=this.conductRole(data.appraiser);
           }
 
-          if(this.formValidate.evaluatedType == 'PART'){//类型为部分人
-            this.formValidate.evaluatedPart=this.conductRelationship(data.evaluated);
-          }else if(this.formValidate.appraiserType == 'ROLE') {//类型为指定角色
-            this.formValidate.evaluatedRole=this.conductRelationship(data.evaluated);
+          if(data.evaluatedType == 'PART'){//类型为部分人
+            data.evaluatedPart=this.conductRelationship(data.evaluated);
+          }else if(data.appraiserType == 'ROLE') {//类型为指定角色
+            data.evaluatedRole=this.conductRelationship(data.evaluated);
             this.evaluatedRole=this.conductRole(data.evaluated);
           }
         }
 
-        if(this.relationship=='DEPT'){
-          this.formValidate.appraiserDept=this.conductRelationship(data.appraiser);
-          this.formValidate.curAppraiserDept = this.conductRole(data.appraiser);
-          this.formValidate.evaluatedDept=this.conductRelationship(data.evaluated);
-          this.formValidate.curEvaluatedDept=this.conductRole(data.evaluated);
+        if(data.relationship=='DEPT'){
+          data.appraiserDept=this.conductRelationship(data.appraiser);
+
+          data.curAppraiserDept = this.conductRole(data.appraiser).join(',');
+          data.evaluatedDept=this.conductRelationship(data.evaluated);
+          data.curEvaluatedDept=this.conductRole(data.evaluated).join(',');
         }
-        this.update++
-        this.formValidate = Object.assign(data,this.formValidate);
+        this.update++;
+        let undefined;
+        for (let i=0 ;i<data.length;i++){
+            if(data[i]==undefined){
+              data[i] = '';
+            }
+        }
+        this.formValidate = this.getFormValidate(this.formValidate,data);
       },
 
       conductRole(data){
