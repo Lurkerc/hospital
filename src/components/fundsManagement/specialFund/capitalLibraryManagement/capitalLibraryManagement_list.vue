@@ -33,19 +33,23 @@
             <!-- 添加即可查看 -->
             <el-button size="small" type="success" @click="show(scope.row)">查看</el-button>
             <!-- 草稿和驳回状态可修改 -->
-            <el-button size="small" type="warning" @click="edit(scope.row)" :disabled="['0','2'].indexOf(scope.row.status) === -1">修改</el-button>
-            <!-- 草稿和驳回状态可上报 -->
-            <el-button size="small" type="danger" @click="reported(scope.row)" :disabled="['0','2'].indexOf(scope.row.status) === -1">上报</el-button>
+            <el-button size="small" type="warning" @click="edit(scope.row)">修改</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="申请人" prop="userName" align="center"></el-table-column>
-        <el-table-column label="手机号" prop="mobile" show-overflow-tooltip></el-table-column>
-        <el-table-column label="专业技术职称" prop="titles" show-overflow-tooltip></el-table-column>
-        <el-table-column label="进修科目" prop="deptName" show-overflow-tooltip></el-table-column>
-        <el-table-column label="进修时间" prop="startTime" show-overflow-tooltip></el-table-column>
-        <el-table-column label="状态" prop="status" show-overflow-tooltip>
+        <el-table-column label="资金库名称" prop="fundName" show-overflow-tooltip></el-table-column>
+        <el-table-column label="资金库金额" prop="fundMoney" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.status | outEducationAntragWriteStatus }}
+            {{ scope.row.fundMoney || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="流出" prop="out" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.out || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="流入" prop="enter" show-overflow-tooltip>
+          <template scope="scope">
+            {{ scope.row.enter || '-' }}
           </template>
         </el-table-column>
       </el-table>
@@ -58,20 +62,20 @@
                      :total="totalCount"></el-pagination>
     </div>
     <!-- 模态框 增加（add） -->
-    <Modal :mask-closable="false" v-model="addModal" height="200" class-name="vertical-center-modal" :width="940">
+    <Modal :mask-closable="false" v-model="addModal" height="200" class-name="vertical-center-modal" :width="800">
       <modal-header slot="header" :content="button.addId"></modal-header>
       <clm-input v-if="addModal" @cancel="cancel" @add="subCallback"></clm-input>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 编辑（edit） -->
-    <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="940">
+    <Modal :mask-closable="false" v-model="editModal" height="200" class-name="vertical-center-modal" :width="800">
       <modal-header slot="header" :content="button.editId"></modal-header>
       <clm-input v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></clm-input>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 查看（view） -->
     <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :loading="true"
-           :width="940">
+           :width="800">
       <modal-header slot="header" :parent="self" :content="button.showId"></modal-header>
       <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData"></show>
       <div slot="footer"></div>
@@ -162,6 +166,9 @@
       // 数据请求成功回调
       listDataSuccess(res, m, loading) {
         this.totalCount = res.totalCount || 0;
+        if (res.data.length) {
+          res.data.map(item => item.id = item.fundId)
+        }
         this.tableData = res.data || [];
       },
       //设置表格及分页的位置
@@ -200,20 +207,20 @@
         }
       },
       // 上报
-      reported(row){
+      reported(row) {
         this.operailityData = row;
         this.openModel('reported')
       },
       // 上报操作
-      reportedCall(){
+      reportedCall() {
         let opt = {
-          ajaxSuccess: res => this.subCallback('reported','上报成功'),
-          ajaxError: ()=> this.errorMess('上报失败'),
-          ajaxParams:{
+          ajaxSuccess: res => this.subCallback('reported', '上报成功'),
+          ajaxError: () => this.errorMess('上报失败'),
+          ajaxParams: {
             url: api.audit.path,
             method: api.audit.method,
-            data:{
-              ids:this.operailityData.id,
+            data: {
+              ids: this.operailityData.id,
               status: '1'
             }
           }
