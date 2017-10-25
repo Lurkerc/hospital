@@ -1,10 +1,10 @@
 <template>
   <div>
-    <el-form :model="formValidate" ref="formValidate" :rules="rules" class="demo-form-inline" label-width="100px">
+    <el-form :model="formValidate" ref="formValidate" :rules="rules" class="editForm" label-width="100px">
 
       <el-row>
         <el-col :span="8" :offset="2">
-          <el-form-item label="房间号：" prop="roomNum" required>
+          <el-form-item label="房间号：" prop="roomNum">
             <el-input v-model="formValidate.roomNum" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
@@ -12,6 +12,66 @@
         <el-col :span="8" :offset="2">
           <el-form-item label="房间名称：" prop="roomName">
             <el-input v-model="formValidate.roomName" placeholder="请输入"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="8" :offset="2">
+          <el-form-item label="类型：" prop="roomType">
+            <el-select v-model="formValidate.roomType" placeholder="请选择">
+              <el-option
+                v-for="(item,index) in roomTypeOptions"
+                :key="index"
+                :label="item.name"
+                :value="item.code">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="8" :offset="2">
+          <el-form-item label="所在楼层：" prop="floor">
+            <el-input v-model="formValidate.floor" placeholder="请输入所在楼层：1"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="8" :offset="2">
+          <el-form-item label="可容量：" prop="capacity">
+            <el-input v-model="formValidate.capacity" placeholder="请输入所在楼层：1"></el-input>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="8" :offset="2">
+          <el-form-item label="有无设备：" prop="isDevice">
+            <el-radio-group v-model="formValidate.isDevice">
+              <el-radio label="1">有</el-radio>
+              <el-radio label="0">无</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row v-if="formValidate.isDevice == 1">
+        <el-col :span="18" :offset="2">
+          <el-form-item label="设备：">
+            <el-tag class="rmDeviceItem"
+                    v-for="(item,index) in formValidate.deviceList"
+                    :key="item.id" :closable="true"
+                    :close-transition="false"
+                    @close="removeDevice(index)"
+            >{{ item.deviceTypeName + '(' + item.deviceIdentifier + ')' }}</el-tag>
+            <el-tag class="rmDeviceItem" type="primary" style="cursor: pointer;" @click.native="selectDevice">+选择设备</el-tag>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="18" :offset="2">
+          <el-form-item label="房间位置：" prop="address">
+            <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 6}" placeholder="请输入内容" v-model="formValidate.address"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -26,37 +86,29 @@
 
       <el-row>
         <el-col :span="18" :offset="2">
-          <el-col :span="11">
-            <el-form-item label="所在楼层：" prop="floor" required>
-              <el-input v-model="formValidate.floor" placeholder="请输入所在楼层：1"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="18" :offset="2">
-          <el-form-item label="房间位置：" prop="address">
-            <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 6}" placeholder="请输入内容" v-model="formValidate.address"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="18" :offset="2">
           <el-form-item label="房间图片：">
-            <upload-file :fileList="fileList" @upladSuccess="upladSuccess"></upload-file>
+            <upload-file @upladSuccess="upladSuccess" :fileList="fileList"></upload-file>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
 
     <el-row>
-      <el-col align="center">
+      <el-col :span="6" :offset="6" align="center">
         <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
       </el-col>
+      <el-col :span="6" align="center">
+        <el-button @click="resetForm('formValidate')">重置</el-button>
+      </el-col>
     </el-row>
+    <!-- 模态框 选择设备 -->
+    <Modal :mask-closable="false" v-model="selectDeviceModal" class-name="vertical-center-modal" :loading="true" :width="900">
+      <modal-header slot="header" :parent="self" :content="contentHeader.selectDeviceId"></modal-header>
+      <select-device v-if="selectDeviceModal" :select="selectDeviceId" @cancel="cancel" @select="selectDeviceCall"></select-device>
+      <div slot="footer"></div>
+    </Modal>
   </div>
+
 </template>
 <script>
   //当前组件引入全局的util
@@ -64,36 +116,55 @@
   import {
     roomManage as rules
   } from '../../rules'; // 表单验证规则
-  import uploadFile from '../uploadFile';
   import api from './api';
+  import uploadFile from '../uploadFile';
+  import selectDevice from '../../device/deviceType_select.vue';
+
   export default {
-    props: {
-      id: { // 操作房间id
-        type: [Number, String],
-        required: true
-      },
-    },
+//    props: {
+//      urlParams: { // api对象
+//        type: Object,
+//        required: true
+//      }
+//    },
+    props:['id'],
     data() {
       return {
         rules,
+        self:this,
+        staticPath:"",
         //保存按钮基本信息
         loadBtn: {
           title: '提交',
           callParEvent: 'listenSubEvent'
         },
-        staticPath: '', // 静态资源
-        countDate: 0,
+        selectDeviceModal: false,
+        contentHeader:{
+          selectDeviceId:{
+            id:"selectDeviceId",
+            title:"选择设备",
+          },
+        },
+        roomTypeOptions:[],
+        selectDeviceId:[],
         //form表单bind数据
         formValidate: {
           roomNum: '', // 房间号
           roomName: '', // 房间名称
           summary: '', // 简介
+          floor: '', // 所在楼层
           address: '', // 房间位置
+          roomType:"", // 房间类型
+          capacity:"", // 可容量
+          isDevice:"0", // 有无设备
+          deviceIds:"", // 设备id
+          deviceList:[
+//            {id:"",name:""}
+          ],
           imgIds: '', // 房间图片 | 多个id以逗号分隔 ---> 1,2
-          imageList: []
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
-        editMessTitle: {
+        addMessTitle: {
           type: 'edit',
           successTitle: '修改成功!',
           errorTitle: '修改失败!',
@@ -107,7 +178,60 @@
         fileList: [],
       }
     },
+    created() {
+      //给当前组件注入全局util
+      Util = this.$util;
+      this.staticPath = this.$store.getters.getEnvPath.http || '';
+      this.getRoomTypeOptions();
+    },
     methods: {
+      getRoomTypeOptions(){
+        let opt = {
+          ajaxSuccess:res=>{
+            this.roomTypeOptions = res.data || [];
+            this.getDataForServer();
+          },
+          ajaxParams:{
+            url:api.getAffairType.path
+          }
+        };
+        this.ajax(opt)
+      },
+      /**************************** 从服务器获取编辑的数据 *****************************************/
+      getDataForServer() {
+        let roomId = this.id;
+        this.ajax({
+          ajaxSuccess: 'getDataSuccess',
+          ajaxParams: {
+            url: api.get.path + roomId,
+            method: api.get.method
+          }
+        })
+      },
+      getDataSuccess(res) {
+        for(let key in this.formValidate){
+          if(res.data[key]){
+            this.formValidate[key]=res.data[key]
+          }
+        }
+
+        // 初始化编辑数据
+        this.fileList = [];
+        let imgIds = [];
+        for (let i = 0, list = res.data.imageList, l = list.length; i < l; i++) {
+          this.fileList.push({
+            name: list[i].id,
+            url: api.down.path + list[i].id,
+          })
+          imgIds.push(list[i].id)
+        }
+        this.formValidate.imgIds = imgIds.join(',');
+
+        this.selectDeviceId = [];
+        (res.data.deviceList || []).map(item=>this.selectDeviceId.push(item.deviceId));
+
+        this.formValidate.isDevice = !res.data.deviceList.length ? '0' : '1'
+      },
       /*
        * 点击提交按钮 监听是否提交数据
        * @param isLoadingFun boolean  form表单验证是否通过
@@ -117,8 +241,9 @@
         if (isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true);
-          this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
-          this.ajax(this.editMessTitle, isLoadingFun)
+          this.formValidate.deviceIds = this.selectDeviceId.join(',') || '';
+          this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          this.ajax(this.addMessTitle, isLoadingFun)
         }
       },
       /*
@@ -134,6 +259,33 @@
           }
         });
         return flag;
+      },
+      /*
+       * 默认组件第一次请求数据
+       * @param res JSON  数据请求成功后返回的数据
+       * 注:当前为添加页面暂时未用到,属于预留
+       * */
+      oneDataSuccess(res) {
+        /*let responseData = res.data;
+        if(this.$util._.isObject(responseData["status"])&&responseData["status"]["code"]==0) {
+          let type = [];
+          let data = responseData.data;
+          type.push(data.type+"");
+          this.formValidate = data;
+          this.formValidate.type = type;
+        }*/
+      },
+      /*
+       * 重置当前表单
+       * */
+      resetForm(formName) {
+        // this.$emit('cancel', this.addMessTitle.type);
+        this.$refs[formName].resetFields();
+        this.fileList = [];
+        this.selectDeviceId = [];
+        this.formValidate.imgIds = '';
+        this.formValidate.deviceIds = '';
+        this.formValidate.deviceList = [];
       },
       /*
        * 获取表单数据
@@ -153,36 +305,45 @@
       upladSuccess(ids) {
         this.formValidate.imgIds = ids
       },
-      /**************************** 从服务器获取编辑的数据 *****************************************/
-      getDataForServer() {
-        let roomId = this.id,
-          urlParams = this.getUrlParams; // props
-        this.ajax({
-          ajaxSuccess: 'getDataSuccess',
-          ajaxParams: {
-            url: api.get.path + roomId,
-            method: api.get.method
-          }
-        })
+      // 选择设备
+      selectDevice(){
+        this.openModel('selectDevice')
       },
-      getDataSuccess(res) {
-        this.formValidate = res.data; // 初始化编辑数据
-        this.fileList = [];
-        for (let i = 0, list = res.data.imageList, l = list.length; i < l; i++) {
-          this.fileList.push({
-            name: list[i].id,
-            url: api.down.path + list[i].id,
-          })
+      // 选择设备模型
+      selectDeviceCall(res) {
+        for (let index in res){
+          if (this.selectDeviceId.indexOf(res[index].id) == -1){
+            this.selectDeviceId.push(res[index].id);
+            this.formValidate.deviceList.push({
+              deviceId: res[index].id,
+              deviceTypeName: res[index].deviceTypeName,
+              deviceIdentifier: res[index].deviceIdentifier
+            })
+          }
         }
-      }
-    },
-    created() {
-      Util = this.$util;
-      this.staticPath = this.$store.getters.getEnvPath.http || '';
-      this.getDataForServer();
+        this.cancel('selectDevice')
+      },
+      // 移除选择的设备
+      removeDevice(index){
+        this.formValidate.deviceList.splice(index,1);
+        this.selectDeviceId.splice(index,1);
+      },
+      /********************************* 模态窗 **********************/
+      /*
+       * 打开指定的模态窗体
+       * @param options string 当前指定的模态:"add"、"edit"
+       * */
+      openModel(options) {
+        this[options + 'Modal'] = true;
+      },
+      // 模态窗关闭
+      cancel(options) {
+        this[options + 'Modal'] = false;
+      },
     },
     components: {
-      uploadFile
+      uploadFile,
+      selectDevice,
     },
   }
 
@@ -198,5 +359,7 @@
     text-align: center;
     border-bottom: 1px solid;
   }
-
+  .rmDeviceItem{
+    margin-right: 10px;
+  }
 </style>

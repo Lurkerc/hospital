@@ -22,19 +22,19 @@
           <el-form-item label="学校：">
             <el-input v-model="searchObj.schoolName"></el-input>
           </el-form-item>
-          <el-form-item label="年份：">
-            <el-date-picker v-model="searchObj.year" align="right" :editable="false" type="year" placeholder="选择年">
-            </el-date-picker>
-          </el-form-item>
+          <!--<el-form-item label="年份：">-->
+            <!--<el-date-picker v-model="searchObj.year" align="right" :editable="false" type="year" placeholder="选择年">-->
+            <!--</el-date-picker>-->
+          <!--</el-form-item>-->
           <el-form-item label="手机号：">
             <el-input v-model="searchObj.mobile"></el-input>
           </el-form-item>
-          <el-form-item label="民族：">
-            <el-select v-model="searchObj.nation" filterable clearable placeholder="请选择" style="width:175px;" class="nation">
-              <el-option v-for="(item,index) in nationOption" :key="index" :label="item.id" :value="item.name">
-              </el-option>
-            </el-select>
-          </el-form-item>
+          <!--<el-form-item label="民族：">-->
+            <!--<el-select v-model="searchObj.nation" filterable clearable placeholder="请选择" style="width:175px;" class="nation">-->
+              <!--<el-option v-for="(item,index) in nationOption" :key="index" :label="item.id" :value="item.name">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
           <el-button type="info" @click="search">搜索</el-button>
         </div>
       </el-row>
@@ -104,7 +104,6 @@
             </a>
             <el-button class="but-col" @click="deriveModal=false">取消</el-button>
           </el-col>
-          </el-col>
         </el-row>
       </div>
       <div slot="footer"></div>
@@ -113,12 +112,14 @@
     <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="payCnfModal" class-name="vertical-center-modal" :width="500">
       <modal-header slot="header" :content="headerContent.payCnfId"></modal-header>
       <div>
-        <div class="modalTips">确认“{{ payCnfTips.userNames.join('，') }}”等{{ payCnfTips.userNames.length }}人已经缴费吗？</div>
+        <div class="modalTips">确认“{{ payCnfTips.userNames.join('、') }}”
+          {{ payCnfTips.userNames.length > 3 ? '等' : '' }}
+          {{ payCnfTips.userNames.length > 1 ? payCnfTips.userNames.length + '人' : '' }}
+          已经缴费吗？</div>
         <el-row>
           <el-col :span="10" :offset="14">
             <el-button @click="payCnfSub" type="primary">确定</el-button>
             <el-button class="but-col" @click="payCnfModal=false">取消</el-button>
-          </el-col>
           </el-col>
         </el-row>
       </div>
@@ -192,9 +193,6 @@
         }
 
         this.setTableData();
-
-        this.getDeriveURL();
-
       },
       /********************************* 按钮事件 *****************************/
       // 搜索
@@ -227,10 +225,10 @@
         if (this.isSelected()) {
           this.payCnfTips.userIds.length = 0;
           this.payCnfTips.userNames.length = 0;
-          for (let item in this.multipleSelection) {
-            this.payCnfTips.userIds.push(this.multipleSelection[item].userId);
-            this.payCnfTips.userNames.push(this.multipleSelection[item].userName);
-          }
+          this.multipleSelection.map(item=>{
+            this.payCnfTips.userIds.push(item.userId);
+            this.payCnfTips.userNames.push(item.userName);
+          })
           this.openModel('payCnf');
         }
       },
@@ -285,7 +283,7 @@
         this.multipleSelection = val;
         this.selSum = 0;
         val.map(item => {
-          this.selSum += (item.totalCost || 0)
+          this.selSum = this.selSum + (item.totalCost || 0)+(item.totalZsCost || 0)
         })
       },
       /*
@@ -363,6 +361,7 @@
     min-height: 100px;
     text-indent: 2em;
     line-height: 32px;
+    margin-bottom: 10px;
   }
 
 </style>

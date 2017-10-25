@@ -39,7 +39,7 @@
       <el-table align="center" :height="tableHeight" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo" style="width: 100%;" @selection-change="handleSelectionChange">
         <el-table-column label="操作" width="70">
           <template scope="scope">
-            <el-button size="small" type="info" @click="add(scope.row)">查看</el-button>
+            <el-button size="small" type="info" @click="add(scope.row)">审核</el-button>
           </template>
         </el-table-column>
         <el-table-column label="课程名称" prop="name" show-overflow-tooltip></el-table-column>

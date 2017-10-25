@@ -59,7 +59,11 @@ let electrocardiogramTemplate = {
   cage:[{ required: true, message: '此项必填'}, baseRules.numbers,baseRules.inputLen(0,20),baseRules.illegalChar()],                         //年龄
   acaTz:[{ required: true, message: '此项必填'},baseRules.float,baseRules.inputLen(0,20),baseRules.illegalChar()],                        //体重
   acaXgn:[baseRules.inputLen(0,50),baseRules.illegalChar()],                        //体重
-  acaSszd:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                      //手术后诊断
+  acaSszd:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],
+
+
+
+  //手术后诊断
   acaYsss:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                      //已施手术
   acaMzqyw:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                     //麻醉前用药
   acaTsqk:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],                      //特殊情况
@@ -105,8 +109,15 @@ let largeCaseTemplate = {
   cjlDate:[{ required: true, message: '此项必填'}],  //记录日期
   cbscsz:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],  //病史陈述者
   chuanzheUser:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],  //与患者关系
-  czs:[{ required: true, message: '此项必填'},baseRules.inputLen(0,1000),baseRules.illegalChar()],  //主诉
+  czs:[{ required: true, message: '此项必填'},baseRules.inputLen(0,20),baseRules.illegalChar()],  //主诉
   cxbs:[{ required: true, message: '此项必填'},baseRules.inputLen(0,1000),baseRules.illegalChar()],  //现病史
+  cjbs:[{ required: true, message: '此项必填'},baseRules.inputLen(0,1000),baseRules.illegalChar()],  //现病史
+
+  cnation:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],
+  workAddress:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],
+  reliability:[{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()],
+  phone:[{ required: true, message: '此项必填'},baseRules.mobile],
+
   cjwsYbjkqk:[baseRules.inputLen(0,1000),baseRules.illegalChar()],  //平时一般健康情况
   cjwsCrbs:[baseRules.inputLen(0,1000),baseRules.illegalChar()],  //传染病史
   cjwsSswss:[baseRules.inputLen(0,1000),baseRules.illegalChar()],  //手术外伤史
@@ -250,6 +261,47 @@ let tubeBedRecordWrite = {
   note: [baseRules.inputLen(0,500),baseRules.illegalChar()], // 病人名称
 }
 
+/**
+ *  - 手术操作 -
+ */
+
+let operation = {
+  podId: [{ required: true, message: '此项必填'}], // 科室名称
+  surgeryName:[{ required: true, message: '此项必填'}],  // 手术名称
+  surgeryTime: [{ required: true, message: '此项必填'}], // 手术日期
+  patientName: [{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
+  recordNo:[{ required: true, message: '此项必填'}],  // 病历号
+  intraoperativePosition:[{ required: true, message: '此项必填'}],  // 术中职务
+}
+
+
+/**
+ *  - 延期出科申请 -
+ */
+
+let delayGiven = {
+  podId: [{ required: true, message: '此项必填'}], // 科室名称
+  rtStartTime:[{ required: true, message: '此项必填'}],  // 轮转开始时间
+  rtEndTime: [{ required: true, message: '此项必填'}], // 轮转结束时间
+  note: [{ required: true, message: '此项必填'},baseRules.inputLen(0,500),baseRules.illegalChar()], // 轮转结束时间
+}
+
+let makeUpRotate = {
+  ts: [baseRules.requiredNoEvent,baseRules.numberSection(1,100)]
+}
+/**
+ *  - 科研日志 -
+ */
+
+let scientificResearchLogList = {
+  logTitle: [baseRules.inputLen(0,20),baseRules.illegalChar()], // 科室名称
+}
+let scientificResearchLog = {
+  logTitle: [{ required: true, message: '此项必填'},baseRules.inputLen(0,50),baseRules.illegalChar()], // 标题
+  editTime: [{ required: true, message: '此项必填'}], // 时间
+  fid: [{ required: true, message: '此项必填'}], // 附件
+}
+
 
 export {
   givenSkillMakeUpAudit,
@@ -265,5 +317,11 @@ export {
   clinicalOperationWrite,
   saveRecordWrite,
   tubeBedRecordWrite,
+  operation,
+  delayGiven,
   // largeCaseWrite,
+  makeUpRotate,
+
+  scientificResearchLogList,
+  scientificResearchLog,
 };

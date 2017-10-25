@@ -128,7 +128,7 @@
         <!--<div slot="header"> -->
         <!--</div>-->
         <modal-header slot="header" :content="editId"></modal-header>
-        <trimming v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></trimming>
+        <trimming v-if="editModal" :userType="userType" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></trimming>
         <div slot="footer"></div>
       </Modal>
     <!---->
@@ -186,10 +186,16 @@
   //当前组件引入全局的util
   let Util=null;
   export default{
+    props:{
+      userType:{
+        type: String,
+        default: "ZYY",
+      }
+    },
     data() {
       return {
         //查询表单
-        deleteUrl: api.deleteRotary.path,
+        deleteUrl: api.deleteRotary.path+this.userType,
         //form表单bind数据
         formValidate: {
           "userName":"",
@@ -237,7 +243,7 @@
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url: api.rtuserPagelist.path,
+            url: api.rtuserPagelist.path+this.userType,
             params:{
               userName:"",
               year:"",

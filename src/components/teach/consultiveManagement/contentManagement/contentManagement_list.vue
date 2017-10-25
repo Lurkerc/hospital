@@ -4,7 +4,7 @@
 
 <template>
   <layout-tree>
-    <left-tree slot="left" @setCurrSltNodeId="setTreeId"  @tree-click="treeClick" :treeOptions="treeDefaults" ></left-tree>
+    <content-tree slot="left" @setCurrSltNodeId="setTreeId"  @tree-click="treeClick" :treeOptions="treeDefaults" ></content-tree>
 
     <div slot="right" id="content" ref="nosocomial" class="table-content ">
       <!--右侧查询-->
@@ -245,13 +245,7 @@
           <operate v-if="revocationModal" :type="'revocation'"  :operateData="revocationData" @operate="subCallback" @cancel="cancel" :operaility-data="operailityData"></operate>
           <div slot="footer"></div>
         </Modal>
-        <!---->
-        <!---->
-
-
       </div>
-
-
     </div>
   </layout-tree>
 
@@ -259,6 +253,8 @@
 
 <script >
   import {contentManagementList} from '../rules'
+  import contentTree from '../contentManagement/leftTree.vue'
+
   /*当前组件必要引入*/
   import url from '../app'
   //引入--修改--组件
@@ -622,7 +618,7 @@
     },
     components:{
       //当前组件引入的子组件
-      edit,add,show
+      edit,add,show,contentTree
     },
   }
 </script>

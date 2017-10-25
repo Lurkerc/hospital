@@ -41,7 +41,11 @@
       poster:{
         type:String,
         default:""
-      }
+      },
+      currentTime:{
+        type:Number,
+        default:0
+      },
     },
     //["videoOptions"],
     data() {
@@ -89,6 +93,7 @@
         // console.log('player pause!', player)
       },
       onPlayerEnded(player) {
+        this.$emit('ended',player)
         // console.log('player ended!', player)
       },
       onPlayerLoadeddata(player) {
@@ -101,7 +106,8 @@
         // console.log('player Playing!', player)
       },
       onPlayerTimeupdate(player) {
-        // console.log('player Timeupdate!', player.currentTime())
+        this.$emit('currentTime',player.currentTime())
+//         console.log('player Timeupdate!', player.currentTime())
       },
       onPlayerCanplay(player) {
         // console.log('player Canplay!', player)
@@ -116,7 +122,7 @@
       // player is ready
       playerReadied(player) {  //设置开始播放开始时间(从什么时间开始播放),单位为秒
         // seek to 10s
-        player.currentTime(0)
+        player.currentTime(this.currentTime);
         // console.log('example 01: the player is readied', player)
       }
     }

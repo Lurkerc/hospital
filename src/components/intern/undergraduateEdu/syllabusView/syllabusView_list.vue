@@ -340,7 +340,7 @@
       timestamp(date){
         let timestamp
         if(navigator.userAgent.indexOf("Firefox")>0){  //解决火狐兼容性问题
-          date &&(date =date+'T09:00:00') ;
+//          date &&(date =date+'T09:00:00') ;
           timestamp = date ? Date.parse(date) : new Date().getTime() ;
         }else {
           timestamp = date ? new Date(date).getTime() : new Date().getTime() ;
@@ -361,7 +361,7 @@
       //获取当前时间属于星期几
       getWeek(date){
         if(navigator.userAgent.indexOf("Firefox")>0){
-          date &&(date =date+'T09:00:00');
+//          date &&(date =date+'T09:00:00');
           date = date ? Date.parse(date) : new Date().getTime();
         }
         let week;
@@ -477,17 +477,7 @@
 
       //获取时间 1990-01-02
       getDate(date){
-        let datetime = new Date(date);
-        let year = datetime.getFullYear();
-        let month = datetime.getMonth() + 1;
-        let D = datetime.getDate() + '';
-        if (month < 10) {
-          month = "0" + month;
-        }
-        if (D  < 10) {
-          D = "0" + D;
-        }
-        return year + '-' + month + '-' + D;
+        return this.conductDate(date,'yyyy-MM-dd');
       },
 
       searchEvent(isLoading){

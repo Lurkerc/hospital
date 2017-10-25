@@ -102,7 +102,7 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
-    props:["initUser","jdProclass"],
+    props:["initUser","jdProclass","userType"],
     data() {
       return {
         formValidate:{
@@ -129,7 +129,7 @@
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url: api.getUsersList.path,
+            url: api.getUsersList.path+this.userType,
             params:{
               rotaryAdmrank:'',
               rotaryZyyType:'',

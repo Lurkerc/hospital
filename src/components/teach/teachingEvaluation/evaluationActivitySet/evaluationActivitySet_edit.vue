@@ -32,7 +32,7 @@
     <date  v-if="count>=3"   v-show="active==3" :url="url" @next="next" @last="last" :operaility-data="formValidate"></date>
 
     <!--第五步预览-->
-    <show v-if="count>=4"   v-show="active==4" :url="url" @next="next" @last="last" :operaility-data="formValidate"></show>
+    <show v-if="count>=4"   v-show="active==4" @edit="editCallBack" :url="url" @next="next" @last="last" :operaility-data="formValidate"></show>
 
 
   </div>
@@ -62,6 +62,7 @@
         appraiserRole:[],
         evaluatedRole:[],
         formValidate:{
+          id:'',
           name:'',                //名称
           type:'',                //类别
           tempId:'',              //评价表ID
@@ -233,7 +234,6 @@
               }
             }
           }
-
           return data;
 
       },
@@ -316,6 +316,11 @@
       last(){
           if(this.active==0) return;
         this.active--
+      },
+
+
+      editCallBack(type,tag){
+          this.$emit(type,type,tag);
       },
 
     },

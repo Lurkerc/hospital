@@ -1,50 +1,99 @@
 <template>
-  <div>
-      <fieldset class="layui-elem-field">
-        <legend>未评对象</legend>
-        <el-row>
-          <el-col :span="24">
-          <div style="width: 120px;margin: 10px 15px;display: inline-block" :key="index" v-for="(item,index) in data.haveScoreList">
-           <div @click="add(item)" >
-             <img style="width: 120px;height: 120px;" :src="item.headPhoto" src="../../../../assets/ambuf/images/physician.png" alt="">
-           </div>
-            <p style="text-align: center">{{item.userName }}</p>
-          </div>
-          </el-col>
-        </el-row>
-      </fieldset>
-    </br>
-      <fieldset class="layui-elem-field">
-        <legend>已评对象</legend>
-        <el-row>
-          <el-col :span="24">
+  <div >
+    <fieldset class="layui-elem-field">
+      <legend>未评对象</legend>
+      <el-row>
+        <el-col :span="24">
 
-            <div style="width: 120px;margin: 10px 15px;display: inline-block" :key="index" v-for="(item,index) in data.noScoreList">
-             <div  @click="add(item)" style="width: 120px;height: 120px;background: #000">
-               <img style="width: 120px;height: 120px;" :src="item.headPhoto | isDefImg"   alt="">
-             </div>
-              <p style="text-align: center">{{item.userName }}</p>
+          <div style="width: 120px;margin: 10px 15px;display: inline-block" :key="index" v-if="data.noScoreList!=0" v-for="(item,index) in data.noScoreList">
+            <div  @click="add(item,'noScoreList')" style="width: 120px;height: 120px;border: 1px solid #dedede;">
+              <img v-if="item.headPhoto" style="width: 118px;height: 118px;cursor: pointer" :src="item.headPhoto "  alt="">
+              <img v-else style="width: 118px;height: 118px;cursor: pointer"  src="../../../../assets/ambuf/images/physician.png" alt="">
             </div>
-          </el-col>
-        </el-row>
+            <el-tooltip v-if="item.userName.length>9" effect="dark" :content="`${item.userName}(${item.score})`" placement="bottom">
+              <p style="text-align: center" class="overflow-txt1">{{item.userName }}({{item.score}})</p>
+            </el-tooltip>
+            <p v-else style="text-align: center;" class="overflow-txt1">{{item.userName }}({{item.score}})</p>
 
-      </fieldset>
+          </div>
+          <div  v-if="data.noScoreList==0" style="text-align: center;font-size: 18px;line-height: 40px">
+            <strong>
+              暂无可评价对象
+            </strong>
+          </div>
+        </el-col>
+      </el-row>
+      <div style="margin: 10px;">
+        <div style="float: right;">
+          <el-pagination
+            v-if="data.noScoreList!=0"
+            @size-change="changeNoPageSize"
+            @current-change="changeNoPage"
+            :current-page="myPages.currentPage"
+            :page-sizes="myPages.pageSizes"
+            :page-size="myPages.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="noTotalCount">
+          </el-pagination>
+        </div>
+      </div>
+    </fieldset>
+    <br>
+
+    <fieldset class="layui-elem-field">
+      <legend>已评对象</legend>
+      <el-row>
+        <el-col :span="24">
+          <div style="width: 120px;margin: 10px 15px;display: inline-block" :key="index" v-if="data.haveScoreList!=0" v-for="(item,index) in data.haveScoreList">
+            <div @click="add(item,'haveScoreList')" style="width: 120px;height: 120px;cursor: pointer;border: 1px solid #dedede;">
+              <img v-if="item.headPhoto" style="width: 118px;height: 118px;cursor: pointer" :src="item.headPhoto"   alt="">
+              <img v-else style="width: 118px;height: 118px;cursor: pointer"  src="../../../../assets/ambuf/images/physician.png"  alt="">
+            </div>
+            <el-tooltip v-if="item.userName.length>9" effect="dark" :content="`${item.userName}(${item.score/100})`" placement="bottom">
+              <p style="text-align: center;" class="overflow-txt1">{{item.userName }}({{item.score/100}})</p>
+            </el-tooltip>
+            <p v-else style="text-align: center;" class="overflow-txt1">{{item.userName }}({{item.score/100}})</p>
+          </div>
+          <div v-if="data.haveScoreList==0" style="text-align: center;font-size: 18px;line-height: 40px">
+            <strong>
+              暂无已评价对象
+            </strong>
+          </div>
+        </el-col>
+      </el-row>
+      <div style="margin: 10px;">
+        <div style="float: right;">
+          <el-pagination
+            v-if="data.haveScoreList!=0"
+            @size-change="changeHavePageSize"
+            @current-change="changeHavePage"
+            :current-page="myPages.currentPage"
+            :page-sizes="myPages.pageSizes"
+            :page-size="myPages.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="haveTotalCount">
+          </el-pagination>
+        </div>
+      </div>
+    </fieldset>
     <!--选择人员-->
     <!--新建教学活动-->
     <Modal
+      :mask-closable="false"
       width="1000"
       v-model="addModal"
       title="新建教学活动"
       class-name="vertical-center-modal"
       >
       <modal-header slot="header" :content="addId"></modal-header>
-      <add v-if="addModal"  @cancel="cancel" :url="url" @add="subCallback" :activityId="operailityData.id" :operailityData="operailityAdd"></add>
+      <add v-if="addModal" :type="type"  @cancel="cancel" :url="url" @add="subCallback" :activityId="operailityData.id" :operailityData="operailityAdd"></add>
       <div slot="footer"></div>
     </Modal>
   </div>
 </template>
 <script>
   import add from './myEvaluation_add.vue'
+  let Util;
   export default{
     //props接收父组件传递过来的数据
     props: ['operailityData','url'],
@@ -56,15 +105,40 @@
             haveScoreList:[],
             noScoreList:[],
           },
-
-          addId:{id:'add',title:'添加'},
+          type:'',
+          addId:{id:'add',title:'评分'},
           operailityAdd:'',
           //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
           listMessTitle: {
             ajaxSuccess: 'oneDataSuccess',
             ajaxParams: {
-              url: this.url.queryByUser+'/'+this.operailityData.id,
-              params: {},
+              url: this.url.queryByUser,
+              params: {
+                activityId:this.operailityData.id,
+              },
+            }
+          },
+
+          noTotalCount:0,
+          haveTotalCount:0,
+          //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
+          noScoreMessTitle: {
+            ajaxSuccess: 'noScoreSuccess',
+            ajaxParams: {
+              url: this.url.noScore,
+              params: {
+                activityId:this.operailityData.id,
+              },
+            }
+          },
+          //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
+          haveScoreMessTitle: {
+            ajaxSuccess: 'haveScoreSuccess',
+            ajaxParams: {
+              url: this.url.haveScore,
+              params: {
+                activityId:this.operailityData.id,
+              },
             }
           },
         }
@@ -78,50 +152,98 @@
        * 组件初始化入口
        * */
       init(){
-        this.ajax(this.listMessTitle)
-        //todo 初始化模拟成功获取数据
-        this.oneDataSuccess({data:{"haveScoreList":[
-          {
-            "id":4,
-            "userId":10121,
-            "userName":"d",
-            "headPhoto":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496925185808&di=c9178707ae1da3c10e32d2e0ec1a8f19&imgtype=0&src=http%3A%2F%2Ff.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fc9fcc3cec3fdfc03dfdfafcad23f8794a4c22618.jpg",
-            "timFrame":false
-          },
-          {
-            "id":5,
-            "userId":10121,
-            "userName":"d",
-            "headPhoto":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496925185808&di=c9178707ae1da3c10e32d2e0ec1a8f19&imgtype=0&src=http%3A%2F%2Ff.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fc9fcc3cec3fdfc03dfdfafcad23f8794a4c22618.jpg",
-            "timFrame":false
+        Util = this.$util;
+        this.myPages =  Util.pageInitPrams;
+
+        this.noScoreQptions = {
+          curPage: 1,pageSize: Util.pageInitPrams.pageSize
+        }
+        this.haveScoreQptions = {
+          curPage: 1,pageSize: Util.pageInitPrams.pageSize
+        }
+
+//        this.ajax(this.listMessTitle)
+        this.getNoScore()
+        this.getHaveScore()
+      },
+
+      /*
+       * 改变每页显示条数调用
+       * @param n number  当前要设置的显示条数
+       * */
+      changeNoPageSize (n){
+        this.noScoreQptions.pageSize = n;
+        this.getNoScore()
+      },
+      /*
+       * 改变页码调用
+       * @param n number  当前要设置的页码
+       * */
+      changeNoPage (n) {
+        // 这里直接更改了模拟的数据，真实使用场景应该从服务端获取数据
+        this.noScoreQptions.curPage = n;
+        this.getNoScore()
+      },
+
+      //获取未评列表
+      getNoScore(){
+        this.noScoreMessTitle.ajaxParams.params = Object.assign(this.noScoreMessTitle.ajaxParams.params,this.noScoreQptions);
+        this.ajax(this.noScoreMessTitle);
+      },
+
+      noScoreSuccess(responseData){
+        let data = responseData.data;
+        if(!data)return;
+        let env = this.$store.getters.getEnvPath;
+        let http = env['http'];
+        for(let i=0;i<data.length;i++){
+          let item = data[i];
+          if(item.headPhoto){
+            item.headPhoto = http+ item.headPhoto;
           }
-        ],
-          "noScoreList":[
-            {
-              "id":1,
-              "userId":-99999,
-              "userName":"系统管理员",
-              "headPhoto":"",
-              "timFrame":false
-            },
-            {
-              "id":2,
-              "userId":10000,
-              "userName":"小张一号",
-              "headPhoto":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496925185808&di=c9178707ae1da3c10e32d2e0ec1a8f19&imgtype=0&src=http%3A%2F%2Ff.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fc9fcc3cec3fdfc03dfdfafcad23f8794a4c22618.jpg",
-              "timFrame":false
-            },
-            {
-              "id":3,
-              "userId":10120,
-              "userName":"s",
-              "headPhoto":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496925185808&di=c9178707ae1da3c10e32d2e0ec1a8f19&imgtype=0&src=http%3A%2F%2Ff.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fc9fcc3cec3fdfc03dfdfafcad23f8794a4c22618.jpg",
-              "timFrame":false
-            },
+        }
+        this.noTotalCount = responseData.totalCount;
+        this.data.noScoreList = data;
+      },
 
-          ]}
 
-        })
+      /*
+       * 改变每页显示条数调用
+       * @param n number  当前要设置的显示条数
+       * */
+      changeHavePageSize (n){
+        this.noScoreQptions.pageSize = n;
+        this.getHaveScore()
+      },
+      /*
+       * 改变页码调用
+       * @param n number  当前要设置的页码
+       * */
+      changeHavePage (n) {
+        // 这里直接更改了模拟的数据，真实使用场景应该从服务端获取数据
+        this.noScoreQptions.curPage = n;
+        this.getHaveScore()
+      },
+
+      //获取未评列表
+      getHaveScore(){
+        this.haveScoreMessTitle.ajaxParams.params = Object.assign(this.haveScoreMessTitle.ajaxParams.params,this.haveScoreQptions);
+        this.ajax(this.haveScoreMessTitle);
+      },
+
+      haveScoreSuccess(responseData){
+        let data = responseData.data;
+        if(!data)return;
+        let env = this.$store.getters.getEnvPath;
+        let http = env['http'];
+        for(let i=0;i<data.length;i++){
+          let item = data[i];
+          if(item.headPhoto){
+            item.headPhoto = http+ item.headPhoto;
+          }
+        }
+        this.haveTotalCount = responseData.totalCount;
+        this.data.haveScoreList = data;
       },
 
 
@@ -133,9 +255,33 @@
       oneDataSuccess(responseData){
         let data = responseData.data;
         if(!data)return;
+        let env = this.$store.getters.getEnvPath;
+        let http = env['http'];
+        let haveScoreList = data.haveScoreList;
+        let noScoreList = data.noScoreList;
+        for(let i=0;i<noScoreList.length;i++){
+          let item = noScoreList[i];
+          if(item.headPhoto){
+            item.headPhoto = http+ item.headPhoto;
+          }
+        }
+
+        for(let k=0;k<haveScoreList.length;k++){
+          let item = haveScoreList[k];
+          if(item.headPhoto){
+            item.headPhoto = http+ item.headPhoto;
+          }
+        }
+
+
         this.data = data;
       },
-      add(data){
+      add(data,type){
+          if(!data.timFrame&&type=='noScoreList'){
+            this.errorMess('不在时间范围之内，不能评分');
+            return;
+          }
+          this.type = type;
         this.operailityAdd = data;
         this.addModal = true;
       },

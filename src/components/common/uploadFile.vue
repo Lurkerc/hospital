@@ -1,9 +1,9 @@
 <template>
-  <div :class="{'onlyUploadShow': uploadShow }">
+  <div :class="{'onlyUploadShow': uploadShow, 'noFile': uploadShow && !fileList.length }">
     <el-upload ref="upload" :multiple="false" with-credentials :before-upload="beforeUpload" :on-progress="onProgress"
       :on-success="onSuccess" :on-error="onError" :on-preview="onPreview" :on-remove="onRemove" :on-format-error="onFormatError"
       :on-exceeded-size="onExceededSize" :file-list="fileList" :drag="isDrag" :headers="headers" :class="{uploadShow:uploadShow,'picture-card':listType=='picture-card'}"
-      :list-type="listType" :action="upUrl">
+      :list-type="listType" :action="upUrl" :data="upData">
       <div v-if="listType=='text' && listLength<data.length" v-show="!uploadShow">
         <el-button size="small" type="primary">点击上传</el-button>
       </div>
@@ -40,12 +40,14 @@
      * message       string         提示消息
      * params        obj            上述数据的集合，优先级较高，会覆盖上述数据
      * uploadFiles   array          需要查看的文件列表数据
+     * callData      any            回调函数中原样返回(多个上传组件同时使用时在上传成功或者移除回调函数中返回)
+     * uploadData    obj            上传附件的附件参数
      * */
 
 
     props: ["uploadUrl", 'downloadUrl', 'type', 'accept', 'show', 'unSize', 'drag', 'size', 'message', 'length',
-      'uploadFiles','noFirstCallBack',
-      'params', 'unMultiple'
+      'uploadFiles','noFirstCallBack','unAccept',
+      'params', 'unMultiple', 'callData', 'uploadData',
     ],
     data() {
       //        let pictureAccept ='image/jpeg,image/png,image/bmp,image/gif,image/psd,image/tiff,image/tga,application/postscript';
@@ -73,6 +75,7 @@
         length: this.length || 500,
         message: this.message,
         show: this.show,
+        upData: this.uploadData || {},
       };
       //合并
       if (this.params) {
@@ -121,6 +124,9 @@
         //          accept = selectAccept.join(',')
 
       }
+      if(this.unAccept){
+        data.accept = '不限格式'
+      }
 
       return {
         selectAccept: data.accept,
@@ -137,6 +143,7 @@
         dialogVisible: false,
         dialogImageUrl: '',
         headers: '',
+        upData: data.upData,
       }
     },
     created() {
@@ -146,11 +153,11 @@
       if (this.data.type == 'picture-card') {
         this.fileList = this.converterPictureList(this.uploadFiles);
         if(this.noFirstCallBack)return
-        this.$emit('setUploadFiles', this.processorPictureList(this.fileList), this.fileList);
+        this.$emit('setUploadFiles', this.processorPictureList(this.fileList), this.fileList, this.callData || {});
       } else {
         this.fileList = this.converterTextList(this.uploadFiles);
         if(this.noFirstCallBack)return
-        this.$emit('setUploadFiles', this.processorList(this.fileList), this.fileList);
+        this.$emit('setUploadFiles', this.processorList(this.fileList), this.fileList, this.callData || {});
       }
     },
     methods: {
@@ -246,14 +253,16 @@
         }
 
         //判断类型
-        let type = file.name.split('.');
-        type = (type[type.length - 1]+'').toLowerCase();
-        if (!(~this.data.accept.indexOf(type))) {
-          this.$Notice.warning({
-            title: '文件格式不正确',
-          });
+        if(!this.unAccept){
+          let type = file.name.split('.');
+          type = (type[type.length - 1]+'').toLowerCase();
+          if (!(~this.data.accept.indexOf(type))) {
+            this.$Notice.warning({
+              title: '文件格式不正确',
+            });
 
-          return false;
+            return false;
+          }
         }
         this.listLength++; //记录上传图片数量
         //图片数量多余默认数量则提示
@@ -310,12 +319,12 @@
           this.uploadList = fileList;
           file.url = response.data.staticUrl + response.data.relativePathFile;
           file.uploadUrl = response.data.relativePathFile;
-          this.$emit('setUploadFiles', this.processorPictureList(fileList), fileList);
+          this.$emit('setUploadFiles', this.processorPictureList(fileList), fileList, this.callData || {});
           return;
         }
-        file.id = response.data;
+        file.id = this.getUploadFileId(response.data);
         this.uploadList = fileList;
-        this.$emit('setUploadFiles', this.processorList(fileList), fileList);
+        this.$emit('setUploadFiles', this.processorList(fileList), fileList, this.callData || {});
       },
       onError(error, file, fileList) {
         this.ajaxCreateLoading(false);
@@ -354,11 +363,11 @@
 
         if (this.listType == 'picture-card') {
           this.uploadList = fileList;
-          this.$emit('setUploadFiles', this.processorPictureList(fileList), fileList);
+          this.$emit('setUploadFiles', this.processorPictureList(fileList), fileList, this.callData || {});
           return;
         }
 
-        this.$emit('setUploadFiles', this.processorList(fileList), fileList);
+        this.$emit('setUploadFiles', this.processorList(fileList), fileList, this.callData || {});
 
       },
       onFormatError(file) {
@@ -392,6 +401,10 @@
         }
         return urls.join(',')
       },
+      // 获取上传的附件id
+      getUploadFileId(res){
+        return res.relativePathFile && res.relativePathFile || res
+      },
     },
     mounted() {
       this.uploadList = this.$refs.upload.fileList;
@@ -402,11 +415,11 @@
         if (this.data.type == 'picture-card') {
           this.fileList = this.converterPictureList(val);
           if(this.noFirstCallBack)return
-          this.$emit('setUploadFiles', this.processorPictureList(this.fileList), this.fileList);
+          this.$emit('setUploadFiles', this.processorPictureList(this.fileList), this.fileList, this.callData || {});
         } else {
           this.fileList = this.converterTextList(val);
           if(this.noFirstCallBack)return
-          this.$emit('setUploadFiles', this.processorList(this.fileList), this.fileList);
+          this.$emit('setUploadFiles', this.processorList(this.fileList), this.fileList, this.callData || {});
         }
       }
     }
@@ -414,10 +427,16 @@
 
 </script>
 
-<style>
+<style lang="scss">
+  .noFile{
+    .uploadShow{display: none;}
+  }
   .noFileTips {
     text-align: center;
     line-height: 26px;
+  }
+  .el-form-item__content{
+    .noFileTips{line-height: 36px;}
   }
 
 </style>

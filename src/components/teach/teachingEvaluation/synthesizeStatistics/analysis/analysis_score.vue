@@ -21,13 +21,13 @@
           </template>
         </el-table-column>
         <el-table-column label="被评对象" prop="evaluatedName" show-overflow-tooltip></el-table-column>
-        <el-table-column label="平均分" prop="averagScore" show-overflow-tooltip></el-table-column>
+        <el-table-column label="综合得分" prop="averagScore" show-overflow-tooltip></el-table-column>
       </el-table>
     </div>
     <!-- 查看报告 -->
     <Modal :mask-closable="false" v-model="reportModal" height="900" class-name="vertical-center-modal" :width="900">
       <modal-header slot="header" :content="contentHeader.reportId"></modal-header>
-      <report v-if="reportModal" @cancel="cancel" :operaility-data="operailityData"></report>
+      <report v-if="reportModal" :strategyData="getData" @cancel="cancel" :operaility-data="operailityData"></report>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -43,6 +43,7 @@
       return {
         self: this,
         dynamicHt: 0,
+        getData:'1',
         reportModal: false,
         tableData: [],
         operailityData: {},
@@ -68,6 +69,18 @@
           ajaxSuccess: res => this.tableData = res.data,
           ajaxParams: {
             url: api.strategyTableDetail.path + this.scoreData.id,
+            method: api.strategyTableDetail.method,
+            params: {
+              // strategyId: this.scoreData.id
+            }
+          }
+        }, isLoading)
+        this.ajax({
+          ajaxSuccess: res =>{
+            this.getData = res.data;
+          },
+          ajaxParams: {
+            url:  api.get.path + this.scoreData.id,
             method: api.strategyTableDetail.method,
             params: {
               // strategyId: this.scoreData.id

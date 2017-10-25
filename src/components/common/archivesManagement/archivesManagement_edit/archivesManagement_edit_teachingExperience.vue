@@ -3,203 +3,34 @@
 
 <template>
   <div >
-    <el-form ref="formValidate" :model="formValidate"  class="demo-form-inline" label-width="130px" >
-      <!--标题-->
-      <el-row >
-        <el-col :span="24" class="lose-margin2" style="text-align: center">
-          <span class="table-headline ">教学经历</span>
-        </el-col >
-      </el-row >
-      <!--内容-->
-      <el-row class="teach-content">
-        <el-col :span="24">
-
-          <el-row class="table-back-one">
-            <el-col :span="6" class="table-dividing">
-              <el-form-item label="是否获得教学职称：" >
-                <el-radio-group v-model="formValidate.hasTeachTitle">
-                  <el-radio label="Y">是</el-radio>
-                  <el-radio label="N">否</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="9" class="table-dividing">
-              <el-form-item label="教学职称：" >
-                <el-input style="width: 100%;" v-model="formValidate.teachTitle"  placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="9" class="table-dividing2">
-              <el-form-item label="是否承担理论授课：" >
-                <el-radio-group v-model="formValidate.hasTheoryTeach">
-                  <el-radio label="Y">是</el-radio>
-                  <el-radio label="N">否</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-          </el-row >
-
-          <el-row class="table-back-two">
-            <el-col :span="6" class="table-dividing">
-              <el-form-item label="是否临床带教：" >
-                <el-radio-group v-model="formValidate.hasClinic">
-                  <el-radio label="Y">是</el-radio>
-                  <el-radio label="N">否</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="9" class="table-dividing">
-              <el-form-item label="已毕业人数："  >
-                实习生<el-input style="width:55px;" v-model="formValidate.graduatedTraineeNumber"  ></el-input>人
-               ，住院医<el-input style="width: 55px;" v-model="formValidate.graduatedResidencyNumber"  ></el-input> 人
-              </el-form-item>
-            </el-col>
-            <el-col :span="9" class="table-dividing2">
-              <el-form-item label="在培人数：">
-                实习生<el-input style="width: 55px;" v-model="formValidate.trainingTraineeNumber"  ></el-input>人
-                ，住院医<el-input style="width: 55px;" v-model="formValidate.trainingResidencyNumber"  ></el-input> 人
-              </el-form-item>
-            </el-col>
-          </el-row >
-
-          <el-row class="table-back-one">
-            <el-col :span="24" class="table-dividing2">
-              <el-form-item label="授课内容：" >
-                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="formValidate.teachContent"  placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row >
-
-          <el-row class="table-back-two">
-            <el-col :span="6" class="table-dividing">
-              <el-form-item label="是否获得导师资格：" >
-                <el-radio-group v-model="formValidate.hasTeachQualified">
-                  <el-radio label="Y">是</el-radio>
-                  <el-radio label="N">否</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="9" class="table-dividing">
-              <el-form-item label="是否院士：" prop="duties" >
-                <el-radio-group v-model="formValidate.hasAcademician">
-                  <el-radio label="Y">是</el-radio>
-                  <el-radio label="N">否</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="9" class="table-dividing3">
-              <el-form-item label="是否国务院学科评议组成员：" prop="duties">
-                <el-radio-group v-model="formValidate.hasCouncilMember">
-                  <el-radio label="Y">是</el-radio>
-                  <el-radio label="N">否</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-          </el-row >
-
-          <el-row  class="table-back-two">
-            <el-col :span="6" class="table-dividing">
-              <el-form-item label="专业代码：" >
-                <el-input style="width: 100%;" v-model="formValidate.specialtyCode"  placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="9" class="table-dividing">
-              <el-form-item label="专业名称：" prop="duties" >
-                <el-input style="width: 100%;" v-model="formValidate.specialtyName"  placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="9" class="table-dividing2">
-              <el-form-item label="培养单位：" prop="duties" >
-                <el-input style="width: 100%;" v-model="formValidate.trainCompany"  placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row >
-
-          <el-row  class="table-back-two-d">
-            <el-col :span="6" class="table-dividing">
-              <el-form-item label="导师类别：" >
-                <el-radio-group v-model="formValidate.tutorType">
-                  <el-radio label="SD">硕导</el-radio>
-                  <el-radio label="BD">博导</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="9" class="table-dividing">
-              <el-form-item label="聘任时间：" prop="duties" >
-                  <el-form-item prop="dutyDate">
-                    <el-date-picker
-                      v-model="formValidate.hiredDate"
-                      type="date"
-                      placeholder="选择日期"
-                      style="width: 100%;"
-                    >
-                    </el-date-picker>
-                  </el-form-item>
-              </el-form-item>
-            </el-col>
-            <el-col :span="9" class="table-dividing2">
-              <el-form-item label="聘任学校：" prop="duties" >
-                <el-input style="width: 100%;" v-model="formValidate.hiredSchool"  placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row >
-
-
-            </el-col>
-          </el-row >
-        </el-col>
-      </el-row>
-    </el-form>
-
+    <teach-input :operailityData="formValidate" ref="teach"></teach-input>
     <!--<br />-->
     <!--<el-row >-->
       <!--<el-col :span="24" style="text-align: center">-->
         <!--<load-btn @listenSubEvent="saveCurrData" :btnData="loadBtn"></load-btn>-->
       <!--</el-col>-->
     <!--</el-row >-->
-    <br />
-    <div style="font-size: 1px;overflow: hidden;line-height: 1;border-top:1px solid #e3e8ee;margin: 12px 0;"></div>
-    <el-row>
-      <el-col :span="9" :offset="10">
-        <el-button type="primary" v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @click="saveDataToParent">保存</el-button>
-        <load-btn  v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
-        <span v-if="userInfo.archivesAuditStatus=='NOT_AUDIT'" style="margin-right: 10px;color: #FF4949;">您的档案信息正在审核中……</span>
-        <el-button  @click="cancel">取消</el-button>
-      </el-col>
-    </el-row >
+    <!--<br />-->
+    <!--<div style="font-size: 1px;overflow: hidden;line-height: 1;border-top:1px solid #e3e8ee;margin: 12px 0;"></div>-->
+    <!--<el-row>-->
+      <!--<el-col :span="9" :offset="10">-->
+        <!--<el-button type="primary" v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @click="saveDataToParent">保存</el-button>-->
+        <!--<load-btn  v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>-->
+        <!--<span v-if="userInfo.archivesAuditStatus=='NOT_AUDIT'" style="margin-right: 10px;color: #FF4949;">您的档案信息正在审核中……</span>-->
+        <!--<el-button  @click="cancel">取消</el-button>-->
+      <!--</el-col>-->
+    <!--</el-row >-->
   </div>
 </template>
-<style>
-  .teach-content .table-back-one,
-  .teach-content .table-back-one,
-  .teach-content .table-back-two,
-  .teach-content .table-back-two-d{
-    padding: 0;
-  }
-  .teach-content .table-dividing,
-  .teach-content .table-dividing2,
-  .teach-content .table-dividing3{
-    min-height: 55px;
-    padding: 5px 5px;
-  }
-  .teach-content .table-dividing .el-form-item__label,
-  .teach-content .table-dividing .el-form-item__content,
-  .teach-content .table-dividing2 .el-form-item__label,
-  .teach-content .table-dividing2 .el-form-item__content,
-  .teach-content .table-dividing3 .el-form-item__content{
-    padding: 0;
-    line-height: 55px;
-  }
-  .teach-content .table-dividing3 .el-form-item__label{
-    line-height: 16px;
-  }
 
-</style>
 <script>
+  import teachInput from '../archivesManagement_teach/input.vue';
   //当前组件引入全局的util
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['dataId','initData','userInfo'],
+//    props: ['dataId','initData','userInfo'],
+    props: ['dataId'],
     data (){
       return{
 
@@ -233,7 +64,7 @@
           type:'edit',
           successTitle:'修改成功!',
           errorTitle:'修改失败!',
-          ajaxSuccess:'ajaxSuccess',
+          ajaxSuccess:'saveSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
             url:'/archives/modify/teach/'+this.dataId,
@@ -266,8 +97,8 @@
        * */
       init(){
         //默认请求加载数据
-        //this.ajax(this.initMessTitle);
-        this.SuccessGetCurrData();
+        this.ajax(this.initMessTitle);
+//        this.SuccessGetCurrData();
       },
 
 
@@ -276,26 +107,34 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       saveCurrData(isLoadingFun){
-        let isSubmit = this.submitForm("formValidate");
-        if(isSubmit) {
+        let data = this.$refs.teach.getInputData();
+        if(data) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true)
-          this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
-          this.$emit("setSaveData",this.editMessTitle.ajaxParams.data);
+//          this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          this.editMessTitle.ajaxParams.data = data;
+//          this.$emit("setSaveData",this.editMessTitle.ajaxParams.data);
           this.ajax(this.editMessTitle, isLoadingFun)
         }
       },
 
+      //保存成功后回调
+      saveSuccess() {
+        this.$emit("save",'teachingExperience');
+      },
+
 
       saveDataToParent(){
-        this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+//        this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+        this.editMessTitle.ajaxParams.data = this.$refs.teach.getInputData();
       },
 
 
       listenSubEvent(){
         let isSubmit = this.submitForm("formValidate");
         if(isSubmit) {
-          this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+//          this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          this.editMessTitle.ajaxParams.data = this.$refs.teach.getInputData();
           this.$emit("setSaveData",this.editMessTitle.ajaxParams.data);
         }
       },
@@ -322,7 +161,7 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-        let data = this.initData;//responseData.data;
+        let data = responseData.data;//responseData.data;
         let isObject = this.valDataType(data, "Object");
         if(isObject){
           this.formValidate = data;
@@ -344,7 +183,9 @@
         myData = this.formDate(myData,['hiredDate'],this.yearMonthData);
         return myData;
       },
-
+    },
+    components:{
+      teachInput,
     }
   }
 </script>

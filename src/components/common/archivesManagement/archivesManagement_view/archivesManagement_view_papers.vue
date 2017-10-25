@@ -4,6 +4,9 @@
 <template>
 
   <div >
+    <el-col :span="24" class="lose-margin2" style="text-align: center">
+      <span class="table-headline ">证件复印件</span>
+    </el-col >
     <el-row >
       <el-col :span="22" :offset="1" class="lose-margin2">
         <fieldset class="layui-elem-field layui-field-title">

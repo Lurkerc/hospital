@@ -60,7 +60,7 @@
 
       <el-row v-if="!unLogo">
         <el-col :span="16" :offset="2">
-          <el-form-item label="视频封面:" prop="logo">
+          <el-form-item label="封面:" prop="logo">
             <img-wall  :onlyOnePic="true" :fileList="logo"  @upladSuccess="expenseLogoEvent"></img-wall>
           </el-form-item>
         </el-col>

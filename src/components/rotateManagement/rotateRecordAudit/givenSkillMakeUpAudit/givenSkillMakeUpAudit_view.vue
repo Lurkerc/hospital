@@ -30,11 +30,13 @@
           </el-form-item>
         </el-col>
         <el-col :span="10" :offset="2">
-          <el-form-item label="技能成绩：" prop="mark">{{ showData.mark }}</el-form-item>
+          <el-form-item label="技能成绩：" prop="mark">{{ showData.skillExamScore }}</el-form-item>
         </el-col>
       </el-form>
       <el-col :span="20" :offset="2">
-        <div>视频区域</div>
+        <div class="gsmuaVideoPlayer">
+          <video-player :filePath="videoUrl" v-if="videoUrl"></video-player>
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -42,10 +44,12 @@
 
 <script>
   import api from './api';
+  import videoPlayer from '../../../common/video.vue';
   export default {
     props: ['operailityData'],
     data() {
       return {
+        videoUrl:'',
         showData: {},
       }
     },
@@ -59,6 +63,9 @@
         this.ajax({
           ajaxSuccess: res => {
             this.showData = res.data;
+            if (res.data.fileList.length){
+              this.videoUrl = '/api'+res.data.fileList[0].fileUrl;
+            }
           },
           ajaxParams: {
             url: api.get.path + this.operailityData.id
@@ -69,11 +76,14 @@
     created() {
       this.init();
     },
+    components:{
+      videoPlayer,
+    }
   }
 
 </script>
 
 <style>
   /* 出科考核补考申请 */
-
+  .gsmuaVideoPlayer{height: 350px;margin-bottom: 20px;background-color: #000;}
 </style>

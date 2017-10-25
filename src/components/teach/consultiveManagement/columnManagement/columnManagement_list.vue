@@ -523,7 +523,7 @@
     },
     components:{
       //当前组件引入的子组件
-      edit,add,show
+      edit,add,show,
     },
   }
 </script>

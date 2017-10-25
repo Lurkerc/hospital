@@ -312,6 +312,8 @@
 
       //更新目录树数据
       updataTree() {
+        this.sltParentId = 0;
+        this.clearCurrSltedData();
         this.postParamToServer();
       },
 

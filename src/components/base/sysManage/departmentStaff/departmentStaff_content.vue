@@ -14,7 +14,7 @@
       <div class="listUpArea-search">
         <div class="listUpArea-searchWrapper">
           <!--右侧查询-->
-          <el-form ref="formValidate" :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px">
+          <el-form :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px">
             <div class="listUpArea-searchLeft">
               <input class="hidden">
               <el-input placeholder="请输入内容" v-model="formValidate.name">
@@ -30,37 +30,37 @@
       </div>
     </div>
     <div v-if="searchMore" class="listUpAreaMoreSearchBox" ref="searchMore">
-      <el-form :inline="true">
-        <el-form-item label="姓名：">
+      <el-form :inline="true" ref="formValidate" :model="formValidate">
+        <el-form-item label="姓名：" prop="name">
           <el-input v-model="formValidate.name"></el-input>
         </el-form-item>
-        <el-form-item label="性别：">
-          <el-select v-model="formValidate.sex" filterable clearable placeholder="请选择" style="width:175px;" class="nation">
-            <el-option v-for="(item,index) in sexOption" :key="index" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="手机号：">
+        <!--<el-form-item label="性别：" prop="sex">-->
+          <!--<el-select v-model="formValidate.sex" filterable clearable placeholder="请选择" style="width:175px;" class="nation">-->
+            <!--<el-option v-for="(item,index) in sexOption" :key="index" :label="item.label" :value="item.value">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
+        <el-form-item label="手机号：" prop="mobile">
           <el-input v-model="formValidate.mobile"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱：">
+        <el-form-item label="邮箱：" prop="email">
           <el-input v-model="formValidate.email"></el-input>
         </el-form-item>
-        <el-form-item label="身份证：">
-          <el-input v-model="formValidate.idNumber"></el-input>
-        </el-form-item>
-        <el-form-item label="年级：">
-          <el-input v-model="formValidate.grade"></el-input>
-        </el-form-item>
-        <el-form-item label="班级：">
-          <el-input v-model="formValidate.classNum"></el-input>
-        </el-form-item>
-        <el-form-item label="审核状态：">
-          <el-select v-model="formValidate.auditStatus" filterable clearable placeholder="请选择" style="width:175px;" class="nation">
-            <el-option v-for="(item,index) in auditStatusOption" :key="index" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item label="身份证：" prop="idNumber">-->
+          <!--<el-input v-model="formValidate.idNumber"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="年级：" prop="grade">-->
+          <!--<el-input v-model="formValidate.grade"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="班级：" prop="classNum">-->
+          <!--<el-input v-model="formValidate.classNum"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="审核状态：" prop="auditStatus">-->
+          <!--<el-select v-model="formValidate.auditStatus" filterable clearable placeholder="请选择" style="width:175px;" class="nation">-->
+            <!--<el-option v-for="(item,index) in auditStatusOption" :key="index" :label="item.label" :value="item.value">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <el-button type="info" @click="search">查询</el-button>
       </el-form>
     </div>
@@ -85,7 +85,7 @@
         </el-table-column>
         <el-table-column prop="name" label="姓名" align="center" width="200">
         </el-table-column>
-        <el-table-column prop="school.name" label="学校" show-overflow-tooltip>
+        <el-table-column prop="schoolName" label="学校" show-overflow-tooltip>
         </el-table-column>
         <el-table-column prop="specialty" label="专业" show-overflow-tooltip>
         </el-table-column>
@@ -108,7 +108,21 @@
         <!--<div slot="header"> -->
         <!--</div>-->
         <modal-header slot="header" :content="editId"></modal-header>
-        <edit v-if="editModal" @cancel="cancel" @edit="subCallback" fromWhere="depUser" :operaility-data="operailityData"></edit>
+        <template v-if="editModal">
+          <template v-if="['ZYY','SXS','YJS','JXS','BKS'].indexOf(operailityData.studentTypes) > -1">
+            <!-- 住院医 -->
+            <zyy-edit v-if="operailityData.studentTypes === 'ZYY'" @cancel="cancel" @edit="subCallback"  :operaility-data="operailityData"></zyy-edit>
+            <!-- 实习生 -->
+            <sxs-edit v-if="operailityData.studentTypes === 'SXS'" @cancel="cancel" @edit="subCallback"  :operaility-data="operailityData"></sxs-edit>
+            <!-- 研究生 -->
+            <yjs-edit v-if="operailityData.studentTypes === 'YJS'" @cancel="cancel" @edit="subCallback"  :operaility-data="operailityData"></yjs-edit>
+            <!-- 进修生 -->
+            <jxs-edit v-if="operailityData.studentTypes === 'JXS'" @cancel="cancel" @edit="subCallback"  :operaility-data="operailityData"></jxs-edit>
+            <!-- 本科生 -->
+            <bks-edit v-if="operailityData.studentTypes === 'BKS'" @cancel="cancel" @edit="subCallback"  :operaility-data="operailityData"></bks-edit>
+          </template>
+          <edit v-else @cancel="cancel" @edit="subCallback" fromWhere="depUser" :operaility-data="operailityData"></edit>
+        </template>
         <div slot="footer"></div>
       </Modal>
       <!---->
@@ -124,7 +138,22 @@
       <!--查看弹窗-->
       <Modal :mask-closable="false" v-model="showModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="1100">
         <modal-header slot="header" :parent="self" :content="showId"></modal-header>
-        <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData"></show>
+        <!--<show v-if="showModal" @cancel="cancel" :operaility-data="operailityData"></show>-->
+        <template v-if="showModal">
+          <template v-if="['ZYY','SXS','YJS','JXS','BKS'].indexOf(operailityData.studentTypes) > -1">
+            <!-- 住院医 -->
+            <zyy-show v-if="operailityData.studentTypes === 'ZYY'" @cancel="cancel"  :operaility-data="operailityData"></zyy-show>
+            <!-- 实习生 -->
+            <sxs-show v-if="operailityData.studentTypes === 'SXS'" @cancel="cancel"  :operaility-data="operailityData"></sxs-show>
+            <!-- 研究生 -->
+            <yjs-show v-if="operailityData.studentTypes === 'YJS'" @cancel="cancel"  :operaility-data="operailityData"></yjs-show>
+            <!-- 进修生 -->
+            <jxs-show v-if="operailityData.studentTypes === 'JXS'" @cancel="cancel"  :operaility-data="operailityData"></jxs-show>
+            <!-- 本科生 -->
+            <bks-show v-if="operailityData.studentTypes === 'BKS'" @cancel="cancel"  :operaility-data="operailityData"></bks-show>
+          </template>
+          <show v-else @cancel="cancel" :operaility-data="operailityData"></show>
+        </template>
         <div slot="footer"></div>
       </Modal>
       <!---->
@@ -157,7 +186,6 @@
               </a>
               <el-button class="but-col" @click=" deriveModal=false">取消</el-button>
             </el-col>
-            </el-col>
           </el-row>
         </div>
         <div slot="footer"></div>
@@ -177,15 +205,39 @@
 <script>
   /*当前组件必要引入*/
   //引入--修改--组件
+  // 普通用户
   import edit from "./departmentStaff_edit.vue";
+  // 住院医
+  import zyyEdit from "../../../zyy/rdyEnrollEnroll/rdyPersonnelManagement/rdyPersonnelManagement_edit.vue";
+  // 实习生
+  import  sxsEdit from "../../../intern/recruitStudent/usersManagement/usersManagement_edit.vue";
+  // 研究生
+  import yjsEdit from '../../../postgraduate/ptEnrollEnroll/yjsPersonnelManagement/yjsPersonnelManagement_edit.vue';
+  // 进修生
+  import jxsEdit from '../../../educationManagement/EnrollEnroll/jxsPersonnelManagement/jxsPersonnelManagement_edit.vue';
+  // 本科生
+  import bksEdit from '../../../educationManagement/EnrollEnroll/bksPersonnelManagement/bksPersonnelManagement_edit.vue';
+
   //引入--查看--组件
+  // 普通用户
   import show from "./departmentStaff_view.vue";
+  // 住院医
+  import zyyShow from "../../../zyy/rdyEnrollEnroll/rdyPersonnelManagement/rdyPersonnelManagement_view.vue";
+  // 实习生
+  import  sxsShow from "../../../intern/recruitStudent/usersManagement/usersManagement_view.vue";
+  // 研究生
+  import yjsShow from '../../../postgraduate/ptEnrollEnroll/yjsPersonnelManagement/yjsPersonnelManagement_view.vue';
+  // 进修生
+  import jxsShow from '../../../educationManagement/EnrollEnroll/jxsPersonnelManagement/jxsPersonnelManagement_view';
+  // 本科生
+  import bksShow from '../../../educationManagement/EnrollEnroll/bksPersonnelManagement/bksPersonnelManagement_view.vue';
+
   //引入--添加--组件
   import add from "./departmentStaff_add.vue";
   //引入--导入--组件
   import toChannel from "./departmentStaff_toChannel.vue";
   //引入--短信通知--组件
-  import shortNote from "./departmentStaff_shortNote.vue";
+  import shortNote from "../../../common/shortNote.vue";
   import sexOption from '../../../intern/recruitStudent/usersManagement/sexOption'; // 性别
   import auditStatusOption from '../../../intern/recruitStudent/usersManagement/auditStatusOption'; // 审核状态
   //当前组件引入全局的util
@@ -404,6 +456,7 @@
 
       // 高级搜索按钮
       showSearchMore() {
+        this.searchMore && this.$refs['formValidate'].resetFields();
         this.searchMore = !this.searchMore;
         this.$nextTick(function () {
           if (this.searchMore) {
@@ -581,7 +634,12 @@
 
       //短信通知
       shortNote() {
-        this.openModel('shortNote')
+        if(this.multipleSelection.length > 0){
+          this.operailityData = this.multipleSelection;
+          this.openModel('shortNote')
+        }else{
+          this.errorMess('请选择短信人员！')
+        }
       },
 
 
@@ -658,7 +716,11 @@
     },
     components: {
       edit,
+      zyyEdit,sxsEdit,yjsEdit,jxsEdit,bksEdit,
+
       add,
+      zyyShow,sxsShow,yjsShow,jxsShow,bksShow,
+
       show,
       toChannel,
       shortNote,
@@ -666,9 +728,12 @@
     watch: {
       deptId(val) {
         if (val) {
-          this.$nextTick(() => this.setTableData());
+          this.$nextTick(() => {
+            this.searchMore && this.$refs['formValidate'].resetFields()
+            this.setTableData();
+          });
         } else {
-          this.tableData = []
+          this.tableData = [];
         }
       }
     }

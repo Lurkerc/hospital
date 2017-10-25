@@ -1,7 +1,7 @@
 <template>
 
   <div class=" leaveManagement-show select-column"  >
-    <left-tree   @tree-click="treeClick" :treeOptions="treeDefaults" ></left-tree>
+    <content-tree   @tree-click="treeClick" :treeOptions="treeDefaults" ></content-tree>
     <el-row >
       <el-col :span="20" :offset="2">
         <div style="margin-left: 100px">
@@ -13,6 +13,7 @@
   </div>
 </template>
 <script>
+  import contentTree from '../contentManagement/leftTree.vue'
 
   /*
   * 接收url  返回选中的节点信息
@@ -92,6 +93,10 @@
       },
 
 
-    }
+    },
+    components:{
+      //当前组件引入的子组件
+     contentTree
+    },
   }
 </script>

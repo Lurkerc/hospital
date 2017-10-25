@@ -246,6 +246,7 @@
   </div>
 </template>
 <script>
+  import api from './api';
   /*当前组件必要引入*/
   import url from '../app'
   //引入--新建--组件
@@ -260,9 +261,8 @@
   export default{
     data() {
       return {
-          url:url,
         //查询表单
-        deleteUrl:'/service-fee/remove/',
+        deleteUrl:api.remove,
         formValidate: {
           type: '',               //类型
           teachLevel: '',         //教师级别
@@ -272,34 +272,34 @@
         multipleSelection: [],
         dynamicHt: 100,
         tableData: [
-          {
-            "id":8,
-            "teachLevel":"正高",
-            "type":"理论课",
-            "excellent":90,
-            "good":80,
-            "avg":60,
-            "bad":0,
-            "excellentFee":100,
-            "goodFee":80,
-            "avgFee":70,
-            "badFee":60,
-            "index":1,
-          },
-          {
-            "id":8,
-            "teachLevel":"正高",
-            "type":"见习课",
-            "excellent":90,
-            "good":80,
-            "avg":60,
-            "bad":20,
-            "excellentFee":100.125,
-            "goodFee":80,
-            "avgFee":70,
-            "badFee":0,
-            "index":2,
-          }
+//          {
+//            "id":8,
+//            "teachLevel":"正高",
+//            "type":"理论课",
+//            "excellent":90,
+//            "good":80,
+//            "avg":60,
+//            "bad":0,
+//            "excellentFee":100,
+//            "goodFee":80,
+//            "avgFee":70,
+//            "badFee":60,
+//            "index":1,
+//          },
+//          {
+//            "id":8,
+//            "teachLevel":"正高",
+//            "type":"见习课",
+//            "excellent":90,
+//            "good":80,
+//            "avg":60,
+//            "bad":20,
+//            "excellentFee":100.125,
+//            "goodFee":80,
+//            "avgFee":70,
+//            "badFee":0,
+//            "index":2,
+//          }
         ],
         loading:false,
         listTotal:0,
@@ -307,7 +307,7 @@
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:url.serviceFeeList,
+            url:api.list.path,
             params:{}
           }
         },

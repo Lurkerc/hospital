@@ -1,56 +1,51 @@
 <template>
 
-  <div>
-    <el-form class="demo-form-inline" label-width="100px">
-
+  <div class="editForm">
+    <el-form ref="formValidate"  :model="formValidate"  :rules="rules"  class="demo-form-inline" label-width="100px">
       <el-row >
         <el-col :span="10" :offset="2">
-          <el-form-item label="姓名:" class="feildFontweight">
-            <el-input placeholder="请输入姓名"></el-input>
+          <el-form-item label="姓名:" class="feildFontweight"  prop="userName">
+            <el-input  placeholder="请输入姓名"  v-model="formValidate.userName"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="10" >
-          <el-form-item label="证件号:" class="feildFontweight">
-            <el-input placeholder="请输入证件号"></el-input>
+          <el-form-item label="证件号:" class="feildFontweight" prop="cardNo">
+            <el-input placeholder="请输入证件号" v-model="formValidate.cardNo"></el-input>
           </el-form-item>
         </el-col >
       </el-row >
 
       <el-row >
         <el-col :span="10" :offset="2">
-          <el-form-item label="经办人:" class="feildFontweight">
-            <el-input placeholder="请输入经办人"></el-input>
+          <el-form-item label="经办人:" class="feildFontweight" prop="jbrName">
+            <el-input placeholder="请输入经办人" v-model="formValidate.jbrName"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="10" >
-          <el-form-item label="金额:" class="feildFontweight">
-            <el-input placeholder="请输入金额"></el-input>
+          <el-form-item label="金额:" class="feildFontweight" prop="money" required>
+            <el-input placeholder="请输入金额" v-model="formValidate.money"></el-input>
           </el-form-item>
         </el-col >
       </el-row >
 
       <el-row >
         <el-col :span="10" :offset="2">
-          <el-form-item label="支付时间:" class="feildFontweight">
-            <el-date-picker
-              v-model="value1"
-              type="date"
-              placeholder="选择日期"
-              :picker-options="pickerOptions0">
-            </el-date-picker>
+          <el-form-item label="支付时间:" class="feildFontweight" prop="payTime">
+              <el-date-picker
+                v-model="formValidate.payTime"
+                type="datetime"
+                placeholder="选择日期时间" @change="changeDate">
+              </el-date-picker>
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="10" >
-          <el-form-item label="类型:" class="feildFontweight">
-            <el-radio-group >
-              <el-radio label="院内人员"></el-radio>
-              <el-radio label="院外人员"></el-radio>
+          <el-form-item label="类型:" class="feildFontweight" >
+            <el-radio-group v-model="formValidate.types">
+              <el-radio label="1" >院内人员</el-radio>
+              <el-radio label="0" >院外人员</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col >
@@ -61,13 +56,11 @@
           <el-form-item label="用途:" class="feildFontweight">
             <el-input
               type="textarea"
-              :rows="5"
-              resize="none"
-              readonly
-              placeholder="请输入内容"></el-input>
+              :autosize="{ minRows: 4, maxRows: 6}"
+              placeholder="请输入内容"
+              v-model="formValidate.yt"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
       </el-row >
     </el-form>
     <el-row >
@@ -81,20 +74,28 @@
   </div>
 </template>
 <script>
+  import api from './api';
+  import {laborManagement as rules} from '../../rules';
   //当前组件引入全局的util
   let Util=null;
   export default {
     data (){
       return{
+        rules,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         countDate:0,
         //form表单bind数据
         formValidate: {
-          name:'',
-          identify:null,
-          remark:'',
-          type:[]
+          userId:'',
+          userName: '', // 姓名
+          cardNo: '', // 证件号
+          types: '0', // 0院内1院外
+          jbrId: '', // 经办人id
+          jbrName:'',// 经办人姓名
+          money: '', // 金额
+          payTime: '', // 支付时间
+          yt: '', // 用途
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle:{
@@ -104,8 +105,8 @@
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
-            url:'/role/add',
-            method:'post'
+            url:api.add.path,
+            method:api.add.method
           }
         },
       }
@@ -113,6 +114,9 @@
     created(){
       //给当前组件注入全局util
       Util = this.$util;
+      let userInfo = this.$store.getters.getUserInfo;
+      this.formValidate.jbrName = userInfo.name;
+      this.formValidate.jbrId = userInfo.id;
     },
     mounted(){
       //暂时没有初始化,预留初始化入口
@@ -159,8 +163,10 @@
        * */
       getFormData(data){
         let myData = Util._.defaultsDeep({},data);
-        myData.type = data.type.join(",");
         return myData;
+      },
+      changeDate(val){
+        this.formValidate.payTime = val
       },
       /*
        * 组件初始化入口
@@ -171,3 +177,7 @@
     }
   }
 </script>
+
+<style lang="scss">
+  @import"../../../../assets/ambuf/css/manage_v1.0/editForm";
+</style>

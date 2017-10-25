@@ -9,7 +9,7 @@ const typeOption = [{
   value: 'PART',
   label: '部分人'
 }, {
-  value: 'RLOE',
+  value: 'ROLE',
   label: '角色'
 }, {
   value: 'DEPT',

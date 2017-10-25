@@ -8,7 +8,7 @@
     </el-steps>
     </br>
     <div>
-      <keep-alive> <first :resizeFirst="resizeFirst" :rtId="rtId" @next="next" v-if="active==0"></first></keep-alive>
+      <keep-alive> <first :resizeFirst="resizeFirst" :rtId="rtId" @next="next" :rtModelType="rtModelType" v-if="active==0"></first></keep-alive>
       <keep-alive>  <second :resizeSecond="resizeSecond"  @next="next"  @last="last" :rtId="rtId" v-if="active==1"></second></keep-alive>
       <keep-alive>  <third @next="next" @cancel="cancel" @last="last" :rtId="rtId" :resizeSecond="resizeSecond" v-if="active==2"></third></keep-alive>
     </div>
@@ -24,7 +24,7 @@
   //当前组件引入全局的util
   let Util=null;
   export default {
-    props:['operailityData','url'],
+    props:['operailityData','url' ,'rtModelType'],
     data (){
       return{
         active:0,

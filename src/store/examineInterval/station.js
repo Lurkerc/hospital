@@ -13,6 +13,7 @@ const mutations = {
     sceneType: '', // 考核类型
     startTime: '', // 开始时间
     endTime: '', // 结束时间
+    setupTime: '', // 时间表生成时间
     restNum: '', // 中场休息数
     restTime: '', // 中场休息时间
     moveTime: '', // 换站时间

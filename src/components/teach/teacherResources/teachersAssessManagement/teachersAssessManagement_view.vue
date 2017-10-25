@@ -6,10 +6,9 @@
       <el-row >
         <el-col :span="20" :offset="2">
           <el-form-item label="姓名:" class="feildFontweight">
-            张三
+            {{ operailityData.name }}
           </el-form-item>
         </el-col>
-        </el-col >
 
       </el-row >
       <el-row >
@@ -20,31 +19,31 @@
               <!--表格数据-->
               <el-table
                 align="center"
-                :data="tableData1"
+                :data="showData.xspjlsqk"
                 tooltip-effect="dark"
                 highlight-current-row
                 style="width: 100%;height: 100%"
               >
                 <el-table-column
-                  prop="name"
+                  prop="great"
                   label="优秀">
                 </el-table-column>
                 <el-table-column
-                  prop="identify"
+                  prop="good"
                   label="良"
                 >
                 </el-table-column>
                 <el-table-column
-                  prop="remark"
+                  prop="avg"
                   label="中"
                 >
                 </el-table-column>
                 <el-table-column
-                  prop="type"
+                  prop="bad"
                   label="差">
                 </el-table-column>
                 <el-table-column
-                  prop="type"
+                  prop="wp"
                   label="未评">
                 </el-table-column>
               </el-table>
@@ -62,31 +61,31 @@
               <!--表格数据-->
               <el-table
                 align="center"
-                :data="tableData1"
+                :data="showData.ddzypjlsqk"
                 tooltip-effect="dark"
                 highlight-current-row
                 style="width: 100%;height: 100%"
               >
                 <el-table-column
-                  prop="name"
+                  prop="great"
                   label="优秀">
                 </el-table-column>
                 <el-table-column
-                  prop="identify"
+                  prop="good"
                   label="良"
                 >
                 </el-table-column>
                 <el-table-column
-                  prop="remark"
+                  prop="avg"
                   label="中"
                 >
                 </el-table-column>
                 <el-table-column
-                  prop="type"
+                  prop="bad"
                   label="差">
                 </el-table-column>
                 <el-table-column
-                  prop="type"
+                  prop="wp"
                   label="未评">
                 </el-table-column>
               </el-table>
@@ -105,22 +104,22 @@
               <!--表格数据-->
               <el-table
                 align="center"
-                :data="tableData1"
+                :data="showData.ndkhqk"
                 tooltip-effect="dark"
                 highlight-current-row
                 style="width: 100%;height: 100%"
               >
                 <el-table-column
-                  prop="name"
+                  prop="nd"
                   label="年度">
                 </el-table-column>
                 <el-table-column
-                  prop="identify"
+                  prop="df"
                   label="得分"
                 >
                 </el-table-column>
                 <el-table-column
-                  prop="remark"
+                  prop="jg"
                   label="结果"
                 >
                 </el-table-column>
@@ -138,22 +137,27 @@
 <script>
   //当前组件引入全局的util
   let Util=null;
+  import api from './api.js';
   export default {
     //props接收父组件传递过来的数据
     props: ['operailityData'],
     data (){
       return{
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
-        showData:{},
         listMessTitle:{
           paramsData:'listUrl',
           ajaxSuccess:'SuccessGetCurrData',
           ajaxParams:{
-            url:'/role/get/'
+            url:api.get.path,
+            method:api.get.method,
           }
         },
         dynamicHt:250,
-        tableData1:[{'1':1}]
+        showData:{
+          xspjlsqk:{},
+          ddzypjlsqk:{},
+          ndkhqk:{},
+        },
       }
     },
     created(){
@@ -170,9 +174,7 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-        let type = [];
-        let data = responseData.data;
-        this.showData = data;
+        this.showData = responseData.data;
       },
       /*
        * 当前组件发送事件给父组件

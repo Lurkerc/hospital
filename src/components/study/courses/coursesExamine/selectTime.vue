@@ -64,13 +64,13 @@
               <el-tooltip class="item" effect="light" placement="bottom-start">
                 <div slot="content" style="max-width:200px;">
                   <p>设备名称：{{ deviceList[index].deviceTypeName }}</p>
-                  <p>开放数量：{{ deviceList[index].openNum || 0 }}</p>
+                  <p>设备数量：{{ deviceList[index].deviceNum || 0 }}</p>
                   <p>设备简介：{{ deviceList[index].describes || '暂无简介' }}</p>
                 </div>
                 <el-button>{{ deviceList[index].deviceTypeName }}</el-button>
               </el-tooltip>
               <span class="bpkdTitle">数量：</span>
-              <el-input style="width:200px;" v-model="item.reserveNum" :placeholder="'1-'+deviceList[index].openNum+'之间'"></el-input>
+              <el-input style="width:200px;" v-model="item.reserveNum" :placeholder="'1-'+deviceList[index].deviceNum+'之间'"></el-input>
             </div>
           </div>
           <el-button type="primary" @click="selectDevice">选择模型</el-button>
@@ -107,7 +107,7 @@
         self: this,
         // 临时数据
         reservePoject: "", // 项目
-        activeName: "", // 日期视图 
+        activeName: "", // 日期视图
         selRoomIndex: -1, // 房间
         selTimeSlotIndex: -1, // 时间段
         selDay: '', // 日期
@@ -374,12 +374,12 @@
           }
           for (let i in this.formValidate.deviceList) {
             let num = this.formValidate.deviceList[i].reserveNum;
-            if (!this.deviceList[i].openNum) {
+            if (!this.deviceList[i].deviceNum) {
               this.errorMess(`设备“${this.deviceList[i].deviceTypeName}”数量不足，不能预约`);
               return false
             }
-            if (isNaN(num) || num < 1 || num > this.deviceList[i].openNum) {
-              this.errorMess(`设备“${this.deviceList[i].deviceTypeName}”预约数量最少为1，最多为${this.deviceList[i].openNum}`);
+            if (isNaN(num) || num < 1 || num > this.deviceList[i].deviceNum) {
+              this.errorMess(`设备“${this.deviceList[i].deviceTypeName}”预约数量最少为1，最多为${this.deviceList[i].deviceNum}`);
               return false
             }
           }

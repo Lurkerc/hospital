@@ -6,14 +6,13 @@
       <el-row >
         <el-col :span="10" :offset="2">
           <el-form-item label="姓名:" class="feildFontweight">
-
+            {{ showData.userName }}
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="10" >
           <el-form-item label="证件号:" class="feildFontweight">
-
+            {{ showData.cardNo || '-' }}
           </el-form-item>
         </el-col >
       </el-row >
@@ -21,14 +20,13 @@
       <el-row >
         <el-col :span="10" :offset="2">
           <el-form-item label="经办人:" class="feildFontweight">
-
+            {{ showData.jbrName }}
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="10" >
           <el-form-item label="金额:" class="feildFontweight">
-
+            {{ showData.money }}
           </el-form-item>
         </el-col >
       </el-row >
@@ -36,14 +34,13 @@
       <el-row >
         <el-col :span="10" :offset="2">
           <el-form-item label="支付时间:" class="feildFontweight">
-
+            {{ showData.payTime }}
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="10" >
           <el-form-item label="类型:" class="feildFontweight">
-            {{showData.identify}}
+            {{ showData.types | laborUserType }}
           </el-form-item>
         </el-col >
       </el-row >
@@ -51,21 +48,16 @@
       <el-row >
         <el-col :span="20" :offset="2">
           <el-form-item label="用途:" class="feildFontweight">
-            <el-input
-              type="textarea"
-              :rows="5"
-              resize="none"
-              readonly
-              placeholder="请输入内容"></el-input>
+            {{ showData.yt }}
           </el-form-item>
         </el-col>
-        </el-col >
       </el-row >
     </el-form>
 
   </div>
 </template>
 <script>
+  import api from './api';
   //当前组件引入全局的util
   let Util=null;
   export default {
@@ -73,7 +65,6 @@
     props: ['operailityData'],
     data (){
       return{
-        tableData1:[{"id":1}],
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         showData:{},
 
@@ -81,7 +72,7 @@
           paramsData:'listUrl',
           ajaxSuccess:'SuccessGetCurrData',
           ajaxParams:{
-            url:'/role/get/'+this.operailityData.id,
+            url:api.get.path+this.operailityData.id,
           }
         }
       }
@@ -100,9 +91,7 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-        let type = [];
-        let data = responseData.data;
-        this.showData = data;
+        this.showData = responseData.data;
       },
       /*
        * 当前组件发送事件给父组件

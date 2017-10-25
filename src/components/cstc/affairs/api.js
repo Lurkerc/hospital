@@ -16,6 +16,15 @@ const api = {
     path: thisFile + '/modify/',
     method: 'put'
   },
+  getAffairType: { // 获取技能中心事项类型
+    path: thisFile + '/getAffairType',
+    method: 'get',
+  },
+  excelImport: { // 导入
+    path: thisFile + '/excelImport/save',
+    method: 'post'
+  },
+  excelExport: thisFile + '/excelExport?ids=', // 导出
   delete: thisFile + '/removes', // 删除
 };
 

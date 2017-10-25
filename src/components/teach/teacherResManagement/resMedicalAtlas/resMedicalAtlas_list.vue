@@ -59,7 +59,9 @@
             <el-table-column label="操作" align="center" width="140">
               <template scope="scope">
                 <el-button size="small" @click="show(scope.row)">查看</el-button>
-                <el-button :disabled="scope.row.publishStatus == 'PUBLISH'" size="small" type="primary" @click="edit(scope.row)">修改</el-button>
+                <el-button v-if="scope.row.publishStatus == 'UNPUBLISH' && scope.row.auditStatus == 'AUDIT_SUCCESS'" :disabled="scope.row.auditStatus == 'AUDIT_FAILURE'" size="small" type="info" @click="modify(scope.row)">修改</el-button>
+                <el-button v-else :disabled="scope.row.publishStatus == 'PUBLISH' ||scope.row.auditStatus == 'AUDIT_FAILURE' " size="small" type="primary" @click="edit(scope.row)">修改</el-button>
+                <!--<el-button :disabled="scope.row.publishStatus == 'PUBLISH'" size="small" type="primary" @click="edit(scope.row)">修改</el-button>-->
               </template>
             </el-table-column>
             <el-table-column label="名称" prop="title" align="center" show-overflow-tooltip></el-table-column>
@@ -114,6 +116,20 @@
       <div slot="footer"></div>
     </Modal>
     <!---->
+    <!--修改浏览次数弹窗-->
+    <Modal
+      :mask-closable="false"
+      v-model="modifyModal"
+      height="200"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :loading="true"
+      :width="1000"
+    >
+      <modal-header slot="header" :parent="self" :content="modifyId"></modal-header>
+      <modify v-if="modifyModal" :id="deptId" :name="typeName"  :fromWhereTree="fromWhereTree" @cancel="cancel" @modify="subCallback" :url="url"  :operaility-data="operailityData"></modify>
+      <div slot="footer"></div>
+    </Modal>
     <!--增加弹窗-->
     <Modal
       :mask-closable="false"
@@ -227,6 +243,7 @@
   import show from "./resMedicalAtlas_view.vue";
   import jurisdiction from "../videoBank/videoBank_set.vue";
   import audit from "../videoBank/audit.vue";
+  import modify from  './resMedicalAtlas_modify.vue';
   import api from "./api.js";
   //当前组件引入全局的util
   let Util = null;
@@ -265,6 +282,10 @@
           id:'edit',
           title:'修改'
         },
+        modifyId:{
+          id:'modify',
+          title:'修改浏览次数'
+        },
         showId:{
           id:'showId',
           title:'查看'
@@ -301,7 +322,7 @@
           url: api.canceled.path,
         },
 
-
+        modifyModal:false,
         showMoreSearch: false, // 更多筛选
         operailityData:'',
         multipleSelection: [],
@@ -480,8 +501,16 @@
         this.operailityData = row;
         this.showModal = true;
       },
-
-
+      /*
+       * 点击--修改浏览次数--按钮
+       * @param row Object  当前行数据对象
+       * */
+      modify(row){
+        row["parentName"] = this.depDetails.name;
+        row["parentId"] = this.deptId;
+        this.operailityData = row;
+        this.modifyModal = true;
+      },
       /*
        * 点击--修改--按钮
        * @param row Object  当前行数据对象
@@ -686,6 +715,7 @@
       show,
       jurisdiction,
       audit,
+      modify,
     }
   }
 </script>

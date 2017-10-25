@@ -5,13 +5,15 @@
 <template>
   <div id="content"  ref="content">
     <!--表格数据-->
-    <div
+    <div v-show="viewType=='list'">
+      <div
       id="myTable"
       ref="myTable">
       <el-table
         :data="tableData"
         border
         tooltip-effect="dark"
+        :height="dynamicHt"
         style="width: 100%"
         @selection-change="handleSelectionChange">
         <el-table-column
@@ -26,7 +28,7 @@
           <template scope="scope">
             <el-button
               size="small"
-              @click="show(scope.row)">详-情</el-button>
+              @click="show(scope.row)">详情</el-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -44,32 +46,50 @@
         <el-table-column
           prop="evaluated"
           label="评价对象"
-          width="120">
+          show-overflow-tooltip
+         >
+          <template scope="scope">
+            {{conductRole(scope.row.evaluated,scope.row)}}
+          </template>
         </el-table-column>
         <el-table-column
-          prop="activityName"
+          prop="noScoreCount"
           label="未评数量"
           width="120">
-          <template scope="scope">
-            {{scope.row.evaluatedCount-scope.row.counts}}
-          </template>
         </el-table-column>
 
       </el-table>
+        <div style="margin: 10px;">
+          <div style="float: right;">
+            <el-pagination
+              @size-change="changePageSize"
+              @current-change="changePage"
+              :current-page="myPages.currentPage"
+              :page-sizes="myPages.pageSizes"
+              :page-size="myPages.pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="totalCount">
+            </el-pagination>
+          </div>
+        </div>
     </div>
-
+    </div>
+    <div v-if="viewType=='view'" :style="{height:parHt+'px'}" style="overflow: auto">
+      <el-button type="info" @click="changeView('list')">返回</el-button>
+      <show  :url="url" :operaility-data="operailityData"></show>
+    </div>
     <!--查看教学活动-->
-    <Modal
-      height="200"
-      v-model="showModal"
-      title="查看教学活动"
-      class-name="vertical-center-modal"
-      :width="960"
-      :loading="loading">
-      <modal-header slot="header" :content="viewId"></modal-header>
-      <show v-if="showModal" :url="url" :operaility-data="operailityData"></show>
-      <div slot="footer"></div>
-    </Modal>
+    <!--<Modal-->
+      <!--height="200"-->
+      <!--v-model="showModal"-->
+      <!--title="查看教学活动"-->
+      <!--class-name="vertical-center-modal"-->
+      <!--:width="960"-->
+      <!--:loading="loading">-->
+      <!--<modal-header slot="header" :content="viewId"></modal-header>-->
+      <!--<show v-if="showModal" :url="url" :operaility-data="operailityData"></show>-->
+      <!--<div slot="footer"></div>-->
+    <!--</Modal>-->
 
   </div>
 </template>
@@ -85,16 +105,17 @@
   export default {
     data() {
       return {
+
         //查询项
         url:url,
-
+        viewType:'list',
         publishModal:false, //评价
         /*--按钮button--*/
         publishId:{id:'publishId',title:'发布'},
         //表格数据
         loading:false,
         tableData: [],
-
+        parHt:'500',
         operailityData:'',
         multipleSelection: [],
         /*--按钮button--*/
@@ -102,8 +123,8 @@
         editId:{id:'edit',title:'修改'},
         viewId:{id:'view',title:'查看'},
         removeId:{id:'remove',title:'删除'},
-
-
+        dynamicHt:100,
+        totalCount:0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle: {
           ajaxSuccess: 'updateList',
@@ -112,7 +133,6 @@
             params: {},
           }
         },
-
 
       }
     },
@@ -134,7 +154,6 @@
         }
 
         this.setTableData();
-        this.updateList({data:[]}) //todo 模拟请求成功
       },
       //查询
       deformatterDate(d){
@@ -156,8 +175,9 @@
       setTableDynHeight(){
         let content = this.$refs.content;
         let parHt = content.parentNode.offsetHeight;
+        this.parHt = parHt
         let myTable = this.$refs.myTable;
-        let paginationHt = 100;
+        let paginationHt = 50;
         this.dynamicHt = parHt - myTable.offsetTop - paginationHt;
       },
       /*
@@ -191,31 +211,8 @@
       updateList(responseData){
         let data = responseData.data;
         if(!data) return;
-        data =[
-          {
-            "id":10,
-            "type":"教评学",
-            "name":"我是一个活动",
-            "relationship":"",
-            "loopType":"",
-            "appraiserType":"",
-            "appraiser":"",
-            "appraiserCount":"",
-            "evaluatedType":"",
-            "evaluated":"zhangs",
-            "evaluatedCount":"23",
-            "counts":"10",
-            "dateType":2,
-            "startDay":1,
-            "endDay":3,
-            "startDate":4,
-            "endDate":5,
-            "publishStatus":"",
-            "createTime":"",
-            "updateTime":""
-          },
-        ]
         this.tableData = data;
+        this.totalCount = responseData.totalCount
       },
       setTableData(){
         this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions);
@@ -228,8 +225,7 @@
        * @param n number  当前要设置的显示条数
        * */
       changePageSize (n){
-        alert(n)
-        this.queryQptions.params.pageSize = n;
+        this.queryQptions.pageSize = n;
         this.setTableData();
       },
       /*
@@ -238,7 +234,7 @@
        * */
       changePage (n) {
         // 这里直接更改了模拟的数据，真实使用场景应该从服务端获取数据
-        this.queryQptions.params.curPage = n;
+        this.queryQptions.curPage = n;
         this.setTableData();
       },
 
@@ -257,7 +253,8 @@
       /*--点击--查看--按钮--*/
       show(data){
         this.operailityData = data;
-        this.openModel('show');
+        this.changeView('view');
+//        this.openModel('show');
 
       },
       /*--点击--发布--按钮--*/
@@ -336,7 +333,7 @@
             break;
           case 3:date = `每月${startDay}日——${endDay}日评价一次`;
             break;
-          case 4:date = `startDate~endDate`;
+          case 4:date = `${startDate}~${endDate}`;
             break;
           case 5:date = `每天评价一次`;
             break;
@@ -353,7 +350,35 @@
       //dateType 1-3
       dateTypeOS(){
 
-      }
+      },
+
+      //评价人
+      conductRole(data,item){
+        let tempArr=[];
+        if(item.relationship!= 'LOOP'&&!data){
+          return '所有人'
+        }
+        if(item.relationship== 'LOOP'){
+          let tempArr=[['学生','老师'],['学生','科室'],['老师','学生']];
+          return tempArr[item.loopType-1][1]
+        }
+        if(typeof data == 'string'){
+          data=data.split(',')
+          for(let i=0;i<data.length;i++){
+            let temp=data[i].split('=');
+            tempArr.push(temp[1]);
+          }
+        }
+        return tempArr.join(' ; ');
+      },
+
+      //改变视图
+      changeView(type){
+        this.viewType = type;
+        if(type=='list'){
+          this.setTableData();
+        }
+      },
     },
     mounted(){
       //页面dom稳定后调用

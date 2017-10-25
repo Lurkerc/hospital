@@ -9,7 +9,6 @@
             <el-input v-model="formValidate.name" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="10" :offset="2">
           <el-form-item label="父栏目" prop="identify">
@@ -19,13 +18,12 @@
       </el-row >
       <el-row >
         <el-col :span="10" :offset="2">
-          <el-form-item label="排列顺序" prop="moduleOrder" >
+          <el-form-item label="排列顺序:" prop="moduleOrder" >
             <el-input v-model="formValidate.moduleOrder"  min="0" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
         <el-col :span="10" :offset="2">
-          <el-form-item label="是否显示" prop="isDisplay">
+          <el-form-item label="是否显示:" prop="isDisplay">
             <el-radio-group @change="isDisplayChange" v-model="formValidate.isDisplay">
               <el-radio   :label="1">是</el-radio>
               <el-radio :label="0">否</el-radio>
@@ -33,8 +31,6 @@
           </el-form-item>
         </el-col >
       </el-row >
-
-
 
       <el-row v-if="!isRoot">
         <el-col :span="20" :offset="2">
@@ -45,6 +41,25 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
+      </el-row >
+
+      <el-row >
+        <el-col :span="10" :offset="2">
+          <el-form-item label="是否为功能:" prop="isFunc">
+            <el-radio-group  v-model="formValidate.isFunc">
+              <el-radio   label="YES">是</el-radio>
+              <el-radio label="NO">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+        <el-col :span="10" :offset="2">
+          <el-form-item label="是否图片新闻:" prop="isPictureNews">
+            <el-radio-group  v-model="formValidate.isPictureNews">
+              <el-radio   label="YES">是</el-radio>
+              <el-radio label="NO">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col >
       </el-row >
 
 
@@ -100,6 +115,8 @@
           isDisplay:1,          //是否显示
           moduleUrl:'',          //url
           remark:'',          //remark
+          isFunc:'YES',          //是否为功能
+          isPictureNews:'YES',   //是否图片新闻
 
         },
         isHome:'YES',

@@ -11,11 +11,11 @@
       <div class="listUpArea-search">
         <div class="listUpArea-searchWrapper">
           <!--右侧查询-->
-          <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px" >
+          <el-form :inline="true" :model="formValidate" :rules="rules" ref="formValidate"  class="form-inline lose-margin" label-width="60px" >
             <div class="listUpArea-searchLeft">
               <input class="hidden">
-              <el-input placeholder="请输入内容" v-model="formValidate.name">
-                <div slot="prepend">姓名</div>
+              <el-input placeholder="请输入内容" v-model="formValidate.account">
+                <div slot="prepend">操作账号</div>
                 <el-button @click="handleSubmit('formValidate')" slot="append" icon="search"></el-button>
               </el-input>
             </div>
@@ -27,7 +27,34 @@
       </div>
     </div>
     <div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox">
-
+      <el-form v-for="item in 1" :key="item" :inline="true" :model="formValidate" :rules="rules" ref="formValidate" style="margin-top:10px;" label-width="74px">
+        <el-row>
+          <el-form-item label="操作人名称:" prop="userName">
+            <el-input v-model="formValidate.userName"></el-input>
+          </el-form-item>
+          <el-form-item label="操作ip:" prop="ip">
+            <el-input v-model="formValidate.ip"></el-input>
+          </el-form-item>
+          <el-form-item label="操作类型:" prop="method">
+            <el-select v-model="formValidate.method" placeholder="请选择生源类型">
+              <el-option label="全部" value=""></el-option>
+              <el-option label="GET" value="GET"></el-option>
+              <el-option label="POST" value="POST"></el-option>
+              <el-option label="DELETE" value="DELETE"></el-option>
+              <el-option label="PUT" value="PUT"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="操作时间:" prop="times">
+              <el-date-picker
+                v-model="formValidate.times"
+                type="datetime"
+                :editable="false"
+                placeholder="选择操作时间" @change="changeDate">
+              </el-date-picker>
+          </el-form-item>
+          <el-button type="info" @click="searchEvent">查询</el-button>
+        </el-row>
+      </el-form>
     </div>
     <br />
     <div>
@@ -57,57 +84,64 @@
           <el-table-column
             align="center"
             prop="userName"
-            label="操作人"
-            width="120">
+            label="用户名称"
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="userName"
-            label="操作"
-            width="120">
+            prop="userId"
+            label="用户ID"
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="userName"
-            label="模块"
+            prop="id"
+            label="数据id"
             align="center"
-            width="120"
-
-          >
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop=""
-            label="子模块"
-            width="120"
-          >
+            prop="account"
+            label="登陆账号"
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="userName"
             label="操作对象"
-            width="120"
-          >
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="userName"
-            label="部门"
-            width="120"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="userName"
-            label="账号"
-            width="120"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="userName"
-            label="ip"
-            width="120"
-          >
-          </el-table-column>
-          <el-table-column
-            prop=""
+            prop="times"
             label="操作时间"
-
-          >
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="ip"
+            label="操作ip"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="uri"
+            label="请求接口"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="method"
+            label="请求类型"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="params"
+            label="携带参数"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+          prop="types"
+          label="接口类型"
+          show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="remark"
+            label="备注"
+            show-overflow-tooltip>
           </el-table-column>
 
         </el-table>
@@ -132,19 +166,22 @@
 
 </template>
 <script >
-
+  import { systemLog as rules} from '../rules'
   //当前组件引入全局的util
   let Util=null;
 
   export default{
     data() {
       return {
+        rules,
         //查询表单
         deleteUrl:'/role/remove',
         formValidate: {
-          name: '',
-          pickerOptions0: '',
-          status: ''
+          account: '',
+          userName: '',
+          ip: '',
+          method:'',
+          times:''
         },
         options: [{
           value: '0',
@@ -157,6 +194,7 @@
 
           label: '未审核'
         }],
+        searchData:{title:'提交',callParEvent:'searchEvent'},
         addData:'',
         editData: '',
         showData:'',
@@ -196,7 +234,7 @@
         listMessTitle:{
           ajaxSuccess:'listDataSuccess',
           ajaxParams:{
-            url:'/role/list',
+            url:'/logs/query',
             params:this.queryQptions
           }
         },
@@ -219,6 +257,17 @@
 
         this.setTableData();
         //console.log(  this.queryQptions);
+      },
+      //搜索监听回调
+      searchEvent(isLoading){
+        //        isLoading(true);
+        let isSubmit = this.handleSubmit('formValidate');
+        if(isSubmit){
+          this.setTableData()
+        }
+      },
+      changeDate(val){
+        this.formValidate.times = val
       },
       //设置表格及分页的位置
       setTableDynHeight(){

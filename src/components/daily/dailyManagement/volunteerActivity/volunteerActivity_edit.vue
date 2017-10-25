@@ -102,7 +102,7 @@
       </el-row >
       <el-row >
         <el-col :span="19" :offset="2">
-          <el-form-item label="  相关资料" >
+          <el-form-item label="  相关证明材料" >
             <upload-file :uploadFiles="fileList" @setUploadFiles="addFileEvent"  ></upload-file>
           </el-form-item>
         </el-col >

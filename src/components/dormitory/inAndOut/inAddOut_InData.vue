@@ -65,7 +65,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="8" >
-                  <el-form-item label="毕业学校：" prop="school" >
+                  <el-form-item label="学校：" prop="school" >
                     {{formValidate.school}}
                   </el-form-item>
                 </el-col>
@@ -123,7 +123,7 @@
 
           <el-row :gutter="10" class="table-back-one">
             <el-col :span="11" >
-              <el-form-item label="是否职业医师：" prop="doctor" >
+              <el-form-item label="是否执业医师：" prop="doctor" >
                 {{formValidate.doctor}}
               </el-form-item>
             </el-col>
@@ -214,13 +214,13 @@
           political:'',   //政治面貌
           highestEdu:'',   //最高学历
           specialty:'',   //专业
-          school:'',   //毕业学校
+          school:'',   //学校
           jobTime:'',   //参加工作时间，年月，例如：199011
           grade:'',   //年级
           group:'',   //班级
           length:'',   //学制
           duties:'',   //职务
-          doctor:'',   //是否职业医师:是、否
+          doctor:'',   //是否执业医师:是、否
           doctorLevel:'',   //医师资格级别(职业、助理、无)
           idNumber:'',   //身份证号码
           mobile:'',    //手机号

@@ -118,7 +118,7 @@
   let Util = null;
   export default{
     //props接收父组件传递过来的数据
-    props: ['operailityData'],
+    props: ['operailityData','userType'],
       data() {
         return {
           rules,
@@ -168,7 +168,7 @@
 
           //保存的数据
           saveData:{
-            "userType":"ZYY",
+            "userType":this.userType,
             "userId":"",
             "userName":"",
             "minBegin":"2017-01-01",   //this.formValidate.rotaryStartTime
@@ -209,7 +209,7 @@
           listMessTitle:{
             ajaxSuccess:'updateListData',
             ajaxParams:{
-              url: api.getRotaryDepIndo.path+"/"+this.operailityData.userId+"_ZYY",
+              url: api.getRotaryDepIndo.path+"/"+this.operailityData.userId+"_"+this.userType,
             }
           },
 
@@ -268,11 +268,10 @@
               }
             }
           }
-
           let depOptions={};
           for(var i=0,item;i<tempArr.length;i++){
             item = tempArr[i];
-            depOptions[item["depId"]]={
+            depOptions[item["depId"]+"##"+item["rdId"]]={
               id:item["depId"]+"##"+item["rdId"],
               name:item["showName"],
             }

@@ -28,7 +28,7 @@
             {{data.hostUserName}}
           </el-form-item>
           <el-form-item label="上课时间:" prop="name6">
-            {{data.recordTimes}}
+            {{data.activityTimeInfo}}
           </el-form-item>
           <el-form-item label="签到人数:" prop="name6">
             {{data.actuallyUserCount}}

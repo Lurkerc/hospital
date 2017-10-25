@@ -37,8 +37,11 @@ const api = {
   },
 
   /********************************** 设备 ********************************************/
-  select: { // 获取选择设备列表 
-    path: 'reserve/device/select/list',
+  select: { // 获取选择设备列表
+    // path: 'reserve/device/select/list',
+    // method: 'get'
+
+    path: 'reserve/poject/room/device/list',
     method: 'get'
   },
   tree: { // 部门树

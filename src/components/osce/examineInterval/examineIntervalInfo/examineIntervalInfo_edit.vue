@@ -132,6 +132,7 @@
           sceneName: '', // 考核名称
           startTime: '', // 开始时间
           endTime: '', // 结束时间
+          setupTime: '', // 时间表生成时间
           restNum: '', // 间隔时间
           restTime: '', // 休息时间
           isSpMove: '', // 是否SP
@@ -186,6 +187,7 @@
           sceneName,
           startTime,
           endTime,
+          setupTime,
           restNum,
           restTime,
           moveTime,
@@ -199,6 +201,7 @@
           sceneName,
           startTime,
           endTime,
+          setupTime,
           restNum,
           restTime,
           moveTime,

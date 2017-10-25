@@ -1,7 +1,7 @@
 <!--第五步：预览-->
 <template>
   <div>
-    <el-form  label-width="80px">
+    <el-form label-width="200px">
       <el-row>
         <el-col :span="20" :offset="1">
 
@@ -34,7 +34,7 @@
       </el-row>
       <el-row >
         <el-col :span="20" :offset="1">
-            <el-form-item label="评价人与被评价对象关系:" label-width="200px">
+            <el-form-item label="评价人与被评价人关系:" label-width="200px">
               {{operailityData.relationship | relation}}
             </el-form-item>
         </el-col>
@@ -42,7 +42,7 @@
       </el-row>
       <el-row v-if="operailityData.relationship=='LOOP'">
         <el-col :span="20" :offset="1"  >
-          <el-form-item v-if="operailityData.appraiserType=='ALL'" label-width="200px" label="评价人与被评价对象:">
+          <el-form-item label-width="200px" label="评价人与被评价人:">
             <el-tag type="primary">{{operailityData.loopType | loopType}}
               </el-tag>
           </el-form-item>
@@ -66,10 +66,10 @@
       </el-row>
       <el-row v-if="operailityData.relationship!='LOOP'">
         <el-col :span="20" :offset="1">
-          <el-form-item v-if="operailityData.relationship=='NO'&&operailityData.evaluatedType=='ALL'" label="被评价对象:">
+          <el-form-item v-if="operailityData.relationship=='NO'&&operailityData.evaluatedType=='ALL'" label="被评价人:">
             <el-tag type="primary" >所有人</el-tag>
           </el-form-item>
-            <el-form-item v-else label="被评价对象:" label-width="100px">
+            <el-form-item v-else label="被评价人:" >
               <el-tag
                 v-for="item in operailityData.evaluated"
                 :key="item.id"
@@ -92,9 +92,9 @@
       </el-row>
 
       <el-row >
-        <el-col :span="20"  :offset="3">
-          <el-button  @click="success">完成</el-button>
+        <el-col :span="10"  :offset="10">
           <el-button  @click="$emit('last') ">上一步</el-button>
+          <el-button  @click="success">完成</el-button>
         </el-col>
 
       </el-row>
@@ -107,7 +107,6 @@
 
     props:['url','operailityData'],
     created(){
-        console.log(this.operailityData);
     },
     methods:{
 

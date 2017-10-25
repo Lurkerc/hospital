@@ -4,143 +4,146 @@
 
 <template>
   <div id="content"  ref="content">
-    <el-form  ref="formValidate" inline label-width="90px" class="demo-ruleForm">
+    <div v-show="viewType=-'list'">
+      <el-form  ref="formValidate" inline label-width="90px" class="demo-ruleForm">
 
-      <el-row >
-        <el-col :span="10" >
+        <el-row >
+          <el-col :span="10" >
 
-        </el-col>
-        <el-col :span="14" :offset="10" align="right">
-          <el-form-item label="活动名称" prop="activityName" >
-            <el-input style="width:300px;"   v-model="formValidate.activityName" placeholder="输入活动名称搜索">
-              <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
-            </el-input>
+          </el-col>
+          <el-col :span="14" :offset="10" align="right">
+            <el-form-item label="活动名称" prop="activityName" >
+              <el-input style="width:300px;"   v-model="formValidate.activityName" placeholder="输入活动名称搜索">
+                <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
+              </el-input>
+            </el-form-item>
+            <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+          </el-col>
+        </el-row>
+        <div v-if="searchMore" ref="searchMore">
+          <el-form-item label="活动类型" prop="user">
+            <el-select v-model="formValidate.activityType" label="活动状态" placeholder="请选择活动类型">
+              <select-option  :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
+            </el-select>
           </el-form-item>
-          <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
-        </el-col>
-      </el-row>
+          <el-form-item label="活动时间" prop="activityBeginTime" >
+            <el-date-picker
+              v-model="formValidate.activityBeginTime"
+              type="date"
+              :editable="false"
+              placeholder="选择日期"
+              :picker-options="pickerOptions0"
+              @change="handleStartTime"
+            >
+            </el-date-picker>
+            到
+            <el-date-picker
+              v-model="formValidate.activityEndTime"
+              align="right"
+              type="date"
+              :editable="false"
+              placeholder="选择日期"
+              :picker-options="pickerOptions1"
+              @change="handleEndTime">
+            </el-date-picker>
+          </el-form-item>
 
+          <el-button type="info" @click="searchEvent">查询</el-button>
 
-      <div v-if="searchMore" ref="searchMore">
-        <el-form-item label="活动类型" prop="user">
-          <el-select v-model="formValidate.activityType" label="活动状态" placeholder="请选择活动类型">
-            <select-option  :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="活动时间" prop="activityBeginTime" >
-          <el-date-picker
-            v-model="formValidate.activityBeginTime"
-            type="date"
-            :editable="false"
-            placeholder="选择日期"
-            :picker-options="pickerOptions0"
-            @change="handleStartTime"
+        </div>
+      </el-form>
+
+      <!--表格数据-->
+      <div
+        id="myTable"
+        ref="myTable">
+        <el-table
+          :data="tableData"
+          border
+          tooltip-effect="dark"
+          style="width: 100%"
+          @selection-change="handleSelectionChange">
+          <el-table-column
+            type="selection"
+            width="55">
+          </el-table-column>
+          <el-table-column
+            label="序号"
+            type="index"
+            align="center"
+            width="65">
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            width="160">
+            <template scope="scope">
+              <el-button
+                size="small"
+                @click="show(scope.row)">详-情</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            align="center"
+            prop="activityName"
+            label="课程名称"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="activityType"
+            label="课程类型"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="activitySite"
+            label="授课地点"
+            align="center"
           >
-          </el-date-picker>
-          到
-          <el-date-picker
-            v-model="formValidate.activityEndTime"
-            align="right"
-            type="date"
-            :editable="false"
-            placeholder="选择日期"
-            :picker-options="pickerOptions1"
-            @change="handleEndTime">
-          </el-date-picker>
-        </el-form-item>
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="hostUserName"
+            label="授课老师"
+            width="120"
+          >
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="activityTime"
+            label="日期"
+            width="120"
+          >
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="recordTimes"
+            label="时间"
+            width="120"
+          >
+          </el-table-column>
 
-        <el-button type="info" @click="searchEvent">查询</el-button>
-
+        </el-table>
       </div>
-    </el-form>
-
-    <!--表格数据-->
-    <div
-      id="myTable"
-      ref="myTable">
-      <el-table
-        :data="tableData"
-        border
-        tooltip-effect="dark"
-        style="width: 100%"
-        @selection-change="handleSelectionChange">
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
-        <el-table-column
-          label="序号"
-          type="index"
-          align="center"
-          width="65">
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          width="160">
-          <template scope="scope">
-            <el-button
-              size="small"
-              @click="show(scope.row)">详-情</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          align="center"
-          prop="activityName"
-          label="课程名称"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          prop="activityType"
-          label="课程类型"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          prop="activitySite"
-          label="授课地点"
-          align="center"
-        >
-        </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          prop="hostUserName"
-          label="授课老师"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          prop="activityTime"
-          label="日期"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          prop="recordTimes"
-          label="时间"
-          width="120"
-        >
-        </el-table-column>
-
-      </el-table>
     </div>
-
-    <!--查看教学活动-->
-    <Modal
-      close-on-click-modal="false"
-      height="200"
-      v-model="showModal"
-      title="查看教学活动"
-      class-name="vertical-center-modal"
-      :width="960"
-      :loading="loading">
-      <modal-header slot="header" :content="viewId"></modal-header>
-      <show v-if="showModal" :url="url" :operaility-data="operailityData"></show>
-      <div slot="footer"></div>
-    </Modal>
+    <div v-if="viewType=-'view'">
+      <el-button @click="changeView('list')">返回</el-button>
+      <show  :url="url" :operaility-data="operailityData"></show>
+    </div>
+    <!--&lt;!&ndash;查看教学活动&ndash;&gt;-->
+    <!--<Modal-->
+      <!--close-on-click-modal="false"-->
+      <!--height="200"-->
+      <!--v-model="showModal"-->
+      <!--title="查看教学活动"-->
+      <!--class-name="vertical-center-modal"-->
+      <!--:width="960"-->
+      <!--:loading="loading">-->
+      <!--<modal-header slot="header" :content="viewId"></modal-header>-->
+      <!--<show v-if="showModal" :url="url" :operaility-data="operailityData"></show>-->
+      <!--<div slot="footer"></div>-->
+    <!--</Modal>-->
   </div>
 </template>
 <style>
@@ -158,6 +161,7 @@
   export default {
     data() {
       return {
+          viewType:'list',
         showSearchMore:'',
         //查询项
         starTimes:'',
@@ -336,7 +340,8 @@
       /*--点击--查看--按钮--*/
       show(data){
         this.operailityData = data;
-        this.openModel('show');
+        this.changeView('view');
+//        this.openModel('show');
 
       },
       /*--点击--发布--按钮--*/
@@ -410,6 +415,11 @@
         this.$nextTick(function () {
           this.setTableDynHeight()
         })
+      },
+
+      //改变视图
+      changeView(type){
+          this.viewType = type;
       },
     },
     mounted(){

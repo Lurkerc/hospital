@@ -94,6 +94,29 @@
               </template>
             </el-table-column>
             <el-table-column
+              prop="deMasterDegree"
+              show-overflow-tooltip
+              label="掌握程度"
+              class-name="valiTableStyle"
+              align="center"
+              width="150"
+            >
+              <template scope="scope">
+                  <el-form  :model="scope.row" :rules="rdyTrainingStandardsSecond" ref="formValidate"  label-width="0">
+                    <el-form-item  prop="deMasterDegree" label-width="0">
+                      <el-select v-model="scope.row.deMasterDegree" >
+                        <el-option
+                          v-for="item in deMasterDegreeData"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
+            <el-table-column
               prop="deCountBasic"
               label="3年要求"
               class-name="valiTableStyle"
@@ -145,10 +168,10 @@
             </el-table-column>
 
           </el-table>
-          </br>
-          <el-row >
-            <el-col :span="10" :offset="10">
-              <div style="margin-left: 100px">
+
+          <el-row style="margin-top: 8px;">
+            <el-col :span="24">
+              <div style="text-align: center;">
                 <load-btn @listenSubEvent="saveSubEvent" :btnData="saveBtn"></load-btn>
               </div>
             </el-col>
@@ -202,10 +225,12 @@
                     "deShowtype":"页面显示类型(表格文本)",
                     "deCountBasic":"三年要求数量",
                     "deCountBasicSecond":"两年要求数量",
-                    "deCountBasicFirst":"一年要求数量"
+                    "deCountBasicFirst":"一年要求数量",
+                deMasterDegree:'掌握程度'
                   }
                 ]*/
               },
+              deMasterDegreeData:[],
               getRulesDepData:[],
               //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
               listMessTitle:{
@@ -230,6 +255,13 @@
                   url:api.disType.path,
                   params:{}
                 }
+              },
+              getDeMasterDegree:{
+                ajaxSuccess:'getDeMasterDegreeSuccess',
+                ajaxParams:{
+                  url:'/dictionary/getByCode/ROTARY_MASTER_DEGREE',
+                  params:{}
+                }
               }
             }
         },
@@ -237,6 +269,7 @@
           //初始化请求列表数据
           init(){
             this.ajax(this.listMessTitle);
+            this.ajax(this.getDeMasterDegree);
 
           },
 
@@ -249,6 +282,17 @@
             data = data.child;
             this.disType = data;
           },
+
+
+          //获取掌握程度
+          getDeMasterDegreeSuccess(res){
+            let data = res.data;
+            if(!data)return;
+            data = data.child;
+            this.deMasterDegreeData = data;
+
+          },
+
 
           //提交保存
           saveSubEvent(isLoadingFun){
@@ -316,9 +360,18 @@
                 tempArr[index].push(data[i].randomRotaryDep[l]);
               }
             }
+            for(let l=0;l<tempArr.length;l++){
+              let item = tempArr[l];
+              if(!item){
+                tempArr.splice(l,1);
+                l--
+              }
+            }
             this.groupItemClick(tempArr[0][0]);
             this.getRulesDepData = tempArr;
           },
+
+
 
           getRulesDepSuccess(res){
               let data = res.data;
@@ -337,7 +390,8 @@
                       "deShowtype":"",
                       "deCountBasic":"",
                       "deCountBasicSecond":"",
-                      "deCountBasicFirst":""
+                      "deCountBasicFirst":"",
+                      "deMasterDegree":'',
                     }
                   ]
                 }
@@ -364,7 +418,8 @@
               "deShowtype":"",
               "deCountBasic":"",
               "deCountBasicSecond":"",
-              "deCountBasicFirst":""
+              "deCountBasicFirst":"",
+              "deMasterDegree":""
             })
 
           },

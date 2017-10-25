@@ -2,6 +2,7 @@
 const dgFile = 'internship/outline';
 /*----- 实习生__科室要求 --------------------------------------------------------------------------------*/
 const depReFile = 'deprequirement';
+
 const api = {
   /*----- 实习大纲 --------------------------------------------------------------------------------*/
 
@@ -83,37 +84,72 @@ const api = {
     path: '/dictionary/getByCode/conf_sx_dep_requires_distype',
     method: 'get'
   },
+  depReDegree: { // 获取掌握程度
+    path: '/dictionary/getByCode/ROTARY_MASTER_DEGREE',
+    method: 'get'
+  },
+  getJxsModel: { // 获取进修生科室要求  改接口在进修生管理-轮转要求设置使用且跟实习生的轮转要求的修改页面公用
+    path: '/deprequirement/getJxsModel',
+    method: 'get'
+  },
+  getByDepth:{  //获取三级科室
+    path:"/hospital/dept/getByDepth",
+    method:"get"
+  },
+
 
   /*----- 科室要求 --------------------------------------------------------------------------------*/
-  // 实习费收费标准、大病历填写设置
+  // 实习费收费标准、大病历填写设置(大病历设置页面公用住院医)
   modifyConfigId: { // 实习费收费标准  黏贴比例修改  {configId}
     path: '/rotaryConfig/modify/',
     method: 'put'
   },
-  chargingStandard: { // 获取实习费收费标准
-    path: '/rotaryConfig/getByKey/rotary_charging_standard-SXS',
+  chargingStandard: { // 获取实习费收费标准 -SXS -JXS
+    path: '/rotaryConfig/getByKey/rotary_charging_standard-',
     method: 'get'
   },
-  deposit: { // 获取实习押金
-    path: '/rotaryConfig/getByKey/rotary_deposit-SXS',
+  deposit: { // 获取实习押金 -SXS -JXS
+    path: '/rotaryConfig/getByKey/rotary_deposit-',
     method: 'get'
   },
-  accommodation: { // 获取实习生住宿费
-    path: '/rotaryConfig/getByKey/rotary_accommodation-SXS',
+  accommodation: { // 获取实习生住宿费 -SXS -JXS
+    path: '/rotaryConfig/getByKey/rotary_accommodation-',
     method: 'get'
   },
-  bigcaseIscopy: { // 黏贴查询是否黏贴
-    path: '/rotaryConfig/getByKey/rotary_bigcase_iscopy-SXS',
+  bigcaseIscopy: { // 黏贴查询是否黏贴 -SXS -JXS
+    path: '/rotaryConfig/getByKey/rotary_bigcase_iscopy-',
     method: 'get'
   },
-  bigcaseCopyscale: { // 黏贴比例查询
-    path: '/rotaryConfig/getByKey/rotary_bigcase_copyscale-SXS',
+  bigcaseCopyscale: { // 黏贴比例查询 -SXS -JXS
+    path: '/rotaryConfig/getByKey/rotary_bigcase_copyscale-',
     method: 'get'
   },
   getDepRequirement: { // 根据科室要求ID和科室ID 获取科室下的要求数据
     path: '/deprequirement/getDepRequirement/', // {depOutlineId}-{depId}-{podId}
     method: 'get'
   },
+
+  // 这块的内容跟住院医的代码公用
+  /*//理论成绩合格分数
+  theoryExamPassMark:{
+    path: '/rotaryConfig/getByKey/theory_exam_pass_mark-SXS', // {configKey}-{userType}
+    method: 'get'
+  },
+  //技能成绩合格分数
+  skillExamPassMark:{
+    path: '/rotaryConfig/getByKey/skill_exam_pass_mark-SXS', // {configKey}-{userType}
+    method: 'get'
+  },
+
+  //出科综合成绩比例(理论、技能、日常)
+  rotaryGivenDdepMarkRatio:{
+    path: '/rotaryConfig/getByKey/rotary_givenDdep_markRatio-SXS', // {configKey}-{userType}
+    method: 'get'
+  },*/
+
+
+
+
 };
 
 export default api

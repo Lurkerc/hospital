@@ -24,6 +24,10 @@ const api = {
     path: thisFile + '/all/list',
     method: 'get'
   },
+  getAffairType:{ // 房间类型
+    path: thisFile + '/getAffairType',
+    method:"get"
+  },
   down: { // 资源下载
     path: '/api/file/download/', // { fileId }
     method: 'get'

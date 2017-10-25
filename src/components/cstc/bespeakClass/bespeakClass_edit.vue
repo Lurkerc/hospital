@@ -10,7 +10,8 @@
         </el-col>
         <el-col>
           <el-form-item label="授课老师：">
-            {{ formValidate.lecturer }}
+            <el-input v-model="formValidate.lecturer" style="width:200px;" @change="lecturerChange"></el-input>
+            <el-button type="info" @click="choiceTeacher">选择授课老师</el-button>
           </el-form-item>
         </el-col>
         <el-col>
@@ -97,12 +98,20 @@
     </el-row>
 
     <template v-if="formValidate.timeModel !== 'SPECIFIC'">
-      <div class="bpaColorBox">
-        <span class="optional">可预约</span>
-        <span class="tenancyEnds">已约满</span>
-        <span class="NO">未开放</span>
-        <span class="select">已预约</span>
-      </div>
+      <el-row>
+        <el-col :span="16">
+          <div class="bpaColorBox">
+            <span class="optional">可预约</span>
+            <span class="tenancyEnds">已约满</span>
+            <span class="NO">未开放</span>
+            <span class="select">已预约</span>
+          </div>
+        </el-col>
+        <!-- 全天候才显示 -->
+        <el-col :span="8" align="right">
+          <el-date-picker v-if="showSelectDay" v-model="pickerSelectDay" type="date" placeholder="选择日期" :picker-options="pickerOptions" @change="getAllDay" style="margin-top: 5px;"> </el-date-picker>
+        </el-col>
+      </el-row>
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane v-for="(item,index) in days" :key="index" :label="item" :name="item+''"></el-tab-pane>
       </el-tabs>
@@ -126,7 +135,8 @@
             </td>
             <td v-for="(dataItem,index) in roomItem.dataList" :key="roomItem.roomId + '-' + index" align="center">
               <div class="cell">
-                <p v-if="selRoomIndex === roomIndex && selTimeSlotIndex === index" class="select" title="已预约" @click="initSelectTime(false)">约</p>
+                <p v-if="isObsolete(tableBody.timeSetList[index].courseTime)" class="NO" title="未开放">X</p>
+                <p v-else-if="selRoomIndex === roomIndex && selTimeSlotIndex === index" class="select" title="已预约" @click="initSelectTime(false)">约</p>
                 <p v-else :class="dataItem" :title="getTitle(dataItem)" @click="selectThisTime(roomItem,roomIndex,index,dataItem)">{{ dataItem | dataListType }}</p>
               </div>
             </td>
@@ -140,16 +150,17 @@
           <el-form-item label="选择设备：">
             <div class="bpkdBox">
               <div v-for="(item,index) in formValidate.deviceList" :key="index" class="bpkdItem">
-                <el-tooltip class="item" effect="light" placement="bottom-start">
-                  <div slot="content" style="max-width:200px;">
-                    <p>设备名称：{{ deviceList[index].deviceTypeName }}</p>
-                    <p>开放数量：{{ deviceList[index].openNum || 0 }}</p>
-                    <p>设备简介：{{ deviceList[index].describes || '暂无简介' }}</p>
-                  </div>
-                  <el-button>{{ deviceList[index].deviceTypeName }}</el-button>
-                </el-tooltip>
-                <span class="bpkdTitle">数量：</span>
-                <el-input style="width:200px;" v-model="item.reserveNum" :placeholder="'1-'+deviceList[index].openNum+'之间'"></el-input>
+                <!--<el-tooltip class="item" effect="light" placement="bottom-start">-->
+                  <!--<div slot="content" style="max-width:200px;">-->
+                    <!--<p>设备名称：{{ deviceList[index].deviceTypeName }}</p>-->
+                    <!--<p>开放数量：{{ deviceList[index].openNum || 0 }}</p>-->
+                    <!--<p>设备简介：{{ deviceList[index].describes || '暂无简介' }}</p>-->
+                  <!--</div>-->
+                <el-button type="text">{{ deviceList[index].deviceTypeName + '(' + deviceList[index].deviceIdentifier + ')' }}</el-button>
+                <!--<el-button>{{ deviceList[index].deviceTypeName }}</el-button>-->
+                <!--</el-tooltip>-->
+                <!--<span class="bpkdTitle">数量：</span>-->
+                <!--<el-input style="width:200px;" v-model="item.reserveNum" :placeholder="'1-'+deviceList[index].openNum+'之间'"></el-input>-->
               </div>
             </div>
             <el-button type="primary" @click="selectDevice">选择模型</el-button>
@@ -167,7 +178,13 @@
     <!-- 模态框 选择设备 -->
     <Modal :mask-closable="false" v-model="selectDeviceModal" class-name="vertical-center-modal" :loading="true" :width="900">
       <modal-header slot="header" :parent="self" :content="contentHeader.selectDeviceId"></modal-header>
-      <select-device v-if="selectDeviceModal" :timeData="{'date':formValidate.openTime.date,reserveTimeSetId:formValidate.openTime.timeSetId}" :select="selectDeviceId" @cancel="cancel" @select="selectDeviceCall"></select-device>
+      <select-device v-if="selectDeviceModal" :roomId="formValidate.reservePojectRoom.roomId" :select="selectDeviceId" @cancel="cancel" @select="selectDeviceCall"></select-device>
+      <div slot="footer"></div>
+    </Modal>
+    <!--选择授课老师-->
+    <Modal :mask-closable="false" width="890" v-model="selectTeacherModal" title="添加人员" class-name="vertical-center-modal">
+      <modal-header slot="header" :content="contentHeader.selectTeacherId"></modal-header>
+      <select-user v-if="selectTeacherModal" :isOnlyOne="true" @cancel="cancel('selectTeacher')" @setUsers="selectTeacherCall" :initUser="initUser"></select-user>
       <div slot="footer"></div>
     </Modal>
     <!--选择人员-->
@@ -194,11 +211,13 @@
         self: this,
         // 临时数据
         reservePoject: "", // 项目
-        activeName: "", // 日期视图 
+        activeName: "", // 日期视图
         selRoomIndex: -1, // 房间
         selTimeSlotIndex: -1, // 时间段
         selDay: '', // 日期
         // 展示数据
+        showSelectDay: false, // 是否显示日期选框
+        pickerSelectDay: '', // 选择的日期
         timeSlot: [], // 时间段
         days: [], // 日期
         projectData: {}, // 可预约项目
@@ -210,6 +229,7 @@
           id: '',
           name: "", // 预约名称
           lecturer: "", // 授课人
+          lecturerId:"",
           minNum: "", // 最低开课人数
           summary: "", // 预约内容
           timeModel: "", // 开放时间类型
@@ -232,7 +252,7 @@
           },
           deviceList: [ // 设备列表
             // {
-            //   derviceTypeId: "", // 设备id
+            //   derviceId: "", // 设备id
             //   reserveNum: "", // 设备数量
             // }
           ],
@@ -245,6 +265,7 @@
         selectDeviceModal: false,
         selectRoomModal: false,
         selectUserModal: false,
+        selectTeacherModal:false,
         contentHeader: {
           selectDeviceId: {
             id: 'selectDeviceId',
@@ -253,6 +274,15 @@
           selectUserId: {
             id: "selectUserId",
             title: "选择人员"
+          },
+          selectTeacherId: {
+            id: "selectTeacherId",
+            title: "选择授课老师"
+          }
+        },
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
           }
         },
       }
@@ -283,7 +313,7 @@
         res.data.reservePojectDeviceList.map(item => {
           // 提交数据
           deviceList.push({
-            derviceTypeId: item.deviceTypeId,
+            derviceId: item.deviceTypeId,
             reserveNum: item.reserveNum,
           })
           // 选择初始化数据
@@ -318,11 +348,20 @@
         this.ajax({
           ajaxSuccess: res => {
             this.days = res.data;
-            if (res.data.length) {
-              this.activeName = userSelDate;
-              this.selDay = userSelDate;
-              this.selectDay(userSelDate); // 指定日期
+            this.showSelectDay = false;
+//            if (res.data.length) {
+//              this.activeName = userSelDate;
+//              this.selDay = userSelDate;
+//              this.selectDay(userSelDate); // 指定日期
+//            }
+            if (!res.data.length) {
+              this.getAllDay()
             }
+
+            this.activeName = userSelDate;
+            this.selDay = userSelDate;
+            this.selectDay(userSelDate); // 指定日期
+
             if (beforeDay) { // 把原预约日期添加在有效日期前面
               this.days.unshift(userSelDate)
             }
@@ -335,6 +374,21 @@
             }
           }
         })
+      },
+      /**
+       * 计算全天候的日期
+       * 指定日期后的五天日期
+       * */
+      getAllDay(day){
+        let now = (day ? new Date(day) : new Date()).getTime();
+        this.days.length = 0;
+        for(let i=0;i<5;i++){
+          this.days.push(this.conductDate(new Date(now + (i * 24*60*60*1000)),'yyyy-MM-dd'))
+        }
+        this.showSelectDay = true;
+//        this.activeName = this.days[0];
+//        this.selDay = this.days[0];
+//        this.selectDay(this.days[0]); // 指定日期
       },
       // 获取项目日期对应的房间信息
       getRoomInfoByDay() {
@@ -378,6 +432,12 @@
         this.formValidate.openTime.date = date;
         this.initSelectTime(data);
         this.getRoomInfoByDay();
+      },
+      // 时间段在今天是否已过期
+      isObsolete(dataItem) {
+        let selectTime = new Date(this.activeName + ' ' + dataItem.split('-')[0]).getTime();
+        let now = new Date().getTime();
+        return now > selectTime
       },
       /************************************* 按钮事件 **********************************/
       // 日期选择
@@ -442,7 +502,20 @@
           this.showMess('请选择日期和时间段')
         }
       },
-
+      lecturerChange(val){
+//        this.formValidate.lecturer = val;
+        this.formValidate.lecturerId = '';
+      },
+      //选择老师弹窗
+      choiceTeacher(){
+        this.selectTeacherModal = true;
+      },
+      //选择授课老师回调
+      selectTeacherCall(res){
+        this.formValidate.lecturerId = res[0].key;
+        this.formValidate.lecturer = res[0].label;
+        this.selectTeacherModal = false;
+      },
       // 选择设备模型
       selectDeviceCall(res) {
         let temp = [];
@@ -450,7 +523,8 @@
         res.map(item => {
           this.selectDeviceId.push(item.id);
           temp.push({
-            derviceTypeId: item.id,
+            derviceId: item.id,
+            deviceIdentifier:item.deviceIdentifier,
             reserveNum: ""
           })
         })
@@ -548,17 +622,17 @@
             this.errorMess('请选择预约项目房间');
             return false
           }
-          for (let i in this.formValidate.deviceList) {
-            let num = this.formValidate.deviceList[i].reserveNum;
-            if (!this.deviceList[i].openNum) {
-              this.errorMess(`设备“${this.deviceList[i].deviceTypeName}”数量不足，不能预约`);
-              return false
-            }
-            if (isNaN(num) || num < 1 || num > this.deviceList[i].openNum) {
-              this.errorMess(`设备“${this.deviceList[i].deviceTypeName}”预约数量最少为1，最多为${this.deviceList[i].openNum}`);
-              return false
-            }
-          }
+//          for (let i in this.formValidate.deviceList) {
+//            let num = this.formValidate.deviceList[i].reserveNum;
+//            if (!this.deviceList[i].openNum) {
+//              this.errorMess(`设备“${this.deviceList[i].deviceTypeName}”数量不足，不能预约`);
+//              return false
+//            }
+//            if (isNaN(num) || num < 1 || num > this.deviceList[i].openNum) {
+//              this.errorMess(`设备“${this.deviceList[i].deviceTypeName}”预约数量最少为1，最多为${this.deviceList[i].openNum}`);
+//              return false
+//            }
+//          }
         }
         return true
       },

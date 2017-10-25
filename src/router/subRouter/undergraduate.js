@@ -97,6 +97,16 @@ const underRouters = {
         }, 'undergraduate');
       }
     },
+    {
+      //人员管理
+      path:'bkusersManagement',
+      name:'bkusersManagement',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/intern/undergraduateEdu/bkusersManagement/bkusersManagement_list.vue'));
+        }, 'undergraduate');
+      }
+    },
   ]
 }
 

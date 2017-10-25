@@ -39,6 +39,7 @@
         }
         window.print();
         this.$emit('print', this.operailityData);
+        setTimeout(()=>printContentBox.innerHTML = '',300)
       },
       /**
        * 对IE设置打印预览
@@ -58,11 +59,11 @@
       // 获取浏览器类型
       getExplorer() {
         var explorer = window.navigator.userAgent;
-        //ie 
+        //ie
         if (explorer.indexOf("MSIE") >= 0) {
           return "IE";
         }
-        //firefox 
+        //firefox
         else if (explorer.indexOf("Firefox") >= 0) {
           return "Firefox";
         }
@@ -99,17 +100,39 @@
     #printContentBox {
       /* width: 1000px; */
       display: block;
+      padding: 20px;
       z-index: -9999;
     }
+    .printNoBorder{border: none !important;}
     /* 下一页 */
-    .pageNext {
+    .printPageNext {
       page-break-after: always;
     }
     @page {
       size: auto;
       /* 边距 */
-      margin: 2mm 10mm;
+      /*margin: 2mm 10mm;*/
+      margin: 5mm 0;
     }
+    /* 表格重置 */
+    table{border:1px solid #dfe6ec;border-collapse: collapse;cellspacing:0;cellpadding:0;}
+    table td,th{border:1px solid #dfe6ec !important;}
+    table th{border-bottom: none !important;}
+    .el-table{border:none;background-color: transparent;overflow: visible;}
+    .el-table table th.gutter{display: none;}
+    .el-table__body-wrapper{width: 100%;}
+    .el-table__header[style]{width: 100% !important;}
+    .el-table__body[style]{width: 100% !important;}
+    .el-tooltip[style]{width: auto !important;}
+    .el-table__empty-block[style]{width: 100% !important;}
+    .el-table__body, .el-table__footer, .el-table__header{table-layout: auto;}
+    .el-table__body-wrapper{margin-top: -1px;}
+    .el-table__empty-block{border:1px solid #dfe6ec;border-top: none;margin-top: -1px;}
+    .el-table::after, .el-table::before{background-color: transparent;}
+
+    /* 交费单 */
+    .printBPMain .printBPItem{margin-top: 150px;}
+    .printBPMain .printBPItem:nth-child(2n){ margin-top: 350px;  page-break-after: always;}
   }
 
 </style>

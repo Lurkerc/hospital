@@ -35,6 +35,15 @@ const zyyRouters = {
         resolve(require('../../components/zyy/rdyRotationArrangement/rdyAdjustManually/rdyAdjustManually_list.vue'));
       }, 'rdyRotationArrangement');
     }
+  },{
+    //安排乱转-带教秘书
+    path:'rdyArrangeRotation',
+    name:'rdyArrangeRotation',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/zyy/rdyRotationArrangement/rdyArrangeRotation/rdyArrangeRotation_list.vue'));
+      }, 'rdyRotationArrangement');
+    }
   },
 
   ]

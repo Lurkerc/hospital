@@ -52,7 +52,10 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="存放地点：">
-                    <el-input v-model="item.storageLocation" placeholder="设备位置" size="small"></el-input>
+                    <el-input size="small" v-model="item.storageLocation" placeholder="请选择或者输入" @input="inputStorageLocation(item)">
+                      <el-button slot="append" @click="selectRoom(item)" size="mini" icon="plus"></el-button>
+                    </el-input>
+                    <!--<el-input v-model="item.storageLocation" placeholder="设备位置" size="small"></el-input>-->
                   </el-form-item>
                 </el-col>
                 <el-col :span="16">
@@ -114,6 +117,12 @@
       <remove v-if="removeModal" :deleteUrl="api.delete" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
       <div slot="footer"></div>
     </Modal>
+    <!--选择房间-->
+    <Modal :mask-closable="false" v-model="selectRoomModal" height="200" class-name="vertical-center-modal" :width="960">
+      <modal-header slot="header" :content="button.selectRoomId"></modal-header>
+      <select-room v-if="selectRoomModal" @cancel="selectRoomModal=false" :selectOne="true" @select="selectRoomCall" :select="roomIds"></select-room>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 
@@ -129,6 +138,7 @@
   // 模态框
   import edit from './deviceStorageMoreInfo_edit'; // 编辑
   import show from './deviceStorageMoreInfo_view'; // 查看
+  import selectRoom from '../../../../common/selectRoom.vue';
 
   export default {
     props: {
@@ -140,12 +150,15 @@
     data() {
       return {
         self: this,
+        editRow:{},
         activeNames: [], // 视图激活
         stateOption, // 设备状态
         operailityData: '',
         api,
+        roomIds:[],
         //* 按钮 *//
         loading: false,
+        selectRoomModal:false,
         // saveModal: false,
         button: {
           addId: {
@@ -163,6 +176,10 @@
           removeId: {
             id: 'removeId',
             title: '删除设备信息'
+          },
+          selectRoomId:{
+            id:'selectRoomId',
+            title:"选择房间",
           },
         },
         todoId: ''
@@ -233,10 +250,36 @@
       openModel(options) {
         this[options + 'Modal'] = true;
       },
+
+      // 选择房间
+      selectRoom(row){
+        this.editRow = row;
+        if (row.roomId){
+          this.roomIds[0] = row.roomId
+        }else {
+          this.roomIds = []
+        }
+        this.openModel('selectRoom');
+      },
+
+      // 选择房间回调
+      selectRoomCall(res){
+        this.roomIds[0] = res[0].id;
+        this.editRow.roomId = res[0].id;
+        this.editRow.storageLocation = res[0].roomNum;
+        this.cancel('selectRoom');
+      },
+
+      // 输入存放地点
+      inputStorageLocation(item){
+        item.roomId = '';
+        this.roomIds = [];
+      },
     },
     components: {
       edit,
-      show
+      show,
+      selectRoom,
     },
     computed: {
       rowDatas() {

@@ -54,6 +54,11 @@
               </template>
             </el-table-column>
             <el-table-column
+              prop="deMasterDegree"
+              label="掌握程度"
+              show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
               prop="deCountBasic"
               label="3年要求"
               show-overflow-tooltip
@@ -74,7 +79,7 @@
           </el-table>
         </div>
       </layout-tree>
-      </br>
+      <br>
       <el-row>
         <el-col :span="8" class="textCenter">&nbsp;</el-col>
         <el-col :span="8" class="textCenter">
@@ -202,7 +207,7 @@
           updateListData(res){
             let data = res.data;
             if(!data) return;
-            let tempArr = [[]];
+            let tempArr = [];
             for(let i in data){
               let index = i.split('_')[1]-1;
               tempArr[index] = [];
@@ -211,6 +216,13 @@
               }
               for(let l=0 ;l<data[i].randomRotaryDep.length;l++){
                 tempArr[index].push(data[i].randomRotaryDep[l]);
+              }
+            }
+            for(let l=0;l<tempArr.length;l++){
+              let item = tempArr[l];
+              if(!item){
+                tempArr.splice(l,1);
+                l--
               }
             }
             this.groupItemClick(tempArr[0][0]);

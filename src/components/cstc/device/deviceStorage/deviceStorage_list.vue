@@ -96,13 +96,12 @@
             </a>
             <el-button class="but-col" @click=" deriveModal=false">取消</el-button>
           </el-col>
-          </el-col>
         </el-row>
       </div>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 设备入库（storage） -->
-    <Modal :mask-closable="false" v-model="storageModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="800">
+    <Modal :mask-closable="false" v-model="storageModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="1100">
       <modal-header slot="header" :content="button.storageId"></modal-header>
       <storage v-if="storageModal" @cancel="cancel" @storage="subCallback" :operaility-data="operailityData" :id="todoId" :depId="addDepId"
         :url-params="api.storage"></storage>

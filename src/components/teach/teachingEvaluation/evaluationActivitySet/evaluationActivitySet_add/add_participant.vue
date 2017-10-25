@@ -65,7 +65,7 @@
           </fieldset>
           </br>
           <fieldset class="layui-elem-field">
-            <legend>被评价对象</legend>
+            <legend>被评价人</legend>
             <div class="layui-field-box">
               <el-radio-group v-model="formValidate.evaluatedType">
                 <el-radio label="ALL">所有人</el-radio>
@@ -133,27 +133,26 @@
       <el-row v-if="relationship=='DEPT'">
         <el-col :span="20"  :offset="1">
           <fieldset class="layui-elem-field">
-            <legend>评价人</legend>
-
+            <legend>评价人与被评价人</legend>
             <div class="layui-field-box" style="height: 300px">
               <left-tree @tree-click="appraiserTree" @setCurrSltNodeId="appraiserCurrSltNodeId" :treeOptions="treeOptions"> </left-tree>
             </div>
             <!--<el-input v-model=""></el-input>-->
           </fieldset>
-          </br>
-          <fieldset class="layui-elem-field">
-            <legend>被评价对象</legend>
-            <div class="layui-field-box" style="height: 300px">
-              <left-tree @tree-click="evaluatedTree" @setCurrSltNodeId="evaluatedCurrSltNodeId" :treeOptions="treeOptions"> </left-tree>
-            </div>
-          </fieldset>
+          <br>
+          <!--<fieldset class="layui-elem-field">-->
+            <!--<legend>被评价人</legend>-->
+            <!--<div class="layui-field-box" style="height: 300px">-->
+              <!--<left-tree @tree-click="evaluatedTree" @setCurrSltNodeId="evaluatedCurrSltNodeId" :treeOptions="treeOptions"> </left-tree>-->
+            <!--</div>-->
+          <!--</fieldset>-->
         </el-col>
       </el-row>
-      </br>
+      <br>
       <el-row >
-        <el-col :span="20"  :offset="3">
-          <el-button  @click="participant">确认并继续</el-button>
+        <el-col :span="10"  :offset="9">
           <el-button  @click="$emit('last') ">上一步</el-button>
+          <el-button  @click="participant">确认并继续</el-button>
         </el-col>
 
       </el-row>
@@ -168,7 +167,7 @@
       <!--<div slot="header"> -->
       <!--</div>-->
       <modal-header slot="header" :content="selectUserId"></modal-header>
-      <select-user v-if="appraiserPartModal"   @cancel="cancel('appraiserPart')" :url="url"   @setUsers="setAppraiserPart" :initUser="formValidate.appraiserPart"></select-user>
+      <select-user v-if="appraiserPartModal"   @cancel="cancel('appraiserPart')"    @setUsers="setAppraiserPart" :initUser="formValidate.appraiserPart"></select-user>
       <div slot="footer"></div>
       </Modal>
 
@@ -180,7 +179,7 @@
       <!--<div slot="header"> -->
       <!--</div>-->
       <modal-header slot="header" :content="selectUserId"></modal-header>
-      <select-user v-if="evaluatedPartModal"   @cancel="cancel" :url="url"  @setUsers="setEvaluatedPart" :initUser="formValidate.evaluatedPart"></select-user>
+      <select-user v-if="evaluatedPartModal"   @cancel="cancel"  @setUsers="setEvaluatedPart" :initUser="formValidate.evaluatedPart"></select-user>
       <div slot="footer"></div>
       </Modal>
 
@@ -200,7 +199,7 @@
     data() {
       return {
         treeOptions:{
-            url:'/hospital/dept/list'
+          url:'/hospital/dept/list'
         },
         treeData: [],
         defaultProps: {
@@ -424,24 +423,48 @@
 //       更新基础数据
 //       继续下一步
         if(this.relationship=='NO'){
-            if(this.formValidate.appraiserType == 'PART'){//类型为部分人
-                this.formValidate.appraiser=this.formValidate.appraiserPart;
-            }else if(this.formValidate.appraiserType == 'ROLE') {//类型为指定角色
-              this.formValidate.appraiser=this.formValidate.appraiserRole;
+          if(this.formValidate.appraiserType=='ALL'){
+            this.formValidate.appraiser = [];
+          }else if(this.formValidate.appraiserType == 'PART'){//类型为部分人
+          if(this.formValidate.appraiserPart==0){
+            this.errorMess('请选择评价人');
+            return;
+          }
+            this.formValidate.appraiser=this.formValidate.appraiserPart;
+          }else if(this.formValidate.appraiserType == 'ROLE') {//类型为指定角色
+            if(this.formValidate.appraiserRole==0){
+              this.errorMess('请选择评价人');
+              return;
             }
+            this.formValidate.appraiser=this.formValidate.appraiserRole;
+          }
 
-            if(this.formValidate.evaluatedType == 'PART'){//类型为部分人
-                this.formValidate.evaluated=this.formValidate.evaluatedPart;
-            }else if(this.formValidate.appraiserType == 'ROLE') {//类型为指定角色
-              this.formValidate.evaluated=this.formValidate.evaluatedRole;
+          if(this.formValidate.evaluatedType=='ALL'){
+            this.formValidate.evaluated = [];
+          }else if(this.formValidate.evaluatedType == 'PART'){//类型为部分人
+            if(this.formValidate.evaluatedPart==0){
+              this.errorMess('请选择被评价人');
+              return;
             }
-        }
+            this.formValidate.evaluated=this.formValidate.evaluatedPart;
+          }else if(this.formValidate.evaluatedType == 'ROLE') {//类型为指定角色
+            if(this.formValidate.evaluatedRole==0){
+              this.errorMess('请选择被评价人');
+              return;
+            }
+            this.formValidate.evaluated=this.formValidate.evaluatedRole;
+          }
+        }else if(this.relationship=='DEPT'){
 
-        if(this.relationship=='DEPT'){
-          this.formValidate.appraiser=this.formValidate.appraiserDept;
-          this.formValidate.evaluated=this.formValidate.evaluatedDept;
-        }
+          this.formValidate.appraiser = this.formValidate.appraiserDept;
+          this.formValidate.evaluated = this.formValidate.appraiserDept;
+//          this.formValidate.evaluated = this.formValidate.evaluatedDept;
 
+        } else{
+
+          this.formValidate.appraiser = [];
+          this.formValidate.evaluated=[];
+        }
 
         this.$emit('next',this.formValidate);
 

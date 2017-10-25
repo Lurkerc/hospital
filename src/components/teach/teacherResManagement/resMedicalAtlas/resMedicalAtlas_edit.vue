@@ -72,7 +72,7 @@
     <el-form label-width="90px" v-for="item in 1" :key="item" :model="formValidate" :rules="resMedicalAtlas" ref="formValidate">
       <el-row v-if="!unLogo">
         <el-col :span="16" :offset="2">
-          <el-form-item label="视频封面:">
+          <el-form-item label="封面:">
             <img-wall  :onlyOnePic="true" :fileList="getLogoFile" :actionUrl="'/file/upload/static'" @upladSuccess="expenseLogoEvent"></img-wall>
           </el-form-item>
         </el-col>

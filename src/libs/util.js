@@ -622,6 +622,7 @@ export default {
          * */
         formDate(data, targer, fn) {
           let length = targer.length;
+          let that = this;
           let isObject = this.valDataType(data, "Object");
           if (isObject) {
             for (let i = 0; i < length; i++) {
@@ -637,12 +638,11 @@ export default {
           this.$util._.forEach(data, function (value) {
             for (let i = 0; i < length; i++) {
               if(typeof fn =='string'){
-                value[targer[i]] =this.conductDate(value[targer[i]],fn)
+                value[targer[i]] =that.conductDate(value[targer[i]],fn)
               }else {
-                fn = fn || this.yearMonthData || function () {};
+                fn = fn || that.yearMonthData || function () {};
                 value[targer[i]] = fn(value[targer[i]]);
               }
-
             }
           })
           return data
@@ -838,7 +838,7 @@ export default {
       },
 
       beforeDestroy(){
-        this.$util.events.removeHandler(window, "resize",this.setTableDynHeight)
+        this.$util.events.removeHandler(window, "resize",this.getContentHeight || this.setTableDynHeight)
       },
 
       components: {

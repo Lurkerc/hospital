@@ -1,7 +1,7 @@
 <template>
 
   <div >
-    <el-form :model="formValidate" ref="formValidate" class="demo-form-inline" label-width="110px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="rules" class="demo-form-inline" label-width="110px" >
 
       <el-row >
         <el-col :span="10" :offset="2">
@@ -106,6 +106,7 @@
   </div>
 </template>
 <script>
+  import {nosocomial as rules} from '../../rules'
   import selectUser from "../../../../common/selectUser.vue"
   //当前组件引入全局的util
   let Util=null;
@@ -114,6 +115,7 @@
     props: ['operailityData'],
     data (){
       return{
+        rules,
         courses: [{
           type: '',
           bizDict: ''
@@ -135,6 +137,8 @@
           "ssyCapacity":"",
           "yjsCapacity":"",
           "jxsCapacity":"",
+          "path":this.operailityData.path,   //深度路径
+          "depth":this.operailityData.depth,  //深度级别
           "parentId":this.operailityData.parentId,
           "parentName":this.operailityData.parentName,
         },

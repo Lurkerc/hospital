@@ -12,8 +12,8 @@
                 <el-radio-group v-model="type">
                   <el-radio label="VIDEO">视频</el-radio>
                   <el-radio label="LITERATURE">文档文献</el-radio>
-                  <el-radio label="CASES">医学图谱</el-radio>
-                  <el-radio label="ATLAS">经典病例</el-radio>
+                  <el-radio label="ATLAS">医学图谱</el-radio>
+                  <el-radio label="CASES">经典病例</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
@@ -25,9 +25,9 @@
           <!--文档文献-->
             <res-literature fromWhereTree="LITERATURE"   @cancel="cancel" @add="subCallback" v-if="type=='LITERATURE'" :url="{add:{path:'/literature/add-stu'},resourceTypeTree:{ path:'/resourceType/tree?types=LITERATURE'}}"></res-literature>
           <!--医学图谱-->
-             <res-medical-atlas  fromWhereTree="CASES"   @cancel="cancel" @add="subCallback" v-if="type=='CASES'" :url="{add:{path:'/atlas/add-stu'},resourceTypeTree:{ path:'/resourceType/tree?types=CASES'}}"></res-medical-atlas>
+             <res-medical-atlas  fromWhereTree="ATLAS"   @cancel="cancel" @add="subCallback" v-if="type=='ATLAS'" :url="{add:{path:'/atlas/add-stu'},resourceTypeTree:{ path:'/resourceType/tree?types=ATLAS'}}"></res-medical-atlas>
           <!--经典病例-->
-            <res-case-library fromWhereTree="ATLAS"   @cancel="cancel" @add="subCallback" v-if="type=='ATLAS'" :url="{add:{path:'/cases/add-stu'},resourceTypeTree:{ path:'/resourceType/tree?types=ATLAS'}}"></res-case-library>
+            <res-case-library fromWhereTree="CASES"   @cancel="cancel" @add="subCallback" v-if="type=='CASES'" :url="{add:{path:'/cases/add-stu'},resourceTypeTree:{ path:'/resourceType/tree?types=CASES'}}"></res-case-library>
         </div>
     </div>
 

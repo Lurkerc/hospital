@@ -1,5 +1,4 @@
-<!--档案审核-->
-<!--劳务费管理-->
+<!--课时费-->
 <template>
   <div id="content" ref="content" class="modal">
     <div class="listUpAreaBox">
@@ -12,7 +11,7 @@
       <div class="listUpArea-search">
         <div class="listUpArea-searchWrapper">
           <!--右侧查询-->
-          <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px" >
+          <el-form ref="formValidate" :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px">
             <div class="listUpArea-searchLeft">
               <el-input placeholder="请输入内容" v-model="formValidate.name">
                 <div slot="prepend">课程类型</div>
@@ -29,145 +28,73 @@
     <div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox">
 
     </div>
-    <br />
+    <br/>
     <!--列表数据-->
     <div>
       <!--表格数据-->
-      <div
-        id="myTable"
-        ref="myTable"
-      >
-        <el-table
-          align="center"
-          :height="dynamicHt"
-          border
-          :data="tableData1"
-          tooltip-effect="dark"
-          highlight-current-row
-          style="width: 100%;height: 100%"
-          @selection-change="handleSelectionChange">
-          <el-table-column
-            type="selection"
-            width="55">
+      <div id="myTable" ref="myTable">
+        <el-table align="center" :height="dynamicHt" border :data="tableData" tooltip-effect="dark" highlight-current-row style="width: 100%;height: 100%" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55">
           </el-table-column>
-          <el-table-column
-            align="center"
-            label="序号"
-            prop="index"
-            width="75">
+          <el-table-column align="center" label="序号" prop="index" width="75">
             <template scope="scope">
               <span>{{scope.row.index}}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            label="操作"
-            width="160">
+          <el-table-column label="操作" width="160">
             <template scope="scope">
               <el-button size="small" @click="show(scope.$index)">查看</el-button>
               <el-button size="small" @click="edit(scope.$index)">修改</el-button>
             </template>
           </el-table-column>
-          <el-table-column
-            align="center"
-            prop="teachLevel"
-            label="职称"
-            width="120">
+          <el-table-column align="center" prop="teachLevel" label="职称" width="120">
           </el-table-column>
-          <el-table-column
-            prop="type"
-            label="课程类型"
-            width="120">
+          <el-table-column prop="type" label="课程类型" width="120">
           </el-table-column>
-          <el-table-column
-            label="优"
-            align="center"
-          >
-            <el-table-column
-              prop="excellent"
-              label="评分"
-              align="center"
-            >
+          <el-table-column label="优" align="center">
+            <el-table-column prop="excellent" label="评分" align="center">
               <template scope="scope">
-                {{scope.row.excellent}}-100
+                {{scope.row.excellent}}-{{scope.row.excellentMax}}
               </template>
             </el-table-column>
-            <el-table-column
-              prop="excellentFee"
-              label="课时费"
-              align="center"
-            >
+            <el-table-column prop="excellentFee" label="课时费" align="center">
               <template scope="scope">
                 {{scope.row.excellentFee | money}}
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column
-            prop="type"
-            label="良"
-            width="120"
-          >
-            <el-table-column
-              prop="good"
-              label="评分"
-              align="center"
-            >
+          <el-table-column prop="type" label="良" align="center">
+            <el-table-column prop="good" label="评分" align="center">
               <template scope="scope">
-                {{scope.row.good}}-{{scope.row.excellent}}
+                {{scope.row.good}}-{{scope.row.goodMax}}
               </template>
             </el-table-column>
-            <el-table-column
-              prop="goodFee"
-              label="课时费"
-              align="center"
-            >
+            <el-table-column prop="goodFee" label="课时费" align="center">
               <template scope="scope">
                 {{scope.row.goodFee | money}}
               </template>
             </el-table-column>
 
           </el-table-column>
-          <el-table-column
-            prop="avg"
-            label="中"
-            width="120"
-          >
-            <el-table-column
-              prop="avg"
-              label="评分"
-              align="center"
-            >
+          <el-table-column prop="avg" label="中" align="center">
+            <el-table-column prop="avg" label="评分" align="center">
               <template scope="scope">
-                {{scope.row.avg}}-{{scope.row.good}}
+                {{scope.row.avg}}-{{scope.row.avgMax}}
               </template>
             </el-table-column>
-            <el-table-column
-              prop="avgFee"
-              label="课时费"
-              align="center"
-            >
+            <el-table-column prop="avgFee" label="课时费" align="center">
               <template scope="scope">
                 {{scope.row.avgFee | money}}
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column
-            label="差"
-            width="120"
-          >
-            <el-table-column
-              prop="bad"
-              label="评分"
-              align="center"
-            >
+          <el-table-column label="差" align="center">
+            <el-table-column prop="bad" label="评分" align="center">
               <template scope="scope">
-                {{scope.row.bad}}-{{scope.row.avg}}
+                {{scope.row.bad}}-{{scope.row.badMax}}
               </template>
             </el-table-column>
-            <el-table-column
-              prop="badFee"
-              label="课时费"
-              align="center"
-            >
+            <el-table-column prop="badFee" label="课时费" align="center">
               <template scope="scope">
                 {{scope.row.badFee | money}}
               </template>
@@ -179,63 +106,32 @@
       <!--分页-->
       <div style="margin: 10px;">
         <div style="float: right;">
-          <el-pagination
-            @size-change="changePageSize"
-            @current-change="changePage"
-            :current-page="myPages.currentPage"
-            :page-sizes="myPages.pageSizes"
-            :page-size="myPages.pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="listTotal">
+          <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes" :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="listTotal">
           </el-pagination>
         </div>
       </div>
     </div>
     <!--新建-->
-    <Modal
-      close-on-click-modal="false"
-      width="1000"
-      v-model="addModal"
-      title="对话框标题"
-      class-name="vertical-center-modal"
-      :loading="loading">
+    <Modal close-on-click-modal="false" width="1000" v-model="addModal" title="对话框标题" class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="addId"></modal-header>
       <add v-if="addModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></add>
       <div slot="footer"></div>
     </Modal>
     <!--修改-->
-    <Modal
-      close-on-click-modal="false"
-      width="1000"
-      v-model="editModal"
-      title="对话框标题"
-      class-name="vertical-center-modal"
-      :loading="loading">
+    <Modal close-on-click-modal="false" width="1000" v-model="editModal" title="对话框标题" class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="editId"></modal-header>
       <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
       <div slot="footer"></div>
     </Modal>
     <!--删除弹窗-->
-    <Modal
-      close-on-click-modal="false"
-      height="200"
-      v-model="removeModal"
-      title="对话框标题"
-      class-name="vertical-center-modal"
-      :loading="loading"
-      :width="500">
+    <Modal close-on-click-modal="false" height="200" v-model="removeModal" title="对话框标题" class-name="vertical-center-modal" :loading="loading" :width="500">
       <modal-header slot="header" :content="removeId"></modal-header>
       <remove v-if="removeModal" :delete-url="deleteUrl" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
 
       <div slot="footer"></div>
     </Modal>
     <!--查看档案管理弹窗-->
-    <Modal
-      width="1000"
-      v-model="showModal"
-      title="查看档案管理弹窗"
-      class-name="vertical-center-modal"
-      :loading="loading">
+    <Modal width="1000" v-model="showModal" title="查看档案管理弹窗" class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="viewId"></modal-header>
       <show v-if="showModal" @cancel="cancel" @show="subCallback" :operaility-data="operailityData"></show>
       <div slot="footer"></div>
@@ -244,6 +140,7 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import api from './api';
   //引入--新建--组件
   import add from "./classSetting_add.vue";
   //引入--修改--组件
@@ -252,68 +149,52 @@
   import show from "./classSetting_view.vue";
 
   //当前组件引入全局的util
-  let Util=null;
-  export default{
+  let Util = null;
+  export default {
     data() {
       return {
         //查询表单
-        deleteUrl:'/service-fee/remove/',
+        deleteUrl: api.delete,
         formValidate: {
           type: '',
         },
 
-        operailityData:'',
+        operailityData: '',
         multipleSelection: [],
         dynamicHt: 100,
-        tableData1: [
-          {
-            "id":8,
-            "teachLevel":"正高",
-            "type":"理论课",
-            "excellent":90,
-            "good":80,
-            "avg":60,
-            "bad":0,
-            "excellentFee":100,
-            "goodFee":80,
-            "avgFee":70,
-            "badFee":60,
-            "index":1,
-          },
-          {
-            "id":8,
-            "teachLevel":"正高",
-            "type":"见习课",
-            "excellent":90,
-            "good":80,
-            "avg":60,
-            "bad":20,
-            "excellentFee":100.125,
-            "goodFee":80,
-            "avgFee":70,
-            "badFee":0,
-            "index":2,
-          }
-        ],
-        loading:false,
-        listTotal:0,
+        tableData: [],
+        loading: false,
+        listTotal: 0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
-        listMessTitle:{
-          paramsData:'listUrl',
-          ajaxSuccess:'updateListData',
-          ajaxParams:{
-            url:'/service-fee/list',
-            params:{
-              type:"",
-              teachLevel:""
+        listMessTitle: {
+          //          paramsData:'listUrl',
+          ajaxSuccess: 'updateListData',
+          ajaxParams: {
+            url: api.list.path,
+            method: api.list.method,
+            params: {
+              type: "",
+              teachLevel: ""
             }
           }
         },
         /*--按钮button--*/
-        addId:{id:'addId',title:'新建'},
-        editId:{id:'editId',title:'修改'},
-        removeId:{id:'removeId',title:'删除'},
-        viewId:{id:'viewId',title:'查看'},
+        addId: {
+          id: 'addId',
+          title: '新建'
+        },
+        editId: {
+          id: 'editId',
+          title: '修改'
+        },
+        removeId: {
+          id: 'removeId',
+          title: '删除'
+        },
+        viewId: {
+          id: 'viewId',
+          title: '查看'
+        },
 
       }
     },
@@ -321,22 +202,25 @@
 
 
       //初始化请求列表数据
-      init(){
+      init() {
         Util = this.$util;
         //ajax请求参数设置
-        this.myPages =  Util.pageInitPrams;
+        this.myPages = Util.pageInitPrams;
 
         this.queryQptions = {
           //url:this.listUrl,
-          params:{curPage: 1,pageSize: Util.pageInitPrams.pageSize}
+          params: {
+            curPage: 1,
+            pageSize: Util.pageInitPrams.pageSize
+          }
         }
 
-        //this.setTableData();
+        this.setTableData();
       },
 
 
       //设置表格及分页的位置
-      setTableDynHeight(){
+      setTableDynHeight() {
         let content = this.$refs.content;
         let parHt = content.parentNode.offsetHeight;
         let myTable = this.$refs.myTable;
@@ -358,14 +242,14 @@
        * 列表数据只能选择一个
        * @param isOnly true  是否只选择一个
        */
-      isSelected(isOnly){
+      isSelected(isOnly) {
         let len = this.multipleSelection.length;
         let flag = true;
-        if(len==0){
+        if (len == 0) {
           this.showMess("请选择数据!");
           flag = false;
         }
-        if(len>1 && isOnly){
+        if (len > 1 && isOnly) {
           this.showMess("只能修改一条数据!")
           flag = false;
         }
@@ -374,15 +258,15 @@
 
 
       //通过get请求列表数据
-      updateListData(responseData){
-        let data =  responseData.data;
-        this.tableData1=[];
+      updateListData(responseData) {
+        let data = responseData.data;
+        this.tableData = [];
         data = this.addIndex(data);
-        this.tableData1 = data;
+        this.tableData = data;
         this.listTotal = responseData.totalCount || 0;
       },
-      setTableData(){
-        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params,this.formValidate);
+      setTableData() {
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params, this.queryQptions.params, this.formValidate);
         this.ajax(this.listMessTitle);
       },
 
@@ -391,32 +275,32 @@
        * 列表查询方法
        * @param string 查询from的id
        * */
-      handleSubmit(name){
+      handleSubmit(name) {
         this.setTableData();
       },
 
 
       /*--点击--添加--按钮--*/
-      add(){
+      add() {
         this.openModel("add");
       },
       /*--点击--修改--按钮--*/
-      edit(index){
-        this.operailityData = this.tableData1[index];
+      edit(index) {
+        this.operailityData = this.tableData[index];
         this.openModel("edit");
       },
       /*--点击--删除--按钮--*/
-      remove(){
-        if(!this.isSelected()) return;
+      remove() {
+        if (!this.isSelected()) return;
         this.operailityData = this.multipleSelection;
-        this.openModel('remove') ;
+        this.openModel('remove');
       },
       /*
        * 点击--查看--按钮
        * @param index string|number  当前行索引
        * */
-      show(index){
-        this.operailityData = this.tableData1[index];
+      show(index) {
+        this.operailityData = this.tableData[index];
         this.openModel("show");
       },
 
@@ -426,8 +310,8 @@
        * 作用:根据不同的参数关闭对应的模态
        * @param targer string example:"add"、"edit"
        * */
-      cancel(targer){
-        this[targer+'Modal'] = false;
+      cancel(targer) {
+        this[targer + 'Modal'] = false;
       },
 
 
@@ -450,12 +334,12 @@
        *    }
        * @param udata boolean 默认false  是否不需要刷新当前表格数据
        * */
-      subCallback(target,title,updata){
+      subCallback(target, title, updata) {
         this.cancel(target);
-        if(title){
+        if (title) {
           this.successMess(title);
         }
-        if(!updata){
+        if (!updata) {
           this.setTableData();
         }
       },
@@ -465,14 +349,14 @@
        * 打开指定的模态窗体
        * @param options string 当前指定的模态:"add"、"edit"
        * */
-      openModel(options){
-        this[options+'Modal'] = true;
+      openModel(options) {
+        this[options + 'Modal'] = true;
       },
     },
-    created(){
+    created() {
       this.init();
     },
-    mounted(){
+    mounted() {
       //页面dom稳定后调用
       this.$nextTick(function () {
         //初始表格高度及分页位置
@@ -482,10 +366,12 @@
         Event.addHandler(window, "resize", this.setTableDynHeight);
       })
     },
-    components:{
+    components: {
       //当前组件引入的子组件
-      add,edit,show
+      add,
+      edit,
+      show
     }
   }
-</script>
 
+</script>

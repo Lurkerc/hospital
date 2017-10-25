@@ -61,6 +61,11 @@ const api = {
     method: 'post'
   },
 
+  // 下载考核视频
+  downloadVideo: { // 下载考核视频
+    path: 'scene/maintain/video/download/', // {id}
+    method: 'get'
+  },
 };
 
 export default api

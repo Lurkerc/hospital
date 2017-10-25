@@ -69,7 +69,7 @@
 
         <el-row>
           <el-col :span="16" :offset="2">
-            <el-form-item label="视频封面:" >
+            <el-form-item label="封面:" >
               <upload-file @setUploadFiles="expenseLogoEvent"></upload-file>
             </el-form-item>
           </el-col>

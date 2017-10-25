@@ -6,12 +6,12 @@
 ----------------------------------->
 <template>
     <div>
-      更改开题审核
+      <proposalApplicationAudit :view="'change'"> </proposalApplicationAudit>
     </div>
 </template>
 <script>
     /*当前组件必要引入*/
-
+    import  proposalApplicationAudit from '../proposalApplicationAudit/proposalApplicationAudit_list.vue'
     //当前组件引入全局的util
     let Util = null;
     export default{
@@ -30,6 +30,8 @@
         },
         mounted(){
         },
-        components: {}
+        components: {
+          proposalApplicationAudit
+        }
     }
 </script>

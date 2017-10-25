@@ -55,7 +55,7 @@
             <el-button size="small" type="warning" @click="borrowThis(scope.$index,scope.row)" v-if="!scope.row.returnTime">归还</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="设备名称" prop="deviceTypeName" align="center"></el-table-column>
+        <el-table-column label="设备名称" prop="deviceTypeName" show-overflow-tooltip></el-table-column>
         <el-table-column label="设备编号" prop="deviceIdentifier" show-overflow-tooltip></el-table-column>
         <el-table-column label="借用人" prop="borrower" show-overflow-tooltip></el-table-column>
         <el-table-column label="用途" prop="purpose" show-overflow-tooltip></el-table-column>

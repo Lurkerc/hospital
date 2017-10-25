@@ -12,6 +12,10 @@ const api = {
     path: thisFile + '/get/_', // {examinationId}
     method: 'get'
   },
+  getConfig:{ // 根据key和生源类型查看单个配置
+    path: '/rotaryConfig/getByKey/',
+    method: 'get'
+  },
 };
 
 export default api

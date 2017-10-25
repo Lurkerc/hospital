@@ -5,69 +5,19 @@
 ----------------------------------->
 <template>
     <div>
-      <el-row>
-        <el-col :span="2">
-          <div class="cal-schoolTit" style="text-align: right;">科室：</div>
-        </el-col>
-        <el-col :span="8">
-          <el-input placeholder="请输入内容" v-model="formValidate.name"></el-input>
-        </el-col>
-        <!--<el-col :span="3">
-          <div class="cal-schoolTit" style="text-align: right;">专科：</div>
-        </el-col>
-        <el-col :span="8">
-          <el-input placeholder="请输入内容" v-model="formValidate.specialty"></el-input>
-        </el-col>-->
-        <el-col :span="2" :push="1">
-          <el-button type="primary" @click="handleSubmit('formValidate')" icon="search"></el-button>
-        </el-col>
-      </el-row>
-      <br />
-      <el-table
-        v-if="tableData1.length>0"
-        ref="multipleTable"
-        align="center"
-        :data="tableData1"
-        :height="500"
-        tooltip-effect="dark"
-        style="width: 100%"
-        @selection-change="handleSelectionChange">
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
-        <el-table-column
-          label="序号"
-          type="index"
-          width="70">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="科室"
-          show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column
-          prop="director"
-          label="科室主任"
-          align="center"
-          width="120"
-          show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column
-          prop="secretary"
-          label="教学秘书"
-          align="center"
-          width="120"
-          show-overflow-tooltip>
-        </el-table-column>
-      </el-table>
-      <br />
-      <el-row>
-        <el-col :span="8" class="textCenter">&nbsp;</el-col>
-        <el-col :span="4" class="textCenter"><el-button type="primary" @click="submitForm('ruleForm')">提交</el-button></el-col>
-        <el-col :span="4" class="textCenter"><el-button  @click="cancel">取消</el-button></el-col>
-        <el-col :span="8" class="textCenter">&nbsp;</el-col>
-      </el-row>
+      <div class="cal-schoolTit">待选科室:<el-input style="width: 200px;" v-model="filterDep" placeholder="请输入内容"></el-input></div>
+      <div class="sltDepWrapper">
+        <ul class="sltDepUl">
+          <div v-for="(item,index) in depTreeData" :key="item.id" class="sltDepBox">
+            <li class="sltDep"><el-checkbox @change="handleCheck(item)" v-model="item.checked">{{item.name}}</el-checkbox></li>
+            <li class="sltSubDep" v-if="typeof item.childList!='undefined'" v-for="(subItem,subIndex) in item.childList"><el-checkbox @change="handleCheck(subItem)" v-model="subItem.checked">{{subItem.name}}</el-checkbox></li>
+          </div>
+        </ul>
+      </div>
+
+      <div style="text-align: center;margin-top: 10px;">
+        <el-button @click="listenSubEvent" type="primary">确定</el-button>
+      </div>
     </div>
 </template>
 <script>
@@ -82,23 +32,25 @@
         data() {
             return {
               //查询表单
-              formValidate: {
-                "name":"",
-                "specialty":""
-              },
 
-              onlyOnce:true,
+              //保存按钮基本信息
+              loadBtn:{title:'确定',callParEvent:'listenSubEvent'},
 
-              tableData1:[],
-              multipleSelection: [],
+              depTreeData:[],
+              saveDepTreeData:{},
 
-              //查询列表数据
-              listMessTitle:{
-                ajaxSuccess:'updateListData',
+              //查询科室
+              filterDep:"",
+
+              initDep:[],
+
+              //获取所有的科室
+              getDepMessTitle:{
+                ajaxSuccess:'setDepData',
                 ajaxParams:{
-                  url: api.searhDepAndSpecialty.path,
+                  url: api.getByDepth.path,
                   params:{
-                    name:'',code:'',director:"",secretary:"",nurse:"",capacity:"",
+                    depth:3
                   }
                 }
               },
@@ -108,72 +60,110 @@
             //初始化请求列表数据
             init(){
               Util = this.$util;
-              this.ajax(this.listMessTitle);
+              this.ajax(this.getDepMessTitle);
             },
 
 
-          /*
-           * 列表查询方法
-           * @param string 查询from的id
-           * */
-          handleSubmit(name){
-            let option = Util._.defaultsDeep({},this.listMessTitle);
-            option.ajaxParams.params = Object.assign(option.ajaxParams.params,this.formValidate);
-            this.ajax(option);
+          //格式化科室目录树
+          initFormateDepTree(data){
+            /*data = [
+             {
+             "expand":true,
+             "name":"内科",
+             "id":1,
+             "leaf":false,
+             "childList":[
+             {
+             "expand":true,
+             "name":"内科A1",
+             "id":3,
+             "leaf":true
+             },
+             {
+             "expand":true,
+             "name":"内科A2",
+             "id":4,
+             "leaf":true
+             }
+             ]
+             },
+             {
+             "expand":true,
+             "name":"外科",
+             "id":2,
+             "leaf":true
+             }
+             ]*/
+            for(var i=0,item;i<this.operailityData.length;i++){
+              item = this.operailityData[i];
+              this.initDep.push(item.depId);
+              this.saveDepTreeData[item.depId] = {depId:item.depId,depName:item.depName};
+            }
+            this.setChecked(data);
+
+            this.depTreeData = data;
           },
 
-
-          //通过get请求列表数据
-          updateListData(responseData){
+          //获取server端所有科室
+          setDepData(responseData){
             let data = responseData.data;
-            for(var i=0,item;i<data.length;i++){
-                item = data[i]
-                if(item.id==-1){
-                    data.splice(i,1);
-                }
+            if(this.valDataType(data,"Array")){
+              //if(typeof data[0].childList!="undefined"){
+              //this.initFormateDepTree(data[0].childList);
+              //}
+              this.initFormateDepTree(data);
             }
-            this.tableData1 = [];
-            this.tableData1= data;
-            let tempArr = [];
-            if(this.operailityData.length>0){
-              let splt = this.operailityData;
-              for(var i=0;i<this.tableData1.length;i++){
-                for(var k=0;k<splt.length;k++){
-                  if(this.tableData1[i]["id"]==splt[k]["depId"]){
-                    tempArr.push(i);
-                    break;
-                  }
-                }
-              }
-              this.multipleSelection = [];
-              for(var i=0;i<tempArr.length;i++){
-                this.multipleSelection.push(this.tableData1[tempArr[i]]);
+          },
+
+          /**
+           * 勾选科室后
+           * @param item {Object}  科室数据
+           * */
+          handleCheck(item){
+            if(item.checked){
+              this.saveDepTreeData[item.id] = {depId:item.id,depName:item.name};
+            }else{
+              if(typeof this.saveDepTreeData[item.id]!="undefined"){
+                delete this.saveDepTreeData[item.id];
               }
             }
           },
 
+          /**
+           * 动态添加科室
+           * @param id {Number}  科室id
+           * @param name {string}  科室名称
+           * */
+          addDep(id,name){
 
-          //提交数据到父组件
-          submitForm(){
-            if(!this.isSelected()) return;
-            let data=[]  //[{id:1,name:"内科"},……}
-            for(var i=0,item;i<this.multipleSelection.length;i++){
-              item = this.multipleSelection[i];
-              data.push({
-               depId:item.id, depName:item.name,
-              });
+          },
+
+
+          setChecked(data){
+            for (var i = 0; i < data.length; i++) {
+              if(this.initDep.indexOf(data[i].id)>-1){
+                data[i]["checked"] = true;
+              }else{
+                data[i]["checked"] = false;
+              }
+              if (this.valDataType(data,"Array")&&data[i].childList!==null) {
+                this.setChecked(data[i].childList);
+              }
             }
+          },
+
+          /*
+           * 点击提交按钮 监听是否提交数据
+           * @param isLoadingFun boolean  form表单验证是否通过
+           * */
+          listenSubEvent(){
+            let obj = Util._.defaultsDeep({},this.saveDepTreeData);
+            let data = [];
+            Util._.forEach(obj,function (n,k) {
+              data.push(n);
+            })
             this.$emit("filterAddDepData",data);
             this.cancel();
-          },
-
-
-          /*
-           * checkbox 选择后触发事件
-           * @param val Array 存在所有的选择每一个行数据
-           */
-          handleSelectionChange(val) {
-            this.multipleSelection = val;
           },
 
 
@@ -213,16 +203,25 @@
 
       },
       watch:{
-        multipleSelection(val){
-          if(!this.onlyOnce) return;
-          this.$nextTick(function () {
-            if(val.length > 0){
-                let tempArr = this.multipleSelection;
-                for (var i = 0; i < tempArr.length; i++) {
-                  this.$refs.multipleTable.toggleRowSelection(tempArr[i], true);
-                }
-            }
+        filterDep(val){
+          //todo
+          //if(!val){
+          //this.depTreeData = this.saveDepTreeData;
+          //}else{
+          this.depTreeData.sort(function(a, b) {
+            return a.name.indexOf(val) < b.name.indexOf(val);
           })
+          for(var i=0,item;i<this.depTreeData.length;i++){
+            item = this.depTreeData[i]["childList"];
+            if(typeof item!="undefined"){
+              item.sort(function(a, b) {
+                return a.name.indexOf(val) < b.name.indexOf(val);
+              })
+            }
+          }
+          //}
+
+          //console.log(val);
         }
       },
         components: {}

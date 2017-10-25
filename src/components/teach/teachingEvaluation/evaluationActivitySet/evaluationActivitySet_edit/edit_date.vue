@@ -3,78 +3,90 @@
 
 <template>
   <div ref="content">
-    <el-form  ref="formValidate" inline label-width="100px" class="demo-ruleForm">
+    <el-form   inline label-width="100px" class="demo-ruleForm">
       <el-row >
         <el-col :span="22"  :offset="1">
           <el-form-item label="评价时间：" label-width="200px">
             <el-radio-group  v-model="formValidate.dateType">
-             <div v-if="relationship=='NO'" style="height:50px;line-height: 40px">
-               <!--1-->
-               <el-radio label="1">出科前
-               <el-form-item >
-                <el-input v-model="date.startDay" style="width: 100px"></el-input>
-               </el-form-item>
-               天——后
-               <el-form-item >
-                 <el-input v-model="date.endDay" style="width: 100px"></el-input>
-               </el-form-item>天 评价一次</el-radio></div>
-
+              <el-form  ref="formValidate1" :model="date"  :rules="evaluationActivitySetDate" inline label-width="100px" class="demo-ruleForm">
+                <div v-if="relationship=='LOOP'" style="height:50px;line-height: 40px">
+                  <!--1-->
+                  <el-radio label="1">出科前
+                    <el-form-item prop="startDay">
+                      <el-input v-model="date.startDay" style="width: 100px"></el-input>
+                    </el-form-item>
+                    天——后
+                    <el-form-item prop="endDay">
+                      <el-input v-model="date.endDay" style="width: 100px"></el-input>
+                    </el-form-item>天 评价一次</el-radio>
+                </div>
+              </el-form >
               <!--2-->
-             <div style="height:50px;line-height: 40px"><el-radio label="2">
-               每周
-               <el-form-item >
-                 <el-input v-model="date.startWeek" style="width: 100px"></el-input>
-               </el-form-item>
-               ——
-               <el-form-item >
-                <el-input v-model="date.endWeek" style="width: 100px"></el-input>
-               </el-form-item>
-               评价一次
-             </el-radio></div>
+              <el-form  ref="formValidate2" :model="date"  :rules="evaluationActivitySetDate" inline label-width="100px" class="demo-ruleForm">
+                <div style="height:50px;line-height: 40px"><el-radio label="2">
+                  每周
+                  <el-form-item prop="startWeek">
+                    <el-input v-model="date.startWeek" style="width: 100px"></el-input>
+                  </el-form-item>
+                  ——
+                  <el-form-item prop="endWeek">
+                    <el-input v-model="date.endWeek" style="width: 100px"></el-input>
+                  </el-form-item>
+                  评价一次
+                </el-radio>
+                </div>
+              </el-form>
               <!--3-->
-             <div style="height:50px;line-height: 40px"><el-radio label="3">
-               每月
-               <el-form-item >
-                 <el-input v-model="date.startMonth" style="width: 100px"></el-input>
-               </el-form-item>
-               ——
-               <el-form-item >
-                <el-input v-model="date.endMonth" style="width: 100px"></el-input>
-               </el-form-item>
-               评价一次
-             </el-radio></div>
+              <el-form  ref="formValidate3" :model="date"  :rules="evaluationActivitySetDate" inline label-width="100px" class="demo-ruleForm">
+                <div style="height:50px;line-height: 40px"><el-radio label="3">
+                  每月
+                  <el-form-item prop="startMonth">
+                    <el-input v-model="date.startMonth" style="width: 100px"></el-input>
+                  </el-form-item>
+                  ——
+                  <el-form-item prop="endMonth">
+                    <el-input v-model="date.endMonth" style="width: 100px"></el-input>
+                  </el-form-item>
+                  评价一次
+                </el-radio>
+                </div>
+              </el-form>
               <!--4-->
-              <div style="height:50px;line-height: 35px"><el-radio label="4">
-                <el-form-item label="特定时间段:" >
-                  开始时间
-                  <el-date-picker
-                    v-model="formValidate.startDate"
-                    type="date"
-                    :editable="false"
-                    placeholder="选择日期"
-                    :picker-options="pickerOptions0"
-                    @change="handleStartTime"
-                  >
-                  </el-date-picker>
+              <el-form  ref="formValidate4" :model="formValidate"  :rules="evaluationActivitySetDate" inline label-width="100px" class="demo-ruleForm">
+                <div style="height:50px;line-height: 35px"><el-radio label="4">
+                  <el-form-item label-width="90px" prop="startDate" label="特定时间段:">
+                    开始时间
+                    <el-date-picker
+                      v-model="formValidate.startDate"
+                      type="date"
+                      :editable="false"
+                      placeholder="选择日期"
+                      :picker-options="pickerOptions0"
+                      @change="handleStartTime"
+                    >
+                    </el-date-picker>
+                  </el-form-item>
                   结束时间
-                  <el-date-picker
-                    v-model="formValidate.endDate"
-                    align="right"
-                    type="date"
-                    :editable="false"
-                    placeholder="选择日期"
-                    :picker-options="pickerOptions1"
-                    @change="handleEndTime">
-                  </el-date-picker>
-                </el-form-item></el-radio></div>
-
-              <!--5-->
-              <div style="height:50px;line-height: 40px"><el-radio label="5">每天评价一次</el-radio></div>
-              <div style="height:50px;line-height: 40px"><el-radio label="6">每季度评价一次</el-radio></div>
-              <!--6-->
-              <div style="height:50px;line-height: 40px"><el-radio label="7">每半年评价一次</el-radio></div>
-              <!--7-->
-              <div style="height:50px;line-height: 40px"><el-radio label="8">每一年评价一次</el-radio></div>
+                  <el-form-item label-width="0" prop="endDate" >
+                    <el-date-picker
+                      v-model="formValidate.endDate"
+                      align="right"
+                      type="date"
+                      :editable="false"
+                      placeholder="选择日期"
+                      :picker-options="pickerOptions1"
+                      @change="handleEndTime">
+                    </el-date-picker>
+                  </el-form-item></el-radio>
+                </div>
+              </el-form>
+              <!--&lt;!&ndash;5&ndash;&gt;-->
+              <!--<div style="height:50px;line-height: 40px"><el-radio label="5">每天评价一次</el-radio></div>-->
+              <!--<div style="height:50px;line-height: 40px"><el-radio label="6">每季度评价一次</el-radio></div>-->
+              <!--&lt;!&ndash;6&ndash;&gt;-->
+              <!--<div style="height:50px;line-height: 40px"><el-radio label="7">每半年评价一次</el-radio></div>-->
+              <!--&lt;!&ndash;7&ndash;&gt;-->
+              <!--<div style="height:50px;line-height: 40px"><el-radio label="8">每一年评价一次</el-radio></div>-->
               <!--8-->
 
             </el-radio-group>
@@ -84,9 +96,9 @@
       </el-row>
       </br>
       <el-row >
-        <el-col :span="20"  :offset="3">
-          <el-button  @click="relation">确认并继续</el-button>
+        <el-col :span="10"  :offset="9">
           <el-button  @click="$emit('last') ">上一步</el-button>
+          <el-button  @click="relation">确认并继续</el-button>
         </el-col>
 
       </el-row>
@@ -116,12 +128,14 @@
 <script>
   /*当前组件必要引入*/
   /*---引入--新建-- */
+  import {evaluationActivitySetDate} from '../../../rules'
 
   let Util=null;
   export default {
     props:['url','operailityData'],
     data() {
       return {
+        evaluationActivitySetDate,
         treeData: [],
         defaultProps: {
           children: 'children',
@@ -173,7 +187,6 @@
     },
     created(){
         //根据不同的时间类型来填充时间
-      console.log(this.operailityData);
       switch (this.operailityData.dateType){
         case 1:
           this.date.startDay = this.operailityData.startDay ;
@@ -188,7 +201,6 @@
           this.date.endMonth = this.operailityData.endDay ;
           break;
         case 4:
-            console.log(this.operailityData.startDate,this.operailityData.endDate);
           this.formValidate.startDate  = this.operailityData.startDate;
           this.formValidate.endDate = this.operailityData.endDate;
           break;
@@ -365,27 +377,60 @@
       relation(){
 //       更新基础数据
 //       继续下一步
-        switch (this.formValidate.dateType){
-          case '1':
+        let  index =  this.formValidate.dateType;
+        let isSubmit = this.submitForm(`formValidate${index}`);
+
+        if(isSubmit) {
+
+
+          switch (this.formValidate.dateType) {
+            case '1':
               this.formValidate.startDay = this.date.startDay;
               this.formValidate.endDay = this.date.endDay;
               break;
-          case '2':
+            case '2':
+              if(this.date.startWeek>this.date.endWeek){
+                this.errorMess('每周开始时间不能大于结束时间')
+                return;
+              }
               this.formValidate.startDay = this.date.startWeek;
               this.formValidate.endDay = this.date.endWeek;
               break;
-          case '3':
+            case '3':
+              if(this.date.startWeek>this.date.endWeek){
+                this.errorMess('每月开始时间不能大于结束时间');
+                return;
+              }
               this.formValidate.startDay = this.date.startMonth;
               this.formValidate.endDay = this.date.endMonth;
               break;
-          case '4':
+            case '4':
               this.formValidate.startDate = this.yearMonthData(this.formValidate.startDate);
               this.formValidate.endDate = this.yearMonthData(this.formValidate.endDate);
               break;
+          }
+          this.$emit('next',this.formValidate);
         }
-        this.$emit('next',this.formValidate);
 
-      }
+      },
+
+
+      /*
+       * 点击提交按钮 监听是否验证通过
+       * @param formName string  form表单v-model数据对象名称
+       * @return flag boolean   form表单验证是否通过
+       * */
+      submitForm(formName){
+        let flag = true;
+        this.$refs[formName].validate((valid) => {
+          if (!valid) {
+            flag = false;
+          }
+        });
+
+        return flag;
+      },
+
     },
     mounted(){
     },

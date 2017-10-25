@@ -7,9 +7,10 @@
     <!--右侧查询-->
 
     <div class="add-remove">
-      <el-button v-show="flag" class="but-col"  @click="trigger(false)"  type="primary">科室信息</el-button>
-      <el-button v-show="flag" class="but-col" @click="trigger(true)" type="primary">下级科室列表</el-button>
+      <el-button v-show="flag" class="but-col" @click="trigger(true)" :type="flag1?'primary':''">下级科室列表</el-button>
+      <el-button v-show="flag" class="but-col"  @click="trigger(false)"  :type="flag1?'':'primary'">科室信息</el-button>
     </div>
+
     <div class="add-remove">
       <fieldset   class="layui-elem-field layui-field-title" style="margin-top: 30px;">
         <legend >{{flag1?'下级科室列表':'科室信息'}}</legend>
@@ -21,12 +22,15 @@
         <el-col :span="10" :offset="2">
           <div v-show="flag1" class="listUpArea-searchWrapper">
             <!--右侧查询-->
-            <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px" >
+            <el-form v-for="item in 1" :key="item" ref="formValidate" :rules="rules"  :model="formValidate" class="form-inline lose-margin" label-width="60px" >
               <div class="listUpArea-searchLeft">
-                <el-input placeholder="请输入内容" v-model="formValidate.name">
-                  <div slot="prepend">科室名称</div>
-                  <el-button @click="searchEvent" :btnData="searchData" slot="append" icon="search"></el-button>
-                </el-input>
+                <input class="hidden">
+                <el-form-item  prop="name">
+                  <el-input placeholder="请输入内容" v-model="formValidate.name">
+                    <div slot="prepend">科室名称</div>
+                    <el-button @click="searchEvent" :btnData="searchData" slot="append" icon="search"></el-button>
+                  </el-input>
+                </el-form-item>
               </div>
               <div class="listUpArea-moreSearch">
                 <el-button @click="showMoreSearch" type="text">高级查询</el-button>
@@ -37,7 +41,32 @@
       </el-row >
     </div>
     <div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox">
-
+      <el-form v-for="item in 1" :key="item" :inline="true" :model="formValidate" :rules="rules" ref="formValidate" style="margin-top:10px;" label-width="74px">
+        <el-row>
+          <el-form-item label="编号:" prop="code">
+            <el-input v-model="formValidate.code"></el-input>
+          </el-form-item>
+          <el-form-item label="科室主任:" prop="director">
+            <el-input v-model="formValidate.director"></el-input>
+          </el-form-item>
+          <el-form-item label="教学秘书:" prop="secretary">
+            <el-input v-model="formValidate.secretary"></el-input>
+          </el-form-item>
+          <el-form-item label="护士长:" prop="nurse">
+            <el-input v-model="formValidate.nurse"></el-input>
+          </el-form-item>
+          <el-form-item label="承载量:" prop="capacity">
+            <el-input v-model="formValidate.capacity"></el-input>
+          </el-form-item>
+          <!--<el-form-item label="考核状态:">
+            <el-select v-model="searchObj.status" placeholder="请选择">
+              <el-option v-for="item in examineStatuOption" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>-->
+          <el-button type="info" @click="searchEvent">查询</el-button>
+        </el-row>
+      </el-form>
     </div>
     <div v-show="!flag1">
       <el-row  class="lose-margin2">
@@ -230,13 +259,9 @@
   </div>
 </layout-tree>
 </template>
-<style>
-  .el-select .el-input {
-    width: 110px;
-  }
-</style>
 <script >
   /*当前组件必要引入*/
+  import {nosocomialList as rules } from '../../rules'
   //引入--修改--组件
   import edit from "./nosocomial_edit.vue";
   //引入--查看--组件
@@ -251,6 +276,7 @@
     props:["isInit"],
     data() {
       return {
+        rules,
          //是否显示科室信息标签
         flag:false,
         flag1:true,
@@ -273,6 +299,11 @@
         deleteUrl:'',
         formValidate: {
           name: '',
+          code:'',
+          director:'',
+          secretary:'',
+          nurse:'',
+          capacity:''
         },
 
         //当前科室详情
@@ -315,6 +346,9 @@
         startUsingId:{id:"forbiddenId",startUsingId:"启用"},
         //tree
         currDeptId:'',
+
+        path:"/",   //深度路径
+        depth:0,  //深度级别
 
         shortNoteModal:false,
         toChannelModal:false,
@@ -363,7 +397,35 @@
         //this.setTableData();
       },
 
+      search(){
+        this.setTableData();
+      },
 
+      //搜索监听回调
+      searchEvent(isLoading){
+        //        isLoading(true);
+        let isSubmit = this.handleSubmit('formValidate');
+        if(isSubmit){
+          this.setTableData()
+        }
+      },
+
+
+      /*
+       * 列表查询方法
+       * @param string 查询from的id
+       * */
+      handleSubmit(name){
+        let flag =true
+        for(let i=0 ;i< this.$refs[name].length;i++){
+          this.$refs[name][i].validate((valid) => {
+            if (!valid) {
+              flag =false;
+            }
+          })
+        }
+        return flag
+      },
       //设置表格及分页的位置
       setTableDynHeight(n){
         let content = this.$refs.content;
@@ -395,12 +457,10 @@
         this.multipleSelection = val;
       },
 
-      //下级科室列表查询
-      searchEvent(){
-        this.setTableData()
-      },
-
-
+//      //下级科室列表查询
+//      searchEvent(){
+//        this.setTableData()
+//      },
       /*
        * 列表数据只能选择一个
        * @param isOnly true  是否只选择一个
@@ -464,19 +524,19 @@
       },
 
 
-      /*
-       * 列表查询方法
-       * @param string 查询from的id
-       * */
-      handleSubmit(name){
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            this.$Message.success('提交成功!');
-          } else {
-            this.$Message.error('表单验证失败!');
-          }
-        })
-      },
+//      /*
+//       * 列表查询方法
+//       * @param string 查询from的id
+//       * */
+//      handleSubmit(name){
+//        this.$refs[name].validate((valid) => {
+//          if (valid) {
+//            this.$Message.success('提交成功!');
+//          } else {
+//            this.$Message.error('表单验证失败!');
+//          }
+//        })
+//      },
 
 
       /*--点击--添加--按钮--*/
@@ -485,7 +545,13 @@
             this.errorMess("请选择左侧目录节点!");
             return;
         }
-        this.operailityData = {parentName:this.depDetails.name,parentId:this.currDeptId};
+        let depth = parseInt(this.depth)+1;  //深度级别
+        let str = "";
+        if(this.path.length!=1){
+          str = "/"
+        }
+        let path = this.path+str+this.currDeptId; //深度路径
+        this.operailityData = {parentName:this.depDetails.name,parentId:this.currDeptId,path:path,depth:depth};
         this.openModel('add') ;
       },
       /*--点击--删除--按钮--*/
@@ -645,17 +711,26 @@
        *
        * */
       treeClick(obj,node,self){
-
         /*if(node.isLeaf){  //当前是否为叶子节点
          alert("====")
          }else {
 
          }*/
-        this.trigger(false);
+        this.path = obj.path;   //深度路径
+        this.depth = obj.depth;  //深度级别
+        this.trigger(true);
         this.flag = true;
         this.setTreeDepId(obj.id,obj);
         this.showTreeList();
         this.currDepDetails();
+        //页面dom稳定后调用
+        this.$nextTick(function () {
+          //初始表格高度及分页位置
+          this.setTableDynHeight();
+          //为窗体绑定改变大小事件
+          let Event = Util.events;
+          Event.addHandler(window, "resize", this.setTableDynHeight);
+        })
       },
 
 

@@ -23,7 +23,9 @@
         </el-table-column>
         <el-table-column prop="modelNum" label="设备型号" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="ip" label="设备IP" align="center" show-overflow-tooltip>
+        <el-table-column prop="ip" label="设备IP" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column prop="terminalId" label="终端ID" show-overflow-tooltip>
         </el-table-column>
         <el-table-column prop="locationType" label="设备所在位置" show-overflow-tooltip>
           <template scope="scope">{{ scope.row.locationType | typeText }}</template>

@@ -5,8 +5,8 @@
 
         <el-col :span="8" :offset="2">
           <el-form-item label="耗材名称：" prop="consumablesId" required>
-            <el-select v-model="formValidate.consumablesId" filterable placeholder="请选择">
-              <el-option v-for="item in deviceOptions" :key="item.id" :label="item.consumablesName" :value="item.id">
+            <el-select v-model="formValidate.consumablesId" filterable placeholder="请选择" @change="selectConsumable">
+              <el-option v-for="(item,index) in deviceOptions" :key="item.id" :label="item.consumablesName" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -24,7 +24,7 @@
         </el-col>
 
         <el-col :span="8" :offset="2">
-          <el-form-item label="盘点人：" required>
+          <el-form-item label="记录人：" required>
             <el-input v-model="formValidate.inventoryMan" :disabled="true"></el-input>
           </el-form-item>
         </el-col>
@@ -65,7 +65,14 @@
   //当前组件引入全局的util
   let Util = null;
   export default {
-    props: ['consumablesId'],
+    props: {
+      operailityData:{
+        type:Object,
+        default:()=>({
+          id:"",
+        })
+      }
+    },
     data() {
       return {
         rules,
@@ -76,7 +83,7 @@
         },
         countDate: 0,
         // 耗材名称
-        deviceOptions: [],
+        deviceOptions: {},
         //form表单bind数据
         formValidate: {
           consumablesId: '', // 设备id
@@ -85,7 +92,7 @@
           differenceNum: 0, // 相差数量
           inventoryMan: '', // 盘点人
           inventoryTime: '', // 盘点时间
-          remark: '', // 备注        
+          remark: '', // 备注
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle: {
@@ -104,6 +111,7 @@
     created() {
       //给当前组件注入全局util
       Util = this.$util;
+      this.formValidate.inventoryTime = new Date();
       this.init()
     },
     methods: {
@@ -165,9 +173,15 @@
       },
       // 选择设备数据
       getSelectDataSuccess(res) {
-        this.deviceOptions = res.data;
-        this.formValidate.consumablesId = this.consumablesId;
+        this.deviceOptions = {};
+        (res.data || []).map(item=>this.deviceOptions[item.id] = item);
+        this.formValidate.consumablesId = this.operailityData.id;
         this.formValidate.inventoryMan = this.$store.getters['getUserInfo'].name;
+      },
+      // 选择设备
+      selectConsumable(id){
+        // 根据库存设置预期数量
+        this.formValidate.expectNum = this.deviceOptions[id].consumablesNum || '';
       },
       /*
        * 组件初始化入口

@@ -3,11 +3,17 @@ import baseRules from '../../formRules/base'; // 公共规则
 
 // 事务管理
 let affairs = {
-  registerDate: baseRules.isDate, // 开始时间 时间类型
-  timeInterval: baseRules.required, // 结束时间 必填
-  affairType: baseRules.selectText, // 类型 必选
-  classhour: baseRules.numberMust, // 课时 必须为数字
-  peopleNum: baseRules.numberMust, // 人数 必须为数字
+  // registerDate: baseRules.isDate, // 开始时间 时间类型
+  // timeInterval: baseRules.required, // 结束时间 必填
+  // affairType: baseRules.selectText, // 类型 必选
+  // classhour: baseRules.numberMust, // 课时 必须为数字
+  // peopleNum: baseRules.numberMust, // 人数 必须为数字
+  affairName:[baseRules.requiredNoEvent,baseRules.inputLen(1,50)],
+  startTime:[baseRules.requiredNoEvent],
+  endTime:[baseRules.requiredNoEvent],
+  receptionObject:[baseRules.requiredNoEvent,baseRules.inputLen(1,50)],
+  affairType:baseRules.selectText,
+  peopleNum:[baseRules.requiredNoEvent,baseRules.greaterThanZero,baseRules.inputLen(1,4),],
 };
 
 /**
@@ -37,6 +43,7 @@ let audio = {
   brand: baseRules.selectText,
   modelNum: baseRules.required,
   ip: [baseRules.required, baseRules.ip],
+  // terminalId:[baseRules.requiredNoEvent,baseRules.numbers,baseRules.inputLen(1,10)]
 };
 
 // 声像设备 - 网络音响 - 任务
@@ -93,6 +100,8 @@ let roomManage = {
   roomNum: baseRules.required, // 房间号 - 必填
   roomName: baseRules.required, // 房间名称 - 必填
   floor: baseRules.numberMust, // 所在楼层 - 必须为数字
+  roomType:baseRules.selectText, // 类型
+  capacity:baseRules.numberMust, // 所在楼层 - 必须为数字
 };
 
 /**

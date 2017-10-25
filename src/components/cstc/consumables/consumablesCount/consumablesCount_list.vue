@@ -57,7 +57,7 @@
     <!-- 模态框 增加（add） -->
     <Modal :mask-closable="false" v-model="addCountModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="1100">
       <modal-header slot="header" :content="button.addCountId"></modal-header>
-      <add v-if="addCountModal" @cancel="cancel" @addCount="subCallback" :operaility-data="operailityData"></add>
+      <add v-if="addCountModal" @cancel="cancel" @addCount="subCallback"></add>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 编辑（edit） -->

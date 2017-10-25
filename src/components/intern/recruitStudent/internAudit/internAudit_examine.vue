@@ -2,7 +2,8 @@
   <!-- 审核 -->
   <div>
     <!-- 基本信息 -->
-    <basic :data-id="operailityData.id"></basic>
+    <!--<basic :data-id="operailityData.id"></basic>-->
+    <show :operailityData="operailityData"></show>
     <!-- 身份证照片 -->
     <el-row class="internAuditExaminePhoto">
       <el-col :span="11" :offset="1">
@@ -47,27 +48,40 @@
                 </el-radio-group>
               </el-form-item>
             </el-col>
-            <!-- <template v-if="formValidate.spState === 'PASS'">
-              <el-col :span="12">
-                <el-form-item label="收费标准：" prop="chargeStandard">
-                  <el-input v-model="formValidate.chargeStandard" :maxlength="5"></el-input>
-                </el-form-item>
-              </el-col>
-              <date-group :dateGroup="{text:'',startDate:formValidate.sxBeginTime,endDate:formValidate.sxEndTime}">
-                <el-col :span="12">
-                  <el-form-item label="实习开始时间：" prop="sxBeginTime">
-                    <el-date-picker v-model="formValidate.sxBeginTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"
-                      @change="handleStartTime"></el-date-picker>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="实习结束时间：" prop="sxEndTime">
-                    <el-date-picker v-model="formValidate.sxEndTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"
-                      @change="handleEndTime"></el-date-picker>
-                  </el-form-item>
-                </el-col>
-              </date-group>
-            </template> -->
+            <!--<template v-if="formValidate.spState === 'PASS'">-->
+              <!--<el-col :span="12">-->
+                <!--<el-form-item label="收费标准：" prop="chargeStandard">-->
+                  <!--<el-input v-model="formValidate.chargeStandard" :maxlength="5"></el-input>-->
+                <!--</el-form-item>-->
+              <!--</el-col>-->
+
+              <!--<el-col :span="12">-->
+                <!--<el-form-item label="住宿费：" prop="zsCost">-->
+                  <!--<el-input v-model="formValidate.zsCost" :maxlength="5"></el-input>-->
+                <!--</el-form-item>-->
+              <!--</el-col>-->
+
+              <!--<el-col :span="12">-->
+                <!--<el-form-item label="押金：" prop="deposit">-->
+                  <!--<el-input v-model="formValidate.deposit" :maxlength="5"></el-input>-->
+                <!--</el-form-item>-->
+              <!--</el-col>-->
+
+              <!--<date-group :dateGroup="{text:'',startDate:formValidate.sxBeginTime,endDate:formValidate.sxEndTime}">-->
+                <!--<el-col :span="12">-->
+                  <!--<el-form-item label="实习开始时间：" prop="sxBeginTime">-->
+                    <!--<el-date-picker v-model="formValidate.sxBeginTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0"-->
+                      <!--@change="handleStartTime"></el-date-picker>-->
+                  <!--</el-form-item>-->
+                <!--</el-col>-->
+                <!--<el-col :span="12">-->
+                  <!--<el-form-item label="实习结束时间：" prop="sxEndTime">-->
+                    <!--<el-date-picker v-model="formValidate.sxEndTime" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1"-->
+                      <!--@change="handleEndTime"></el-date-picker>-->
+                  <!--</el-form-item>-->
+                <!--</el-col>-->
+              <!--</date-group>-->
+            <!--</template>-->
             <el-form-item label="审核意见：" style="margin-bottom:0;clear:both;">
               <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}" :maxlength="200" placeholder="请输入审核意见" v-model="formValidate.reviewMess"></el-input>
             </el-form-item>
@@ -99,7 +113,8 @@
   import {
     internAudit as rules
   } from '../../rules';
-  import basic from '../../../teach/archivesManagement/archivesManagement/archivesManagement_view/archivesManagement_view_basic';
+//  import basic from '../../../common/archivesManagement/archivesManagement_basic/s_sxs/view.vue';
+  import show from '../usersManagement/usersManagement_view.vue';
   import selectRoom from './internAudit_selectRoom';
   export default {
     props: ['operailityData'],
@@ -168,7 +183,7 @@
         Util = this.$util;
         this.getPhoto();
         this.getCost();
-        // this.getChargeStandard();
+         this.getChargeStandard();
       },
       /*
        * 点击提交按钮 监听是否提交数据
@@ -180,9 +195,9 @@
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true);
         this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
-        // let data = this.addMessTitle.ajaxParams.data;
-        // data.sxBeginTime = this.conductDate(data.sxBeginTime, 'yyyy-MM-dd') || '';
-        // data.sxEndTime = this.conductDate(data.sxEndTime, 'yyyy-MM-dd') || '';
+        let data = this.addMessTitle.ajaxParams.data;
+        data.sxBeginTime = this.conductDate(data.sxBeginTime, 'yyyy-MM-dd') || '';
+        data.sxEndTime = this.conductDate(data.sxEndTime, 'yyyy-MM-dd') || '';
         this.ajax(this.addMessTitle, isLoadingFun)
         // console.log(this.addMessTitle)
         // }
@@ -266,7 +281,7 @@
       // 获取相关费用
       getCost() {
         let cost = {
-          "rotary_deposit": "deposit", // 押金 
+          "rotary_deposit": "deposit", // 押金
           "rotary_accommodation": "zsCost", // 住宿费
           "rotary_charging_standard": "chargeStandard" // 收费标准
         };
@@ -315,7 +330,8 @@
       },
     },
     components: {
-      basic,
+//      basic,
+      show,
       selectRoom
     },
     created() {

@@ -1,21 +1,25 @@
 <!--系统管理-->
 <!--部门人员管理-->
 <template>
-  <layout-tree class="defined-t">
+  <layout-tree>
     <left-tree slot="left" @setCurrSltNodeId="setTreeDepId" @tree-click="treeClick" @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults"
       :fromWhereTreeType="fromWhereTree"></left-tree>
-    <!-- 住院医人员管理 -->
-    <zyy-content v-if="viewTypes === 'ZYY'" slot="right" :deptId="deptId"></zyy-content>
+    <template v-if="['ZYY','SXS','YJS','JXS','BKS'].indexOf(viewTypes) > -1">
+      <!-- 住院医人员管理 -->
+      <zyy-content v-if="viewTypes === 'ZYY'" slot="right" :deptId="deptId"></zyy-content>
+      <!-- 实习生人员管理 -->
+      <sxs-content v-if="viewTypes === 'SXS'" slot="right" :deptId="deptId"></sxs-content>
+      <!-- 研究生人员管理 -->
+      <yjs-content v-if="viewTypes === 'YJS'" slot="right" :deptId="deptId"></yjs-content>
+      <!-- 进修生人员管理 -->
+      <jxs-content v-if="viewTypes === 'JXS'" slot="right" :deptId="deptId"></jxs-content>
+      <!-- 本科生人员管理 -->
+      <bks-content v-if="viewTypes === 'BKS'" slot="right" :deptId="deptId"></bks-content>
+    </template>
     <!-- 默认部门人员管理 -->
     <dep-content v-else slot="right" :deptId="deptId"></dep-content>
   </layout-tree>
 </template>
-<style>
-  .defined-t .el-select .el-input {
-    width: 158px;
-  }
-
-</style>
 <script>
   /*当前组件必要引入*/
   import layoutTree from "../../../common/layoutTree.vue";
@@ -24,6 +28,14 @@
   import depContent from "./departmentStaff_content";
   // 住院医部门人员
   import zyyContent from "../../../zyy/rdyEnrollEnroll/rdyPersonnelManagement/rdyPersonnelManagement_content";
+  // 实习生
+  import  sxsContent from "../../../intern/recruitStudent/usersManagement/usersManagement_content.vue";
+  // 研究生
+  import yjsContent from '../../../postgraduate/ptEnrollEnroll/yjsPersonnelManagement/yjsPersonnelManagement_content.vue';
+  // 进修生
+  import jxsContent from '../../../educationManagement/EnrollEnroll/jxsPersonnelManagement/jxsPersonnelManagement_content.vue';
+  // 本科生
+  import bksContent from '../../../educationManagement/EnrollEnroll/bksPersonnelManagement/bksPersonnelManagement_content.vue';
 
   //当前组件引入全局的util
   let Util = null;
@@ -67,6 +79,7 @@
       treeClick(obj, node, self) {
         // 记录视图
         this.viewTypes = obj.types;
+//        console.log(obj.types)
         this.setTreeDepId(obj.id);
       },
 
@@ -107,6 +120,10 @@
       //当前组件引入的子组件
       depContent,
       zyyContent,
+      sxsContent,
+      yjsContent,
+      jxsContent,
+      bksContent,
       layoutTree,
       leftTree
     }

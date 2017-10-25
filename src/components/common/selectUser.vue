@@ -46,6 +46,7 @@
       return {
         //tree默认项设置
         treeDefaults: {
+
           selectUser: true,
           getDataUrl: '',
           isShowMenus: false,
@@ -84,6 +85,9 @@
 
         if (typeof this.initUser != "undefined") {
           this.rightSltedData = this.initUser;
+        }
+        if(this.url){
+         this.treeDefaults.getTreeUrl=this.url;
         }
         this.getMockData();
       },
@@ -146,11 +150,16 @@
             }*/
             for (var i = 0, item; i < rawData.length; i++) {
               item = rawData[i];
+              let codeNumber = "";  //人员编号
+              if(item["codeNumber"]!==null||typeof item["codeNumber"]!="undefined"){
+                codeNumber = item["codeNumber"];
+              }
               tempObj[item["id"]] = {
                 key: item.id,
                 label: item.name,
                 specialty: item.specialty,
-                description: '人员id---' + item.id + '的描述信息',
+                codeNumber:codeNumber,
+                description: '编号---' + codeNumber,
                 disabled: false
               }
             }
@@ -231,9 +240,11 @@
                   item.specialty = "";
                 }
                 tempArr.push({
+                  isParent:true,
                   key: item.key,
                     label: '<i dep="dep" class="ivu-icon ivu-icon-android-folder ambuf-tree-icon" style="margin-left:0;font-size:16px;"></i>' + item.label,
                   specialty: item.specialty,
+                  codeNumber:item.codeNumber,
                   description: '内容---' + item.key + '的描述信息',
                   disabled: false
                 })
@@ -249,10 +260,16 @@
             })*/
             for (var i = 0, item; i < rawData.length; i++) {
               item = rawData[i];
+              let codeNumber = "";  //人员编号
+              if(item["codeNumber"]!==null||typeof item["codeNumber"]!="undefined"){
+                codeNumber = item["codeNumber"];
+              }
               tempArr.push({
+                isParent:false,
                 key: item.id,
                 label: item.name,
                 specialty: item.specialty,
+                codeNumber:item.codeNumber,
                 description: '人员id---' + item.id + '的描述信息',
                 disabled: false
               })
@@ -377,9 +394,20 @@
        * @param moveKeys    string  移动过程中的值
        */
       handleChange3(targetKeys, direction, moveKeys) {
-        if (this.onlyOne && targetKeys.length > 1) { //如果选择一个
-          this.showMess('只能选择一个');
-          return;
+        if (this.onlyOne ) { //如果选择一个
+          if( targetKeys.length > 1){
+            this.showMess('只能选择一个人员');
+            return;
+          }else {
+            let temp = {}
+            for (let i = 0, item; i < this.leftListData.length; i++) {
+              item = this.leftListData[i];
+              if(item["key"]==targetKeys[0]&&item.isParent){
+                this.showMess('只能选择一个人员');
+                return;
+              }
+          }
+          }
         }
 
         this.rightTargetKeys = targetKeys;
@@ -411,7 +439,10 @@
        * todo  描述信息暂时没有,用到selectUser的地方可以先把描述信息传递过来,这里不做展示
        * */
       render3(item) {
-        return item.label + ' - id(' + item.key + ')' //item.description;
+        if(typeof item.codeNumber=="undefined"||item.codeNumber===null||item.codeNumber==""){
+          item.codeNumber = "无"
+        }
+        return item.label + ' - 编号(' + item.codeNumber + ')' //item.description;
       },
 
     }

@@ -37,10 +37,10 @@
             </el-input>
           </el-col>
           <el-col :span="8" :offset="2">
-            <el-button v-popover:popover>记录</el-button>
-            <el-button>收藏</el-button>
+            <!--<el-button v-popover:popover>记录</el-button>-->
+            <!--<el-button>收藏</el-button>-->
           </el-col>
-          <el-col :span="4">
+          <el-col :span="4" :offset="1">
           <el-button type="primary" icon="arrow-left" @click="goBack">返回</el-button>
           </el-col>
         </el-row>
@@ -49,7 +49,7 @@
     <!--<showVideo :videoType="'mp4'"></showVideo>-->
     <div v-if="serverData.id!=''">
       <div style="width: 100%;height: 500px;margin-top: 10px">
-        <showVideo v-if="videoOptions.filePath!=''" :filePath="videoOptions.filePath" :videoType="videoOptions.videoType"></showVideo>
+        <showVideo v-if="videoOptions.filePath!=''" :currentTime="currentTime" @ended="videoEnded" @currentTime="videoCurrentTime"  :filePath="videoOptions.filePath" :videoType="videoOptions.videoType"></showVideo>
         <p v-else>数据加载失败……</p>
       </div>
       <introduce :content="serverData.remark"></introduce>
@@ -70,9 +70,12 @@
     props:["operailityData",'isStudyRecords'],
     data() {
       return {
+        time:0,// 播放时长  10秒更新一次
+        upDateTime:10,
         formValidate: {
           "name":"",
         },
+        currentTime:0,
 
         serverData:{
           "id":"",
@@ -128,6 +131,21 @@
           }
         },
 
+        //saveProgress  上传进度
+        saveProgressTitle:{
+          ajaxSuccess:'videoSuccess',
+            ajaxParams:{
+              url: api.saveProgress.path,
+              method:api.saveProgress.method,
+              data:{
+                videoId:'',
+                times:"",
+                status:'0',
+            }
+          }
+        },
+
+
         listMessTitle:{
           ajaxSuccess:'SuccessGetCurrData',
           ajaxParams:{
@@ -149,6 +167,11 @@
         if(this.videoRules.indexOf(suffix)){
           this.showMess("不支持的视频格式("+suffix+")!");
         }
+        if(data.progress!=data.length){
+          this.currentTime = +data.progress; // 开始播放时长
+        }
+
+        this.saveProgressTitle.ajaxParams.data.videoId = data.id;
         this.videoOptions.videoType = suffix;
         this.videoOptions.filePath = this.$store.state.envPath.videoHost+data.filePath;
       },
@@ -181,7 +204,29 @@
       },
       goBack(){
         this.$emit('show', 'index',{});
-      }
+      },
+
+      videoCurrentTime(time){
+        this.saveProgressTitle.ajaxParams.data.times = parseInt(time)||'0';
+//        if(time-this.time>this.upDateTime||time<this.time){
+        if(time-this.time>this.upDateTime){
+          this.saveProgressTitle.ajaxParams.data.status = '0';
+          this.time = time;
+          this.ajax(this.saveProgressTitle)
+        }
+      },
+
+      videoSuccess(){
+
+
+      },
+
+      //视频播放结束
+      videoEnded(){
+        this.saveProgressTitle.ajaxParams.data.status = 1;
+        this.ajax(this.saveProgressTitle)
+      },
+
     },
     created(){
       this.init();

@@ -141,7 +141,7 @@
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
-            prop="recordTimes"
+            prop="activityTimeInfo"
             label="时间"
             width="120">
           </el-table-column>
@@ -325,7 +325,7 @@
         let data = responseData.data;
         if(!data)return;
         this.tableData = this.addIndex(data);
-        this.listTotal = data.listTotal||0;
+        this.listTotal = responseData.totalCount||0;
       },
       setTableData(){
         let  formSearch = this.formDate(this.getFormData(this.formValidate),['activityBeginTime','activityEndTime'],this.yearMonthData);

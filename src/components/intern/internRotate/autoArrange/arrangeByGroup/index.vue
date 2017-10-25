@@ -20,9 +20,10 @@
           <div class="cal-schools">
             <el-row>
               <el-col :span="20">
-                <el-tooltip :content="item.name" effect="light" placement="top">
+                <el-tooltip v-if="item.name&&item.name.length>10" :content="item.name" effect="light" placement="top">
                 <el-button class="overflow-txt" :type="item.checked?'success':''" @click="handleCheckSchool(index,item)" style="width: 100%" v-text="item.name"></el-button>
                 </el-tooltip>
+                <el-button v-else class="overflow-txt" :type="item.checked?'success':''" @click="handleCheckSchool(index,item)" style="width: 100%" v-text="item.name"></el-button>
               </el-col>
               <el-col :span="4">
                 <div v-show="item.checked" class="cal-check"><i class="el-icon-check"></i></div>
@@ -88,6 +89,7 @@
           <el-date-picker
             v-model="startRotateTime"
             type="date"
+            :editable="false"
             placeholder="选择开始乱转开始时间"
             :picker-options="pickerOptions0">
           </el-date-picker>
@@ -103,7 +105,7 @@
       <el-row>
         <el-col :span="20"><div class="cal-schoolTit">轮转开始时间：{{startRotateTime||""}}</div></el-col>
       </el-row>
-      <el-row :gutter="10" class="myCard">
+      <el-row :gutter="10" class="myCard" style=" max-height: 420px;overflow: auto;box-shadow: 1px 0px 2px rgba(0, 0, 0, 0.32) ">
         <el-col style="margin: 10px 0; overflow: hidden; float: left" :span="12" v-for="(o, index) in groupData" :key="o">
           <el-card :body-style="{ padding: '0px', margin:'0 auto' }">
             <div style="padding: 14px;">
@@ -434,7 +436,7 @@
 
           /*
            * 设置专业
-           * @param val string || number  选中毕业学校的id
+           * @param val string || number  选中学校的id
            * */
           setSpecialtyOptionValue(val,id){
             //this.formValidate.schoolId = id;
@@ -550,7 +552,7 @@
 
             if(this.active==2){
               this.rotaryDeptGroupTitle.ajaxParams.data = this.getFormData(this.postData);
-              this.isLoading=true;
+//              this.isLoading=true;
               this.ajax(this.rotaryDeptGroupTitle);
               return;
             }

@@ -1,7 +1,7 @@
 <!--第五步：预览-->
 <template>
   <div>
-    <el-form  label-width="80px">
+    <el-form  label-width="200px">
       <el-row>
         <el-col :span="20" :offset="1">
 
@@ -33,7 +33,7 @@
       </el-row>
       <el-row>
         <el-col :span="20" :offset="1">
-          <el-form-item label="评价人与被评价对象关系:" label-width="200px">
+          <el-form-item label="评价人与被评价人关系:" label-width="200px">
             {{formValidate.relationship | relation}}
           </el-form-item>
         </el-col>
@@ -41,7 +41,7 @@
       </el-row>
       <el-row v-if="formValidate.relationship=='LOOP'">
         <el-col :span="20" :offset="1"  >
-          <el-form-item v-if="formValidate.appraiserType=='ALL'" label-width="200px" label="评价人与被评价对象:">
+          <el-form-item  label-width="200px" label="评价人与被评价人:">
             <el-tag type="primary">{{formValidate.loopType | loopType}}
             </el-tag>
           </el-form-item>
@@ -49,7 +49,7 @@
       </el-row>
       <el-row v-if="formValidate.relationship!='LOOP'">
         <el-col :span="20" :offset="1">
-          <el-form-item v-if="formValidate.relationship=='NO'&&formValidate.appraiserType=='ALL'" label="评价人:">
+          <el-form-item v-if="formValidate.relationship=='NO' && formValidate.appraiserType=='ALL'" label="评价人:">
             <el-tag type="primary">所有人</el-tag>
           </el-form-item>
           <el-form-item v-else label="评价人:">
@@ -65,10 +65,10 @@
       </el-row>
       <el-row v-if="formValidate.relationship!='LOOP'">
         <el-col :span="20" :offset="1">
-          <el-form-item v-if="formValidate.relationship=='NO'&&formValidate.evaluatedType=='ALL'" label="被评价对象:">
+          <el-form-item v-if="formValidate.relationship=='NO'&&formValidate.evaluatedType=='ALL'" label="被评价人:">
             <el-tag type="primary" >所有人</el-tag>
           </el-form-item>
-          <el-form-item v-else label="被评价对象:" label-width="100px">
+          <el-form-item v-else label="被评价人:" >
             <el-tag
               v-for="item in formValidate.evaluated"
               :key="item.id"
@@ -93,9 +93,7 @@
   </div>
 </template>
 <script >
-
   export default {
-
     props:['url','operailityData'],
     data(){
       return {

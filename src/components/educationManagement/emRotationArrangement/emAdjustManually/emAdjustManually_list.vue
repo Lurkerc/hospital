@@ -5,13 +5,11 @@
 ****--@author   gx
 ----------------------------------->
 <template>
-    <div>
-      手工调整
-    </div>
+  <emAdjustManually userType="JXS"></emAdjustManually>
 </template>
 <script>
     /*当前组件必要引入*/
-
+    import emAdjustManually from '../../../zyy/rdyRotationArrangement/rdyAutomaticScheduling/rdyAutomaticScheduling_list.vue';
     //当前组件引入全局的util
     let Util = null;
     export default{
@@ -30,6 +28,8 @@
         },
         mounted(){
         },
-        components: {}
+        components: {
+          emAdjustManually
+        }
     }
 </script>

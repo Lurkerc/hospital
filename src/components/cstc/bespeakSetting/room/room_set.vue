@@ -9,12 +9,14 @@
             <el-button v-for="(item,index) in opData" :key="index" @click="showRoomInfo(item.id)">{{ item.roomNum }}</el-button>
           </el-form-item>
         </el-col>
+
         <el-col :span="12">
           <el-form-item label="是否开放预约：">
             <el-radio v-model="formValidate.isOpen" label="YES">开放</el-radio>
             <el-radio v-model="formValidate.isOpen" label="NO">关闭</el-radio>
           </el-form-item>
         </el-col>
+
         <template v-if="formValidate.isOpen === 'YES'">
           <el-col :span="12">
             <el-form-item label="选择开放日期：">
@@ -32,7 +34,7 @@
           </el-col>
 
           <div style="clear:both;" class="newCalendar" v-if="formValidate.timeModel === 'SPECIFIC'">
-            <full-calendar class="test-fc" :tpl="calendarSet.tpl" :itemLimit="calendarSet.itemLimit" :events="calendarSet.fcEvents" first-day='1'
+            <full-calendar ref="newCalendar" class="test-fc" :tpl="calendarSet.tpl" :itemLimit="calendarSet.itemLimit" :events="calendarSet.fcEvents" first-day='1'
               locale="zh-cn" @changeMonth="changeMonth" @eventClick="eventClick" @dayClick="dayClick" @moreClick="moreClick"
               @goPrev="goPrev" @goNext="goNext">
               <template slot="fc-header-left" scope="p">
@@ -54,6 +56,27 @@
               </template>
             </full-calendar>
           </div>
+
+          <el-col>
+            <el-form-item label="本房间中的设备：">
+              <el-tag class="brsdItem" :key="item.id" v-for="(item,index) in roomDevice"
+                      :closable="true"
+                      :close-transition="false"
+                      @close="handleClose('room',index)"
+              >{{ item.deviceTypeName + '(' + item.deviceIdentifier+ ')' }}</el-tag>
+              <el-tag class="brsdSelBtn brsdItem" type="primary" @click.native="selectDevice('room')">+选择设备</el-tag>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="设备库：">
+              <el-tag class="brsdItem" :key="item.id" v-for="(item,index) in otherDevice"
+                      :closable="true"
+                      :close-transition="false"
+                      @close="handleClose('other',index)"
+              >{{ item.deviceTypeName + '(' + item.deviceIdentifier+ ')' }}</el-tag>
+              <el-tag class="brsdSelBtn brsdItem" type="primary" @click.native="selectDevice('other')">+选择设备</el-tag>
+            </el-form-item>
+          </el-col>
         </template>
 
         <el-col align="center" style="margin-top:10px;">
@@ -70,6 +93,13 @@
       <room-view v-if="showModal" @cancel="cancel" :operaility-data="operailityData" :id="todoId"></room-view>
       <div slot="footer"></div>
     </Modal>
+    <!-- 模态框 选择设备 -->
+    <Modal :mask-closable="false" v-model="selectDeviceModal" height="200" title="对话框标题" class-name="vertical-center-modal" :loading="true"
+           :width="800">
+      <modal-header slot="header" :parent="self" :content="selectDeviceId"></modal-header>
+      <select-device v-if="selectDeviceModal" @select="selectDeviceCall" @cancel="cancel" :select="selectDeviceType == 'room' ? roomDeviceId : otherDeviceId " :url="selectDeviceUrl"></select-device>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 
@@ -77,6 +107,7 @@
   import api from './api';
 
   import roomView from '../../room/roomManage/roomManage_view'; // 房间查看
+  import selectDevice from './device_select.vue';
   import fullCalendar from 'vue-ambuf-fullcalendar'; // 周历
   //引入日历相关的配置
   import calendarSet from './calendarSet';
@@ -88,6 +119,17 @@
         self: this,
         todoId: '', // 查看房间id
         roomIds: [],
+        roomDeviceId:[],
+        otherDeviceId:[],
+        roomDevice:[], // 房间内的设备
+        otherDevice:[], // 房间外的设备
+        selectDeviceUrl:"",
+        selectDeviceType:"", // room|other
+        selectDeviceModal:false,
+        selectDeviceId:{
+          id:"selectDeviceId",
+          title:"选择设备"
+        },
         //保存按钮基本信息
         loadBtn: {
           title: '保存设置',
@@ -95,7 +137,7 @@
         },
         //form表单bind数据
         formValidate: {
-          roomIds: '', // 房间 多个id以逗号分隔 ---> 1,2    
+          roomIds: '', // 房间 多个id以逗号分隔 ---> 1,2
           isOpen: 'YES', // 是否开放预约
           timeModel: 'SPECIFIC', // 选择开放日期
           openTimeList: [ // 开放时间列表
@@ -104,7 +146,13 @@
             //   "date": "2017-01-02", // 日期
             //   "timeSetIds": "1,2,3" // 时间段id字符串
             // },
-          ]
+          ],
+          deviceList:[
+//            {
+//              deviceId:"",
+//              inRoom:"", // 0|1
+//            }
+          ],
         },
 
         openTimeList: {}, // 开放日期
@@ -159,7 +207,6 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun) {
-
         let openTimeList = this.$util._.defaultsDeep({}, this.openTimeList);
         this.$util._.map(openTimeList, item => {
           item.reserveSetType = 'ROOM';
@@ -173,6 +220,21 @@
 
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true);
+
+        this.roomDeviceId.map(deviceId=>{
+          this.formValidate.deviceList.push({
+            deviceId,
+            inRoom:1,
+          })
+        })
+
+        this.otherDeviceId.map(deviceId=>{
+          this.formValidate.deviceList.push({
+            deviceId,
+            inRoom:0,
+          })
+        })
+
         this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
         this.ajax(this.addMessTitle, isLoadingFun)
         // console.log(this.addMessTitle.ajaxParams.data)
@@ -198,18 +260,10 @@
       },
       /*********************************************************** 周历 ***********************************************/
       goPrev() {
-        try {
-          this.$children[0].$children[0].$children[4].goPrev()
-        } catch (error) {
-          this.$children[0].$children[0].$children[5].goPrev()
-        }
+        this.$refs['newCalendar'].goPrev()
       },
       goNext() {
-        try {
-          this.$children[0].$children[0].$children[4].goNext()
-        } catch (error) {
-          this.$children[0].$children[0].$children[5].goNext()
-        }
+        this.$refs['newCalendar'].goPrev()
       },
       changeMonth(start, end, current, foramatData) {
         this.monthTitle = foramatData(current, 'MMMM YYYY');
@@ -286,6 +340,53 @@
         this.openModel('show')
       },
 
+      // 选择设备
+      selectDevice(type){
+        this.selectDeviceUrl = api[type].path + this.roomIds.join(',');
+        this.selectDeviceType = type;
+        this.openModel('selectDevice')
+      },
+
+      // 选择设备回调
+      selectDeviceCall(arr){
+        (arr || []).map(item=>{
+          if(this.selectDeviceType == 'room'){
+//            this.roomDevice[item.id] = item;
+//            roomDeviceId:[],
+//              otherDeviceId:[],
+            if(this.roomDeviceId.indexOf(item.id) == -1){
+              this.roomDeviceId.push(item.id)
+              this.roomDevice.push(item)
+            }
+          }else {
+//            this.otherDevice[item.id] = item;
+            if(this.otherDeviceId.indexOf(item.id) == -1){
+              this.otherDeviceId.push(item.id);
+              this.otherDevice.push(item)
+            }
+          }
+        })
+        this.cancel('selectDevice')
+      },
+
+      // 删除选择的数据
+      handleClose(type,index){
+//        let obj = {};
+        if (type == 'room'){
+//          obj = this.$util._.defaultsDeep({}, this.roomDevice);
+//          delete (obj[id]);
+//          this.roomDevice = obj;
+          this.roomDevice.splice(index,1);
+          this.roomDeviceId.splice(index,1);
+        }else {
+//          obj = this.$util._.defaultsDeep({}, this.otherDevice);
+//          delete (obj[id]);
+//          this.otherDevice = obj;
+          this.otherDevice.splice(index,1);
+          this.otherDeviceId.splice(index,1);
+        }
+      },
+
       /*
        * 打开指定的模态窗体
        * @param options string 当前指定的模态:"add"、"edit"
@@ -328,6 +429,18 @@
         let openTimeList = {};
         fData.isOpen = rData.isOpen;
         fData.timeModel = rData.timeModel;
+
+        // 房间设备
+        (res.data.deviceList || []).map(item=>{
+          if(item.inRoom){
+            this.roomDeviceId.push(item.deviceId)
+            this.roomDevice.push(item)
+          }else{
+            this.otherDeviceId.push(item.deviceId);
+            this.otherDevice.push(item)
+          }
+        });
+
         // 时间段数组转换为对象存储
         this.timeSlot.map(item => timeSlotId[item.timeId] = item);
         // 根据日期设置对应的时间段
@@ -356,7 +469,8 @@
     },
     components: {
       fullCalendar,
-      roomView
+      roomView,
+      selectDevice,
     },
     created() {
       this.init()
@@ -382,6 +496,15 @@
     width: 95%;
     position: relative;
     top: -18px;
+  }
+
+  .brsdItem{
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
+
+  .brsdSelBtn{
+    cursor: pointer;
   }
 
 </style>

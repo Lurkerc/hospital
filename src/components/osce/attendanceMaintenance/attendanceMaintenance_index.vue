@@ -3,11 +3,12 @@
   <div ref="dataList">
     <!-- 搜索 -->
     <el-row>
-      <el-col :span="4">
-        <el-button @click="remove">彻底删除</el-button>
+      <el-col :span="10">
+        <el-button @click="remove" type="danger">彻底删除</el-button>
+        <el-button @click="downVideo" type="info">下载考核监控</el-button>
       </el-col>
 
-      <el-col :span="20" style="float:right;">
+      <el-col :span="14" style="float:right;">
         <el-col align="right" style="width:90px;float:right;">
           <el-button :icon="getSearchBtnIcon()" @click="openMoreSearch()">筛选</el-button>
         </el-col>
@@ -79,7 +80,22 @@
     <Modal close-on-click-modal="false" height="200" v-model="removeModal" title="对话框标题" class-name="vertical-center-modal" :width="500">
       <modal-header slot="header" :content="removeId"></modal-header>
       <remove v-if="removeModal" :delete-url="url.delete" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
+      <div slot="footer"></div>
+    </Modal>
 
+    <!-- 下载考核视频 -->
+    <Modal :mask-closable="false" v-model="downVideoModal" height="200" class-name="vertical-center-modal" :width="500">
+      <modal-header slot="header" :content="downVideoId"></modal-header>
+      <div v-if="downVideoModal">
+        <div class="remove">是否下载“{{ operailityData.sceneName }}”的考核视频？</div>
+        <el-row>
+          <el-col :span="22" align="right">
+            <a v-if="downVideoObj.filePath" :href="getVideoPath(downVideoObj.filePath)"><el-button @click="cancel('downVideo')" type="primary">下载</el-button></a>
+            <span v-else>请稍等，正在准备文件...</span>
+            <el-button style="margin-left: 10px" class="but-col" @click="cancel('downVideo')">取消</el-button>
+          </el-col>
+        </el-row>
+      </div>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -88,6 +104,7 @@
 <script>
   let Util = null;
 
+  import api from './api';
   import examineIntervalApi from '../examineInterval/api'; // 考核场次api
   import examineTypeOption from '../examineInterval/examineTypeOption'; // 类型选择
   import examineStatuOption from '../examineInterval/examineStatuOption'; // 状态选择
@@ -103,6 +120,7 @@
         examineStatuOption,
         operailityData: '',
         showMoreSearch: false, // 更多筛选
+        downVideoModal: false,
         searchObj: { // 搜索
           sceneName: '', // 场次名称
           sceneType: '', // 类型
@@ -115,6 +133,11 @@
           id: 'removeId',
           title: '彻底删除'
         },
+        downVideoId:{
+          id:"downVideo",
+          title: '下载考核视频'
+        },
+        downVideoObj:{},
       }
     },
     methods: {
@@ -201,6 +224,30 @@
         this.removeModal = true;
       },
 
+      // 下载监控视频
+      downVideo() {
+        if (!this.isSelected(true)) return;
+        this.downVideoObj = {};
+        this.operailityData = this.multipleSelection[0];
+        this.downVideoModal = true;
+        let opt = {
+          ajaxSuccess: res => this.downVideoObj = res.data,
+          ajaxError: () => {
+            this.errorMess('获取监控视频异常，请重试...');
+            this.downVideoModal = false;
+          },
+          ajaxParams: {
+            url: api.downloadVideo.path + this.operailityData.id,
+            method: api.downloadVideo.method
+          }
+        };
+        this.ajax(opt)
+      },
+
+      // 获取监控视频下载地址
+      getVideoPath(path) {
+        return this.$store.getters.getEnvPath.http + path
+      },
 
       /*
        * 列表数据只能选择一个
@@ -214,7 +261,7 @@
           flag = false;
         }
         if (len > 1 && isOnly) {
-          this.showMess("只能修改一条数据!")
+          this.showMess("只能选择一条数据!")
           flag = false;
         }
         return flag;

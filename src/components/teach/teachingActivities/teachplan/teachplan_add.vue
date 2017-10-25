@@ -35,7 +35,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-
           <el-button  @click="submit">确定</el-button>
         </el-form>
       </el-col>
@@ -69,7 +68,7 @@
         listMessTitle:{
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:'/hospital/dept/queryAll',  //向后台请求数据的地址
+            url:this.url.byNowUser,  //向后台请求数据的地址
           }
         },
         optionData:[], // 请求的科室信息

@@ -4,18 +4,20 @@
 
     <div style="padding-top: 36px;"></div>
 
-    <el-form ref="formValidate" :model="formValidate" class="form-inline lose-margin" label-width="90px" >
+    <el-form ref="formValidate" :model="formValidate" :rules="rules" class="form-inline lose-margin" label-width="90px" >
       <el-row >
-        <el-col :span="8" :offset="6">
+        <el-col :span="6" :offset="18">
           <div class="listUpArea-searchWrapper">
             <!--右侧查询-->
-            <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px" >
+            <el-form ref="formValidate" :rules="rules" :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px" >
               <div class="listUpArea-searchLeft">
                 <input class="hidden">
-                <el-input placeholder="请输入内容" v-model="formValidate.name">
-                  <div slot="prepend">名称</div>
-                  <el-button @click="handleSubmit('formValidate')" slot="append" icon="search"></el-button>
-                </el-input>
+                <el-form-item  prop="name">
+                  <el-input placeholder="请输入内容" v-model="formValidate.name">
+                    <div slot="prepend">名称</div>
+                    <el-button @click="handleSubmit('formValidate')" slot="append" icon="search"></el-button>
+                  </el-input>
+                </el-form-item>
               </div>
             </el-form>
           </div>
@@ -157,6 +159,7 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import {groupList as rules} from '../rules'
   //引入--修改--组件
   import edit from "./group_edit.vue";
   //引入--查看--组件
@@ -168,6 +171,7 @@
   export default{
       data(){
           return{
+            rules,
             //查询表单
             deleteUrl:'/groups/remove',
             formValidate: {

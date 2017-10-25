@@ -54,15 +54,15 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="生源类型" prop="userType" >
-        <el-select filterable  v-model="formValidate.userType" placeholder="请选择">
-          <el-option label="全部" value=""></el-option>
-          <el-option label="实习生" value="SXS"></el-option>
-          <el-option label="研究生" value="YJS"></el-option>
-          <el-option label="住院医" value="ZYY"></el-option>
-          <el-option label="进修生" value="JXS"></el-option>
-        </el-select>
-      </el-form-item>
+      <!--<el-form-item label="生源类型" prop="userType" >-->
+        <!--<el-select filterable  v-model="formValidate.userType" placeholder="请选择">-->
+          <!--<el-option label="全部" value=""></el-option>-->
+          <!--<el-option label="实习生" value="SXS"></el-option>-->
+          <!--<el-option label="研究生" value="YJS"></el-option>-->
+          <!--<el-option label="住院医" value="ZYY"></el-option>-->
+          <!--<el-option label="进修生" value="JXS"></el-option>-->
+        <!--</el-select>-->
+      <!--</el-form-item>-->
        <el-button type="info" @click="searchEvent">查询</el-button>
 
     </div>

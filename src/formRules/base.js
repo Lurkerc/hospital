@@ -26,6 +26,7 @@ let changeEvent = 'change';
  * numberSection  数字区间
  * numbers        必须为数字
  * ip             IP地址 0.0.0.0 - 255.255.255.255
+ * postCode       邮编
  */
 
 /************************* 常规规则 ****************************/
@@ -102,7 +103,7 @@ let baseRules = {
         msg = `最多输入${max}个字符`;
       } else {
         if (max && (value.length > max || value.length < min)) {
-          msg = `只能输入${min}-${max}个字符`
+          msg = '只能输入' + (min === max ? min : `${min}-${max}`) + '个字符'
         }
         if (value.length < min) {
           msg = `最少输入${min}个字符`;
@@ -228,7 +229,7 @@ let baseRules = {
    */
   numbers: function (rule, value, callback) {
     //检验位的检测
-    if (/[^0-9]/m.test(value)) {
+    if (!(/^\d+$/.test(value))) {
       callback(new Error('该项必须数字'));
     }
     callback();
@@ -257,9 +258,9 @@ let baseRules = {
     callback();
   },
   /**
-   * 必须正整数字且>0
+   * 必须正整数字且>=0
    */
-  greaterThanZero2: function (rule, value, callback) {
+  greaterThanZero2:function (rule, value, callback) {
     //检验位的检测
     if (value == '') callback();
     if (!/^\+?[0-9]\d*$/.test(value)) {
@@ -267,16 +268,70 @@ let baseRules = {
     }
     callback();
   },
+  /**
+   * 必须正整数字且>=0
+   */
+  greaterThanZero3(min=0,max=100){
+    return (rule, value, callback)=>{
+      //检验位的检测
+      if (value == '') callback();
+      if (!/^\+?[0-9]\d*$/.test(value)) {
+        callback(new Error('必须正整数且大于等于零'));
+      }
+      if(+value>=+min && +value<=+max){
+        callback();
+      }else {
+        callback(new Error(`必须是${min}-${max}之间的数字`));
+      }
+      callback();
+    }
+  },
+
 
   /**
    * 必须数字
    */
   float: function (rule, value, callback) {
     //检验位的检测
+
     if (/[^0-9.?]/m.test(value)) {
       callback(new Error('该项必须数字'));
     }
     callback();
+  },
+  /**
+   * 必须数字 .可以是小数
+   */
+  float1(min=0,max=100){
+    return (rule, value, callback) => {
+      if (value == '') callback();
+      if (/^\d+.?\d*$/m.test(value)) {
+      } else {
+        callback(new Error('该项必须是数字'));
+      }
+      if (+value >= +min && +value <= +max) {
+        callback();
+      } else {
+        callback(new Error(`必须是${min}-${max}之间的数字`));
+      }
+    }
+  },
+  /**
+   * 必须数字 .可以是小数
+   */
+  float2(min=0,max=100){
+    return (rule, value, callback)=>{
+      if(value=='') callback();
+      if (/^\d+.?\d{0,2}$/m.test(value)) {
+      } else {
+        callback(new Error('最多两位小数的数字'));
+      }
+      if (+value >= +min && +value <= +max) {
+        callback();
+      } else {
+        callback(new Error(`必须是${min}-${max}之间的数字`));
+      }
+    }
   },
 
   /**
@@ -287,6 +342,16 @@ let baseRules = {
     // 0.0.0.0 - 255.255.255.255
     if (!(/^(25[0-5]|2[0-4]\d|1\d\d|\d\d|\d).(25[0-5]|2[0-4]\d|1\d\d|\d\d|\d).(25[0-5]|2[0-4]\d|1\d\d|\d\d|\d).(25[0-5]|2[0-4]\d|1\d\d|\d\d|\d)$/.test(value))) {
       callback(new Error('IP地址不正确'));
+    }
+    callback();
+  },
+  /**
+   *邮编
+   */
+  postCode: function (rule, value, callback) {
+    //检验位的检测
+    if (value && !(/^\d{6}$/.test(value))) {
+      callback(new Error('请输入6位邮编数字'));
     }
     callback();
   },

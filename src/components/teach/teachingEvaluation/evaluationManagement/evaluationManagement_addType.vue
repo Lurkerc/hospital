@@ -3,10 +3,10 @@
   <div>
 
 
-    <el-form ref="formValidate"  class="demo-form-inline" label-width="90px">
+    <el-form ref="formValidate" :model="formValidate"  :rules="evaluationManagementType" class="demo-form-inline" label-width="90px">
       <el-row>
-        <el-col :span="10" :offset="7">
-          <el-form-item  prop="title" label="类型名称">
+        <el-col :span="11" :offset="6">
+          <el-form-item  prop="name" label="类型名称">
             <el-input   v-model="formValidate.name" placeholder="请输入名称">
             </el-input>
           </el-form-item>
@@ -14,7 +14,7 @@
       </el-row>
     </el-form>
     <el-row >
-      <el-col :span="10" :offset="10">
+      <el-col :span="24" style="text-align: center">
           <load-btn @listenSubEvent="listenSubEvent" :btnData="saveBtn"></load-btn>
           <el-button  @click="cancel">取消</el-button>
       </el-col>
@@ -22,6 +22,7 @@
   </div>
 </template>
 <script>
+  import {evaluationManagementType} from '../../rules'
   //当前组件引入全局的util
   let Util=null;
   export default {
@@ -29,6 +30,7 @@
     props: ['operailityData','url'],
     data (){
       return{
+        evaluationManagementType,
         //保存按钮基本信息
         saveBtn:{title:'保存',callParEvent:'listenSubEvent'},
         //form表单bind数据

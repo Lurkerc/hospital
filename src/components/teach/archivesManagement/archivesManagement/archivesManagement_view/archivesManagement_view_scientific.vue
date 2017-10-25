@@ -11,27 +11,27 @@
       </el-col >
     </el-row >
     <!--内容-->
-    <el-row >
-      <el-col :span="22" :offset="1" class="lose-margin2">
-        <fieldset class="layui-elem-field layui-field-title">
-          <legend>本人从事的主要研究方向的特点、意义及其水平</legend>
-          <div class="layui-field-box">
-            <el-input v-model="secientData.secient.directionInfo"  type="textarea" :rows="5" readonly resize="none"></el-input>
-          </div>
-        </fieldset>
-      </el-col >
-    </el-row >
+    <!--<el-row >-->
+      <!--<el-col :span="22" :offset="1" class="lose-margin2">-->
+        <!--<fieldset class="layui-elem-field layui-field-title">-->
+          <!--<legend>本人从事的主要研究方向的特点、意义及其水平</legend>-->
+          <!--<div class="layui-field-box">-->
+            <!--<el-input v-model="secientData.secient.directionInfo"  type="textarea" :rows="5" readonly resize="none"></el-input>-->
+          <!--</div>-->
+        <!--</fieldset>-->
+      <!--</el-col >-->
+    <!--</el-row >-->
 
-    <el-row >
-      <el-col :span="22" :offset="1" class="lose-margin2">
-        <fieldset class="layui-elem-field layui-field-title">
-          <legend>学术团体任职情况</legend>
-          <div class="layui-field-box">
-            <el-input v-model="secientData.secient.groupWorkInfo" type="textarea" :rows="5" readonly resize="none"></el-input>
-          </div>
-        </fieldset>
-      </el-col >
-    </el-row >
+    <!--<el-row >-->
+      <!--<el-col :span="22" :offset="1" class="lose-margin2">-->
+        <!--<fieldset class="layui-elem-field layui-field-title">-->
+          <!--<legend>学术团体任职情况</legend>-->
+          <!--<div class="layui-field-box">-->
+            <!--<el-input v-model="secientData.secient.groupWorkInfo" type="textarea" :rows="5" readonly resize="none"></el-input>-->
+          <!--</div>-->
+        <!--</fieldset>-->
+      <!--</el-col >-->
+    <!--</el-row >-->
 
     <el-row >
       <el-col :span="22" :offset="1" class="lose-margin2">

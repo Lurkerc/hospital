@@ -15,16 +15,18 @@
           <el-col :span="10" :offset="2">
             <div class="listUpArea-searchWrapper">
               <!--右侧查询-->
-              <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px" >
+              <el-form ref="formValidate" :rules="rules" :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px" >
                 <div class="listUpArea-searchLeft">
                   <input class="hidden">
-                  <el-input placeholder="请输入内容" v-model="formValidate.name">
-                    <div slot="prepend">标准科室名称</div>
-                    <el-button @click="searchEvent" :btnData="searchData" slot="append" icon="search"></el-button>
-                  </el-input>
+                  <el-form-item  prop="name">
+                    <el-input placeholder="请输入内容" v-model="formValidate.name">
+                      <div slot="prepend">标准科室名称</div>
+                      <el-button @click="searchEvent" :btnData="searchData" slot="append" icon="search"></el-button>
+                    </el-input>
+                  </el-form-item>
                 </div>
                 <div class="listUpArea-moreSearch">
-                  <el-button @click="showMoreSearch" type="text">高级查询</el-button>
+                  <!--<el-button @click="showMoreSearch" type="text">高级查询</el-button>-->
                 </div>
               </el-form>
             </div>
@@ -120,6 +122,8 @@
 
 <script >
   /*当前组件必要引入*/
+  import {nosocomialList as rules } from '../../rules'
+
   //引入--修改--组件
   import edit from "./standard_edit.vue";
   //引入--查看--组件
@@ -134,6 +138,7 @@
     props:['parentFlag'],
     data() {
       return {
+        rules,
         flag:false,
         flag1:true,
         //查询表单
@@ -165,14 +170,14 @@
         dynamicHt: 100,
         self: this,
         tableData1: [
-          {
-            "id":1000,
-            "name":"内科"
-          },
-          {
-            "id":1000,
-            "name":"内科"
-          }
+//          {
+//            "id":1000,
+//            "name":"内科"
+//          },
+//          {
+//            "id":1000,
+//            "name":"内科"
+//          }
         ],
         loading:false,
         listTotal:0,
@@ -204,7 +209,7 @@
         this.myPages =  Util.pageInitPrams;
 
         this.queryQptions = {
-          params:{curPage: 1,pageSize: Util.pageInitPrams.pageSize}
+          curPage: 1,pageSize: Util.pageInitPrams.pageSize
         }
 
         this.setTableData();
@@ -255,23 +260,32 @@
 
       //搜索监听回调
 
-
-      searchEvent(){
-        this.setTableData()
+      //搜索监听回调
+      searchEvent(isLoading){
+        //        isLoading(true);
+        let isSubmit = this.handleSubmit('formValidate');
+        if(isSubmit){
+          this.setTableData()
+        }
       },
+
+
       /*
        * 列表查询方法
        * @param string 查询from的id
        * */
       handleSubmit(name){
+        let flag =false
         this.$refs[name].validate((valid) => {
           if (valid) {
-            this.$Message.success('提交成功!');
+            flag =true;
           } else {
-            this.$Message.error('表单验证失败!');
+            this.$Message.error('查询输入有误!');
           }
         })
+        return flag
       },
+
 
 
       /*--点击--添加--按钮--*/

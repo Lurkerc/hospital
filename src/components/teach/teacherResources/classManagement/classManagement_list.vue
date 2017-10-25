@@ -16,7 +16,7 @@
             <div class="listUpArea-searchLeft">
               <el-input placeholder="请输入内容" v-model="formValidate.name">
                 <div slot="prepend">姓名</div>
-                <el-button slot="append" @click="handleSubmit('formValidate')" icon="search"></el-button>
+                <el-button slot="append" @click="search" icon="search"></el-button>
               </el-input>
             </div>
             <div class="listUpArea-moreSearch">
@@ -78,7 +78,18 @@
     <!--导出-->
     <Modal close-on-click-modal="false" width="500" v-model="exportModal" title="导出" class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="exportId"></modal-header>
-      <ept-assess v-if="exportModal" @cancel="cancel" @export="subCallback" :operaility-data="operailityData"></ept-assess>
+      <!--<ept-assess v-if="exportModal" @cancel="cancel" @export="subCallback" :operaility-data="operailityData"></ept-assess>-->
+      <div>
+        <div class="remove">确认导出吗？</div>
+        <el-row>
+          <el-col :span="10" :offset="14">
+            <a href="/api/teach/exportEvaluates">
+              <el-button @click="cancel('export')" type="primary">确定</el-button>
+            </a>
+            <el-button class="but-col" @click="cancel('export')">取消</el-button>
+          </el-col>
+        </el-row>
+      </div>
       <div slot="footer"></div>
     </Modal>
 
@@ -110,8 +121,9 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import api from './api';
   //引入--导出--组件
-  import eptAssess from "./classManagement_export.vue";
+//  import eptAssess from "./classManagement_export.vue";
   //引入--新建--组件
   import editPay from "./teachersManagement_editPay.vue";
   //引入--查看--组件
@@ -239,16 +251,15 @@
         that.listTotal = 1;
       },
       setTableData() {
-        this.listMessTitle.ajaxParams = Object.assign(this.listMessTitle.ajaxParams, this.queryQptions);
+        this.listMessTitle.ajaxParams = Object.assign(this.listMessTitle.ajaxParams, this.queryQptions,this.formValidate);
         this.ajax(this.listMessTitle);
       },
       /*
        * 列表查询方法
        * @param string 查询from的id
        * */
-      handleSubmit(name) {
-        let formData = Util._.defaultsDeep({}, this.formValidate);
-        // console.log(formData)
+      search() {
+        this.setTableData()
       },
       /*--点击--修改--按钮--*/
       editPay(data) {
@@ -340,7 +351,7 @@
       //当前组件引入的子组件
       editPay,
       show,
-      eptAssess
+//      eptAssess
     }
   }
 

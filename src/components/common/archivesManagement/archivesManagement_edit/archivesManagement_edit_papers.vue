@@ -22,7 +22,6 @@
             <upload-photo-wall :index="1" @upladSuccess="setUploadHeaderSuccessUrl" :actionUrl="uploadHeaderUrl" :fileList="photoData['2']"></upload-photo-wall>
           </div>
         </fieldset>
-        </fieldset>
       </el-col >
     </el-row >
     <el-row >
@@ -32,7 +31,6 @@
           <div class="layui-field-box">
             <upload-photo-wall :index="2" @upladSuccess="setUploadHeaderSuccessUrl" :actionUrl="uploadHeaderUrl" :fileList="photoData['3']"></upload-photo-wall>
           </div>
-        </fieldset>
         </fieldset>
       </el-col >
     </el-row >
@@ -44,7 +42,6 @@
             <upload-photo-wall :index="3" @upladSuccess="setUploadHeaderSuccessUrl" :actionUrl="uploadHeaderUrl" :fileList="photoData['4']"></upload-photo-wall>
           </div>
         </fieldset>
-        </fieldset>
       </el-col >
     </el-row >
     <el-row >
@@ -55,7 +52,6 @@
             <upload-photo-wall :index="4" @upladSuccess="setUploadHeaderSuccessUrl" :actionUrl="uploadHeaderUrl" :fileList="photoData['5']"></upload-photo-wall>
           </div>
         </fieldset>
-        </fieldset>
       </el-col >
     </el-row >
 
@@ -64,16 +60,16 @@
         <!--<load-btn @listenSubEvent="saveCurrData" :btnData="loadBtn"></load-btn>-->
       <!--</el-col>-->
     <!--</el-row >-->
-    <br />
-    <div style="font-size: 1px;overflow: hidden;line-height: 1;border-top:1px solid #e3e8ee;margin: 12px 0;"></div>
-    <el-row>
-      <el-col :span="9" :offset="10">
-        <el-button type="primary" v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @click="saveDataToParent">保存</el-button>
-        <load-btn  v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
-        <span v-if="userInfo.archivesAuditStatus=='NOT_AUDIT'" style="margin-right: 10px;color: #FF4949;">您的档案信息正在审核中……</span>
-        <el-button  @click="cancel">取消</el-button>
-      </el-col>
-    </el-row >
+    <!--<br />-->
+    <!--<div style="font-size: 1px;overflow: hidden;line-height: 1;border-top:1px solid #e3e8ee;margin: 12px 0;"></div>-->
+    <!--<el-row>-->
+      <!--<el-col :span="9" :offset="10">-->
+        <!--<el-button type="primary" v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @click="saveDataToParent">保存</el-button>-->
+        <!--<load-btn  v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>-->
+        <!--<span v-if="userInfo.archivesAuditStatus=='NOT_AUDIT'" style="margin-right: 10px;color: #FF4949;">您的档案信息正在审核中……</span>-->
+        <!--<el-button  @click="cancel">取消</el-button>-->
+      <!--</el-col>-->
+    <!--</el-row >-->
   </div>
 </template>
 <script>
@@ -82,7 +78,8 @@
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['dataId','initData','userInfo'],
+//    props: ['dataId','initData','userInfo'],
+    props: ['dataId'],
     data (){
       return{
         //上传证件图片
@@ -107,7 +104,7 @@
           type:'edit',
           successTitle:'修改成功!',
           errorTitle:'修改失败!',
-          ajaxSuccess:'ajaxSuccess',
+          ajaxSuccess:'saveSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
             url:'/archives/files/save/'+this.dataId,
@@ -140,8 +137,8 @@
        * */
       init(){
         //默认请求加载数据
-        //this.ajax(this.initMessTitle);
-        this.SuccessGetCurrData();
+        this.ajax(this.initMessTitle);
+//        this.SuccessGetCurrData();
       },
 
 
@@ -155,9 +152,14 @@
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true)
           this.editMessTitle.ajaxParams.data = this.getFormData(this.cerTypeArr);
-          this.$emit("setSaveData",this.editMessTitle.ajaxParams.data);
+//          this.$emit("setSaveData",this.editMessTitle.ajaxParams.data);
           this.ajax(this.editMessTitle, isLoadingFun);
         }
+      },
+
+      //保存成功后回调
+      saveSuccess() {
+        this.$emit("save",'papers');
       },
 
 
@@ -196,7 +198,7 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-        let data = this.initData;//responseData.data;
+        let data = responseData.data;//responseData.data;
         this.setPhotos(data);
       },
 
@@ -204,11 +206,12 @@
       //修改时设置已经上传动的图片
       setPhotos(data){
           let tempObj = {'1':[],'2':[],'3':[],'4':[],'5':[]};
+          let http = this.$store.getters.getEnvPath.http;
           for(var i=0,item,obj;i<data.length;i++){
             item = data[i];
             obj = {
               name:"",
-              url:item.cerCopies
+              url:http + item.cerCopies
             }
             if(typeof this.photoData[item.cerType]=="undefined"){
               this.photoData[item.cerType] = [];
@@ -239,7 +242,7 @@
         for (var i=0,item;i<imgList.length;i++){
           item = imgList[i];
           tempArr.push({
-            "cerCopies":"/"+item.src,
+            "cerCopies":item.src,
             "cerType":(idx+1)
           })
         }

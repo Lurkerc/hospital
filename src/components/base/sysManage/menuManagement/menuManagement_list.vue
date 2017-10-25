@@ -7,10 +7,10 @@
       <!--右侧查询-->
       <div class="listUpAreaBox">
         <div class="listUpArea-menus">
-          <!--<div class="add-remove">
-            <el-button  class="but-col"  @click="add"  type="primary">添加</el-button>
+          <div class="add-remove">
+            <!--<el-button  class="but-col"  @click="add"  type="primary">添加</el-button>-->
             <el-button class="but-col" @click="remove" type="danger">删除</el-button>
-          </div>-->
+          </div>
         </div>
         <div class="listUpArea-search">
           <div class="listUpArea-searchWrapper">

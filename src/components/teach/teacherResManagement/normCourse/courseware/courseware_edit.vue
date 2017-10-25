@@ -309,7 +309,7 @@
           });
         }
       },
-      /** 
+      /**
        * 删除
        * type 资料类型 课前|课中|课后
        * planIndex 第几节课索引
@@ -365,24 +365,32 @@
         //   }
         // }
         let data = this.planDtoList;
-        for (let i in data) {
+        console.log(data);
+        for (let i = 0;i<data.length;i++ ) {
           // 课前
-          for (let b in data[i].wareDtoListTemp.before) {
-            if (!data[i].wareDtoListTemp.before[b].title) {
+//          for(let c = 0; c < data[i].wareDtoListTemp.before.length; c++){
+//            if (!data[i].wareDtoListTemp.before[b].title) {
+//              console.log(b);
+//              this.errorMess(`第${this.indexText(i)}节课的课前第${(+b+1)}个资料未填写显示名称`)
+//              return false
+//            }
+//          }
+          for (let b = 0;b < data[i].wareDtoListTemp.before.length; b++) {
+            if (data[i].wareDtoListTemp.before[b].title == '') {
               this.errorMess(`第${this.indexText(i)}节课的课前第${(+b+1)}个资料未填写显示名称`)
               return false
             }
           }
           // 课中
-          for (let p in data[i].wareDtoListTemp.in_progress) {
-            if (!data[i].wareDtoListTemp.in_progress[p].title) {
+          for (let p = 0; p< data[i].wareDtoListTemp.in_progress.length;p++) {
+            if (data[i].wareDtoListTemp.in_progress[p].title == '') {
               this.errorMess(`第${this.indexText(i)}节课的课中第${(+p+1)}个资料未填写显示名称`)
               return false
             }
           }
           // 课后
-          for (let a in data[i].wareDtoListTemp.after) {
-            if (!data[i].wareDtoListTemp.after[a].title) {
+          for (let a =0; a< data[i].wareDtoListTemp.after.length;a++) {
+            if (data[i].wareDtoListTemp.after[a].title == '') {
               this.errorMess(`第${this.indexText(i)}节课的课后第${(+a+1)}个资料未填写显示名称`)
               return false
             }

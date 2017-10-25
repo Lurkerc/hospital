@@ -26,7 +26,26 @@ const rotateRouters = {
         resolve(require('../../components/rotateManagement/rotateRecordWrite/entityWrite/entityWrite_list.vue'));
       }, 'rotateRecordWrite');
     }
-   }, {
+   },{
+      //手术操作  2017-08-31
+      path:'operationTechnique',
+      name:'operationTechnique',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/rotateManagement/rotateRecordWrite/operationTechnique/operationTechnique_list.vue'));
+        }, 'rotateRecordWrite');
+      }
+    },{
+    //延期出科申请  2017-09-02
+    path:'extensionRequest',
+    name:'extensionRequest',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/rotateManagement/rotateRecordWrite/extensionRequest/extensionRequest_list.vue'));
+      }, 'rotateRecordWrite');
+    }
+    },
+    {
       //技能操作填写
       path:'skillWrite',
       name:'skillWrite',

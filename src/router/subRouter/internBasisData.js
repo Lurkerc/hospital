@@ -15,9 +15,20 @@ const internBasisRouters = {
     }, 'internBasis');
   },
   redirect: to => {
-    return '/manage/internBasis/internOutline'
+    return '/manage/internBasis/usersManagement'
   },
-  children:[{
+  children:[
+    {
+      //人员管理
+      path:'usersManagement',
+      name:'usersManagement',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/intern/recruitStudent/usersManagement/usersManagement_list.vue'));
+        }, 'internBasis');
+      }
+    },
+    {
     //实习大纲
     path:'internOutline',
     name:'internOutline',
@@ -57,6 +68,17 @@ const internBasisRouters = {
         }, 'internBasis');
       }
     },
+    {
+      //出科设置
+      path:'givenSet',
+      name:'givenSet',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/intern/internBasisData/givenSet/givenSet_list.vue'));
+        }, 'internBasis');
+      }
+    },
+
   ]
 }
 

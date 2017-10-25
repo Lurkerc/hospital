@@ -17,7 +17,18 @@ const zyyRouters = {
   redirect: to => {
     return '/manage/rdyBasicSetting/rdyTrainingStandards'
   },
-  children:[{
+  children:[
+    {
+      //人员管理
+      path:'rdyPersonnelManagement',
+      name:'rdyPersonnelManagement',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/zyy/rdyEnrollEnroll/rdyPersonnelManagement/rdyPersonnelManagement_list.vue'));
+        }, 'rdyBasicSetting');
+      }
+    },
+    {
     //培训标准
     path:'rdyTrainingStandards',
     name:'rdyTrainingStandards',
@@ -44,7 +55,16 @@ const zyyRouters = {
         resolve(require('../../components/zyy/rdyBasicSetting/rdyRecordsSet/rdyRecordsSet_list.vue'));
       }, 'rdyBasicSetting');
     }
-  }
+  },{
+    //出科设置
+    path:'rdyGivenSet',
+    name:'rdyGivenSet',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/zyy/rdyBasicSetting/rdyGivenSet/rdyGivenSet_list.vue'));
+      }, 'rdyBasicSetting');
+    }
+  },
 
 
   ]

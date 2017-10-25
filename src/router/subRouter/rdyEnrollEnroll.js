@@ -15,18 +15,21 @@ const zyyRouters = {
     }, 'rdyEnrollEnroll');
   },
   redirect: to => {
-    return '/manage/rdyEnrollEnroll/rdyPersonnelManagement'
+    // return '/manage/rdyEnrollEnroll/rdyPersonnelManagement'
+    return '/manage/rdyEnrollEnroll/rdyOnlinePrequalification'
   },
-  children:[{
-    //人员管理
-    path:'rdyPersonnelManagement',
-    name:'rdyPersonnelManagement',
-    component:resolve=> {
-      require.ensure([], () => {
-        resolve(require('../../components/zyy/rdyEnrollEnroll/rdyPersonnelManagement/rdyPersonnelManagement_list.vue'));
-      }, 'rdyEnrollEnroll');
-    }
-  },{
+  children:[
+  //   {
+  //   //人员管理
+  //   path:'rdyPersonnelManagement',
+  //   name:'rdyPersonnelManagement',
+  //   component:resolve=> {
+  //     require.ensure([], () => {
+  //       resolve(require('../../components/zyy/rdyEnrollEnroll/rdyPersonnelManagement/rdyPersonnelManagement_list.vue'));
+  //     }, 'rdyEnrollEnroll');
+  //   }
+  // },
+    {
     //网上预审
     path:'rdyOnlinePrequalification',
     name:'rdyOnlinePrequalification',

@@ -9,92 +9,136 @@
         <el-col :span="10">
           <el-form-item label="科室：">{{ viewData.depName }}</el-form-item>
         </el-col>
-        <el-col :span="20" :offset="2">
-          <el-form-item label="考勤：">
-            <span>旷工 {{ viewData.minerDays || 0 }} 天，</span>
-            <span>病假 {{ viewData.sickDays || 0 }} 天，</span>
-            <span>事假 {{ viewData.personalDays || 0 }} 天</span>
-          </el-form-item>
-        </el-col>
+        <!--<el-col :span="20" :offset="2">-->
+        <!--<el-form-item label="考勤：">-->
+        <!--<span>旷工 {{ viewData.minerDays || 0 }} 天，</span>-->
+        <!--<span>病假 {{ viewData.sickDays || 0 }} 天，</span>-->
+        <!--<span>事假 {{ viewData.personalDays || 0 }} 天</span>-->
+        <!--</el-form-item>-->
+        <!--</el-col>-->
 
-        <el-col :span="20" :offset="2">
-          <el-form-item label="奖惩情况：">
-            <span>奖励 {{ viewData.rewardNum || 0 }} 次，</span>
-            <span>惩罚 {{ viewData.penaltyNum || 0 }} 次</span>
-          </el-form-item>
-        </el-col>
+        <!--<el-col :span="20" :offset="2">-->
+        <!--<el-form-item label="奖惩情况：">-->
+        <!--<span>奖励 {{ viewData.rewardNum || 0 }} 次，</span>-->
+        <!--<span>惩罚 {{ viewData.penaltyNum || 0 }} 次</span>-->
+        <!--</el-form-item>-->
+        <!--</el-col>-->
         <el-col :span="20" :offset="2">
           <el-form-item label="老师评价：">{{ viewData.teacherEvaluation || '暂无' }}</el-form-item>
         </el-col>
+
         <el-col :span="20" :offset="2">
-          <h4>轮转记录填写：</h4>
-          <el-table align="center" :context="self" :data="viewData.depRequired" tooltip-effect="dark">
-            <el-table-column label="名称" prop="requiredName"></el-table-column>
-            <el-table-column label="要求例数" prop="requiredNum" show-overflow-tooltip></el-table-column>
-            <el-table-column label="实填例数" prop="userNum" show-overflow-tooltip></el-table-column>
+          <el-table :data="viewDayData">
+            <el-table-column label="旷工" prop="minerDays">
+              <template scope="scope">
+                {{ scope.row.minerDays || 0 }} 天
+              </template>
+            </el-table-column>
+            <el-table-column label="病假" prop="sickDays">
+              <template scope="scope">
+                {{ scope.row.sickDays || 0 }} 天
+              </template>
+            </el-table-column>
+            <el-table-column label="事假" prop="personalDays">
+              <template scope="scope">
+                {{ scope.row.personalDays || 0 }} 天
+              </template>
+            </el-table-column>
+            <el-table-column label="奖励" prop="rewardNum">
+              <template scope="scope">
+                {{ scope.row.rewardNum || 0 }} 次
+              </template>
+            </el-table-column>
+            <el-table-column label="惩罚" prop="penaltyNum">
+              <template scope="scope">
+                {{ scope.row.penaltyNum || 0 }} 次
+              </template>
+            </el-table-column>
           </el-table>
         </el-col>
+
+        <el-col :span="20" :offset="2">
+          <h4>轮转要求统计：</h4>
+          <el-table align="center" :context="self" :data="rotaryRequirStatic" tooltip-effect="dark">
+            <el-table-column label="名称" prop="name"></el-table-column>
+            <el-table-column label="要求数量" prop="yqnum" show-overflow-tooltip></el-table-column>
+            <el-table-column label="已完成数量" prop="ywcnum" show-overflow-tooltip></el-table-column>
+            <el-table-column label="完成比例" prop="wcbl" show-overflow-tooltip></el-table-column>
+          </el-table>
+        </el-col>
+
+        <!--<el-col :span="20" :offset="2">-->
+        <!--<h4>轮转记录填写：</h4>-->
+        <!--<el-table align="center" :context="self" :data="viewData.depRequired" tooltip-effect="dark">-->
+        <!--<el-table-column label="名称" prop="requiredName"></el-table-column>-->
+        <!--<el-table-column label="要求例数" prop="requiredNum" show-overflow-tooltip></el-table-column>-->
+        <!--<el-table-column label="实填例数" prop="userNum" show-overflow-tooltip></el-table-column>-->
+        <!--</el-table>-->
+        <!--</el-col>-->
         <el-col :span="20" :offset="2">
           <h4>出科成绩：</h4>
           <table class="el-table">
             <thead>
-              <tr>
-                <th>
-                  <div class="cell">名称</div>
-                </th>
-                <th>
-                  <div class="cell">成绩</div>
-                </th>
-                <th>
-                  <div class="cell">是否补考</div>
-                </th>
-              </tr>
+            <tr>
+              <th>
+                <div class="cell">名称</div>
+              </th>
+              <th>
+                <div class="cell">成绩</div>
+              </th>
+              <th>
+                <div class="cell">是否补考</div>
+              </th>
+            </tr>
             </thead>
             <tbody>
-              <tr class="el-table__row">
-                <td>
-                  <div class="cell">理论考核</div>
-                </td>
-                <td>
-                  <div class="cell">{{ viewData.theoryExamScore }}</div>
-                </td>
-                <td>
-                  <div class="cell">{{ (viewData.theoryExamScore ? viewData.theoryExamIsMakeup : '--') | isNeed }}</div>
-                </td>
-              </tr>
-              <tr class="el-table__row">
-                <td>
-                  <div class="cell">技能考核</div>
-                </td>
-                <td>
-                  <div class="cell">{{ viewData.skillExamScore }}</div>
-                </td>
-                <td>
-                  <div class="cell">{{ (viewData.skillExamScore ? viewData.skillExamIsMakeup : '--') | isNeed }}</div>
-                </td>
-              </tr>
-              <tr class="el-table__row">
-                <td>
-                  <div class="cell">日常考核</div>
-                </td>
-                <td>
-                  <div class="cell">{{ viewData.dailyExamScore }}</div>
-                </td>
-                <td>
-                  <div class="cell">--</div>
-                </td>
-              </tr>
-              <tr class="el-table__row">
-                <td>
-                  <div class="cell">综合成绩</div>
-                </td>
-                <td>
-                  <div class="cell">{{ viewData.coligateScore }}</div>
-                </td>
-                <td>
-                  <div class="cell">--</div>
-                </td>
-              </tr>
+            <tr class="el-table__row">
+              <td>
+                <div class="cell">理论考核</div>
+              </td>
+              <td>
+                <div class="cell">{{ viewData.theoryExamScore }}</div>
+              </td>
+              <td>
+                <div class="cell">{{ (viewData.theoryExamScore != null ? viewData.theoryExamIsMakeup : '--') | isNeed
+                  }}
+                </div>
+              </td>
+            </tr>
+            <tr class="el-table__row">
+              <td>
+                <div class="cell">技能考核</div>
+              </td>
+              <td>
+                <div class="cell">{{ viewData.skillExamScore }}</div>
+              </td>
+              <td>
+                <div class="cell">{{ (viewData.skillExamScore != null ? viewData.skillExamIsMakeup : '--') | isNeed }}
+                </div>
+              </td>
+            </tr>
+            <tr class="el-table__row">
+              <td>
+                <div class="cell">日常考核</div>
+              </td>
+              <td>
+                <div class="cell">{{ viewData.dailyExamScore }}</div>
+              </td>
+              <td>
+                <div class="cell">--</div>
+              </td>
+            </tr>
+            <tr class="el-table__row">
+              <td>
+                <div class="cell">综合成绩</div>
+              </td>
+              <td>
+                <div class="cell">{{ viewData.coligateScore }}</div>
+              </td>
+              <td>
+                <div class="cell">--</div>
+              </td>
+            </tr>
             </tbody>
           </table>
         </el-col>
@@ -105,7 +149,7 @@
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>小结附件：</h4>
-          <uploadFile :uploadFiles="depUploadFiles" :show="true"></uploadFile>
+          <uploadFile :uploadFiles="studentUploadFiles" :show="true"></uploadFile>
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>老师评语：</h4>
@@ -118,7 +162,8 @@
 
         <el-col :span="20" :offset="2">
           <h4>科室评语：</h4>
-          <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}" :maxlength="250" placeholder="请输入内容" v-model="summaryFileList.comment"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}" :maxlength="250" placeholder="请输入内容"
+                    v-model="summaryFileList.comment"></el-input>
         </el-col>
         <el-col :span="20" :offset="2">
           <h4>科室附件：</h4>
@@ -135,15 +180,15 @@
         <template v-if="summaryFileList.depQualified === 'NO_QUALIFIED'">
           <el-col :span="10" :offset="2">
             <el-form-item label="是否需要补轮转：">
-              <el-radio class="radio" v-model="summaryFileList.isMakeupRotary" :label="1">需要</el-radio>
-              <el-radio class="radio" v-model="summaryFileList.isMakeupRotary" :label="0">不需要</el-radio>
+              <el-radio class="radio" v-model="summaryFileList.isMakeupRotary" :label="1">是</el-radio>
+              <el-radio class="radio" v-model="summaryFileList.isMakeupRotary" :label="0">否</el-radio>
             </el-form-item>
           </el-col>
-          <el-col :span="10" v-if="summaryFileList.isMakeupRotary">
-            <el-form-item label="补轮转周期：">
-              <el-input v-model="summaryFileList.makeupTs" style="width:200px;"></el-input> 周
-            </el-form-item>
-          </el-col>
+          <!--<el-col :span="10" v-if="summaryFileList.isMakeupRotary">-->
+          <!--<el-form-item label="补轮转周期：">-->
+          <!--<el-input v-model="summaryFileList.makeupTs" style="width:200px;"></el-input> 周-->
+          <!--</el-form-item>-->
+          <!--</el-col>-->
         </template>
       </el-form>
       <div style="padding-top:16px;clear:both;">
@@ -167,12 +212,20 @@
     data() {
       return {
         self: this,
+        viewDayData: [{ // 出勤、奖惩情况
+          minerDays: '',
+          sickDays: '',
+          personalDays: '',
+          rewardNum: '',
+          penaltyNum: '',
+        }],
+        rotaryRequirStatic: [], // 轮转要求统计
         viewData: [],
         summaryFileList: {
           fileIds: '',
           comment: '',
           depQualified: "QUALIFIED", // 是否合格 QUALIFIED合格|NO_QUALIFIED不合格
-          isMakeupRotary: 1, // 是否需要补轮转 0不需要|1需要
+          isMakeupRotary: 0, // 是否需要补轮转 0不需要|1需要
           makeupTs: 1, // 轮转周期
           czType: '',
         },
@@ -187,7 +240,60 @@
     methods: {
       // 初始化
       init() {
-        this.getViewData()
+        if (this.userType) {
+          this.studentType = this.userType;
+        }
+        this.getViewData();
+        this.getRotaryRequirStatic();
+      },
+
+      // 获取出勤比例
+      getRotaryStuAbsenteeismRate() {
+        this.ajax({
+          ajaxSuccess: res => {
+            // 如果轮转出勤比例大于设置的轮转比例数的则默认需要补轮转
+            if ((this.viewData.attendanceRate || 0) > +(res.data.configValue ? res.data.configValue : 20)) {
+              this.summaryFileList.isMakeupRotary = 1;
+              this.summaryFileList.depQualified = 'NO_QUALIFIED';
+            }
+          },
+          ajaxParams: {
+            url: api.getConfig.path + 'rotary_stu_absenteeism_rate-' + this.studentType,
+            method: api.getConfig.method
+          }
+        })
+      },
+
+      // 转要求统计
+      getRotaryRequirStatic() {
+        let name = {
+          sscz: '手术操作',
+          jnys: '技能演示',
+          bltl: '病例讨论',
+          klxjz: '科内小讲座',
+          jxcf: '教学查房',
+          dbl: '大病例',
+          jn: '技能',
+          bz: '病种',
+        };
+        let opt = {
+          ajaxSuccess: res => {
+            if (res.data) {
+              let temp = [];
+              this.$util._.map(res.data, (val, key) => {
+                val.key = key;
+                val.name = name[key];
+                temp.push(val)
+              })
+              this.rotaryRequirStatic = temp;
+            }
+          },
+          ajaxParams: {
+            url: api.getRotaryRequirStatic.path + this.operailityData.podId,
+            method: api.getRotaryRequirStatic.method
+          }
+        };
+        this.ajax(opt)
       },
 
       // 获取预览数据
@@ -205,15 +311,20 @@
       getDataSuccess(res) {
         let fileIds = [];
         this.viewData = res.data;
+
+        for (let key in this.viewDayData[0]) {
+          this.viewDayData[0][key] = this.viewData[key] || '';
+        }
+
         this.summaryFileList.comment = res.data.depComment;
         this.summaryFileList.depQualified = res.data.depQualified || "QUALIFIED";
-        this.summaryFileList.isMakeupRotary = res.data.isMakeupRotary;
+        this.summaryFileList.isMakeupRotary = res.data.isMakeupRotary || 0;
         this.summaryFileList.makeupTs = res.data.makeupTs;
         this.studentUploadFiles.length = 0;
         this.teacherUploadFiles.length = 0;
         this.depUploadFiles.length = 0;
         // 学生附件
-        res.data.summaryFileList.map(item => {
+        (res.data.summaryFileList || []).map(item => {
           this.studentUploadFiles.push({
             fileId: item.id,
             fileName: item.fileName,
@@ -221,7 +332,7 @@
           })
         });
         // 老师附件
-        res.data.teacherCommentFileList.map(item => {
+        (res.data.teacherCommentFileList || []).map(item => {
           this.teacherUploadFiles.push({
             fileId: item.id,
             fileName: item.fileName,
@@ -229,7 +340,7 @@
           })
         });
         // 科室附件
-        res.data.depCommentFileList.map(item => {
+        (res.data.depCommentFileList || []).map(item => {
           fileIds.push(item.id);
           this.depUploadFiles.push({
             fileId: item.id,
@@ -239,6 +350,11 @@
         });
 
         this.summaryFileList.fileIds = fileIds.join(',');
+
+        // 首次审核则获取该生的轮转缺勤比例来初始化是否出科合格及是否需要补轮转
+        if(!res.data.depQualified){
+          this.getRotaryStuAbsenteeismRate();
+        }
 
         if (this.studentType === 'SXS') {
           this.operailityData.podId && this.getDepRequirementBySXS()
@@ -262,7 +378,7 @@
         this.ajax({
           ajaxSuccess: res => this.depRequirement = res.data || [],
           ajaxParams: {
-            url: api.getDepRequirement.path + '--' + this.operailityData.podId,
+            url: api.getDepRequirement.path + '__' + this.operailityData.podId,
             method: api.getDepRequirement.method
           }
         })

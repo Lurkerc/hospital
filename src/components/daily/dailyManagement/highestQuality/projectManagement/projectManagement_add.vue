@@ -69,7 +69,7 @@
       </el-row >
       <el-row >
         <el-col :span="17" :offset="2">
-          <el-form-item type="附件" v-model="formValidate.title" label="相关资料:" class="feildFontweight">
+          <el-form-item type="附件" v-model="formValidate.title" label="相关证明材料:" class="feildFontweight">
 
             <upload-file   @setUploadFiles="addFileEvent"></upload-file>
           </el-form-item>

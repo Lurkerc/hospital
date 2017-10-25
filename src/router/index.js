@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import {utils} from '../libs/util';
-import config from '../config/config';
+// import {utils} from '../libs/util';
+// import config from '../config/config';
 import Index from '../components/Index'
 
 //引入各个业务模块的二级路由
@@ -43,10 +43,8 @@ import courses from './subRouter/courses';
  * */
 //我的评价
 import evaluations from './subRouter/evaluations'
-
 //评价设置
 import evaluationSetting from './subRouter/evaluationSetting'
-
 //统计分析
 import jxpjStatistic from './subRouter/jxpjStatistic'
 
@@ -67,6 +65,15 @@ import cxtj from './subRouter/dorQueryStatistic'
  * 理论考核
  *
  * */
+//题库管理
+import questionBank from './subRouter/questionBank.js'
+//试卷管理
+import examPapers from './subRouter/examPapers.js'
+//考试统计
+import examQueryStatistic from './subRouter/examQueryStatistic.js'
+//学员考试练习
+import examStudentStudy from './subRouter/examStudentStudy.js'
+
 
 /**
  * 基础教务
@@ -87,79 +94,112 @@ import resources from './subRouter/teacherResManagement';
  * 技能中心
  *
  * */
-  //中心管理
-  import cstc from './subRouter/cstc'
-  //技能考核
-  import osce from './subRouter/osce'
+//中心管理
+import cstc from './subRouter/cstc'
+//技能考核
+import osce from './subRouter/osce'
 
 /**
  *
  * 轮转管理
  *
  * */
- import rotateRecordWrite from './subRouter/rotateRecordWrite.js'
- import rotateRecordAudit from './subRouter/rotateRecordAudit.js'
- import rotateQuery from './subRouter/rotateQuery.js'
- import appraisalManagement from './subRouter/appraisalManagement.js'
- import reportsManagement from './subRouter/reportsManagement.js'
+import rotateRecordWrite from './subRouter/rotateRecordWrite.js'
+import rotateRecordAudit from './subRouter/rotateRecordAudit.js'
+import rotateQuery from './subRouter/rotateQuery.js'
+import appraisalManagement from './subRouter/appraisalManagement.js'
+import reportsManagement from './subRouter/reportsManagement.js'
+// 轮转安排
+import arrangeRotation from './subRouter/arrangeRotation.js'
 
 /**
  *
  * 实习生
  *
  * */
-  //本科教育
-  import undergraduate from './subRouter/undergraduate'
-  //实习生基础数据
-  import internBasis from './subRouter/internBasisData'
-  //实习生招生
-  import recruitStudent from './subRouter/recruitStudent'
-  //实习生轮转
-  import internRotate from './subRouter/internRotate'
-  //轮转管理
-  import rotateManagement from './subRouter/rotateManagement'
-  //实习手册
-  import internHandbook from './subRouter/internHandbook'
+//本科教育
+import undergraduate from './subRouter/undergraduate'
+//实习生基础数据
+import internBasis from './subRouter/internBasisData'
+//实习生招生
+import recruitStudent from './subRouter/recruitStudent'
+//实习生轮转
+import internRotate from './subRouter/internRotate'
+//轮转管理
+import rotateManagement from './subRouter/rotateManagement'
+//实习手册
+import internHandbook from './subRouter/internHandbook'
 
 /**
  *
  * 研究生
  *
  * */
+//报名招录
+import ptEnrollEnroll from './subRouter/ptEnrollEnroll.js'
+//研导双选
+import ptResearchSelections from './subRouter/ptResearchSelections.js'
+//培养计划
+import pttrainingPlan from './subRouter/pttrainingPlan.js'
+//培养计划
+import ptProposal from './subRouter/ptProposal.js'
+//中期考核
+import mediumTermExamination from './subRouter/mediumTermExamination.js'
+//答辩管理
+import makeOpenReply from './subRouter/makeOpenReply.js'
+//毕业管理
+import graduate from './subRouter/graduate.js'
+//轮转安排
+import ptRotationArrangement from './subRouter/ptRotationArrangement.js'
+//基础设置
+import ptBasicSetting from './subRouter/ptBasicSetting.js'
 
 /**
  *
  * 住院医
  *
  * */
-  //报名招录
-  import rdyEnrollEnroll from './subRouter/rdyEnrollEnroll'
-  //轮转安排
-  import rdyRotationArrangement from './subRouter/rdyRotationArrangement'
-  //基础设置
-  import rdyBasicSetting from './subRouter/rdyBasicSetting'
+//报名招录
+import rdyEnrollEnroll from './subRouter/rdyEnrollEnroll'
+//轮转安排
+import rdyRotationArrangement from './subRouter/rdyRotationArrangement'
+//基础设置
+import rdyBasicSetting from './subRouter/rdyBasicSetting'
 
 /**
  *
  * 进修管理
  *
  * */
+//外出进修
+import outEducation from './subRouter/outEducation.js'
+//学术会议
+import academicConference from './subRouter/academicConference.js'
+//报名招录
+import enrollEnroll from './subRouter/enrollEnroll.js'
+//过程记录
+import recordsCourse from './subRouter/recordsCourse.js'
+//轮转安排
+import emRotationArrangement from './subRouter/emRotationArrangement.js'
+//基础设置
+import emBasicSetting from './subRouter/emBasicSetting.js'
 
 /**
  *
  * 经费管理
  *
  * */
+import specialFund from './subRouter/specialFund.js'
 
 /**
  *
  * 系统管理
  *
  * */
-  //系统管理
-  import sysManage from './subRouter/sysManage'
-  //系统设置
-  import systemSettings from './subRouter/systemSettings'
+//系统管理
+import sysManage from './subRouter/sysManage'
+//系统设置
+import systemSettings from './subRouter/systemSettings'
 
 
 /**
@@ -167,11 +207,12 @@ import resources from './subRouter/teacherResManagement';
  * 登录
  *
  * */
-  import Login from '../components/login'
+import Login from '../components/login'
+
 /*
 * 404页面配置
 * */
-import NotFoundComponent from '../components/common/404'
+// import NotFoundComponent from '../components/common/404'
 
 Vue.use(Router)
 
@@ -991,50 +1032,41 @@ dataStructure["structureIndex"] = structureIndex;
 //配置子路由
 const routes = [
   //系统打的默认首页
-  { path: '/manage',redirect: '/login' },
-  { path: '/manage.html',redirect:'/login' },
+  {path: '/manage', redirect: '/login'},
+  {path: '/manage.html', redirect: '/login'},
   {
-    path:'/manage',
+    path: '/manage',
     name: 'manage',
     component: Index,
-    children:[
+    children: [
       //工作台
-       work,
+      work,
       //日常管理
-      pygl,jtgl,zyzhd,kqgl,zybl,jcjl,
-
+      pygl, jtgl, zyzhd, kqgl, zybl, jcjl,
       //在线学习
-      resourcesStudy,courses,
-
+      resourcesStudy, courses,
       //教学评价
-      evaluations,evaluationSetting,jxpjStatistic,
-
+      evaluations, evaluationSetting, jxpjStatistic,
       //宿舍管理
-      dormitory,zsgl,cxtj,
-
+      dormitory, zsgl, cxtj,
       //理论考核
-
-
+      questionBank, examPapers, examQueryStatistic, examStudentStudy,
       //基础教务
       jxhd, consultive, szk, dagl, resources,
-
       //技能中心
       cstc, osce,
-
       //轮转管理
-      rotateRecordWrite, rotateRecordAudit, rotateQuery, appraisalManagement, reportsManagement,
+      rotateRecordWrite, rotateRecordAudit, rotateQuery, appraisalManagement, reportsManagement, arrangeRotation,
       //实习生
       undergraduate, internBasis, recruitStudent, internRotate, rotateManagement, internHandbook,
-
       //研究生
-
+      ptEnrollEnroll, ptResearchSelections, pttrainingPlan, ptProposal, mediumTermExamination, makeOpenReply, graduate, ptRotationArrangement, ptBasicSetting,
       //住院医
-      rdyEnrollEnroll, rdyBasicSetting, rdyRotationArrangement,
-
+      rdyEnrollEnroll, rdyBasicSetting, rdyRotationArrangement, enrollEnroll,
       //进修管理
-
+      outEducation, academicConference, enrollEnroll, recordsCourse, emRotationArrangement, emBasicSetting,
       //经费管理
-
+      specialFund,
       //系统设置
       sysManage, systemSettings,
     ]
@@ -1047,7 +1079,7 @@ const routes = [
     },
     component: Login
   },
-  { path: '*', redirect: '/login'}
+  {path: '*', redirect: '/login'}
 
 ]
 //实例化路由

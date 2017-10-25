@@ -231,6 +231,14 @@
       //获取server端返回的科室
       getDepData(responseData){
         let data = responseData.data;
+        if(!data) return ;
+        for(let i =0;i<data.length;i++){
+          let item = data[i]
+          if(item.id == -1){
+            data.splice(i,1);
+            i--;
+          }
+        }
         this.optionData = data;
       },
 

@@ -372,7 +372,7 @@
         </el-row>
         <el-row class="table-back-two-d">
           <el-col :span="10" >
-            <el-form-item label="相关资料:">
+            <el-form-item label="相关证明材料:">
               <upload-file :uploadFiles="formValidate.fileList" :show="true"></upload-file>
             </el-form-item>
           </el-col>

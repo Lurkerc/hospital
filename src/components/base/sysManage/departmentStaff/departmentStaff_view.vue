@@ -1,79 +1,96 @@
 <!--档案查看-->
 <template>
   <div>
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="基本情况" name="first">
-        <!-- 基本情况-->
+    <p align="right">
+      <el-button @click="changeView">切换视图</el-button>
+    </p>
+    <el-tabs v-show="showTab" v-model="activeName">
+      <el-tab-pane label="基本情况" name="basic">
         <keep-alive>
-          <basic :data-id="operailityData.id" :studentType="studentType" v-if="currentView==0"></basic>
+          <basic :data-id="operailityData.id" v-if="activeName==='basic'"></basic>
         </keep-alive>
       </el-tab-pane>
-      <el-tab-pane label="学历信息" name="second">
+      <el-tab-pane label="学历信息" name="education">
         <keep-alive>
-          <education :data-id="operailityData.id" v-if="currentView==1"></education>
+          <education :data-id="operailityData.id" v-if="activeName==='education'"></education>
         </keep-alive>
       </el-tab-pane>
-      <el-tab-pane label="工作经历" name="third">
+      <el-tab-pane label="工作经历" name="work-experience">
         <!--   工作经历-->
         <keep-alive>
-          <work-experience :data-id="operailityData.id" v-if="currentView==2"></work-experience>
+          <work-experience :data-id="operailityData.id" v-if="activeName==='work-experience'"></work-experience>
         </keep-alive>
       </el-tab-pane>
-      <el-tab-pane label="专业技术职称晋升情况" name="fourth">
+      <el-tab-pane label="专业技术职称晋升情况" name="professional-skill">
         <!-- 专业技术职称晋升情况-->
         <keep-alive>
-          <professional-skill :data-id="operailityData.id" v-if="currentView==3"></professional-skill>
+          <professional-skill :data-id="operailityData.id" v-if="activeName==='professional-skill'"></professional-skill>
         </keep-alive>
       </el-tab-pane>
-      <el-tab-pane label="资格证书取得情况" name="five">
+      <el-tab-pane label="资格证书取得情况" name="credentials">
         <!-- 资格证书取得情况-->
         <keep-alive>
-          <credentials :data-id="operailityData.id" v-if="currentView==4"></credentials>
+          <credentials :data-id="operailityData.id" v-if="activeName==='credentials'"></credentials>
         </keep-alive>
       </el-tab-pane>
-      <el-tab-pane label="教学经历" name="six">
+      <el-tab-pane label="教学经历" name="teaching-experience">
         <!--教学经历-->
         <keep-alive>
-          <teaching-experience :data-id="operailityData.id" v-if="currentView==5"></teaching-experience>
+          <teaching-experience :data-id="operailityData.id" v-if="activeName==='teaching-experience'"></teaching-experience>
         </keep-alive>
       </el-tab-pane>
-      <el-tab-pane label="学习培训情况" name="seven">
-        <!--学习培训情况-->
-        <keep-alive>
-          <study :data-id="operailityData.id" v-if="currentView==6"></study>
-        </keep-alive>
-      </el-tab-pane>
-      <el-tab-pane label="培训考试、考核情况" name="eight">
-        <!--培训考试、考核情况-->
-        <keep-alive>
-          <train :data-id="operailityData.id" v-if="currentView==7"></train>
-        </keep-alive>
-      </el-tab-pane>
-      <el-tab-pane label="获奖情况" name="nine">
+      <!--<el-tab-pane label="学习培训情况" name="study">-->
+        <!--&lt;!&ndash;学习培训情况&ndash;&gt;-->
+        <!--<keep-alive>-->
+          <!--<study :data-id="operailityData.id" v-if="activeName==='study'"></study>-->
+        <!--</keep-alive>-->
+      <!--</el-tab-pane>-->
+      <!--<el-tab-pane label="培训考试、考核情况" name="train">-->
+        <!--&lt;!&ndash;培训考试、考核情况&ndash;&gt;-->
+        <!--<keep-alive>-->
+          <!--<train :data-id="operailityData.id" v-if="activeName==='train'"></train>-->
+        <!--</keep-alive>-->
+      <!--</el-tab-pane>-->
+      <el-tab-pane label="获奖情况" name="awards">
         <!--获奖情况-->
         <keep-alive>
-          <awards :data-id="operailityData.id" v-if="currentView==8"></awards>
+          <awards :data-id="operailityData.id" v-if="activeName==='awards'"></awards>
         </keep-alive>
       </el-tab-pane>
-      <el-tab-pane label="科研信息" name="ten">
+      <el-tab-pane label="科研信息" name="scientific">
         <!--科研信息-->
         <keep-alive>
-          <scientific :data-id="operailityData.id" v-if="currentView==9"></scientific>
+          <scientific :data-id="operailityData.id" v-if="activeName==='scientific'"></scientific>
         </keep-alive>
       </el-tab-pane>
-      <el-tab-pane label="证件复印件" name="eleven">
+      <el-tab-pane label="证件复印件" name="papers">
         <!--证件复印件-->
         <keep-alive>
-          <papers :data-id="operailityData.id" v-if="currentView==10"></papers>
+          <papers :data-id="operailityData.id" v-if="activeName==='papers'"></papers>
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
+    <div v-show="!showTab">
+      <template v-if="initShowData">
+        <basic :data-id="operailityData.id" class="archivesItems"></basic>
+        <education :data-id="operailityData.id" class="archivesItems"></education>
+        <work-experience :data-id="operailityData.id" class="archivesItems"></work-experience>
+        <professional-skill :data-id="operailityData.id" class="archivesItems"></professional-skill>
+        <credentials :data-id="operailityData.id" class="archivesItems"></credentials>
+        <teaching-experience :data-id="operailityData.id" class="archivesItems"></teaching-experience>
+        <!--<study :data-id="operailityData.id" class="archivesItems"></study>-->
+        <!--<train :data-id="operailityData.id" class="archivesItems"></train>-->
+        <awards :data-id="operailityData.id" class="archivesItems"></awards>
+        <scientific :data-id="operailityData.id" class="archivesItems"></scientific>
+        <papers :data-id="operailityData.id" class="archivesItems"></papers>
+      </template>
+    </div>
   </div>
 </template>
 <script>
   /*引入查看的子组件*/
   //  引入--基本情况--组件
-  import basic from '../../../teach/archivesManagement/archivesManagement/archivesManagement_view/archivesManagement_view_basic.vue';
+  import basic from '../../../common/archivesManagement/archivesManagement_basic/other/view.vue';
   //  引入--学历信息--组件
   import education from '../../../teach/archivesManagement/archivesManagement/archivesManagement_view/archivesManagement_view_education.vue';
   //  引入--工作经历--组件
@@ -85,9 +102,9 @@
   //  引入--教学经历--组件
   import teachingExperience from '../../../teach/archivesManagement/archivesManagement/archivesManagement_view/archivesManagement_view_teachingExperience.vue';
   //  引入--学习培训情况--组件
-  import study from '../../../teach/archivesManagement/archivesManagement/archivesManagement_view/archivesManagement_view_study.vue';
+//  import study from '../../../teach/archivesManagement/archivesManagement/archivesManagement_view/archivesManagement_view_study.vue';
   //  引入--培训考试、考核情况--组件
-  import train from '../../../teach/archivesManagement/archivesManagement/archivesManagement_view/archivesManagement_view_train.vue';
+//  import train from '../../../teach/archivesManagement/archivesManagement/archivesManagement_view/archivesManagement_view_train.vue';
   //  引入--获奖情况--组件
   import awards from '../../../teach/archivesManagement/archivesManagement/archivesManagement_view/archivesManagement_view_awards.vue';
   //  引入--科研信息--组件
@@ -99,13 +116,23 @@
     props: ['operailityData', 'studentType'], // studentType 学生类型
     data() {
       return {
-        activeName: 'first',
-        currentView: 0,
+        showTab: true,
+        activeName: 'basic',
+//        currentView: 0,
+        initShowData:false,
       };
     },
     methods: {
-      handleClick(tab, event) {
-        this.currentView = tab["index"];
+//      handleClick(tab, event) {
+//        this.currentView = tab["index"];
+//      },
+      changeView(){
+        this.showTab = !this.showTab;
+        if(this.showTab){
+          this.activeName= 'basic';
+//          this.currentView = 0;
+        }
+        this.initShowData = true;
       },
     },
     components: {
@@ -115,8 +142,8 @@
       professionalSkill,
       credentials,
       teachingExperience,
-      study,
-      train,
+//      study,
+//      train,
       awards,
       scientific,
       papers
@@ -124,3 +151,11 @@
   };
 
 </script>
+
+<style lang="scss">
+  .archivesItems{
+    &~&{
+       margin-top:50px;
+    }
+  }
+</style>

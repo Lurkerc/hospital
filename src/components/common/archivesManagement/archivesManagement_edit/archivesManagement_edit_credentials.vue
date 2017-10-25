@@ -52,6 +52,7 @@
                   <el-date-picker
                     v-model="scope.row.obtainDate"
                     type="date"
+                    :editable="false"
                     placeholder="选择日期"
                     style="width: 100%;"
                   >
@@ -84,15 +85,15 @@
         <!--<load-btn @listenSubEvent="saveCurrData" :btnData="loadBtn"></load-btn>-->
       <!--</el-col>-->
     <!--</el-row >-->
-    <div style="font-size: 1px;overflow: hidden;line-height: 1;border-top:1px solid #e3e8ee;margin: 12px 0;"></div>
-    <el-row>
-      <el-col :span="9" :offset="10">
-        <el-button type="primary" v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @click="saveDataToParent">保存</el-button>
-        <load-btn  v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
-        <span v-if="userInfo.archivesAuditStatus=='NOT_AUDIT'" style="margin-right: 10px;color: #FF4949;">您的档案信息正在审核中……</span>
-        <el-button  @click="cancel">取消</el-button>
-      </el-col>
-    </el-row >
+    <!--<div style="font-size: 1px;overflow: hidden;line-height: 1;border-top:1px solid #e3e8ee;margin: 12px 0;"></div>-->
+    <!--<el-row>-->
+      <!--<el-col :span="9" :offset="10">-->
+        <!--<el-button type="primary" v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @click="saveDataToParent">保存</el-button>-->
+        <!--<load-btn  v-if="userInfo.archivesAuditStatus!='NOT_AUDIT'" @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>-->
+        <!--<span v-if="userInfo.archivesAuditStatus=='NOT_AUDIT'" style="margin-right: 10px;color: #FF4949;">您的档案信息正在审核中……</span>-->
+        <!--<el-button  @click="cancel">取消</el-button>-->
+      <!--</el-col>-->
+    <!--</el-row >-->
   </div>
 </template>
 <script>
@@ -100,7 +101,8 @@
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['dataId','initData','userInfo'],
+//    props: ['dataId','initData','userInfo'],
+    props: ['dataId'],
     data (){
       return{
         tableData:[],
@@ -117,7 +119,7 @@
           type:'edit',
           successTitle:'修改成功!',
           errorTitle:'修改失败!',
-          ajaxSuccess:'ajaxSuccess',
+          ajaxSuccess:'saveSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
             url:'/archives/save/qualified/'+this.dataId,
@@ -151,8 +153,8 @@
        * */
       init(){
         //默认请求加载数据
-        //this.ajax(this.initMessTitle);
-        this.SuccessGetCurrData();
+        this.ajax(this.initMessTitle);
+//        this.SuccessGetCurrData();
       },
 
 
@@ -166,9 +168,14 @@
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true)
           this.editMessTitle.ajaxParams.data = this.getFormData(this.tableData);
-          this.$emit("setSaveData",this.editMessTitle.ajaxParams.data);
+//          this.$emit("setSaveData",this.editMessTitle.ajaxParams.data);
           this.ajax(this.editMessTitle, isLoadingFun)
         }
+      },
+
+      //保存成功后回调
+      saveSuccess() {
+        this.$emit("save",'credentials');
       },
 
 
@@ -207,7 +214,7 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-        let data = this.initData;//responseData.data;
+        let data = responseData.data;//responseData.data;
         this.tableData = data;
         this.setTableDatTemplate();
       },

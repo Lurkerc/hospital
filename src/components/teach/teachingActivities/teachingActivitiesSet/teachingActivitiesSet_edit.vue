@@ -16,9 +16,8 @@
         </el-form-item>
 
         <el-form-item style="width:284px;" label="类型 :" prop="activityType">
-          <el-select style="width:284px;" v-model="formValidate.activityType"  placeholder="请选择" >
+          <el-select disabled  style="width:284px;" v-model="formValidate.activityType"  placeholder="请选择" >
             <select-option :unAll="true" :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
-            </el-option>
           </el-select>
         </el-form-item>
 
@@ -50,7 +49,7 @@
         </el-form-item>
 
         <el-form-item label="活动名称 :" prop="activityName">
-          <el-input v-model="formValidate.activityName"></el-input>
+          <el-input disabled v-model="formValidate.activityName"></el-input>
         </el-form-item>
 
         <el-form-item label="活动地点 :" prop="activitySite">
@@ -61,13 +60,16 @@
     <el-row>
       <el-col :span="24">
         <el-form-item label="时间段 :" prop="recordTimes">
-          <el-checkbox-group v-model="formValidate.recordTimes">
-            <el-checkbox v-for="(item,index) in getRecordTimes" :key="index" :label="item.courseTime+'/'+item.timeId" >{{item.courseTime}}</el-checkbox>
-          </el-checkbox-group>
+          <el-time-picker
+            is-range
+            :editable="false"
+            v-model="formValidate.recordTimes"
+            placeholder="选择时间范围">
+          </el-time-picker>
         </el-form-item>
       </el-col>
     </el-row>
-      <el-row>
+    <!--  <el-row>
         <el-col :span="12">
           <el-form-item label="病例 :" prop="whetherNeedCases">
             <el-radio-group v-model="formValidate.whetherNeedCases">
@@ -81,7 +83,7 @@
             <el-input v-model="formValidate.casesName" ></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row>-->
       <el-row>
         <el-col :span="24">
           <el-form-item label="活动内容 :" prop="name8">
@@ -99,7 +101,7 @@
                 <el-col :span="24">
                   <div class="grid-content-ptop">
                     <el-radio :label="'ROTARYDEP'">轮转科室</el-radio>
-                    <el-select v-show="formValidate.activityUserType=='ROTARYDEP'" v-model="rotarydep.activityUserTypeValue" multiple placeholder="请选择" >-->
+                    <el-select v-show="formValidate.activityUserType=='ROTARYDEP'" v-model="rotarydep.activityUserTypeValue" multiple placeholder="请选择" >
                       <select-option :unAll="true"></select-option>
                     </el-select>
                     <div v-show="formValidate.activityUserType=='ROTARYDEP'" style="display:inline-block;width: 100px;font-size:14px;text-align: right">人员类型:</div>
@@ -116,7 +118,7 @@
                 <el-col :span="24">
                   <div class="grid-content-ptop">
                     <el-radio :label="'PARTUSER'">部分人员</el-radio>
-                      <el-select style="margin-left: 10px" v-show="formValidate.activityUserType == 'PARTUSER'" placeholder multiple v-model="partuser.activityUserTypeValue" filterable placeholder="请选择">
+                      <el-select style="margin-left: 10px" @remove-tag="userRemove"  v-show="formValidate.activityUserType == 'PARTUSER'" placeholder multiple v-model="partuser.activityUserTypeValue" filterable placeholder="请选择">
                         <el-option
                           v-for="item in options"
                           :key="item.id"
@@ -149,6 +151,13 @@
           </el-form-item>
         </el-col>
       </el-row>
+    <el-row>
+      <el-col :span="24" >
+        <el-form-item label="相关证明材料:">
+          <upload-file  :uploadFiles="data.activityFileList"  @setUploadFiles="expenseFileEvent"></upload-file>
+        </el-form-item>
+      </el-col>
+    </el-row>
   </el-form>
     <el-row>
       <el-col :span="10" :offset="10">
@@ -201,11 +210,7 @@
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         countDate:0,
-        options: [{
-          id:0,
-          value: '选项1',
-          label: '暂无'
-        }],
+        options: [],
 
         activityPlan:'',
         getRecordTimes:'',
@@ -234,6 +239,8 @@
           isPlan:'',  //是否计划内
           activityPlanId:'', //月度计划ID
           planDetailId:'', //计划详情ID
+          activityFileIds:'',
+          activityFileList:[],
         },
 
         "data":{
@@ -260,6 +267,8 @@
           "recordTimes":"",
           "activityState":"",
           "fileList":[
+          ],
+          "activityFileList":[
           ]
         },
 
@@ -373,7 +382,7 @@
     mounted(){
       //暂时没有初始化,预留初始化入口
       this.init();
-      this.ajax(this.timeListMessTitle)
+//      this.ajax(this.timeListMessTitle)
 
     },
     methods: {
@@ -443,8 +452,7 @@
          }
          ]*/
         this.planData = data;
-        if( this.isFirst){
-
+        if(this.isFirst){
           this.activityPlan = this.formValidate.planDetailId+'-'+this.formValidate.activityPlanId;
           this.isPlan = true;
           this.$nextTick(function () {
@@ -462,11 +470,12 @@
        * */
       listenSubEvent(isLoadingFun){
         let isSubmit = this.submitForm("formValidate");
-
         if(isSubmit){
           if(!isLoadingFun) isLoadingFun=function(){};
+          let data = this.disposeData(this.getFormData(this.formValidate));
+          if(!data) return ;
+          this.editMessTitle.ajaxParams.data = data;
           isLoadingFun(true);
-          this.editMessTitle.ajaxParams.data=this.disposeData(this.getFormData(this.formValidate));
           this.ajax(this.editMessTitle,isLoadingFun)
         }
       },
@@ -483,12 +492,27 @@
           if(typeof this[activityUserType].activityUserTypeValueId=='object'){
             Value =this[activityUserType].activityUserTypeValueId.join(',');
           }
+          if(!Value){
+            this.errorMess('部分人员不能为空');
+            return;
+          }
           data.activityUserTypeValue =Value|| this[activityUserType].activityUserTypeValueId;
         }else{
-          if(activityUserType!='rotarydep') data.activityDepUserType ='';
+          if(activityUserType!='rotarydep'){
+            data.activityDepUserType ='';
+          } else {
+            if(!data.activityDepUserType){
+              this.errorMess('人员类型不能为空');
+              return;
+            }
+          }
           let Value;
           if(typeof this[activityUserType].activityUserTypeValue=='object'){
             Value =this[activityUserType].activityUserTypeValue.join(',');
+          }
+          if(!Value){
+            this.errorMess(`${activityUserType=='rotarydep'?'轮转科室':'部分角色'}不能为空`);
+            return;
           }
           data.activityUserTypeValue =Value|| this[activityUserType].activityUserTypeValue;
         }
@@ -497,16 +521,11 @@
           data.casesName='';
         }
 
-        //处理recordTimes，timeIds
-        let times=[];
-        let ids = [];
-        for (let i=0;i<data.recordTimes.length;i++){
-          let val = data.recordTimes[i].split('/');
-          ids.push(val[1]);
-          times.push(val[0]);
+        if( data.recordTimes.length!=2){
+          this.errorMess('请选择时间段')
+          return;
         }
-        data.recordTimes = times.join(',');
-        data.timeIds = ids.join(',');
+        data.activityTimeInfo = this.conductDate(data.recordTimes[0],'HH:mm')+'-'+this.conductDate(data.recordTimes[1],'HH:mm');
         this.formDate(data,['activityTime']);
 
         return data
@@ -611,16 +630,32 @@
 
       //处理获取到的数据
       disposeGetData(data){
-        let times=[];
-          if(data.recordTimes&&data.timeIds){
-            let  recordTimes=  data.recordTimes.split(',');
-            let timeIds =  data.timeIds.split(',');
-            for (let i=0;i<recordTimes.length;i++){
-              times.push(recordTimes[i]+'/'+timeIds[i]);
-            }
-          }
-        data.recordTimes = times||[];
+        let time= data.activityTimeInfo.split('-');
+         let start = time[0].split(':');
+         let end = time[1].split(':');
+        data.recordTimes= [new Date(2017, 9, 10, start[0], start[1]), new Date(2017, 9, 10,end[0], end[1])];
         return data
+      },
+
+
+      //移除人员的标签
+      userRemove(item){
+        let value = item.value;
+        for(let i=0;i<this.selectUser.length;i++){
+          let item = this.selectUser[i];
+          if(item.label == value){
+            this.partuser.activityUserTypeValueId.splice(i,1);
+            this.selectUser.splice(i,1);
+          }
+
+        }
+//        console.log(this.selectUser);
+//       /* //部分人员
+//        partuser:{
+//          activityUserTypeValue:[],
+//            activityUserTypeValueId:[],
+//        },*/
+//       console.log(this.partuser);
       },
 
 
@@ -720,7 +755,7 @@
 
       //计划选项发生改变
       planChange(val){
-
+        if(this.isFirst)return;
         if(!val)return;
         let selectPlanData = {};
         for(let i=0;i<this.planData.length;i++){
@@ -763,7 +798,6 @@
         formValidate.activityName = selectPlanData.planActivityTitle ; //活动名称
         formValidate.activityType = selectPlanData.planActivityType  ;//活动类型
 
-        //todo 主持人  主持人只能选择一个计划要修改
         formValidate.hostUserId = selectPlanData.planActivityHostUserId;
         formValidate.hostUserName = selectPlanData.planActivityHostUserName;
         this.selectHost = [{
@@ -779,17 +813,11 @@
         let times = []
         if(!selectPlanData.planActivityTimeids)selectPlanData.planActivityTimeids='';
         let planActivityTimeids = selectPlanData.planActivityTimeids.split(',');
-        for(let k=0;k<planActivityTimeids.length;k++){
-          let item = planActivityTimeids[k];
-          for(let l=0;l<this.getRecordTimes.length;l++){
-            let time = this.getRecordTimes[l];
-            if(time.timeId == item){
-              times.push(time.courseTime+'/'+time.timeId)
-              continue;
-            }
-          }
-        }
-        formValidate.recordTimes = times;
+        let time= planActivityTimeids.split('-');
+          let start = time[0].split(':');
+          let end = time[1].split(':');
+        formValidate.recordTimes= [new Date(2017, 9, 10, start[0], start[1]), new Date(2017, 9, 10,end[0], end[1])];
+
         //活动地点
         formValidate.activitySite =selectPlanData.planActivitySite;
         //活动内容
@@ -797,7 +825,12 @@
         formValidate.planDetailId = selectPlanData.planDetailId;
         formValidate.activityPlanId = selectPlanData.activityPlanId;
 
+      },
+
+      expenseFileEvent(ids){
+        this.formValidate.activityFileIds = ids;
       }
+
 
 
 

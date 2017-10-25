@@ -29,7 +29,44 @@
       </div>
     </div>
     <div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox">
+      <el-form :rules="form" :inline="true" style="margin-top:10px;" label-width="74px">
+        <el-row>
 
+          <el-form-item label="状态:">
+            <el-select v-model="formValidate.rtState" placeholder="请选择状态">
+              <el-option label="全部" value=""></el-option>
+              <el-option label="轮转中" value="99"></el-option>
+              <el-option label="已安排未开始轮转" value="9"></el-option>
+              <el-option label="轮转暂停" value="-1"></el-option>
+            </el-select>
+          </el-form-item>
+          <!--<el-form-item label="排序:">-->
+            <!--<el-select v-model="formValidate.sortby" placeholder="请选择状态">-->
+              <!--<el-option label="全部" value=""></el-option>-->
+              <!--<el-option label="创建时间" value="createTime"></el-option>-->
+              <!--<el-option label="状态" value="rtState"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <el-form-item label="创建年份:">
+            <el-select v-model="formValidate.year" placeholder="请选择状态">
+              <el-option label="全部" value=""></el-option>
+              <el-option label="2015" value="2015"></el-option>
+              <el-option label="2016" value="2016"></el-option>
+              <el-option label="2017" value="2017"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="学院名称:" prop="schoolName">
+            <el-input v-model="formValidate.schoolName"></el-input>
+          </el-form-item>
+          <!--<el-form-item label="考核状态:">
+            <el-select v-model="searchObj.status" placeholder="请选择">
+              <el-option v-for="item in examineStatuOption" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>-->
+          <el-button type="info" @click="search">查询</el-button>
+        </el-row>
+      </el-form>
     </div>
     <br />
     <!--表格数据操作按钮-->
@@ -177,6 +214,7 @@
 
 <script >
   /*当前组件必要引入*/
+  import { form } from '../../rules';
   //引入--微调--组件
   import trimming from "./trimming.vue";
   import recover from "./recoverRotate.vue";
@@ -188,18 +226,17 @@
   export default{
     data() {
       return {
+        form,
         //查询表单
         deleteUrl: api.deleteRotary.path,
         //form表单bind数据
         formValidate: {
-          "userName":"",
-          "schoolName":"",
-          "mobile":"",
-          "major":"",
-          "idNumber":"",
-          "rotaryBeginTime":"",
-          "rotaryEndTime":"",
-          "rotaryState":""
+          userName: '',
+          rtState:'',
+          year:'',
+          sortby:'',
+          schoolName:'',
+          order:''
         },
         /*--按钮button--*/
         removeId:{
@@ -338,7 +375,10 @@
         this.openModel('remove') ;
       },
 
-
+      //查询
+      search(){
+        this.setTableData()
+      },
       /*
        * 点击--修改角色--按钮
        * @param index string|number  当前行索引

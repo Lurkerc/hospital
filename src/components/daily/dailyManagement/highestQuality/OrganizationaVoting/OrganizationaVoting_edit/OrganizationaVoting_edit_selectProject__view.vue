@@ -44,7 +44,7 @@
       </el-row >
       <el-row >
         <el-col :span="8" :offset="2">
-          <el-form-item type="附件" label="相关资料:" class="feildFontweight">
+          <el-form-item type="附件" label="相关证明材料:" class="feildFontweight">
             <p v-for="(item,index) in data.fileList" :key="index"><a href="">{{item.fileName}}</a></p>
           </el-form-item>
         </el-col >

@@ -127,14 +127,14 @@
               loading:false,
               listTotal:0,
               tableData1:[
-                {
-                  "userId":1,
-                  "userName":"欧阳夏丹",
-                  "schoolName":"北京医科大学",
-                  "specialty":"呼吸内科",
-                  "phoneNum":"13261889505",
-                  "email":"yongchao0310@163.com"
-                }
+//                {
+//                  "userId":1,
+//                  "userName":"欧阳夏丹",
+//                  "schoolName":"北京医科大学",
+//                  "specialty":"呼吸内科",
+//                  "phoneNum":"13261889505",
+//                  "email":"yongchao0310@163.com"
+//                }
               ],
               dataObj:{},
 

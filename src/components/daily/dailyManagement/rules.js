@@ -10,7 +10,7 @@ let leaveManagementList = {
 
 let leaveManagement = {
   status:[{ required: true, message: '此项为必填项'},baseRules.inputLen(0,50),baseRules.illegalChar()],
-  auditInfo: [baseRules.inputLen(0,500),baseRules.illegalChar()] //
+  content: [baseRules.inputLen(0,500),baseRules.illegalChar()] //
 };
 
 /**

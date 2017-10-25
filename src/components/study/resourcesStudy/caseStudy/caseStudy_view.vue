@@ -55,7 +55,7 @@
         <h2 style="text-align: center;padding: 15px 0;">{{showListItem.title}}</h2>
       </div>
     </pdf>
-    <div class="downLoadDoc"><el-button type="primary" @click="downLoadFile(showListItem.pdf)" icon="arrow-down">下载</el-button></div>
+    <div class="downLoadDoc" v-if="showListItem.pdf"><a :href="showListItem.pdf" download><el-button type="primary"  icon="arrow-down">下载</el-button></a></div>
     <chatteris v-if="showListItem.id!=''" :resourceId="showListItem.id" :types="'CASES'"></chatteris>
   </div>
 </template>

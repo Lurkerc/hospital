@@ -24,6 +24,7 @@
         <el-date-picker
           v-model="formSearch.activityBeginTime"
           type="date"
+          :editable="false"
           placeholder="选择日期"
           :picker-options="pickerOptions0"
           @change="handleStartTime">
@@ -35,6 +36,7 @@
           v-model="formSearch.activityEndTime"
           align="right"
           type="date"
+          :editable="false"
           placeholder="选择日期"
           :picker-options="pickerOptions1"
           @change="handleEndTime">
@@ -154,7 +156,7 @@
     </div>
     <!--新建教学活动-->
     <Modal
-      close-on-click-modal="false"
+      :mask-closable="false"
       width="800"
       v-model="addModal"
       title="新建教学活动"
@@ -166,7 +168,6 @@
     </Modal>
     <!--修改角色弹窗-->
     <Modal
-      close-on-click-modal="false"
       :mask-closable="false"
       v-model="editModal"
       height="200"
@@ -181,7 +182,7 @@
     </Modal>
     <!--查看教学活动-->
     <Modal
-      close-on-click-modal="false"
+      :mask-closable="false"
       height="200"
       v-model="showModal"
       title="查看教学活动"
@@ -194,7 +195,7 @@
     </Modal>
     <!--发布弹窗-->
     <Modal
-      close-on-click-modal="false"
+      :mask-closable="false"
       height="200"
       v-model="publishModal"
       title="对话框标题"
@@ -208,7 +209,7 @@
 
     <!--删除弹窗-->
     <Modal
-      close-on-click-modal="false"
+      :mask-closable="false"
       height="200"
       v-model="removeModal"
       title="对话框标题"
@@ -395,7 +396,8 @@
       * @param JSON 后台返回的data
       */
       updateList(responseData){
-        this.tableData = responseData.data
+        this.tableData = responseData.data;
+        this.listTotal = responseData.totalCount||0;
       },
       setTableData(){
         let formSearch;
@@ -410,8 +412,7 @@
   * @param n number  当前要设置的显示条数
   * */
       changePageSize (n){
-          alert(n)
-        this.queryQptions.params.pageSize = n;
+        this.queryQptions.pageSize = n;
         this.setTableData();
       },
       /*
@@ -420,7 +421,7 @@
        * */
       changePage (n) {
         // 这里直接更改了模拟的数据，真实使用场景应该从服务端获取数据
-        this.queryQptions.params.curPage = n;
+        this.queryQptions.curPage = n;
         this.setTableData();
       },
 

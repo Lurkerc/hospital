@@ -29,8 +29,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="9" :offset="2">
-          <el-form-item label="存放地点：" prop="storageLocation">
-            <el-input v-model="formValidate.storageLocation" placeholder="请输入存放地点"></el-input>
+          <el-form-item label="存放地点：" prop="storageLocation" style="margin-bottom: 23px">
+            <el-input v-model="formValidate.storageLocation" placeholder="请选择或者输入" @input="inputStorageLocation">
+              <el-button slot="append" @click="selectRoom">选择房间</el-button>
+            </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="9" :offset="2">
@@ -75,6 +77,12 @@
         <el-button @click="cancel">取消</el-button>
       </el-col>
     </el-row>
+    <!--选择房间-->
+    <Modal :mask-closable="false" v-model="selectRoomModal" height="200" class-name="vertical-center-modal" :width="960">
+      <modal-header slot="header" :content="selectRoomId"></modal-header>
+      <select-room v-if="selectRoomModal" @cancel="selectRoomModal=false" :selectOne="true" @select="selectRoomCall" :select="roomIds"></select-room>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 
@@ -84,6 +92,8 @@
   import {
     deviceStorageMoreInfo as rules
   } from '../../../rules'; // 表单验证规则
+
+  import selectRoom from '../../../../common/selectRoom.vue';
 
   // 设备状态
   import stateOption from './stateOption';
@@ -112,6 +122,7 @@
           title: '提交',
           callParEvent: 'listenSubEvent'
         },
+        roomIds:[],
         stateOption, // 设备状态选择项
         // 表单数据
         formValidate: {
@@ -121,6 +132,7 @@
           manufacturerPhone: "", // 厂商电话
           servicingPhone: "", // 维修电话
           storageLocation: "", // 存放地点
+          roomId:"", // 存放的房间id
           buyAdderss: "", // 购买地点
           manufactureDate: "", // 生产日期
           guaranteeDate: "", // 保修截止日期
@@ -138,6 +150,11 @@
             url: this.urlParams.path,
             method: this.urlParams.method
           }
+        },
+        selectRoomModal:false,
+        selectRoomId:{
+          id:'selectRoomId',
+          title:"选择房间",
         },
       }
     },
@@ -198,11 +215,33 @@
         let myData = Util._.defaultsDeep({}, data);
         return myData;
       },
+
+      // 选择房间
+      selectRoom(){
+        this.selectRoomModal = true;
+      },
+
+      // 选择房间回调
+      selectRoomCall(res){
+        this.roomIds[0] = res[0].id;
+        this.formValidate.roomId = res[0].id;
+        this.formValidate.storageLocation = res[0].roomNum;
+        this.selectRoomModal = false;
+      },
+
+      // 输入存放地点
+      inputStorageLocation(){
+        this.formValidate.roomId = '';
+        this.roomIds = [];
+      },
     },
     created() {
       //给当前组件注入全局util
       Util = this.$util;
     },
+    components:{
+      selectRoom,
+    }
   }
 
 </script>

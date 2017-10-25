@@ -94,6 +94,29 @@
               </template>
             </el-table-column>
             <el-table-column
+              prop="deMasterDegree"
+              show-overflow-tooltip
+              label="掌握程度"
+              class-name="valiTableStyle"
+              align="center"
+              width="150"
+            >
+              <template scope="scope">
+                <el-form  :model="scope.row" :rules="rdyTrainingStandardsSecond" ref="formValidate"  label-width="0">
+                  <el-form-item  prop="deMasterDegree" label-width="0">
+                    <el-select v-model="scope.row.deMasterDegree" >
+                      <el-option
+                        v-for="item in deMasterDegreeData"
+                        :key="item.value"
+                        :label="item.name"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
+            <el-table-column
               prop="deCountBasic"
               label="3年要求"
               class-name="valiTableStyle"
@@ -230,6 +253,13 @@
                   url:api.disType.path,
                   params:{}
                 }
+              },
+              getDeMasterDegree:{
+                ajaxSuccess:'getDeMasterDegreeSuccess',
+                ajaxParams:{
+                  url:'/dictionary/getByCode/ROTARY_MASTER_DEGREE',
+                  params:{}
+                }
               }
             }
         },
@@ -237,7 +267,7 @@
           //初始化请求列表数据
           init(){
             this.ajax(this.listMessTitle);
-
+            this.ajax(this.getDeMasterDegree);
           },
 
           listenSubEvent(){
@@ -248,6 +278,16 @@
             if(!data)return;
             data = data.child;
             this.disType = data;
+          },
+
+
+          //获取掌握程度
+          getDeMasterDegreeSuccess(res){
+            let data = res.data;
+            if(!data)return;
+            data = data.child;
+            this.deMasterDegreeData = data;
+
           },
 
           //提交保存
@@ -305,7 +345,7 @@
           updateListData(res){
             let data = res.data;
             if(!data) return;
-            let tempArr = [[]];
+            let tempArr = [];
             for(let i in data){
               let index = i.split('_')[1]-1;
               tempArr[index] = [];
@@ -314,6 +354,13 @@
               }
               for(let l=0 ;l<data[i].randomRotaryDep.length;l++){
                 tempArr[index].push(data[i].randomRotaryDep[l]);
+              }
+            }
+            for(let l=0;l<tempArr.length;l++){
+              let item = tempArr[l];
+              if(!item){
+                tempArr.splice(l,1)
+                l--
               }
             }
             this.groupItemClick(tempArr[0][0]);
@@ -337,7 +384,8 @@
                       "deShowtype":"",
                       "deCountBasic":"",
                       "deCountBasicSecond":"",
-                      "deCountBasicFirst":""
+                      "deCountBasicFirst":"",
+                      deMasterDegree:"",
                     }
                   ]
                 }
@@ -364,7 +412,8 @@
               "deShowtype":"",
               "deCountBasic":"",
               "deCountBasicSecond":"",
-              "deCountBasicFirst":""
+              "deCountBasicFirst":"",
+              deMasterDegree:"",
             })
 
           },

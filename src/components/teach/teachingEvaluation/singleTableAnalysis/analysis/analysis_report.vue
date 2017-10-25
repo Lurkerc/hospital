@@ -4,7 +4,7 @@
     <el-form>
       <el-row>
         <el-col align="center" style="line-height:30px;">
-          <h3>住院医师综合统计表</h3>
+          <h3>综合统计表</h3>
         </el-col>
         <!--<el-col :span="4" align="right">
         <el-button size="small" type="info">导出统计表</el-button>
@@ -13,11 +13,11 @@
           <legend>&nbsp;&nbsp;基本信息&nbsp;&nbsp;</legend>
           <el-col :span="18" class="infoText">
             <el-col>评价主体：{{ viewData.name }}</el-col>
-            <el-col :span="12">身份：{{ viewData.identity }}</el-col>
+            <el-col :span="12">身份：{{ viewData.identity |userRoluName }}</el-col>
             <el-col :span="12">当前培训科室：{{ viewData.depName }}</el-col>
             <el-col>培养专业：{{ viewData.specialty }}</el-col>
             <el-col>开始培训时间：{{ viewData.depBeginTime }}</el-col>
-            <el-col>培训时间：{{ viewData.ts }}</el-col>
+            <el-col>培训时间：{{ viewData.ts }}年</el-col>
           </el-col>
           <el-col :span="6" align="right">
             <!--<img src="../../../../../assets/ambuf/images/physician.png" class="physicianPic" @click="show">-->
@@ -38,7 +38,7 @@
             <el-table-column label="评分人" prop="appraiserName" show-overflow-tooltip align="center"></el-table-column>
             <el-table-column label="评价对象" prop="evaluatedName" show-overflow-tooltip align="center"></el-table-column>
             <el-table-column label="分数" prop="totalScore" show-overflow-tooltip align="center"></el-table-column>
-            <el-table-column label="时间" prop="createTimeString" show-overflow-tooltip align="center"></el-table-column>
+            <el-table-column label="时间" prop="updateTimeString" show-overflow-tooltip align="center"></el-table-column>
           </el-table>
         </fieldset>
       </el-row>
@@ -115,6 +115,18 @@
        * */
       openModel(options) {
         this[options + 'Modal'] = true;
+      },
+
+      identity(type){
+        let obj={
+            'SXS':'实习生',
+            'YJS':'研究生',
+            'JXS':'进修生',
+            'ZYY':'住院医',
+
+        }
+        return obj[type]
+
       },
     },
     created() {

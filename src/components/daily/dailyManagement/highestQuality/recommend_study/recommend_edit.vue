@@ -22,7 +22,7 @@
       </el-row >
       <el-row >
         <el-col :span="17" :offset="2">
-          <el-form-item label="相关资料:" prop="name" class="feildFontweight">
+          <el-form-item label="相关证明材料:" prop="name" class="feildFontweight">
             <upload-file :uploadFiles="data.fileList"  @setUploadFiles="editFileEvent"></upload-file>
           </el-form-item >
         </el-col >

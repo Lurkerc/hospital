@@ -23,7 +23,7 @@
           </el-form-item>
         </el-col>-->
       </el-row>
-      </el-form-item>
+      <!--</el-form-item>-->
       <br />
       <el-table
         align="center"
@@ -103,6 +103,31 @@
             <el-form :model="scope.row" :ref="'formValidate_disNum'+scope.$index" label-width="0" :rules="rules">
               <el-form-item prop="disNum">
                 <el-input placeholder="请输入内容" v-model="scope.row.disNum"></el-input>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="disNum"
+          label="掌握程度"
+          class-name="valiTableStyle"
+          align="center"
+          width="130">
+          <template scope="scope">
+            <el-form :model="scope.row" :ref="'formValidate_deMasterDegree'+scope.$index" label-width="0" :rules="rules">
+              <el-form-item prop="deMasterDegree">
+                <!--<el-input placeholder="请输入内容" v-model="scope.row.deMasterDegree"></el-input>-->
+                <el-select
+                  v-model="scope.row.deMasterDegree"
+                  :filterable="true"
+                  placeholder="选择或输入匹配搜索">
+                  <el-option
+                    v-for="(item,index) in depReDegree"
+                    :key="index"
+                    :label="item.value"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-form>
           </template>
@@ -194,6 +219,9 @@
             jsonString:true,
           },
         },
+
+        // 熟练程度
+        depReDegree:[],
       }
     },
     methods: {
@@ -203,6 +231,7 @@
         this.add();
         this.ajax(this.listMessTitle);
         this.ajax(this.getDisType);
+        this.getDepReDegree();
       },
 
       /**
@@ -216,7 +245,8 @@
             "depName":"",
             "disType":"",
             "disTitle":"",
-            "disNum":""
+            "disNum":"",
+            "deMasterDegree": "", // 掌握程度
         }
         this.formValidate["outlineRequires"].push(rowTemplate)
       },
@@ -318,7 +348,7 @@
 
       /*
        * 设置专业
-       * @param val string || number  选中毕业学校的id
+       * @param val string || number  选中学校的id
        * */
       setSpecialtyOptionValue(val,id){
         //this.formValidate.schoolId = id;
@@ -329,6 +359,18 @@
       //选中值发生变化时触发
       change(val){
 
+      },
+
+      // 获取掌握程度
+      getDepReDegree(){
+        let opt = {
+          ajaxSuccess: res => this.depReDegree = res.data.child,
+          ajaxParams:{
+            url: api.depReDegree.path,
+            method: api.depReDegree.method,
+          }
+        };
+        this.ajax(opt)
       },
 
 

@@ -6,14 +6,14 @@
     <el-col :span="2" :push="1">
       <el-button type="primary" @click="add">添加</el-button>
     </el-col>
-    <el-col :span="4">
-      <div class="cal-schoolTit" style="text-align: right;">名称：</div>
-    </el-col>
-    <el-col :span="6">
-      <el-form-item prop="name">
-      <el-input placeholder="请输入内容" v-model="formValidate.name"></el-input>
-      </el-form-item>
-    </el-col>
+    <!--<el-col :span="4">-->
+      <!--<div class="cal-schoolTit" style="text-align: right;">名称：</div>-->
+    <!--</el-col>-->
+    <!--<el-col :span="6">-->
+      <!--<el-form-item prop="name">-->
+      <!--<el-input placeholder="请输入内容" v-model="formValidate.name"></el-input>-->
+      <!--</el-form-item>-->
+    <!--</el-col>-->
     <!--<el-col :span="3">
       <div class="cal-schoolTit" style="text-align: right;">专业：</div>
     </el-col>
@@ -23,7 +23,7 @@
       </el-form-item>
     </el-col>-->
   </el-row>
-    </el-form-item>
+    <!--</el-form-item>-->
   <br />
       <el-table
     align="center"
@@ -108,6 +108,31 @@
       </template>
     </el-table-column>
     <el-table-column
+      prop="disNum"
+      label="掌握程度"
+      class-name="valiTableStyle"
+      align="center"
+      width="130">
+      <template scope="scope">
+        <el-form :model="scope.row" :ref="'formValidate_deMasterDegree'+scope.$index" label-width="0" :rules="rules">
+          <el-form-item prop="deMasterDegree">
+            <!--<el-input placeholder="请输入内容" v-model="scope.row.deMasterDegree"></el-input>-->
+            <el-select
+              v-model="scope.row.deMasterDegree"
+              :filterable="true"
+              placeholder="选择或输入匹配搜索">
+              <el-option
+                v-for="(item,index) in depReDegree"
+                :key="index"
+                :label="item.value"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </template>
+    </el-table-column>
+    <el-table-column
       label="操作"
       align="center"
       width="100">
@@ -137,8 +162,14 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
-    props:["operailityData"],
+    props:["operailityData","userType"],
     data() {
+      let geDatatUrl = "";
+      if(this.userType == 'JXS'){
+        geDatatUrl = api.getJxsModel.path;
+      }else{
+        geDatatUrl = api.depReGet.path+"/"+this.operailityData.depOutlineId
+      }
       return {
         //表单验证
         rules,
@@ -190,7 +221,7 @@
         tableListMessTitle:{
           ajaxSuccess:'setTableListData',
           ajaxParams:{
-            url: api.depReGet.path+"/"+this.operailityData.depOutlineId,
+            url: geDatatUrl,
           }
         },
 
@@ -200,7 +231,7 @@
           type:'edit',
           successTitle:'添加成功!',
           errorTitle:'添加失败!',
-          ajaxSuccess:'ajaxSuccess',
+          ajaxSuccess:'saveajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
             url: api.depReAdd.path,
@@ -208,6 +239,9 @@
             jsonString:true,
           },
         },
+
+        // 熟练程度
+        depReDegree:[],
       }
     },
     methods: {
@@ -215,6 +249,7 @@
       init(){
         Util = this.$util;
         this.ajax(this.tableListMessTitle);
+        this.getDepReDegree();
       },
 
       /**
@@ -228,7 +263,8 @@
           "depName":"",
           "disType":"",
           "disTitle":"",
-          "disNum":""
+          "disNum":"",
+          "deMasterDegree": "", // 掌握程度
         }
         this.formValidate["outlineRequires"].push(rowTemplate)
       },
@@ -255,7 +291,12 @@
         this.ajax(this.getDisType);
       },
 
-
+      //提交成功的回调函数
+      saveajaxSuccess(res){
+        if(res.status.code == '0'){
+          this.successMess('提交成功');
+        }
+      },
       /**
        * 删除当前行
        * @param index {number}  当前行索引
@@ -350,7 +391,7 @@
 
       /*
        * 设置专业
-       * @param val string || number  选中毕业学校的id
+       * @param val string || number  选中学校的id
        * */
       setSpecialtyOptionValue(val,id){
         //this.formValidate.schoolId = id;
@@ -361,6 +402,19 @@
       //选中值发生变化时触发
       change(val){
 
+      },
+
+
+      // 获取掌握程度
+      getDepReDegree(){
+        let opt = {
+          ajaxSuccess: res => this.depReDegree = res.data.child,
+          ajaxParams:{
+            url: api.depReDegree.path,
+            method: api.depReDegree.method,
+          }
+        };
+        this.ajax(opt)
       },
 
 

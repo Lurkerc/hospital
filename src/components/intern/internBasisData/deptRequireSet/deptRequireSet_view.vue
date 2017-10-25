@@ -36,6 +36,11 @@
         align="center"
         width="100">
       </el-table-column>
+      <el-table-column
+        prop="deMasterDegree"
+        label="掌握程度"
+        align="center">
+      </el-table-column>
     </el-table>
     <br />
     <el-row>

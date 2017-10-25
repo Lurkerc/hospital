@@ -5,8 +5,10 @@
 ----------------------------------->
 <template>
     <div>
-      <el-form  :model="formValidate" ref="formValidate" :rules="entityAudit"  class="demo-form-inline" label-width="130px" >
+      <el-form  v-for="item in 1" :key="item" :model="formValidate" ref="formValidate" :rules="entityAudit"  class="demo-form-inline" label-width="130px" >
         <el-row class="table-back-one">
+          <!--批注-->
+
           <el-col :span="6" >
             <el-form-item label="姓名:" prop="cname" >
               {{formValidate.cname}}
@@ -26,7 +28,7 @@
           </el-col >
 
           <el-col :span="6" >
-            <el-form-item label="婚否:" prop="cisMarry" >
+            <el-form-item label="婚姻:" prop="cisMarry" >
               {{formValidate.cisMarry | typeText}}
             </el-form-item>
           </el-col >
@@ -34,6 +36,8 @@
         </el-row >
 
         <el-row class="table-back-two" >
+          <!--批注-->
+
           <el-col :span="6" >
             <el-form-item label="民族:" prop="cnation" >
               {{formValidate.cnation}}
@@ -52,14 +56,39 @@
             </el-form-item>
           </el-col >
 
+        </el-row >
+
+
+        <el-row class="table-back-two" >
           <el-col :span="6" >
-            <el-form-item label="出生地:" prop="cbirthPlace" >
+            <el-form-item label="籍贯:" prop="cnation">
               {{formValidate.cbirthPlace}}
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6" >
+            <el-form-item label="工作单位:" prop="workAddress" >
+              {{formValidate.workAddress}}
+            </el-form-item>
+          </el-col >
+
+          <el-col :span="6" >
+            <el-form-item label="联系电话:" prop="phone" >
+              {{formValidate.phone}}
+            </el-form-item>
+          </el-col >
+          <el-col :span="6" >
+            <el-form-item label="可靠程度:" prop="reliability" >
+              {{formValidate.reliability}}
             </el-form-item>
           </el-col >
         </el-row >
 
+
+
         <el-row class="table-back-one">
+          <!--批注-->
+
           <el-col :span="6" >
             <el-form-item label="床号:" prop="cbedNo" >
               {{formValidate.cbedNo}}
@@ -80,6 +109,7 @@
         </el-row >
 
         <el-row class="table-back-two">
+          <!--批注-->
           <el-col :span="6" >
             <el-form-item label="入院日期:" prop="cruyuanDate" >
               {{formValidate.cruyuanDate}}
@@ -98,6 +128,7 @@
             </el-form-item>
           </el-col >
           <el-col :span="6" >
+
             <el-form-item label="与患者关系:" prop="chuanzheUser" >
               {{formValidate.chuanzheUser}}
             </el-form-item>
@@ -134,15 +165,23 @@
           </el-col>
         </el-row >
 
+        <el-row class="table-back-one">
+          <el-col :span="24" >
+            <el-form-item label="既往史:" >
+              <el-input type="textarea" readonly v-model="formValidate.cjbs"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row >
+
         <el-row >
           <el-col :span="24" >
             <el-collapse v-model="activeNames" >
               <!---->
-              <el-collapse-item title="既往史" name="1">
+              <!--<el-collapse-item title="既往史" name="1">
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="平时一般健康情况:" prop="cjwsYbjkqk" >
-                      <el-input readonly type="textarea" v-model="formValidate.cjwsYbjkqk"></el-input>
+                      <el-input @keydown.native="keydown('cjwsYbjkqk',$event)" @paste.native="contextmenu('cjwsYbjkqk',$event)" type="textarea" v-model="formValidate.cjwsYbjkqk"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -150,7 +189,7 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="传染病史:" prop="cjwsCrbs" >
-                      <el-input readonly type="textarea" v-model="formValidate.cjwsCrbs"></el-input>
+                      <el-input @keydown.native="keydown('cjwsCrbs',$event)"  @paste.native="contextmenu('cjwsCrbs',$event)" type="textarea" v-model="formValidate.cjwsCrbs"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -158,148 +197,145 @@
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="手术外伤史:" prop="cjwsSswss" >
-                      <el-input readonly type="textarea" v-model="formValidate.cjwsSswss"></el-input>
+                      <el-input @keydown.native="keydown('cjwsSswss',$event)"  @paste.native="contextmenu('cjwsSswss',$event)" type="textarea" v-model="formValidate.cjwsSswss"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="药物过敏史:" prop="cjwsYwgms" >
-                      <el-input readonly type="textarea" v-model="formValidate.cjwsYwgms"></el-input>
+                      <el-input @keydown.native="keydown('cjwsYwgms',$event)"  @paste.native="contextmenu('cjwsYwgms',$event)" type="textarea" v-model="formValidate.cjwsYwgms"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
-              </el-collapse-item>
+              </el-collapse-item>-->
               <!---->
-              <el-collapse-item title="系统回顾" name="2">
+              <el-collapse-item title="系统回顾" name="1">
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="呼吸系统:" prop="cxthgHxxt" >
-                      <el-input readonly type="textarea" v-model="formValidate.cxthgHxxt"></el-input>
+                      {{formValidate.cxthgHxxt}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
+
                     <el-form-item label="循环系统:" prop="cxthgXuhxt" >
-                      <el-input type="textarea" v-model="formValidate.cxthgXuhxt"></el-input>
+                      {{formValidate.cxthgXuhxt}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="消化系统:" prop="cxthgXihxt" >
-                      <el-input readonly type="textarea" v-model="formValidate.cxthgXihxt"></el-input>
+                      {{formValidate.cxthgXihxt}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="泌尿系统:" prop="cxthgMlxt" >
-                      <el-input readonly type="textarea" v-model="formValidate.cxthgMlxt"></el-input>
+                    <el-form-item label="泌尿生殖系统:" prop="cxthgMlxt" >
+                      {{formValidate.cxthgMlxt}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="血液系统:" prop="cxthgXyxt" >
-                      <el-input readonly type="textarea" v-model="formValidate.cxthgXyxt"></el-input>
+                    <el-form-item label="造血系统:" prop="cxthgXyxt" >
+                      {{formValidate.cxthgXyxt}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="内分泌系统:" prop="cxthgNfmxt" >
-                      <el-input readonly type="textarea" v-model="formValidate.cxthgNfmxt"></el-input>
+                    <el-form-item label="内分泌系统及代谢:" prop="cxthgNfmxt" >
+                      {{formValidate.cxthgNfmxt}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="神经系统:" prop="cxthgSjxt1" >
-                      <el-input readonly type="textarea" v-model="formValidate.cxthgSjxt1"></el-input>
+                    <el-form-item label="神经精神系统:" prop="cxthgSjxt1" >
+                      {{formValidate.cxthgSjxt1}}
                     </el-form-item>
                   </el-col>
                 </el-row>
+                <!-- <el-row >
+                   <el-col :span="24" >
+                     <el-form-item label="生殖系统:" prop="cxthgSzxt" >
+                       <el-input @keydown.native="keydown('cxthgSzxt',$event)"  @paste.native="contextmenu('cxthgSzxt',$event)" type="textarea" v-model="formValidate.cxthgSzxt"></el-input>
+                     </el-form-item>
+                   </el-col>
+                 </el-row>-->
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="生殖系统:" prop="cxthgSzxt" >
-                      <el-input  readonly type="textarea" v-model="formValidate.cxthgSzxt"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="肌肉骨关节系统:" prop="cxthgGgjxt" >
-                      <el-input readonly type="textarea" v-model="formValidate.cxthgGgjxt"></el-input>
+                    <el-form-item label="肌肉骨骼系统:" prop="cxthgGgjxt" >
+                      {{formValidate.cxthgGgjxt}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="个人史:" prop="cxthgGrs" >
-                      <el-input readonly type="textarea" v-model="formValidate.cxthgGrs"></el-input>
+                      {{formValidate.cxthgGrs}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="月经婚育史:" prop="cxthgYjhys" >
-                      <el-input  readonly type="textarea" v-model="formValidate.cxthgYjhys"></el-input>
+                    <el-form-item label="月经史:" prop="cxthgYjhys" >
+                      {{formValidate.cxthgYjhys}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="家庭史:" prop="cxthgJts" >
-                      <el-input readonly type="textarea" v-model="formValidate.cxthgJts"></el-input>
+                    <el-form-item label="婚姻史:" prop="cxthgHys" >
+                      {{formValidate.cxthgHys}}
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row >
+                  <el-col :span="24" >
+                    <el-form-item label="生育史:" prop="cxthgSys" >
+                      {{formValidate.cxthgSys}}
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row >
+                  <el-col :span="24" >
+                    <el-form-item label="家族史:" prop="cxthgJts" >
+                      {{formValidate.cxthgJts}}
                     </el-form-item>
                   </el-col>
                 </el-row>
               </el-collapse-item>
               <!---->
-              <el-collapse-item title=" 体格检查" name="3">
+              <el-collapse-item title=" 体格检查" name="2">
                 <el-row >
                   <el-col :span="24">
-                    <el-form-item label="生命体征:" prop="cxbs" >
+                    <el-form-item label="生命体征:"  >
                       <el-row >
-                        <el-col :span="3">
-                          <el-form-item label="T:" prop="ctgjcSmtzT" label-width="50px">
-                            {{formValidate.ctgjcSmtzT}}
+                        <el-col :span="6">
+                          <el-form-item label="体温(T):" prop="ctgjcSmtzT" label-width="80px">
+                            {{formValidate.ctgjcSmtzT}} °C
                           </el-form-item>
                         </el-col>
-                        <el-col :span="3">
-                          <el-form-item label="C:" prop="ctgjcSmtzC" label-width="50px">
-                            {{formValidate.ctgjcSmtzC}}
+                        <el-col :span="6">
+                          <el-form-item label="脉搏(P):" prop="ctgjcSmtzP" label-width="80px">
+                            {{formValidate.ctgjcSmtzP}} 次/分
                           </el-form-item>
                         </el-col>
-                        <el-col :span="3">
-                          <el-form-item label="P:" prop="ctgjcSmtzP" label-width="50px">
-                            {{formValidate.ctgjcSmtzP}}
+                        <el-col :span="6">
+                          <el-form-item label="呼吸(R):" prop="ctgjcSmtzR" label-width="80px">
+                            {{formValidate.ctgjcSmtzR}} 次/分
                           </el-form-item>
                         </el-col>
-                        <el-col :span="3">
-                          <el-form-item label="	次/分:" prop="ctgjcSmtzCf1" label-width="50px">
-                            {{formValidate.ctgjcSmtzCf1}}
+                        <el-col :span="6">
+                          <el-form-item label="血压(BP):" prop="ctgjcSmtzBp" label-width="80px">
+                            {{formValidate.ctgjcSmtzBp}} mmHg(kPa)
                           </el-form-item>
-                        </el-col>
-                        <el-col :span="3">
-                          <el-form-item label="R:" prop="ctgjcSmtzR" label-width="50px">
-                            {{formValidate.ctgjcSmtzR}}
-                          </el-form-item>
-                        </el-col>
-                        <el-col :span="3">
-                          <el-form-item label="	次/分:" prop="ctgjcSmtzCf2" label-width="50px">
-                            {{formValidate.ctgjcSmtzCf2}}
-                          </el-form-item>
-                        </el-col>
-                        <el-col :span="3">
-                          <el-form-item label="BP:" prop="ctgjcSmtzBp" label-width="50px">
-                            {{formValidate.ctgjcSmtzBp}}
-                          </el-form-item>
-                        </el-col>
-                        <el-col :span="3">
-                          mmHg(kPa)
                         </el-col>
                       </el-row>
                     </el-form-item>
@@ -307,330 +343,358 @@
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="一般情况:" prop="ctgjcYbqk1" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcYbqk1"></el-input>
+                    <el-form-item label="一般状况:" prop="ctgjcYbqk1" >
+                      {{formValidate.ctgjcYbqk1}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="皮肤粘膜:" prop="ctgjcPfnm" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcPfnm"></el-input>
+                      {{formValidate.ctgjcPfnm}}
                     </el-form-item>
                   </el-col>
                 </el-row>
 
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="浅表淋巴结:" prop="ctgjcQblbj" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcQblbj"></el-input>
+                    <el-form-item label="淋巴结:" prop="ctgjcQblbj" >
+                      {{formValidate.ctgjcQblbj}}
                     </el-form-item>
                   </el-col>
                 </el-row>
 
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="头部及其器官:" prop="ctgjcTbqg" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcTbqg"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
+                <!--头部五官-->
+                <el-collapse v-model="activeNames" >
+                  <el-collapse-item title=" 头部五官" name="2-1">
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="头颅:" prop="ctgjcTbqg" >
+                          {{formValidate.ctgjcTbqg}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="眼:" prop="ctgjcYan" >
+                          {{formValidate.ctgjcYan}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="耳:" prop="ctgjcEr" >
+                          {{formValidate.ctgjcEr}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="鼻:" prop="ctgjcBi" >
+                          {{formValidate.ctgjcBi}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="口:" prop="ctgjcKou" >
+                          {{formValidate.ctgjcKou}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                  </el-collapse-item>
+                </el-collapse>
+                <br>
+
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="颈部:" prop="ctgjcJb" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcJb"></el-input>
+                      {{formValidate.ctgjcJb}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="胸部:" prop="ctgjcXb" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcXb"></el-input>
+                      {{formValidate.ctgjcXb}}
                     </el-form-item>
                   </el-col>
                 </el-row>
-                <el-row >
+                <!--<el-row >
                   <el-col :span="24" >
                     <el-form-item label="胸廊:" prop="ctgjcXl" >
-                      <el-input type="textarea"  readonly v-model="formValidate.ctgjcXl"></el-input>
+                      {{formValidate.ctgjcXl}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="乳腺:" prop="ctgjcRx" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcRx"></el-input>
+                      {{formValidate.ctgjcRx}}
                     </el-form-item>
                   </el-col>
                 </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="肺:" prop="ctgjcFei" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcFei"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="视诊:" prop="ctgjcSz1" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcSz1"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="触诊:" prop="ctgjcCz1" >
-                      <el-input type="textarea"  readonly v-model="formValidate.ctgjcCz1"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="叩诊:" prop="ctgjcKz1" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcKz1"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="听诊:" prop="ctgjcTz1" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcTz1"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="心脏:" prop="ctgjcXz" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcXz"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="视诊:" prop="ctgjcSz2" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcSz2"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="触诊:" prop="ctgjcCz2" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcCz2"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;   叩诊：心脏相对浊音界如下况：
-                <el-row>
-                  <el-col :span="3" :offset="2">
-                    <div style="text-align: center">右(Cm)</div>
-                  </el-col>
-                  <el-col  style="text-align: center" :span="3" :offset="2">
-                    <div>肋间</div>
-                  </el-col>
-                  <el-col :span="3" :offset="2">
-                    <div  style="text-align: center">左(Cm)</div>
-                  </el-col>
-                </el-row>
+-->
+                <!--肺-->
+                <el-collapse v-model="activeNames" >
+                  <el-collapse-item title=" 肺" name="2-3">
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="视诊:" prop="ctgjcSz1" >
+                          {{formValidate.ctgjcSz1}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="触诊:" prop="ctgjcCz1" >
+                          {{formValidate.ctgjcCz1}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="叩诊:" prop="ctgjcKz1" >
+                          {{formValidate.ctgjcKz1}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="听诊:" prop="ctgjcTz1" >
+                          {{formValidate.ctgjcTz1}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                  </el-collapse-item>
+                </el-collapse>
+                <br>
 
-                <el-row style="text-align: center">
-                  <el-col :span="3" :offset="2">
-                    <el-form-item label-width="0" prop="ctgjcKzy1" >
-                      {{formValidate.ctgjcKzy1}}
-                    </el-form-item>
-                  </el-col>
-                  <el-col  style="text-align: center" :span="3" :offset="2">
-                    <div>II</div>
-                  </el-col>
-                  <el-col :span="3" :offset="2">
-                    <el-form-item label-width="0" prop="ctgjcKzz1" >
-                      {{formValidate.ctgjcKzz1}}
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row style="text-align: center">
-                  <el-col :span="3" :offset="2">
-                    <el-form-item label-width="0" prop="ctgjcKzy2" >
-                      {{formValidate.ctgjcKzy2}}
-                    </el-form-item>
-                  </el-col>
-                  <el-col  style="text-align: center" :span="3" :offset="2">
-                    <div>III</div>
-                  </el-col>
-                  <el-col :span="3" :offset="2">
-                    <el-form-item  prop="ctgjcKzz2" label-width="0">
-                      {{formValidate.ctgjcKzz2}}
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row style="text-align: center">
-                  <el-col :span="3" :offset="2">
-                    <el-form-item  prop="ctgjcKzy3" label-width="0">
-                      {{formValidate.ctgjcKzy3}}
-                    </el-form-item>
-                  </el-col>
-                  <el-col  style="text-align: center" :span="3" :offset="2">
-                    <div>IV</div>
-                  </el-col>
-                  <el-col :span="3" :offset="2">
-                    <el-form-item  prop="ctgjcKzz3" label-width="0">
-                      {{formValidate.ctgjcKzz3}}
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row style="text-align: center">
-                  <el-col :span="3" :offset="2">
-                    <el-form-item  prop="ctgjcKzy4" label-width="0">
-                      {{formValidate.ctgjcKzy4}}
-                    </el-form-item>
-                  </el-col>
-                  <el-col  style="text-align: center" :span="3" :offset="2">
-                    <div>V</div>
-                  </el-col>
-                  <el-col :span="3" :offset="2">
-                    <el-form-item  prop="ctgjcKzz4" label-width="0">
-                      {{formValidate.ctgjcKzz4}}
-                    </el-form-item>
-                  </el-col>
-                </el-row>
+
+                <!--心脏-->
+                <el-collapse v-model="activeNames" >
+                  <el-collapse-item title="心脏" name="2-4">
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="视诊:" prop="ctgjcSz2" >
+                          {{formValidate.ctgjcSz2}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="触诊:" prop="ctgjcCz2" >
+                          {{formValidate.ctgjcCz2}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;   叩诊：心脏相对浊音界如下况：
+                    <el-row>
+                      <el-col :span="3" :offset="2">
+                        <div style="text-align: center">右(Cm)</div>
+                      </el-col>
+                      <el-col  style="text-align: center" :span="3" :offset="2">
+                        <div>肋间</div>
+                      </el-col>
+                      <el-col :span="3" :offset="2">
+                        <div  style="text-align: center">左(Cm)</div>
+                      </el-col>
+                    </el-row>
+
+                    <el-row>
+                      <el-col :span="3" :offset="2">
+                        <el-form-item label-width="0" prop="ctgjcKzy1" >
+                          {{formValidate.ctgjcKzy1}}
+                        </el-form-item>
+                      </el-col>
+                      <el-col  style="text-align: center" :span="3" :offset="2">
+                        <div>II</div>
+                      </el-col>
+                      <el-col :span="3" :offset="2">
+                        <el-form-item label-width="0" prop="ctgjcKzz1" >
+                          {{formValidate.ctgjcKzz1}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="3" :offset="2">
+                        <el-form-item label-width="0" prop="ctgjcKzy2" >
+                          {{formValidate.ctgjcKzy2}}
+                        </el-form-item>
+                      </el-col>
+                      <el-col  style="text-align: center" :span="3" :offset="2">
+                        <div>III</div>
+                      </el-col>
+                      <el-col :span="3" :offset="2">
+                        <el-form-item  prop="ctgjcKzz2" label-width="0">
+                          {{formValidate.ctgjcKzz2}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="3" :offset="2">
+                        <el-form-item  prop="ctgjcKzy3" label-width="0">
+                          {{formValidate.ctgjcKzy3}}
+                        </el-form-item>
+                      </el-col>
+                      <el-col  style="text-align: center" :span="3" :offset="2">
+                        <div>IV</div>
+                      </el-col>
+                      <el-col :span="3" :offset="2">
+                        <el-form-item  prop="ctgjcKzz3" label-width="0">
+                          {{formValidate.ctgjcKzz3}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="3" :offset="2">
+                        <el-form-item  prop="ctgjcKzy4" label-width="0">
+                          {{formValidate.ctgjcKzy4}}
+                        </el-form-item>
+                      </el-col>
+                      <el-col  style="text-align: center" :span="3" :offset="2">
+                        <div>V</div>
+                      </el-col>
+                      <el-col :span="3" :offset="2">
+                        <el-form-item  prop="ctgjcKzz4" label-width="0">
+                          {{formValidate.ctgjcKzz4}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="听诊:" prop="ctgjcTz2" >
+                          {{formValidate.ctgjcTz2}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="双侧桡动脉:" prop="ctgjcRdm" >
+                          {{formValidate.ctgjcRdm}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="周围血管征:" prop="ctgjcZwxg">
+                          {{formValidate.ctgjcZwxg}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                  </el-collapse-item>
+                </el-collapse>
+                <br>
+
+
+
+                <!--腹部-->
+                <el-collapse v-model="activeNames" >
+                  <el-collapse-item title=" 腹部" name="2-5">
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="腹部:" prop="ctgjcFb" >
+                          腹围: {{formValidate.ctgjcFb}} cm
+
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="视诊:" prop="ctgjcSz3" >
+                          {{formValidate.ctgjcSz3}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="触诊:" prop="ctgjcCz3" >
+                          {{formValidate.ctgjcCz3}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="叩诊:" prop="ctgjcKz3" >
+                          {{formValidate.ctgjcKz3}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="听诊:" prop="ctgjcTz3" >
+                          {{formValidate.ctgjcTz3}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                  </el-collapse-item>
+                </el-collapse>
+                <br>
+
 
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="听诊:" prop="ctgjcTz2" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcTz2"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="桡动脉:" prop="ctgjcRdm" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcRdm"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="周围血管征:" prop="ctgjcZwxg" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcZwxg"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="腹部:" prop="ctgjcFb" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcFb"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="视诊:" prop="ctgjcSz3" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcSz3"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="触诊:" prop="ctgjcCz3" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcCz3"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="一般情况:" prop="ctgjcYbqk2" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcYbqk2"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="肝脏:" prop="ctgjcGz" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcGz"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="脾脏:" prop="ctgjcPz" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcPz"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="肾脏:" prop="ctgjcSz" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcSz"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="其他:" prop="ctgjcQt" >
-                      <el-input type="textarea"  readonly v-model="formValidate.ctgjcQt"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="叩诊:" prop="ctgjcKz3" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcKz3"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="听诊:" prop="ctgjcTz3" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcTz3"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="肛门、直肠:" prop="ctgjcGzc" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcGzc"></el-input>
+                    <el-form-item label="肛门直肠:" prop="ctgjcGzc" >
+                      {{formValidate.ctgjcGzc}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
                     <el-form-item label="外生殖器:" prop="ctgjcWszq" >
-                      <el-input type="textarea"  readonly v-model="formValidate.ctgjcWszq"></el-input>
+                      {{formValidate.ctgjcWszq}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="脊柱:" prop="ctgjcJz" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcJz"></el-input>
+                    <el-form-item label="脊柱及四肢:" prop="ctgjcJz" >
+                      {{formValidate.ctgjcJz}}
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+
+                <!--神经系统-->
+                <el-collapse v-model="activeNames" >
+                  <el-collapse-item title="神经系统" name="2-6">
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="生理反射:" prop="ctgjcSjxt2" >
+                          {{formValidate.ctgjcSjxt2}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="病理反射:" prop="ctgjcSjxtblfs" >
+                          {{formValidate.ctgjcSjxtblfs}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row >
+                      <el-col :span="24" >
+                        <el-form-item label="脑膜刺激征:" prop="ctgjcSjxtnmcjz" >
+                          {{formValidate.ctgjcSjxtnmcjz}}
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                  </el-collapse-item>
+                </el-collapse>
+                <br>
+
+                <el-row >
+                  <el-col :span="24" >
+                    <el-form-item label="专科检查:" prop="ctgjcZkqk" >
+                      {{formValidate.ctgjcZkqk}}
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row >
                   <el-col :span="24" >
-                    <el-form-item label="四肢:" prop="ctgjcShiz" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcShiz"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="神经系统:" prop="ctgjcSjxt2" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcSjxt2"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="专科情况:" prop="ctgjcZkqk" >
-                      <el-input type="textarea"  readonly v-model="formValidate.ctgjcZkqk"></el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row >
-                  <el-col :span="24" >
-                    <el-form-item label="实验室及特殊检查:" prop="ctgjcSysjc" >
-                      <el-input type="textarea" readonly v-model="formValidate.ctgjcSysjc"></el-input>
+                    <el-form-item label="实验室及器械检查:" prop="ctgjcSysjc" >
+                      {{formValidate.ctgjcSysjc}}
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -664,33 +728,107 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row class="table-back-one">
-          <el-col :span="24" >
-            <el-form-item label="入院诊断:" prop="cryzd" >
-              <el-input readonly type="textarea" v-model="formValidate.cryzd"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5" :offset="1">
-            <el-form-item label="医师签名:" prop="cysqm2" >
-              {{formValidate.cysqm2}}
-            </el-form-item>
-          </el-col>
-          <el-col :span="5" >
-            <el-form-item label-width="70px" label="时间:" prop="cysqm2Date" >
-              {{formValidate.cysqm2Date}}
-            </el-form-item>
-          </el-col>
-        </el-row>
         <el-row class="table-back-two-d">
-          <el-col :span="10" >
-            <el-form-item label-width="130px" label="相关资料:" prop="cysqm2Date" >
-              <upload-file :uploadFiles="formValidate.fileList"  :show="true" ></upload-file>
+          <el-col :span="20" >
+            <el-form-item  label="相关证明材料:" >
+              <div>为证实填写的大病历为本人管床的真实病历，请上传带有学员姓名的病历首页或病程记录照片。</div>
+              <upload-file accept="'png|jpg|jpeg|bmp|gif'" :uploadFiles="formValidate.fileList"  :show="true" ></upload-file>
             </el-form-item>
-
           </el-col>
         </el-row>
 
-
+        <!--评分表-->
+        <el-table
+          align="center"
+          :data="tableData"
+          tooltip-effect="dark"
+          highlight-current-row
+          border
+          style="width: 100%;height: 100%">
+          <el-table-column
+            align="center"
+            label="序号"
+            type="index"
+            width="75">
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            align="center"
+            prop="detailClassification"
+            label="考核项目">
+          </el-table-column>
+          <el-table-column
+            prop="detailInspectionItem"
+            label="考核内容"
+            align="center"
+            :show-overflow-tooltip="addMarkData.type==1"
+            class-name="clearPadding">
+            <template scope="scope">
+              <div v-for="(item, index) in scope.row.configurationDetails">
+                <div :class="{'div-noborder':scope.row.configurationDetails.length-1==index}" class="div-border" >
+                  <el-tooltip  v-if="addMarkData.type!=1&&item.detailInspectionItem.length>16" effect="dark" :content="item.detailInspectionItem" placement="top">
+                    <div class="overflow-txt1">{{item.detailInspectionItem}}</div>
+                  </el-tooltip>
+                  <div v-else>{{item.detailInspectionItem}}</div>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="detailNote"
+            class-name="clearPadding"
+            label="考核备注"
+            :show-overflow-tooltip="addMarkData.type==1"
+            align="center">
+            <template scope="scope">
+              <div v-for="(item, index) in scope.row.configurationDetails">
+                <div :class="{'div-noborder':scope.row.configurationDetails.length-1==index}" class="div-border" >
+                  <el-tooltip  v-if="addMarkData.type!=1&&item.detailNote.length>16" effect="dark" :content="item.detailNote" placement="top">
+                    <div class="overflow-txt1">{{item.detailNote}}</div>
+                  </el-tooltip>
+                  <div v-else>{{item.detailNote}}</div>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            class-name="clearPadding"
+            prop="detailScore"
+            label="标准分值"
+            width="100"
+            align="center">
+            <template scope="scope">
+              <div v-for="(item, index) in scope.row.configurationDetails">
+                <div :class="{'div-noborder':scope.row.configurationDetails.length-1==index}" class="div-border" >
+                  {{item.detailScore}}
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            class-name="valiTableStyle clearPadding"
+            prop="detailScore"
+            label="得分"
+            width="150"
+            align="center">
+            <template scope="scope">
+              <div v-for="(item, index) in scope.row.configurationDetails">
+                <div :class="{'div-noborder2':scope.row.configurationDetails.length-1==index}" class="div-border1" >
+                    <el-form :model="item" ref="formValidate"  :rules="entityAudit">
+                    <el-form-item  prop="mark" label-width="0">
+                      <div >
+                        <el-input v-model="item.mark"> </el-input>
+                      </div>
+                    </el-form-item>
+                  </el-form>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
       <!--审核信息-->
       <!--审核历史列表-->
       <el-table
@@ -705,7 +843,7 @@
           align="center"
           label="序号"
           type="index"
-          width="100">
+          width="75">
         </el-table-column>
         <el-table-column
           align="center"
@@ -716,18 +854,18 @@
         <el-table-column
           prop="createTime"
           label="审核时间"
-          width="300">
+          width="150">
         </el-table-column>
         <el-table-column
           prop="reviewMess"
           label="审核意见"
           align="center"
-          width="200"
         >
         </el-table-column>
         <el-table-column
           prop="spState"
           label="审核状态"
+          width="100"
         >
           <template scope="scope">
             {{ scope.row.spState | typeText}}
@@ -761,9 +899,9 @@
         </el-col >
       </el-row >
 
-
+        </br>
         <el-row>
-          <el-col :span="20" :offset="1">
+          <el-col :span="24" style="text-align: center">
             <!--<load-btn @postilSubEvent="postilSubEvent" :btnData="saveBtn"></load-btn>-->
             <load-btn @saveSubEvent="saveSubEvent" :btnData="loadBtn"></load-btn>
             <el-button  @click="cancel">取消</el-button>
@@ -774,6 +912,7 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import baseRules from '../../../../../formRules/base'; // 公共规则
   import {entityAudit} from '../../rules'
   //当前组件引入全局的util
     //前台业务字典组件引入
@@ -783,6 +922,7 @@
         props:['operailityData','url','podId'],
         data() {
             return {
+              baseRules,
               entityAudit,
               saveBtn: {title: '批注', callParEvent: 'postilSubEvent'},
               loadBtn: {title: '保存', callParEvent: 'saveSubEvent'},
@@ -790,7 +930,7 @@
               activeNames: [],
               dictionary: dictionary,
               formValidate: {
-                spState:''
+                spState:'',
                 /*"caseId": '',
 //                "ctype": "DBL 大病例 MJJL 麻醉记录 YXZL 影像资料",
                 "cname": "姓名",
@@ -1538,8 +1678,8 @@
                     "reviewMess": "审核意见",
                     "spState": "审核状态(PASS 通过 REJECT 驳回)"
                   }
-                ],
-                "copyBl": 0.8*/
+                ],*/
+                "copyBl": 0
               },
               template: {
                 "czs": "反复四肢关节肿痛半年。",
@@ -1622,6 +1762,17 @@
                   url:this.url.caseRecordGet+this.operailityData.cid,
                 }
               },
+
+              addMarkData:{},
+              tableData:[],
+              //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
+              getConfigurationMessTitle:{
+                ajaxSuccess:'ConfigurationData',
+                ajaxParams:{
+                  url:this.url.configurationGet+'DBL',
+                }
+              },
+              hasConfiguration:false,
           }
         },
         methods: {
@@ -1631,6 +1782,7 @@
             let userInfo = this.$store.getters.getUserInfo;
             this.name= userInfo.name;
             this.ajax(this.listMessTitle);
+            this.ajax(this.getConfigurationMessTitle);
           },
 
           SuccessGetCurrData(res){
@@ -1640,6 +1792,43 @@
             data.reviewMess = '';
             this.formValidate = data;
           },
+
+          ConfigurationData(res){
+            let data = res.data;
+            if(!data){
+              this.errorMess('无评分表,请添加评分表');
+              return;
+            }
+            this.hasConfiguration = true;
+            this.addMarkData = data;
+            let configurationDetails = data.configurationDetails;
+
+            let temArr = [];
+            let index = -1;
+            let flag;
+            if(data.type==1){
+              flag = true;
+            }
+            let detailClassification = '';///项目名称
+            for(let i=0;i<configurationDetails.length;i++){
+              if(flag || detailClassification!=configurationDetails[i].detailClassification){
+                index++;
+                temArr[index] = {
+                  detailClassification:'',
+                  configurationDetails:[],
+                };
+                detailClassification = configurationDetails[i].detailClassification;
+                temArr[index].detailClassification = configurationDetails[i].detailClassification;
+                configurationDetails[i].mark = '';
+                temArr[index].configurationDetails.push(configurationDetails[i]);
+              }else {
+                configurationDetails[i].mark = '';
+                temArr[index].configurationDetails.push(configurationDetails[i]);
+              }
+            }
+            this.tableData = temArr;
+
+          },
           /*
            * 点击提交按钮 监听是否提交数据
            * @param isLoadingFun boolean  form表单验证是否通过
@@ -1647,10 +1836,45 @@
           listenSubEvent(isLoadingFun){
             let isSubmit = this.submitForm("formValidate");
             if(isSubmit){
+              if(!this.hasConfiguration){
+                this.errorMess('无评分表,请添加评分表');
+                return;
+              }
+
               if(!isLoadingFun) isLoadingFun=function(){};
+
+              this.addMarkData.userId =  this.formValidate.createUserId;
+              this.addMarkData.userName =  this.formValidate.createUserNmae;
+              this.addMarkData.businessId = this.formValidate.caseId;
+              let tempArr = []
+              let index = 0;
+              for (let i=0;i<this.tableData.length;i++){
+                let item = this.tableData[i];
+                for (let l=0;l <item['configurationDetails'].length;l++){
+                  index++;
+                  if(+item['configurationDetails'][l].detailScore<+item['configurationDetails'][l].mark){
+                    this.errorMess(`第${index}行得分不能大于标准分`);
+                    return;
+                  }
+                  item['configurationDetails'][l].detailsId =  item['configurationDetails'][l].detailId;
+                  tempArr.push(item['configurationDetails'][l]);
+                }
+              }
               isLoadingFun(true);
-              this.addMessTitle.ajaxParams.data=this.getFormData(this.formValidate)
-              this.ajax(this.addMessTitle,isLoadingFun)
+              this.addMarkData.configurationDetails = tempArr;
+              let  addMarkMessTitle={
+                ajaxSuccess:(res)=>{
+                  this.addMessTitle.ajaxParams.data=this.getFormData(this.formValidate);
+                  this.ajax(this.addMessTitle,isLoadingFun);
+                },
+                  ajaxParams:{
+                    method:'post',
+                  url:this.url.configurationAddMark,
+                    jsonString:true,
+                    data:this.addMarkData,
+                }
+              }
+              this.ajax(addMarkMessTitle);
             }
           },
 
@@ -1660,12 +1884,15 @@
            * @return flag boolean   form表单验证是否通过
            * */
           submitForm(formName){
-            let flag = false;
-            this.$refs[formName].validate((valid) => {
-              if (valid) {
-                flag= true;
-              }
-            });
+            let flag = true;
+            for(let i=0;i< this.$refs[formName].length;i++){
+              this.$refs[formName][i].validate((valid) => {
+                if (!valid) {
+                  flag= false;
+                }
+              });
+            }
+
             return flag;
           },
 

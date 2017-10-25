@@ -24,10 +24,10 @@
           <el-form-item label="学校：">
             <el-input v-model="searchObj.schoolName"></el-input>
           </el-form-item>
-          <el-form-item label="年份：">
-            <el-date-picker v-model="searchObj.year" align="right" type="year" placeholder="选择年">
-            </el-date-picker>
-          </el-form-item>
+          <!--<el-form-item label="年份：">-->
+            <!--<el-date-picker v-model="searchObj.year" align="right" type="year" placeholder="选择年">-->
+            <!--</el-date-picker>-->
+          <!--</el-form-item>-->
           <el-form-item label="专业：">
             <el-input v-model="searchObj.specialty"></el-input>
           </el-form-item>
@@ -98,7 +98,6 @@
               <el-button @click="deriveModal=false" type="primary">确定</el-button>
             </a>
             <el-button class="but-col" @click="deriveModal=false">取消</el-button>
-          </el-col>
           </el-col>
         </el-row>
       </div>
@@ -190,7 +189,7 @@
       search() {
         this.setTableData()
       },
-      // 筛选 
+      // 筛选
       showSearchMore() {
         this.searchMore = !this.searchMore;
         this.$nextTick(function () {
@@ -221,7 +220,7 @@
       derive(type) {
         let params = [];
         Util._.map(this.searchObj, (key, val) => {
-          params.push(key + '=' + val)
+          params.push(val + '=' + key)
         })
         this.deriveUrl = '/api' + api[type].path + '?' + params.join('&');
         this.openModel('derive');

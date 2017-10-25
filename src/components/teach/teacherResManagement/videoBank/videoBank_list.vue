@@ -59,7 +59,8 @@
             <el-table-column label="操作" align="center" width="140">
               <template scope="scope">
                 <el-button size="small" @click="show(scope.row)">查看</el-button>
-                <el-button :disabled="scope.row.publishStatus == 'PUBLISH' " size="small" type="primary" @click="edit(scope.row)">修改</el-button>
+                <el-button v-if="scope.row.publishStatus == 'UNPUBLISH' && scope.row.auditStatus == 'AUDIT_SUCCESS'" :disabled="scope.row.auditStatus == 'AUDIT_FAILURE'" size="small" type="info" @click="modify(scope.row)">修改</el-button>
+                <el-button v-else :disabled="scope.row.publishStatus == 'PUBLISH' ||scope.row.auditStatus == 'AUDIT_FAILURE' " size="small" type="primary" @click="edit(scope.row)">修改</el-button>
               </template>
             </el-table-column>
             <el-table-column label="名称" prop="name" align="center" show-overflow-tooltip></el-table-column>
@@ -116,6 +117,20 @@
       <!--</div>-->
       <modal-header slot="header" :content="editId"></modal-header>
       <edit v-if="editModal" :id="deptId" :name="typeName"  :fromWhereTree="fromWhereTree"  @cancel="cancel"  @edit="subCallback" :url="url" :operaility-data="operailityData"></edit>
+      <div slot="footer"></div>
+    </Modal>
+    <!--修改播放次数弹窗-->
+    <Modal
+      :mask-closable="false"
+      v-model="modifyModal"
+      height="200"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :loading="true"
+      :width="1000"
+    >
+      <modal-header slot="header" :parent="self" :content="modifyId"></modal-header>
+      <modify v-if="modifyModal" :id="deptId" :name="typeName"  :fromWhereTree="fromWhereTree" @cancel="cancel" @modify="subCallback" :url="url"  :operaility-data="operailityData"></modify>
       <div slot="footer"></div>
     </Modal>
     <!---->
@@ -232,6 +247,7 @@
   import show from "./videoBank_view.vue";
   import jurisdiction from "./videoBank_set.vue";
   import audit from "./audit.vue";
+  import modify from './videoBank_modify.vue';
   import api from "./api.js";
   //当前组件引入全局的util
   let Util = null;
@@ -266,6 +282,10 @@
           id:'remove',
           title:'删除'
         },
+        modifyId:{
+          id:'modify',
+          title:'修改播放次数'
+        },
         editId:{
           id:'edit',
           title:'修改'
@@ -293,7 +313,7 @@
         publishModal:false,
         //撤销发布
         revocationModal:false,
-
+        modifyModal:false,
 
         //发布
         publishData:{
@@ -488,7 +508,12 @@
         this.operailityData = row;
         this.showModal = true;
       },
-
+      modify(row){
+        row["parentName"] = this.depDetails.name;
+        row["parentId"] = this.deptId;
+        this.operailityData = row;
+        this.modifyModal = true;
+      },
 
       /*
        * 点击--修改--按钮
@@ -697,6 +722,7 @@
       show,
       jurisdiction,
       audit,
+      modify
     }
   }
 </script>

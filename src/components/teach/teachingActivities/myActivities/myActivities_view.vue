@@ -25,7 +25,7 @@
             {{data.hostUserName}}
           </el-form-item>
           <el-form-item label="上课时间:" prop="name6">
-            {{data.recordTimes}}
+            {{data.activityTimeInfo}}
           </el-form-item>
           <el-form-item label="签到时间:" prop="name6">
             {{data.signTime}}
@@ -35,8 +35,15 @@
 
       <el-row>
         <el-col :span="24">
-          <el-form-item label="相关资料:" prop="name7">
+          <el-form-item label="课件资料:" prop="name7">
             <upload-file  :show="true" :uploadFiles="data.fileList"></upload-file>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="相关证明材料:" prop="name7">
+            <upload-file  :show="true" :uploadFiles="data.activityFileList"></upload-file>
           </el-form-item>
         </el-col>
       </el-row>

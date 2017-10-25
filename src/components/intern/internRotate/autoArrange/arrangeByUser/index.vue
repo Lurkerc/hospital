@@ -21,9 +21,10 @@
           <div class="cal-schools">
             <el-row>
               <el-col :span="20">
-                <el-tooltip :content="item.name" effect="light" placement="top">
-                <el-button :type="item.checked?'success':''" @click="handleCheckSchool(index,item)" style="width: 100%" v-text="item.name"></el-button>
+                <el-tooltip v-if="item.name&&item.name.length>10" :content="item.name" effect="light" placement="top">
+                <el-button :type="item.checked?'success':''" class="overflow-txt1" @click="handleCheckSchool(index,item)" style="width: 100%" v-text="item.name"></el-button>
                 </el-tooltip>
+                <el-button v-else :type="item.checked?'success':''" class="overflow-txt1" @click="handleCheckSchool(index,item)" style="width: 100%" v-text="item.name"></el-button>
               </el-col>
               <el-col :span="4">
                 <div v-show="item.checked" class="cal-check"><i class="el-icon-check"></i></div>
@@ -93,6 +94,7 @@
           <el-date-picker
             v-model="startRotateTime"
             type="date"
+            :editable="false"
             placeholder="选择开始乱转开始时间"
             :picker-options="pickerOptions0">
           </el-date-picker>
@@ -420,7 +422,7 @@
 
       /*
        * 设置专业
-       * @param val string || number  选中毕业学校的id
+       * @param val string || number  选中学校的id
        * */
       setSpecialtyOptionValue(val,id){
         //this.formValidate.schoolId = id;
@@ -508,7 +510,7 @@
         if(this.active==3){
 
           this.rotaryDeptGroupTitle.ajaxParams.data = this.getFormData(this.postData);
-          this.isLoading=true;
+//          this.isLoading=true;
           this.ajax(this.rotaryDeptGroupTitle);
           return;
         }

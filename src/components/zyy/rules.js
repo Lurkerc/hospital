@@ -19,6 +19,13 @@ let chargingStandard = {
 };
 
 /**
+ * 出科设置
+ */
+let givenSet = {
+  configValue: [baseRules.required, baseRules.numberMust,baseRules.inputLen(0, 3)], // 实习费 - 必填\数字
+};
+
+/**
  * 科室要求
  */
 let reqDepVal = {
@@ -68,7 +75,7 @@ function multiple2(rule, value, callback) {
   let val = (value / 0.5) + '';
   if (val != val || /\./g.test(val)) {
     callback(new Error('该项必须是0.5的倍数'));
-  } else {
+  }else {
     callback();
   }
 }
@@ -79,6 +86,7 @@ function multiple2(rule, value, callback) {
 let rdyTrainingStandardsFirst = {
   "rtName": [baseRules.requiredNoEvent, baseRules.inputLen(0, 50), baseRules.illegalChar()],
   "jdName": [baseRules.requiredNoEvent],
+  "rtProclass": [baseRules.requiredNoEvent],//培训方向
   "rtIntroduce": [baseRules.inputLen(0, 500), baseRules.illegalChar()],
   "rtTarget": [baseRules.inputLen(0, 500), baseRules.illegalChar()],
   "rtMethod": [baseRules.inputLen(0, 500), baseRules.illegalChar()],
@@ -93,6 +101,7 @@ let rdyTrainingStandardsSecond = {
   "optionalNum": [baseRules.requiredNoEvent, baseRules.numbers, baseRules.inputLen(0, 20), baseRules.illegalChar()],
   "deDetype": [baseRules.requiredNoEvent],
   "deShowtype": [baseRules.requiredNoEvent],
+  "deMasterDegree": [baseRules.requiredNoEvent],
   "deCountBasic": [baseRules.requiredNoEvent, baseRules.numbers, baseRules.inputLen(0, 20), baseRules.illegalChar()],
   "deCountBasicSecond": [baseRules.requiredNoEvent, baseRules.numbers, baseRules.inputLen(0, 20), baseRules.illegalChar()],
   "deCountBasicFirst": [baseRules.requiredNoEvent, baseRules.numbers, baseRules.inputLen(0, 20), baseRules.illegalChar()],
@@ -119,6 +128,46 @@ let rdyDepContrast = {
   "ts": [baseRules.requiredNoEvent, baseRules.float, multiple2, baseRules.inputLen(0, 20), baseRules.illegalChar()],
 };
 
+/**
+ * 安排轮转-带教秘书
+ */
+let rdyRotation = {
+  "randomNum": baseRules.numbers,
+  "ts": [baseRules.requiredNoEvent, baseRules.float, multiple2, baseRules.inputLen(0, 20), baseRules.illegalChar()],
+};
+
+// 安排轮转 - 实习生
+let rdyRotationBySXS = {
+  "randomNum": baseRules.numbers,
+  "ts": [baseRules.requiredNoEvent, baseRules.number, baseRules.inputLen(0, 20)],
+};
+// 安排轮转 - 其他生源
+let rdyRotationByOther = {
+  "randomNum": baseRules.numbers,
+  "ts": [baseRules.requiredNoEvent, baseRules.float, multiple2, baseRules.inputLen(0, 20), baseRules.illegalChar()],
+};
+
+// 住院医人员追加规则
+let zyyUserInfo = {
+  rotaryProclass: baseRules.requiredNoEvent, // 培训方向
+  rotaryYear: baseRules.requiredNoEvent, // 参培年份
+  rotaryAdmrank: baseRules.requiredNoEvent, // 培训年限
+  rotaryZyytype: baseRules.requiredNoEvent, // 人员属性
+};
+
+// 住院医网上预审
+let rdyOnlinePrequalification = {
+  mess:[baseRules.inputLen(0,250),baseRules.illegalChar()]
+};
+
+let rdyEnrollSet_rst = {
+  configValue:baseRules.requiredNoEvent,
+};
+
+let rdyEnrollSet_ret = {
+  configValue:baseRules.requiredNoEvent,
+};
+
 export {
   internAudit,
   chargingStandard,
@@ -129,4 +178,12 @@ export {
   rdyPersonnelManagement,
   rdyDepContrast,
   pauseRotate,
+  givenSet,
+  rdyRotation,
+  zyyUserInfo,
+  rdyRotationBySXS,
+  rdyRotationByOther,
+  rdyOnlinePrequalification,
+  rdyEnrollSet_rst,
+  rdyEnrollSet_ret,
 };

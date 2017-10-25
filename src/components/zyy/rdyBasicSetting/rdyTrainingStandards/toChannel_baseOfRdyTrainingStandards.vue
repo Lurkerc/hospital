@@ -94,7 +94,7 @@
      * width :  单元格宽度
      * height :  最小高度
      * */
-    props:['format','height','url','data','extra','id','treeRoad','date'],
+    props:['format','height','url','data','extra','id','treeRoad','date','headerData'],
     data(){
 
       return{
@@ -217,6 +217,7 @@
 
 
       analysisErrorData(data){
+
           let tempArr = [];
           let index = 0;
           let countArr = []
@@ -303,6 +304,7 @@
 
       //格式化Header 把中文转换成英文
       formatHeader(data){
+
         let format= this.formats;
         if(!format){
           this.showMess('format未定义');
@@ -318,7 +320,20 @@
           formats.push(format[data[i]])
         }
         this.formats = formats;
-        return  tempArr;
+        if(this.headerData){
+          data  =this.headerData;
+          let temp=[];
+          for(let i=0;i<data.length;i++){
+            temp.push({
+              key   : format[data[i]],
+              label : data[i]
+            })
+          }
+          return  temp;
+        }else {
+          return  tempArr;
+        }
+
       },
 
       //格式化body 把中文转换成英文

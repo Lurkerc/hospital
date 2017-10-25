@@ -2,99 +2,110 @@
 
   <div>
 
-
-    <el-form ref="formValidate"  class="demo-form-inline" label-width="90px">
-
       <el-row >
+        <br>
         <fieldset class="layui-elem-field selfBody" style="width: 100%">
-          <legend>评分表内容设置</legend>
-          <div   v-if="body[0]"  style="width: 900px;overflow: auto;margin: 0 auto" class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition">
-
-
-            <table :width="header.length*150">
-
+          <div   v-if="show"  style="border: 1px solid #dfe6ec;width: 902px;overflow: auto;margin: 0 auto" class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition">
+            <table :width="header.length*150>900?header.length*150:900">
               <colgroup  v-for="(item,index) in header">
-                <col :name="'el-table_1_column_'+index" :width="150">
+                <col :name="'el-table_1_column_'+index" :width="header.length*150>900?900/header.length:150">
               </colgroup>
-
-              <thead >
+              <thead>
               <tr  >
-                <th class="cell" v-for="(item,index) in header">
-                  {{item.label}}{{item.key}}
+                <th class="cell" v-for="(item,index) in header" style="text-align: center;">
+                  {{item.label}}
                 </th>
               </tr>
               </thead>
             </table>
-            <div class="el-table__body-wrapper" style="max-height:400px;overflow-x: hidden;overflow-y: auto;" :style="'width:'+header.length*150+'px'">
-              <table   :width="header.length*150">
+            <div class="el-table__body-wrapper" style="max-height:400px;overflow-x: hidden;overflow-y: auto;" :style="'width:'+(header.length*150>900?header.length*150:900)+'px'">
+              <table   :width="header.length*150>900?header.length*150:900">
                 <colgroup  v-for="(item,index) in header">
-                  <col name="'el-table_1_column_'+index" :width="150">
+                  <col name="'el-table_1_column_'+index" :width="header.length*150>900?900/header.length:150">
                 </colgroup>
 
-                <tbody  class="add-scope">
+                <tbody  >
                 <tr v-for="(item,index) in body">
-                  <td v-if="isShow(item,head['key'])"  :rowspan="item[head['key']+'Row']" v-for="(head,i) in header" :key="i">
-
-                    <el-form-item v-if="head.key=='goal'"  prop="title" label-width="0">
-                      <el-input  @blur="ceelClick(head['key'])" v-model="item[head.key]"></el-input>
-                    </el-form-item>
-                    <el-form-item v-else    prop="title" label-width="0">
-                      {{item[head.key]}}
-                    </el-form-item>
+                  <td class="valiTableStyle"  v-if="isShow(item,head['key'])"  :rowspan="item[head['key']+'Row']" v-for="(head,i) in header" :key="i">
+                    <el-form :model="item"  ref="formValidate" :rules="{gold:[baseRules.requiredNoEvent,baseRules.float2(0,item['score']?item['score']:10000),baseRules.inputLen(0,20),baseRules.illegalChar()]}"  class="demo-form-inline" style="width:100%;">
+                    <!--<el-form :model="item" v-for="ss in 1" :key="ss" ref="formValidate+index" :rules="vaGold(item)"  class="demo-form-inline" style="width:100%;">-->
+                      <div v-if="head['key']== 'operateSub'" style="text-align: center">
+                        <el-button size="mini" type="primary" icon="plus" @click="operateSubAdd(item,head['key'],index)"></el-button>
+                        <el-button  size="mini" type="warning" icon="minus" @click="operateSubRemove(item,head['key'],index)"></el-button>
+                      </div>
+                      <div v-else-if="head['key']== 'operateParent' " style="text-align: center">
+                        <el-button  type="primary" icon="plus" @click="operateParentAdd(item,head['key'],index)"></el-button>
+                        <el-button   type="warning" icon="minus" @click="operateParentRemove(item,head['key'],index)"></el-button>
+                      </div>
+                      <el-form-item  v-else-if="type=='noScoreList' && head['key'].includes('select')&&formValidate.scoreType=='SELECT'"  prop="gold" label-width="0">
+                        <div style="text-align: center" @click="goldClick"><el-radio  v-model="item.gold" :label="item[head.key]"></el-radio></div>
+                      </el-form-item>
+                      <el-form-item v-else-if="type=='noScoreList' && head['key']=='gold'&&formValidate.scoreType=='INPUT'"  prop="gold" label-width="0">
+                        <el-input @blur="goldClick"  v-model="item.gold" :label="item[head.key]"/>
+                      </el-form-item>
+                      <el-form-item v-else-if="head.key=='gold'"  prop="title" label-width="0">
+                        <div style="text-align: center"> {{item[head.key]==null?'':item[head.key]/100}}</div>
+                      </el-form-item>
+                      <el-form-item v-else  prop="title" label-width="0">
+                        <div style="text-align: center"> {{item[head.key]}}</div>
+                      </el-form-item>
+                    </el-form>
                   </td>
+
                 </tr>
                 <!--总分-->
                 <tr>
                   <td style="text-align: center;color: #000;font-size: 18px" :colspan="scoreCol()">
                     <span>总分</span>
                   </td >
-
-                  <td style="text-align: center;color: #000;font-size: 18px" :colspan="1">
-                    {{formValidate.score}}
-                  </td>
-                  <td style="text-align: center;color: #000;font-size: 18px" :colspan="1">
-                    {{goal}}
-                  </td>
-                </tr>
-                <tr>
-                  <td style="text-align: center;color: #000;font-size: 18px" :colspan="1">
-                    <span>考核人员:</span>
-                  </td >
-
-                  <td style="text-align: center;color: #000;font-size: 18px" :colspan="scoreCol()-1">
-                    {{getData.appraiserName}}
-                  </td>
-                  <td style="text-align: center;color: #000;font-size: 18px" :colspan="2">
-                    {{getData.createTimeString}}
+                  <td style="text-align: center;color: #000;font-size: 18px" :colspan="formValidate.hasScoreLevel=='Y'?select.length:1">
+                    {{submitData.totalScore}}
                   </td>
                 </tr>
                 </tbody>
               </table>
             </div>
           </div>
+          <el-row style="font-size: 16px">
+            <el-col :span="10" :offset="1" style="padding:10px">
+              <strong >
+                &nbsp; 考核人员 : {{operailityData.userName}}
+              </strong>
+            </el-col>
+            <el-col :span="12" style="text-align: right;padding: 10px" >
+              <strong>
+                时间 : {{time}}
+              </strong>
+            </el-col>
+          </el-row>
         </fieldset>
-        <el-col :span="10" :offset="10">
-          <div style="margin-top: 20px">
+        <br>
+        <el-col :span="24"  v-if="type=='noScoreList'">
+          <div style="text-align: center">
             <load-btn @listenSubEvent="listenSubEvent" :btnData="saveBtn"></load-btn>
             <el-button  @click="cancel">取消</el-button>
           </div>
         </el-col>
       </el-row >
 
-    </el-form>
   </div>
 </template>
 <script>
   //当前组件引入全局的util
+  import baseRules from '../../../../formRules/base'; // 公共规则
+  import {myEvaluation} from '../../rules'
   let Util=null;
   export default {
     //props接收父组件传递过来的数据
-    props: ['operailityData','url','activityId'],
+    props: ['operailityData','url','activityId','unShowStyle','type'],
     data (){
       return{
+        baseRules,
+        myEvaluation,
         //保存按钮基本信息
         goal:'',
-        getData:'',
+        time:'',
+        show:false,
         saveBtn:{title:'保存',callParEvent:'listenSubEvent'},
         setTableStyle:'height:300px;overflow-x: hidden;overflow-y: auto;',
         //form表单bind数据
@@ -113,8 +124,11 @@
            "templateItemList":[
            ],*/
         },
-        header:[
-        ],
+
+        //需要提交的数据
+        submitData:{ },
+        header:[ ],
+        getData:{},
         idCount:50, //累计数，防止重复
         body:[],
         select:[],
@@ -126,24 +140,19 @@
           type:'add',
           successTitle:'保存成功',
           errorTitle:'保存失败',
-
           ajaxSuccess:'ajaxSuccess',
           ajaxParams:{
             jsonString:true,
-            url:this.url.templateModify+this.operailityData.id,
+            url:this.url.appraiserSubmit,
             method:'post',
-            data:{
-              activityId:this.activityId,
-              evaluatedId:this.operailityData.userId,
-              id:this.operailityData.id,
-            },
+            data:{},
           }
         },
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle:{
           ajaxSuccess:'SuccessGetCurrData',
           ajaxParams:{
-            url:this.url.queryByUser,
+            url:this.url.EvaluatedGet,
             params:{
               activityId:this.activityId,
               evaluatedId:this.operailityData.userId,
@@ -160,6 +169,8 @@
     mounted(){
       //初始化
 
+      let date = new Date();
+      this.time = this.conductDate(date,'yyyy-MM-dd');
       this.init();
     },
     methods:{
@@ -170,152 +181,197 @@
       init(){
         //默认请求加载数据
         this.ajax(this.listMessTitle);
-        this.SuccessGetCurrData()
+
       },
 
       //初始请求数据
       SuccessGetCurrData(res){
-        //let data = res.data;
-        let data = {
-          "evaluatedName":"张永超",
-          "appraiserName":"小张一号",
-          "totalScore":5,
-          "createTimeString":"2017-05-26 17:29:03",
-          "evaluateResultDtoList":[
-            {
-              "tempId":1,
-              "score":3
-            },
-            {
-              "tempId":2,
-              "score":2
-            },
-            {
-              "tempId":3,
-              "score":1
-            }
-          ],
-          "temtemplateDto":{
-          "id":1000,
-          "typeId":1000,
-
-          "name":"住院医专用的评分模板01",
-          "remark":"住院医用的",
-          "score":"100",
-          "hasGroup":"N",
-          "hasGroupScore":"Y",
-          "hasRemark":"Y",
-          "scoreType":"SELECT",
-          "hasScoreLevel":"Y",
-          "scoreLevel":"优|良|中|差",
-          "templateItemList":[
-            {
-              "id":1,
-              "title":"评分第一条",
-              "hasRemark":"Y",
-              tempId:'1',
-              "remark":"随便打分",
-              "maxScore":"80",
-              "score":"0",
-              "hasScore":"Y",
-              "scoreType":"SELECT",
-              "templateItemOptionList":[
-                {
-                  "id":2,
-                  "title":"优",
-                  "val":80
-                },
-                {
-                  "id":2,
-                  "title":"良",
-                  "val":70
-                },
-                {
-                  "id":2,
-                  "title":"中",
-                  "val":60
-                },
-                {
-                  "id":2,
-                  "title":"差",
-                  "val":30
-                }
-              ],
-              "child":[
-                {
-                  "id":1,
-                  tempId:'2',
-                  "title":"评分第一条",
-                  "hasRemark":"Y",
-                  "remark":"随便打分",
-                  "maxScore":"80",
-                  "score":"0",
-                  "hasScore":"Y",
-                  "scoreType":"INPUT",
-                  "templateItemOptionList":[
-                    {
-                      "id":2,
-                      "title":"优",
-                      "val":80
-                    },
-                    {
-                      "id":2,
-                      "title":"良",
-                      "val":70
-                    },
-                    {
-                      "id":2,
-                      "title":"中",
-                      "val":60
-                    },
-                    {
-                      "id":2,
-                      "title":"差",
-                      "val":30
-                    }]
-                },
-              ]
-            },
-
-          ]
-
-        }
-      }
+        let data = res.data;
         if(!data) return;
-        this.getData = data;
-        this.goal = data.totalScore;
-        this.formValidate =data.temtemplateDto;
-        let item ;
-        this.formValidate = this.conductData(data.temtemplateDto);
-        for(let i=0;i<data.evaluateResultDtoList.length;i++){
-            for(let k=0;k<this.body.length;k++){
+        /* data = {
+         "id":1000,
+         "typeId":1000,
+         "name":"住院医专用的评分模板01",
+         "remark":"住院医用的",
+         "score":"100",
+         "hasGroup":"Y",
+         "hasGroupScore":"Y",
+         "hasRemark":"Y",
+         "scoreType":"SELECT",
+         "hasScoreLevel":"Y",
+         "scoreLevel":"优|良|中|差",
+         "templateItemList":[
+         {
+         "id":1,
+         "title":"评分第一条",
+         "hasRemark":"Y",
+         "remark":"随便打分",
+         "maxScore":"80",
+         "score":"0",
+         "hasScore":"Y",
+         "scoreType":"SELECT",
+         "templateItemOptionList":[
+         {
+         "id":2,
+         "title":"优",
+         "val":80
+         },
+         {
+         "id":2,
+         "title":"良",
+         "val":70
+         },
+         {
+         "id":2,
+         "title":"中",
+         "val":60
+         },
+         {
+         "id":2,
+         "title":"差",
+         "val":30
+         }
+         ],
+         "child":[
+         {
+         "id":1,
+         "title":"评分第一条",
+         "hasRemark":"Y",
+         "remark":"随便打分",
+         "maxScore":"80",
+         "score":"0",
+         "hasScore":"Y",
+         "scoreType":"INPUT",
+         "templateItemOptionList":[
+         {
+         "id":2,
+         "title":"优",
+         "val":80
+         },
+         {
+         "id":2,
+         "title":"良",
+         "val":70
+         },
+         {
+         "id":2,
+         "title":"中",
+         "val":60
+         },
+         {
+         "id":2,
+         "title":"差",
+         "val":30
+         }]
+         },
+         {
+         "id":1,
+         "title":"评分第一条",
+         "hasRemark":"Y",
+         "remark":"随便打分",
+         "maxScore":"80",
+         "score":"0",
+         "hasScore":"Y",
+         "scoreType":"INPUT",
+         "templateItemOptionList":[
+         {
+         "id":2,
+         "title":"优",
+         "val":80
+         },
+         {
+         "id":2,
+         "title":"良",
+         "val":70
+         },
+         {
+         "id":2,
+         "title":"中",
+         "val":60
+         },
+         {
+         "id":2,
+         "title":"差",
+         "val":30
+         }]
+         }
+         ]
+         },
 
-              if(this.formValidate.hasGroupScore=='Y'){
-                if(this.body[k]._id){
-                    if(data.evaluateResultDtoList[i].tempId==this.body[k].tempId){
-                      this.body[k].goal = data.evaluateResultDtoList[i].score;
-                    }
-                }
-              }else {
+         ]
+         }*/
+//        this.formValidate =data.templateDto;//使基础数据显示
+//        this.getData = data
+        data.score = data.score/100;
+         this.formValidate = this.conductData(data.templateDto);
+         if(data.totalScore!=null){
+           data.totalScore = data.totalScore/100
+         }
+          this.submitData = data;
+          delete this.submitData.templateDto;
+          delete this.submitData.appraiserId;
+          delete this.submitData.appraiserName;
+          delete this.submitData.updateTime;
+        for(let i=0;i<data.evaluateResultDtoList.length;i++){
+          for(let k=0;k<this.body.length;k++){
+            if(this.formValidate.hasGroupScore=='Y'){
+              if(this.body[k]._id){
                 if(data.evaluateResultDtoList[i].tempId==this.body[k].tempId){
-                  this.body[k].goal = data.evaluateResultDtoList[i].score;
+                  this.body[k].gold = data.evaluateResultDtoList[i].score;
                 }
               }
+            }else {
+              if(data.evaluateResultDtoList[i].tempId==this.body[k].tempId){
+                this.body[k].gold = data.evaluateResultDtoList[i].score;
+              }
             }
+          }
         }
+        this.show = true;
       },
 
-
+      //处理获取到的数据
       conductData(data){
         let select = [];
         let _scoreLevel = [];
         let scoreTypeArr = [];//头部使用
+        if(data.scoreType == 'SELECT'){
+          if(this.type=='noScoreList'){
+            data.scoreLevel.split('|').forEach( (item,index)=> {
+              let key = ++this.idCount;
+              _scoreLevel.push({
+                key:`select${key}`,
+                label:item
+              });
+              select.push(`select${key}`);
+              scoreTypeArr.push({
+                label:`${item}`,
+                key:`select${key}`
+              })
+            })
+            this.select  = select
+          }else {
+            scoreTypeArr.push({
+              key :'score',
+              label :'标准分',
+            },{
+              key :'gold',
+              label :'得分',
+            })
+          }
+
+        }else {
           _scoreLevel = [{label:'',key:'select1'}];
           this.select = ['select1'];
-          scoreTypeArr = {
+          scoreTypeArr =[ {
             key :'score',
             label :'标准分',
-          }
+          },
+            {
+              key :'gold',
+              label :'得分',
+            }]
+        }
         data._scoreLevel =_scoreLevel;
 
         if(data.hasGroup == 'Y'){
@@ -333,23 +389,17 @@
         //定义头部header
         let header = [{
           key :'parentTitle',
-          label :'项目名称',
+          label :'考核项目',
         },{
           key :'titleSub',
-          label :'内容名称',
+          label :'考核内容',
         },{
           key :'remark',
           label :'备注',
         },
-          {
-            key :'score',
-            label :'标准分',
-          }
+          ...scoreTypeArr
           ,
-          {
-            key :'goal',
-            label :'得分',
-          },
+
       ];
         //是否有备注
         if(data.hasRemark =='N'){
@@ -365,68 +415,109 @@
         if(data.hasGroupScore == 'Y'){
           isScore = true
         }
+
+        //如果是选择的，为返回的选择的数据进行排序和匹配
+        let scoreLevelObj={}
+        for(let l=0;l<data._scoreLevel.length;l++){
+          scoreLevelObj[data._scoreLevel[l].label] = data._scoreLevel[l].key;
+        }
         let obj;
         let parentId;
+        let flag=true;//如果不是否按照分类评分的，则k=0时是true，只允许进一次;如果是否按照分类评分的，则此项为true,判断条件是，是否是hasScore为‘Y’；
         let templateItemList = data.templateItemList;  //传过来的内容主体
         for(let i=0;i<templateItemList.length;i++){
           let child=templateItemList[i].child;
           if(!child) continue;
+          let tempArr = [];//临时放置处理的当前child的子项
           for(let k=0;k<child.length;k++){
             if(k==0){
               parentId = ++this.idCount;
-              this.constructionMerge[parentId] = child.length;
+              this.constructionMerge[parentId] = child.length;//父元素要合并的单元格数
+            }
+            if(!isScore){
+              flag = k==0;
+            }else {
+              flag=true;
+            }
+            if(flag && child[k].hasScore=='Y') {
+              if(isScore)child[k].templateItemOptionList = templateItemList[i].templateItemOptionList;
               obj = {
+                tempId:child[k].id,
                 parentTitle:templateItemList[i].title||'',
                 parentTitleRow:child.length,
                 titleSub:child[k].title||'',
                 _isParent:true,
                 _id:parentId,
-                tempId:isScore?templateItemList[i].tempId:child[k].tempId,
-                score:child[k].score||'',
+                score:child[k].score/100||'',
                 scoreRow:isScore?child.length:1,
                 remark:child[k].remark||'',
-                goal:'',
-                goalRow:isScore?child.length:1,
+                operateSub:'',
                 operateParent:'',
                 operateParentRow:child.length,
                 select1:'',
+                gold:'',
+                goldRow:isScore?child.length:1,
                 select1Row:isScore?child.length:1,
               }
-              let val=[]
-              if(data.scoreType == 'SELECT'){
-                for(let l=0;l<child[k].templateItemOptionList.length;l++){
-                  val.push(child[k].templateItemOptionList[l].val)
+
+              if(child[k].templateItemOptionList!=0) {
+                if(this.type=='noScoreList') {
+                  for(let j=0;j<child[k].templateItemOptionList.length;j++){
+                    let title = child[k].templateItemOptionList[j].title;
+                    let label = child[k].templateItemOptionList[j].val/100;
+                    obj[scoreLevelObj[title]] = label;
+                    obj[scoreLevelObj[title]+'Row'] =isScore?child.length:1
+                  }
+
+                }else {
+                    let optionListScope = [];
+                  for (let l = 0; l < child[k].templateItemOptionList.length; l++) {
+                    optionListScope.push(child[k].templateItemOptionList[l].val/100) ;
+                  }
+                  obj.score = optionListScope.join(' : ');
                 }
-                obj.score = val.join(':')
               }
 
-              body.push(obj);
+              tempArr.unshift(obj);
             }else {
               obj = {
+                tempId:child[k].id,
                 titleSub:child[k].title||'',
                 _isParent:false,
                 _parentId:parentId,
-                score:child[k].score||'',
+                score:child[k].score/100||'',
                 remark:child[k].remark||'',
-                goal:'',
-                tempId:child[k].tempId,
+                operateSub:'',
+                gold:'',
                 select1:'',
               }
-              let val=[];
-              if(data.scoreType == 'SELECT'){
-                for(let l=0;l<child[k].templateItemOptionList.length;l++){
-                  val.push(child[k].templateItemOptionList[l].val)
+              if(child[k].templateItemOptionList!=0) {
+                if(this.type=='noScoreList') {
+                  for(let j=0;j<child[k].templateItemOptionList.length;j++){
+                    let title = child[k].templateItemOptionList[j].title;
+                    let label = child[k].templateItemOptionList[j].val/100;
+                    obj[scoreLevelObj[title]] = label;
+                    obj[scoreLevelObj[title]+'Row'] =isScore?child.length:1
+                  }
+
+                }else {
+                  let optionListScope = [];
+                  for (let l = 0; l < child[k].templateItemOptionList.length; l++) {
+                    optionListScope.push(child[k].templateItemOptionList[l].val/100) ;
+                  }
+                  obj.score = optionListScope.join(' : ');
+
                 }
-                obj.score = val.join(':')
               }
-              body.push(obj)
+              tempArr.push(obj)
             }
-
           }
+          body = body.concat(tempArr);
+          tempArr = [];
         }
-
         this.body = body;
-        this.groupScoreChange(this.formValidate.hasGroupScore);
+        //根据当前评分分组决定评分项是否合并单元格
+        this.groupScoreChange(data.hasGroupScore);
       },
 
       //返回的数据不存在分组
@@ -434,20 +525,13 @@
         //定义头部header
         let header = [{
           key :'titleSub',
-          label :'内容名称',
+          label :'考核内容',
         },{
           key :'remark',
           label :'备注',
         },
-          {
-            key :'score',
-            label :'标准分',
-          }
-          ,
-          {
-            key :'goal',
-            label :'得分',
-          },
+          ...scoreTypeArr
+
       ];
         if(data.hasRemark =='N'){
           header.splice(1,1)
@@ -461,112 +545,134 @@
         if(data.hasGroupScore == 'Y'){
           isScore = true
         }
+
+        //如果是选择的，为返回的选择的数据进行排序和匹配
+        let scoreLevelObj={}
+        for(let l=0;l<data._scoreLevel.length;l++){
+          scoreLevelObj[data._scoreLevel[l].label] = data._scoreLevel[l].key;
+        }
+
         let parentId;
         let obj;
         let templateItemList = data.templateItemList;  //传过来的内容主体
         for(let i=0;i<templateItemList.length;i++){
+          parentId = ++this.idCount;
           this.constructionMerge[parentId] = 1;
           obj= {
+            tempId:templateItemList[i].id,
             parentTitle:'',
             parentTitleRow:1,
             titleSub:templateItemList[i].title||'',
             _isParent:true,
-            _id:++this.idCount,
-            score:templateItemList[i].score||'',
-            scoreRow:'1',
+            _id:parentId,
+            score:templateItemList[i].score/100||'',
+            scoreRow:1,
             remark:templateItemList[i].remark||'',
-            goal:'',
-            tempId:templateItemList[i].tempId,
+            operateSub:'',
             operateParent:'',
             operateParentRow:1,
             select1:'',
             select1Row:1,
+            gold:'',
+            goldRow:1,
           }
-          let val=[]
-          if(data.scoreType == 'SELECT'){
-            for(let l=0;l<templateItemList[i].templateItemOptionList.length;l++){
-              val.push(templateItemList[i].templateItemOptionList[l].val)
+
+          if(templateItemList[i].templateItemOptionList!=0) {
+            if(this.type=='noScoreList') {
+              for(let j=0;j<templateItemList[i].templateItemOptionList.length;j++){
+                let title = templateItemList[i].templateItemOptionList[j].title;
+                let label = templateItemList[i].templateItemOptionList[j].val/100;
+                obj[scoreLevelObj[title]] = label;
+                obj[scoreLevelObj[title]+'Row'] =1
+              }
+
+            }else {
+              let optionListScope = [];
+              for (let l = 0; l < templateItemList[i].templateItemOptionList.length; l++) {
+                optionListScope.push(templateItemList[i].templateItemOptionList[l].val/100) ;
+              }
+              obj.score = optionListScope.join(' : ');
+
             }
-            obj.score  = val.join(':')
           }
           body.push(obj)
         }
 
-        //评分方式为选择或输入的时候都添加上选择项
-//        for(let i=0;i<this.select.length;i++){
-//          for(let k=0;k<this.body.length;k++){
-//            body[k][this.select[i]] = '';
-//            if(body[k]._id){
-//              body[k][this.select[i]+'Row'] =1;
-//            }
-//          }
-//        }
-
         this.body = body;
+        //根据当前评分分组决定评分项是否合并单元格
         this.groupScoreChange(this.formValidate.hasGroupScore);
       },
 
+
+      //
+      evaluateResultDtoList(){
+
+      },
 
       /*  确定
        * 点击提交按钮 监听是否提交数据
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       listenSubEvent(isLoadingFun){
-        let isSubmit = this.submitForm("formValidate");
-        if(isSubmit) {
+          let submit = this.submitForm('formValidate');
+          if(!submit) return;
           if (!isLoadingFun) isLoadingFun = function () {
           };
-          isLoadingFun(true);
-          if(!this.getData){
-              this.showMess('获取数据失败，不能提交');
-              return;
-          }
+
+          let tempArr = [];
           //处理提交的参数
-          let params ={
-            "evaluatedName":this.getData.evaluatedName,
-            "appraiserName":this.getData.evaluatedName,
-            "totalScore":this.goal,
-            activityId:this.activityId,
-            evaluatedId:this.operailityData.userId,
-            id:this.operailityData.id,
-            evaluateResultDtoList:this.conductParams(this.body),
-          };
-          this.addMessTitle.ajaxParams.data  = params;
-          this.ajax(this.addMessTitle, isLoadingFun)
-        }
-      },
+          if(this.formValidate.hasGroupScore == 'Y'){
+              for(let i=0;i<this.body.length;i++){
+                let item = this.body[i];
 
+                if(item._id){
+                  if(item.gold==''){
+                    let table;
+                    if(this.formValidate.hasGroup =='Y'){
+                      table = `项目 ：${item.parentTitle} 分数不能为空`;
+                    }else {
+                      table = `内容 ： ${item.titleSub}  分数不能为空`;
+                    }
+                    this.showMess(table);
+                    return;
+                  }
+                  tempArr.push({
+                    tempId:item.tempId ,
+                    score:parseInt(item.gold*100),
+                    remark:item.remark,
+                  })
+                }
+              }
 
-      conductParams(data){
-        let _scoreLevel = this.formValidate._scoreLevel;
-        let tempArr = [];
-        let obj={};
-        let  bodyData = data;
-        for(let i=0;i<bodyData.length;i++){
-          if(this.formValidate.hasGroupScore=='Y'){
-            if(bodyData[i]._id){
-              obj ={
-                "tempId":bodyData[i].tempId,
-                "score":bodyData[i].goal,
-                "remark":bodyData[i].remark,
-              };
-              tempArr.push(obj)
-            }
           }else {
-            obj ={
-              "tempId":bodyData[i].tempId,
-              "score":bodyData[i].goal,
-              "remark":bodyData[i].remark,
-            };
-            tempArr.push(obj)
+            for(let i=0;i<this.body.length;i++) {
+              let item = this.body[i];
+              if (item.gold == '') {
+                let table;
+                if (this.formValidate.hasGroup == 'Y') {
+                  table = `项目 ：${item.parentTitle} 分数不能为空`;
+                } else {
+                  table = `内容 ： ${item.titleSub}  分数不能为空`;
+                }
+                this.showMess(table);
+                return;
+              }
+              tempArr.push({
+                tempId: item.tempId,
+                score: parseInt(item.gold*100),
+                remark: item.remark,
+              })
+            }
           }
+        isLoadingFun(true);
+          this.submitData.evaluateResultDtoList = tempArr
 
-        }
-
-        return tempArr
+//        this.submitData
+        let submitData =  Util._.defaultsDeep({},  this.submitData);
+        submitData.totalScore = parseInt(submitData.totalScore*100);
+        this.addMessTitle.ajaxParams.data =  submitData;
+          this.ajax(this.addMessTitle, isLoadingFun)
       },
-
-
 
       /*
        * 点击提交按钮 监听是否验证通过
@@ -574,39 +680,16 @@
        * @return flag boolean   form表单验证是否通过
        * */
       submitForm(formName){
-        let flag = false;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            flag= true;
-          }
-        });
+        let flag = true;
+        for(let i=0;i<this.$refs[formName].length;i++){
+          this.$refs[formName][i].validate((valid) => {
+            if (!valid) {
+              flag= false;
+            }
+          });
+        }
         return flag;
       },
-
-
-      ceelClick(key,val){
-        if(val)this.formValidate.hasGroupScore =val;
-        let bodyData =  Util._.defaultsDeep([],this.body);
-        let maxScore = 0 ;
-
-          //计算总分数
-          for(let i=0;i<bodyData.length;i++){
-            if(this.formValidate.hasGroupScore=='Y'){
-              if(bodyData[i]._id){
-                let item = bodyData[i].goal;
-                maxScore += + item||0
-              }
-            }else {
-              let item = bodyData[i].goal;
-              maxScore += + item||0;
-            }
-
-          }
-          this.goal = maxScore;
-
-
-      },
-
       /**----------------------------------------------操作处理*/
       /*
        * 当前组件发送事件给父组件
@@ -631,11 +714,18 @@
       /**---------------------操作 ---------------------------*/
       //总分占多少单元格
       scoreCol(){
-        let scoreCol = this.formValidate.hasScoreLevel=='Y'?this.select.length:1;
+          let length=1;
+          if(this.type=='noScoreList'){
+            length =  this.select.length
+
+          }else {
+            length=1;
+          }
+        let scoreCol = this.formValidate.hasScoreLevel=='Y'?length:1;
         if(this.formValidate.hasGroup=='Y'){
-          return this.header.length-(1+scoreCol)
+          return this.header.length-(+scoreCol)
         }else {
-          return this.header.length-(1+scoreCol)
+          return this.header.length-(+scoreCol)
 
         }
       },
@@ -699,7 +789,7 @@
           //更改头部
           this.header.unshift({
             key :'parentTitle',
-            label :'项目名称',
+            label :'考核项目',
           });
           this.header.push(
             {
@@ -732,7 +822,6 @@
       //改变是否按照分组评分
       groupScoreChange(val){
         if(val=='Y'){
-
           for(let i=0;i<this.body.length;i++){
             let _id=this.body[i]._id;
             if(_id){//存在id为父元素 评分项单元格
@@ -993,7 +1082,6 @@
               tempArr[k][this.select[i]+'Row'] = score;
             }
           }
-
         }
         this.body=this.body.concat(tempArr);
         this.groupScoreChange(this.formValidate.hasGroupScore) // 标准分合并
@@ -1020,11 +1108,12 @@
           return true
         }
         if(this.formValidate.hasGroupScore=='Y'&&key=='score'){
-
+          return false;
+        }
+        if(this.formValidate.hasGroupScore=='Y'&&key=='gold'){
           return false;
         }
         if(this.formValidate.hasGroupScore=='Y'&&key.includes('select')){
-
           return false;
         }
 
@@ -1033,12 +1122,20 @@
         }else {
           return true
         }
+      },
 
+      goldClick(){
+         let body = this.body;
+         let score = 0;
+         for(let i=0;i<body.length;i++){
+           let item = body[i];
+           if(+item.gold!=+item.gold) continue;
+           score =  parseInt(score*100+item.gold*100)/100;
+         }
+         this.submitData.totalScore = score
 
-      }
+      },
 
     },
-    components:{
-    }
   }
 </script>

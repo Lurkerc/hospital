@@ -114,7 +114,7 @@
             width="120">
           </el-table-column>
           <el-table-column
-            prop="recordTimes"
+            prop="activityTimeInfo"
             label="时间"
             show-overflow-tooltip
           >
@@ -139,7 +139,7 @@
     </div>
     <!--心得体会-->
     <Modal
-      close-on-click-modal="false"
+      :mask-closable="false"
       width="1000"
       v-model="xdthModal"
       title="对话框标题"
@@ -151,7 +151,7 @@
     </Modal>
     <!--查看弹窗-->
     <Modal
-      close-on-click-modal="false"
+      :mask-closable="false"
       width="800"
       v-model="showModal"
       title="查看档案管理弹窗"
@@ -163,7 +163,7 @@
     </Modal>
     <!--评价弹窗-->
     <Modal
-      close-on-click-modal="false"
+      :mask-closable="false"
       width="1000"
       v-model="evaluateModal"
       title="查看档案管理弹窗"
@@ -203,19 +203,19 @@
 
 
         "tableData":[
-          {
-            "id":1,
-            "activityName":"教学查房",
-            "activityType":"理论",
-            "hostUserName":"张三",
-            "activityTime":"2017-03-31",
-            "activitySite":"教学楼三楼301室",
-            "activityUser":"呼吸科-住院医师",
-            "shouldUserCount":30,
-            "actuallyUserCount":30,
-            "recordTimes":"9:00-10:00,10:10-11:00",
-            "activityState":"nosubmit"
-          }
+//          {
+//            "id":1,
+//            "activityName":"教学查房",
+//            "activityType":"理论",
+//            "hostUserName":"张三",
+//            "activityTime":"2017-03-31",
+//            "activitySite":"教学楼三楼301室",
+//            "activityUser":"呼吸科-住院医师",
+//            "shouldUserCount":30,
+//            "actuallyUserCount":30,
+//            "recordTimes":"9:00-10:00,10:10-11:00",
+//            "activityState":"nosubmit"
+//          }
         ],
         operailityData:'',
         multipleSelection: [],
@@ -228,7 +228,7 @@
           ajaxSuccess:'updateListData',
           ajaxParams:{
             url:url.userList,
-            params:{}
+            params:{},
           }
         },
         xdthModal:false,
@@ -315,6 +315,7 @@
       //通过get请求列表数据
       updateListData(responseData){
         this.tableData = this.addIndex(responseData.data);
+        this.listTotal = responseData.totalCount;
       },
       setTableData(){
         let formSearch;

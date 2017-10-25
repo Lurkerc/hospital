@@ -59,15 +59,16 @@
         <el-col :span="22" :offset="1">
           <el-form-item label="设备：">
             <template v-if="showData.reservePojectDeviceList.length">
-              <el-tooltip class="item" effect="light" placement="bottom-start" v-for="(item,index) in showData.reservePojectDeviceList"
-                :key="index">
-                <div slot="content" style="max-width:200px;">
-                  <p>设备名称：{{ item.deviceTypeName }}</p>
-                  <p>开放数量：{{ item.openNum || 0 }}</p>
-                  <p>设备简介：{{ item.describes || '暂无简介' }}</p>
-                </div>
-                <el-button>{{ item.deviceTypeName + ' 数量：' + item.reserveNum }}</el-button>
-              </el-tooltip>
+              <!--<el-tooltip class="item" effect="light" placement="bottom-start" v-for="(item,index) in showData.reservePojectDeviceList"-->
+                <!--:key="index">-->
+                <!--<div slot="content" style="max-width:200px;">-->
+                  <!--<p>设备名称：{{ item.deviceTypeName }}</p>-->
+                  <!--<p>开放数量：{{ item.openNum || 0 }}</p>-->
+                  <!--<p>设备简介：{{ item.describes || '暂无简介' }}</p>-->
+                <!--</div>-->
+                <!--<el-button>{{ item.deviceTypeName + ' 数量：' + item.reserveNum }}</el-button>-->
+              <el-button type="text" v-for="(item,index) in showData.reservePojectDeviceList" :key="index">{{ item.deviceTypeName + '(' + item.deviceIdentifier + ')' }}</el-button>
+              <!--</el-tooltip>-->
             </template>
             <span v-else>暂未分配</span>
           </el-form-item>

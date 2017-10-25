@@ -70,12 +70,12 @@ const api = {
     path: '/rotaryConfig/modify/',
     method: 'put'
   },
-  bigcaseIscopy: { // 黏贴查询是否黏贴
-    path: '/rotaryConfig/getByKey/rotary_bigcase_iscopy-ZYY',
+  bigcaseIscopy: { // 黏贴查询是否黏贴 -ZYY -YJS -JXS
+    path: '/rotaryConfig/getByKey/rotary_bigcase_iscopy-',
     method: 'get'
   },
-  bigcaseCopyscale: { // 黏贴比例查询
-    path: '/rotaryConfig/getByKey/rotary_bigcase_copyscale-ZYY',
+  bigcaseCopyscale: { // 黏贴比例查询 -ZYY -YJS -JXS
+    path: '/rotaryConfig/getByKey/rotary_bigcase_copyscale-',
     method: 'get'
   },
 
@@ -103,14 +103,36 @@ const api = {
     method: 'delete',
   },
 
-  getDepTree:{  //获取所有院内科室
+  getDepTree:{  //获取所有院内科室  此接口可能暂时不用了更换为getByDepth
     path:"/hospital/dept/tree",
     method:"get",
+  },
+
+  getByDepth:{  //获取三级科室
+    path:"/hospital/dept/getByDepth",
+      method:"get"
   },
 
   getRulesDepHgGroupByHgId:{  //配置-修改-查看单个分组详情 {hgId}
     path:"/rotaryBasis/rulesTraining/getRulesDepHgGroupByHgId/",
     method:"get",
+  },
+
+  //理论成绩合格分数
+  theoryExamPassMark:{  //-ZYY -YJS -JXS
+    path: '/rotaryConfig/getByKey/theory_exam_pass_mark-', // {configKey}-{userType}
+    method: 'get'
+  },
+  //技能成绩合格分数
+  skillExamPassMark:{  //-ZYY -YJS -JXS
+    path: '/rotaryConfig/getByKey/skill_exam_pass_mark-', // {configKey}-{userType}
+    method: 'get'
+  },
+
+  //出科综合成绩比例(理论、技能、日常)
+  rotaryGivenDdepMarkRatio:{
+    path: '/rotaryConfig/getByKey/rotary_givenDdep_markRatio-', // {configKey}-{userType}
+    method: 'get'
   }
 
 };

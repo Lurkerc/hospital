@@ -52,6 +52,12 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
+    props:{
+      userType:{  //人员类型
+        type: String,
+        default: "ZYY",
+      }
+    },
     data() {
       return {
         //保存按钮基本信息
@@ -88,7 +94,7 @@
         getBigcaseIscopy:{
           ajaxSuccess:'getBigcaseIscopyData',
           ajaxParams:{
-            url: api.bigcaseIscopy.path,
+            url: api.bigcaseIscopy.path+this.userType,
           }
         },
 
@@ -97,7 +103,7 @@
         getBigcaseCopyscale:{
           ajaxSuccess:'getBigcaseCopyscaleData',
           ajaxParams:{
-            url: api.bigcaseCopyscale.path,
+            url: api.bigcaseCopyscale.path+this.userType,
           }
         },
 
@@ -209,9 +215,7 @@
        * 当前组件发送事件给父组件
        * 发送关闭(cancel)模态事件给父组件,请求关闭当前模态窗
        * */
-      cancel(){
-        alert(456)
-      },
+      cancel(){},
 
 
       /*

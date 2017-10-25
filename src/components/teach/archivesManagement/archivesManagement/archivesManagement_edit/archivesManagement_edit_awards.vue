@@ -76,7 +76,7 @@
             </el-table-column>
             <el-table-column
               prop="remark"
-              label="相关资料">
+              label="相关证明材料">
               <template scope="scope">
                 <el-form-item prop="remark">
                   <el-input style="width: 100%;" v-model="scope.row.remark"  placeholder="请输入内容"></el-input>

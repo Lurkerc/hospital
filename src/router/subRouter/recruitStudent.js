@@ -15,18 +15,19 @@ const recruitRouters = {
     }, 'recruitStudent');
   },
   redirect: to => {
-    return '/manage/recruitStudent/usersManagement'
+    return '/manage/recruitStudent/internAudit'
   },
-  children:[{
-    //人员管理
-    path:'usersManagement',
-    name:'usersManagement',
-    component:resolve=> {
-      require.ensure([], () => {
-        resolve(require('../../components/intern/recruitStudent/usersManagement/usersManagement_list.vue'));
-      }, 'recruitStudent');
-    }
-  },
+  children:[
+  //   {
+  //   //人员管理
+  //   path:'usersManagement',
+  //   name:'usersManagement',
+  //   component:resolve=> {
+  //     require.ensure([], () => {
+  //       resolve(require('../../components/intern/recruitStudent/usersManagement/usersManagement_list.vue'));
+  //     }, 'recruitStudent');
+  //   }
+  // },
     {
       //实习生审核
       path:'internAudit',

@@ -1,6 +1,16 @@
 <template>
   <!-- 易耗品 -->
   <div>
+    <el-form :inline="true" :model="formValidate" class="demo-form-inline">
+      <el-row>
+        <el-form-item label="价格筛选" >
+          <el-input style="width:200px;" v-model="formValidate.priceStart" placeholder="最低价格"></el-input>～<el-input style="width: 200px;" v-model="formValidate.priceEnd" placeholder="最高价格"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleSubmit('formValidate')">查询</el-button>
+        </el-form-item>
+      </el-row>
+    </el-form>
     <!-- 操作按钮 -->
     <div class="buttonList">
       <el-button size="small" type="success" @click="add">新建耗材</el-button>
@@ -81,7 +91,6 @@
             </a>
             <el-button class="but-col" @click=" deriveModal=false">取消</el-button>
           </el-col>
-          </el-col>
         </el-row>
       </div>
       <div slot="footer"></div>
@@ -104,7 +113,7 @@
     <!-- 模态框 盘点 -->
     <Modal :mask-closable="false" v-model="addCountModal" height="200" title="对话框标题" class-name="vertical-center-modal" :width="1100">
       <modal-header slot="header" :content="button.addCountId"></modal-header>
-      <consumables-count-add v-if="addCountModal" @cancel="cancel" @addCount="addCountDone" :consumablesId="consumablesId"></consumables-count-add>
+      <consumables-count-add v-if="addCountModal" @cancel="cancel" @addCount="addCountDone" :operaility-data="operailityData"></consumables-count-add>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -133,6 +142,10 @@
       return {
         api, // 当前模块api
         derUrl: '',
+        formValidate:{
+          priceStart:'',
+          priceEnd:''
+        },
         operailityData: '', // 操作数据集
         multipleSelection: [], // 表格选中索引
         dynamicHt: 100, // 表格自适应高度
@@ -224,6 +237,7 @@
        * @param isLoading Boolean 是否加载
        */
       setTableData(isLoading) {
+        Object.assign(this.queryQptions.params, this.formValidate);
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions
@@ -240,6 +254,7 @@
         let paginationHt = 50 * 2 + 10;
         this.dynamicHt = this.contenHeight - consumablesTable.offsetTop - paginationHt;
       },
+
       /*
        * 列表数据只能选择一个
        * @param isOnly true  是否只选择一个
@@ -256,6 +271,13 @@
           flag = false;
         }
         return flag;
+      },
+      /*
+       * 列表查询方法
+       * @param string 查询from的id
+       * */
+      handleSubmit(name){
+        this.setTableData();
       },
       /************************************** 模态框处理 **************************************************/
       // 增加
@@ -276,7 +298,7 @@
       },
       // 盘点
       countCmb(row) {
-        this.consumablesId = row.id;
+        this.operailityData = row;
         this.openModel('addCount')
       },
       // 取消
@@ -316,7 +338,7 @@
       addCountDone(target, title, updata) {
         this.subCallback(target, title, true);
         // 切换为盘点视图
-        this.$emit('show', 'count')
+//        this.$emit('show', 'count')
       },
       // 增加回调
       subCallback(target, title, updata) {

@@ -41,8 +41,8 @@
         <!-- 设备列表 -->
         <div class="adcBoxList">
           <el-checkbox-group v-model="checkBoxs" v-if="boxList.length">
-            <div class="adcrBoxItem" v-for="box in boxList" :key="box.id">
-              <el-checkbox :label="box.id" v-if="box.id"></el-checkbox>
+            <div class="adcrBoxItem" v-for="box in boxList" :key="box.terminalId">
+              <el-checkbox :label="box.terminalId" v-if="box.terminalId"></el-checkbox>
               <img src="../../../../../assets/ambuf/images/audio.png" class="audioImg">
               <p class="audioVolume">{{ box.volume }}</p>
               <p class="overflow-txt1" v-if="box.roomId">{{ box.roomNum }}房间</p>
@@ -188,7 +188,7 @@
       // 获取所有设备id
       getAllBoxId() {
         let boxId = [];
-        this.boxList.map(box => boxId.push(box.id));
+        this.boxList.map(box => boxId.push(box.terminalId));
         this.boxAllId = boxId;
       },
       // 待选房间初始化
@@ -351,7 +351,7 @@
         let boxId = [];
         checkBox.map(item => {
           for (let i = 0; i < box.length; i++) {
-            if (box[i].id === item) {
+            if (box[i].terminalId === item) {
               boxId.push(item);
               boxIndex.push(i);
             }

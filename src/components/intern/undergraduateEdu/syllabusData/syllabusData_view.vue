@@ -15,6 +15,14 @@
         </el-col>
       </el-row>
       <el-row>
+        <el-col :span="3" style="text-align: right;line-height: 30px;">时间段</el-col>
+        <el-col :span="20">
+          <el-form-item label="">
+            {{formValidate.timeInfo}}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="3" style="text-align: right;line-height: 30px;">课程内容</el-col>
         <el-col :span="20">
           <el-form-item label="">
@@ -47,7 +55,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="3" style="text-align: right;line-height: 30px;">相关资料</el-col>
+        <el-col :span="3" style="text-align: right;line-height: 30px;">相关证明材料</el-col>
         <el-col :span="20">
           <el-form-item label="">
             <upload-file :uploadFiles="formValidate.fileList" :show="true"></upload-file>
@@ -80,21 +88,21 @@
           "courseTime":"2017-02-08",
           "courseDataState":"RELEASE",*/
 
-          "courseDataId":23,
-          "courseContent":"111",
-          "courseType":"见习",
-          "teachNames":"老师",
-          "courseAddress":"授课地点",
-          "courseTime":"2017-02-08",
-          "courseDataNote":"备注",
-          "courseDataState":"RELEASE",
+          "courseDataId":'',
+          "courseContent":"",
+          "courseType":"",
+          "teachNames":"",
+          "courseAddress":"",
+          "courseTime":"",
+          "courseDataNote":"",
+          "courseDataState":"",
 
           "fileList":[
             {
-              "fileId":"2",
-              "fileName":"文件名称",
-              "fileType":"txt",
-              "fileUrl":"txt"
+              "fileId":"",
+              "fileName":"",
+              "fileType":"",
+              "fileUrl":""
             }
           ]
         },

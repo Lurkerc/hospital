@@ -60,13 +60,13 @@
         </el-col >
       </el-row >
 
-      <el-row >
-        <el-col :span="16" :offset="2">
-          <el-form-item label="是否抢救:" prop="name" >
-            {{formValidate.isRescue | typeText}}
-          </el-form-item>
-        </el-col >
-      </el-row >
+      <!--<el-row >-->
+        <!--<el-col :span="16" :offset="2">-->
+          <!--<el-form-item label="是否抢救:" prop="name" >-->
+            <!--{{formValidate.isRescue | typeText}}-->
+          <!--</el-form-item>-->
+        <!--</el-col >-->
+      <!--</el-row >-->
 
       <el-row >
         <el-col :span="16" :offset="2">
@@ -79,7 +79,7 @@
 
       <el-row >
         <el-col :span="16" :offset="2">
-          <el-form-item label="相关资料:" prop="name" >
+          <el-form-item label="相关证明材料:" prop="name" >
             <upload-file :uploadFiles="formValidate.fileList"  :show="true" ></upload-file>
           </el-form-item>
         </el-col>

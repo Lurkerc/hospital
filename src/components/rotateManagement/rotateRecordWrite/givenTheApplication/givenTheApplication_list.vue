@@ -7,19 +7,24 @@
           <el-form-item label="科室：">
             <el-select v-model="departmentId" placeholder="请选择">
               <el-option label="全部" value=""></el-option>
-              <el-option v-for="item in departmentOption" :key="item.depId" :label="item.depName" :value="item.depId"></el-option>
+              <el-option v-for="item in departmentOption" :key="item.depId" :label="item.label" :value="item.depId"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="排序字段：">
-            <el-select v-model="otherParams.sortby" placeholder="请选择">
-              <el-option v-for="item in sortbyOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-form-item label="生源类型：">
+            <el-select v-model="otherParams.podClass" placeholder="请选择">
+              <el-option v-for="item in userTypeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="排序方式：">
-            <el-select v-model="otherParams.order" placeholder="请选择">
-              <el-option v-for="item in orderOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
+          <!--<el-form-item label="排序字段：">-->
+            <!--<el-select v-model="otherParams.sortby" placeholder="请选择">-->
+              <!--<el-option v-for="item in sortbyOption" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="排序方式：">-->
+            <!--<el-select v-model="otherParams.order" placeholder="请选择">-->
+              <!--<el-option v-for="item in orderOption" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
           <el-button type="info" @click="search">搜索</el-button>
         </el-form>
       </el-col>
@@ -27,8 +32,8 @@
     <!-- 数据表格 -->
     <div id="tableData" ref="tableData" class="givenTheAppTable">
       <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-        <el-table-column label="序号" prop="index" width="100"></el-table-column>
-        <el-table-column label="操作" width="140">
+        <el-table-column label="序号" prop="index" width="100" align="center"></el-table-column>
+        <el-table-column label="操作" width="200" align="center">
           <!-- <template scope="scope">
             <template v-if="scope.row.depExaminationId">
               <el-button size="small" type="success" @click="rotary(scope.row)" v-if="!isManage && scope.row.depQualified === 'QUALIFIED'">出科</el-button>
@@ -40,9 +45,10 @@
             <!-- <el-button size="small" type="success" @click="rotary(scope.row)">出科</el-button> -->
             <!-- <el-button size="small" type="warning" @click="show(scope.row)">查看</el-button> -->
             <el-button :disabled="!scope.row.depExaminationId" size="small" type="warning" @click="show(scope.row)">查看</el-button>
-            <el-tooltip effect="light" content="出科时间前5天、后5天可填出科申请" placement="bottom-start">
+            <el-tooltip effect="light" content="出科时间前5天可填出科申请" placement="bottom-start">
               <el-button :disabled="!canRotary(scope.row)" size="small" type="success" @click="rotary(scope.row)">出科</el-button>
             </el-tooltip>
+            <!--<el-button :disabled="!scope.row.depExaminationId" size="small" type="warning" @click="postpone(scope.row)">延期</el-button>-->
           </template>
         </el-table-column>
         <el-table-column label="姓名" prop="userName" show-overflow-tooltip></el-table-column>
@@ -98,7 +104,7 @@
     <!-- 模态框 技能补考 -->
     <Modal :mask-closable="false" v-model="skillModal" height="200" class-name="vertical-center-modal" :width="800">
       <modal-header slot="header" :content="contentHeader.skillId"></modal-header>
-      <skill v-if="skillModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></skill>
+      <skill v-if="skillModal" @cancel="cancel" @skill="subCallback" :operaility-data="operailityData"></skill>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 考核详情 -->
@@ -120,6 +126,7 @@
   import theory from './givenTheApplication_theory'; // 理论补考
   import skill from './givenTheApplication_skill'; // 技能补考
   import depQualified from './givenTheApplication_depQualified'; // 考核详情
+//  import postpone from  './postpone.vue'; //延期申请
   //当前组件引入全局的util
   let Util = null;
   export default {
@@ -140,7 +147,8 @@
         loading: false,
         operailityData: [],
         otherParams: {
-          sortby: '', // rotaryBeginTime|开始时间 endBeginTime|结束时间 theoryScore|理论成绩 skillScore|技能成绩  
+          podClass: '',
+          sortby: '', // rotaryBeginTime|开始时间 endBeginTime|结束时间 theoryScore|理论成绩 skillScore|技能成绩
           order: 'DESC',
         },
         rotaryModal: false,
@@ -186,8 +194,16 @@
           }
         }
 
+        let userRoleList = [];
+
         this.userInfo = this.$store.getters.getUserInfo;
-        this.userInfo.roleList.map(item => this.userType.push(item.identify));
+        this.userInfo.roleList.map(item => userRoleList.push(item.identify.toLocaleUpperCase()));
+
+        if(userRoleList.indexOf('SXS') > -1){
+          this.userType = 'SXS';
+        }else {
+          this.userType = userRoleList[0];
+        }
 
         this.getDepartmentOption();
         this.setTableData();
@@ -196,12 +212,31 @@
       // 获取科室
       getDepartmentOption() {
         this.ajax({
-          ajaxSuccess: res => this.departmentOption = res.data || [],
+          ajaxSuccess: res =>{
+            if (res.data && res.data.length){
+              this.departmentOption= this.getQTBObj(res.data);
+            }
+          } ,
           ajaxParams: {
-            url: api.getDepartment.path + this.userInfo.roleList[0].identify + '-' + this.userInfo.id,
-            method: api.getDepartment.method,
+            url: api.getDepartmentTree.path + this.userInfo.roleList[0].identify + '-' + this.userInfo.id,
+            method: api.getDepartmentTree.method,
           }
         })
+      },
+      // 处理科室数据结构（三级以下）
+      getQTBObj(arr,res,depth=-1){
+        depth++;
+        let t = res || [];
+        if(arr && arr.length) {
+          arr.map(item => {
+            item.label='　'.repeat(depth)+item.depName;
+            t.push(item);
+            if (item.childList){
+              return t.concat(this.getQTBObj(item.childList,t,depth))
+            }
+          })
+        }
+        return t
       },
       /*************************************** 表格相关 **********************************/
       /*
@@ -252,7 +287,8 @@
         if (row.rotaryEndTime) {
           rotaryEndTime = new Date(row.rotaryEndTime).getTime();
           // 前五天                                       后五天
-          tag = ((thisTime > (rotaryEndTime - validTime)) && (thisTime < (rotaryEndTime + validTime)));
+//          tag = ((thisTime > (rotaryEndTime - validTime)) && (thisTime < (rotaryEndTime + validTime)));
+          tag = thisTime > (rotaryEndTime - validTime);
         }
         // 如果在前后五天，老师都还没有进行审核就可以一直修改
         if (tag && row.graduateAppraisalState) {
@@ -275,6 +311,10 @@
         this.operailityData = row;
         this.openModel('show');
       },
+      //延期
+//      postpone(row){
+//
+//      },
       // 理论考核补考
       theory(row) {
         this.operailityData = row;
@@ -346,7 +386,8 @@
       show,
       theory,
       skill,
-      depQualified
+      depQualified,
+//      postpone
     }
   }
 

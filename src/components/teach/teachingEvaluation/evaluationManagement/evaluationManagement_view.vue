@@ -6,11 +6,11 @@
     <el-form ref="formValidate"  class="demo-form-inline" label-width="90px">
       <el-row>
         <el-col :span="10" :offset="2">
-          <el-form-item label="姓名 :" prop="title">
+          <el-form-item label="名称 :" prop="title">
             {{formValidate.name}}
           </el-form-item>
         </el-col>
-        <el-col :span="10" >
+        <el-col :span="10" v-if="!unShowStyle">
           <el-form-item label="分类 :" prop="title">
             {{operailityData.treeName}}
           </el-form-item>
@@ -25,8 +25,7 @@
       </el-row>
 
       <el-row >
-
-        <fieldset class="layui-elem-field">
+        <fieldset class="layui-elem-field" v-if="!unShowStyle">
           <legend>评分表样式设置</legend>
           <el-row>
             <el-col :span="6" :offset="2">
@@ -112,13 +111,13 @@
         </br>
         <fieldset class="layui-elem-field selfBody" style="width: 100%">
           <legend>评分表内容设置</legend>
-          <div   v-if="body[0]"  style="width: 900px;overflow: auto;margin: 0 auto" class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition">
+          <div   v-if="body[0]"  style="border: 1px solid #dfe6ec;width: 902px;overflow: auto;margin: 0 auto" class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition">
 
 
-            <table :width="header.length*150">
+            <table :width="header.length*150>900?header.length*150:900">
 
               <colgroup  v-for="(item,index) in header">
-                <col :name="'el-table_1_column_'+index" :width="150">
+                <col :name="'el-table_1_column_'+index" :width="header.length*150>900?900/header.length:150">
               </colgroup>
 
               <thead >
@@ -129,10 +128,10 @@
               </tr>
               </thead>
             </table>
-            <div class="el-table__body-wrapper" style="max-height:400px;overflow-x: hidden;overflow-y: auto;" :style="'width:'+header.length*150+'px'">
-              <table   :width="header.length*150">
+            <div class="el-table__body-wrapper" style="max-height:400px;overflow-x: hidden;overflow-y: auto;" :style="'width:'+(header.length*150>900?header.length*150:900)+'px'">
+              <table   :width="header.length*150>900?header.length*150:900">
                 <colgroup  v-for="(item,index) in header">
-                  <col name="'el-table_1_column_'+index" :width="150">
+                  <col name="'el-table_1_column_'+index" :width="header.length*150>900?900/header.length:150">
                 </colgroup>
 
                 <tbody  class="add-scope">
@@ -167,11 +166,6 @@
             </div>
           </div>
         </fieldset>
-        <el-col :span="10" :offset="10">
-          <div style="margin-top: 20px">
-            <el-button  @click="cancel">取消</el-button>
-          </div>
-        </el-col>
       </el-row >
 
     </el-form>
@@ -184,7 +178,7 @@
   import cell from '../../../common/customCell.vue'
   export default {
     //props接收父组件传递过来的数据
-    props: ['operailityData','url'],
+    props: ['operailityData','url','unShowStyle'],
     data (){
       return{
         //保存按钮基本信息
@@ -376,6 +370,7 @@
 
           ]
         }*/
+        data.score = data.score/100;
         this.formValidate =data;//使基础数据显示
         this.formValidate = this.conductData(data);
       },
@@ -424,10 +419,10 @@
         //定义头部header
         let header = [{
           key :'parentTitle',
-          label :'项目名称',
+          label :'考核项目',
         },{
           key :'titleSub',
-          label :'内容名称',
+          label :'考核内容',
         },{
           key :'remark',
           label :'备注',
@@ -484,7 +479,7 @@
                 titleSub:child[k].title||'',
                 _isParent:true,
                 _id:parentId,
-                score:child[k].score||'',
+                score:child[k].score/100||'',
                 scoreRow:isScore?child.length:1,
                 remark:child[k].remark||'',
                 operateSub:'',
@@ -499,8 +494,16 @@
 //                }
                 for(let j=0;j<child[k].templateItemOptionList.length;j++){
                   let title = child[k].templateItemOptionList[j].title;
-                  let label = child[k].templateItemOptionList[j].val;
+                  let label = child[k].templateItemOptionList[j].val/100;
                   obj[scoreLevelObj[title]] = label;
+                }
+              }else {
+                for(let l=0;l<this.select.length;l++){
+                  if(child[k].templateItemOptionList[l]==null){
+                    obj[this.select[l]] = '';
+                  }else {
+                    obj[this.select[l]] = child[k].templateItemOptionList[l].val/100
+                  }
                 }
               }
 
@@ -510,7 +513,7 @@
                   titleSub:child[k].title||'',
                   _isParent:false,
                   _parentId:parentId,
-                  score:child[k].score||'',
+                  score:child[k].score/100||'',
                   remark:child[k].remark||'',
                   operateSub:'',
                   select1:'',
@@ -522,8 +525,16 @@
 
                 for(let j=0;j<child[k].templateItemOptionList.length;j++){
                   let title = child[k].templateItemOptionList[j].title;
-                  let label = child[k].templateItemOptionList[j].val;
+                  let label = child[k].templateItemOptionList[j].val/100;
                   obj[scoreLevelObj[title]] = label;
+                }
+              }else {
+                for(let l=0;l<this.select.length;l++){
+                  if(child[k].templateItemOptionList[l]==null){
+                    obj[this.select[l]] = '';
+                  }else {
+                    obj[this.select[l]] = child[k].templateItemOptionList[l].val/100
+                  }
                 }
               }
               tempArr.push(obj)
@@ -542,7 +553,7 @@
         //定义头部header
         let header = [{
           key :'titleSub',
-          label :'内容名称',
+          label :'考核内容',
         },{
           key :'remark',
           label :'备注',
@@ -581,7 +592,7 @@
             titleSub:templateItemList[i].title||'',
             _isParent:true,
             _id:parentId,
-            score:templateItemList[i].score||'',
+            score:templateItemList[i].score/100||'',
             scoreRow:1,
             remark:templateItemList[i].remark||'',
             operateSub:'',
@@ -596,8 +607,16 @@
 //            }
             for(let j=0;j<templateItemList[i].templateItemOptionList.length;j++){
               let title = templateItemList[i].templateItemOptionList[j].title;
-              let label = templateItemList[i].templateItemOptionList[j].val;
+              let label = templateItemList[i].templateItemOptionList[j].val/100;
               obj[scoreLevelObj[title]] = label;
+            }
+          }else {
+            for (let l = 0; l < this.select.length; l++) {
+              if(templateItemList[i].templateItemOptionList[l]==null) {
+                obj[this.select[l]] = '';
+              }else {
+                obj[this.select[l]] = templateItemList[i].templateItemOptionList[l].val/100
+              }
             }
           }
 
@@ -642,7 +661,7 @@
         if(this.formValidate.hasGroup=='Y'){
           return this.header.length-(+scoreCol)
         }else {
-          return this.header.length-(1+scoreCol)
+          return this.header.length-(+scoreCol)
 
         }
       },
@@ -706,7 +725,7 @@
           //更改头部
           this.header.unshift({
             key :'parentTitle',
-            label :'项目名称',
+            label :'考核项目',
           });
           this.header.push(
             {

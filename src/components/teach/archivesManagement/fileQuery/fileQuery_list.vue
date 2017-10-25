@@ -2,7 +2,7 @@
 <template>
   <div style="height: 100%">
     <layout-tree>
-      <left-tree slot="left"  @tree-click="treeClick" @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
+      <left-tree slot="left"  @setCurrSltNodeId="setTreeDepId" @tree-click="treeClick" @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
       <div id="content" ref="content"  slot="right" >
           <el-form ref="formValidate" :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="90px" >
             <el-form-item label="姓名">
@@ -44,31 +44,27 @@
                 <el-table-column
                   align="center"
                   label="序号"
-                  prop="index"
-                  width="100">
+                  prop="index">
                   <template scope="scope">
                     <span>{{scope.row.index}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
-                  label="操作"
-                  width="100">
+                  prop="name"
+                  label="姓名"
+                  align="center">
                   <template scope="scope">
-                    <el-button size="small" @click="show(scope.$index)">张三</el-button>
+                    <el-button size="small" @click="show(scope.$index)" type="text">{{ scope.row.name }}</el-button>
                   </template>
                 </el-table-column>
                 <el-table-column
-                  prop="name"
-                  label="姓名"
-                  align="center"
-                  width="100">
-                </el-table-column>
-                <el-table-column
-                  prop="school.sex"
+                  prop="sex"
                   label="性别"
                   align="center"
-                  width="80"
                   show-overflow-tooltip>
+                  <template scope="scope">
+                    {{ scope.row.sex | typeText }}
+                  </template>
                 </el-table-column>
                 <el-table-column
                   prop="mobile"
@@ -76,7 +72,7 @@
                   show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                  prop="rewardDate"
+                  prop="email"
                   label="邮箱"
                   show-overflow-tooltip>
                 </el-table-column>
@@ -106,7 +102,14 @@
             class-name="vertical-center-modal"
             :loading="loading">
             <modal-header slot="header" :content="viewId"></modal-header>
-            <show v-if="showModal" @cancel="cancel" @show="subCallback" :operaility-data="operailityData"></show>
+            <!--<show v-if="showModal" @cancel="cancel" @show="subCallback" :operaility-data="operailityData"></show>-->
+            <template v-if="showModal">
+              <!-- 实习生查看 -->
+              <sxs-show v-if="showUserType === 'SXS'" :operaility-data="operailityData"></sxs-show>
+              <zyy-show v-else-if="showUserType === 'ZYY'" :operaility-data="operailityData"></zyy-show>
+              <!-- 其他人员查看 -->
+              <other-show v-else :operaility-data="operailityData"></other-show>
+            </template>
             <div slot="footer"></div>
           </Modal>
       </div>
@@ -116,12 +119,17 @@
 <script>
   /*当前组件必要引入*/
   //引入--查看--组件
-  import show from "../archivesManagement/archivesManagement_view.vue";
+//  import show from "../archivesManagement/archivesManagement_view.vue";
+  //引入--查看--组件
+  import otherShow from "../../../base/sysManage/departmentStaff/departmentStaff_view.vue"; // 其他人员
+  import sxsShow from  '../../../intern/recruitStudent/usersManagement/usersManagement_view.vue'; // 实习生
+  import zyyShow from  '../../../zyy/rdyEnrollEnroll/rdyPersonnelManagement/rdyPersonnelManagement_view.vue'; // 住院医
   //当前组件引入全局的util
   let Util=null;
   export default {
     data () {
       return {
+        showUserType:'PYTH', // 查看用户类型
         //查询
         formValidate: {
           name: '',
@@ -187,7 +195,7 @@
           //url:this.listUrl,
           params:{curPage: 1,pageSize: Util.pageInitPrams.pageSize}
         }
-        this.setTableData();
+//        this.setTableData();
       },
 
 
@@ -317,6 +325,7 @@
          }*/
         this.setTreeDepId(obj.id);
         this.showTreeList(obj.id);
+        this.showUserType = obj.types.toLocaleUpperCase();
       },
 
 
@@ -385,12 +394,15 @@
        * */
       setTreeDepId(id){
         this.deptId = id;
+        this.setTableData();
       }
 
     },
     components:{
       //当前组件引入的子组件
-      show
+      otherShow,
+      zyyShow,
+      sxsShow,
     },
     mounted(){
       //页面dom稳定后调用

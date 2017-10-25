@@ -3,7 +3,10 @@
   <div ref="internAuditListMain">
     <el-form :inline="true" class="internAuditList">
       <el-row>
-        <el-col align="right" style="padding-bottom:20px;">
+        <el-col :span="10">
+          <el-button type="success" @click="allExamine">批量审核</el-button>
+        </el-col>
+        <el-col :span="14" align="right" style="padding-bottom:20px;">
           <el-input :maxlength="20" placeholder="请输入姓名" icon="search" v-model="searchObj.userName" :on-icon-click="search" style="width:300px;"></el-input>
           <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
         </el-col>
@@ -14,19 +17,19 @@
           <el-form-item label="学校：">
             <el-input v-model="searchObj.schoolName"></el-input>
           </el-form-item>
-          <el-form-item label="年份：">
-            <el-date-picker v-model="searchObj.year" align="right" :editable="false" type="year" placeholder="选择年">
-            </el-date-picker>
-          </el-form-item>
+          <!--<el-form-item label="年份：">-->
+            <!--<el-date-picker v-model="searchObj.year" align="right" :editable="false" type="year" placeholder="选择年">-->
+            <!--</el-date-picker>-->
+          <!--</el-form-item>-->
           <el-form-item label="手机号：">
             <el-input v-model="searchObj.mobile"></el-input>
           </el-form-item>
-          <el-form-item label="民族：">
-            <el-select v-model="searchObj.nation" filterable clearable placeholder="请选择" style="width:175px;" class="nation">
-              <el-option v-for="(item,index) in nationOption" :key="index" :label="item.id" :value="item.name">
-              </el-option>
-            </el-select>
-          </el-form-item>
+          <!--<el-form-item label="民族：">-->
+            <!--<el-select v-model="searchObj.nation" filterable clearable placeholder="请选择" style="width:175px;" class="nation">-->
+              <!--<el-option v-for="(item,index) in nationOption" :key="index" :label="item.id" :value="item.name">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
           <el-button type="info" @click="search">搜索</el-button>
         </div>
       </el-row>
@@ -34,7 +37,9 @@
     <!-- 表格 -->
     <div id="myTable" ref="myTable">
       <el-table ref="multipleTable" align="center" :height="tabHeight" :context="self" :data="tableData" tooltip-effect="dark"
+        @selection-change="handleSelectionChange"
         style="width: 100%">
+        <el-table-column type="selection" width="55" :selectable="canTodo"></el-table-column>
         <el-table-column label="序号" prop="index" width="100"></el-table-column>
         <el-table-column label="操作" width="140">
           <template scope="scope">
@@ -61,15 +66,31 @@
       </div>
     </div>
     <!--查看弹窗-->
-    <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1000">
+    <Modal :mask-closable="false" v-model="showModal" height="200" class-name="vertical-center-modal" :width="1100">
       <modal-header slot="header" :parent="self" :content="headerContent.showId"></modal-header>
       <show v-if="showModal" @cancel="cancel" :operaility-data="operailityData"></show>
       <div slot="footer"></div>
     </Modal>
     <!--审核弹窗-->
-    <Modal :mask-closable="false" v-model="examineModal" height="200" class-name="vertical-center-modal" :width="1000">
+    <Modal :mask-closable="false" v-model="examineModal" height="200" class-name="vertical-center-modal" :width="1100">
       <modal-header slot="header" :parent="self" :content="headerContent.examineId"></modal-header>
       <examine v-if="examineModal" @cancel="cancel" @examine="subCallback" :operaility-data="operailityData"></examine>
+      <div slot="footer"></div>
+    </Modal>
+    <!-- 上报 -->
+    <Modal :mask-closable="false" v-model="allExamineModal" class-name="vertical-center-modal" :loading="loading" :width="500">
+      <modal-header slot="header" :content="headerContent.allExamineId"></modal-header>
+      <div v-if="allExamineModal">
+        <el-form>
+          <el-form-item label="批量审核：">
+            {{ getAllExamineName(multipleSelection) }}
+          </el-form-item>
+        </el-form>
+        <div align="center">
+          <el-button type="info" @click="allExamineCall('PASS')">通过</el-button>
+          <el-button type="danger" @click="allExamineCall('REJECT')">驳回</el-button>
+        </div>
+      </div>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -79,7 +100,7 @@
   let Util;
   import api from './api';
   import dictionary from '../../../../libs/dictionary'; // 字典
-  import show from '../../../base/sysManage/departmentStaff/departmentStaff_view'; // 查看
+  import show from '../usersManagement/usersManagement_view.vue'; // 查看
   import examine from './internAudit_examine'; // 审核
   export default {
     data() {
@@ -94,12 +115,16 @@
           idNumber: '', // 身份号
           nation: '', // 民族
         },
+        loading:false,
         dynamicHt: 100,
         tabHeight: 0,
         self: this,
+        allExamineIds:[],
+        multipleSelection:"",
         operailityData: [],
         tableData: [],
         totalCount: 0,
+        allExamineModal:false,
         examineModal: false,
         headerContent: {
           showId: {
@@ -109,6 +134,10 @@
           examineId: {
             id: "examineId",
             title: '审核'
+          },
+          allExamineId:{
+            id: "allExamineId",
+            title: '批量审核'
           },
         }
       }
@@ -130,11 +159,14 @@
         this.setTableData()
       },
       /********************************* 按钮事件 *****************************/
+      canTodo(row){
+        return row.state != 'AUDIT_SUCCESS'
+      },
       // 搜索
       search() {
         this.setTableData()
       },
-      // 筛选 
+      // 筛选
       showSearchMore() {
         this.searchMore = !this.searchMore;
         this.$nextTick(function () {
@@ -156,6 +188,37 @@
         row.id = row.userId;
         this.operailityData = row;
         this.openModel('examine')
+      },
+      // 批量审核
+      allExamine(){
+        if (this.isSelected()){
+          this.openModel('allExamine')
+        }
+      },
+      allExamineCall(spState){
+        let opt = {
+          ajaxSuccess: ()=>this.subCallback('allExamine','批量操作成功'),
+          ajaxParams:{
+            url:api.modifySpTrialSxUsers.path + this.allExamineIds.join(','),
+            method:api.modifySpTrialSxUsers.method,
+            data:{
+              spState,
+              deposit:"",
+              zsCost:"",
+            }
+          }
+        };
+        this.ajax(opt)
+      },
+      getAllExamineName(arr){
+        let names = [];
+        let myArr = [];
+        (arr || []).map(item=>{
+          names.push(item.userName);
+          myArr.push(item.userId);
+        });
+        this.allExamineIds = myArr;
+        return names.join('、') + '。';
       },
       /********************************* 表格相关 *****************************/
       /*
@@ -192,6 +255,18 @@
         this.tabHeight = this.dynamicHt;
       },
       /********************************* 弹窗相关 *****************************/
+      /*
+       * 列表数据选择
+       */
+      isSelected() {
+        let len = this.multipleSelection.length;
+        let flag = true;
+        if (len < 1) {
+          this.showMess("请选择数据!");
+          flag = false;
+        }
+        return flag;
+      },
       // 取消
       cancel(targer) {
         this[targer + 'Modal'] = false;

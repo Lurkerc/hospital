@@ -41,22 +41,22 @@
               <span>{{scope.row.index}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="160">
+          <el-table-column label="操作" width="80">
             <template scope="scope">
               <el-button size="small" @click="show(scope.row.index)">查看</el-button>
             </template>
           </el-table-column>
           <el-table-column align="center" prop="name" label="姓名" width="120">
           </el-table-column>
-          <el-table-column prop="identify" label="科室" width="120">
+          <el-table-column prop="hosDept" label="科室" width="120">
           </el-table-column>
-          <el-table-column prop="remark" label="优" align="center">
+          <el-table-column prop="great" label="优" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="良" width="120">
+          <el-table-column prop="good" label="良" width="120">
           </el-table-column>
-          <el-table-column prop="type" label="中" width="120">
+          <el-table-column prop="avg" label="中" width="120">
           </el-table-column>
-          <el-table-column prop="type" label="差" width="120">
+          <el-table-column prop="bad" label="差" width="120">
           </el-table-column>
 
         </el-table>
@@ -73,7 +73,18 @@
     <!--导出-->
     <Modal close-on-click-modal="false" width="500" v-model="exportModal" title="导出" class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="exportId"></modal-header>
-      <ept-assess v-if="exportModal" @cancel="cancel" @export="subCallback" :operaility-data="operailityData"></ept-assess>
+      <!--<ept-assess v-if="exportModal" @cancel="cancel" @export="subCallback" :operaility-data="operailityData"></ept-assess>-->
+      <div>
+        <div class="remove">确认导出吗？</div>
+        <el-row>
+          <el-col :span="10" :offset="14">
+            <a href="/api/teach/exportEvaluates">
+              <el-button @click="cancel('export')" type="primary">确定</el-button>
+            </a>
+            <el-button class="but-col" @click="cancel('export')">取消</el-button>
+          </el-col>
+        </el-row>
+      </div>
       <div slot="footer"></div>
     </Modal>
     <!--查看-->
@@ -85,6 +96,7 @@
   </div>
 </template>
 <script>
+  import api from './api';
   /*当前组件必要引入*/
   //引入--导出--组件
   import eptAssess from "./teachersAssessManagement_export.vue";
@@ -97,8 +109,8 @@
     data() {
       return {
         //查询表单
-        listUrl: '/role/list?name=&identify=&type=',
-        deleteUrl: '/role/remove',
+//        listUrl: '/role/list?name=&identify=&type=',
+//        deleteUrl: '/role/remove',
         formValidate: {
           name: '',
           dep: ''
@@ -108,9 +120,7 @@
         multipleSelection: [],
         dynamicHt: 100,
         self: this,
-        tableData1: [{
-          "id": 1
-        }],
+        tableData1: [],
         loading: false,
         listTotal: 0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
@@ -118,7 +128,8 @@
           paramsData: 'listUrl',
           ajaxSuccess: 'updateListData',
           ajaxParams: {
-            url: '/role/list?name=&identify=&type=',
+            url: api.list.path,
+            method:api.list.method,
           }
         },
         /*--按钮button--*/
@@ -281,7 +292,7 @@
     components: {
       //当前组件引入的子组件
       show,
-      eptAssess
+//      eptAssess
     }
   }
 

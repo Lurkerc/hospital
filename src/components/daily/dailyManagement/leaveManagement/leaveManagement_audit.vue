@@ -42,42 +42,59 @@
 
     <!--<div class="shxx">-->
     <div >
-      <!--<el-row class="step">-->
-      <!--<el-col :span="20" :offset="2">-->
-      <!--<el-steps :space="350" :active="2">-->
-      <!--<el-step title="带教老师" description="已审批"></el-step>-->
-      <!--<el-step title="教学秘书" description="审批中"></el-step>-->
-      <!--<el-step title="教育处" description="待审批"></el-step>-->
-      <!--</el-steps>-->
-      <!--</el-col >-->
-      <!--</el-row >-->
+      <el-row >
+        <el-col :span="18" :offset="2">
+          <img :src="data.hisProcess.base64Img" alt="">
+        </el-col >
+      </el-row >
+<!--审核历史-->
+      <el-table
+        v-if="data.hisProcess.listHisTaskLog && data.hisProcess.listHisTaskLog!=0"
+        align="center"
+        :height="200"
+        :data="data.hisProcess.listHisTaskLog"
+        tooltip-effect="dark"
+        highlight-current-row
+        style="width: 100%;height: 100%">
+        <el-table-column
+          align="center"
+          label="序号"
+          type="index"
+          width="100">
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="spUserName"
+          label="审核人"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="审核时间"
+          width="300">
+        </el-table-column>
+        <el-table-column
+          prop="mess"
+          label="审核意见"
+          align="center"
+          width="200"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="status"
+          label="审核状态"
+        >
+          <template scope="scope">
+            {{ scope.row.spState | typeText}}
+          </template>
+        </el-table-column>
+      </el-table>
 
-      <!--<el-row class="lose-margin2">-->
-      <!--<el-col :span="18" :offset="2">-->
-      <!--<el-row >-->
-      <!--<fieldset class="layui-elem-field">-->
-      <!--<legend>审核</legend>-->
-      <!--<div class="layui-field-box">-->
-      <!--<el-col :span="8" >-->
-      <!--<p class="center"><span class="name">审核人</span><span>张三</span></p>-->
-      <!--</el-col >-->
-      <!--<el-col :span="8" >-->
-      <!--<p class="center"><span class="name">审核时间</span><span>2017/12/29   12：00</span></p>-->
-      <!--</el-col >-->
-      <!--<el-col :span="8" >-->
-      <!--<p class="center"><span class="name">审核时间</span><span>2017/12/29   12：00</span></p>-->
-      <!--</el-col >-->
-      <!--</div>-->
-      <!--</fieldset>-->
-      <!--</el-row >-->
-      <!--</el-col>-->
-      <!--</el-row>-->
-
-      <el-form  :model="formValidate" ref="formValidate" :rules="rules.leaveManagement"  label-width="80px">
+      <el-form v-if="data.hisProcess.hasSp"   :model="formValidate" ref="formValidate" :rules="rules.leaveManagement"  label-width="80px">
         <el-row >
           <el-col :span="18" :offset="2">
             <el-form-item label="审核结果" prop="status">
-              <el-radio-group v-model="formValidate.status"  >
+              <el-radio-group  v-model="formValidate.status"  >
                 <el-radio label="TG">通过</el-radio>
                 <el-radio label="BTG">不通过</el-radio>
                 <el-radio label="BH">驳回修改</el-radio>
@@ -88,16 +105,16 @@
 
         <el-row >
           <el-col :span="18" :offset="2">
-            <el-form-item label="审核意见" prop="auditInfo">
-              <el-input type="textarea" v-model="formValidate.auditInfo" :rows="6" resize="none"></el-input>
+            <el-form-item label="审核意见" prop="content">
+              <el-input type="textarea"   v-model="formValidate.content" :rows="6" resize="none"></el-input>
             </el-form-item>
           </el-col >
         </el-row >
       </el-form>
     </div>
-    <el-row >
+    <el-row  v-if="data.hisProcess.hasSp" >
       <el-col :span="9" :offset="10">
-        <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
+        <load-btn   @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
         <el-button  @click="cancel">取消</el-button>
       </el-col>
     </el-row >
@@ -124,32 +141,35 @@
         formValidate:{
           id:this.operailityData.id,
           status:'TG',
-          auditInfo:'',
+          content:'',
         },
-        "data":[
+        data:
           {
-            "explains":"有事",
-            "applicantName":"蒋国华",
-            "applicantId":"2",
-            "depName":"呼吸科",
-            "timeLength":"1",
-            "leaveType":"事假",
-            "createTime":"2016-04-25",
-            "depId":"2",
-            "id":1,
-            "beginData":"2016-05-01",
-            "endData":"2016-05-03",
+            "explains":"",
+            "applicantName":"",
+            "applicantId":"",
+            "depName":"",
+            "timeLength":"",
+            "leaveType":"",
+            "createTime":"",
+            "depId":"",
+            "id":'',
+            "beginData":"",
+            "endData":"",
             "fileList":[
               {
-                "fileName":"文件名称",
-                "id":"1",
-                "fileType":"text"
+                "fileName":"",
+                "id":"",
+                "fileType":""
               }
             ],
             "status":"WSB",
             auditInfo:'',
+            hisProcess:{
+              listHisTaskLog:[],
+            },// 审核流程:
           }
-        ],
+        ,
         //当前组件提交(edit)数据时,ajax处理的 基础信息设置
         auditMessTitle:{
           type:'audit',
@@ -157,8 +177,8 @@
           errorTitle:'审核失败',
           ajaxSuccess:'ajaxSuccess',
           ajaxParams:{
-            url:'/leave/modify/'+this.operailityData.id,
-            method:'put',
+            url:'workflow/leaveComplete/',
+            method:'post',
           }
         },
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
@@ -224,7 +244,9 @@
        * */
       SuccessGetCurrData(responseData){
 
-        this.data =this.getFormData(this.data,responseData.data)
+        this.data =responseData.data;
+
+        this.auditMessTitle.ajaxParams.url+=responseData.data.hisProcess.taskId
       },
 
 

@@ -19,8 +19,7 @@
         <el-row>
           <el-col :span="20" :offset="2">
             <el-form-item label-width="0" prop="name7">
-              <img style="width: 140px;height: 140px;margin:0 5px;border: 1px solid #bfcbd9; " v-for="(img,index) in item.fileList" :key="index" :src="config.urlPrefix+'/file/download/'+img.id" >
-              <!--<upload-file   :show="true" :uploadFiles="item.fileList"></upload-file>-->
+              <upload-file :uploadFiles="item.fileList" :show="true"></upload-file>
             </el-form-item>
           </el-col>
         </el-row>

@@ -16,9 +16,9 @@
       </el-col>
 
     </el-row>
-    </br>
+    <br>
     <hr>
-    </br>
+    <br>
     <!--第一步：填写基本信息-->
     <base-info  v-show="active==0" :url="url" @next="next" :operaility-data="formValidate"> </base-info>
 
@@ -77,7 +77,7 @@
           evaluatedPart:[],       //部分人PART被评对象 ，，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
           evaluatedRole:[],       //指定角色ROLE被评对象 ，，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
           evaluatedDept:[],       //科室DEPT被评对象(本部门或本科室) ，，如：1000=张三,1000=张三 或 100=住院医,101=教学秘书 或 12=角色A,13=角色B
-          dateType:'',            //评价时间
+          dateType:'2',            //评价时间
           startDay:'',            //
           endDay:'',              //
           startDate:'',           //开始时间（yyyy-MM-dd）

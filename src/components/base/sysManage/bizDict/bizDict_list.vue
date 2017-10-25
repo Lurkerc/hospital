@@ -123,7 +123,7 @@
         height="200"
         title="对话框标题"
         class-name="vertical-center-modal"
-        :width="960">
+        :width="1100">
         <!--<div slot="header"> -->
         <!--</div>-->
         <modal-header slot="header" :content="addId"></modal-header>
@@ -137,9 +137,10 @@
         v-model="showModal"
         height="200"
         title="对话框标题"
+
         class-name="vertical-center-modal"
         :loading="true"
-        :width="800"
+        :width="1100"
       >
         <modal-header slot="header" :parent="self" :content="showId"></modal-header>
         <show v-if="showModal"  @cancel="cancel" :operaility-data="operailityData"></show>

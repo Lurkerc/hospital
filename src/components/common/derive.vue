@@ -2,14 +2,12 @@
 
   <div>
     <div class="remove">{{title}}</div>
-
     <el-row>
       <el-col :span="10" :offset="14">
         <a :href="url">
           <el-button type="primary" @click="cancel">确定</el-button>
         </a>
         <el-button class="but-col" @click="cancel">取消</el-button>
-      </el-col>
       </el-col>
     </el-row>
   </div>

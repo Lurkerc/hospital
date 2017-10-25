@@ -36,6 +36,26 @@ const systemSettingsRouters = {
           resolve(require('../../components/base/systemSettings/checkLocation/checkLocation_list.vue'));
         }, 'systemSetting');
       }
+    },
+    {
+      //病历评价设置
+      path:'evaluationSet',
+      name:'evaluationSet',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/base/systemSettings/evaluationSet/evaluationSet_list.vue'));
+        }, 'systemSetting');
+      }
+    },
+    {
+      //轮转基础设置
+      path:'rotaryBasisSet',
+      name:'rotaryBasisSet',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/base/systemSettings/rotaryBasisSet/rotaryBasisSet_list.vue'));
+        }, 'systemSetting');
+      }
     }
 
   ]

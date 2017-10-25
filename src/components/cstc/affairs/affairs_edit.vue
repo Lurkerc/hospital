@@ -1,87 +1,69 @@
 <template>
-  <!--事项增加-->
+  <!--事务增加-->
   <div class="editForm">
     <el-form :model="formValidate" ref="formValidate" :rules="rules" class="demo-form-inline" label-width="130px">
 
       <el-row>
         <el-col :span="10" :offset="1">
-          <el-form-item label="日期：" prop="registerDate" required>
-            <!-- <el-date-picker name="end" v-model="formValidate.registerDate" @change="changeDay" :editable="false" :picker-options="pickerOptions"
-              type="date" placeholder="选择日期"></el-date-picker> -->
-            <el-date-picker v-model="formValidate.registerDate" :editable="false" type="date" placeholder="选择日期"></el-date-picker>
+          <el-form-item label="事务名称：" prop="affairName">
+            <el-input v-model="formValidate.affairName"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="10" :offset="2">
-          <el-form-item label="时间段：" prop="timeInterval">
-            <el-time-select v-model="formValidate.timeInterval" :editable="false" :picker-options="{start,step: '00:05', end: '22:30' }"
-              placeholder="选择时间">
-            </el-time-select>
-          </el-form-item>
-        </el-col>
-
         <el-col :span="10" :offset="1">
           <el-form-item label="类型：" prop="affairType">
-            <el-select placeholder="请选择类型" v-model="formValidate.affairType">
-              <el-option v-for="item in typeOption" v-if="item.value" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-select placeholder="请选择" v-model="formValidate.affairType" clearable>
+              <el-option v-for="item in typeOption" :key="item.value" :label="item.name" :value="item.code"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="10" :offset="2">
-          <el-form-item label="课时：" prop="classhour">
-            <el-input v-model="formValidate.classhour" placeholder="请输入"></el-input>
-          </el-form-item>
-        </el-col>
-
+        <date-group :dateGroup="{text:'',startDate:formValidate.startTime,endDate:formValidate.endTimeEnd}">
+          <el-col :span="10" :offset="1" name="start">
+            <el-form-item label="接待开始时间：" prop="startTime">
+              <el-date-picker v-model="formValidate.startTime" :editable="false" type="datetime" placeholder="选择时间" :picker-options="pickerOptions0" @change="handleStartTime"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10" :offset="1" name="end">
+            <el-form-item label="接待结束时间：" prop="endTime">
+              <el-date-picker v-model="formValidate.endTime" :editable="false" type="datetime" placeholder="选择时间" :picker-options="pickerOptions1" @change="handleEndTime"></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </date-group>
         <el-col :span="10" :offset="1">
-          <el-form-item label="人次：" prop="peopleNum">
-            <el-input v-model="formValidate.peopleNum" placeholder="请输入"></el-input>
+          <el-form-item label="接待对象：" prop="receptionObject">
+            <el-input v-model="formValidate.receptionObject"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="10" :offset="2">
-          <el-form-item label="教师/考官：" prop="teacher">
-            <el-input v-model="formValidate.teacher" placeholder="请输入"></el-input>
-          </el-form-item>
-        </el-col>
-
         <el-col :span="10" :offset="1">
-          <el-form-item label="登记人：" prop="creater">
-            <el-input v-model="formValidate.creater" :readonly="true"></el-input>
+          <el-form-item label="人数：" prop="peopleNum">
+            <el-input v-model="formValidate.peopleNum"></el-input>
           </el-form-item>
         </el-col>
-
         <el-col :span="21" :offset="1">
-          <el-form-item label="培训地点：" required>
-            <span style="display:inline;margin-right:20px;">{{ roomNums.join('，') }}</span>
-            <el-button type="info" @click="selectRoom">选择房间</el-button>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="21" :offset="1">
-          <el-form-item label="培训/考核对象：" required>
-            <!-- <span v-for="(item,index) in users" :key="index">{{ item.userName }}</span>
-            <el-button type="info" @click="selectUser">选择人员</el-button> -->
-            <el-radio-group v-model="formValidate.trainingObject">
-              <el-radio v-for="item in userOption" :key="item.label" :label="item.label">{{ item.value }}</el-radio>
+          <el-form-item label="是否使用房间：" prop="isRoom">
+            <el-radio-group v-model="formValidate.isRoom">
+              <el-radio label="YES">是</el-radio>
+              <el-radio label="NO">否</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <el-col :span="10" :offset="1">
-          <el-form-item label="使用部门：">
-            <!-- <span>{{ formValidate.department }}</span>
-            <el-button type="info">选择部门</el-button> -->
-            <el-input v-model="formValidate.department" placeholder="请输入"></el-input>
+        <el-col :span="21" :offset="1" v-if="formValidate.isRoom === 'YES'">
+          <el-form-item label="使用房间：">
+            <el-tag class="affairsRoomItem" :key="room.roomId" v-for="(room,index) in formValidate.roomList">{{ room.roomNum }}</el-tag>
+            <el-tag class="affairsSelectRoom" type="primary" @click.native="selectRoom">+选择房间</el-tag>
           </el-form-item>
         </el-col>
-
-        <el-col :span="22" :offset="1">
-          <el-form-item label="培训/考核内容：">
-            <el-input type="textarea" v-model="formValidate.trainingContent" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容">
-            </el-input>
+        <el-col :span="21" :offset="1">
+          <el-form-item label="附件：">
+            <upload-file @setUploadFiles="setUploadFiles" :uploadFiles="filelist"></upload-file>
           </el-form-item>
         </el-col>
-        <el-col :span="22" :offset="1">
-          <el-form-item label="备注：">
-            <el-input type="textarea" v-model="formValidate.remark" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容">
+        <el-col :span="21" :offset="1">
+          <el-form-item label="事务描述：">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 6}"
+              placeholder="请输入内容"
+              v-model="formValidate.trainingContent">
             </el-input>
           </el-form-item>
         </el-col>
@@ -102,12 +84,6 @@
       <select-room v-if="selectRoomModal" @cancel="cancel" @select="selectRoomCallback" :select="roomIds"></select-room>
       <div slot="footer"></div>
     </Modal>
-    <!--选择人员-->
-    <Modal width="890" v-model="selectUserModal" title="新建教学活动" class-name="vertical-center-modal">
-      <modal-header slot="header" :content="headerContent.selectUserId"></modal-header>
-      <select-user v-if="selectUserModal" @cancel="cancel" @setUsers="setUsers" :initUser="users"></select-user>
-      <div slot="footer"></div>
-    </Modal>
   </div>
 </template>
 <script>
@@ -115,8 +91,8 @@
   let Util = null;
 
   import api from './api';
-  import typeOption from './typeOption'; // 事项类型
-  import userOption from './userOption'; // 培训对象
+  //  import typeOption from './typeOption'; // 事务类型
+  //  import userOption from './userOption'; // 培训对象
   import selectRoom from '../../common/selectRoom'; // 选择房间
 
   import {
@@ -127,44 +103,36 @@
     data() {
       return {
         rules,
+        filelist: [],
         //保存按钮基本信息
         loadBtn: {
           title: '提交',
           callParEvent: 'listenSubEvent'
         },
-        start: '06:00',
-        editInit: true,
-        users: [],
         roomIds: [],
         roomNums: [],
         //form表单bind数据
         formValidate: {
-          registerDate: "",
-          timeInterval: "",
-          classhour: "",
-          affairType: "",
-          trainingObject: "ALL",
-          peopleNum: "",
-          teacher: "",
-          department: "",
-          creater: "",
-          trainingContent: "",
-          remark: "",
+          affairName:"", // 事务名称
+          startTime:"", // 接待开始时间
+          endTime:"", // 接待结束时间
+          receptionObject:"", // 接待对象
+          affairType:"", // 事务类型
+          peopleNum:"", // 人数
+          isRoom:"YES", // 是否使用房间 YES是|NO否
+          roomIds:"", // 房间id字符串
+          roomNums:"", // 房间号字符串 多个id以逗号分隔
+          trainingContent:"", // 事务描述
+          fileIds:"", // 附件id字符串
           roomList: [ //
             // {
             //   "roomId": "1",
             //   "roomNum": "101"
             // }
           ],
-          userList: [ //
-            // {
-            //   userId: 1,
-            //   userName: '666'
-            // }
-          ]
         },
-        userOption,
-        typeOption, // 事项类型
+//        userOption,
+        typeOption:[], // 事务类型
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle: {
           type: 'edit',
@@ -184,15 +152,6 @@
             id: "selectRoomId",
             title: "选择房间"
           },
-          selectUserId: {
-            id: "selectUserId",
-            title: "选择人员"
-          }
-        },
-        pickerOptions: {
-          disabledDate(time) {
-            return time.getTime() < Date.now() - 8.64e7;
-          }
         },
       }
     },
@@ -206,17 +165,49 @@
        * 组件初始化入口
        * */
       init() {
-        this.getDataForServer()
+        //this.ajax(this.listMessTitle)
+        this.getTypeOption();
+        this.getDataForServer();
+      },
+      getTypeOption(){
+        let opt = {
+          ajaxSuccess:res=>this.typeOption = res.data || [],
+          ajaxParams:{
+            url:api.getAffairType.path,
+            method:api.getAffairType.method,
+          }
+        };
+        this.ajax(opt)
       },
       // 获取数据
       getDataForServer() {
         this.ajax({
           ajaxSuccess: res => {
             this.formValidate = res.data;
+            this.filelist.length = 0;
+
+            for(let key in this.formValidate){
+              if(res.data[key]){
+                this.formValidate[key] = res.data[key]
+              }
+            }
+
             (res.data.roomList || []).map(item => {
               this.roomNums.push(item.roomNum);
               this.roomIds.push(item.roomId);
             })
+
+            let fileId = [];
+            for (let i = 0, list = res.data.fileList || [], l = list.length; i < l; i++) {
+              this.filelist.push({
+                fileId: list[i].fileId,
+                fileName: list[i].fileName,
+                filePath: list[i].path + list[i].fileName
+              });
+              fileId.push(list[i].fileId)
+            }
+
+            this.formValidate.fileIds = fileId.join(',')
           },
           ajaxError: 'ajaxError',
           ajaxParams: {
@@ -232,8 +223,8 @@
       listenSubEvent(isLoadingFun) {
         let isSubmit = this.submitForm("formValidate");
         if (isSubmit) {
-          if (!this.roomIds.length) {
-            this.errorMess('请选择培训地点')
+          if(this.formValidate.isRoom == 'YES' && !this.roomIds.length){
+            this.errorMess('请选择需要使用的房间')
             return
           }
           if (!isLoadingFun) isLoadingFun = function () {};
@@ -242,8 +233,8 @@
           let data = this.addMessTitle.ajaxParams.data;
           data.roomIds = this.roomIds.join(',');
           data.roomNums = this.roomNums.join(',');
-          data.registerDate = this.conductDate(data.registerDate, 'yyyy-MM-dd');
-          // console.log(this.addMessTitle.ajaxParams.data)
+          data.startTime = this.conductDate(data.startTime, 'yyyy-MM-dd HH:mm:ss');
+          data.endTime = this.conductDate(data.endTime, 'yyyy-MM-dd HH:mm:ss');
           this.ajax(this.addMessTitle, isLoadingFun)
         }
       },
@@ -276,34 +267,14 @@
         let myData = Util._.defaultsDeep({}, data);
         return myData;
       },
-
-      // 选择日期
-      changeDay(day) {
-        let selDay = new Date(day).getTime();
-        let thisDay = new Date();
-        if (selDay > thisDay.getTime()) { // 如果选择日期超过今天，则时间段从06：00开始
-          this.start = '06:00';
-        } else { // 如果选择的是今天，那么根据当前时间来设置时间段
-          let h = thisDay.getHours();
-          let m = thisDay.getMinutes();
-          m = m < 30 ? '30' : '00';
-          h = m === '00' ? h + 1 : h; // 如果当前分钟已经大于30，则下一小时才是起始时间段
-          h = h < 10 ? '0' + h : h;
-          this.start = h + ':' + m;
-        }
-        if (!this.editInit) {
-          this.formValidate.timeInterval = '';
-        }
-        this.editInit = false;
+      // 上传附件
+      setUploadFiles(ids) {
+        this.formValidate.fileIds = ids;
       },
       /********************************* 按钮事件 *****************************/
       // 选择房间
       selectRoom() {
         this.openModel('selectRoom')
-      },
-      // 选择人员
-      selectUser() {
-        this.openModel('selectUser')
       },
       /********************************* 弹窗相关 *****************************/
       // 取消
@@ -322,26 +293,16 @@
       selectRoomCallback(res) {
         this.roomIds.length = 0;
         this.roomNums.length = 0;
+        this.formValidate.roomList.length=0;
         res.map(item => {
           this.roomIds.push(item.id);
-          this.roomNums.push(item.roomNum)
+          this.roomNums.push(item.roomNum);
+          this.formValidate.roomList.push({
+            roomId:item.id,
+            roomNum:item.roomNum
+          })
         });
         this.cancel('selectRoom')
-      },
-      // 选择人员
-      setUsers(res) {
-        this.users = res;
-        this.cancel('selectUser')
-        // let tempArr = [];
-        // for (var i = 0, item; i < this.users.length; i++) {
-        //   item = this.users[i];
-        //   tempArr.push(item.label);
-        //   this.formValidate.managerList.push({
-        //     id: item.key,
-        //     name: item.label,
-        //   })
-        // }
-        // this.userNames = tempArr.join(",");
       },
     },
     components: {
@@ -352,5 +313,6 @@
 </script>
 <style lang="scss">
   @import '../../../assets/ambuf/css/manage_v1.0/editForm';
-
+  .affairsRoomItem{margin-right: 10px;}
+  .affairsSelectRoom{cursor: pointer;}
 </style>

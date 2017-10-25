@@ -19,7 +19,6 @@
         <el-form-item style="width:284px;" label="类型 :" prop="activityType">
           <el-select style="width:284px;" v-model="formValidate.activityType"  placeholder="请选择" >
             <select-option :unAll="true" :id="'value'" :isCode="true" :type="'teachActivityType'"></select-option>
-            </el-option>
           </el-select>
         </el-form-item>
 
@@ -62,13 +61,16 @@
     <el-row>
       <el-col :span="24">
         <el-form-item label="时间段 :" prop="recordTimes">
-            <el-checkbox-group v-model="formValidate.recordTimes">
-              <el-checkbox v-for="(item,index) in getRecordTimes" :key="index" :label="item.courseTime+'/'+item.timeId" >{{item.courseTime}}</el-checkbox>
-            </el-checkbox-group>
+            <el-time-picker
+              is-range
+              :editable="false"
+              v-model="formValidate.recordTimes"
+              placeholder="选择时间范围">
+            </el-time-picker>
         </el-form-item>
       </el-col>
     </el-row>
-    <el-row>
+   <!-- <el-row>
       <el-col :span="12">
         <el-form-item label="病例 :" prop="whetherNeedCases">
           <el-radio-group v-model="formValidate.whetherNeedCases">
@@ -82,16 +84,7 @@
           <el-input v-model="formValidate.casesName" ></el-input>
         </el-form-item>
       </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
-        <el-form-item label="活动内容 :" prop="name8">
-          <div class="grid-content">
-            <el-input type="textarea" :rows="6" resize="none" v-model="formValidate.activityContent"></el-input>
-          </div>
-        </el-form-item>
-      </el-col>
-    </el-row>
+    </el-row>-->
     <el-row>
       <el-col :span="24">
         <el-form-item label="参加人 :" prop="name9">
@@ -117,7 +110,7 @@
               <el-col :span="24">
                 <div class="grid-content-ptop">
                   <el-radio :label="'PARTUSER'">部分人员</el-radio>
-                    <el-select style="margin-left: 10px" v-show="formValidate.activityUserType == 'PARTUSER'" placeholder multiple v-model="partuser.activityUserTypeValue" filterable placeholder="请选择">
+                    <el-select style="margin-left: 10px" @remove-tag="userRemove"  v-show="formValidate.activityUserType == 'PARTUSER'" placeholder multiple v-model="partuser.activityUserTypeValue" filterable placeholder="请选择">
                       <el-option
                         v-for="item in options"
                         :key="item.id"
@@ -150,8 +143,15 @@
         </el-form-item>
       </el-col>
     </el-row>
+    <el-row>
+      <el-col :span="24" >
+        <el-form-item label="相关证明材料:">
+          <upload-file   @setUploadFiles="expenseFileEvent"></upload-file>
+        </el-form-item>
+      </el-col>
+    </el-row>
       <el-row>
-        <el-col :span="10" :offset="10">
+        <el-col :span="24" style="text-align: center">
           <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
           <el-button  @click="cancel">取消</el-button>
         </el-col>
@@ -234,6 +234,7 @@
           isPlan:'N',  //是否计划内
           activityPlanId:'', //月度计划ID
           planDetailId:'', //计划详情ID
+          activityFileIds:'',
         },
         getRecordTimes:'', //获取到的时间段
         //轮转科室
@@ -324,7 +325,7 @@
     mounted(){
       //暂时没有初始化,预留初始化入口
       //this.init();
-      this.ajax(this.timeListMessTitle)
+//      this.ajax(this.timeListMessTitle)
       this.$nextTick(function () {
         setTimeout(() => {
           this.isPlan = false;
@@ -408,8 +409,10 @@
         let isSubmit = this.submitForm("formValidate");
         if(isSubmit){
           if(!isLoadingFun) isLoadingFun=function(){};
+          let data = this.disposeData(this.getFormData(this.formValidate));
+          if(!data) return ;
+          this.addMessTitle.ajaxParams.data = data;
           isLoadingFun(true);
-          this.addMessTitle.ajaxParams.data=this.disposeData(this.getFormData(this.formValidate));
           this.ajax(this.addMessTitle,isLoadingFun);
         }
       },
@@ -425,14 +428,29 @@
         }else if(activityUserType == 'partuser'){
           let Value;
             Value = this[activityUserType].activityUserTypeValueId.join(',');
+            if(!Value){
+              this.errorMess('部分人员不能为空');
+                return;
+            }
           data.activityUserTypeValue =Value|| this[activityUserType].activityUserTypeValueId;
         }else{
-          if(activityUserType!='rotarydep') data.activityDepUserType ='';
+          if(activityUserType!='rotarydep'){
+            data.activityDepUserType ='';
+          } else {
+            if(!data.activityDepUserType){
+              this.errorMess('人员类型不能为空');
+              return;
+            }
+          }
           let Value;
           if(typeof this[activityUserType].activityUserTypeValue=='object'){
             Value =this[activityUserType].activityUserTypeValue.join(',');
           }
-          data.activityUserTypeValue =Value|| this[activityUserType].activityUserTypeValue;
+          if(!Value){
+            this.errorMess(`${activityUserType=='rotarydep'?'轮转科室':'部分角色'}不能为空`);
+            return;
+          }
+          data.activityUserTypeValue =Value || this[activityUserType].activityUserTypeValue;
         }
         //处理whetherNeedCases
         if(data.whetherNeedCases=='NO'){
@@ -440,18 +458,29 @@
         }
 
         //处理recordTimes，timeIds
-        let times=[];
-        let ids = [];
-        for (let i=0;i<data.recordTimes.length;i++){
-          let val = data.recordTimes[i].split('/');
-          ids.push(val[1]);
-          times.push(val[0]);
+        if( data.recordTimes.length!=2){
+          this.errorMess('请选择时间段')
+          return;
         }
-        data.recordTimes = times.join(',');
-        data.timeIds = ids.join(',');
+        data.activityTimeInfo = this.conductDate(data.recordTimes[0],'HH:mm')+'-'+this.conductDate(data.recordTimes[1],'HH:mm');
         this.formDate(data,['activityTime']);
           return data
       },
+
+
+      //移除人员的标签
+      userRemove(item) {
+        let value = item.value;
+        for (let i = 0; i < this.selectUser.length; i++) {
+          let item = this.selectUser[i];
+          if (item.label == value) {
+            this.partuser.activityUserTypeValueId.splice(i, 1);
+            this.selectUser.splice(i, 1);
+          }
+
+        }
+      },
+
 
       /*
        * 点击提交按钮 监听是否验证通过
@@ -482,6 +511,7 @@
           this.designatedPer=true;
         }
       },
+
       /*
        * 默认组件第一次请求数据
        * @param res JSON  数据请求成功后返回的数据
@@ -625,7 +655,6 @@
         formValidate.activityName = selectPlanData.planActivityTitle ; //活动名称
         formValidate.activityType = selectPlanData.planActivityType  ;//活动类型
 
-        //todo 主持人  主持人只能选择一个计划要修改
         formValidate.hostUserId = selectPlanData.planActivityHostUserId;
         formValidate.hostUserName = selectPlanData.planActivityHostUserName;
           this.selectHost = [{
@@ -641,17 +670,11 @@
         let times = []
         if(!selectPlanData.planActivityTimeids)selectPlanData.planActivityTimeids='';
         let planActivityTimeids = selectPlanData.planActivityTimeids.split(',');
-        for(let k=0;k<planActivityTimeids.length;k++){
-            let item = planActivityTimeids[k];
-            for(let l=0;l<this.getRecordTimes.length;l++){
-                let time = this.getRecordTimes[l];
-                if(time.timeId == item){
-                  times.push(time.courseTime+'/'+time.timeId)
-                    continue;
-                }
-            }
-        }
-        formValidate.recordTimes = times;
+        let time= planActivityTimeids.split('-');
+        let start = time[0].split(':');
+        let end = time[1].split(':');
+        formValidate.recordTimes= [new Date(2017, 9, 10, start[0], start[1]), new Date(2017, 9, 10,end[0], end[1])];
+        /*formValidate.recordTimes = times;*/
         //活动地点
         formValidate.activitySite =selectPlanData.planActivitySite;
         //活动内容
@@ -662,8 +685,12 @@
 
 
 
-      }
+      },
 
+
+      expenseFileEvent(ids){
+          this.formValidate.activityFileIds = ids;
+      }
 
     },
     components:{

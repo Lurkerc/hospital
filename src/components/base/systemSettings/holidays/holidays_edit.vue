@@ -1,32 +1,35 @@
 <template>
 
   <div >
-    <el-form ref="formValidate" class="demo-form-inline" label-width="110px" >
+    <el-form ref="formValidate" inline :model="formValidate" :rules="rules" class="demo-form-inline" label-width="110px" >
 
       <el-row >
-        <el-col :span="19" :offset="2">
-          <el-form-item label="节目名称：" prop="name" >
-            <el-input v-model="formValidate.holidayName" placeholder="请输入"></el-input>
+        <el-col :span="20" :offset="2">
+          <el-form-item label="节目名称：" prop="holidayName" style="width: 520px" >
+            <el-input v-model="formValidate.holidayName" style="width: 410px" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col >
       </el-row >
 
       <el-row >
-        <el-col :span="19" :offset="2">
-          <el-form-item label="时间：">
+        <el-col :span="20" :offset="2">
+          <el-form-item label="时间：" prop="startDate">
             <el-date-picker
               v-model="formValidate.startDate"
               type="date"
+              :editable="false"
               placeholder="选择日期"
               :picker-options="pickerOptions0"
-              @change="handleStartTime"
-            >
+              @change="handleStartTime">
             </el-date-picker>
-            到
+          </el-form-item>
+          <span style="line-height: 35px;font-size: 16px">到</span>
+          <el-form-item  lable-width="0" prop="endDate">
             <el-date-picker
               v-model="formValidate.endDate"
               align="right"
               type="date"
+              :editable="false"
               placeholder="选择日期"
               :picker-options="pickerOptions1"
               @change="handleEndTime">
@@ -34,6 +37,7 @@
           </el-form-item>
         </el-col >
       </el-row >
+
     </el-form>
 
     <el-row >
@@ -47,11 +51,13 @@
 <script>
   //当前组件引入全局的util
   let Util=null;
+  import {holidays as rules} from '../rules';
   export default {
     //props接收父组件传递过来的数据
     props: ['operailityData'],
     data (){
       return{
+        rules,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
 

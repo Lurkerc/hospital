@@ -1,10 +1,10 @@
 <template>
-  <!-- 预约项目管理 -->
+  <!-- 自主训练管理 -->
   <div>
     <el-row>
       <el-col :span="18">
         <!-- 操作按钮 -->
-        <el-button type="success" @click="add">新建预约项目</el-button>
+        <el-button type="success" @click="add">新建自主训练</el-button>
       </el-col>
       <!-- 搜索框 -->
       <el-col :span="6" align="right">
@@ -25,7 +25,7 @@
             <el-button size="small" type="danger" @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="预约项目名称" prop="name" show-overflow-tooltip></el-table-column>
+        <el-table-column label="自主训练名称" prop="name" show-overflow-tooltip></el-table-column>
         <el-table-column label="创建人" prop="creater" show-overflow-tooltip></el-table-column>
         <el-table-column label="创建时间" prop="createTime" show-overflow-tooltip>
           <template scope="scope">

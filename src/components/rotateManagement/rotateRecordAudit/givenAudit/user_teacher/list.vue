@@ -4,12 +4,11 @@
     <el-row>
       <el-col>
         <el-form :inline="true">
-          <el-form-item label="科室：">
-            <el-select v-model="departmentId" placeholder="请选择">
-              <el-option label="全部" value=""></el-option>
-              <el-option v-for="item in departmentOption" :key="item.depId" :label="item.depName" :value="item.depId"></el-option>
-            </el-select>
-          </el-form-item>
+          <!--<el-form-item label="科室：">-->
+            <!--<el-select v-model="departmentId" placeholder="请选择">-->
+              <!--<select-option type="byUserType"></select-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
           <el-form-item label="学生姓名：">
             <el-input v-model="manageParams.userName"></el-input>
           </el-form-item>
@@ -18,7 +17,7 @@
               <el-option v-for="item in userTypeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
-          <date-group :dateGroup="{text:'',startDate:manageParams.rotaryBeginTime,endDate:manageParams.rotaryEndTime}" style="display:inline-block;">
+          <date-group :dateGroup="{text:'',startDate:manageParams.rotaryBeginTime,endDate:manageParams.rotaryEndTime}" style="display:inline;">
             <el-form-item label="开始日期：">
               <el-date-picker v-model="manageParams.rotaryBeginTime" :editable="false" type="date" placeholder="选择入科开始日期" :picker-options="pickerOptions0" @change="handleStartTime"></el-date-picker>
             </el-form-item>
@@ -26,16 +25,16 @@
               <el-date-picker v-model="manageParams.rotaryEndTime" :editable="false" type="date" placeholder="选择入科结束日期" :picker-options="pickerOptions1" @change="handleEndTime"></el-date-picker>
             </el-form-item>
           </date-group>
-          <el-form-item label="排序字段：">
-            <el-select v-model="otherParams.sortby" placeholder="请选择">
-              <el-option v-for="item in sortbyOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="排序方式：">
-            <el-select v-model="otherParams.order" placeholder="请选择">
-              <el-option v-for="item in orderOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
+          <!--<el-form-item label="排序字段：">-->
+            <!--<el-select v-model="otherParams.sortby" placeholder="请选择">-->
+              <!--<el-option v-for="item in sortbyOption" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="排序方式：">-->
+            <!--<el-select v-model="otherParams.order" placeholder="请选择">-->
+              <!--<el-option v-for="item in orderOption" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
           <el-button type="info" @click="search">搜索</el-button>
         </el-form>
       </el-col>
@@ -146,8 +145,8 @@
           rotaryEndTime: '', // 入科时间-结束时间(yyyy-MM-dd)
         },
         otherParams: {
-          sortby: '', // rotaryBeginTime|开始时间 endBeginTime|结束时间 theoryScore|理论成绩 skillScore|技能成绩  
-          order: 'DESC',
+//          sortby: '', // rotaryBeginTime|开始时间 endBeginTime|结束时间 theoryScore|理论成绩 skillScore|技能成绩
+//          order: 'DESC',
         },
         rotaryModal: false,
         theoryModal: false,
@@ -195,12 +194,31 @@
       // 获取科室
       getDepartmentOption() {
         this.ajax({
-          ajaxSuccess: res => this.departmentOption = res.data || [],
+          ajaxSuccess: res =>{
+            if (res.data && res.data.length){
+              this.departmentOption= this.getQTBObj(res.data);
+            }
+          } ,
           ajaxParams: {
-            url: api.getDepartment.path + this.userInfo.roleList[0].identify + '-' + this.userInfo.id,
+            url: api.getDepartmentTree.path + this.userInfo.roleList[0].identify + '-' + this.userInfo.id,
             method: api.getDepartment.method,
           }
         })
+      },
+      // 处理科室数据结构（三级以下）
+      getQTBObj(arr,res,depth=-1){
+        depth++;
+        let t = res || [];
+        if(arr && arr.length) {
+          arr.map(item => {
+            item.label='　'.repeat(depth)+item.depName;
+            t.push(item);
+            if (item.childList){
+              return t.concat(this.getQTBObj(item.childList,t,depth))
+            }
+          })
+        }
+        return t
       },
       /*************************************** 表格相关 **********************************/
       /*

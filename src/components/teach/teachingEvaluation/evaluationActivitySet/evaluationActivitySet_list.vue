@@ -1,33 +1,61 @@
 <template>
   <div ref="content">
-    <el-row >
-      <el-col :span="20"  :offset="1">
-        <el-form  ref="formValidate" inline label-width="100px" class="demo-ruleForm">
-          <el-form-item  prop="title">
-            <el-input   v-model="formValidate.name" placeholder="输入姓名搜索">
+
+    <el-form  ref="formValidate" :model="formValidate"  :rules="evaluationManagementList" inline label-width="100px">
+      <el-row style="margin-bottom:0">
+        <!--列表操作按钮-->
+        <el-col :span="10" >
+          <el-button  class="but-col" @click="add" type="primary">新建评价</el-button>&nbsp;
+          <el-button   type="primary" @click="publish">发布</el-button>
+          <el-button  class="but-col" @click="remove" type="primary">删除</el-button>
+          <!--todo 目前没有接口 8/31-->
+          <!--<el-button   type="primary">导出word</el-button>-->
+        </el-col>
+        <!--搜索项-->
+        <el-col :span="14"  align="right">
+          <el-form-item  prop="name">
+            <el-input   v-model="formValidate.name" placeholder="输入名称搜索">
+              <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
             </el-input>
           </el-form-item>
-          <el-form-item  prop="title">
-            <el-input   v-model="formValidate.appraiser" placeholder="输入被评名称搜索">
-            </el-input>
-          </el-form-item>
+
           <!--<el-form-item  prop="title">-->
           <!--<el-input   v-model="formValidate.userName" placeholder="输入类型搜索">-->
 
           <!--</el-input>-->
           <!--</el-form-item>-->
-          <el-button @click="searchEvent"   icon="search"></el-button>
-        </el-form>
-      </el-col>
+          <!--<el-button @click="searchEvent"   icon="search"></el-button>-->
+          <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+        </el-col>
+      </el-row>
+      <br>
+      <!--高级搜索项-->
+      <div v-if="searchMore" ref="searchMore">
+        <el-form-item label="评价人" prop="appraiser">
+          <el-input   v-model="formValidate.appraiser" placeholder="输入评价人搜索">
+          </el-input>
+        </el-form-item>
 
-    </el-row>
-    <div class="add-remove">
-      <el-button  class="but-col" @click="add" type="primary">新建评价</el-button>&nbsp;
-      <el-button   type="primary" @click="publish">发布</el-button>
-      <el-button  class="but-col" @click="remove" type="primary">删除</el-button>
-      <el-button   type="primary">导出word</el-button>
+        <el-form-item label="被评人" prop="evaluated">
+          <el-input   v-model="formValidate.evaluated" placeholder="输入被评人搜索">
+          </el-input>
+        </el-form-item>
 
-    </div>
+        <el-form-item label="发布状态" prop="userType" >
+          <el-select filterable  v-model="formValidate.publishStatus" placeholder="请选择">
+            <el-option label="全部" value=""></el-option>
+            <el-option label="未发布" value="NO_PUBLISH"></el-option>
+            <el-option label="已发布" value="PUBLISH"></el-option>
+            <el-option label="进行中" value="PROGRESS"></el-option>
+            <el-option label="结束" value="END"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-button type="info" @click="searchEvent">查询</el-button>
+
+      </div>
+    </el-form>
+
     <div
       id="myTable"
       ref="myTable">
@@ -57,12 +85,14 @@
               @click="show(scope.row)">查看</el-button>
             <el-button
               size="small"
+              :disabled="scope.row.publishStatus=='PUBLISH'"
               @click="edit(scope.row)">修改</el-button>
           </template>
         </el-table-column>
         <el-table-column
           label="类别"
           width="150"
+          show-overflow-tooltip
           prop="type">
         </el-table-column>
         <el-table-column
@@ -71,32 +101,35 @@
           show-overflow-tooltip>
         </el-table-column>
         <el-table-column
+          show-overflow-tooltip
           prop="score"
           label="评价时间"
-          width="150"
           show-overflow-tooltip>
           <template scope="scope">
             {{conductDateType(scope.row)}}
           </template>
         </el-table-column>
         <el-table-column
+          show-overflow-tooltip
           prop="appraiser"
-          label="评价人"
-          width="150"
-        >
+          label="评价人">
+          <template scope="scope">
+            {{conductRole(scope.row.appraiser,scope.row,`0`)}}
+          </template>
         </el-table-column>
         <el-table-column
+          show-overflow-tooltip
           prop="evaluated"
-          label="被评价人"
-          width="150"
-
-        >
+          label="被评价人">
+          <template scope="scope">
+            {{conductRole(scope.row.evaluated,scope.row,'1')}}
+          </template>
         </el-table-column>
         <el-table-column
+          show-overflow-tooltip
           prop="publishStatus"
           label="是否发布"
-          width="100"
-        >
+          width="100">
           <template scope="scope">
             {{scope.row.publishStatus | typeText}}
           </template>
@@ -213,11 +246,11 @@
         <div slot="footer"></div>
       </Modal>
 
-
     </div>
   </div>
 </template>
 <script>
+  import {evaluationManagementList} from '../../rules'
   /*当前组件必要引入*/
   import url from '../app'
   /*---引入--新建-- */
@@ -230,6 +263,7 @@
   export default {
     data() {
       return {
+        evaluationManagementList,
         treeData: [],
         defaultProps: {
           children: 'children',
@@ -248,13 +282,13 @@
         /*--按钮button--*/
         //表格数据
         loading:false,
+        searchMore:false,
         tableData: [],
         selectTreeData:[],
         dynamicHt:100,
         totalCount:0,
         operailityData:'',
         multipleSelection: [],
-
         publishModal:false,
         /*--按钮button--*/
         addId:{id:'add',title:'添加'},
@@ -326,7 +360,7 @@
           if (valid) {
             flag =true;
           } else {
-            this.$Message.error('表单验证失败!');
+            this.$Message.error('输入有误，请修改!');
           }
         })
         return flag
@@ -393,6 +427,13 @@
       /*--点击--发布--按钮--*/
       publish(data){
         if(!this.isSelected()) return;
+        for(let i=0;i<this.multipleSelection.length;i++){
+            let item = this.multipleSelection[i];
+            if(item.publishStatus=='PUBLISH'){
+                this.showMess('已发布的不能再发布');
+                return;
+            }
+        }
         this.operailityData = this.multipleSelection;
         this.openModel('publish');
 
@@ -400,6 +441,13 @@
       /*--点击--删除--按钮--*/
       remove(){
         if(!this.isSelected()) return;
+        for(let i=0;i<this.multipleSelection.length;i++){
+          let item = this.multipleSelection[i];
+          if(item.publishStatus=='PUBLISH'){
+            this.showMess('已发布的不能删除');
+            return;
+          }
+        }
         this.operailityData = this.multipleSelection;
         this.openModel('remove') ;
       },
@@ -490,6 +538,27 @@
 
       },
 
+      conductRole(data,item,index){
+          if(item.relationship!= 'LOOP'&&!data){
+              return '所有人'
+          }
+          if(item.relationship== 'LOOP'){
+              let tempArr=[['学生','老师'],['学生','科室'],['老师','学生']];
+            return tempArr[item.loopType-1][index]
+          }
+
+        let tempArr=[]
+        if(typeof data == 'string'){
+          data=data.split(',')
+          for(let i=0;i<data.length;i++){
+            let temp=data[i].split('=');
+            tempArr.push(temp[1]);
+          }
+        }
+        return tempArr.join(' ; ');
+      },
+
+
       //列表的评价时间处理
       conductDateType({dateType,startDay,endDay,startDate,endDate}){
         let date='' ;
@@ -500,7 +569,7 @@
             break;
           case 3:date = `每月${startDay}日——${endDay}日评价一次`;
             break;
-          case 4:date = `startDate~endDate`;
+          case 4:date = `${startDate}~${endDate}`;
             break;
           case 5:date = `每天评价一次`;
             break;
@@ -514,7 +583,13 @@
         return date;
       },
 
-
+      // 高级搜索按钮展开搜索表单并重新计算表格高度
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          this.setTableDynHeight()
+        })
+      },
 
     },
     mounted(){

@@ -111,6 +111,7 @@
                 align="right"
                 type="date"
                 :editable="false"
+                :picker-options="pickerOptions3"
                 placeholder="选择活动时间">
               </el-date-picker>
             </el-form-item>
@@ -123,18 +124,16 @@
         align="center"
         class-name="valiTableStyle"
         label="活动时间段"
-        width="180">
+        width="215">
         <template scope="scope">
           <el-form :model="scope.row" ref="formValidate"  :rules="rules.teachplanAddsuborEdit"  class="demo-form-inline my-tooltip-button" label-width="0" >
             <el-form-item  prop="planActivityTimeids">
-              <el-select  v-model="scope.row.planActivityTimeids" multiple  placeholder="请选择" >
-                <el-option
-                  v-for="item in timeIdsData"
-                  :key="item.id"
-                  :label="item.courseTime"
-                  :value="item.timeId+''">
-                </el-option>
-              </el-select>
+              <el-time-picker
+                is-range
+                :editable="false"
+                v-model="scope.row.planActivityTimeids"
+                placeholder="选择时间范围">
+              </el-time-picker>
             </el-form-item>
           </el-form>
         </template>
@@ -178,7 +177,7 @@
         </template>
       </el-table-column>
     </el-table>
-    </br>
+    <br>
     <el-row >
       <el-col :span="10" :offset="10">
         <load-btn @listenSubEvent="noreleaseEvent" :btnData="loadBtn"></load-btn>
@@ -252,7 +251,22 @@
           ]
         },
 
-
+        pickerOptions3: {
+          disabledDate:(time)=> {
+            let start = this.operailityData.activityPlanYear+'-'+this.operailityData.activityPlanMonth+'-01';
+            let  curDate = this.parseDate(start);
+            start = this.parseDate(this.operailityData.activityPlanYear+'-'+this.operailityData.activityPlanMonth+'-01');
+             let curMonth = curDate.getMonth();
+                   /*  生成实际的月份: 由于curMonth会比实际月份小1, 故需加1 */
+                    curDate.setMonth(curMonth + 1);
+                   /* 将日期设置为0, 这里为什么要这样设置, 我不知道原因, 这是从网上学来的 */
+            curDate.setDate(0);
+            let count = curDate.getDate();
+            let end =  this.operailityData.activityPlanYear+'-'+this.operailityData.activityPlanMonth+'-'+count;
+            end = this.parseDate(end);
+            return (start.getTime()  > time.getTime() || time.getTime()>end.getTime());
+          }
+        },
         fileList:[], //当前选中附件的数据
         selectUser:[],//当前选中选择人员的数据
         planActivityTypeData:[],  //获取的活动类型数据
@@ -314,7 +328,7 @@
       Util = this.$util;
       //请求教学活动类型数据
       this.ajax(this.planActivityTypeMessTitle)
-      this.ajax(this.timeIdsMessTitle);
+//      this.ajax(this.timeIdsMessTitle);
       this.ajax(this.listMessTitle) //获取详情
 //      this.SuccessGetCurrData()
     },
@@ -361,9 +375,12 @@
         for(let i=0 ;i<activityDetails.length;i++){
           let item = activityDetails[i];
           delete item.planActivityHasfile;
-          item.planActivityTimeids = item.planActivityTimeids.join(',')  //处理时间段
+          if( item.planActivityTimeids.length!=2){
+            this.errorMess('请选择时间段');
+            return;
+          }
+          item.planActivityTimeids = this.conductDate(item.planActivityTimeids[0],'HH:mm')+'-'+this.conductDate(item.planActivityTimeids[1],'HH:mm');
           item.planActivityTime = this.yearMonthData(item.planActivityTime)  //处理时间段
-
         }
         return data;
 
@@ -404,7 +421,10 @@
         for(let i=0;i<activityDetails.length;i++){
             let item = activityDetails[i];
             //处理时间段
-            item.planActivityTimeids = item.planActivityTimeids.split(',');  //
+          let time= item.planActivityTimeids.split('-');
+          let start = time[0].split(':');
+          let end = time[1].split(':');
+          item.planActivityTimeids = [new Date(2017, 9, 10, start[0], start[1]), new Date(2017, 9, 10,end[0], end[1])];
               //处理主持人
             item.planActivityHost = [];
             let planActivityHostUserIds = (item.planActivityHostUserId+'').split(',');
@@ -528,7 +548,7 @@
           "planActivityHostUserId":"", //主持人ID
           planActivityHost:[],
           "planActivityHostUserName":"",//主持人姓名
-          "planActivityTime":"",        //活动时间(yyyy-MM-dd)
+          "planActivityTime":this.operailityData.activityPlanYear+'-'+this.operailityData.activityPlanMonth+'-01',        //活动时间(yyyy-MM-dd)
           "planActivityTimeids":[],     //活动时间段id(多个逗号分隔)
           "planActivitySite":"",        //活动地点
           "planActivityContent":"",     //活动内容

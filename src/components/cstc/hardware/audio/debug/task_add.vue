@@ -25,17 +25,17 @@
                 <div class="thProjectItem">
                   <el-radio label="WHENLONG">
                     <span>播放时长：</span>
-                    <el-select v-model="formValidate.hour" style="width:60px;">
+                    <el-select :disabled="formValidate.playMode!='WHENLONG'" v-model="formValidate.hour" style="width:60px;">
                       <el-option :key="0" :label="0" :value="0"></el-option>
                       <el-option v-for="item in 12" :key="item" :label="item" :value="item"></el-option>
                     </el-select>
                     <span class="adtTimeText">小时</span>
-                    <el-select v-model="formValidate.minute" style="width:65px;">
+                    <el-select :disabled="formValidate.playMode!='WHENLONG'" v-model="formValidate.minute" style="width:65px;">
                       <el-option :key="0" :label="0" :value="0"></el-option>
                       <el-option v-for="item in 60" :key="item" :label="item" :value="item"></el-option>
                     </el-select>
                     <span class="adtTimeText">分钟</span>
-                    <el-select v-model="formValidate.second" style="width:65px;">
+                    <el-select :disabled="formValidate.playMode!='WHENLONG'" v-model="formValidate.second" style="width:65px;">
                       <el-option v-for="item in 60" :key="item" :label="item" :value="item"></el-option>
                     </el-select>
                     <span class="adtTimeText">秒</span>
@@ -44,7 +44,7 @@
                 <div class="thProjectItem">
                   <el-radio label="FREQUENCY">
                     <span>播放次数：</span>
-                    <el-input v-model="formValidate.frequency" placeholder="0为循环播放" :maxLength="4" style="width:158px;"></el-input>
+                    <el-input :disabled="formValidate.playMode!='FREQUENCY'" v-model="formValidate.frequency" placeholder="0为循环播放" :maxLength="4" style="width:158px;"></el-input>
                     <span>（0为循环播放）</span>
                   </el-radio>
                 </div>

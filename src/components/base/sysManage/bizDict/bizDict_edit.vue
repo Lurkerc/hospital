@@ -5,11 +5,10 @@
 
       <el-row >
         <el-col :span="9" :offset="2">
-          <el-form-item label="课程类型" prop="parentName" >
+          <el-form-item label="字典名称" prop="parentName" >
             <el-input v-model="formValidate.parentName" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="9" >
           <el-form-item label="字典代码" prop="parentCode" >
@@ -17,7 +16,6 @@
             <!--<el-input v-model="" placeholder="请输入"></el-input>-->
           </el-form-item>
         </el-col>
-        </el-col >
       </el-row >
       <el-row >
         <el-col :span="20" :offset="2">
@@ -36,8 +34,10 @@
               </el-col>
               <el-col :span="6" >
                 <el-form-item label="字典Code" prop="code" >
-                  {{value.code}}
-                  <!--<el-input  v-model="value.code" placeholder="请输入"></el-input>-->
+                  <template v-if="value.parentId">
+                    {{value.code}}
+                  </template>
+                  <el-input v-else v-model="value.code" placeholder="请输入"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6" >
@@ -52,7 +52,7 @@
                 <div style="padding: 6px 0">
                   <!--<el-button type="primary" @click="down(index)" size="mini" icon="caret-bottom"></el-button>
                   <el-button type="primary" @click="up(index)" size="mini" icon="caret-top"></el-button>-->
-                  <el-button type="danger" @click="remove(index)" size="mini" icon="close"></el-button>
+                  <el-button type="danger" @click="removeItem(index)" size="mini" icon="close"></el-button>
                 </div>
               </el-col>
             </el-row >
@@ -155,7 +155,7 @@
 
 
       //删除添加项
-      remove(index){
+      removeItem(index){
         if(this.formValidate.child.length==1) return;
         this.formValidate.child.splice(index,1)
       },

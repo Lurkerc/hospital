@@ -22,6 +22,11 @@ export default {
   //详情 GET
   queryByUser:'/appraiserEvaluated/query/byUser',
 
+  //详情(未评分列表)
+  noScore:'/appraiserEvaluated/query/byUser/noScore',
+  //详情(已评分列表)
+  haveScore:'/appraiserEvaluated/query/byUser/haveScore',
+
   //活动列表（获取自己的活动列表） GET
   queryBySelf:'/appraiserEvaluated/query-by-self',
 

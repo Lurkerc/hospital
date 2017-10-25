@@ -36,7 +36,9 @@
         </el-col>
       </el-form>
       <el-col :span="20" :offset="2">
-        <div>视频区域</div>
+        <div class="gsmuaVideoPlayer">
+          <video-player :filePath="videoUrl" v-if="videoUrl"></video-player>
+        </div>
       </el-col>
       <div style="padding:20px 0;">
         <el-col :span="6" :offset="6" align="center">
@@ -55,11 +57,13 @@
   import {
     givenSkillMakeUpAudit as rules
   } from '../../rules';
+  import videoPlayer from '../../../common/video.vue';
   export default {
     props: ['operailityData'],
     data() {
       return {
         rules,
+        videoUrl:'',
         formValidate: {
           mark: '',
         },
@@ -80,6 +84,9 @@
         this.ajax({
           ajaxSuccess: res => {
             this.showData = res.data;
+            if (res.data.fileList.length){
+              this.videoUrl = '/api'+res.data.fileList[0].fileUrl;
+            }
           },
           ajaxParams: {
             url: api.get.path + this.operailityData.id
@@ -130,11 +137,14 @@
     created() {
       this.init();
     },
+    components:{
+      videoPlayer,
+    }
   }
 
 </script>
 
 <style>
   /* 出科考核补考申请 */
-
+  .gsmuaVideoPlayer{height: 350px;margin-bottom: 20px;background-color: #000;}
 </style>

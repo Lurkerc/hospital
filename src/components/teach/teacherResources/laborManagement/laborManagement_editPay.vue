@@ -1,20 +1,14 @@
 <template>
 
   <div>
-    <el-form :model="formValidate" ref="formValidate" :rules="this.$store.state.rules.authority" class="demo-form-inline" label-width="90px" >
+    <el-form :model="formValidate" ref="formValidate" :rules="rules" class="demo-form-inline" label-width="90px" >
 
       <el-row >
         <el-col :span="16" :offset="2">
-          <el-form-item label="支付时间" prop="name" >
-            <el-date-picker
-              v-model="value1"
-              type="date"
-              placeholder="选择日期"
-              :picker-options="pickerOptions0">
-            </el-date-picker>
+          <el-form-item label="支付时间" prop="payTime" >
+            <el-date-picker  v-model="formValidate.payTime" type="datetime"  placeholder="选择日期" @change="changeDate" :editable="false"> </el-date-picker>
           </el-form-item>
         </el-col>
-        </el-col >
       </el-row>
 
     </el-form>
@@ -30,6 +24,8 @@
   </div>
 </template>
 <script>
+  import api from './api';
+  import {laborManagementPayTime as rules} from '../../rules';
   //当前组件引入全局的util
   let Util=null;
   export default {
@@ -37,15 +33,13 @@
     props: ['operailityData'],
     data (){
       return{
+        rules,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         countDate:0,
         //form表单bind数据
         formValidate: {
-          name:'',
-          identify:null,
-          remark:'',
-          type:[]
+          payTime:'',
         },
         //当前组件提交(edit)数据时,ajax处理的 基础信息设置
         editPayMessTitle:{
@@ -54,16 +48,15 @@
           errorTitle:'修改失败',
           ajaxSuccess:'ajaxSuccess',
           ajaxParams:{
-            url:'/role/modify/'+this.operailityData.id,
-            method:'put',
+            url:api.modify.path +this.operailityData.id,
+            method:api.modify.method,
           }
         },
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle:{
-          paramsData:'listUrl',
           ajaxSuccess:'SuccessGetCurrData',
           ajaxParams:{
-            url:'/role/get/'+this.operailityData.id,
+            url:api.get.path+this.operailityData.id,
           }
         }
       }
@@ -110,11 +103,10 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-        let type = [];
-        let data = responseData.data;
-        type.push(data.type+"");
-        this.formValidate = data;
-        this.formValidate.type = type;
+        this.formValidate = responseData.data;
+      },
+      changeDate(val){
+        this.formValidate.payTime = val
       },
       /*
        * 当前组件发送事件给父组件
@@ -129,7 +121,7 @@
        * */
       getFormData(data){
         let myData = Util._.defaultsDeep({},data);
-        myData.type = data.type.join(",");
+        delete(myData.id);
         return myData;
       },
       /*

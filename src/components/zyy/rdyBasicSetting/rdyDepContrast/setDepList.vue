@@ -375,7 +375,7 @@ export default{
       remove(hgId){
         this.deleteUrl = this.saveDelUrl+hgId;
         this.operailityData = [];
-        this.openModel('remove') ;
+        this.openModel('remove');
       },
 
 

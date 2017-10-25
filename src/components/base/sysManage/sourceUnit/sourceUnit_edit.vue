@@ -1,13 +1,12 @@
 <template>
 
   <div >
-    <el-form ref="formValidate" class="demo-form-inline" label-width="80px" >
+    <el-form ref="formValidate" :model="formValidate" :rules="rules" class="demo-form-inline" label-width="80px" >
       <el-row >
         <el-col :span="18" :offset="2">
           <el-form-item label="单位名称" prop="name" >
             <el-input v-model="formValidate.name" placeholder="请输入"></el-input>
           </el-form-item>
-        </el-col>
         </el-col>
       </el-row >
       <el-row >
@@ -16,13 +15,11 @@
             <el-input v-model="formValidate.contacts" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col>
         <el-col :span="9" >
           <el-form-item label="联系电话" prop="phone" >
             <el-input v-model="formValidate.phone" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
       </el-row >
       <el-row >
         <el-col :span="18" :offset="2">
@@ -34,7 +31,6 @@
               v-model="formValidate.remark">
             </el-input>
           </el-form-item>
-        </el-col>
         </el-col>
       </el-row >
 
@@ -49,6 +45,7 @@
   </div>
 </template>
 <script>
+  import {sourceUnit as rules} from '../rules';
   //当前组件引入全局的util
   let Util=null;
   export default {
@@ -56,6 +53,7 @@
     props: ['operailityData'],
     data (){
       return{
+        rules,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         countDate:0,

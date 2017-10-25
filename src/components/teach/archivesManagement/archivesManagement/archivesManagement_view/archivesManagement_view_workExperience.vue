@@ -6,7 +6,7 @@
     <!--标题-->
     <el-row >
       <el-col :span="24" class="lose-margin2" style="text-align: center">
-        <span class="table-headline ">学历信息</span>
+        <span class="table-headline ">工作经历</span>
       </el-col >
     </el-row >
     <!--内容-->

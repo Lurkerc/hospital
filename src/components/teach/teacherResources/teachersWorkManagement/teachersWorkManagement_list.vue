@@ -39,7 +39,7 @@
           align="center"
           :height="dynamicHt"
           :context="self"
-          :data="tableData1"
+          :data="tableData"
           tooltip-effect="dark"
           highlight-current-row
           style="width: 100%;height: 100%"
@@ -71,18 +71,18 @@
             width="120">
           </el-table-column>
           <el-table-column
-            prop="identify"
+            prop="hosDept"
             label="科室"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="remark"
+            prop="hosDept"
             label="轮转记录审核"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="type"
+            prop="evaluateStu"
             label="评价学生"
             width="120"
           >
@@ -113,7 +113,18 @@
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="exportId"></modal-header>
-      <ept-work v-if="exportModal" @cancel="cancel" @export="subCallback" :operaility-data="operailityData"></ept-work>
+      <!--<ept-work v-if="exportModal" @cancel="cancel" @export="subCallback" :operaility-data="operailityData"></ept-work>-->
+      <div>
+        <div class="remove">确认导出吗？</div>
+        <el-row>
+          <el-col :span="10" :offset="14">
+            <a href="/api/teach/exportWorks">
+              <el-button @click="cancel('export')" type="primary">确定</el-button>
+            </a>
+            <el-button class="but-col" @click="cancel('export')">取消</el-button>
+          </el-col>
+        </el-row>
+      </div>
       <div slot="footer"></div>
     </Modal>
     <!--查看-->
@@ -130,9 +141,10 @@
   </div>
 </template>
 <script>
+  import api from './api';
   /*当前组件必要引入*/
   //引入--导出--组件
-  import eptWork from "./teachersWorkManagement_export.vue";
+//  import eptWork from "./teachersWorkManagement_export.vue";
   //引入--查看--组件
   import show from "./teachersWorkManagement_view.vue";
 
@@ -141,9 +153,6 @@
   export default{
     data() {
       return {
-        //查询表单
-        listUrl:'/role/list?name=&identify=&type=',
-        deleteUrl:'/role/remove',
         formValidate: {
           name: '',
         },
@@ -152,15 +161,16 @@
         multipleSelection: [],
         dynamicHt: 100,
         self: this,
-        tableData1: [{id:1}],
+        tableData: [],
         loading:false,
         listTotal:0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle:{
-          paramsData:'listUrl',
+//          paramsData:'listUrl',
           ajaxSuccess:'updateListData',
           ajaxParams:{
-            url:'/role/list?name=&identify=&type=',
+            url:api.list.path,
+            method:api.list.method,
           }
         },
         /*--按钮button--*/
@@ -210,7 +220,7 @@
           flag = false;
         }
         if(len>1 && isOnly){
-          this.showMess("只能修改一条数据!")
+          this.showMess("只能选择一条数据!")
           flag = false;
         }
         return flag;
@@ -219,9 +229,9 @@
       //通过get请求列表数据
       updateListData(responseData){
         let data = responseData.data;
-        this.tableData1=[];
+        this.tableData=[];
         data = this.addIndex(data);
-        this.tableData1 = data;
+        this.tableData = data;
         this.listTotal = 1;
       },
       setTableData(){
@@ -244,7 +254,7 @@
        * @param index string|number  当前行索引
        * */
       show(index){
-        this.operailityData = this.tableData1[index-1];
+        this.operailityData = this.tableData[index-1];
         this.openModel("show");
       },
       /*
@@ -306,7 +316,8 @@
     },
     components:{
       //当前组件引入的子组件
-      show,eptWork
+      show,
+//      eptWork
     }
   }
 </script>

@@ -10,15 +10,15 @@
         <div class="listUpArea-searchWrapper">
           <!--右侧查询-->
           <el-form ref="formValidate" :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px">
-            <div class="listUpArea-searchLeft">
-              <el-input placeholder="请输入内容" v-model="formValidate.name">
-                <div slot="prepend">姓名</div>
+            <!--<div class="listUpArea-searchLeft">-->
+              <el-input placeholder="请输入角色名称" v-model="formValidate.name">
+                <div slot="prepend">角色名称</div>
                 <el-button slot="append" @click="handleSubmit('formValidate')" icon="search"></el-button>
               </el-input>
-            </div>
-            <div class="listUpArea-moreSearch">
-              <el-button @click="showMoreSearch" type="text">高级查询</el-button>
-            </div>
+            <!--</div>-->
+            <!--<div class="listUpArea-moreSearch">-->
+              <!--<el-button @click="showMoreSearch" type="text">高级查询</el-button>-->
+            <!--</div>-->
           </el-form>
         </div>
       </div>
@@ -29,18 +29,18 @@
       <!--表格数据-->
       <div id="myTable" ref="myTable">
 
-        <el-table align="center" :height="dynamicHt" :context="self" :data="tableData1" tooltip-effect="dark" highlight-current-row
+        <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" highlight-current-row
           style="width: 100%;height: 100%">
           <el-table-column label="操作" width="160">
             <template scope="scope">
-              <el-button size="small" @click="allotJurisdition">权限设置</el-button>
+              <el-button size="small" @click="allotJurisdition(scope.row)">权限设置</el-button>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="name" label="角色名称" width="120">
+          <el-table-column align="center" prop="name" label="角色名称" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="identify" label="代码" width="120">
+          <el-table-column prop="identify" label="代码" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="remark" label="角色描述" align="center">
+          <el-table-column prop="remark" label="角色描述" align="center" show-overflow-tooltip>
           </el-table-column>
 
         </el-table>
@@ -58,13 +58,14 @@
     <Modal close-on-click-modal="false" width="1000" v-model="allotJurisditionModal" title="对话框标题" class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="allotJurisditionId"></modal-header>
-      <allotJurisdition v-if="allotJurisditionModal" @cancel="cancel" @person="subCallback" :show-data="operailityData"></allotJurisdition>
+      <allotJurisdition v-if="allotJurisditionModal" @cancel="cancel" @allotJurisdition="subCallback" :show-data="operailityData"></allotJurisdition>
       <div slot="footer"></div>
     </Modal>
   </div>
 </template>
 <script>
   /*当前组件必要引入*/
+  import api from './api';
   //引入--分配权限--组件
   import allotJurisdition from "./permissionSetting_allotJurisdition.vue";
   //当前组件引入全局的util
@@ -75,13 +76,15 @@
         //查询
         formValidate: {
           name: '',
+          identify:"",
+          type:"",
         },
         radioVal: '',
         operailityData: '',
         multipleSelection: [],
         dynamicHt: 100,
         self: this,
-        tableData1: [],
+        tableData: [],
         allotJurisditionModal: false,
         loading: false,
         listTotal: 0,
@@ -89,10 +92,10 @@
         listMessTitle: {
           ajaxSuccess: 'updateListData',
           ajaxParams: {
-            url: '/role/list',
+            url: api.list.path,
             params: {
-              identify: "",
-              type: ""
+//              identify: "",
+//              type: ""
             }
           }
         },
@@ -159,24 +162,23 @@
       updateListData(responseData) {
         let data = responseData.data;
         // console.log(responseData);
-        this.tableData1 = [];
+        this.tableData = [];
         data = this.addIndex(data);
-        this.tableData1 = data;
+        this.tableData = data;
         this.listTotal = responseData.totalCount || 0;
       },
 
 
       setTableData() {
-        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params, this.queryQptions.params,
-          this.formValidate);
+        Object.assign(this.listMessTitle.ajaxParams.params, this.queryQptions.params,this.formValidate);
         this.ajax(this.listMessTitle);
       },
 
 
       /*--点击--审核--按钮--*/
-      allotJurisdition(index) {
-        this.operailityData = this.tableData1[index - 1];
-        this.allotJurisditionModal = true;
+      allotJurisdition(row) {
+        this.operailityData = row;
+        this.openModel('allotJurisdition');
       },
 
 

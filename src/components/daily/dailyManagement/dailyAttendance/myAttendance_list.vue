@@ -464,6 +464,9 @@
         </div>
       </div>
     </div>
+    <div style="padding: 5px;font-size: 16px">
+      考勤标记: &nbsp;&nbsp; 出勤|&nbsp;&nbsp; 事假+ &nbsp;&nbsp; 病假++ &nbsp;&nbsp;  产假#&nbsp;&nbsp;  探亲假△ &nbsp;&nbsp; 丧假☓&nbsp;&nbsp;  婚假✔&nbsp;&nbsp;  旷工◯
+    </div>
   </div>
   </div>
 </template>
@@ -550,7 +553,7 @@
         let content = this.$refs.content;
         let parHt = content.parentNode.offsetHeight;
         let myTable = this.$refs.myTable;
-        let paginationHt = 12;
+        let paginationHt = 25;
         this.dynamicHt = parHt - myTable.offsetTop - paginationHt;
       },
       /*

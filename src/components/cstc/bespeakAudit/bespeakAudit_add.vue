@@ -27,8 +27,8 @@
           <el-form-item label="选择房间：">
             <template v-if="formValidate.reservePojectRoom.roomNum">
               <span style="display:inline;">{{ formValidate.reservePojectRoom.roomNum }}</span>
-              <span style="margin-left:10px;">承载量：</span>
-              <el-input style="width:200px;" v-model="formValidate.reservePojectRoom.bearingCapacity"></el-input>
+              <!--<span style="margin-left:10px;">承载量：</span>-->
+              <!--<el-input style="width:200px;" v-model="formValidate.reservePojectRoom.bearingCapacity"></el-input>-->
             </template>
             <el-button type="info" @click="selectRoom">选择房间</el-button>
           </el-form-item>
@@ -42,16 +42,17 @@
           <el-form-item label="设备：">
             <div class="bpkdBox">
               <div v-for="(item,index) in formValidate.deviceList" :key="index" class="bpkdItem">
-                <el-tooltip class="item" effect="light" placement="bottom-start">
-                  <div slot="content" style="max-width:200px;">
-                    <p>设备名称：{{ deviceList[index].deviceTypeName }}</p>
-                    <p>设备数量：{{ deviceList[index].deviceNum || 0 }}</p>
-                    <p>设备简介：{{ deviceList[index].describe || '暂无简介' }}</p>
-                  </div>
-                  <el-button>{{ deviceList[index].deviceTypeName }}</el-button>
-                </el-tooltip>
-                <span class="bpkdTitle">数量：</span>
-                <el-input style="width:200px;" v-model="item.reserveNum"></el-input>
+                <!--<el-tooltip class="item" effect="light" placement="bottom-start">-->
+                  <!--<div slot="content" style="max-width:200px;">-->
+                    <!--<p>设备名称：{{ deviceList[index].deviceTypeName }}</p>-->
+                    <!--<p>设备数量：{{ deviceList[index].deviceNum || 0 }}</p>-->
+                    <!--<p>设备简介：{{ deviceList[index].describe || '暂无简介' }}</p>-->
+                  <!--</div>-->
+                  <!--<el-button>{{ deviceList[index].deviceTypeName }}</el-button>-->
+                <el-button type="text">{{ deviceList[index].deviceTypeName + '(' + deviceList[index].deviceIdentifier + ')' }}</el-button>
+                <!--</el-tooltip>-->
+                <!--<span class="bpkdTitle">数量：</span>-->
+                <!--<el-input style="width:200px;" v-model="item.reserveNum"></el-input>-->
               </div>
             </div>
             <el-button type="primary" @click="selectDevice">选择模型</el-button>
@@ -80,7 +81,7 @@
     <!--选择设备-->
     <Modal :mask-closable="false" v-model="selectDeviceModal" height="200" class-name="vertical-center-modal" :width="960">
       <modal-header slot="header" :content="headerContent.selectDeviceId"></modal-header>
-      <select-device v-if="selectDeviceModal" @cancel="cancel" @select="selectDeviceCall" :select="deviceIds"></select-device>
+      <select-device v-if="selectDeviceModal" @cancel="cancel" @select="selectDeviceCall" :select="deviceIds" :roomId="formValidate.reservePojectRoom.roomId"></select-device>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -92,7 +93,7 @@
 
   import api from './api';
   import selectRoom from '../../common/selectRoom'; // 选择房间
-  import selectDevice from '../device/deviceStorage/deviceStorage_select'; // 选择设备
+  import selectDevice from '../bespeakClass/bespeakClass_selectDevice.vue'; // 选择设备
   export default {
     props: ['operailityData'],
     data() {
@@ -172,9 +173,7 @@
       // 提交数据
       subData(status) {
         let msg = status === 'ADOPT' ? '通过' : '驳回';
-
         this.formValidate.status = status;
-
         this.ajax({
           type: 'add',
           successTitle: `${msg}成功`,
@@ -201,13 +200,13 @@
             // 设备
             res.data.reservePojectDeviceList.map(item => {
               this.formValidate.deviceList.push({
-                deviceTypeId: item.deviceTypeId,
-                reserveNum: item.reserveNum
+                deviceId: item.deviceId,
+                reserveNum: item.reserveNum || ''
               });
-              this.deviceIds.push(item.deviceTypeId)
+              this.deviceIds.push(item.deviceId)
             });
             this.deviceList = res.data.reservePojectDeviceList;
-            this.formValidate.opinion = res.data.opinion;
+            this.formValidate.opinion = res.data.opinion || '';
           },
           ajaxParams: {
             url: api.get.path + this.operailityData.id,
@@ -240,17 +239,23 @@
       // 选择房间
       selectRoomCall(res) {
         this.formValidate.reservePojectRoom.roomId = res[0].id;
-        this.formValidate.reservePojectRoom.roomNum = res[0].roomNum;
+        this.formValidate.reservePojectRoom.roomNum = res[0].roomNum || '';
+        this.formValidate.reservePojectRoom.bearingCapacity = res[0].capacity; // 可容量
+        this.formValidate.deviceList.length = 0;
+        this.deviceList.length = 0;
+        this.deviceIds.length=0;
         this.cancel('selectRoom')
       },
       // 选择设备模型
       selectDeviceCall(res) {
         let temp = [];
+        this.deviceIds.length=0;
         res.map(item => {
           temp.push({
-            deviceTypeId: item.id,
+            deviceId: item.id,
             reserveNum: ""
           })
+          this.deviceIds.push(item.id);
         })
         this.formValidate.deviceList = temp;
         this.deviceList = res;

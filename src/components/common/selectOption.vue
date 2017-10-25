@@ -34,15 +34,15 @@
           type = this.type;
         }
         let typeUrl={
-          dep:'/hospital/dept/queryAll',
+          dep:'/hospital/dept/query/allNameId',
           role:'/role/list?name=&identify=&type=',
           school:'/schools/queryList',
           allBuild:'/dormitory/build/query/allBuild',   //添加-查询所有大楼(用于添加房间时，选择大楼的下拉框)
           teachActivityType:'/dictionary/getByCode/TEACH_ACTIVITY_TYPE',   //获取教学活动类型
           aysUserType:'/dictionary/getByCode/SYS_USER_TYPE',                //生源类型
-          userRotaryDeptlist:'/traineeRotary/arrangeRotary/userRotaryDeptlist/'+(this.userType)+'-'+this.userId,      //轮转科室用
+          userRotaryDeptlist:'/traineeRotary/arrangeRotary/userRotaryDeptlistTreeData/'+(this.userType)+'-'+this.userId,      //轮转科室用
           getDepByTeacher:'/rotationProcess/rotaryTable/getDepByTeacher/'+this.userId,      //轮转科室用
-          byUserType:'/hospital/dept/query/byUserType/'+this.userId,      //轮转科室用
+          byUserType:'/hospital/dept/query/byUserType/',      //轮转科室用   //获取当前角色科室
           //根据不同角色获取科室 (科室主任和带教秘书用) 获取当前角色下的科室
           byNowUser:'/hospital/dept/get/byNowUser/' //uesrId
         };
@@ -101,13 +101,57 @@
         if(this.isCode){
             data = data.child;
         }
+        if(!this.type || this.type=='dep'){
+          for(let i=0;i<data.length;i++){
+            if(data[i].id=='-1'){
+                data.splice(i,1);
+                continue;
+            }
+          }
+        }
         if(!this.unAll){
           data.unshift({
             [this.id||'id']: '',
             [this.name||'name']:'全部'
           },)
         }
+        if(this.type=='userRotaryDeptlist'){
+          this.optionData = this.getQTBObj(data);
+          return;
+        }
         this.optionData = data;
+      },
+
+      // 处理科室数据结构（三级以下）
+      getQTBObj(arr,res,depth=-1){
+        depth++;
+        let t = res || [];
+        if(arr && arr.length) {
+          arr.map(item => {
+            item.label='　'.repeat(depth)+item.depName;
+            t.push(item);
+            if (item.childList){
+              return t.concat(this.getQTBObj(item.childList,t,depth))
+            }
+          })
+        }
+        return t
+      },
+
+
+      getQTBObj(arr,res,depth=-1){
+        depth++;
+        let t = res || [];
+        if(arr && arr.length) {
+          arr.map(item => {
+            item[this.name||'name']='　'.repeat(depth)+item[this.name||'name'];
+            t.push(item);
+            if (item.childList){
+              return t.concat(this.getQTBObj(item.childList,t,depth))
+            }
+          })
+        }
+        return t
       },
 
 

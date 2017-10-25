@@ -86,6 +86,8 @@ export default {
   //教学活动计划详情 post
   teachActivityPlanGet:'/teachActivityPlan/get/' ,///planId
 
+  //根据不同角色获取科室 (科室主任和带教秘书用) 获取当前角色下的科室
+  byNowUser:'/hospital/dept/get/byNowUser/' //uesrId
 
 
 }

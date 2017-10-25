@@ -8,7 +8,7 @@
       </div>
       <div class="showTime" v-if="status !== 'NOARRANGED'">
         <p>生成时间</p>
-        <p>-</p>
+        <p>{{ setupTime }}</p>
       </div>
       <div class="publishButton">
         <!-- 如果 未生成轮转表 则显示生成时间表按钮 -->
@@ -97,6 +97,7 @@
         active: 'student',
         viewType: '', //当前考站类型
         startTime: '-',
+        setupTime: '-',
         config: {},
         //时间表动态啊高度
         dynamicHt: 0,
@@ -314,6 +315,7 @@
       this.viewType = info.sceneType;
       this.status = info.status;
       this.startTime = info.startTime;
+      this.setupTime = info.setupTime;
       if (this.status != 'NOARRANGED') {
         this.loadTimeData(this.active);
       }

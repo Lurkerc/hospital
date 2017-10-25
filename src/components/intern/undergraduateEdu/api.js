@@ -155,6 +155,26 @@ teachctivityListType: '/teachctivityManagement/list',///{userType}
   //学员-学生查看课程详情
   weekSetUserGetCourse:'/weekSet/userGetCourse',
 
+  /**学员*/
+  //学员-学员获取课程安排
+  userCurriculum:'/weekSet/userCurriculum',
+  //学员-学员获取课程安排
+  userCourse:'/weekSet/userGetCourse/',
+
+  /**老师
+   * */
+  //老师-授课老师获取本人的课程
+  teacherCourseFile:'/weekSet/teacherCourseFile/pagelist',
+  //老师-授课老师获取本人的课程
+  teacherCourseFileGet:'/weekSet/teacherCourseFile/get/',//{courseDataId}
+  /**教育处
+   * */
+  //教育处-课程表
+  manageWeekCourseFile:'/weekSet/manageWeekSetTimeTablesPageList',
+  //教育处-教育处查看课程详情
+  manageGetCourse:'/weekSet/manageGetCourse',//{courseDataId}
+
+
 };
 
 export default api

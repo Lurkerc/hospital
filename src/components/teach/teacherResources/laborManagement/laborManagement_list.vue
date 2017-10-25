@@ -6,10 +6,10 @@
         <div class="add-remove">
           <el-button type="primary" @click="add">添加</el-button>
           <el-button type="danger" @click="remove">删除</el-button>
-          <el-button type="danger" @click="editPay">修改支付时间</el-button>
-          <el-button type="primary">导入</el-button>
-          <el-button type="primary">导出</el-button>
-          <el-button type="primary" @click="pay">支付</el-button>
+          <el-button type="info" @click="editPay">修改支付时间</el-button>
+          <!--<el-button type="primary">导入</el-button>-->
+          <!--<el-button type="primary">导出</el-button>-->
+          <el-button type="danger" @click="pay">支付</el-button>
         </div>
       </div>
       <div class="listUpArea-search">
@@ -37,34 +37,40 @@
     <div>
       <!--表格数据-->
       <div id="myTable" ref="myTable">
-        <el-table align="center" :height="dynamicHt" :context="self" :data="tableData1" tooltip-effect="dark" highlight-current-row
+        <el-table align="center" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" highlight-current-row
           style="width: 100%;height: 100%" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55">
+          <el-table-column type="selection" width="55" :selectable="canTodo">
           </el-table-column>
-          <el-table-column align="center" label="序号" prop="index" width="100">
+          <el-table-column align="center" label="序号" prop="index">
             <template scope="scope">
               <span>{{scope.row.index}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="160">
+          <el-table-column label="操作" width="140" align="center">
             <template scope="scope">
               <el-button size="small" @click="show(scope.row)">查看</el-button>
-              <el-button size="small" @click="edit(scope.row)">修改</el-button>
+              <el-button size="small" @click="edit(scope.row)" :disabled="scope.row.payStatus == 1">修改</el-button>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="name" label="姓名" width="120">
+          <el-table-column align="center" prop="userName" label="姓名" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="identify" label="类型" width="120">
+          <el-table-column prop="types" label="类型" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.types | laborUserType }}
+            </template>
           </el-table-column>
-          <el-table-column prop="remark" label="经办人" width="120" align="center">
+          <el-table-column prop="jbrName" label="经办人" align="center" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="type" label="金额" width="120">
+          <el-table-column prop="money" label="金额" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="type" label="支付时间" width="120">
+          <el-table-column prop="payTime" label="支付时间"  show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="type" label="用途">
+          <el-table-column prop="yt" label="用途" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="type" label="状态" width="120">
+          <el-table-column prop="payStatus" label="状态" show-overflow-tooltip>
+            <template scope="scope">
+              {{ scope.row.payStatus | laborPayStatus }}
+            </template>
           </el-table-column>
 
         </el-table>
@@ -80,20 +86,20 @@
     </div>
 
     <!--新建-->
-    <Modal close-on-click-modal="false" width="1000" v-model="addModal" title="对话框标题" class-name="vertical-center-modal" :loading="loading">
+    <Modal close-on-click-modal="false" width="1000" v-model="addModal"  class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="addId"></modal-header>
       <add v-if="addModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></add>
       <div slot="footer"></div>
     </Modal>
     <!--修改-->
-    <Modal close-on-click-modal="false" width="1000" v-model="editModal" title="对话框标题" class-name="vertical-center-modal" :loading="loading">
+    <Modal close-on-click-modal="false" width="1000" v-model="editModal"  class-name="vertical-center-modal" :loading="loading">
       <modal-header slot="header" :content="editId"></modal-header>
       <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
       <div slot="footer"></div>
     </Modal>
 
     <!--删除弹窗-->
-    <Modal close-on-click-modal="false" height="200" v-model="removeModal" title="对话框标题" class-name="vertical-center-modal" :loading="loading"
+    <Modal close-on-click-modal="false"  v-model="removeModal"  class-name="vertical-center-modal" :loading="loading"
       :width="500">
       <modal-header slot="header" :content="removeId"></modal-header>
       <remove v-if="removeModal" :delete-url="deleteUrl" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
@@ -109,15 +115,15 @@
 
 
     <!--支付弹窗-->
-    <Modal close-on-click-modal="false" height="200" v-model="payModal" title="对话框标题" class-name="vertical-center-modal" :loading="loading"
+    <Modal close-on-click-modal="false"  v-model="payModal"  class-name="vertical-center-modal" :loading="loading"
       :width="500">
       <modal-header slot="header" :content="payId"></modal-header>
-      <operate v-if="payModal" :type="'pay'" :operateUrl="payUrl" @pay="subCallback" @cancel="cancel" :operaility-data="operailityData"></operate>
+      <operate v-if="payModal" :type="'pay'" methods="post" :operateUrl="payUrl" @operate="subCallback" @cancel="cancel" :operaility-data="operailityData"></operate>
       <div slot="footer"></div>
     </Modal>
     <!---->
     <!--修改支付时间弹窗-->
-    <Modal close-on-click-modal="false" height="200" v-model="editPayModal" title="对话框标题" class-name="vertical-center-modal"
+    <Modal close-on-click-modal="false"  v-model="editPayModal"  class-name="vertical-center-modal"
       :loading="loading" :width="500">
       <modal-header slot="header" :content="editPayId"></modal-header>
       <edit-pay v-if="editPayModal" @editPay="subCallback" @cancel="cancel" :operaility-data="operailityData"></edit-pay>
@@ -127,6 +133,7 @@
   </div>
 </template>
 <script>
+  import api from './api';
   /*当前组件必要引入*/
   //引入--新建--组件
   import editPay from "./laborManagement_editPay.vue";
@@ -143,9 +150,9 @@
     data() {
       return {
         //查询表单
-        listUrl: '/role/list?name=&identify=&type=',
-        deleteUrl: '/role/remove',
-        payUrl: '/role/remove',
+//        listUrl: '/role/list?name=&identify=&type=',
+        deleteUrl: api.delete,
+        payUrl:api.pay,
         formValidate: {
           name: '',
         },
@@ -154,17 +161,16 @@
         multipleSelection: [],
         dynamicHt: 100,
         self: this,
-        tableData1: [{
-          'id': 1
-        }],
+        tableData: [],
         loading: false,
         listTotal: 0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle: {
-          paramsData: 'listUrl',
+//          paramsData: 'listUrl',
           ajaxSuccess: 'updateListData',
           ajaxParams: {
-            url: '/role/list?name=&identify=&type=',
+            url: api.list.path,
+            method:api.list.method,
           }
         },
         payModal: false,
@@ -241,7 +247,7 @@
           flag = false;
         }
         if (len > 1 && isOnly) {
-          this.showMess("只能修改一条数据!")
+          this.showMess("只能选择一条数据!")
           flag = false;
         }
         return flag;
@@ -252,26 +258,29 @@
         let len = responseData.data.length;
         let data = responseData.data.splice(0, 150);
         let that = this;
-        that.tableData1 = [];
+        that.tableData = [];
         data = that.addIndex(data);
         for (var i = 0, n = 0; i < data.length; i += 100, n++) {
           setTimeout(() => {
-            that.tableData1 = that.tableData1.concat(data.splice(0, 100));
+            that.tableData = that.tableData.concat(data.splice(0, 100));
           }, n * 10)
         }
         that.listTotal = 1;
       },
       setTableData() {
-        this.listMessTitle.ajaxParams = Object.assign(this.listMessTitle.ajaxParams, this.queryQptions);
+        this.listMessTitle.ajaxParams = Object.assign(this.listMessTitle.ajaxParams, this.queryQptions,this.formValidate);
         this.ajax(this.listMessTitle);
+      },
+      // 已支付的不允许选择参与操作
+      canTodo(row){
+        return row.payStatus != 1
       },
       /*
        * 列表查询方法
        * @param string 查询from的id
        * */
       handleSubmit(name) {
-        let formData = Util._.defaultsDeep({}, this.formValidate);
-        // console.log(formData)
+        this.setTableData()
       },
 
 
@@ -282,8 +291,8 @@
 
       /*--点击--修改支付--按钮--*/
       editPay(data) {
-        if (!this.isSelected()) return;
-        this.operailityData = this.multipleSelection;
+        if (!this.isSelected(true)) return;
+        this.operailityData = this.multipleSelection[0];
         this.openModel("editPay");
       },
 

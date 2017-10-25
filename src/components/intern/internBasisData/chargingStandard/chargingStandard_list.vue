@@ -4,7 +4,7 @@
     <el-form :model="formValidate" ref="formValidate" label-width="0" :rules="rules">
     <el-row :gutter="10">
       <el-col style="width:120px;">
-        <div class="cal-schoolTit" style="text-align: right;">实习费：</div>
+        <div class="cal-schoolTit" style="text-align: right;">{{userType=='SXS'?'实习':'进修'}}费：</div>
       </el-col>
       <el-col :span="4">
         <el-form-item prop="configValue" required>
@@ -51,7 +51,7 @@
     </el-row>
     <el-row :gutter="10">
       <el-col :span="22" :push="1">
-        <div class="cal-schoolTit" style="text-align: left;color: #FF0000;">说明：实习费默认为100元/月，可更改</div>
+        <div class="cal-schoolTit" style="text-align: left;color: #FF0000;">说明：{{userType=='SXS'?'实习':'进修'}}费默认为100元/月，可更改</div>
       </el-col>
     </el-row>
     </el-form>
@@ -67,6 +67,12 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
+    props:{
+      userType:{
+        type: String,
+        default: 'SXS',
+      }
+    },
     data() {
       return {
         //bind表单数据
@@ -92,7 +98,7 @@
         getChargingStandard:{
           ajaxSuccess:'getChargingStandardData',
           ajaxParams:{
-            url: api.chargingStandard.path,
+            url: api.chargingStandard.path+this.userType,
           }
         },
 
@@ -100,7 +106,7 @@
         getAccommodation:{
           ajaxSuccess:'getAccommodationData',
           ajaxParams:{
-            url: api.accommodation.path,
+            url: api.accommodation.path+this.userType,
           }
         },
 
@@ -108,7 +114,7 @@
         getDeposit:{
           ajaxSuccess:'getDepositData',
           ajaxParams:{
-            url: api.deposit.path,
+            url: api.deposit.path+this.userType,
           }
         },
 

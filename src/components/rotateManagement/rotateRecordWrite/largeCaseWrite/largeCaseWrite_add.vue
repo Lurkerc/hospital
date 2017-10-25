@@ -7,7 +7,7 @@
           <el-form :model="formValidate" ref="formValidate"  class="demo-form-inline" label-width="90px">
             <el-form-item label="科室:" prop="dep">
               <el-select v-model="dep" placeholder="请选择">
-                <el-option v-for="item in optionData" :key="item.id" :label="item.depName" :value="item.depId+'-'+item.depName+'-'+item.podId">
+                <el-option v-for="item in optionData" :key="item.id" :label="item.label" :value="item.depId+'-'+item.depName+'-'+item.podId">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -81,7 +81,7 @@
       Util = this.$util;
       let userInfo = this.$store.getters.getUserInfo;
       let role = userInfo.studentTypes;
-      this.listMessTitle.ajaxParams.url = this.url.userRotaryDeptlist +role+'-' + userInfo.id;
+      this.listMessTitle.ajaxParams.url = this.url.userRotaryDeptlistTree +role+'-' + userInfo.id;
       this.ajax(this.listMessTitle);
       if (this.initData) { // initData 数据结构与 formValidate 的一致
         this.formValidate = this.initData;
@@ -98,8 +98,23 @@
       updateListData(res) {
         let data = res.data;
         if (!data) return;
-        this.optionData = data;
+        this.optionData = this.getQTBObj(res.data);
 
+      },
+      // 处理科室数据结构（三级以下）
+      getQTBObj(arr,res,depth=-1){
+        depth++;
+        let t = res || [];
+        if(arr && arr.length) {
+          arr.map(item => {
+            item.label='　'.repeat(depth)+item.depName;
+            t.push(item);
+            if (item.childList){
+              return t.concat(this.getQTBObj(item.childList,t,depth))
+            }
+          })
+        }
+        return t
       },
       /*
        * 点击提交按钮 监听是否提交数据
@@ -161,17 +176,18 @@
             return;
           }
         let dep = val.split('-');
-        this.$emit('changeWidth',1300);
+        this.$emit('changeWidth',1000);
         this.formValidate.depId = dep[0];
         this.formValidate.depName = dep[1];
         this.formValidate.podId = dep[2];
-        if (dep[1] == '心电图') {
-          this.showWhat = 'imageTemplate';
-        } else if (dep[1] == '麻醉科') {
-          this.showWhat = 'electrocardiogramTemplate';
-        } else {
-          this.showWhat = 'largeCase';
-        }
+//        if (dep[1] == '心电图') {
+//          this.showWhat = 'imageTemplate';
+//        } else if (dep[1] == '麻醉科') {
+//          this.showWhat = 'electrocardiogramTemplate';
+//        } else {
+//          this.showWhat = 'largeCase';
+//        }
+        this.showWhat = 'largeCase';
 
         //            largeCase electrocardiogramTemplate imageTemplate
       },

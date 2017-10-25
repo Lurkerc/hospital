@@ -18,7 +18,7 @@
 
     <el-row >
       <el-col :span="8" :offset="2">
-        <el-form-item type="附件" label="相关资料:" class="feildFontweight">
+        <el-form-item type="附件" label="相关证明材料:" class="feildFontweight">
           <a href="">上传附件</a>
         </el-form-item>
       </el-col >

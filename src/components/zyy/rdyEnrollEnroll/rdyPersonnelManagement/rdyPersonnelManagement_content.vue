@@ -14,7 +14,7 @@
       <div class="listUpArea-search">
         <div class="listUpArea-searchWrapper">
           <!--右侧查询-->
-          <el-form ref="formValidate" :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px">
+          <el-form :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px">
             <div class="listUpArea-searchLeft">
               <input class="hidden">
               <el-input placeholder="请输入内容" v-model="formValidate.name">
@@ -30,37 +30,37 @@
       </div>
     </div>
     <div v-if="searchMore" class="listUpAreaMoreSearchBox" ref="searchMore">
-      <el-form :inline="true">
-        <el-form-item label="姓名：">
+      <el-form :inline="true" ref="formValidate" :model="formValidate">
+        <el-form-item label="姓名：" prop="name">
           <el-input v-model="formValidate.name"></el-input>
         </el-form-item>
-        <el-form-item label="性别：">
-          <el-select v-model="formValidate.sex" filterable clearable placeholder="请选择" style="width:175px;" class="nation">
-            <el-option v-for="(item,index) in sexOption" :key="index" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="手机号：">
+        <!--<el-form-item label="性别：">-->
+          <!--<el-select v-model="formValidate.sex" filterable clearable placeholder="请选择" style="width:175px;" class="nation">-->
+            <!--<el-option v-for="(item,index) in sexOption" :key="index" :label="item.label" :value="item.value">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
+        <el-form-item label="手机号：" prop="mobile">
           <el-input v-model="formValidate.mobile"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱：">
+        <el-form-item label="邮箱：" prop="email">
           <el-input v-model="formValidate.email"></el-input>
         </el-form-item>
-        <el-form-item label="身份证：">
-          <el-input v-model="formValidate.idNumber"></el-input>
-        </el-form-item>
-        <el-form-item label="年级：">
-          <el-input v-model="formValidate.grade"></el-input>
-        </el-form-item>
-        <el-form-item label="班级：">
-          <el-input v-model="formValidate.classNum"></el-input>
-        </el-form-item>
-        <el-form-item label="审核状态：">
-          <el-select v-model="formValidate.auditStatus" filterable clearable placeholder="请选择" style="width:175px;" class="nation">
-            <el-option v-for="(item,index) in auditStatusOption" :key="index" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item label="身份证：">-->
+          <!--<el-input v-model="formValidate.idNumber"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="年级：">-->
+          <!--<el-input v-model="formValidate.grade"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="班级：">-->
+          <!--<el-input v-model="formValidate.classNum"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="审核状态：">-->
+          <!--<el-select v-model="formValidate.auditStatus" filterable clearable placeholder="请选择" style="width:175px;" class="nation">-->
+            <!--<el-option v-for="(item,index) in auditStatusOption" :key="index" :label="item.label" :value="item.value">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <el-button type="info" @click="search">查询</el-button>
       </el-form>
     </div>
@@ -80,7 +80,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="name" label="姓名" align="center" width="200"></el-table-column>
-        <el-table-column prop="school.name" label="学校" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="schoolName" label="学校" show-overflow-tooltip></el-table-column>
         <el-table-column prop="specialty" label="专业" show-overflow-tooltip></el-table-column>
         <el-table-column prop="mobile" label="手机号" show-overflow-tooltip></el-table-column>
         <el-table-column prop="email" label="邮箱" show-overflow-tooltip></el-table-column>
@@ -136,7 +136,6 @@
               </a>
               <el-button class="but-col" @click=" deriveModal=false">取消</el-button>
             </el-col>
-            </el-col>
           </el-row>
         </div>
         <div slot="footer"></div>
@@ -156,13 +155,13 @@
   //引入--修改--组件
   import edit from "./rdyPersonnelManagement_edit";
   //引入--查看--组件
-  import show from "../../../base/sysManage/departmentStaff/departmentStaff_view";
+  import show from "./rdyPersonnelManagement_view.vue";
   //引入--添加--组件
   import add from "./rdyPersonnelManagement_add";
   //引入--导入--组件
   import toChannel from "./rdyPersonnelManagement_toChannel.vue";
   //引入--短信通知--组件
-  import shortNote from "../../../intern/recruitStudent/usersManagement/usersManagement_shortNote";
+  import shortNote from "../../../common/shortNote.vue";
   import sexOption from '../../../intern/recruitStudent/usersManagement/sexOption'; // 性别
   import auditStatusOption from '../../../intern/recruitStudent/usersManagement/auditStatusOption'; // 审核状态
   //当前组件引入全局的util
@@ -375,6 +374,7 @@
 
       // 高级搜索按钮
       showSearchMore() {
+        this.searchMore && this.$refs['formValidate'].resetFields();
         this.searchMore = !this.searchMore;
         this.$nextTick(function () {
           if (this.searchMore) {
@@ -553,7 +553,12 @@
 
       //短信通知
       shortNote() {
-        this.openModel('shortNote')
+        if(this.multipleSelection.length > 0){
+          this.operailityData = this.multipleSelection;
+          this.openModel('shortNote')
+        }else{
+          this.errorMess('请选择短信通知人员！')
+        }
       },
 
 
@@ -640,7 +645,10 @@
     watch: {
       deptId(val) {
         if (val) {
-          this.$nextTick(() => this.setTableData());
+          this.$nextTick(() => {
+            this.searchMore && this.$refs['formValidate'].resetFields();
+            this.setTableData();
+          });
         } else {
           this.tableData = []
         }

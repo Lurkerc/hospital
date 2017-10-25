@@ -24,6 +24,10 @@ const api = {
     path: thisFile + '/teacherAddComment/', // {examinationId}
     method: 'put'
   },
+  skillMakeUpExamAdd: { // 技能补考添加--出科鉴定 技能补考页面保存时调用
+    path: '/rotationProcess/skillMakeUpExam/add',
+    method: 'post'
+  },
   get: { // 查看出科鉴定
     path: thisFile + '/get/_', // {examinationId}
     method: 'get'

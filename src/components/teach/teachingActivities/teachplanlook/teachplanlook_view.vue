@@ -80,16 +80,6 @@
           align="center"
           label="活动时间段"
           width="200">
-          <template scope="scope">
-            <el-select disabled  v-model="scope.row.planActivityTimeids" multiple  placeholder="请选择" >
-              <el-option
-                v-for="item in timeIdsData"
-                :key="item.id"
-                :label="item.courseTime"
-                :value="item.timeId+''">
-              </el-option>
-            </el-select>
-          </template>
         </el-table-column>
         <el-table-column
           show-overflow-tooltip
@@ -249,7 +239,7 @@
       Util = this.$util;
       //请求教学活动类型数据
       this.ajax(this.planActivityTypeMessTitle)
-      this.ajax(this.timeIdsMessTitle);
+//      this.ajax(this.timeIdsMessTitle);
       this.ajax(this.listMessTitle) //获取详情
     },
     mounted(){
@@ -318,7 +308,6 @@
       SuccessGetCurrData(res){
         let data = res.data;
         if(!data) return;
-
         this.formValidate =  this.conductGetData(data)
 
       },

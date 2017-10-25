@@ -9,31 +9,125 @@
         <el-col :span="10">
           <el-form-item label="科室：">{{ viewData.depName }}</el-form-item>
         </el-col>
-        <el-col :span="20" :offset="2">
-          <el-form-item label="考勤：">
-            <span>旷工 <el-input v-model="numParams.minerDays" class="numInput"></el-input> 天，</span>
-            <span>病假 <el-input v-model="numParams.sickDays" class="numInput"></el-input> 天，</span>
-            <span>事假 <el-input v-model="numParams.personalDays" class="numInput"></el-input> 天</span>
-          </el-form-item>
-        </el-col>
+        <!--<el-col :span="20" :offset="2">-->
+          <!--<el-form-item label="考勤：">-->
+            <!--<span>旷工 <el-input v-model="numParams.minerDays" class="numInput"></el-input> 天，</span>-->
+            <!--<span>病假 <el-input v-model="numParams.sickDays" class="numInput"></el-input> 天，</span>-->
+            <!--<span>事假 <el-input v-model="numParams.personalDays" class="numInput"></el-input> 天</span>-->
+          <!--</el-form-item>-->
+        <!--</el-col>-->
 
-        <el-col :span="20" :offset="2">
-          <el-form-item label="奖惩情况：">
-            <span>奖励 {{ viewData.rewardNum || 0 }} 次，</span>
-            <span>惩罚 {{ viewData.penaltyNum || 0 }} 次</span>
-          </el-form-item>
-        </el-col>
+        <!--<el-col :span="20" :offset="2">-->
+          <!--<el-form-item label="奖惩情况：">-->
+            <!--<span>奖励 {{ viewData.rewardNum || 0 }} 次，</span>-->
+            <!--<span>惩罚 {{ viewData.penaltyNum || 0 }} 次</span>-->
+          <!--</el-form-item>-->
+        <!--</el-col>-->
+
         <el-col :span="20" :offset="2">
           <el-form-item label="老师评价：">{{ viewData.teacherEvaluation || '暂无' }}</el-form-item>
         </el-col>
+
         <el-col :span="20" :offset="2">
-          <h4>轮转记录填写：</h4>
-          <el-table align="center" :context="self" :data="viewData.depRequired" tooltip-effect="dark">
-            <el-table-column label="名称" prop="requiredName"></el-table-column>
-            <el-table-column label="要求例数" prop="requiredNum" show-overflow-tooltip></el-table-column>
-            <el-table-column label="实填例数" prop="userNum" show-overflow-tooltip></el-table-column>
+
+          <table class="el-table">
+            <thead>
+            <tr>
+              <th>
+                <div class="cell">旷工</div>
+              </th>
+              <th>
+                <div class="cell">病假</div>
+              </th>
+              <th>
+                <div class="cell">事假</div>
+              </th>
+              <th>
+                <div class="cell">奖励</div>
+              </th>
+              <th>
+                <div class="cell">惩罚</div>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <div class="cell">
+                  <el-input v-model="numParams.minerDays" class="numInput"></el-input> 天
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <el-input v-model="numParams.sickDays" class="numInput"></el-input> 天
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <el-input v-model="numParams.personalDays" class="numInput"></el-input> 天
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  {{ viewData.rewardNum || 0 }} 次
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  {{ viewData.penaltyNum || 0 }} 次
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+          <!--<el-table>-->
+            <!--<el-table-column label="旷工" prop="minerDays">-->
+              <!--<template>-->
+                <!--<el-input v-model="numParams.minerDays" class="numInput"></el-input> 天-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column label="病假" prop="sickDays">-->
+              <!--<template scope="scope">-->
+                <!--{{ scope.row.sickDays || 0 }} 天-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column label="事假" prop="personalDays">-->
+              <!--<template scope="scope">-->
+                <!--{{ scope.row.personalDays || 0 }} 天-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column label="奖励" prop="rewardNum">-->
+              <!--<template scope="scope">-->
+                <!--{{ scope.row.rewardNum || 0 }} 次-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column label="惩罚" prop="penaltyNum">-->
+              <!--<template scope="scope">-->
+                <!--{{ scope.row.penaltyNum || 0 }} 次-->
+              <!--</template>-->
+            <!--</el-table-column>-->
+          <!--</el-table>-->
+        </el-col>
+
+        <el-col :span="20" :offset="2">
+          <h4>轮转要求统计：</h4>
+          <el-table align="center" :context="self" :data="rotaryRequirStatic" tooltip-effect="dark">
+            <el-table-column label="名称" prop="name"></el-table-column>
+            <el-table-column label="要求数量" prop="yqnum" show-overflow-tooltip></el-table-column>
+            <el-table-column label="已完成数量" prop="ywcnum" show-overflow-tooltip></el-table-column>
+            <el-table-column label="完成比例" prop="wcbl" show-overflow-tooltip></el-table-column>
           </el-table>
         </el-col>
+
+        <!--<el-col :span="20" :offset="2">-->
+          <!--<h4>轮转记录填写：</h4>-->
+          <!--<el-table align="center" :context="self" :data="viewData.depRequired" tooltip-effect="dark">-->
+            <!--<el-table-column label="名称" prop="requiredName"></el-table-column>-->
+            <!--<el-table-column label="要求例数" prop="requiredNum" show-overflow-tooltip></el-table-column>-->
+            <!--<el-table-column label="实填例数" prop="userNum" show-overflow-tooltip></el-table-column>-->
+          <!--</el-table>-->
+        <!--</el-col>-->
         <el-col :span="20" :offset="2">
           <h4>出科成绩：</h4>
           <table class="el-table">
@@ -57,7 +151,7 @@
                 </td>
                 <td>
                   <div class="cell">
-                    <el-input v-model="numParams.theoryExamScore" class="numInput"></el-input>
+                    <el-input v-model="numParams.theoryExamScore" class="numInput" @change="countColigateScore"></el-input>
                   </div>
                 </td>
                 <td>
@@ -71,7 +165,7 @@
                 </td>
                 <td>
                   <div class="cell">
-                    <el-input v-model="numParams.skillExamScore" class="numInput"></el-input>
+                    <el-input v-model="numParams.skillExamScore" class="numInput" @change="countColigateScore"></el-input>
                   </div>
                 </td>
                 <td>
@@ -85,7 +179,7 @@
                 </td>
                 <td>
                   <div class="cell">
-                    <el-input v-model="numParams.dailyExamScore" class="numInput"></el-input>
+                    <el-input v-model="numParams.dailyExamScore" class="numInput" @change="countColigateScore"></el-input>
                   </div>
                 </td>
                 <td>
@@ -98,7 +192,8 @@
                 </td>
                 <td>
                   <div class="cell">
-                    <el-input v-model="numParams.coligateScore" class="numInput"></el-input>
+                    {{ numParams.coligateScore }}
+                    <!--<el-input v-model="numParams.coligateScore" class="numInput"></el-input>-->
                   </div>
                 </td>
                 <td>
@@ -160,6 +255,14 @@
     data() {
       return {
         self: this,
+        viewDayData:[{ // 出勤、奖惩情况
+          minerDays:'',
+          sickDays:'',
+          personalDays:'',
+          rewardNum:'',
+          penaltyNum:'',
+        }],
+        rotaryRequirStatic:[], // 轮转要求统计
         viewData: [],
         summaryFileList: {
           fileIds: '', // 附件IDs
@@ -181,12 +284,67 @@
         // 学生类型
         studentType: 'SXS', // 默认实习生
         depRequirement: [],
+        // 分数比例
+        markRatio:{
+          ll:1, // 理论
+          jn:1, // 技能
+          rc:1, // 日常
+        },
       }
     },
     methods: {
       // 初始化
       init() {
-        this.getViewData()
+        if(this.userType){
+          this.studentType = this.userType;
+        }
+        this.getMarkRatio();
+        this.getViewData();
+        this.getRotaryRequirStatic();
+      },
+
+      // 获取分数比例
+      getMarkRatio(){
+        let opt = {
+          ajaxSuccess:"getMarkRatioSuccess",
+          ajaxParams: {
+            url: api.getConfig.path + 'rotary_givenDdep_markRatio-' + this.studentType,
+            method: api.getConfig.method,
+          }
+        };
+        this.ajax(opt)
+      },
+
+      // 转要求统计
+      getRotaryRequirStatic(){
+        let name = {
+          sscz:'手术操作',
+          jnys: '技能演示',
+          bltl: '病例讨论',
+          klxjz: '科内小讲座',
+          jxcf: '教学查房',
+          dbl: '大病例',
+          jn: '技能',
+          bz: '病种',
+        };
+        let opt = {
+          ajaxSuccess:res=>{
+            if(res.data){
+              let temp = [];
+              this.$util._.map(res.data,(val,key)=>{
+                val.key = key;
+                val.name = name[key];
+                temp.push(val)
+              })
+              this.rotaryRequirStatic = temp;
+            }
+          },
+          ajaxParams:{
+            url:api.getRotaryRequirStatic.path + this.operailityData.podId,
+            method:api.getRotaryRequirStatic.method
+          }
+        };
+        this.ajax(opt)
       },
 
       // 获取预览数据
@@ -209,7 +367,7 @@
         this.teacherUploadFiles.length = 0;
         this.depUploadFiles.length = 0;
         // 学生附件
-        res.data.summaryFileList.map(item => {
+        (res.data.summaryFileList || []).map(item => {
           this.studentUploadFiles.push({
             fileId: item.id,
             fileName: item.fileName,
@@ -217,7 +375,7 @@
           })
         });
         // 老师附件
-        res.data.teacherCommentFileList.map(item => {
+        (res.data.teacherCommentFileList || []).map(item => {
           fileIds.push(item.id);
           this.teacherUploadFiles.push({
             fileId: item.id,
@@ -226,7 +384,7 @@
           })
         });
         // 科室附件
-        res.data.depCommentFileList.map(item => {
+        (res.data.depCommentFileList || []).map(item => {
           this.depUploadFiles.push({
             fileId: item.id,
             fileName: item.fileName,
@@ -248,6 +406,36 @@
         }
       },
 
+      // 获取分数比例
+      getMarkRatioSuccess(res){
+        if(res.data.configValue){
+          let mr = res.data.configValue.split(',');
+          let count = 0;
+          mr.map(item=>count+=+item);
+          this.markRatio.ll = (mr[0] / count).toFixed(2);
+          this.markRatio.jn= (mr[1] / count).toFixed(2);
+          this.markRatio.rc = (mr[2] / count).toFixed(2);
+        }
+      },
+
+      // 计算综合成绩
+      countColigateScore(){
+        let temp = 0;
+        if(!isNaN(this.numParams.theoryExamScore)){
+          temp += +(this.numParams.theoryExamScore * this.markRatio.ll).toFixed(2);
+        }
+        if(!isNaN(this.numParams.skillExamScore)){
+          temp += +(this.numParams.skillExamScore * this.markRatio.jn).toFixed(2);
+        }
+        if(!isNaN(this.numParams.dailyExamScore)){
+          temp += +(this.numParams.dailyExamScore * this.markRatio.rc).toFixed(2);
+        }
+        if(temp.toString().indexOf('.')>-1) {
+          temp = temp.toFixed(1);
+        }
+        this.numParams.coligateScore = temp;
+      },
+
       // 获取实习生查看的轮转记录填写
       getDepRequirementBySXS() {
         this.ajax({
@@ -263,7 +451,7 @@
         this.ajax({
           ajaxSuccess: res => this.depRequirement = res.data || [],
           ajaxParams: {
-            url: api.getDepRequirement.path + '--' + this.operailityData.podId,
+            url: api.getDepRequirement.path + '__' + this.operailityData.podId,
             method: api.getDepRequirement.method
           }
         })
@@ -281,20 +469,19 @@
           minerDays: '旷工天数', // 旷工天数
           sickDays: '病假天数', // 病假天数
           personalDays: '事假天数', // 事假天数
-          theoryExamScore: '理论成绩', // 理论成绩
-          skillExamScore: '技能成绩', // 技能成绩
+          theoryExamScore: '理论考核成绩', // 理论成绩
+          skillExamScore: '技能考核成绩', // 技能成绩
           dailyExamScore: '日常考核成绩', // 日常考核成绩
           coligateScore: '综合成绩', // 综合成绩
         }
         // 获取输入数据
         for (let key in this.numParams) {
-          if (!this.numParams[key] || isNaN(this.numParams[key]) || !(this.numParams[key] > -1 && this.numParams[key] <
-              100)) {
+          if (isNaN(this.numParams[key]) || !(this.numParams[key] >= 0 && this.numParams[key] <= 100)) {
             this.errorMess(`${tips[key]}只能为数字并且在0-100之间！`)
             return
           }
           if (!this.numParams[key]) {
-            this.numParams[key] = 0
+            this.numParams[key] = '0'
           }
         }
 

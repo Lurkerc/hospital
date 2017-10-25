@@ -2,6 +2,7 @@
 <!--业务字典-->
 <template>
   <div class="depContainer" :class="defaults.cls">
+
     <div v-if="defaults.isShowSearch" class="treeSearchBox">
       <el-input placeholder="输入关键字进行过滤" v-model="filterText">
       </el-input>
@@ -157,7 +158,6 @@
     created() {
       Util = this.$util;
       this.init();
-
     },
     components: {
       addDep,
@@ -199,8 +199,9 @@
         if (this.treeOptions.defaultProps) {
           this.defaultProps = Object.assign(this.defaultProps, this.treeOptions.defaultProps);
         }
-        if (this.currentNodeKey) {
-          this.currentNodeKey = this.currentKey;
+        if (this.currentKey) {
+          this.currentNodeKey = +this.currentKey;
+          this.expandedKeys = [+this.currentKey]
         }
 
         if (!this.defaults.asyn) {
@@ -222,8 +223,8 @@
             return;
           }
         }
-        if (this.currentNodeKey) {
-          this.currentNodeKey = this.currentKey
+        if (this.currentKey) {
+          this.currentNodeKey = +this.currentKey
         }
         defaults.treeData = responseData.data;
         if (this.operailityType == "remove") {
@@ -295,13 +296,23 @@
           nodeId = id;
         }
         //是否默认选中tree节点
+
+
         if (this.defaults.isInitSltedNode) {
-          this.sltedTreeData = this.recursionTree(defaults.treeData, nodeId)||defaults.treeData[0];
-          this.currentNodeKey = nodeId;
+          if(this.expandedKeys!=0){
+            nodeId = this.currentNodeKey;
+            this.sltedTreeData = this.recursionTree(defaults.treeData, nodeId)||defaults.treeData[0];
+          }else {
+            this.sltedTreeData = this.recursionTree(defaults.treeData, nodeId)||defaults.treeData[0];
+            this.currentNodeKey = nodeId;
+          }
         } else {
           this.sltedTreeData = {}
         }
-        this.expandedKeys = [nodeId];
+        if(this.expandedKeys==0){
+            this.expandedKeys = [nodeId];
+        }
+
         try {
           this.$emit("setCurrSltNodeId", nodeId, this.sltedTreeData);
         } catch (e) {}
@@ -343,6 +354,8 @@
       //更新目录树数据
       updataTree() {
         this.defaults.isInitSltedNode = true;
+        this.sltParentId = 0;
+        this.clearCurrSltedData();
         this.postParamToServer();
       },
 

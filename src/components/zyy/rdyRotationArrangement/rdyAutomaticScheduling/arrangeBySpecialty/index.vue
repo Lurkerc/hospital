@@ -16,15 +16,15 @@
     </el-steps>
     <!--- 第一步：选择基地 --->
     <div v-show="active==0" style="margin: 20px;">
-      <first @setFirstVal="setFirstVal"></first>
+      <first @setFirstVal="setFirstVal" :userType="userType"></first>
     </div>
     <!--- 第二步：选择人员 --->
     <div v-if="active==1" style="margin: 20px;">
-      <second @setSecondVal="setSecondVal" :initUser="initUser" :jdProclass="jdProclass"></second>
+      <second @setSecondVal="setSecondVal" :userType="userType" :initUser="initUser" :jdProclass="jdProclass"></second>
     </div>
     <!--- 第三步：选择培训标准 --->
     <div v-if="active==2" style="margin: 20px;">
-      <third @setThirdVal="setThirdVal" :initRtId="initRtId" :jdProclass="jdProclass"></third>
+      <third @setThirdVal="setThirdVal" :userType="userType" :initRtId="initRtId" :jdProclass="jdProclass"></third>
     </div>
     <!--- 第四步：设置轮转时间 --->
     <div v-if="active==3" style="margin: 10px 20px;">
@@ -103,7 +103,7 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
-    props:["isInit"],
+    props:["isInit","userType"],
     data() {
       return {
         //生成轮转表提交时post用的data
@@ -165,7 +165,7 @@
         rotaryDeptGroupTitle:{
           ajaxSuccess:'setRotaryViewData',
           ajaxParams:{
-            url: api.rotaryDeptUser.path,
+            url: api.rotaryDeptUser.path+this.userType,
             method:'post',
             jsonString:true,
           }
@@ -180,7 +180,7 @@
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
-            url: api.regrotaryDept.path,
+            url: api.regrotaryDept.path+this.userType,
             method:api.regrotaryDept.method,
             jsonString:true
           }
@@ -199,7 +199,7 @@
       setFirstVal(val){
         //console.log("setFirstVal",val);
         this.postData["jdName"] = val["jdName"];
-        this.jdProclass = val["jdProclass"];
+        this.jdProclass = val["jdProclass"]||'';
       },
 
 

@@ -63,8 +63,9 @@
         uploadFiles: [],
         //form表单bind数据
         formValidate: {
-          fileIds: '',
+          fileId: '',
           podId: this.operailityData.podId,
+          type: 'DEP', // DEP 小科 | BIG_DEP 出大科
         },
         //保存按钮基本信息
         loadBtn: {
@@ -93,22 +94,22 @@
       // 获取数据成功
       getDataSuccess(res) {
         this.viewData = res.data;
-        // let fileIds = [];
+        // let fileId = [];
         // this.uploadFiles.length = 0;
         // res.data.summaryFileList.map(item => {
-        //   fileIds.push(item.id);
+        //   fileId.push(item.id);
         //   this.uploadFiles.push({
         //     fileId: item.id,
         //     fileName: item.fileName,
         //     filePath: '/api/file/download/' + item.id
         //   })
         // });
-        // this.fileIds = fileIds.join(',')
+        // this.fileId = fileId.join(',')
       },
 
       // 上传附件
       setUploadFiles(ids) {
-        this.formValidate.fileIds = ids;
+        this.formValidate.fileId = ids;
       },
 
       // 取消
@@ -118,14 +119,19 @@
 
       // 提交
       listenSubEvent(isLoadingFun) {
-        if (!this.formValidate.fileIds) {
+        if (!this.formValidate.fileId) {
           this.errorMess('请上传技能操作视频')
           return
         }
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true);
         this.ajax({
-          ajaxSuccess: 'getDataSuccess',
+          type:'skill',
+          successTitle: '补考提交成功',
+          errorTitle: '补考提交失败',
+//          ajaxSuccess: 'getDataSuccess',
+          ajaxSuccess: 'ajaxSuccess',
+          ajaxError: 'ajaxError',
           ajaxParams: {
             url: api.skillMakeUpExamAdd.path,
             method: api.skillMakeUpExamAdd.method,

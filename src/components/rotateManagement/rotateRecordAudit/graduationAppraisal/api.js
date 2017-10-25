@@ -8,7 +8,7 @@ const api = {
     path: thisFile + '/get/', // {appraisalId}
     method: 'get'
   },
-  manageAdd: { // 实习单位添加意见 
+  manageAdd: { // 实习单位添加意见
     path: thisFile + '/manageAdd/', // {appraisalId}
     method: 'post'
   },
@@ -21,7 +21,7 @@ const api = {
     method: 'get'
   },
   uploadMark: { // 管理员导入成绩
-    path: thisFile + 'uploadMark',
+    path: thisFile + '/uploadMark',
     method: 'post'
   }
 };

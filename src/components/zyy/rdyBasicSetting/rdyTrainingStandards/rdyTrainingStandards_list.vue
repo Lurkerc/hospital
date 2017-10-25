@@ -142,25 +142,25 @@
     <!--新建-->
     <Modal
       close-on-click-modal="false"
-      width="1200"
+      width="1300"
       v-model="addModal"
       title="对话框标题"
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="addId"></modal-header>
-      <add v-if="addModal" @resize="resize" @cancel="cancel" @add="subCallback" :operaility-data="operailityData" :url="url"></add>
+      <add v-if="addModal" @resize="resize" @cancel="cancel" @add="subCallback" :rtModelType="rtModelType" :operaility-data="operailityData" :url="url"></add>
       <div slot="footer"></div>
     </Modal>
     <!--修改-->
     <Modal
       close-on-click-modal="false"
-      width="1200"
+      width="1300"
       v-model="editModal"
       title="对话框标题"
       class-name="vertical-center-modal"
       :loading="loading">
       <modal-header slot="header" :content="editId"></modal-header>
-      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData" :url="url"></edit>
+      <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :rtModelType="rtModelType" :operaility-data="operailityData" :url="url"></edit>
       <div slot="footer"></div>
     </Modal>
     <!--删除弹窗-->
@@ -207,7 +207,7 @@
     </Modal>
     <!--查看弹窗-->
     <Modal
-      width="1200"
+      width="1300"
       v-model="showModal"
       title="查看档案管理弹窗"
       class-name="vertical-center-modal"
@@ -244,6 +244,12 @@
   //当前组件引入全局的util
   let Util=null;
   export default{
+    props:{
+      rtModelType:{   //各个生源类型判断ZYY(住院医)、YJS(研究生)、JXS(进修生)
+        type: String,
+        default:'ZYY',
+      }
+    },
     data() {
       return {
         url:url,
@@ -260,7 +266,7 @@
           rtProclass: '',        //专业
           state: '',             //状态
 //          rtModelType: 'ZYY',       //模块   //住院医 ZYY 研究生 YJS  进修生 JXS
-          rtModelType: '',       //模块   //住院医 ZYY 研究生 YJS  进修生 JXS
+          rtModelType: this.rtModelType,       //模块   //住院医 ZYY 研究生 YJS  进修生 JXS
           sortby: '',//排序列
           order: ''     //升序、降序
         },

@@ -136,10 +136,10 @@
 
 
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
-        addMessTitle:{
+        editMessTitle:{
           type:'edit',
-          successTitle:'添加成功!',
-          errorTitle:'添加失败!',
+          successTitle:'修改成功!',
+          errorTitle:'修改失败!',
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
@@ -188,7 +188,7 @@
 
       /*
        * 设置专业
-       * @param val string || number  选中毕业学校的id
+       * @param val string || number  选中学校的id
        * */
       setSpecialtyOptionValue(val,id){
         //this.formValidate.schoolId = id;
@@ -286,10 +286,10 @@
         if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true)
-          this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
-          //console.log(this.addMessTitle.ajaxParams.data);
+          this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          //console.log(this.editMessTitle.ajaxParams.data);
           //return;
-          this.ajax(this.addMessTitle, isLoadingFun)
+          this.ajax(this.editMessTitle, isLoadingFun)
         }
       },
 

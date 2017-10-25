@@ -62,8 +62,8 @@
           </el-input>
         </el-col>
         <el-col :span="10" :offset="2">
-          <el-button v-popover:popover>记录</el-button>
-          <el-button>收藏</el-button>
+          <!--<el-button v-popover:popover>记录</el-button>-->
+          <!--<el-button>收藏</el-button>-->
         </el-col>
       </el-row>
 

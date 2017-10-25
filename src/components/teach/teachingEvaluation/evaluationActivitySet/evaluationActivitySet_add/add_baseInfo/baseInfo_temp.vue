@@ -23,61 +23,63 @@
 
     </el-row>
     <div
-      id="myTable"
-      ref="myTable">
-      <el-radio-group style="display: block" v-model="tempRadio" @change="radioChange">
-        <el-table
-          :height="400"
-          :data="tableData"
-          border
-          tooltip-effect="dark"
-          style="width: 100%"
-          @selection-change="handleSelectionChange">
+    id="myTable"
+    ref="myTable">
+    <el-radio-group style="display: block" v-model="tempRadio" @change="radioChange">
+      <el-table
+        :height="400"
+        :data="tableData"
+        border
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange">
 
-            <el-table-column
-              align="center"
-              width="65">
-              <template scope="scope">
-                <el-radio   :label="scope.row.id" > {{' ' }} </el-radio>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="序号"
-              type="index"
-              align="center"
-              width="65">
-            </el-table-column>
-            <el-table-column
-              label="操作"
-              width="160">
-              <template scope="scope">
-                <el-button
-                  size="small"
-                  @click="show(scope.row)">预-览</el-button>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="名称"
-              prop="name">
-            </el-table-column>
-            <el-table-column
-              prop="typeName"
-              label="类型 "
-              show-overflow-tooltip>
-            </el-table-column>
-            <el-table-column
-              prop="score"
-              label="总分"
-              width="120">
-            </el-table-column>
-        </el-table>
-      </el-radio-group>
+        <el-table-column
+          align="center"
+          width="65">
+          <template scope="scope">
+            <el-radio   :label="scope.row.id" > {{' ' }} </el-radio>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="序号"
+          type="index"
+          align="center"
+          width="65">
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="80">
+          <template scope="scope">
+            <el-button
+              size="small"
+              @click="show(scope.row)">预-览</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="名称"
+          prop="name">
+        </el-table-column>
+        <el-table-column
+          prop="typeName"
+          label="类型 "
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="score"
+          label="总分"
+          width="120">
+          <template scope="scope">
+            {{scope.row.score/100}}
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-radio-group>
 
-    </div>
+  </div>
     </br>
      <div style="height:30px;">
       <div style="float: right; ">
-
         <el-pagination
           @size-change="changePageSize"
           @current-change="changePage"
@@ -91,7 +93,7 @@
     </div>
 
     <el-row >
-      <el-col :span="20"  :offset="3">
+      <el-col :span="10"  :offset="11">
         <el-button  @click="baseInfo">确定</el-button>
         <!--<el-button  @click="$emit('lost') ">上一步</el-button>-->
       </el-col>
@@ -109,13 +111,27 @@
       <!--<show v-if="showModal" :url="url" :operaility-data="operailityData"></show>-->
       <!--<div slot="footer"></div>-->
     <!--</Modal>-->
-
+    <!--查看右侧评分模板弹窗-->
+    <Modal
+      :mask-closable="false"
+      v-model="showModal"
+      height="200"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :width="1000">
+      <!--<div slot="header"> -->
+      <!--</div>-->
+      <modal-header slot="header" :content="viewId"></modal-header>
+      <show v-if="showModal" :unShowStyle="true" @cancel="cancel" :url="url" :operaility-data="operailityData"   @add="subCallback" ></show>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 <style>
 </style>
 <script>
   /*当前组件必要引入*/
+  import show from '../../../evaluationManagement/evaluationManagement_view.vue'
   //引入--新建教学活动--组件
   let Util=null;
   export default {
@@ -163,8 +179,6 @@
     created(){
       this.init();
       this.setTableData()
-    },
-    components:{
     },
     methods:{
       //初始化请求列表数据
@@ -324,6 +338,9 @@
     },
     mounted(){
     },
+    components:{
+      show
+    }
   };
 </script>
 

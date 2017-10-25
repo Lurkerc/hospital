@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import rules from '../config/formRules';
+import  allUserRolu from '../config/userRolu.js';
 
 const state = {
   token: false,
@@ -23,7 +24,7 @@ const state = {
 };
 
 const mutations = {
-  //todo 暂时未启用  用于左侧菜单在状态中的存储
+
   setMenusStatus(state, setObj) {
     let first = state["leftMainMenus"]["first"];
     let second = state["leftMainMenus"]["second"];
@@ -74,7 +75,7 @@ const mutations = {
         url: '/user/getUserInfo'
       }
     };
-    //todo 因为接口还未写完，先用假数据
+
     $vue.ajax(options);
   },
 
@@ -129,6 +130,14 @@ const getters = {
   },
   getFullLoading: state => {
     return state.isLoading;
+  },
+  getUserRolu:state => {
+    let roleList = state.userInfo['roleList'] || [];
+    let tag = allUserRolu.PTYH; // 默认普通用户
+    if(roleList.length){
+      tag = allUserRolu[roleList[0].identify.toLocaleUpperCase()] || tag; // 如果在用户角色代码中没有的则规划为普通用户
+    }
+    return tag;
   },
 }
 

@@ -896,13 +896,15 @@ $boderColor:#dfe6ec;
 
 
 //选择框的宽度
-.select-width{
-  width:200px;
-}
+// 影响全局样式，使用时请加模块前缀
+// .select-width{
+//   width:200px;
+// }
 //日期选择框的宽度
-.date-select-width{
-  width:193px;
-}
+// 影响全局样式，使用时请加模块前缀
+// .date-select-width{
+//   width:193px;
+// }
 
 
 //批注
@@ -939,7 +941,7 @@ $boderColor:#dfe6ec;
   height: 150px;
   position: absolute;
   top: 6px;
-  right: 6px;
+  right: 40px;
 }
 
 //科室对照表
@@ -947,6 +949,14 @@ $boderColor:#dfe6ec;
   border-bottom: 1px solid #dfe6ec;
   height: 45px;
   line-height: 45px;
+}
+.div-border1{
+  padding: 0 0 10px 0;
+  border-bottom: 1px solid #dfe6ec;
+}
+.div-noborder2{
+  border: none;
+  padding: 10px 0 0 0;
 }
 .div-noborder{
   border: none;
@@ -1003,4 +1013,9 @@ ul.sltDepUl li.sltSubDep{
   .el-upload-list__item {
     width:125px;
   }
+}
+
+//教学计划文件管理按钮
+.my-tooltip-button .el-button{
+  margin-left: 0;
 }

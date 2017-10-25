@@ -36,12 +36,12 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="时间段 :" prop="name7">
-            {{data.recordTimes}}
+            {{data.activityTimeInfo}}
             <!--<span v-for="item in data.recordTimes" :key="item" >{{item+'  '}}</span>-->
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+  <!--    <el-row>
         <el-col :span="12">
           <el-form-item label="病例 :" prop="whetherNeedCases">
             {{data.whetherNeedCases=='YES'?'需要':data.whetherNeedCases=='NO'?'不需要':data.whetherNeedCases}}
@@ -52,7 +52,7 @@
             {{data.casesName}}
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row>-->
       <el-row>
         <el-col :span="24">
           <el-form-item label="活动内容 : " prop="name8">
@@ -62,6 +62,7 @@
           </el-form-item>
         </el-col>
       </el-row>
+
       <el-row>
         <el-col :span="24">
           <el-form-item label="参加人 :" prop="name9">
@@ -69,7 +70,20 @@
           </el-form-item>
         </el-col>
       </el-row>
-
+      <el-row>
+        <el-col :span="24" >
+          <el-form-item label="课件资料:">
+            <upload-file :show="true" :uploadFiles="data.fileList" ></upload-file>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24" >
+          <el-form-item label="相关证明材料:">
+            <upload-file :show="true" :uploadFiles="data.activityFileList" ></upload-file>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <!--选择人员-->
 

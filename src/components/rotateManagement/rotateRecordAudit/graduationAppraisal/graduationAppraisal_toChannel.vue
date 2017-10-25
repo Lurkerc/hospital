@@ -20,7 +20,7 @@
       <el-col :span="16">
         <p>上传填好的成绩表 ( 仅支持.xls/.xlsx格式)</p>
         </br>
-        <xlsx @on-select-file="handleSelectedFile" :row="2">上传</xlsx>
+        <xlsx @on-select-file="handleSelectedFile" :row="1">上传</xlsx>
       </el-col>
     </el-row>
     <el-row class="but-space">
@@ -47,7 +47,7 @@
 </template>
 <script>
   import toChannel from '../../../common/toChannel_base.vue'
-  //当前组件引入全局的util 
+  //当前组件引入全局的util
   let Util = null;
   export default {
     //props接收父组件传递过来的数据
@@ -67,7 +67,7 @@
         },
         convertedData: {},
         format: {
-          "身份证": "idCard",
+          "身份证号": "idCard",
           "分数": "mark",
         },
         date: [],
@@ -98,7 +98,7 @@
       init() {
         //默认请求加载数据
         let http = this.$store.getters.getEnvPath.http;
-        this.http = http + 'static/template/导入设备模板.xls';
+        this.http = http + 'static/template/实习生结业成绩模板.xls';
       },
       /*
        * 点击提交按钮 监听是否提交数据

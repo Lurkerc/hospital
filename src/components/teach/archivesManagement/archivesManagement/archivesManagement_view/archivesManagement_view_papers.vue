@@ -4,6 +4,9 @@
 <template>
 
   <div >
+    <el-col :span="24" class="lose-margin2" style="text-align: center">
+      <span class="table-headline ">证件复印件</span>
+    </el-col >
     <el-row >
       <el-col :span="22" :offset="1" class="lose-margin2">
         <fieldset class="layui-elem-field layui-field-title">
@@ -35,7 +38,6 @@
             <div style="text-align: center" v-if="photoData['2'].length==0">还没有上传复印件(图片)</div>
           </div>
         </fieldset>
-        </fieldset>
       </el-col >
     </el-row >
     <el-row >
@@ -51,7 +53,6 @@
             </ul>
             <div style="text-align: center" v-if="photoData['3'].length==0">还没有上传复印件(图片)</div>
           </div>
-        </fieldset>
         </fieldset>
       </el-col >
     </el-row >
@@ -69,7 +70,6 @@
             <div style="text-align: center" v-if="photoData['4'].length==0">还没有上传复印件(图片)</div>
           </div>
         </fieldset>
-        </fieldset>
       </el-col >
     </el-row >
     <el-row >
@@ -85,7 +85,6 @@
             </ul>
             <div style="text-align: center" v-if="photoData['5'].length==0">还没有上传复印件(图片)</div>
           </div>
-        </fieldset>
         </fieldset>
       </el-col >
     </el-row >

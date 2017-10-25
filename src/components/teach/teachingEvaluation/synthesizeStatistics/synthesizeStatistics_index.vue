@@ -8,11 +8,11 @@
         <el-button type="danger" @click="remove">删除策略</el-button>
       </el-col>
       <el-col :span="18" align="right">
-        <el-form :inline="true">
-          <el-form-item label="策略名称：">
-            <el-input v-model="searchObj.title" :maxlength="20"></el-input>
+        <el-form ref="formValidate" :model="searchObj"  :rules="singleTableAnalysisList"  :inline="true">
+          <el-form-item label="策略名称：" prop="title">
+            <el-input v-model="searchObj.title" :maxlength="51"></el-input>
           </el-form-item>
-          <el-form-item label="分析对象：">
+          <el-form-item label="分析对象：" prop="objType">
             <el-select v-model="searchObj.objType" placeholder="请选择">
               <el-option v-for="item in objTypeOption" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
@@ -77,7 +77,9 @@
 </template>
 
 <script>
+
   let Util;
+  import {singleTableAnalysisList} from '../../rules'
   import api from './api';
   import objTypeOption from './objTypeOption'; // 分析对象选择对象
   import add from './synthesizeStatistics_add'; // 增加
@@ -86,6 +88,7 @@
   export default {
     data() {
       return {
+        singleTableAnalysisList,
         api,
         objTypeOption,
         /* 搜索 */

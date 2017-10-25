@@ -4,7 +4,7 @@
     <el-form label-width="120px" :model="formValidate" ref="formValidate" :rules="rules">
       <el-row>
         <el-col>
-          <el-form-item label="项目名称：" prop="name">
+          <el-form-item label="名称：" prop="name">
             <el-input v-model="formValidate.name" style="width:400px;"></el-input>
           </el-form-item>
         </el-col>
@@ -88,7 +88,7 @@
         </el-col>
 
         <div style="clear:both;" class="newCalendar" v-if="formValidate.timeModel === 'SPECIFIC'">
-          <full-calendar class="test-fc" :tpl="calendarSet.tpl" :itemLimit="calendarSet.itemLimit" :events="calendarSet.fcEvents" first-day='1'
+          <full-calendar ref="newCalendar" class="test-fc" :tpl="calendarSet.tpl" :itemLimit="calendarSet.itemLimit" :events="calendarSet.fcEvents" first-day='1'
             locale="zh-cn" @changeMonth="changeMonth" @eventClick="eventClick" @dayClick="dayClick" @moreClick="moreClick"
             @goPrev="goPrev" @goNext="goNext">
             <template slot="fc-header-left" scope="p">
@@ -364,18 +364,10 @@
       },
       /*********************************************************** 周历 ***********************************************/
       goPrev() {
-        try {
-          this.$children[0].$children[0].$children[7].goPrev()
-        } catch (error) {
-          this.$children[0].$children[0].$children[8].goPrev()
-        }
+        this.$refs['newCalendar'].goPrev()
       },
       goNext() {
-        try {
-          this.$children[0].$children[0].$children[7].goNext()
-        } catch (error) {
-          this.$children[0].$children[0].$children[8].goNext()
-        }
+        this.$refs['newCalendar'].goNext()
       },
       changeMonth(start, end, current, foramatData) {
         this.monthTitle = foramatData(current, 'MMMM YYYY');

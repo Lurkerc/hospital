@@ -17,7 +17,7 @@
 <script>
   let Util=null;
   export default {
-    props:["selectOptions",'isClear'],
+    props:["selectOptions",'isClear','selVal'],
     data() {
       return {
         optionData: [],
@@ -88,7 +88,10 @@
     watch:{
       isClear(){
         this.value = [];
-      }
+      },
+      selVal(val){
+        this.value = val;
+      },
     }
   }
 </script>

@@ -1,6 +1,11 @@
 import _ from 'lodash';
 import baseRules from '../../formRules/base'; // 公共规则
+//表单验证
+let form ={
+  schoolName:baseRules.illegalChar(),
+  specialty:baseRules.illegalChar(),
 
+};
 /**
  * 本科生 - 课程管理 - 课程安排
  */
@@ -26,9 +31,11 @@ let usersManagement = {
  * 实习生 - 报名招录 - 报名审核
  */
 let internAudit = {
-  chargeStandard: baseRules.numberMust, // 收费标准 - 必须为数字
-  sxBeginTime: baseRules.isDate, // 实习开始时间 - 必须为日期时间
-  sxEndTime: baseRules.isDate, // 实习结束时间 - 必须为日期时间
+  // chargeStandard: baseRules.numberMust, // 收费标准 - 必须为数字
+  // sxBeginTime: baseRules.isDate, // 实习开始时间 - 必须为日期时间
+  // sxEndTime: baseRules.isDate, // 实习结束时间 - 必须为日期时间
+  // zsCost:[baseRules.requiredNoEvent,baseRules.greaterThanZero2,],
+  // deposit:[baseRules.requiredNoEvent,baseRules.greaterThanZero2,],
 };
 
 
@@ -36,7 +43,14 @@ let internAudit = {
  * 收费标准
  */
 let chargingStandard = {
-  configValue: [baseRules.required, baseRules.numberMust], // 实习费 - 必填\数字
+  configValue: [baseRules.required, baseRules.numberMust,baseRules.inputLen(0, 6)], // 实习费 - 必填\数字
+};
+
+/**
+ * 出科设置
+ */
+let givenSet = {
+  configValue: [baseRules.required, baseRules.numberMust,baseRules.inputLen(0, 6)], // 实习费 - 必填\数字
 };
 
 /**
@@ -48,8 +62,9 @@ let reqDepVal = {
   "disType": baseRules.required,
   "disTitle": baseRules.required,
   "disNum": baseRules.numberMust,
-  specialty: [baseRules.required],
+  "specialty": [baseRules.required],
   "ts": baseRules.numberMust,
+  "deMasterDegree": baseRules.required,
 };
 
 /**
@@ -87,6 +102,10 @@ let internOutline = {
   "rotaryUserNum": baseRules.greaterThanZero,
 };
 
+//发送短信
+let shortNote = {
+  content:[baseRules.requiredNoEvent,baseRules.inputLen(0,50),baseRules.illegalChar()],  //短信内容
+}
 
 
 export {
@@ -96,5 +115,8 @@ export {
   chargingStandard,
   reqDepVal,
   internOutline,
-  pauseRotate
+  pauseRotate,
+  givenSet,
+  form,
+  shortNote
 };

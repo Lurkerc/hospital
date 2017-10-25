@@ -7,7 +7,6 @@
         <load-btn @operateCallback="operateCallback" :btnData="loadBtn"></load-btn>
         <el-button class="but-col" @click="cancel" type="danger">取消</el-button>
       </el-col>
-      </el-col>
     </el-row>
   </div>
 </template>
@@ -36,6 +35,12 @@ let todoType = {
   "cancelIssued": "取消下发",
   "recover":"恢复",
   "pause":"暂停",
+  "planAdmit":"拟录取",
+    "noAdmit":"不拟录取",
+  "giveUp":"放弃录取",
+  "noEnroll":"不录取",
+  "enroll":"正式录取",
+  "affirm":"确认",
 };
 export default {
   props: ['operailityData', 'operateUrl', 'type', 'messTitle', 'methods', 'operateData'],

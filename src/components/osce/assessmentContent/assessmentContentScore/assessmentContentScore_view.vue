@@ -15,6 +15,8 @@
           </el-table-column>
           <el-table-column label="评分标准及要求" prop="content" show-overflow-tooltip></el-table-column>
           <el-table-column label="描述" prop="remark" show-overflow-tooltip></el-table-column>
+          <el-table-column v-if="formValidate.scoreType == 'GRADE'" label="评分标准描述" prop="classifyDescribe" show-overflow-tooltip></el-table-column>
+          <el-table-column v-if="formValidate.scoreType == 'GRADE'" label="分值展示" prop="classifyScore" show-overflow-tooltip></el-table-column>
           <el-table-column label="标准分" width="80px" prop="score" show-overflow-tooltip></el-table-column>
         </el-table>
       </el-form>
@@ -79,6 +81,11 @@
             }, 0);
           }
         });
+        for(let a = 0;a < param.data.length; a++){
+          if(param.data[a].isPoints == '1'){
+            sums[3] = sums[3] - param.data[a].score
+          }
+        };
         this.formValidate.totalScore = sums[3];
         return sums;
       },

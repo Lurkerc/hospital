@@ -10,41 +10,72 @@
     :on-progress="uploadProgress"
     :headers="headers"
     :on-error="uploadError">
-    <img v-if="imageUrl!=''" :src="imageUrl" class="avatar">
-    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+    <user-avatar v-if="imageUrl" :cursor="true" :src="imageUrl"></user-avatar>
+    <template v-else>
+      <p class="avatar-uploader-icon">
+        <i class="el-icon-plus"></i>
+      </p>
+      <div class="apTips" v-if="avatarTips">
+        蓝底1寸照<br>
+        (413 * 295像素)
+      </div>
+    </template>
   </el-upload>
 </template>
 
-<style>
-  .avatar-uploader .el-upload {
+<style lang="scss">
+  .avatar-uploader{
+    width: 100%;
+    height: 100%;
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    .el-upload.el-upload--text{
+      display: block;
+      height: 100%;
+    }
+    .apTips{
+      width: 100%;
+      line-height: 20px;
+      text-align: center;
+      position: absolute;
+      left: 0;
+      bottom: 20px;
+    }
   }
-  .avatar-uploader .el-upload:hover {
+  .avatar-uploader:hover {
     border-color: #20a0ff;
   }
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 165px;
-    height: 175px;
-    line-height: 175px;
     text-align: center;
+    i{
+      margin-top: 46%;
+    }
+  }
+  .uploadBookLogo {
+    .avatar-uploader-icon i{
+      margin-top: 0;
+    }
+  }
+  .avatarBox{
+    width: 100%;
+    height: 100%;
   }
   .avatar {
-    width: 165px;
-    height: 175px;
+    width:100%;
     display: block;
   }
 </style>
 
 <script>
   import config from '../../config/config.js';
+  import  userAvatar from './userAvatar.vue'; // 用户头像
   export default {
-    props:["actionUrl","imgFile"],
+    props:["actionUrl","imgFile",'avatarTips'],
     data() {
       return {
         imageUrl: '',
@@ -79,8 +110,12 @@
        * 上传成功后处理
        * */
       handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
         this.setUploadHeaderLoading(false);
+        if(res.status && res.status.code != 0){
+          this.errorMess(res.status.msg);
+          return
+        }
+        this.imageUrl = URL.createObjectURL(file.raw);
         this.$emit("upladSuccess",res.data,this.imageUrl);
       },
 
@@ -123,9 +158,8 @@
         this.$message.error('上传失败!');
         this.setUploadHeaderLoading(false);
       },
-      changeHeader(file, fileList){
 
-      },
+      changeHeader(file, fileList){},
 
       /*
        * 设置是否显示上传头像loading
@@ -134,6 +168,9 @@
       setUploadHeaderLoading(flag){
         this.loading = flag;
       }
-    }
+    },
+    components:{
+      userAvatar,
+    },
   }
 </script>

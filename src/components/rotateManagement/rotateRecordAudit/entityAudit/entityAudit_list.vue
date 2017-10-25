@@ -23,16 +23,16 @@
               @change="handleStartTime"
             >
             </el-date-picker>
-            到
-            <el-date-picker
-              v-model="formValidate.createEndTime"
-              align="right"
-              type="date"
-              :editable="false"
-              placeholder="选择日期"
-              :picker-options="pickerOptions1"
-              @change="handleEndTime">
-            </el-date-picker>
+            <!--到-->
+            <!--<el-date-picker-->
+              <!--v-model="formValidate.createEndTime"-->
+              <!--align="right"-->
+              <!--type="date"-->
+              <!--:editable="false"-->
+              <!--placeholder="选择日期"-->
+              <!--:picker-options="pickerOptions1"-->
+              <!--@change="handleEndTime">-->
+            <!--</el-date-picker>-->
           </el-form-item>
           <!--UE上未体现-->
         <!--  <el-form-item  prop="title" label="科室:">

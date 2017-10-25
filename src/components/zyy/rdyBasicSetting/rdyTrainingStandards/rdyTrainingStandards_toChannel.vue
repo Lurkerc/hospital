@@ -43,7 +43,7 @@
       title="对话框标题"
       class-name="vertical-center-modal">
       <modal-header slot="header" :content="toChannelId" ></modal-header>
-      <to-channel v-if="toChannelModal" :id="id" :treeRoad="treeRoad" @cancel="closeChannel"  :url="url.uploadExcel.path"  @success="subHandelEvent" :data="convertedData" :format="format"></to-channel>
+      <to-channel v-if="toChannelModal" :headerData="headerData" :id="id" :treeRoad="treeRoad" @cancel="closeChannel"  :url="url.uploadExcel.path"  @success="subHandelEvent" :data="convertedData" :format="format"></to-channel>
       <div slot="footer"></div>
     </Modal>
   </div>
@@ -59,7 +59,7 @@
       return{
         active:0,
         //保存按钮基本信息
-
+        headerData:["培训标准名称", "是否住院医师", "细则类型",  "基地名称","学历", "专业", "培训方法", "培训标准简介", "培训目标", "教学、科研能力培训","轮转科室", "轮转目的", "培训周期", "是否必须轮转", "任选其几", "任选分组号", "阶段号", "阶段名称", "考核指标", "指标类型", "显示类型", "要求级别", "分类", "掌握程度", "3年要求数量", "2年要求数量", "1年要求数量", ],
 
         //导入条件
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
@@ -69,9 +69,11 @@
           "培训标准名称":"rtName",
           "是否住院医师":"rtModelType",
           "细则类型":"rtrulesType",
+          "基地名称":"jdName",
           "学历":"rtSchlength",
           "专业":"rtProclass",
           "培训方法":"rtMethod",
+          "掌握程度":"deMasterDegree",
 
 
           "培训标准简介":"rtIntroduce",

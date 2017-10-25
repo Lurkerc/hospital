@@ -1,20 +1,14 @@
 <!-- 住院医 - 报名招录 - 人员管理 -->
 <template>
-  <layout-tree class="defined-t">
+  <layout-tree>
     <left-tree slot="left" @setCurrSltNodeId="setTreeDepId" @tree-click="treeClick" @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
     <zyy-content slot="right" :deptId="deptId" :fromWhereTree="fromWhereTree"></zyy-content>
   </layout-tree>
 </template>
-<style>
-  .defined-t .el-select .el-input {
-    width: 158px;
-  }
-
-</style>
 <script>
   /*当前组件必要引入*/
   import layoutTree from "../../../common/layoutTree";
-  import leftTree from "../../../intern/recruitStudent/usersManagement/tree/leftTree";
+  import leftTree from "../../../common/leftTree.vue";
   // 住院医部门人员
   import zyyContent from "./rdyPersonnelManagement_content";
   export default {

@@ -12,34 +12,52 @@
           node-key="id"
           ref="tree"
           :current-node-key="treeOperailityData.id"
+          :render-content="renderContent"
           @node-click="nodeClick"
           :props="defaultProps">
         </el-tree>
       </div>
       <div ref="content" slot="right">
-        <el-row >
-          <el-col :span="20"  :offset="1">
-            <el-form ref="formValidate" inline label-width="100px" class="demo-ruleForm">
-              <el-form-item  prop="title">
-                <el-input   v-model="formValidate.name" placeholder="输入姓名搜索">
+        <el-form  ref="formValidate" :model="formValidate"  :rules="evaluationManagementList" inline label-width="100px">
+          <el-row style="margin-bottom:0">
+            <!--列表操作按钮-->
+            <br>
+            <el-col :span="7" :offset="1">
+              <el-button  class="but-col" @click="add" type="primary">添加</el-button>
+              <el-button  class="but-col" @click="remove" type="primary">删除</el-button>
+              <!--todo 目前没有接口 8/31-->
+              <!--<el-button   type="primary">导出word</el-button>-->
+              <!--<el-button  type="primary">导入</el-button>-->
+            </el-col>
+            <!--搜索项-->
+            <el-col :span="15"  align="right">
+              <el-form-item   prop="name">
+                <el-input   v-model="formValidate.name" placeholder="输入名称搜索">
+                  <el-button @click="searchEvent"  slot="append"  icon="search"></el-button>
                 </el-input>
               </el-form-item>
-              <!--<el-form-item  prop="title">-->
-                <!--<el-input   v-model="formValidate.userName" placeholder="输入类型搜索">-->
+              <!--<el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>-->
+            </el-col>
+          </el-row>
+          <br>
+          <!--高级搜索项-->
+          <div v-if="searchMore" ref="searchMore">
+            <el-form-item label="生源类型" prop="userType" >
+              <el-select filterable  v-model="formValidate.userType" placeholder="请选择">
+                <el-option label="全部" value=""></el-option>
+                <el-option label="实习生" value="SXS"></el-option>
+                <el-option label="研究生" value="YJS"></el-option>
+                <el-option label="住院医" value="ZYY"></el-option>
+                <el-option label="进修生" value="JXS"></el-option>
+              </el-select>
+            </el-form-item>
 
-                <!--</el-input>-->
-              <!--</el-form-item>-->
-              <el-button @click="searchEvent"   icon="search"></el-button>
-            </el-form>
-          </el-col>
+            <el-button type="info" @click="searchEvent">查询</el-button>
 
-        </el-row>
-        <div class="add-remove">
-          <el-button  class="but-col" @click="add" type="primary">添加</el-button>
-          <el-button  class="but-col" @click="remove" type="primary">删除</el-button>
-          <el-button   type="primary">导出word</el-button>
-          <el-button  type="primary">导入</el-button>
-        </div>
+          </div>
+        </el-form>
+
+
         <div
           id="myTable"
           ref="myTable">
@@ -63,14 +81,11 @@
             </el-table-column>
             <el-table-column
               label="操作"
-              width="160">
+              width="200">
               <template scope="scope">
-                <el-button
-                  size="small"
-                  @click="show(scope.row)">查看</el-button>
-                <el-button
-                  size="small"
-                  @click="edit(scope.row)">修改</el-button>
+                <el-button size="small"  @click="show(scope.row)">查看</el-button>
+                <el-button size="small"  @click="edit(scope.row)">修改</el-button>
+                <el-button size="small"  @click="copy(scope.row)">复制</el-button>
               </template>
             </el-table-column>
             <el-table-column
@@ -84,8 +99,10 @@
             </el-table-column>
             <el-table-column
               prop="score"
-              label="总分"
-              >
+              label="总分">
+              <template scope="scope">
+                {{scope.row.score/100}}
+              </template>
             </el-table-column>
 
           </el-table>
@@ -180,6 +197,20 @@
         <edit v-if="editModal"  @cancel="cancel" :url="url" :operaility-data="operailityData"   @edit="subCallback" ></edit>
         <div slot="footer"></div>
       </Modal>
+      <!--复制右侧评分模板弹窗-->
+      <Modal
+        :mask-closable="false"
+        v-model="copyModal"
+        height="200"
+        title="对话框标题"
+        class-name="vertical-center-modal"
+        :width="1000">
+        <!--<div slot="header"> -->
+        <!--</div>-->
+        <modal-header slot="header" :content="copyId"></modal-header>
+        <copy v-if="copyModal"  @cancel="cancel" :url="url" :operaility-data="operailityData"   @copy="subCallback" ></copy>
+        <div slot="footer"></div>
+      </Modal>
       <!--查看右侧评分模板弹窗-->
       <Modal
         :mask-closable="false"
@@ -211,6 +242,7 @@
   </div>
 </template>
 <script>
+  import {evaluationManagementList} from '../../rules'
   /*当前组件必要引入*/
   import url from '../app'
   /*引入 --新建类型*/
@@ -221,22 +253,23 @@
 
   /*引入 --新建*/
   import add from './evaluationManagement_add.vue'
+  /*引入 --复制*/
+  import copy from './evaluationManagement_copy.vue'
   /*引入 --修改*/
   import edit from './evaluationManagement_edit.vue'
   /*引入 --查看*/
   import show from './evaluationManagement_view.vue'
 
 
-
-
   let Util=null;
   export default {
     data() {
       return {
+        evaluationManagementList,
         treeData: [],
         defaultProps: {
           children: 'children',
-          label: 'name'
+          label: 'name',
         },
         formValidate:{
           typeId:'',
@@ -247,6 +280,7 @@
       //查询项
         url:url,
         treeOperailityData:{},
+        searchMore:false, //评价
         publishModal:false, //评价
         /*--按钮button--*/
         publishId:{id:'publishId',title:'发布'},
@@ -261,6 +295,7 @@
 
         addTypeModal:false,
         editTypeModal:false,
+        copyModal:false,
         removeTypeModal:false,
         /*--按钮button--*/
         addId:{id:'add',title:'添加'},
@@ -270,6 +305,7 @@
         editId:{id:'edit',title:'修改'},
         viewId:{id:'view',title:'查看'},
         removeId:{id:'remove',title:'删除'},
+        copyId:{id:'copyId',title:'复制'},
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         listMessTitle: {
           ajaxSuccess: 'updateList',
@@ -310,8 +346,11 @@
       //获取tree的数据
       treeList(res){
           let data = res.data;
-          if(!data) return;
-
+          if(!data||data==0){
+            this.treeOperailityData ={};
+            this.treeData=[]
+            return;
+          }
           this.treeData = data;
         this.treeOperailityData = data[0];
         this.setTableData();
@@ -352,7 +391,7 @@
           if (valid) {
             flag =true;
           } else {
-            this.$Message.error('表单验证失败!');
+            this.$Message.error('输入有误，请修改');
           }
         })
         return flag
@@ -401,6 +440,10 @@
 
       /*--点击--添加--按钮--*/
       add(){
+          if(this.treeOperailityData.id==null){
+              this.showMess('请选择评分表类型');
+              return;
+          }
         this.openModel('add');
       },
       /*
@@ -411,6 +454,15 @@
         this.operailityData = data;
         this.operailityData.treeName = this.treeOperailityData.name;
         this.openModel('edit')
+      },
+      /*
+       * 点击--修改角色--按钮
+       * @param index string|number  当前行索引
+       * */
+      copy(data){
+        this.operailityData = data;
+        this.operailityData.treeName = this.treeOperailityData.name;
+        this.openModel('copy')
       },
       /*--点击--查看--按钮--*/
       show(data){
@@ -427,6 +479,10 @@
       },
       /*--点击--删除--按钮--*/
       remove(){
+        if(this.treeOperailityData.type){
+          this.errorMess('系统内置的评价表不能删除');
+          return;
+        }
         if(!this.isSelected()) return;
         this.operailityData = this.multipleSelection;
         this.openModel('remove') ;
@@ -490,9 +546,17 @@
           this.openModel('addType')
       },
       typeEdit(){
+        if(this.treeOperailityData.id==null){
+          this.showMess('请选择评分表类型');
+          return;
+        }
           this.openModel('editType')
       },
       typeRemove(){
+          if(this.treeOperailityData.type){
+              this.errorMess('系统内置的评价表不能删除');
+              return;
+          }
           this.openModel('removeType')
       },
 
@@ -543,6 +607,26 @@
 
       },
 
+      //渲染数节点
+      renderContent(h, { node, data, store }){
+        let icon;
+        if(data.type){
+          icon  =  <span style="color:red ">{node.label}</span>
+        }else {
+          icon  =  <span >{node.label}</span>
+        }
+        return (
+          icon
+       );
+     },
+      // 高级搜索按钮展开搜索表单并重新计算表格高度
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          this.setTableDynHeight()
+        })
+      },
+
 
     },
     mounted(){
@@ -556,7 +640,7 @@
       })
     },
     components:{
-      addType,editType,add,edit,show
+      addType,editType,add,edit,show,copy
     }
   };
 </script>

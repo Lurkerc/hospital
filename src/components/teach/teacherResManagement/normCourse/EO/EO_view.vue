@@ -39,11 +39,11 @@
       // 初始化
       init() {
         if (!this.showInfo) {
-          if (this.isCourse) {
+//          if (this.isCourse) {
             this.getUrl = api.getCT.path
-          } else {
-            this.getUrl = api.get.path
-          }
+//          } else {
+//            this.getUrl = api.get.path
+//          }
         }
       },
       // 视图切换

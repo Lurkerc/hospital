@@ -3,45 +3,51 @@
   <div ref="affairs">
     <el-form :inline="true">
       <el-row>
-        <el-col :span="10">
+        <el-col :span="13">
           <el-button type="primary" @click="add">新建事项</el-button>
           <el-button type="success" @click="edit">修改事项</el-button>
           <el-button type="danger" @click="remove">删除事项</el-button>
+          <el-button type="info" @click="toChannel">导入事项</el-button>
+          <el-button type="info" @click="derive">导出事项</el-button>
           <!-- <el-button type="info">导出Excel</el-button> -->
         </el-col>
-        <el-col :span="14" align="right">
-          <!-- <el-input :maxlength="20" placeholder="请输入姓名" icon="search" v-model="searchObj.userName" :on-icon-click="search" style="width:200px;"></el-input> -->
-          <el-form-item label="培训/考核对象：">
-            <el-select placeholder="请选择" v-model="searchObj.trainingObject" clearable style="width:200px;">
-              <el-option v-for="item in userOption" :key="item.value" :label="item.value" :value="item.label"></el-option>
-            </el-select>
+        <el-col :span="11" align="right">
+          <el-form-item label="事项名称：">
+            <el-input v-model="searchObj.affairName" style="width: 150px"></el-input>
             <el-button type="info" @click="search">搜索</el-button>
             <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
           </el-form-item>
         </el-col>
         <div v-show="searchMore" style="clear:both;" align="right" ref="searchMore">
-          <date-group :dateGroup="{text:'',startDate:searchObj.registerStartDate,endDate:searchObj.registerEndDate}" style="display:inline-block;">
-            <el-form-item label="日期：">
-              <el-date-picker name="start" v-model="searchObj.registerStartDate" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0" @change="handleStartTime"></el-date-picker>
+          <date-group :dateGroup="{text:'',startDate:searchObj.startTimeBegin,endDate:searchObj.startTimeEnd}" style="display:inline-block;">
+            <el-form-item label="接待开始时间：">
+              <el-date-picker name="start" v-model="searchObj.startTimeBegin" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0" @change="handleStartTime"></el-date-picker>
             </el-form-item>
             <el-form-item label="-">
-              <el-date-picker name="end" v-model="searchObj.registerEndDate" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1" @change="handleEndTime"></el-date-picker>
+              <el-date-picker name="end" v-model="searchObj.startTimeEnd" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1" @change="handleEndTime"></el-date-picker>
             </el-form-item>
           </date-group>
+          <date-group :dateGroup="{text:'',startDate:searchObj.endTimeBegin,endDate:searchObj.endTimeEnd}" style="display:inline-block;">
+            <el-form-item label="接待结束时间：">
+              <el-date-picker name="start" v-model="searchObj.endTimeBegin" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions0" @change="handleStartTime"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="-">
+              <el-date-picker name="end" v-model="searchObj.endTimeEnd" :editable="false" type="date" placeholder="选择日期" :picker-options="pickerOptions1" @change="handleEndTime"></el-date-picker>
+            </el-form-item>
+          </date-group>
+
+          <el-form-item label="接待对象：">
+            <el-input v-model="searchObj.receptionObject"></el-input>
+          </el-form-item>
+
           <el-form-item label="事务类型：">
             <el-select placeholder="请选择" v-model="searchObj.affairType" clearable>
-              <el-option v-for="item in typeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="(item,index) in typeOption" :key="item.value" :label="item.name" :value="item.code"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="使用部门：">
-            <el-input v-model="searchObj.department"></el-input>
+          <el-form-item label="人数：">
+            <el-input v-model="searchObj.peopleNum"></el-input>
           </el-form-item>
-          <el-form-item label="培训/考核对象：">
-            <el-select placeholder="请选择" v-model="searchObj.trainingObject" clearable>
-              <el-option v-for="item in userOption" :key="item.value" :label="item.value" :value="item.label"></el-option>
-            </el-select>
-          </el-form-item>
-          <!-- <el-button type="info" @click="search">搜索</el-button> -->
         </div>
       </el-row>
     </el-form>
@@ -54,28 +60,16 @@
             <el-button size="small" type="success" @click="show(scope.row)">查看</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="registerDate" label="日期" align="center" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="timeInterval" label="时段" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="classhour" label="课时" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="affairName" label="事项名称" align="center" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="startTime" label="接待开始时间" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="endTime" label="接待结束时间" show-overflow-tooltip></el-table-column>
         <el-table-column prop="affairType" label="类型" show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.affairType | affairsType }}
+            {{ scope.row.affairType | affairType(typeOption) }}
           </template>
         </el-table-column>
-        <el-table-column prop="trainingPlace" label="培训地点" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="trainingObject" label="培训/考核对象" show-overflow-tooltip>
-          <template scope="scope">
-            {{ scope.row.trainingObject | userType }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="peopleNum" label="人次" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="teacher" label="教师/考官" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="department" label="使用部门" show-overflow-tooltip>
-          <template scope="scope">
-            {{ scope.row.department || '-' }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="creater" label="创建人" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="receptionObject" label="接待对象" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="peopleNum" label="人数" show-overflow-tooltip></el-table-column>
       </el-table>
     </div>
     <div style="margin: 10px;">
@@ -111,32 +105,66 @@
       <remove v-if="removeModal" :delete-url="api.delete" @remove="subCallback" @cancel="cancel" :operaility-data="operailityData"></remove>
       <div slot="footer"></div>
     </Modal>
+    <!--导入弹窗-->
+    <Modal :mask-closable="false" close-on-click-modal="false" height="200" v-model="toChannelModal" class-name="vertical-center-modal" :width="800">
+      <modal-header slot="header" :content="headerContent.toChannelId"></modal-header>
+      <toChannel v-if="toChannelModal" @toChannel="subCallback" @cancel="cancel" :operaility-data="operailityData"></toChannel>
+      <div slot="footer"></div>
+    </Modal>
+    <!--导出弹窗-->
+    <Modal :mask-closable="false" height="200" v-model="deriveModal" class-name="vertical-center-modal" :width="500">
+      <modal-header slot="header" :content="headerContent.deriveId"></modal-header>
+      <div>
+        <div class="remove">确认导出吗</div>
+        <el-row>
+          <el-col :span="10" :offset="14">
+            <a :href="exportUrl">
+              <el-button @click="affirmDerive" type="primary">确定</el-button>
+            </a>
+            <el-button class="but-col" @click="cancel('derive')">取消</el-button>
+          </el-col>
+        </el-row>
+      </div>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 <script>
   let Util = null;
   import api from './api';
-  import typeOption from './typeOption'; // 事项类型
-  import userOption from './userOption'; // 事项类型
+//  import typeOption from './typeOption'; // 事务类型
+//  import userOption from './userOption'; // 事务类型
 
   // 引入操作模态组件
   import add from './affairs_add'; // 增加
   import edit from './affairs_edit'; // 编辑
   import show from './affairs_view'; // 编辑
+  import toChannel from "./affairs_toChannel.vue";
 
   export default {
     data() {
       return {
         api,
-        userOption,
-        typeOption,
+//        userOption,
+        exportUrl:'',
+        typeOption:{},
+        toChannelModal:false,
+        deriveModal:false,
         searchMore: false,
         searchObj: {
-          registerStartDate: '', // 开始日期
-          registerEndDate: '', // 结束日期
-          affairType: '', // 事务类型
-          department: '', // 使用部门
-          trainingObject: '', // 培训/考核对象
+          affairName:"", // 事务名称
+          startTimeBegin: "", // 接待开始时间开始
+          startTimeEnd:"", // 接待开始时间结束
+          endTimeBegin:"", // 接待结束时间开始
+          endTimeEnd:"", // 接待结束时间结束
+          receptionObject: "", // 接待对象
+          affairType:"", // 事务类型
+          peopleNum:"", // 人数
+//          registerStartDate: '', // 开始日期
+//          registerEndDate: '', // 结束日期
+//          affairType: '', // 事务类型
+//          department: '', // 使用部门
+//          trainingObject: '', // 培训/考核对象
         },
         dynamicHt: 100,
         tabHeight: 0,
@@ -149,19 +177,27 @@
         headerContent: {
           addId: {
             id: 'add',
-            title: '新增事项'
+            title: '新增事务'
           },
           editId: {
             id: 'edit',
-            title: '修改事项'
+            title: '修改事务'
           },
           showId: {
             id: 'show',
-            title: '查看事项'
+            title: '查看事务'
           },
           removeId: {
             id: 'remove',
-            title: '删除事项'
+            title: '删除事务'
+          },
+          deriveId:{
+            id: 'deriveId',
+            title: '导出事务'
+          },
+          toChannelId:{
+            id: 'toChannelId',
+            title: '导入事务'
           },
         }
       }
@@ -179,15 +215,33 @@
             pageSize: Util.pageInitPrams.pageSize
           }
         }
-
-        this.setTableData()
+        this.getTypeOption();
+//        this.setTableData()
+      },
+      getTypeOption(){
+        let opt = {
+          ajaxSuccess:res=>{
+            if (!res.data.length){
+              return
+            }
+            res.data.map(item=>{
+              this.typeOption[item.code]=item
+            })
+            this.setTableData()
+          },
+          ajaxParams:{
+            url:api.getAffairType.path,
+            method:api.getAffairType.method,
+          }
+        };
+        this.ajax(opt)
       },
       /********************************* 按钮事件 *****************************/
       // 搜索
       search() {
         this.setTableData()
       },
-      // 筛选 
+      // 筛选
       showSearchMore() {
         this.searchMore = !this.searchMore;
         this.$nextTick(function () {
@@ -220,6 +274,31 @@
           this.operailityData = this.multipleSelection;
           this.openModel('remove')
         }
+      },
+
+      //导入
+      toChannel() {
+        this.openModel('toChannel')
+      },
+
+      //导出
+      derive() {
+        this.getDeriveURL();
+        this.openModel('derive');
+      },
+
+      // 获取导出URL
+      getDeriveURL() {
+        let ids = [];
+        if(this.multipleSelection.length){
+          this.multipleSelection.map(item=>ids.push(item.id))
+        }
+        this.exportUrl = '/api/' + api.excelExport + ids.join(',')
+      },
+
+      //确定导出
+      affirmDerive() {
+        this.cancel('derive');
       },
       /********************************* 表格相关 *****************************/
       /*
@@ -299,7 +378,13 @@
     components: {
       add,
       edit,
-      show
+      show,
+      toChannel,
+    },
+    filters:{
+      affairType(val,self){
+        return self[val] && self[val].name || val
+      },
     },
     created() {
       this.init();
@@ -317,4 +402,3 @@
   }
 
 </script>
-<style></style>

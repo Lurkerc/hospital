@@ -32,6 +32,20 @@
           </el-form-item>
         </el-col >
       </el-row >
+
+      <el-row >
+        <el-col :span="10" :offset="2">
+          <el-form-item label="是否为功能:" >
+            {{data.isFunc=='YES'?'是':'否'}}
+          </el-form-item>
+        </el-col>
+        <el-col :span="10" :offset="2">
+          <el-form-item label="是否图片新闻:" prop="isPictureNews">
+            {{data.isPictureNews=='YES'?'是':'否'}}
+          </el-form-item>
+        </el-col >
+      </el-row >
+
       <el-row >
         <el-col :span="20" :offset="2">
           <el-form-item label="url:" class="feildFontweight">

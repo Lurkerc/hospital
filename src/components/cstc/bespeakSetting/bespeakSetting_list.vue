@@ -5,10 +5,10 @@
       <el-tab-pane label="房间预约管理" name="room">
         <room-list v-if="activeName == 'room'" :contenHeight="contenHeight" @show="show"></room-list>
       </el-tab-pane>
-      <el-tab-pane label="模型预约管理" name="model">
-        <model-list v-if="activeName == 'model'" :contenHeight="contenHeight" @show="show"></model-list>
-      </el-tab-pane>
-      <el-tab-pane label="预约项目管理" name="project">
+      <!--<el-tab-pane label="模型预约管理" name="model">-->
+        <!--<model-list v-if="activeName == 'model'" :contenHeight="contenHeight" @show="show"></model-list>-->
+      <!--</el-tab-pane>-->
+      <el-tab-pane label="自主训练管理" name="project">
         <project-list v-if="activeName == 'project'" :contenHeight="contenHeight" @show="show"></project-list>
       </el-tab-pane>
     </el-tabs>
@@ -17,8 +17,8 @@
 
 <script>
   import roomList from './room/room_list'; // 房间预约管理
-  import modelList from './model/model_list'; // 模型预约管理
-  import projectList from './project/project_list'; // 预约项目管理
+//  import modelList from './model/model_list'; // 模型预约管理
+  import projectList from './project/project_list'; // 自主训练管理
   export default {
     data() {
       return {
@@ -50,7 +50,7 @@
     },
     components: {
       roomList,
-      modelList,
+//      modelList,
       projectList
     }
   }

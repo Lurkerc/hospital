@@ -1,7 +1,7 @@
 <template>
 
   <div >
-    <el-form ref="formValidate"    class="demo-form-inline" label-width="80px" >
+    <el-form ref="formValidate"  :rules="rules" :model="formValidate"    class="demo-form-inline" label-width="80px" >
 
       <el-row >
         <el-col :span="9" :offset="2">
@@ -9,14 +9,12 @@
             <el-input v-model="formValidate.name" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="9" >
           <el-form-item label="描述" prop="remark" >
             <el-input v-model="formValidate.remark" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
       </el-row >
       <el-row :span="18" :offset="2">
         <div class="itemLayout">
@@ -53,12 +51,14 @@
 <script>
   //当前组件引入全局的util
   let Util=null;
+  import {group as rules} from '../rules';
   import selectUser from "../../../common/selectUser.vue"
   export default {
     //props接收父组件传递过来的数据
     props: ['operailityData'],
     data (){
       return{
+        rules,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         countDate:0,
@@ -171,6 +171,10 @@
         let isSubmit = this.submitForm("formValidate");
         if(isSubmit){
           if(!isLoadingFun) isLoadingFun=function(){};
+          if(this.users==0){
+            this.errorMess('参加人员不能为空');
+            return;
+          }
           isLoadingFun(true);
           this.editMessTitle.ajaxParams.data=this.getFormData(this.formValidate);
           this.ajax(this.editMessTitle,isLoadingFun)

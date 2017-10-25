@@ -148,6 +148,11 @@
             }, 0);
           }
         });
+        for(let a = 0;a < param.data.length; a++){
+          if(param.data[a].isPoints == '1'){
+            sums[3] = sums[3] - param.data[a].score
+          }
+        };
         this.formValidate.totalScore = sums[3];
         return sums;
       },

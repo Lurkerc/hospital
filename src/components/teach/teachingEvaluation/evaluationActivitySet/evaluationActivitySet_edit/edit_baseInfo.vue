@@ -3,7 +3,7 @@
 
 <template>
   <div ref="content">
-    <el-form  ref="formValidate"  label-width="100px" class="demo-ruleForm">
+    <el-form  ref="formValidate" :model="formValidate"  :rules="evaluationActivitySetBaseInfo"  label-width="100px" class="demo-ruleForm">
       <el-row >
         <el-col :span="16"  :offset="1">
             <el-form-item  prop="title" label="名称">
@@ -15,7 +15,6 @@
       </el-row>
       <el-row >
         <el-col :span="8"  :offset="1">
-
             <el-form-item  prop="title" label="类别">
               <el-select v-model="formValidate.type" placeholder="请选择活动区域">
                 <el-option label="学评教" value="学评教"></el-option>
@@ -28,7 +27,7 @@
           </el-col>
         <el-col :span="8"  >
             <el-form-item  prop="title" label="评价表">
-              <el-input   v-model="formValidate.tempName"  @focus="selectTemp" placeholder="选择评价表 ">
+              <el-input   v-model="formValidate.tempName" readonly @focus="selectTemp" placeholder="选择评价表 ">
               </el-input>
             </el-form-item>
 
@@ -45,7 +44,7 @@
       </el-row>
       </br>
       <el-row >
-        <el-col :span="20"  :offset="3">
+        <el-col :span="10"  :offset="9">
           <el-button  @click="baseInfo">确认并继续</el-button>
           <!--<el-button  @click="$emit('lost') ">上一步</el-button>-->
         </el-col>
@@ -75,6 +74,7 @@
   </div>
 </template>
 <script>
+  import {evaluationActivitySetBaseInfo} from '../../../rules'
   /*当前组件必要引入*/
   /*---引入--新建-- */
   import temp from './edit_baseInfo/baseInfo_temp.vue'
@@ -83,6 +83,7 @@
       props:['url','operailityData','update'],
     data() {
       return {
+        evaluationActivitySetBaseInfo,
         treeData: [],
         defaultProps: {
           children: 'children',
@@ -294,9 +295,27 @@
       baseInfo(){
 //       更新基础数据
 //       继续下一步
-        this.$emit('next',this.formValidate);
+        let isSubmit = this.submitForm("formValidate");
+        if(isSubmit) {
+          this.$emit('next', this.formValidate);
+        }
 
-      }
+      },
+      /*
+       * 点击提交按钮 监听是否验证通过
+       * @param formName string  form表单v-model数据对象名称
+       * @return flag boolean   form表单验证是否通过
+       * */
+      submitForm(formName){
+        let flag = true;
+        this.$refs[formName].validate((valid) => {
+          if (!valid) {
+            flag= false;
+          }
+        });
+
+        return flag;
+      },
     },
     mounted(){
     },

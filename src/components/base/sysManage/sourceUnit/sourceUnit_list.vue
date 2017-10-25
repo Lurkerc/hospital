@@ -2,29 +2,33 @@
 <template>
   <div id="content" ref="content" class="modal">
 
-    <div style="padding-top: 36px;"></div>
-
-    <el-form ref="formValidate" :model="formValidate" class="form-inline lose-margin" label-width="90px" >
-      <el-row >
-        <el-col :span="8" :offset="6">
-          <div class="listUpArea-searchWrapper">
-            <!--右侧查询-->
-            <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px" >
-              <div class="listUpArea-searchLeft">
-                <input class="hidden">
-                <el-input placeholder="请输入内容" v-model="formValidate.name">
-                  <div slot="prepend">单位名称</div>
-                  <el-button @click="handleSubmit('formValidate')" slot="append" icon="search"></el-button>
-                </el-input>
-              </div>
-            </el-form>
-          </div>
+    <el-form  ref="formValidate" :model="formValidate" :rules="rules" inline label-width="100px">
+      <el-row style="margin-bottom:0">
+        <!--列表操作按钮-->
+        <el-col :span="10" >
+          <el-button  class="but-col"  @click="add"  type="primary">添加</el-button>
         </el-col>
-      </el-row >
+        <!--搜索项-->
+        <el-col :span="14"  align="right">
+          <el-form-item  prop="name">
+            <el-input placeholder="请输入内容" v-model="formValidate.name">
+              <div slot="prepend">单位名称</div>
+              <el-button @click="searchEvent" slot="append" icon="search"></el-button>
+            </el-input>
+          </el-form-item>
+          <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
+        </el-col>
+      </el-row>
+      <br>
+      <!--高级搜索项-->
+      <div v-if="searchMore" ref="searchMore" style="text-align: right">
+        <el-form-item  prop="contacts" label="联系人">
+          <el-input placeholder="请输入内容" v-model="formValidate.contacts">
+          </el-input>
+        </el-form-item>
+        <el-button type="info" @click="searchEvent">查询</el-button>
+      </div>
     </el-form>
-    <div class="add-remove">
-      <el-button  class="but-col"  @click="add"  type="primary">添加</el-button>
-    </div>
     <div
       id="myTable"
       ref="myTable"
@@ -69,6 +73,7 @@
           prop="name"
           label="单位名称"
           align="center"
+          show-overflow-tooltip
           width="200">
         </el-table-column>
         <el-table-column
@@ -153,6 +158,7 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import {sourceUnitList as rules} from '../rules'
   //引入--修改--组件
   import edit from "./sourceUnit_edit.vue";
   //引入--查看--组件
@@ -164,14 +170,15 @@
   export default{
     data(){
       return{
+        rules,
         //查询表单
         deleteUrl:'/groups/remove',
         formValidate: {
           "id":'',
           "name":"",
-          "remark":""
+          "contacts":""
         },
-
+        searchMore:false,
         addData:'',
         editData: '',
         showData:'',
@@ -286,7 +293,31 @@
         this.ajax(this.listMessTitle);
       },
 
+      //搜索监听回调
+      searchEvent(isLoading){
+        //        isLoading(true);
+        let isSubmit = this.handleSubmit('formValidate');
+        if(isSubmit){
+          this.setTableData()
+        }
+      },
 
+
+      /*
+       * 列表查询方法
+       * @param string 查询from的id
+       * */
+      handleSubmit(name){
+        let flag =false
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            flag =true;
+          } else {
+            this.$Message.error('表单验证失败!');
+          }
+        })
+        return flag
+      },
       //设置提交的参数
       setAjaxParams(){
         this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params,this.formValidate);
@@ -378,7 +409,17 @@
        * */
       openModel(options){
         this[options+'Modal'] = true;
-      }
+      },
+
+      // 高级搜索按钮展开搜索表单并重新计算表格高度
+      showSearchMore() {
+        this.searchMore = !this.searchMore;
+        this.$nextTick(function () {
+          this.setTableDynHeight()
+        })
+      },
+
+
     },
 
     mounted(){

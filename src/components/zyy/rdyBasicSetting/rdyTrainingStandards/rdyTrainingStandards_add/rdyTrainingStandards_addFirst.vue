@@ -15,16 +15,60 @@
           </el-form-item>
         </el-col >
       </el-row >
-      <el-row >
+      <el-row v-if="rtModelType=='YJS'">
+        <el-col :span="7" :offset="3">
+          <el-form-item  style="width:300px" label="学校名称:" prop="jdName"  >
+            <el-select style="width:300px" v-model="formValidate.jdId" placeholder="请选择" @change="selectSchool" >
+              <el-option
+                style="width:300px"
+                v-for="item in schoolData"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+                <!--:value="item.jdName+'-'+item.jdId+'-'+item.jdProclass">-->
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col >
+        <el-col :span="6" :offset="3">
+          <el-form-item  style="width:300px" label="培训方向:" prop="rtProclass" >
+            <el-select style="width:300px" v-model="formValidate.rtProclass" placeholder="请选择" >
+              <el-option
+                style="width:300px"
+                v-for="(item,index) in trainingData"
+                :key="item.index"
+                :label="item.value"
+                :value="item.value">
+                <!--:value="item.jdName+'-'+item.jdId+'-'+item.jdProclass">-->
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col >
+        <!--<el-col :span="9"  >
+          <el-form-item  style="width:350px" label="学历:" prop="rtSchlength">
+            <el-select  style="width:348px" v-model="formValidate.rtSchlength" placeholder="请选择">
+              <el-option
+                style="width:300px"
+                v-for="item in rtSchlengthData"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col >-->
+      </el-row >
+      <el-row v-else>
         <el-col :span="18" :offset="3">
           <el-form-item  style="width:300px" label="基地名称:" prop="jdName"  >
-            <el-select style="width:300px" v-model="formValidate.jdName" placeholder="请选择">
+            <el-select style="width:300px" v-model="formValidate.jdId" placeholder="请选择" @change="selectJD">
               <el-option
                 style="width:300px"
                 v-for="item in jDData"
-                :key="item.value"
+                :key="item.jdId"
                 :label="item.jdName"
-                :value="item.jdName+'-'+item.jdId+'-'+item.jdProclass">
+                :value="item.jdId">
+                <!--:value="item.jdName+'-'+item.jdId+'-'+item.jdProclass">-->
               </el-option>
             </el-select>
           </el-form-item>
@@ -230,7 +274,7 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
-    props:['resizeFirst','rtId'],
+    props:['resizeFirst','rtId','rtModelType'],
     data() {
       return {
         rdyTrainingStandardsFirst,
@@ -284,7 +328,7 @@
           "rtType":"0",          //指标类型
           "rtrulesType":"西医",       //西医/中医
           "jdName":"",          //基地名
-          "rtModelType":"ZYY",     //细则对应模块
+          "rtModelType":this.rtModelType,     //细则对应模块
           "jdId":"",            //基地ID
           outlines:[],
         },
@@ -310,7 +354,12 @@
           }
         ],
         //基地
-        jDData:[],
+        jDData:{},
+        //学校
+        schoolData:[],
+        changSchoolData:{}, // 以对象的形式保存
+        //培训方向
+        trainingData:[],
         //学历
         rtSchlengthData:[],
         //获取基地数组
@@ -319,6 +368,22 @@
           ajaxError:'ajaxError',
           ajaxParams:{
             url:api.BaseManageGetList.path
+          },
+        },
+        //获取学校数据
+        getSchool :{
+          ajaxSuccess:'getSchoolData',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url:'/schools/queryList'
+          },
+        },
+        //获取培训方向
+        getTraining :{
+          ajaxSuccess:'getTrainingData',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url:'/dictionary/getByCode/'+'ROTARY_PROCLASS'
           },
         },
         //获取学历数据
@@ -360,6 +425,33 @@
         Util = this.$util;
         this.ajax(this.getJd);
         this.ajax(this.getSchlength);
+        if(this.rtModelType=='YJS'){
+          this.ajax(this.getSchool);
+          this.ajax(this.getTraining);
+        }
+      },
+
+
+      /**
+       * ajax 获取成功回调
+       * */
+
+      //获取培训方向（YJS）
+      getTrainingData(res){
+        let data = res.data;
+        data = data.child;
+        this.trainingData = data;
+
+      },
+      //获取学校（YJS）
+      getSchoolData(res){
+        let data = res.data;
+        this.schoolData = data;
+        let TempObj = {}
+        data.map(item=>{
+          TempObj[item.id] = item;
+        })
+        this.changSchoolData = TempObj;
       },
 
 
@@ -422,6 +514,17 @@
           tempArr[index]=obj;
 
         }
+        for (let l=0;l<tempArr.length;l++){
+          let item = tempArr[l];
+          if(!item){
+            tempArr[l] =  {
+              "mustRotaryDep":[[]],
+              "randomRotaryDep": [[]],
+              ts:[''],
+              optionalNum:[''],
+            }
+          }
+        }
         return tempArr;
 
 
@@ -432,8 +535,28 @@
       getJdData(res){
         let data = res.data;
         if(!data)return;
-        this.jDData = data;
+        this.jDData = {};
+        (data || []).map(item=>{
+          this.jDData[item.jdId] = item;
+        })
+//        this.jDData = data;
+      },
 
+      /**
+       * 下拉改变回调
+       * */
+
+      selectSchool(value){
+        let item =   this.changSchoolData[this.formValidate.jdId];
+        if(!item)return;
+        this.formValidate.jdName = item.name
+
+      },
+      // 基地选择
+      selectJD(){
+        let selectJDObj = this.jDData[this.formValidate.jdId];
+        this.formValidate.jdName = selectJDObj.jdName;
+        this.formValidate.rtProclass = selectJDObj.jdProclass;
       },
 
       /**
@@ -493,7 +616,7 @@
 
       /**
        * 打开设置科室弹窗
-       * @param currGroupIndex {number}  当前组的索引
+       * @param  {number} currGroupIndex   当前组的索引
        * @param tabType {string}   哪一类表格数据  必填 mustRotaryDep   自选 randomRotaryDep
        */
       openSetDepWin(currGroupIndex,tabType,groupNo){
@@ -583,12 +706,12 @@
       conductFormValidate(formValidate,outlines){
         let tempArr = [];
         let flag = true;
-        if(formValidate.jdName){
-          let depArr = formValidate.jdName.split('-');
-          formValidate.jdName = depArr[0];
-          formValidate.jdId = depArr[1];
-          formValidate.rtProclass = depArr[2];
-        }
+//        if(formValidate.jdName){
+//          let depArr = formValidate.jdName.split('-');
+//          formValidate.jdName = depArr[0];
+//          formValidate.jdId = depArr[1];
+//          formValidate.rtProclass = depArr[2];
+//        }
         for(let i=0 ;i<outlines.length;i++){
           let item = outlines[i];
             //处理必选科室

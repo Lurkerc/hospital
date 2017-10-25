@@ -20,24 +20,34 @@
           </div>
         </div>
         <div class="gaContent">
+          <p class="gacTitle">附件：</p>
+          <upload-file :uploadFiles="showData.fileList" :show="true"></upload-file>
+          <!--<p class="gacSignature">本人签名：</p>-->
+          <!--<p class="gacDay">-->
+          <!--<span>年</span>-->
+          <!--<span>月</span>-->
+          <!--<span>日</span>-->
+          <!--</p>-->
+        </div>
+        <div class="gaContent">
           <p class="gacTitle">自我鉴定：</p>
           <p class="gacText">{{ showData.selfComment }}</p>
-          <p class="gacSignature">本人签名：</p>
+         <!-- <p class="gacSignature">本人签名：</p>
           <p class="gacDay">
             <span>年</span>
             <span>月</span>
             <span>日</span>
-          </p>
+          </p>-->
         </div>
         <div class="gaContent">
           <p class="gacTitle">实习单位意见：</p>
           <el-input type="textarea" :autosize="{ minRows: 4}" v-model="showData.unitComment"></el-input>
-          <p class="gacSignature">单位盖章</p>
-          <p class="gacDay">
-            <span>年</span>
-            <span>月</span>
-            <span>日</span>
-          </p>
+          <!--<p class="gacSignature">单位盖章</p>-->
+          <!--<p class="gacDay">-->
+            <!--<span>年</span>-->
+            <!--<span>月</span>-->
+            <!--<span>日</span>-->
+          <!--</p>-->
         </div>
       </div>
     </div>

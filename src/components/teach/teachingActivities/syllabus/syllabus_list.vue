@@ -1,9 +1,6 @@
 <template>
-  <div>
-
-
-  <div>
-    <el-form  label-width="80px" inline class="demo-ruleForm">
+  <div id="content" ref="content">
+    <el-form  label-width="80px" ref="formValidate" inline class="demo-ruleForm">
       <el-row style="margin-top: 10px">
         <el-col  :span="24" >
           <el-form-item label="开始时间" prop="activityBeginTime" >
@@ -37,36 +34,114 @@
           <el-button  @click="searchEvent">搜索</el-button>
         </el-col>
       </el-row>
-    </el-form></div>
-    <div id="content" ref="content" style="position: absolute;left:0;top: 85px;bottom: 0;right:6px;">
-      <listHeaders
-        :headList="tableHeader"
-        @mouseEnter="mouseEnter"
-        @mouseLeave="mouseLeave"
-        :url="url"
-        :tableDataList="tableData">
-      </listHeaders>
+    </el-form>
+    <div>
+      <div
+        id="myTable"
+        ref="myTable">
+        <el-table
+          :data="tableData"
+          border
+          :height="dynamicHt"
+          tooltip-effect="dark"
+          style="width: 100%;height: 100%"
+          @selection-change="handleSelectionChange">
+          <el-table-column
+            label="序号"
+            prop="index"
+            align="center"
+            width="65">
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            width="100">
+            <template scope="scope">
+              <el-button size="small" @click="show(scope.row)">查看</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="课程名称"
+            prop="activityName"
+            show-overflow-tooltip
+            width="200">
+          </el-table-column>
+          <el-table-column
+            prop="activitySite"
+            show-overflow-tooltip
+            label="授课地点"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="activityType"
+            label="课程类型"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="activityTime"
+            label="课程时间"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="hostUserName"
+            label="授课老师"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            show-overflow-tooltip
+            prop="activityState"
+            label="状态"
+            width="120">
+            <template scope="scope">
+              {{ scope.row.activityState == 'NO_RELEASE'?'未发布':scope.row.activityState =='RELEASE'?'已发布':'结束'}}
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <!--分页-->
+      <div style="margin: 10px;">
+        <div style="float: right;">
+          <el-pagination
+            @size-change="changePageSize"
+            @current-change="changePage"
+            :current-page="myPages.currentPage"
+            :page-sizes="myPages.pageSizes"
+            :page-size="myPages.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="totalCount">
+          </el-pagination>
+        </div>
+      </div>
     </div>
-  </div>
+    <!--查看教学活动-->
+    <Modal
+      :mask-closable="false"
+      height="200"
+      v-model="showModal"
+      title="查看教学活动"
+      class-name="vertical-center-modal"
+      :width="960">
+      <modal-header slot="header" :content="viewId"></modal-header>
+      <show v-if="showModal" :url="url" :operaility-data="operailityData"></show>
+      <div slot="footer"></div>
+    </Modal>
+    </div>
 </template>
 
 
 <script>
-  import listHeaders from './listHeaders.vue';
   import url from '../app';
+  import show from './syllabus_view.vue';
   let Util = null;
   export default {
       props:['userType'],
     data() {
       return {
         //查询表单
-        listUrl: '',
         url:url,
         tableData: [],
-        tableHeader: [
-
-        ],
-
         formValidate: {
           activityName: '',//活动名称
           activityType: '',//活动类型
@@ -74,25 +149,12 @@
           activityEndTime: '',//结束时间
           depId: '',//科室
         },
-        date: {
-          startStamp: '', //开始时间
-          endStamp: '', //结束时间
-          weekCount: '', //一周的累计
-          index: 0,    //索引
-          mistiming: 150, // 时间差  初始化的时候开始和结束时间未定
-          timeOut:'',//定时
-          time:1000,//定时时间
-        },
-
-
-        //当前组件默认请求(头部)数据时,ajax处理的 基础信息设置
-        headerListMessTitle: {
-          ajaxSuccess: 'updateHeaderList',
-          ajaxParams: {
-            url: url.teachCourseTime,
-            params: {},
-          }
-        },
+        showModal:false,
+        viewId:{id:'view',title:'查看'},
+        dynamicHt:100,
+        totalCount:0,
+        operailityData:{},
+        multipleSelection:[],
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         tableListMessTitle: {
           ajaxSuccess: 'updateTableList',
@@ -104,336 +166,183 @@
       }
     },
     methods: {
-      //初始化请求列表数据
-      init(){
-        Util = this.$util;
-        this.tableListMessTitle.ajaxParams.url=url.teachctivityListType+'/'+this.userType;// 需要角色类型,根据当前登录的角色
-        //ajax请求参数设置
-        let myDate=new Date();
-        let year = myDate.getFullYear();
-        let start=this.parseDate(year+"-01-01");
-        let end = this.parseDate(this.getFirstAndLastMonthDay(year,12));
-        this.formValidate.activityBeginTime = start; //获得格式化的时间
-        this.formValidate.activityEndTime = end;
+    //初始化请求列表数据
+    init(){
+      Util = this.$util;
+      //ajax请求参数设置
+      this.myPages =  Util.pageInitPrams;
 
-        this.queryQptions = {
-          url: this.listUrl
-        }
-
-        this.setTableData();
-      },
-
-
-//获取当前月的第一天和最后一天:
-      getFirstAndLastMonthDay( year, month){
-        var   firstdate = year + '-' + month + '-01';
-        var  day = new Date(year,month,0);
-        var lastdate = year + '-' + month + '-' + day.getDate();//获取当月最后一天日期
-        //给文本控件赋值。同下
-        return lastdate;
-      },
-
-      //通过get请求列表数据
-      setTableData(){
-        this.date= {
-          startStamp: '', //开始时间
-          endStamp: '', //结束时间
-          weekCount: '', //一周的累计
-          index: 0,    //索引
-          mistiming: 150, // 时间差  初始化的时候开始和结束时间未定
-          timeOut:'',//定时
-          time:1000,//定时时间
-        };
-
-        this.date.weekCount = this.getWeek(this.formValidate.activityBeginTime); //开始时间所在的星期
-        this.calculate(this.formValidate.activityBeginTime,this.formValidate.activityEndTime);
-        let formValidate = this.formDate(Util._.defaultsDeep({},this.formValidate),['activityBeginTime','activityEndTime'],this.yearMonthData);
-        this.tableListMessTitle.ajaxParams.params = Object.assign( this.tableListMessTitle.ajaxParams.params,formValidate);
-        this.ajax(this.headerListMessTitle);  //请求头部
-        this.ajax(this.tableListMessTitle);     //请求列表数据
-      },
-
-
-      //获取表头数据成功
-      updateHeaderList(res){
-        this.tableHeader =  this.decomposeHead(res.data);
-      },
-
-      //获取列表数据成功
-      updateTableList(res){
-        this.tableData = this.disposeTableData(this.getFormData(res.data));
-      },
-
-
-      //处理表单数据
-      disposeTableData(data){
-        let tableData = [{BeginTime:'',EndTime:'',}];
-        let ascending =this.date.startStamp ;
-        let end = this.date.endStamp;
-        let length=1;
-        let index = this.date.index;
-        let weekCount = this.date.weekCount;
-        let activityBeginTime =  this.formValidate.activityBeginTime;
-        let activityEndTime =  this.formValidate.activityEndTime;
-        let key ;
-        let recordTimeIds;
-        //先把第一个对象数据填满
-        tableData[index].BeginTime = this.getDate(ascending);
-        tableData[index].EndTime = this.countDate(ascending,weekCount);
-        tableData[index].weekIndex = this.theWeek(ascending);
-        let cell ='';
-        while (weekCount<8){
-          if(data[0]&& data[0].activityTime.replace(/(^\s*)|(\s*$)/g, "")== this.getDate(ascending).replace(/(^\s*)|(\s*$)/g, "")){
-            cell =  data.shift();
-            recordTimeIds =cell.recordTimeIds&& cell.recordTimeIds.split(',')||[];
-            for(let i=0;i<recordTimeIds.length;i++){
-              key = weekCount+'-'+recordTimeIds[i];
-              tableData[index][key] = cell.activityName;  //为tableData添加内容
-              tableData[index][key+'-id'] = cell.activityId;
-            }
-          }else {
-            weekCount++;
-            ascending = ascending+86400000;
-          }
-        }
-        //再把第其余对象数据填满
-        while (ascending<=end){
-          if(weekCount>7){
-            weekCount=1;
-            index++;
-            tableData.push({});
-            tableData[index].BeginTime = this.getDate(ascending);
-            tableData[index].EndTime = this.countDate(ascending,weekCount);
-            tableData[index].weekIndex = this.theWeek(ascending);
-          }else {
-            if(data[0] && data[0].activityTime.replace(/(^\s*)|(\s*$)/g, "")== this.getDate(ascending).replace(/(^\s*)|(\s*$)/g, "")){  //2017-04-04判定
-              cell =  data.shift();
-              recordTimeIds =cell.recordTimeIds&&  cell.recordTimeIds.split(',')||[];
-              for(let i=0;i<recordTimeIds.length;i++){  //拆分合并的单元格
-                key = weekCount+'-'+recordTimeIds[i];
-                tableData[index][key] = cell.activityName;  //为tableData添加内容
-                tableData[index][key+'-id'] = cell.activityId;
-              }
-            }else {
-              weekCount++;
-              ascending = ascending+86400000;
-            }
-          }
-
-          if(tableData.length==length*20||ascending<end){
-              length++;
-            this.tableData = tableData
-          }
-        }
-        return tableData
-      },
-      //鼠标进入单元格
-      mouseEnter(ids){
-        this.date.timeOut = setTimeout(() =>{
-        },this.date.time)
-      },
-      mouseLeave(ids){
-        clearTimeout(this.date.timeOut)
-      },
-
-
-      //统计时间
-      countDate(startStamp,weekCount){
-        let endStamp;
-        let residue = 7-  weekCount;
-        endStamp =  startStamp +  residue*86400000;
-        if(endStamp>this.date.endStamp)endStamp = this.date.endStamp;
-        return this.getDate(endStamp)
-
-      },
-
-
-      //计算指定时间，算出开始和结束时间
-      calculate(start, end){
-        let endTime;
-        let startTime;
-        if (!end) {
-          endTime = this.date.endStamp = this.timestamp();
-        } else {
-          endTime = this.date.endStamp = this.timestamp(end);
-        }
-        if (!start) {
-          startTime = this.date.startStamp = this.timestamp() - this.date.mistiming * 86400000;
-        } else {
-          startTime = this.date.startStamp = this.timestamp(start) ;
-        }
-
-      },
-
-      //获取指定时间的时间戳
-
-      timestamp(date){
-        let timestamp
-        if(navigator.userAgent.indexOf("Firefox")>0){  //解决火狐兼容性问题
-          date &&(date =date+'T00:00:00');
-          timestamp = date ? Date.parse(date) : new Date().getTime();
-        }else {
-          timestamp = date ? new Date(date).getTime() : new Date().getTime();
-        }
-        return timestamp
-
-      },
-
-      /*
-       * 获取表单数据
-       * @return string  格式:id=0&name=aa
-       * */
-      getFormData(data){
-        let myData = Util._.defaultsDeep([],data);
-        return myData;
-      },
-
-      //获取当前时间属于星期几
-      getWeek(date){
-        if(navigator.userAgent.indexOf("Firefox")>0){
-          date &&(date =date+'T09:00:00');
-          date = date ? Date.parse(date) : new Date().getTime();
-        }
-        let week;
-        let time = new Date(date);
-        week = time.getDay();
-        switch (week) {
-          case 0 :
-            week = 7;
-            break;
-          case 1 :
-            week = 1;
-            break;
-          case 2 :
-            week = 2;
-            break;
-          case 3 :
-            week = 3;
-            break;
-          case 4 :
-            week = 4;
-            break;
-          case 5 :
-            week = 5;
-            break;
-          case 6 :
-            week = 6;
-            break;
-        }
-        return week;
-      },
-
-
-      //js获取当前日期在当前年所属第几周
-      theWeek(date) {
-        let totalDays = 0;
-        let now = new Date(date);
-        let years = now.getYear();
-        if (years < 1000)
-          years += 1900
-        let days = new Array(12);
-        days[0] = 31;
-        days[2] = 31;
-        days[3] = 30;
-        days[4] = 31;
-        days[5] = 30;
-        days[6] = 31;
-        days[7] = 31;
-        days[8] = 30;
-        days[9] = 31;
-        days[10] = 30;
-        days[11] = 31;
-
-        //判断是否为闰年，针对2月的天数进行计算
-        if (Math.round(now.getYear() / 4) == now.getYear() / 4) {
-          days[1] = 29
-        } else {
-          days[1] = 28
-        }
-
-        let y = now.getFullYear();
-        let dt = new Date(y+"-01-01");
-        let weekNum = dt.getDay();
-        let d = 0
-        if(weekNum==0){
-          d = 6
-        }else{
-          if(week!=1){
-            d = weekNum-1;
-          }
-        }
-        totalDays = d;
-        if (now.getMonth() == 0) {
-          totalDays = totalDays + now.getDate();
-        }else {
-          /*let curMonth = now.getMonth();
-           totalDays = totalDays + days[curMonth-1] + now.getDate();*/
-          let curMonth = now.getMonth();
-          for (let count = 1; count <= curMonth; count++) {
-            totalDays = totalDays + days[count - 1];
-          }
-          totalDays = totalDays + now.getDate();
-        }
-        //得到第几周
-        let week = Math.ceil(totalDays / 7);
-//        week=week+1;
-        return week;
-      },
-
-
-
-      //把获取的头部信息分为上午 下午 以courseType划分  并排序
-      decomposeHead(data){
-        if (!this.valDataType(data, 'Array')) {
-          this.errorMess('活动时间段格式错误');
-          return;
-        }
-        let arr = [[], []];
-        for (let i = 0; i < data.length; i++) {
-          if (!data[i].courseType) {
-            arr[0].push(data[i])
-
-          } else {
-            arr[1].push(data[i])
-          }
-        }
-        for (let i = 0; i < arr.length; i++){
-          arr[i].sort(function(a,b){
-            return a.timeId-b.timeId});
-        }
-        return arr;
-      },
-
-
-      //获取时间 1990-01-02
-      getDate(date){
-
-
-        let datetime = new Date(date);
-        let year = datetime.getFullYear();
-        let month = datetime.getMonth() + 1;
-        let D = datetime.getDate() + '';
-        if (month < 10) {
-          month = "0" + month;
-        }
-        if (D < 10) {
-          D = "0" + D;
-        }
-        return year + '-' + month + '-' + D;
-      },
-
-
-      searchEvent(isLoading){
-        //        isLoading(true);
-        this.setTableData()
-      },
-
+      this.queryQptions = {
+        curPage: 1,pageSize: Util.pageInitPrams.pageSize
+      }
+      this.setTableData();
     },
+    //设置表格及分页的位置
+    setTableDynHeight(){
+      let content = this.$refs.content;
+      let parHt = content.parentNode.parentNode.offsetHeight;
+      let myTable = this.$refs.myTable;
+      let paginationHt = 50;
+      this.dynamicHt = parHt - myTable.offsetTop - paginationHt;
+    },
+    /*
+     * checkbox 选择后触发事件
+     * @param val Array 存在所有的选择每一个行数据
+     */
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    /*
+     * 列表数据只能选择一个
+     * @param isOnly true  是否只选择一个
+     */
+    isSelected(isOnly){
+      let len = this.multipleSelection.length;
+      let flag = true;
+      if(len==0){
+        this.showMess("请选择数据!");
+        flag = false;
+      }
+      if(len>1 && isOnly){
+        this.showMess("只能修改一条数据!")
+        flag = false;
+      }
+      return flag;
+    },
+
+    //通过get请求列表数据
+    updateTableList(responseData){
+      if(!responseData.data)return;
+      this.tableData = this.addIndex(responseData.data);
+      if(!responseData.totalCount) return;
+      this.totalCount = responseData.totalCount;
+    },
+    setTableData(){
+      this.tableListMessTitle.ajaxParams.params = Object.assign(this.tableListMessTitle.ajaxParams.params,this.queryQptions,this.formValidate);
+      this.ajax(this.tableListMessTitle);
+    },
+
+    //搜索监听回调
+    searchEvent(isLoading){
+      //        isLoading(true);
+      let isSubmit = this.handleSubmit('formValidate');
+      if(isSubmit){
+        this.setTableData()
+      }
+    },
+
+
+    /*
+     * 列表查询方法
+     * @param string 查询from的id
+     * */
+    handleSubmit(name){
+      let flag =false
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          flag =true;
+        } else {
+          this.$Message.error('表单验证失败!');
+        }
+      })
+      return flag
+    },
+
+
+    /*--点击--添加--按钮--*/
+    add(){
+      this.openModel("add");
+    },
+    /*--点击--修改--按钮--*/
+    edit(data){
+      this.operailityData = data;
+      this.openModel("edit");
+    },
+    /*--点击--删除--按钮--*/
+    remove(){
+      if(!this.isSelected()) return;
+      this.operailityData = this.multipleSelection;
+      this.openModel('remove') ;
+    },
+    /*
+     * 点击--查看--按钮
+     * @param index string|number  当前行索引
+     * */
+    show(data){
+      this.operailityData = data;
+      this.openModel("show");
+    },
+    /*
+     * 监听子组件通讯的方法
+     * 作用:根据不同的参数关闭对应的模态
+     * @param targer string example:"add"、"edit"
+     * */
+    cancel(targer){
+      this[targer+'Modal'] = false;
+    },
+    /*
+     * 监听子组件通讯的方法
+     * 作用:ajax请求成功回调,该监听方法在libs/util 中的混合模式下定义回调
+     * @param targer string example:"add"、"edit"
+     * @param targer string 提示返回的ajax回调返回的信息改信息在对应的子组件中定义
+     * 例如:errorTitle、errorTitle
+     *addMessTitle:{
+     *    type:'add',
+     *    successTitle:'添加成功!',
+     *    errorTitle:'添加失败!',
+     *    ajaxSuccess:'ajaxSuccess',
+     *    ajaxError:'ajaxError',
+     *    ajaxParams:{
+     *      url:'/role/add',
+     *      method:'post'
+     *    }
+     *    }
+     * @param udata boolean 默认false  是否不需要刷新当前表格数据
+     * */
+    subCallback(target,title,updata){
+      this.cancel(target);
+      if(title){
+        this.successMess(title);
+      }
+      if(!updata){
+        this.setTableData();
+      }
+    },
+    /*
+     * 打开指定的模态窗体
+     * @param options string 当前指定的模态:"add"、"edit"
+     * */
+    openModel(options){
+      this[options+'Modal'] = true;
+    },
+
+
+    // 高级搜索按钮展开搜索表单并重新计算表格高度
+    showSearchMore() {
+      this.searchMore = !this.searchMore;
+      this.$nextTick(function () {
+        this.setTableDynHeight()
+      })
+    },
+
+
+
+  },
     created(){
       this.init();
     },
+    mounted(){
+      //页面dom稳定后调用
+      this.$nextTick(function () {
+        //初始表格高度及分页位置
+        this.setTableDynHeight();
+        //为窗体绑定改变大小事件
+        let Event = Util.events;
+        Event.addHandler(window, "resize", this.setTableDynHeight);
+      })
+    },
     components:{
-      listHeaders,
+      show,
     }
   };
 

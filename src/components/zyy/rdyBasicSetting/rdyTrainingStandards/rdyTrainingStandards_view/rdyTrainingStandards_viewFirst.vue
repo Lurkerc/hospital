@@ -75,7 +75,6 @@
                 :data="groupItem.mustRotaryDep[0]"
                 tooltip-effect="dark"
                 style="width: 100%">
-                </el-table-column>
                 <el-table-column
                   prop="depName"
                   label="科室"
@@ -342,12 +341,19 @@
           obj.randomRotaryDep = randomRotaryDep;
           obj.optionalNum = optionalNum;
           tempArr[index]=obj;
-
+        }
+        for (let l=0;l<tempArr.length;l++){
+          let item = tempArr[l];
+          if(!item){
+            tempArr[l] =  {
+              "mustRotaryDep":[[]],
+              "randomRotaryDep": [[]],
+              ts:[''],
+              optionalNum:[''],
+            }
+          }
         }
         return tempArr;
-
-
-
       },
 
       //获取基地集合

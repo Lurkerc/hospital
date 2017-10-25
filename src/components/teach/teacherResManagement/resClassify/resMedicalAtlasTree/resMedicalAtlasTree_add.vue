@@ -13,14 +13,12 @@
             <el-input v-model="formValidate.name" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="10" >
           <el-form-item label="管理员：" prop="parentId" >
             <el-input readonly v-model="formValidate.managerName" @focus="addUser" placeholder="请输选择"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
       </el-row >
       <el-row >
         <el-col :span="10" :offset="2">
@@ -178,14 +176,22 @@
       },
 
 
+
       /*
        * 获取选择人员的人员信息并赋值
        * @param users [{id:'',name:''},{}]  已选人员信息
        * */
       setUsers(users){
-        this.users = users;
-        this.formValidate.managerId = this.users[0].key;
-        this.formValidate.managerName = this.users[0].label;
+        if(users==0){
+          this.users = [];
+          this.formValidate.managerId = '';
+          this.formValidate.managerName = '';
+        }else {
+          this.users = users;
+          this.formValidate.managerId = this.users[0].key;
+          this.formValidate.managerName = this.users[0].label;
+        }
+
         /*let tempArr = [];
         for(var i=0,item;i<this.users.length;i++){
           item = this.users[i];

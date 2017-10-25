@@ -9,47 +9,90 @@
         <el-col :span="10">
           <el-form-item label="科室：">{{ viewData.depName }}</el-form-item>
         </el-col>
-        <el-col :span="20" :offset="2">
-          <el-form-item label="考勤：">
-            <span>旷工 {{ viewData.minerDays || 0 }} 天，</span>
-            <span>病假 {{ viewData.sickDays || 0 }} 天，</span>
-            <span>事假 {{ viewData.personalDays || 0 }} 天</span>
-          </el-form-item>
-        </el-col>
 
-        <el-col :span="20" :offset="2">
-          <el-form-item label="奖惩情况：">
-            <span>奖励 {{ viewData.rewardNum || 0 }} 次，</span>
-            <span>惩罚 {{ viewData.penaltyNum || 0 }} 次</span>
-          </el-form-item>
-        </el-col>
         <el-col :span="20" :offset="2">
           <el-form-item label="老师评价：">{{ viewData.teacherEvaluation || '-' }}</el-form-item>
         </el-col>
+
         <el-col :span="20" :offset="2">
-          <h4>轮转记录填写：</h4>
-          <!-- 实习生 -->
-          <!-- <template v-if="studentType">
-            <el-table align="center" :context="self" :data="viewData.depRequired" tooltip-effect="dark">
-              <el-table-column label="名称" prop="requiredName"></el-table-column>
-              <el-table-column label="要求例数" prop="requiredNum" show-overflow-tooltip></el-table-column>
-              <el-table-column label="实填例数" prop="userNum" show-overflow-tooltip></el-table-column>
-            </el-table>
-          </template> -->
-          <!-- 非实习生 -->
-          <!-- <template v-else>
-            <el-table align="center" :context="self" :data="viewData.depRequirement" tooltip-effect="dark">
-              <el-table-column label="名称" prop="disTitle"></el-table-column>
-              <el-table-column label="要求例数" prop="disNum" show-overflow-tooltip></el-table-column>
-              <el-table-column label="实填例数" prop="disTs" show-overflow-tooltip></el-table-column>
-            </el-table>
-          </template> -->
-          <el-table align="center" :context="self" :data="depRequirement" tooltip-effect="dark">
-            <el-table-column label="名称" prop="disTitle"></el-table-column>
-            <el-table-column label="要求例数" prop="disNum" show-overflow-tooltip></el-table-column>
-            <el-table-column label="实填例数" prop="disTs" show-overflow-tooltip></el-table-column>
+          <el-table :data="viewDayData">
+            <el-table-column label="旷工" prop="minerDays">
+              <template scope="scope">
+                {{ scope.row.minerDays || 0 }} 天
+              </template>
+            </el-table-column>
+            <el-table-column label="病假" prop="sickDays">
+              <template scope="scope">
+                {{ scope.row.sickDays || 0 }} 天
+              </template>
+            </el-table-column>
+            <el-table-column label="事假" prop="personalDays">
+              <template scope="scope">
+                {{ scope.row.personalDays || 0 }} 天
+              </template>
+            </el-table-column>
+            <el-table-column label="奖励" prop="rewardNum">
+              <template scope="scope">
+                {{ scope.row.rewardNum || 0 }} 次
+              </template>
+            </el-table-column>
+            <el-table-column label="惩罚" prop="penaltyNum">
+              <template scope="scope">
+                {{ scope.row.penaltyNum || 0 }} 次
+              </template>
+            </el-table-column>
           </el-table>
         </el-col>
+
+        <!--<el-col :span="20" :offset="2">-->
+          <!--<el-form-item label="考勤：">-->
+            <!--<span>旷工 {{ viewData.minerDays || 0 }} 天，</span>-->
+            <!--<span>病假 {{ viewData.sickDays || 0 }} 天，</span>-->
+            <!--<span>事假 {{ viewData.personalDays || 0 }} 天</span>-->
+          <!--</el-form-item>-->
+        <!--</el-col>-->
+
+        <!--<el-col :span="20" :offset="2">-->
+          <!--<el-form-item label="奖惩情况：">-->
+            <!--<span>奖励 {{ viewData.rewardNum || 0 }} 次，</span>-->
+            <!--<span>惩罚 {{ viewData.penaltyNum || 0 }} 次</span>-->
+          <!--</el-form-item>-->
+        <!--</el-col>-->
+
+        <el-col :span="20" :offset="2">
+          <h4>轮转要求统计：</h4>
+          <el-table align="center" :context="self" :data="rotaryRequirStatic" tooltip-effect="dark">
+            <el-table-column label="名称" prop="name"></el-table-column>
+            <el-table-column label="要求数量" prop="yqnum" show-overflow-tooltip></el-table-column>
+            <el-table-column label="已完成数量" prop="ywcnum" show-overflow-tooltip></el-table-column>
+            <el-table-column label="完成比例" prop="wcbl" show-overflow-tooltip></el-table-column>
+          </el-table>
+        </el-col>
+
+        <!--<el-col :span="20" :offset="2">-->
+          <!--<h4>轮转记录填写：</h4>-->
+          <!--&lt;!&ndash; 实习生 &ndash;&gt;-->
+          <!--&lt;!&ndash; <template v-if="studentType">-->
+            <!--<el-table align="center" :context="self" :data="viewData.depRequired" tooltip-effect="dark">-->
+              <!--<el-table-column label="名称" prop="requiredName"></el-table-column>-->
+              <!--<el-table-column label="要求例数" prop="requiredNum" show-overflow-tooltip></el-table-column>-->
+              <!--<el-table-column label="实填例数" prop="userNum" show-overflow-tooltip></el-table-column>-->
+            <!--</el-table>-->
+          <!--</template> &ndash;&gt;-->
+          <!--&lt;!&ndash; 非实习生 &ndash;&gt;-->
+          <!--&lt;!&ndash; <template v-else>-->
+            <!--<el-table align="center" :context="self" :data="viewData.depRequirement" tooltip-effect="dark">-->
+              <!--<el-table-column label="名称" prop="disTitle"></el-table-column>-->
+              <!--<el-table-column label="要求例数" prop="disNum" show-overflow-tooltip></el-table-column>-->
+              <!--<el-table-column label="实填例数" prop="disTs" show-overflow-tooltip></el-table-column>-->
+            <!--</el-table>-->
+          <!--</template> &ndash;&gt;-->
+          <!--<el-table align="center" :context="self" :data="depRequirement" tooltip-effect="dark">-->
+            <!--<el-table-column label="名称" prop="disTitle"></el-table-column>-->
+            <!--<el-table-column label="要求例数" prop="disNum" show-overflow-tooltip></el-table-column>-->
+            <!--<el-table-column label="实填例数" prop="disTs" show-overflow-tooltip></el-table-column>-->
+          <!--</el-table>-->
+        <!--</el-col>-->
         <el-col :span="20" :offset="2">
           <h4>出科成绩：</h4>
           <table class="el-table">
@@ -75,7 +118,7 @@
                   <div class="cell">{{ viewData.theoryExamScore }}</div>
                 </td>
                 <td>
-                  <div class="cell">{{ (viewData.theoryExamScore ? viewData.theoryExamIsMakeup : '--') | isNeed }}</div>
+                  <div class="cell">{{ (viewData.theoryExamScore !=null ? viewData.theoryExamIsMakeup : '--') | isNeed }}</div>
                 </td>
               </tr>
               <tr class="el-table__row">
@@ -86,7 +129,7 @@
                   <div class="cell">{{ viewData.skillExamScore }}</div>
                 </td>
                 <td>
-                  <div class="cell">{{ (viewData.skillExamScore ? viewData.skillExamIsMakeup : '--') | isNeed }}</div>
+                  <div class="cell">{{ (viewData.skillExamScore !=null ? viewData.skillExamIsMakeup : '--') | isNeed }}</div>
                 </td>
               </tr>
               <tr class="el-table__row">
@@ -145,6 +188,14 @@
       return {
         self: this,
         depRequirement: [], //轮转记录
+        viewDayData:[{ // 出勤、奖惩情况
+          minerDays:'',
+          sickDays:'',
+          personalDays:'',
+          rewardNum:'',
+          penaltyNum:'',
+        }],
+        rotaryRequirStatic:[], // 轮转要求统计
         viewData: {
           depExaminationId: '',
           depId: "",
@@ -197,8 +248,8 @@
       init() {
         // 检测当前登录用户是否是实习生
         let thisUserRoleList = [];
-        if (this.userType.indexOf('SXS') > -1) {
-          this.studentType = 'SXS'
+        if (this.userType) {
+          this.studentType = this.userType.toLocaleUpperCase()
         }
 
         if (this.operailityData.depExaminationId) {
@@ -206,6 +257,40 @@
         } else {
           this.getViewDataForPodId()
         }
+
+        this.getRotaryRequirStatic()
+      },
+
+      // 转要求统计
+      getRotaryRequirStatic(){
+        let name = {
+          sscz:'手术操作',
+          jnys: '技能演示',
+          bltl: '病例讨论',
+          klxjz: '科内小讲座',
+          jxcf: '教学查房',
+          dbl: '大病例',
+          jn: '技能',
+          bz: '病种',
+        };
+        let opt = {
+          ajaxSuccess:res=>{
+            if(res.data){
+              let temp = [];
+              this.$util._.map(res.data,(val,key)=>{
+                val.key = key;
+                val.name = name[key];
+                temp.push(val)
+              })
+              this.rotaryRequirStatic = temp;
+            }
+          },
+          ajaxParams:{
+            url:api.getRotaryRequirStatic.path + this.operailityData.podId,
+            method:api.getRotaryRequirStatic.method
+          }
+        };
+        this.ajax(opt)
       },
 
       // 获取预览数据
@@ -255,6 +340,10 @@
           val && (this.viewData[key] = val)
         })
 
+        for(let key in this.viewDayData[0]){
+          this.viewDayData[0][key] = this.viewData[key] || '';
+        }
+
         if (this.studentType === 'SXS') {
           this.getDepRequirementBySXS()
         } else {
@@ -279,9 +368,7 @@
         this.ajax({
           ajaxSuccess: res => this.depRequirement = res.data || [],
           ajaxParams: {
-            url: api.getDepRequirement.path + (this.operailityData.rdId || '') + '-' + (this.operailityData.depId ||
-                '') + '-' +
-              this.operailityData.podId,
+            url: api.getDepRequirement.path + (this.operailityData.rdId || '') + '_' + (this.operailityData.depId || '') + '_' + this.operailityData.podId,
             method: api.getDepRequirement.method
           }
         })

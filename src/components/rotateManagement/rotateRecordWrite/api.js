@@ -37,6 +37,7 @@ export default {
 
   /*查科室名字  --根据轮转生以及用户类型获取轮转科室以及状态记录*/
   userRotaryDeptlist:'/traineeRotary/arrangeRotary/userRotaryDeptlist/',//{userType}-{userId}
+  userRotaryDeptlistTree:'/traineeRotary/arrangeRotary/userRotaryDeptlistTreeData/',//{userType}-{userId}
 
 /*技能填写*/
   /*修改上报技能*/
@@ -102,6 +103,14 @@ export default {
 
 
   //*大病例模板*/
+//根据模块获取对应的评分表
+  configurationGet:'/rotaryevaluation/configuration/get/',
+
+  //根据评分表打分
+  configurationAddMark:'/rotaryevaluation/configuration/addMark',
+
+  //查分数
+  getMark:'/rotaryevaluation/configuration/getMark/',//{businessId}_{model}
 
   /*大病例查看*/
   caseRecordGet:'/rotationProcess/caseRecord/get/',//{caseId}
@@ -132,6 +141,18 @@ export default {
 
   // 黏贴查询是否黏贴
   bigcaseIscopy: '/rotaryConfig/getByKey/rotary_bigcase_iscopy-',
+
+  // 大病例模板添加
+  bigCasesAddTemplate: '/rotationProcess/caseRecord/bigCasesAddTemplate',
+
+  // 大病例模板list
+  templateList: '/rotationProcess/caseRecord/template/list',
+
+  // bigCases   DeleteTemplate 删除
+  bigCasesDeleteTemplate: '/rotationProcess/caseRecord/bigCasesDeleteTemplate',//{casesId}
+
+  // bigCases   getTemplate 查看
+  getTemplate: '/rotationProcess/caseRecord/getTemplate/',//{casesId}
 
 
   /**
@@ -259,6 +280,124 @@ export default {
   medicalEthicsAdd:'/traineeRotary/medicalEthics/add',//{id}
 
 
+  /**
+   * 手术操作
+   * */
+  operationList:{  //手术操作列表(轮转生)
+    path:"/surgeryOperation/pageList",
+    method:"get",
+  },
+  operationModifySubmit:{  //手术操作修改上报 /{id}
+    path:"/surgeryOperation/modifySubmit/",
+    method:"put",
+  },
+  operationAddSubmit:{  //手术操作添加上报
+    path:"/surgeryOperation/addSubmit",
+    method:"post",
+  },
+  operationModify:{  //手术操作修改 /{id}
+    path:"/surgeryOperation/modify/",
+    method:"put",
+  },
+  operationAdd:{  //手术操作添加
+    path:"/surgeryOperation/add",
+    method:"post",
+  },
+  operationGet:{  //手术操作详情查看 /{id}
+    path:"/surgeryOperation/get/",
+    method:"get",
+  },
+  operationRemove:{  //手术操作删除 /{ids}
+    path:"/surgeryOperation/remove/",
+    method:"delete",
+  },
+  onlySubmit:{  //手术操作上报 /{id}
+    path:"/surgeryOperation/submit/",
+    method:"put",
+  },
+
+  /**
+   * 延期出科申请
+   * */
+  userRotaryByUserId:{ //根据人员ID和人员类型查看轮转表(自动排班--查看轮转表)  {userType}-{userId}
+    path:"/traineeRotary/arrangeRotary/userRotaryByUserId/",
+    method:"get",
+  },
+  delayGivenList:{  //延期出科申请列表(轮转生)
+    path:"/rotationProcess/delayGiven/pageList",
+    method:"get",
+  },
+  delayGivenModifySubmit:{  //延期出科申请修改上报 /{id}
+    path:"/rotationProcess/delayGiven/modifySubmit/",
+    method:"put",
+  },
+  delayGivenAddSubmit:{  //延期出科申请添加上报
+    path:"/rotationProcess/delayGiven/addSubmit",
+    method:"post",
+  },
+  delayGivenModify:{  //延期出科申请修改 /{id}
+    path:"/rotationProcess/delayGiven/modify/",
+    method:"put",
+  },
+  delayGivenAdd:{  //延期出科申请添加
+    path:"/rotationProcess/delayGiven/add",
+    method:"post",
+  },
+  delayGivenGet:{  //延期出科申请查看 /get-{id}
+    path:"/rotationProcess/delayGiven/get-",
+    method:"get",
+  },
+  delayGivenRemove:{  //延期出科申请删除 /{ids}
+    path:"/rotationProcess/delayGiven/remove/",
+    method:"delete",
+  },
+  delayGivenSubmit:{  //延期出科申请上报 /{id}
+    path:"/rotationProcess/delayGiven/submit/",
+    method:"put",
+  },
+
+
+
+  /**
+   * 科研日志
+   * */
+  scientificResearchLogExportWord:{  //导出word科研日志
+    path:"/rotationProcess/scientificResearchLog/exportWord/",//{ids}
+    method:"get",
+  },
+  scientificResearchLogGet:{  //查看科研日志
+    path:"/rotationProcess/scientificResearchLog/get/",//{ids}
+    method:"get",
+  },
+  scientificResearchLogRemove:{  //批量删除科研日志
+    path:"/rotationProcess/scientificResearchLog/remove",//{ids}
+    method:"delete",
+  },
+  scientificResearchLogSubmit:{  //上报科研日志
+    path:"/rotationProcess/scientificResearchLog/submit/",//{id}
+    method:"put",
+  },
+  scientificResearchLogModifySubmit:{  //修改上报科研日志
+    path:"/rotationProcess/scientificResearchLog/modifySubmit/",//{id}
+    method:"put",
+  },
+
+  scientificResearchLogModify:{  //修改科研日志
+    path:"/rotationProcess/scientificResearchLog/modify/",//{id}
+    method:"put",
+  },
+  scientificResearchLogAddSubmit:{  //科研日志添加上报
+    path:"/rotationProcess/scientificResearchLog/addSubmit",//{id}
+    method:"post",
+  },
+  scientificResearchLogAdd:{  //科研日志添加
+    path:"/rotationProcess/scientificResearchLog/add",//{id}
+    method:"post",
+  },
+  scientificResearchLogPageList:{  //科研日志分页列表-本人填写的科研日志
+    path:"/rotationProcess/scientificResearchLog/pageList",//{id}
+    method:"post",
+  },
 
 
 }

@@ -2,10 +2,10 @@
   <!-- 单表分析 - 列表 -->
   <div ref="singleTableAnalysis">
     <!-- 搜索 -->
-    <el-form :inline="true">
-      <el-form-item label="名称：">
-        <el-input v-model="searchObj.name" :maxlength="20"></el-input>
-      </el-form-item>
+    <el-form :inline="true" ref="formValidate" :model="searchObj"  :rules="singleTableAnalysisList">
+      <el-form-item label="名称：" prop="name">
+        <el-input v-model="searchObj.name" :maxlength="51"></el-input>
+      </el-form-item >
       <el-form-item label="被评对象：">
         <el-select v-model="searchObj.evaluatedType" placeholder="请选择">
           <el-option v-for="item in evaluatedTypeOption" :key="item.value" :label="item.label" :value="item.value">
@@ -47,11 +47,13 @@
 
 <script>
   let Util;
+  import {singleTableAnalysisList} from '../../rules'
   import api from './api';
   import evaluatedTypeOption from '../synthesizeStatistics/objTypeOption';
   export default {
     data() {
       return {
+        singleTableAnalysisList,
         evaluatedTypeOption,
         // 搜索
         searchObj: {

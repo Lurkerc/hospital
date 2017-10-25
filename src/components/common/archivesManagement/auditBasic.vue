@@ -2,238 +2,13 @@
 <!--基本情况-->
 
 <template>
-
   <div>
-    <el-form ref="formValidate" :rules="this.$store.state.rules.suers" :model="formValidate" class="demo-form-inline" label-width="115px">
-      <!--标题-->
-      <el-row>
-        <el-col :span="24" class="lose-margin2" style="text-align: center">
-          <span class="table-headline ">基本情况</span>
-        </el-col>
-      </el-row>
-      <!--内容-->
-      <el-row>
-        <el-col :span="24">
-          <el-row :gutter="10">
-            <el-col :span="19">
-              <el-row :gutter="10" class="table-back-one">
-                <el-col :span="8">
-
-                  <el-form-item label="姓名：" prop="name">
-                    <span v-if="formValidate.auditStatus=='AUDIT_SUCCESS'||formValidate.auditStatus=='NOT_AUDIT'">{{formValidate.name}}</span>
-                    <el-input v-else v-model="formValidate.name" placeholder="请输入"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="性别：" prop="sex">
-                    <el-select v-model="formValidate.sex" placeholder="请选择">
-                      <el-option
-                        v-for="item in dictionary.gender"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="民族：" prop="nation">
-                    <el-select v-model="formValidate.nation" filterable placeholder="请选择">
-                      <el-option
-                        v-for="item in dictionary.nation"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-
-              <el-row :gutter="10" class="table-back-two">
-                <el-col :span="8">
-                  <el-form-item label="出生年月：" prop="birth">
-                    <el-date-picker
-                      :editable="false"
-                      v-model="formValidate.birth"
-                      type="month"
-                      placeholder="选择日期"
-                      style="width: 158px;"
-                    >
-                    </el-date-picker>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="籍贯：" prop="origin">
-                    <el-input v-model="formValidate.origin" placeholder="请输入"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="政治面貌：" prop="political">
-                    <el-select v-model="formValidate.political" filterable placeholder="请选择">
-                      <el-option
-                        v-for="item in dictionary.political"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id">
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-
-              <el-row :gutter="10" class="table-back-one">
-                <el-col :span="8">
-                  <el-form-item label="最高学历：" prop="highestEdu">
-                    <el-input v-model="formValidate.highestEdu" placeholder="请输入"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="专业：" prop="specialty">
-                    <el-input v-model="formValidate.specialty" placeholder="请输入"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="毕业学校：" prop="school">
-                    <search-select v-if="isShowSlt" @setSltOptionValue="setSltOptionValue" :selectOptions="selectOptions"></search-select>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-
-              <el-row :gutter="10" class="table-back-two">
-                <el-col :span="8">
-                  <el-form-item label="年级：" prop="grade">
-                    <el-input v-model="formValidate.grade" placeholder="请输入"></el-input>
-                  </el-form-item>
-                </el-col>
-
-                <el-col :span="8">
-                  <el-form-item label="学制：" prop="length">
-                    <el-input v-model="formValidate.length" placeholder="请输入"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="班级：" prop="classNum">
-                    <el-input v-model="formValidate.classNum" placeholder="请输入"></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </el-col>
-
-            <el-col :span="5" class="table-back-header">
-              <div style="text-align: center">
-                <up-header @upladSuccess="setUploadHeaderSuccessUrl" :imgFile="imgSrc" :actionUrl="uploadHeaderUrl"></up-header>
-              </div>
-            </el-col>
-
-          </el-row>
-
-
-          <el-row :gutter="10" class="table-back-one">
-            <el-col :span="12">
-              <el-form-item label="参加工作时间：" prop="jobTime">
-                <el-date-picker
-                  :editable="false"
-                  v-model="formValidate.jobTime"
-                  type="month"
-                  placeholder="选择日期"
-                >
-                </el-date-picker>
-
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="职务：" prop="duties">
-                <el-input v-model="formValidate.duties" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="10" class="table-back-two">
-            <el-col :span="12">
-              <el-form-item label="是否职业医师：" prop="doctor">
-                <el-radio-group v-model="formValidate.doctor">
-                  <el-radio label="0">是</el-radio>
-                  <el-radio label="1">否</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12" :pull="7">
-              <el-form-item v-if="formValidate.doctor==0" label="医师资格级别：" prop="doctorLevel">
-                <el-select v-model="formValidate.doctorLevel" placeholder="请选择">
-                  <el-option
-                    v-for="item in options"
-                    :label="item.label"
-                    :value="item.value"
-                    :key="item.value"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="10" class="table-back-one">
-            <el-col :span="12">
-              <el-form-item label="身份证号码：" prop="idNumber">
-                <el-input v-model="formValidate.idNumber" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="手机号码：" prop="mobile">
-                <el-input v-model="formValidate.mobile" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="10" class="table-back-two">
-            <el-col :span="12">
-              <el-form-item label="紧急联系人：" prop="emgContact">
-                <el-input v-model="formValidate.emgContact" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="紧急联系人电话：" prop="emgContactMobile" label-width="130px">
-                <el-input v-model="formValidate.emgContactMobile" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="10" class="table-back-one">
-            <el-col :span="12">
-              <el-form-item label="现住地址：" prop="address">
-                <el-input v-model="formValidate.address" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="邮编：" prop="postCode">
-                <el-input v-model="formValidate.postCode" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="10" class="table-back-two-d">
-            <el-col :span="8">
-              <el-form-item label="QQ：" prop="qq">
-                <el-input v-model="formValidate.qq" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="邮箱：" prop="email">
-                <el-input v-model="formValidate.email" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="办公电话：" prop="telephone">
-                <el-input v-model="formValidate.telephone" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-
-        </el-col>
-      </el-row>
-    </el-form>
+    <bks-basic-input v-if="thisUserType==='BKS'" :operailityData="formData" ref="BKS"></bks-basic-input>
+    <jxs-basic-input v-if="thisUserType==='JXS'" :operailityData="formData" ref="JXS"></jxs-basic-input>
+    <sxs-basic-input v-if="thisUserType==='SXS'" :operailityData="formData" ref="SXS"></sxs-basic-input>
+    <yjs-basic-input v-if="thisUserType==='YJS'" :operailityData="formData" ref="YJS"></yjs-basic-input>
+    <zyy-basic-input v-if="thisUserType==='ZYY'" :operailityData="formData" ref="ZYY"></zyy-basic-input>
+    <other-basic-input v-if="thisUserType === 'OTHER'" :operailityData="formData" ref="OTHER"></other-basic-input>
     <br/>
     <el-row>
       <el-col :span="24" style="text-align: center;">
@@ -245,46 +20,25 @@
     </el-row>
   </div>
 </template>
-<style>
-  .headerUrl {
-    width: 165px;
-    height: 175px;
-    line-height: 175px;
-  }
-
-</style>
 <script>
-  //上传头像组件引入
-  import upHeader from '../uploadHeader.vue';
-  //前台业务字典组件引入
-  import dictionary from '../../../libs/dictionary.js';
-  //来源单位、毕业学校公用组件
-  import searchSelect from '../searchSelect.vue';
-
   let Util = null;
+  import otherBasicInput from './archivesManagement_basic/other/input.vue'; // 其他人员
+  import bksBasicInput from './archivesManagement_basic/s_bks/input.vue'; // 本科生
+  import jxsBasicInput from './archivesManagement_basic/s_jxs/input.vue'; // 进修生
+  import sxsBasicInput from './archivesManagement_basic/s_sxs/input.vue'; // 实习生
+  import yjsBasicInput from './archivesManagement_basic/s_yjs/input.vue'; // 研究生
+  import zyyBasicInput from './archivesManagement_basic/s_zyy/input.vue'; // 住院医
   export default {
     //props接收父组件传递过来的数据
     props: ['operailityData', 'fromWhere'],
     data() {
       return {
-        //公用业务字典
-        dictionary,
-        //医师资格级别
-        options: [{
-          value: '0',
-          label: '职业'
-        }, {
-          value: '1',
-          label: '助理'
-        }, {
-          value: '2',
-          label: '无'
-        }],
-
+        // 当前登录人的角色
+        thisUserType:'',
         //保存的类型,是否为上报审核
         saveType: "save",
 
-        //毕业学校
+        //学校
         selectOptions: {
           multiple: false, //是否多选
           url: "/schools/queryList"
@@ -296,41 +50,7 @@
         loadBtnSub:{title:'上报审核',callParEvent:'listenSubEvent'},
         countDate: 0,
         //form表单bind数据
-        formValidate: {
-          deptId: '', //部门id
-          name: '', //姓名
-          auditStatus: '', //审核通过判断
-          sex: '', //性别
-          nation: '', //民族
-          birth: '', //出生日期
-          origin: '', //籍贯
-          political: '', //政治面貌
-          highestEdu: '', //最高学历
-          specialty: '', //专业
-          school: '', //毕业学校
-          jobTime: '', //参加工作时间，年月，例如：199011
-          grade: '', //年级
-          classNum: '', //班级
-          length: '', //学制
-          duties: '', //职务
-          doctor: '', //是否职业医师:是、否
-          doctorLevel: '', //医师资格级别(职业、助理、无)
-          idNumber: '', //身份证号码
-          mobile: '', //手机号
-          emgContact: '', //紧急联系人
-          emgContactMobile: '', //紧急联系人电话
-          qq: '', //qq
-          email: '', //邮箱
-          telephone: '', //办公电话
-          address: '', //现住地址
-          postCode: '', //邮编
-          headPhoto: '', //头像地址
-          headPhotoHttp: '' //头像全地址
-        },
-        //上传头像
-        uploadHeaderUrl: '/file/upload/headImg',
-        //是否显示头像
-        imgSrc:'',
+        formData: null,
 
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         editMessTitle:{
@@ -377,7 +97,6 @@
         },
 
 
-
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
         initMessTitle:{
           ajaxSuccess:'SuccessGetCurrData',
@@ -392,9 +111,6 @@
       Util = this.$util;
       //初始化
       this.init();
-      if(typeof this.fromWhere=="undefined"){
-        this.fromWhere = "depUser";
-      }
     },
     mounted(){
     },
@@ -403,19 +119,38 @@
        * 组件初始化入口
        * */
       init(){
+        let api = {
+          ZYY:{
+            get: '/user/getZYY/'+this.operailityData.id,
+            edit: '/user/saveZYY',
+          },
+          SXS:{
+            get: '/user/getSXS/'+this.operailityData.id,
+            edit: '/user/saveSXS',
+          },
+        };
+        let thisUserRole = this.$store.getters.getUserRolu.code;
+        let isStudent = ['YJS','ZYY','JXS','SXS','BKS'].indexOf(thisUserRole) > -1;
+        this.thisUserType = isStudent ? thisUserRole : "OTHER";
+        console.log('用户类型:',this.thisUserType)
         //默认请求加载数据
+        if(['ZYY','SXS'].indexOf(this.thisUserType) > -1){ // 实习生与住院医的资料接口初始化
+          this.initMessTitle.ajaxParams.url = api[this.thisUserType].get;
+          this.editMessTitle.ajaxParams.url = api[this.thisUserType].edit;
+        }
         this.ajax(this.initMessTitle);
       },
 
 
       //上报审核
       subAndAudit(isLoadingFun){
-        let isSubmit = this.submitForm("formValidate");
-        if(isSubmit) {
+        let data = this.$refs[this.thisUserType].getInputData();
+        if(data) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true)
-          this.auditFrontEditMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          this.auditFrontEditMessTitle.ajaxParams.data = data;
           this.ajax(this.auditFrontEditMessTitle, isLoadingFun);
+          console.log('上报')
         }
       },
 
@@ -437,29 +172,14 @@
        * @param isLoadingFun boolean  form表单验证是否通过
        * */
       saveCurrData(isLoadingFun){
-        let isSubmit = this.submitForm("formValidate");
-        if(isSubmit) {
+        let data = this.$refs[this.thisUserType].getInputData();
+        if(data) {
           if (!isLoadingFun) isLoadingFun = function () {};
           isLoadingFun(true)
-          this.editMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
+          this.editMessTitle.ajaxParams.data = data;
           this.ajax(this.editMessTitle, isLoadingFun)
+          console.log('保存')
         }
-      },
-
-
-      /*
-       * 点击提交按钮 监听是否验证通过
-       * @param formName string  form表单v-model数据对象名称
-       * @return flag boolean   form表单验证是否通过
-       * */
-      submitForm(formName){
-        let flag = false;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            flag= true;
-          }
-        });
-        return flag;
       },
 
 
@@ -468,16 +188,7 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
-        let data = responseData.data;
-        this.formValidate = this.formDate(data,['birth','jobTime'],this.yearMonth);
-        let env = this.$store.getters.getEnvPath;
-        if(data.headPhoto === null || data.headPhoto==""){
-          this.imgSrc = "";
-        }else{
-          this.imgSrc = env["http"]+data.headPhoto;
-        }
-        this.selectOptions.value = this.formValidate.schoolId;
-        this.isShowSlt = true;
+        this.formData = responseData.data;
       },
 
 
@@ -489,40 +200,6 @@
         this.$emit('cancel','edit');
       },
 
-
-      /*
-       * 获取表单数据
-       * @return string  格式:id=0&name=aa
-       * */
-      getFormData(data){
-        let myData = Util._.defaultsDeep({},data);
-        this.formDate(myData,['jobTime','birth'],this.yearMonth);
-        return myData;
-      },
-
-
-      /*
-       * 设置是否显示上传头像loading
-       *
-       * @param resData  {}  上传成功后后台返回的数据 {"relativePathFile":"img/2017/04/28/20170428093435979.png","staticUrl":"http://ip:port/static/"}
-       *
-       * @param imgSrc  string  头像路径
-       * */
-      setUploadHeaderSuccessUrl(resData,imgSrc){
-        this.formValidate.headPhoto = resData;
-
-        this.imgSrc = this.$store.state.envPath.http + resData;
-      },
-
-
-      /*
-       * 设置毕业学校选中的值
-       * @param val string || number  选中毕业学校的id
-       * */
-      setSltOptionValue(val,id){
-        this.formValidate.schoolId = id;
-        this.formValidate.school = val;
-      }
 
 
     },
@@ -536,7 +213,6 @@
               if (info.auditStatus != "AUDIT_SUCCESS") {
                 this.archivesModal = true;
               }
-
               if (info.auditStatus == "NOT_SUBMIT") { //未提交
                 this.currAuditStatus = "您的档案未提交,请先完善个人档案!";
               } else if (info.auditStatus == "NOT_AUDIT") { //未审核
@@ -551,7 +227,7 @@
       }
     },
     components:{
-      upHeader,searchSelect
+      otherBasicInput,bksBasicInput,jxsBasicInput,sxsBasicInput,yjsBasicInput,zyyBasicInput,
     }
   }
 

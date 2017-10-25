@@ -146,8 +146,9 @@
           this.activeName = '0'
         }
         this.cwSelectList = this.planDtoList[this.selectObj.planIndex].wareDtoList[this.selectObj.types] || [];
+
         if (this.cwSelectList.length) {
-          setTimeout(() => this.showFile(this.cwSelectList[0]), 10)
+          setTimeout(() => this.showFile(this.cwSelectList[this.activeName]), 10)
         }
       },
       // 获取路径

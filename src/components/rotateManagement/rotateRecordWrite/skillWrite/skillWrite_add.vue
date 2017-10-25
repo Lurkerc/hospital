@@ -7,7 +7,7 @@
         <el-col :span="8" :offset="2">
           <el-form-item label="科室:" prop="podId">
             <el-select @change="podIdChange" v-model="formValidate.podId" placeholder="请选择" :disabled="!!podId">
-              <el-option v-for="item in optionData" :key="item.id" :label="item.depName" :value="item.podId">
+              <el-option v-for="item in optionData" :key="item.id" :label="item.label" :value="item.podId">
               </el-option>
             </el-select>
           </el-form-item>
@@ -40,7 +40,6 @@
             <el-select style="width: 100%;" multiple v-model="formValidate.disTitle" placeholder="请选择">
               <el-option v-if="role == 'SXS'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+'掌握程度:'+item.deMasterDegree+')'" :value="item.outlineRequireId+'-'+item.disTitle"> </el-option>
               <el-option v-if="role == 'ZYY'" v-for="item in getMyRotaryRequirements" :key="item.id" :label="item.disTitle+'(科室要求:'+item.disNum+'未填:'+item.wwc+'掌握程度:'+item.deMasterDegree+')'" :value="item.deId+'-'+item.disTitle"></el-option>
-              </el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -64,12 +63,11 @@
         </el-col>
       </el-row>
 
-      <el-row>
+      <el-row v-if="isShow">
         <el-col :span="16" :offset="2">
-          <el-form-item label="相关资料:" prop="name">
+          <el-form-item label="相关证明材料:" prop="name">
             <upload-file @setUploadFiles="expenseFileEvent"></upload-file>
           </el-form-item>
-        </el-col>
         </el-col>
       </el-row>
 
@@ -99,6 +97,7 @@
       return {
         skillWrite,
         disTitle: [],
+        isShow:true,
         getMyRotaryRequirements: [], //技能名称列表
         optionData: '',
         depUrl: '',
@@ -150,7 +149,7 @@
       Util = this.$util;
       let userInfo = this.$store.getters.getUserInfo;
       let userType = userInfo.studentTypes;
-      this.listMessTitle.ajaxParams.url = this.url.userRotaryDeptlist + userType + '-' + userInfo.id;
+      this.listMessTitle.ajaxParams.url = this.url.userRotaryDeptlistTree + userType + '-' + userInfo.id;
       this.ajax(this.listMessTitle);
       if (this.podId) {
         this.formValidate.podId = this.podId; // 外部传入科室id
@@ -165,8 +164,25 @@
       updateListData(res) {
         let data = res.data;
         if (!data) return;
-        this.optionData = data;
+        this.optionData = this.getQTBObj(res.data);
 
+      },
+
+
+      // 处理科室数据结构（三级以下）
+      getQTBObj(arr,res,depth=-1){
+        depth++;
+        let t = res || [];
+        if(arr && arr.length) {
+          arr.map(item => {
+            item.label='　'.repeat(depth)+item.depName;
+            t.push(item);
+            if (item.childList){
+              return t.concat(this.getQTBObj(item.childList,t,depth))
+            }
+          })
+        }
+        return t
       },
       /*
        * 点击提交按钮 监听是否提交数据
@@ -243,6 +259,10 @@
             data: {},
           }
         }
+        this.isShow=false;
+        this.$nextTick(function () {
+          this.isShow=true;
+        })
         this.addMessTitle = addMessTitle;
         this.listenSubEvent()
       },
@@ -261,6 +281,10 @@
             data: {},
           }
         }
+        this.isShow=false;
+        this.$nextTick(function () {
+          this.isShow=true;
+        })
         this.addMessTitle = addMessTitle;
         this.listenSubEvent()
       },
@@ -342,9 +366,9 @@
         let userInfo = this.$store.getters.getUserInfo;
         let role = userInfo.roleList[0].identify;
         this.role = role;
-        if(role=='SXS'){
+        if(role=='SXS'||role=='JXS'){
           listMessTitle.ajaxParams.url =  this.url.getMyRotaryRequirements + 'jn-' + val;
-        }else if (role=='ZYY'){
+        }else if (role=='ZYY'||role=='YJS'){
           listMessTitle.ajaxParams.url =  this.url.ZYYgetMyRotaryRequirements + 'jn_' + val;
         };
         this.formValidate.disTitle = [];

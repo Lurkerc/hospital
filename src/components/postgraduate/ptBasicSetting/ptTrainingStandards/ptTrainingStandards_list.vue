@@ -5,13 +5,11 @@
 ****--@author   gx
 ----------------------------------->
 <template>
-    <div>
-      培训标准
-    </div>
+  <standards :rtModelType="'YJS'"></standards>
 </template>
 <script>
     /*当前组件必要引入*/
-
+    import standards from "../../../zyy/rdyBasicSetting/rdyTrainingStandards/rdyTrainingStandards_list.vue";
     //当前组件引入全局的util
     let Util = null;
     export default{
@@ -30,6 +28,8 @@
         },
         mounted(){
         },
-        components: {}
+        components: {
+          standards
+        }
     }
 </script>

@@ -9,7 +9,6 @@
             <el-input v-model="formValidate.name" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="8" :offset="2">
           <el-form-item label="英文名称" prop="identify">
@@ -30,7 +29,9 @@
           <fieldset>
             <legend style="font-size:16px"> 添加人员 <el-button  type="primary" size="mini" @click="addUser" icon="plus"></el-button>&nbsp;&nbsp;</legend>
 
-            <span v-for="(item,index) in users" class="userName"><em class="nameText">{{item.label}}</em><el-button type="danger" @click="removeUser(index)" size="mini" icon="close"></el-button></span>
+            <div style="max-height: 316px;overflow-y: auto;">
+              <span v-for="(item,index) in users" class="userName"><em class="nameText">{{item.label}}</em><el-button type="danger" @click="removeUser(index)" size="mini" icon="close"></el-button></span>
+            </div>
 
           </fieldset>
         </div>

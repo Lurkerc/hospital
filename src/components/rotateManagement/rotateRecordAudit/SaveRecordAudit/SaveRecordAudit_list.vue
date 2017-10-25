@@ -24,12 +24,12 @@
           <el-button :icon="searchMore ? 'arrow-down' : 'arrow-up'" @click="showSearchMore">筛选</el-button>
         </el-col>
       </el-row>
-      </br>
+      <br>
       <!--高级搜索项-->
       <div v-show="searchMore"  ref="searchMore">
         <el-form-item label="科室" prop="userType" >
           <el-select filterable  v-model="formValidate.depId" placeholder="请选择">
-            <select-option :type="type"></select-option>
+            <select-option type="byUserType"></select-option>
             <!--<select-option :type="'userRotaryDeptlist'" :userType="userType" :userId="userId"  name="depName" id="depId"></select-option>-->
           </el-select>
 
@@ -266,7 +266,6 @@
         reportedId:{id:'reportedId',title:'上报'},
         rejectId:{id:'rejectId',title:'驳回'},
         //人员
-        type:'',
       }
 
 
@@ -276,13 +275,6 @@
       init(){
         Util = this.$util;
         //ajax请求参数设置
-        let userInfo = this.$store.getters.getUserInfo;
-        let identify = userInfo.roleList[0].identify;
-        if(identify=='JXMS'||identify=='KEZR'|| identify==''){
-          this.type = 'byNowUser';
-        }else {
-          this.type = 'dep';
-        }
         this.myPages =  Util.pageInitPrams;
 
         this.queryQptions = {

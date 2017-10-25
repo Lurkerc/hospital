@@ -5,23 +5,23 @@
 -->
 <template>
   <div ref="givenTheApplicationOfLarge">
-    <el-row>
-      <el-col>
-        <el-form :inline="true">
-          <el-form-item label="排序字段：">
-            <el-select v-model="otherParams.sortby" placeholder="请选择">
-              <el-option v-for="item in sortbyOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="排序方式：">
-            <el-select v-model="otherParams.order" placeholder="请选择">
-              <el-option v-for="item in orderOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-button type="info" @click="search">查看</el-button>
-        </el-form>
-      </el-col>
-    </el-row>
+    <!--<el-row>-->
+      <!--<el-col>-->
+        <!--<el-form :inline="true">-->
+          <!--<el-form-item label="排序字段：">-->
+            <!--<el-select v-model="otherParams.sortby" placeholder="请选择">-->
+              <!--<el-option v-for="item in sortbyOption" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="排序方式：">-->
+            <!--<el-select v-model="otherParams.order" placeholder="请选择">-->
+              <!--<el-option v-for="item in orderOption" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <!--<el-button type="info" @click="search">查看</el-button>-->
+        <!--</el-form>-->
+      <!--</el-col>-->
+    <!--</el-row>-->
     <!-- 数据表格 -->
     <div id="tableData" ref="tableData" class="givenTheAppTable">
       <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
@@ -89,7 +89,7 @@
         loading: false,
         operailityData: [],
         otherParams: {
-          sortby: '', // rotaryBeginTime|开始时间 endBeginTime|结束时间 theoryScore|理论成绩 skillScore|技能成绩  
+          sortby: '', // rotaryBeginTime|开始时间 endBeginTime|结束时间 theoryScore|理论成绩 skillScore|技能成绩
           order: 'DESC',
         },
         rotaryModal: false,
@@ -129,12 +129,34 @@
       // 获取科室
       getDepartmentOption() {
         this.ajax({
-          ajaxSuccess: res => this.departmentOption = res.data || [],
+          ajaxSuccess: res =>{
+
+            if (res.data && res.data.length){
+              this.departmentOption= this.getQTBObj(res.data);
+            }
+          } ,
+
           ajaxParams: {
-            url: api.getDepartment.path + this.userInfo.roleList[0].identify + '-' + this.userInfo.id,
-            method: api.getDepartment.method,
+            url: api.getDepartmentTree.path + this.userInfo.roleList[0].identify + '-' + this.userInfo.id,
+            method: api.getDepartmentTree.method,
           }
         })
+      },
+
+      // 处理科室数据结构（三级以下）
+      getQTBObj(arr,res,depth=-1){
+        depth++;
+        let t = res || [];
+        if(arr && arr.length) {
+          arr.map(item => {
+            item.label='　'.repeat(depth)+item.depName;
+            t.push(item);
+            if (item.childList){
+              return t.concat(this.getQTBObj(item.childList,t,depth))
+            }
+          })
+        }
+        return t
       },
       /*************************************** 表格相关 **********************************/
       /*

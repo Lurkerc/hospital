@@ -44,7 +44,47 @@
       </div>
     </div>
     <div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox">
+      <el-form :rules="form" :inline="true" style="margin-top:10px;" label-width="74px">
+        <el-row>
 
+          <el-form-item label="状态:">
+            <el-select v-model="formValidate.rtState" placeholder="请选择状态">
+              <el-option label="全部" value=""></el-option>
+              <el-option label="未安排轮转" value="0"></el-option>
+              <el-option label="轮转中" value="99"></el-option>
+              <el-option label="轮转结束" value="9999"></el-option>
+              <el-option label="已安排未开始轮转" value="9"></el-option>
+              <el-option label="轮转暂停" value="-1"></el-option>
+            </el-select>
+          </el-form-item>
+          <!--<el-form-item label="排序:">-->
+            <!--<el-select v-model="formValidate.sortby" placeholder="请选择状态">-->
+              <!--<el-option label="全部" value=""></el-option>-->
+              <!--<el-option label="创建时间" value="createTime"></el-option>-->
+              <!--<el-option label="状态" value="rtState"></el-option>-->
+              <!--<el-option label="学院名称" value="schoolName"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <el-form-item label="创建年份:">
+            <el-select v-model="formValidate.year" placeholder="请选择状态">
+              <el-option label="全部" value=""></el-option>
+              <el-option label="2015" value="2015"></el-option>
+              <el-option label="2016" value="2016"></el-option>
+              <el-option label="2017" value="2017"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="学院名称:" prop="schoolName">
+          <el-input v-model="formValidate.schoolName"></el-input>
+          </el-form-item>
+          <!--<el-form-item label="考核状态:">
+            <el-select v-model="searchObj.status" placeholder="请选择">
+              <el-option v-for="item in examineStatuOption" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>-->
+          <el-button type="info" @click="search">查询</el-button>
+        </el-row>
+      </el-form>
     </div>
     <br />
     <!--列表数据-->
@@ -183,7 +223,6 @@
             </a>
             <el-button class="but-col" @click="exportDepModal=false">取消</el-button>
           </el-col>
-          </el-col>
         </el-row>
       </div>
       <div slot="footer"></div>
@@ -207,7 +246,6 @@
             </a>
             <el-button class="but-col" @click="exportUserModal=false">取消</el-button>
           </el-col>
-          </el-col>
         </el-row>
       </div>
       <div slot="footer"></div>
@@ -216,6 +254,7 @@
 </template>
 <script>
   /*当前组件必要引入*/
+  import { form } from '../../rules';
   import add from "./autoArrange_add.vue";
   import show from "./autoArrange_view.vue";
 
@@ -228,10 +267,16 @@
   export default{
     data() {
       return {
+        form,
         showView:"列表",
         //查询
         formValidate: {
           userName: '',
+          rtState:'',
+          year:'',
+          sortby:'',
+          schoolName:'',
+          order:''
         },
         operailityData:'',
         multipleSelection: [],
@@ -302,7 +347,7 @@
 
         this.queryQptions = {
           //url:this.listUrl,
-          params:{curPage: 1,pageSize: Util.pageInitPrams.pageSize}
+          curPage: 1,pageSize: Util.pageInitPrams.pageSize
         }
         this.setTableData();
       },
@@ -340,8 +385,8 @@
 
 
       setTableData(){
-        this.formValidate.userName="";
-        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params);
+        let formValidate =this.$util._.defaultsDeep({},this.formValidate);
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions,formValidate);
         this.ajax(this.listMessTitle);
       },
 
@@ -366,7 +411,10 @@
         }
       },
 
-
+      //查询
+      search(){
+        this.setTableData();
+      },
       //按科室导出
       exportDep(){
         let myParams = Object.assign({

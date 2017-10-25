@@ -48,7 +48,7 @@
             </el-table-column>
             <el-table-column
               label="操作"
-              width="160">
+              width="80">
               <template scope="scope">
                 <el-button
                   size="small"
@@ -68,12 +68,15 @@
               prop="score"
               label="总分"
               width="120">
+              <template scope="scope">
+                {{scope.row.score/100}}
+              </template>
             </el-table-column>
         </el-table>
       </el-radio-group>
 
     </div>
-    </br>
+    <br>
      <div style="height:30px;">
       <div style="float: right; ">
 
@@ -90,7 +93,7 @@
     </div>
 
     <el-row >
-      <el-col :span="20"  :offset="3">
+      <el-col :span="10"  :offset="11">
         <el-button  @click="baseInfo">确定</el-button>
         <!--<el-button  @click="$emit('lost') ">上一步</el-button>-->
       </el-col>
@@ -108,12 +111,28 @@
       <!--<show v-if="showModal" :url="url" :operaility-data="operailityData"></show>-->
       <!--<div slot="footer"></div>-->
     <!--</Modal>-->
-
+    <!--查看右侧评分模板弹窗-->
+    <Modal
+      :mask-closable="false"
+      v-model="showModal"
+      height="200"
+      title="对话框标题"
+      class-name="vertical-center-modal"
+      :width="1000">
+      <!--<div slot="header"> -->
+      <!--</div>-->
+      <modal-header slot="header" :content="viewId"></modal-header>
+      <show v-if="showModal" :unShowStyle="true" @cancel="cancel" :url="url" :operaility-data="operailityData"   @add="subCallback" ></show>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 <style>
 </style>
 <script>
+  /*引入 --查看*/
+  import show from '../../../evaluationManagement/evaluationManagement_view.vue'
+
   /*当前组件必要引入*/
   //引入--新建教学活动--组件
   let Util=null;
@@ -161,8 +180,6 @@
     },
     created(){
       this.init();
-    },
-    components:{
     },
     methods:{
       //初始化请求列表数据
@@ -323,6 +340,9 @@
     },
     mounted(){
     },
+    components:{
+      show
+    }
   };
 </script>
 

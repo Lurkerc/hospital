@@ -15,7 +15,7 @@
         <el-col :span="16" :offset="4">
           <el-form-item label="科室:" prop="podId">
             <el-select  v-model="formValidate.podId" placeholder="请选择" >
-              <el-option  v-for="item in optionData" :key="item.id" :label="item.depName" :value="item.depId+'-'+item.depName+'-'+item.podId">
+              <el-option  v-for="item in optionData" :key="item.id" :label="item.label" :value="item.depId+'-'+item.depName+'-'+item.podId">
               </el-option>
             </el-select>
           </el-form-item>
@@ -128,7 +128,7 @@
       Util = this.$util;
       let userInfo = this.$store.getters.getUserInfo;
       let userType = userInfo.studentTypes;
-      this.listMessTitle.ajaxParams.url = this.url.userRotaryDeptlist + userType + '-' + userInfo.id;
+      this.listMessTitle.ajaxParams.url = this.url.userRotaryDeptlistTree + userType + '-' + userInfo.id;
       this.init()
     },
     mounted(){
@@ -139,8 +139,23 @@
       updateListData(res) {
         let data = res.data;
         if (!data) return;
-        this.optionData = data;
+        this.optionData = this.getQTBObj(res.data);
 
+      },
+      // 处理科室数据结构（三级以下）
+      getQTBObj(arr,res,depth=-1){
+        depth++;
+        let t = res || [];
+        if(arr && arr.length) {
+          arr.map(item => {
+            item.label='　'.repeat(depth)+item.depName;
+            t.push(item);
+            if (item.childList){
+              return t.concat(this.getQTBObj(item.childList,t,depth))
+            }
+          })
+        }
+        return t
       },
       /*
        * 保存或上报按钮会调用这个公共函数

@@ -52,6 +52,12 @@
           width="160">
         </el-table-column>
         <el-table-column
+          prop="timeInfo"
+          label="时间段"
+          align="center"
+          width="160">
+        </el-table-column>
+        <el-table-column
           prop="courseDataState"
           label="状态"
           align="center"

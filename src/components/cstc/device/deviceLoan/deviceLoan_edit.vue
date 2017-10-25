@@ -29,7 +29,6 @@
         <el-col :span="8" :offset="2">
           <el-form-item label="借用人：" prop="borrower" required>
             <el-input v-model="formValidate.borrower"></el-input>
-            </el-select>
           </el-form-item>
         </el-col>
 

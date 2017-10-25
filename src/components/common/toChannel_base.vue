@@ -11,7 +11,7 @@
         <!--<el-button size="small" type="danger" @click="remove(scope.$index,scope.row)">删除</el-button>-->
         <!--</template>-->
         <!--</el-table-column>-->
-        <el-table-column v-for="(item,index) in header" :key="index" :prop="item.key" :label="item.label" align="center" :width="this.width||180">
+        <el-table-column v-for="(item,index) in header" :key="index" :prop="item.key" :label="item.label" align="center" :min-width="180">
           <template scope="scope">
             <span v-if="!scope.row[item.key+'edit']">{{scope.row[item.key]}}</span>
             <el-input v-else v-model="scope.row[item.key]"></el-input>
@@ -256,10 +256,13 @@
         for (let i = 0; i < data.length; i++) {
           let tempObj = {};
           for (let key in format) {
+                  if(typeof format[key]=='function') continue;
             // tempObj[format[key]]  = data[i][key].replace(/(^\s*)|(\s*$)/g, "");
             tempObj[format[key]] = data[i][key];
             tempObj[format[key] + 'edit'] = false;
           }
+
+
           if (this.extra) {
             for (let k = 0; k < this.extra.length; k++) {
               tempObj[this.extra[i].key] = this.extra[i].label
@@ -289,8 +292,10 @@
         for (let i = 0, n = 0; i < tempArr.length; i += 100, n++) {
           setTimeout(() => {
             that.body = that.body.concat(tempArr.splice(0, 100));
+            console.log( that.body);
           }, n * 10)
         }
+
         this.formats = this.format;
       },
 

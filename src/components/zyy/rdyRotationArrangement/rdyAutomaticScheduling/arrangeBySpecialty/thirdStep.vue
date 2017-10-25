@@ -20,6 +20,12 @@
       </el-table-column>
       <el-table-column
         prop="jdName"
+        v-if="userType=='YJS'"
+        label="学校">
+      </el-table-column>
+      <el-table-column
+        prop="jdName"
+        v-if="userType!='YJS'"
         label="基地名">
       </el-table-column>
       <el-table-column
@@ -45,7 +51,7 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
-    props:["initRtId","jdProclass"],
+    props:["initRtId","jdProclass","userType"],
     data() {
       return {
         radio:this.initRtId,
@@ -68,7 +74,7 @@
             url: api.getRulesList.path,
             params:{
               rtProclass:this.jdProclass,
-              rtModelType:'ZYY',
+              rtModelType:this.userType,
             }
           }
         },

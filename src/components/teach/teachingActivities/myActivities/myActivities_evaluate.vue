@@ -67,7 +67,6 @@
                 <tbody  class="add-scope">
                 <tr v-for="(item,index) in body">
 
-
                   <td v-if="isShow(item,head['key'])"  :rowspan="item[head['key']+'Row']" v-for="(head,i) in header" :key="i">
                     <div v-if="head['key']== 'operateSub'" style="text-align: center">
                       <el-button size="mini" type="primary" icon="plus" @click="operateSubAdd(item,head['key'],index)"></el-button>

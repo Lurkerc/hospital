@@ -29,13 +29,14 @@
             </template>
           </el-table-column>
           <el-table-column label="评价人" prop="appraiser" show-overflow-tooltip>
-            <template scope="scope">
-              {{ scope.row.appraiser && scope.row.appraiser.split('=')[1] }}
-            </template>
+            <!--<template scope="scope">-->
+              <!--{{ scope.row.appraiser && scope.row.appraiser.split('=')[1] }}-->
+            <!--</template>-->
           </el-table-column>
           <el-table-column label="被评价人" prop="evaluated" show-overflow-tooltip>
             <template scope="scope">
-              {{ scope.row.evaluated && scope.row.evaluated.split('=')[1] }}
+              {{ scope.row.evaluated  }}
+              <div v-if="show"></div>
             </template>
           </el-table-column>
           <el-table-column label="权重" prop="weight"></el-table-column>
@@ -55,6 +56,7 @@
         viewContent: [], // 分析报告基本信息展示
         queryContent: [], // 分析报告数据查询内容
         //form表单bind数据
+        show:false,
         formValidate: {
           "title": "",
           "objType": "",
@@ -81,50 +83,27 @@
     },
     methods: {
       // 获取评价时间描述文本
-      getTimeText(res) {
-        let dateType = (res.dateType || 0) - 1; // 时间类型
-        let startDay = res.startDay; // 开始
-        let endDay = res.endDay; // 截止
-        let week = {
-          1: '一',
-          2: '二',
-          3: '三',
-          4: '四',
-          5: '五',
-          6: '六',
-          7: '日'
-        };
-        let dateText = [{
-            start: `出科前${startDay}天`,
-            end: `后${endDay}天`
-          },
-          {
-            start: `每周${week[startDay]}`,
-            end: `周${week[endDay]}`
-          },
-          {
-            start: `每月${startDay}日`,
-            end: `${endDay}日`
-          },
-          {
-            start: `${res.startDate}`,
-            end: `${res.endDate}`
-          },
-          '每天',
-          '每季度',
-          '每半年',
-          '每年'
-        ];
-        let text = '';
-        if (dateType > -1) {
-          if (dateType > 3) {
-            text = dateText[dateType]
-          } else {
-            text = dateText[dateType].start;
-            endDay && (text += ' - ' + dateText[dateType].end)
-          }
+      getTimeText({dateType,startDay,endDay,startDate,endDate}){
+        let date='' ;
+        switch (dateType){
+          case 1:date = `出科前${startDay}天——后${endDay}天评价一次`;
+            break;
+          case 2:date = `每周${startDay}——周${endDay}评价一次`;
+            break;
+          case 3:date = `每月${startDay}日——${endDay}日评价一次`;
+            break;
+          case 4:date = `${startDate}~${endDate}`;
+            break;
+          case 5:date = `每天评价一次`;
+            break;
+          case 6:date = `每季度评价一次`;
+            break;
+          case 7:date = `每半年评价一次`;
+            break;
+          case 8:date = `每年评价一次`;
+            break;
         }
-        return text
+        return date;
       },
       // 从服务器获取数据
       getDataForServer() {
@@ -142,7 +121,60 @@
         this.viewContent = (res.data.viewContent || '').split(',');
         this.queryContent = (res.data.queryContent || '').split(',');
         this.formValidate = res.data;
+        let data = res.data.strategyResourceDtoList;
+        for (let i = 0, l = data.length; i < l; i++) {
+//          data[i].timeText = this.getTimeText(data[i]);
+          this.getSelectDataInfo(i,data[i].activityId ,data)
+        }
         this.tableData = res.data.strategyResourceDtoList;
+      },
+      // 根据选择的评分表获取详细信息
+      getSelectDataInfo(index, id,data) {
+        if (!id) {
+          return
+        }
+        if(!data){
+          data = this.tableData
+        }
+        this.ajax({
+          ajaxSuccess: res => {
+          this.$nextTick(function () {
+
+            data[index].appraiser =this.conductRole(res.data.appraiser,res.data,0) ; // 评价对象
+            data[index].evaluated =this.conductRole(res.data.evaluated,res.data,1) ; // 评价对象
+//              data[index].evaluated = res.data.evaluated; // 被评价对象
+            data[index].timeText = this.getTimeText(res.data); // 评价时间
+            this.show = !this.show;
+          })
+        },
+        ajaxParams: {
+          url: api.getActivity.path + id,
+            method: api.getActivity.method,
+            params: {
+            id
+          }
+        }
+      })
+      },
+
+      conductRole(data,item,index){
+        if(item.relationship== 'NO'&&!data){
+          return '所有人'
+        }
+        if(item.relationship== 'LOOP'){
+          let tempArr=[['学生','老师'],['学生','科室'],['老师','学生']];
+          return tempArr[item.loopType-1][index]
+        }
+
+        let tempArr=[]
+        if(typeof data == 'string'){
+          data=data.split(',')
+          for(let i=0;i<data.length;i++){
+            let temp=data[i].split('=');
+            tempArr.push(temp[1]);
+          }
+        }
+        return tempArr.join(' ; ');
       },
       /*
        * 组件初始化入口

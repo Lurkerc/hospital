@@ -17,6 +17,7 @@ let entityWriteList = {
 };
 let entityAudit = {
   reviewMess: [baseRules.inputLen(0,500),baseRules.illegalChar()], // 病人名称
+  mark:[{ required: true, message: '此项不能为空', },baseRules.float2(0,100),baseRules.inputLen(0,6),baseRules.illegalChar()]
 };
 
 /**
@@ -49,6 +50,13 @@ let largeCaseAudit = {
 let clinicalOperationWriteList = {
   name: [baseRules.inputLen(0,50),baseRules.illegalChar()], // 病人名称
 }
+/**
+ *  - 科研日志 -
+ */
+
+let scientificResearchLog = {
+  logTitle: [baseRules.inputLen(0,20),baseRules.illegalChar()], // 科室名称
+}
 
 export {
   givenSkillMakeUpAudit,
@@ -59,4 +67,6 @@ export {
   entityAudit,
   skillAudit,
   // largeCaseWrite,
+
+  scientificResearchLog
 };

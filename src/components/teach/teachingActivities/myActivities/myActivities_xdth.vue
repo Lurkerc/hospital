@@ -48,6 +48,21 @@
 
           </el-col>
         </el-row>
+
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="课件资料:" prop="name7">
+              <upload-file  :show="true" :uploadFiles="data.fileList"></upload-file>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="相关证明材料:" prop="name7">
+              <upload-file  :show="true" :uploadFiles="data.activityFileList"></upload-file>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </fieldset>
       </br>
       <fieldset class="layui-elem-field">
@@ -63,16 +78,16 @@
 
 
       <el-row>
-        <el-col :span="24">
-          <el-form-item label="现场照片:" prop="name7">
-            <upload-file :type="'picture'" :uploadFiles="data.activityTipsFileList"  @setUploadFiles="expenseFileEvent"></upload-file>
+        <el-col :span="24" >
+          <el-form-item label="附件:" prop="name7">
+            <upload-file :unAccept="true" :uploadFiles="data.activityTipsFileList"  @setUploadFiles="expenseFileEvent"></upload-file>
           </el-form-item>
         </el-col>
       </el-row>
 
       </fieldset>
 
-      <el-form-item>
+      <el-form-item style="text-align: center;padding-top: 10px">
         <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
         <el-button  @click="cancel">取消</el-button>
       </el-form-item>

@@ -49,7 +49,7 @@
           </el-col>
 
           <div style="clear:both;" class="newCalendar" v-if="formValidate.timeModel === 'SPECIFIC'">
-            <full-calendar class="test-fc" :tpl="calendarSet.tpl" :itemLimit="calendarSet.itemLimit" :events="calendarSet.fcEvents" first-day='1'
+            <full-calendar ref="newCalendar" class="test-fc" :tpl="calendarSet.tpl" :itemLimit="calendarSet.itemLimit" :events="calendarSet.fcEvents" first-day='1'
               locale="zh-cn" @changeMonth="changeMonth" @eventClick="eventClick" @dayClick="dayClick" @moreClick="moreClick"
               @goPrev="goPrev" @goNext="goNext">
               <template slot="fc-header-left" scope="p">
@@ -116,7 +116,7 @@
         },
         //form表单bind数据
         formValidate: {
-          deviceList: [], // 房间 多个id以逗号分隔 ---> 1,2    
+          deviceList: [], // 房间 多个id以逗号分隔 ---> 1,2
           isOpen: 'NO', // 是否开放预约
           timeModel: 'SPECIFIC', // 选择开放日期
           openNum: '', // 单个预约数量
@@ -222,18 +222,10 @@
       },
       /*********************************************************** 周历 ***********************************************/
       goPrev() {
-        try {
-          this.$children[0].$children[0].$children[4].goPrev()
-        } catch (error) {
-          this.$children[0].$children[0].$children[5].goPrev()
-        }
+        this.$refs['newCalendar'].goPrev()
       },
       goNext() {
-        try {
-          this.$children[0].$children[0].$children[4].goNext()
-        } catch (error) {
-          this.$children[0].$children[0].$children[5].goNext()
-        }
+        this.$refs['newCalendar'].goNext()
       },
       changeMonth(start, end, current, foramatData) {
         this.monthTitle = foramatData(current, 'MMMM YYYY');

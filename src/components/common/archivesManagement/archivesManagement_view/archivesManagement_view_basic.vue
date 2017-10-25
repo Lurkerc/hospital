@@ -123,7 +123,7 @@
 
               <el-row :gutter="10" class="table-back-one">
                 <el-col :span="11" >
-                  <el-form-item label="是否职业医师：" prop="doctor" >
+                  <el-form-item label="是否执业医师：" prop="doctor" >
                     {{formValidate.doctor | typeText}}
                   </el-form-item>
                 </el-col>
@@ -221,7 +221,7 @@
           group:'',   //班级
           length:'',   //学制
           duties:'',   //职务
-          doctor:'',   //是否职业医师:是、否
+          doctor:'',   //是否执业医师:是、否
           doctorLevel:'',   //医师资格级别(职业、助理、无)
           idNumber:'',   //身份证号码
           mobile:'',    //手机号

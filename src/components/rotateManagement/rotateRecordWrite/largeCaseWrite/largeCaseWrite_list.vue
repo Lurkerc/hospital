@@ -17,15 +17,15 @@
             <el-input   v-model="formValidate.czyNo" placeholder="输入住院号搜索">
             </el-input>
           </el-form-item>
-          <el-form-item  label="科室:"   >
+          <el-form-item  label="科室:"  >
             <el-select v-model="formValidate.depId" placeholder="请选择科室">
               <select-option :type="'userRotaryDeptlist'" :userType="userType" :userId="userId"  name="depName" id="depId"></select-option>
             </el-select>
-            </el-input>
           </el-form-item>
           <el-form-item label="状态:"  prop="title">
             <el-select v-model="formValidate.cstate" placeholder="请选择状态">
               <el-option label="全部" value=""></el-option>
+              <el-option label="草稿" value="DRAFT"></el-option>
               <el-option label="未上报" value="NO_SUBMIT"></el-option>
               <el-option label="驳回" value="REJECT"></el-option>
               <el-option label="待审核" value="NO_PASS"></el-option>
@@ -77,7 +77,7 @@
             width="200">
             <template scope="scope">
               <el-button size="small" @click="show(scope.row)">查看</el-button>
-              <el-button v-if="scope.row.cstate=='NO_SUBMIT'||scope.row.cstate=='REJECT'"  size="small" @click="edit(scope.row)">修改</el-button>
+              <el-button v-if="scope.row.cstate=='NO_SUBMIT'||scope.row.cstate=='REJECT' || scope.row.cstate=='DRAFT'"  size="small" @click="edit(scope.row)">修改</el-button>
               <el-button v-if="scope.row.cstate=='NO_SUBMIT'||scope.row.cstate=='REJECT'"  size="small" @click="reported(scope.row)">上报</el-button>
             </template>
           </el-table-column>
@@ -149,7 +149,7 @@
     <!--修改-->
     <Modal
       close-on-click-modal="false"
-      width="1300"
+      width="1000"
       v-model="editModal"
       title="对话框标题"
       class-name="vertical-center-modal"
@@ -174,7 +174,7 @@
     </Modal>
     <!--查看弹窗-->
     <Modal
-      width="1300"
+      width="1000"
       v-model="showModal"
       title="查看档案管理弹窗"
       class-name="vertical-center-modal"
@@ -224,7 +224,7 @@
           sortby: '',//排序列
           order: ''     //升序、降序
         },
-        width:1300,
+        width:1100,
 
         operailityData:'',
         multipleSelection: [],
@@ -284,7 +284,7 @@
 
       changeWidth(val){
           if(!val){
-            this.width = 1300;
+            this.width = 1000;
           }else {
             this.width = val;
           }
@@ -380,7 +380,7 @@
       /*--点击--删除--按钮--*/
       remove(){
         if(!this.isSelected(true)) return;
-        if(!(this.multipleSelection[0].cstate == 'NO_SUBMIT' || this.multipleSelection[0].cstate == 'REJECT')) {
+        if(!(this.multipleSelection[0].cstate == 'NO_SUBMIT')) {
           this.showMess('只能删除未上报或已驳回的数据');
           return;
         }

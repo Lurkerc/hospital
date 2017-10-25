@@ -35,7 +35,7 @@
             </el-table-column>
             <el-table-column
               prop="school"
-              label="毕业学校"
+              label="学校"
             >
               <template scope="scope">
                 <el-form-item prop="school">

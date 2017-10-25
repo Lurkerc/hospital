@@ -234,6 +234,7 @@
   .addLabor .el-form-item{margin-bottom: 0}
 </style>
 <script>
+  import api from './api';
   //当前组件引入全局的util
   let Util=null;
   export default {
@@ -282,9 +283,9 @@
           ajaxSuccess:'ajaxSuccess',
           ajaxError:'ajaxError',
           ajaxParams:{
-            url:'/service-fee/add',
-            method:'post',
-            "jsonString":true
+            jsonString:true,
+            url:api.add.path,
+            method:api.add.method
           }
         },
       }

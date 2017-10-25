@@ -31,7 +31,37 @@
       </div>
     </div>
     <div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox">
+      <el-form :inline="true" style="margin-top:10px;" label-width="74px">
+        <el-row>
 
+          <!--<el-form-item label="排序:">-->
+            <!--<el-select v-model="formValidate.sortby" placeholder="请选择状态">-->
+              <!--<el-option label="全部" value=""></el-option>-->
+              <!--<el-option label="创建时间" value="createTime"></el-option>-->
+              <!--<el-option label="分组名称" value="groupName"></el-option>-->
+              <!--<el-option label="组状态" value="groupState"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <el-form-item label="创建年份:">
+            <el-select v-model="formValidate.year" placeholder="请选择状态">
+              <el-option label="全部" value=""></el-option>
+              <el-option label="2015" value="2015"></el-option>
+              <el-option label="2016" value="2016"></el-option>
+              <el-option label="2017" value="2017"></el-option>
+            </el-select>
+          </el-form-item>
+          <!--<el-form-item label="承载量:">-->
+            <!--<el-input v-model="formValidate.capacity"></el-input>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="考核状态:">
+            <el-select v-model="searchObj.status" placeholder="请选择">
+              <el-option v-for="item in examineStatuOption" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>-->
+          <el-button type="info" @click="search">查询</el-button>
+        </el-row>
+      </el-form>
     </div>
     <br />
     <!--列表数据-->
@@ -182,6 +212,8 @@
         deleteUrl: api.groupDelete.path,
         formValidate: {
           groupName: '',
+          sortby:'',
+          year:''
         },
 
         operailityData:'',
@@ -268,8 +300,9 @@
         this.listTotal = responseData.totalCount || 0;
       },
       setTableData(){
-        this.formValidate.name="";
-        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params);
+        //this.formValidate.name="";
+        let formValidate =this.$util._.defaultsDeep({},this.formValidate);
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions,formValidate);
         this.ajax(this.listMessTitle);
       },
       /*
@@ -280,6 +313,11 @@
         let option = Util._.defaultsDeep({},this.listMessTitle)
         option.ajaxParams.params = Object.assign(option.ajaxParams.params,this.queryQptions.params,this.formValidate);
         this.ajax(option);
+      },
+      //查询
+      search(){
+        console.log(this.formValidate);
+        this.setTableData();
       },
       /*--点击--添加--按钮--*/
       add(){

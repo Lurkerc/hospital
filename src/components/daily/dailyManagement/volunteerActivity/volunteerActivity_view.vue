@@ -114,7 +114,7 @@
     <!--11-->
     <div>
       <div>
-        <div  class="headline"><span class="headline-text">11</span><span> . &nbsp;相关资料</span></div>
+        <div  class="headline"><span class="headline-text">11</span><span> . &nbsp;相关证明材料</span></div>
       </div>
       <div class="content-wrap">　
         <upload-file :uploadFiles="data.fileList" :show="true"   ></upload-file>

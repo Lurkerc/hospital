@@ -6,7 +6,7 @@
       <el-row>
         <el-col :span="8" :offset="2">
           <el-form-item label="品牌：" prop="brand">
-            <el-select v-model="formValidate.brand" placeholder="请选择">
+            <el-select v-model="formValidate.brand" placeholder="请选择" @change="changeBrand">
               <el-option v-for="item in brand" v-if="item.value!==''" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
@@ -22,6 +22,12 @@
         <el-col :span="8" :offset="2">
           <el-form-item label="设备IP：" prop="ip">
             <el-input v-model="formValidate.ip" placeholder="请输入IP地址"></el-input>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="8" :offset="2" v-if="formValidate.brand === 'SPON'">
+          <el-form-item label="终端ID：" prop="terminalId" required>
+            <el-input v-model="formValidate.terminalId" placeholder="请输入终端ID" :maxlength="10"></el-input>
           </el-form-item>
         </el-col>
 
@@ -84,6 +90,7 @@
         brand,
         rules,
         locationType,
+        oldTerminalId:'',
         //保存按钮基本信息
         loadBtn: {
           title: '提交',
@@ -94,6 +101,7 @@
           brand: '',
           modelNum: '',
           ip: '',
+          terminalId: '',
           locationType: 'ROOM',
           roomId: '',
           roomNum: '',
@@ -169,6 +177,10 @@
       checkData() {
         let data = this.formValidate;
         let selRoom = this.selectRoomId;
+        if(this.formValidate.brand === 'SPON' && !/^\d+$/.test(this.formValidate.terminalId)){
+          this.errorMess('终端ID必须填写并且是整数')
+          return false
+        }
         if (data.locationType === 'ROOM') {
           if (!this.selectRoomId) {
             this.errorMess('必选选择房间')
@@ -211,6 +223,16 @@
         this.formValidate = res.data;
         if (res.data.roomId) {
           this.selectRoomId = parseInt(res.data.roomId);
+        }
+        this.oldTerminalId = res.data.terminalId;
+      },
+      // 改变设备品牌
+      changeBrand(){
+        let t = this.oldTerminalId;
+        if(this.formValidate.brand == 'SPON'){
+          this.formValidate.terminalId = t;
+        }else{
+          this.formValidate.terminalId = '';
         }
       },
       /*

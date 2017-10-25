@@ -63,6 +63,10 @@
             prop="depName"
             label="科室"
             width="120">
+            <template scope="scope">
+              <el-button v-if="scope.row.arrangeDepState=='P'" @click="show(scope.$index,scope.row)" type="text">{{scope.row.depName}}</el-button>
+              <span v-else>{{scope.row.depName}}</span>
+            </template>
           </el-table-column>
           <el-table-column
             prop="rotaryBeginTime"
@@ -105,6 +109,21 @@
         </div>
       </div>
     </div>
+    <!--查看弹窗-->
+    <Modal
+      :mask-closable="false"
+      v-model="showModal"
+      height="200"
+      title="对话框标题"
+
+      class-name="vertical-center-modal"
+      :loading="true"
+      :width="800"
+    >
+      <modal-header slot="header" :parent="self" :content="showId"></modal-header>
+      <show v-if="showModal"  @cancel="cancel" :operaility-data="operailityData"></show>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 
@@ -113,6 +132,8 @@
   //引入--微调--组件
 
   import api from "../api.js";
+  //引入--查看--组件
+  import show from "./myRotateTables_view.vue";
   //当前组件引入全局的util
   let Util=null;
   export default{
@@ -130,6 +151,11 @@
           "ts":"",
           "podClass":""
         },
+        showId:{
+          id:'auditId',
+          title:'查看'
+        },
+        operailityData:'',
         dynamicHt: 100,
         self: this,
         tableData1: [{}],
@@ -178,6 +204,14 @@
         this.dynamicHt = parHt - myTable.offsetTop - paginationHt;
       },
 
+      /*
+       * 点击--查看--按钮
+       * @param index string|number  当前行索引
+       * */
+      show(index){
+        this.operailityData = this.tableData1[index];
+        this.showModal = true;
+      },
 
       //通过get请求列表数据
       updateListData(responseData){
@@ -199,6 +233,14 @@
         this.setTableData();
       },
 
+      /*
+       * 监听子组件通讯的方法
+       * 作用:根据不同的参数关闭对应的模态
+       * @param targer string example:"add"、"edit"
+       * */
+      cancel(targer){
+        this[targer+'Modal'] = false;
+      },
 
     },
     created(){
@@ -222,6 +264,7 @@
     },
     components:{
       //当前组件引入的子组件
+      show
     }
 
   }

@@ -30,7 +30,35 @@
       </div>
     </div>
     <div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox">
+      <el-form :rules="form" :inline="true" style="margin-top:10px;" label-width="74px">
+        <el-row>
 
+          <!--<el-form-item label="排序方式:">-->
+            <!--<el-select v-model="formValidate.order" placeholder="请选择状态">-->
+              <!--<el-option label="全部" value=""></el-option>-->
+              <!--<el-option label="DESC" value="DESC"></el-option>-->
+              <!--<el-option label="ASC" value="ASC"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="排序:">-->
+            <!--<el-select v-model="formValidate.sortby" placeholder="请选择状态">-->
+              <!--<el-option label="全部" value=""></el-option>-->
+              <!--<el-option label="专业" value="specialty"></el-option>-->
+              <!--<el-option label="创建时间" value="createTime"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <el-form-item label="专业:" prop="specialty">
+            <el-input v-model="formValidate.specialty"></el-input>
+          </el-form-item>
+          <!--<el-form-item label="考核状态:">
+            <el-select v-model="searchObj.status" placeholder="请选择">
+              <el-option v-for="item in examineStatuOption" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>-->
+          <el-button type="info" @click="search">查询</el-button>
+        </el-row>
+      </el-form>
     </div>
     <br />
     <div>
@@ -56,15 +84,12 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="操作"  width="200" align="center">
+          <el-table-column label="操作"  width="250" align="center">
             <template scope="scope">
               <el-button
                 size="small"
                 @click="show(scope.$index,scope.row)">查看</el-button>
-              <el-button
-                v-if="scope.row.state=='ENABLE'"
-                size="small"
-                @click="edit(scope.$index, scope.row)">修改</el-button>
+              <el-button :disabled="scope.row.state!=='ENABLE'" size="small" @click="edit(scope.$index, scope.row)">修改</el-button>
               <el-button v-if="scope.row.state=='DISABLE'" size="small" @click="forbidden(scope.$index, scope.row)">启 用</el-button>
               <el-button v-if="scope.row.state=='ENABLE'" size="small" @click="startUsing(scope.$index, scope.row)" type="danger">禁 用</el-button>
             </template>
@@ -114,7 +139,7 @@
       <!--<div slot="header"> -->
       <!--</div>-->
       <modal-header slot="header" :content="editId"></modal-header>
-      <edit v-if="editModal"   @cancel="cancel"  @edit="subCallback" :operaility-data="operailityData"></edit>
+      <edit v-if="editModal" :userType="userType"  @cancel="cancel"  @edit="subCallback" :operaility-data="operailityData"></edit>
       <div slot="footer"></div>
     </Modal>
     <!---->
@@ -178,6 +203,7 @@
 
 <script >
   /*当前组件必要引入*/
+  import { form } from '../../rules';
   //引入--审查--组件
   import edit from "./deptRequireSet_edit.vue";
 
@@ -192,12 +218,23 @@
   //当前组件引入全局的util
   let Util=null;
   export default{
+    props:{
+      userType:{
+        type: String,
+        default: "SXS",
+      },
+    },
     data() {
       return {
+        form,
         //查询表单
         deleteUrl: api.dgList.path,
         formValidate: {
           schoolName: '',
+          name:'',
+          specialty:'',
+          sortby:'',
+          order:''
         },
 
         /*--按钮button--*/
@@ -353,7 +390,9 @@
         this.operailityData = this.multipleSelection;
         this.openModel('remove') ;
       },
-
+      search(){
+        this.setTableData();
+      },
 
       /*
        * 点击--查看--按钮

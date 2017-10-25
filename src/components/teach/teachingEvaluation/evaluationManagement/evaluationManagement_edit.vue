@@ -3,11 +3,11 @@
   <div>
 
 
-    <el-form ref="formValidate"  class="demo-form-inline" label-width="90px">
+    <el-form  ref="formValidate" :model="formValidate"  :rules="evaluationManagementAdd" v-for="item in 1"  :key="item"  class="demo-form-inline" label-width="90px">
       <el-row>
         <el-col :span="10" :offset="2">
-          <el-form-item label="姓名 :" prop="title">
-            <el-input   v-model="formValidate.name" placeholder="请输入姓名">
+          <el-form-item label="名称 :" prop="name">
+            <el-input   v-model="formValidate.name" placeholder="请输入名称">
             </el-input>
           </el-form-item>
         </el-col>
@@ -19,112 +19,110 @@
       </el-row>
       <el-row>
         <el-col :span="20" :offset="2">
-          <el-form-item label="用途 :" prop="title">
+          <el-form-item label="用途 :" prop="remark">
             <el-input type="textarea"  v-model="formValidate.remark" placeholder="请输入用途">
             </el-input>
           </el-form-item>
         </el-col>
       </el-row>
+    </el-form>
 
       <el-row >
 
         <fieldset class="layui-elem-field">
           <legend>评分表样式设置</legend>
-          <el-row>
-            <el-col :span="6" :offset="2">
-              <el-form-item label="是否包含分类 :" prop="title" label-width="110px">
-                <el-switch
-                  @change="groupChange"
-                  v-model="formValidate.hasGroup"
-                  on-color="#13ce66"
-                  off-color="#ff4949"
-                  on-text="是"
-                  off-text="否"
-                  on-value="Y"
-                  off-value="N">
-                </el-switch>
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="10" >
-              <el-form-item v-if="formValidate.hasGroup=='Y'" label="是否按照分类评分 :" prop="title" label-width="12 0px">
-                <el-switch
-                  @change="groupScoreChange"
-                  v-model="formValidate.hasGroupScore"
-                  on-color="#13ce66"
-                  off-color="#ff4949"
-                  on-text="是"
-                  off-text="否"
-                  on-value="Y"
-                  off-value="N">
-                </el-switch>
-                </el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="20" :offset="2">
-              <el-form-item label="是否显示备注 :" prop="title" label-width="110px">
-                <el-switch
-                  @change="hasRemarkChange"
-                  v-model="formValidate.hasRemark"
-                  on-color="#13ce66"
-                  off-color="#ff4949"
-                  on-text="是"
-                  off-text="否"
-                  on-value="Y"
-                  off-value="N">
-                </el-switch>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col :span="20" :offset="2">
-              <el-form-item  label="评分方式 :" prop="title" label-width="110px">
-                <el-switch
-                  @change="scoreTypeChange"
-                  v-model="formValidate.scoreType"
-                  on-color="#13ce66"
-                  off-color="#ff4949"
-                  on-text="输入"
-                  off-text="选择"
-                  on-value="INPUT"
-                  off-value="SELECT">
-                </el-switch>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <!--选择SELECT时显示候选项-->
-          <div v-if="formValidate.scoreType == 'SELECT'">
-            <el-row v-for="(item,index) in formValidate._scoreLevel" :key="index">
-              <el-col :span="10" :offset="2">
-                <el-form-item  :label="`候选项 ${index+1}:`" prop="title" label-width="110px">
-                  <el-input v-model="item.label"></el-input>
+          <el-form >
+            <el-row>
+              <el-col :span="6" :offset="2">
+                <el-form-item label="是否包含分类 :" prop="title" label-width="110px">
+                  <el-switch
+                    @change="groupChange"
+                    v-model="formValidate.hasGroup"
+                    on-color="#13ce66"
+                    off-color="#ff4949"
+                    on-text="是"
+                    off-text="否"
+                    on-value="Y"
+                    off-value="N">
+                  </el-switch>
                 </el-form-item>
               </el-col>
               <el-col :span="10" >
-                <el-form-item   prop="title" label-width="50px">
-                  <el-button type="primary" icon="plus" @click="addLevel(index)"></el-button>
-                  <el-button type="warning"  icon="minus"  @click="removeLevel(index)"></el-button>
+                <el-form-item v-if="formValidate.hasGroup=='Y'" label="是否按照分类评分 :" prop="title" label-width="12 0px">
+                  <el-switch
+                    @change="groupScoreChange"
+                    v-model="formValidate.hasGroupScore"
+                    on-color="#13ce66"
+                    off-color="#ff4949"
+                    on-text="是"
+                    off-text="否"
+                    on-value="Y"
+                    off-value="N">
+                  </el-switch>
                 </el-form-item>
               </el-col>
             </el-row>
+            <el-row>
+              <el-col :span="20" :offset="2">
+                <el-form-item label="是否显示备注 :" prop="title" label-width="110px">
+                  <el-switch
+                    @change="hasRemarkChange"
+                    v-model="formValidate.hasRemark"
+                    on-color="#13ce66"
+                    off-color="#ff4949"
+                    on-text="是"
+                    off-text="否"
+                    on-value="Y"
+                    off-value="N">
+                  </el-switch>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="20" :offset="2">
+                <el-form-item  label="评分方式 :" prop="title" label-width="110px">
+                  <el-switch
+                    @change="scoreTypeChange"
+                    v-model="formValidate.scoreType"
+                    on-color="#13ce66"
+                    off-color="#ff4949"
+                    on-text="输入"
+                    off-text="选择"
+                    on-value="INPUT"
+                    off-value="SELECT">
+                  </el-switch>
+                </el-form-item>
+              </el-col>
+            </el-row>
+        </el-form>
+          <!--选择SELECT时显示候选项-->
+          <div v-if="formValidate.scoreType == 'SELECT'">
+            <el-row v-for="(item,index) in formValidate._scoreLevel" :key="index">
+              <el-form   ref="formValidate" :model="item"  :rules="evaluationManagementAdd"   label-width="90px">
+                <el-col :span="10" :offset="2">
+                  <el-form-item  :label="`候选项 ${index+1}:`" prop="label" label-width="110px">
+                    <el-input v-model="item.label"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="10" >
+                  <el-form-item   prop="title" label-width="50px">
+                    <el-button type="primary" icon="plus" @click="addLevel(index)"></el-button>
+                    <el-button type="warning"  icon="minus"  @click="removeLevel(index)"></el-button>
+                  </el-form-item>
+                </el-col>
+              </el-form>
+            </el-row>
           </div>
         </fieldset>
-
-        </br>
+        <br>
         <fieldset class="layui-elem-field selfBody" style="width: 100%">
           <legend>评分表内容设置</legend>
-          <div   v-if="body[0]"  style="width: 900px;overflow: auto;margin: 0 auto" class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition">
-
-
-            <table :width="header.length*150">
-
+          <div   v-if="body[0]"  style="border: 1px solid #dfe6ec;width: 902px;overflow: auto;margin: 0 auto" class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition">
+            <table :width="header.length*150>900?header.length*150:900">
               <colgroup  v-for="(item,index) in header">
-                <col :name="'el-table_1_column_'+index" :width="150">
+                <col :name="'el-table_1_column_'+index" :width="header.length*150>900?900/header.length:150">
               </colgroup>
-
               <thead >
               <tr  >
                 <th class="cell" v-for="(item,index) in header">
@@ -133,15 +131,14 @@
               </tr>
               </thead>
             </table>
-            <div class="el-table__body-wrapper" style="max-height:400px;overflow-x: hidden;overflow-y: auto;" :style="'width:'+header.length*150+'px'">
-              <table   :width="header.length*150">
+            <div class="el-table__body-wrapper" style="max-height:400px;overflow-x: hidden;overflow-y: auto;" :style="'width:'+(header.length*150>900?header.length*150:900)+'px'">
+              <table   :width="header.length*150>900?header.length*150:900">
                 <colgroup  v-for="(item,index) in header">
-                  <col name="'el-table_1_column_'+index" :width="150">
+                  <col name="'el-table_1_column_'+index" :width="header.length*150>900?900/header.length:150">
                 </colgroup>
-
-                <tbody  class="add-scope">
+                <tbody  >
                 <tr v-for="(item,index) in body">
-                  <td v-if="isShow(item,head['key'])" @blur="ceelClick(head['key'])" :rowspan="item[head['key']+'Row']" v-for="(head,i) in header" :key="i">
+                  <td class="valiTableStyle" v-if="isShow(item,head['key'])" @blur="ceelClick(head['key'])" :rowspan="item[head['key']+'Row']" v-for="(head,i) in header" :key="i">
 
                     <div v-if="head['key']== 'operateSub'" style="text-align: center">
                       <el-button size="mini" type="primary" icon="plus" @click="operateSubAdd(item,head['key'],index)"></el-button>
@@ -151,9 +148,12 @@
                       <el-button  type="primary" icon="plus" @click="operateParentAdd(item,head['key'],index)"></el-button>
                       <el-button   type="warning" icon="minus" @click="operateParentRemove(item,head['key'],index)"></el-button>
                     </div>
-                    <el-form-item v-else  prop="title" label-width="0">
-                      <el-input  @blur = "ceelClick(head['key'])"  v-model="item[head.key]" />
-                    </el-form-item>
+                    <el-form   v-else ref="formValidate" :model="item"  :rules="evaluationManagementAddList" >
+                      <el-form-item style=" text-align: center;" :prop="head['key']"  label-width="0">
+                        <el-input  style="width:90%;"  @blur = "ceelClick(head['key'])"  v-model="item[head.key]" />
+                      </el-form-item>
+                    </el-form>
+
                   </td>
                 </tr>
                 <!--总分-->
@@ -179,11 +179,11 @@
         </el-col>
       </el-row >
 
-    </el-form>
   </div>
 </template>
 <script>
   //当前组件引入全局的util
+  import {evaluationManagementAdd,evaluationManagementAddList} from '../../rules';
   let Util=null;
   import myTable from '../../../common/customTable.vue'
   import cell from '../../../common/customCell.vue'
@@ -192,7 +192,10 @@
     props: ['operailityData','url'],
     data (){
       return{
+        evaluationManagementAdd,
+        evaluationManagementAddList,
         //保存按钮基本信息
+        restrictScore:200, // 验证分数的 最大分数
         saveBtn:{title:'保存',callParEvent:'listenSubEvent'},
         setTableStyle:'height:300px;overflow-x: hidden;overflow-y: auto;',
         //form表单bind数据
@@ -220,7 +223,7 @@
         isFirst:true,
         select:[],
         constructionMerge:{ //项目合并数，key为ID
-          '1':2,
+//          '1':2,
         },
         //当前组件提交(edit)数据时,ajax处理的 基础信息设置
         addMessTitle:{
@@ -380,6 +383,7 @@
           ]
         }*/
         if(!data) return;
+        data.score = data.score/100;
         this.formValidate =data;
         this.formValidate = this.conductData(data);
         this.$nextTick(function () {
@@ -434,10 +438,10 @@
         //定义头部header
         let header = [{
           key :'parentTitle',
-          label :'项目名称',
+          label :'考核项目',
         },{
           key :'titleSub',
-          label :'内容名称',
+          label :'考核内容',
         },{
           key :'remark',
           label :'备注',
@@ -496,7 +500,7 @@
                 titleSub:child[k].title||'',
                 _isParent:true,
                 _id:parentId,
-                score:child[k].score||'',
+                score:child[k].score/100||'',
                 scoreRow:isScore?child.length:1,
                 remark:child[k].remark||'',
                 operateSub:'',
@@ -511,8 +515,16 @@
 //                }
                 for(let j=0;j<child[k].templateItemOptionList.length;j++){
                   let title = child[k].templateItemOptionList[j].title;
-                  let label = child[k].templateItemOptionList[j].val;
+                  let label = child[k].templateItemOptionList[j].val/100;
                   obj[scoreLevelObj[title]] = label;
+                }
+              }else {
+                for(let l=0;l<this.select.length;l++){
+                    if(child[k].templateItemOptionList[l]==null){
+                      obj[this.select[l]] = '';
+                    }else {
+                      obj[this.select[l]] = child[k].templateItemOptionList[l].val/100
+                    }
                 }
               }
 
@@ -522,7 +534,7 @@
                 titleSub:child[k].title||'',
                 _isParent:false,
                 _parentId:parentId,
-                score:child[k].score||'',
+                score:child[k].score/100||'',
                 remark:child[k].remark||'',
                 operateSub:'',
                 select1:'',
@@ -532,10 +544,19 @@
 //                  obj[this.select[l]] = child[k].templateItemOptionList[l].val
 //                }
                 for(let j=0;j<child[k].templateItemOptionList.length;j++){
-                  let title = child[k].templateItemOptionList[j].title;
-                  let label = child[k].templateItemOptionList[j].val;
+                  let title =   child[k].templateItemOptionList[j].title;
+                  let label = child[k].templateItemOptionList[j].val/100;
                   obj[scoreLevelObj[title]] = label;
                 }
+              }else {
+                for (let l = 0; l < this.select.length; l++) {
+                  if(child[k].templateItemOptionList[l]==null){
+                  obj[this.select[l]] = '';
+                }else {
+                    obj[this.select[l]] = child[k].templateItemOptionList[l].val/100
+                  }
+                }
+
               }
               tempArr.push(obj)
             }
@@ -544,9 +565,8 @@
           body = body.concat(tempArr);
           tempArr = [];
         }
-
         this.body = body;
-        this.groupScoreChange(this.formValidate.hasGroupScore);
+        this.groupScoreChange(this.formValidate.hasGroupScore,true);
       },
 
       //返回的数据不存在分组
@@ -554,7 +574,7 @@
         //定义头部header
         let header = [{
           key :'titleSub',
-          label :'内容名称',
+          label :'考核内容',
         },{
           key :'remark',
           label :'备注',
@@ -596,7 +616,7 @@
             titleSub:templateItemList[i].title||'',
             _isParent:true,
             _id:parentId,
-            score:templateItemList[i].score||'',
+            score:templateItemList[i].score/100||'',
             scoreRow:1,
             remark:templateItemList[i].remark||'',
             operateSub:'',
@@ -611,8 +631,16 @@
 //            }
             for(let j=0;j<templateItemList[i].templateItemOptionList.length;j++){
               let title = templateItemList[i].templateItemOptionList[j].title;
-              let label = templateItemList[i].templateItemOptionList[j].val;
+              let label = templateItemList[i].templateItemOptionList[j].val/100;
               obj[scoreLevelObj[title]] = label;
+            }
+          }else {
+            for (let l = 0; l < this.select.length; l++) {
+              if(templateItemList[i].templateItemOptionList[l]==null) {
+                obj[this.select[l]] = '';
+              }else {
+                obj[this.select[l]] = templateItemList[i].templateItemOptionList[l].val/100
+              }
             }
           }
           body.push(obj)
@@ -629,7 +657,7 @@
 //        }
 
         this.body = body;
-        this.groupScoreChange(this.formValidate.hasGroupScore);
+        this.groupScoreChange(this.formValidate.hasGroupScore,true);
       },
 
 
@@ -642,15 +670,130 @@
         if(isSubmit) {
           if (!isLoadingFun) isLoadingFun = function () {
           };
-          isLoadingFun(true);
-
+          if(this.formValidate.score>this.restrictScore){
+            this.errorMess(`总分不能大于${this.restrictScore}`);
+            return;
+          }
+          if(!this.verify(this.body)) return;
           //处理提交的参数
           this.formValidate.templateItemList = this.conductParams(Util._.defaultsDeep([],this.body));
-          this.addMessTitle.ajaxParams.data  =  this.formValidate;
-          this.ajax(this.addMessTitle, isLoadingFun)
+          let formValidate = Util._.defaultsDeep({}, this.formValidate);
+          formValidate.score = parseInt(100*formValidate.score);
+          this.addMessTitle.ajaxParams.data  =  formValidate;
+          isLoadingFun(true);
+          this.ajax(this.addMessTitle, isLoadingFun);
         }
       },
 
+      //验证提交的分数 和选择时候的候选项
+      verify(data){
+        let flag = true;
+        let index =0;   //如果是按照分组评分
+        for(let i=0;i<data.length;i++){
+          let item = data[i];
+          let reg = /^\d+.?\d{0,2}$/m;
+          let hasGroupScore = this.formValidate.hasGroupScore=='N';
+          if(this.formValidate.scoreType == 'SELECT'){  // 判断是否是选择
+
+            //验证候选项分数
+            if(hasGroupScore){
+              for(let k=0;k<this.select.length;k++){
+                let label = item[this.select[k]];
+                if(label==''){
+                  this.errorMess(`第${i+1}行 候选项${k+1} 必填`);
+                  return false;
+                }else {
+
+                  if (!reg.test(label)) {
+                    this.errorMess(`第${i+1}行 候选项${k+1} 最多两位小数的数字`);
+                    return false;
+                  }
+                  if(label>this.restrictScore){
+                    this.errorMess(`第${i+1}行 候选项${k+1} 分数不能大于${this.restrictScore}`);
+                    return false;
+                  }
+                }
+              }
+
+            }else {
+              if(item._isParent){
+                index++
+                for(let k=0;k<this.select.length;k++){
+                  let label = item[this.select[k]];
+                  if(label==''){
+                    this.errorMess(`第${index}行 候选项${k+1} 必填`);
+                    return false;
+                  }else{
+
+                    if (!reg.test(label)) {
+                      this.errorMess(`第${index}行 候选项${k+1} 最多两位小数的数字`);
+                      return false;
+                    }
+
+                    if(label>this.restrictScore){
+                      this.errorMess(`第${i+1}行 候选项${k+1} 分数不能大于${this.restrictScore}`);
+                      return false;
+                    }
+
+                  }
+                }
+              }
+            }
+
+            //验证候选项本身
+            let _scoreLevel = this.formValidate._scoreLevel;  //候选项层级
+            let scoreLevelObj = {};
+            for(let j=0;j<_scoreLevel.length;j++){
+              let scoreLevel = _scoreLevel[j];
+              if(scoreLevelObj[scoreLevel.label]){
+                this.errorMess(`候选项${j+1}的值 : ${scoreLevel.label}  (已存在)`);
+                return false;
+              }else {
+                scoreLevelObj[scoreLevel.label]= scoreLevel.label;
+              }
+            }
+
+          }else {
+            if(hasGroupScore){
+              if(item.score==''){
+                this.errorMess(`第${i+1}行 标准分 必填`);
+                return false;
+              }else {
+
+                if (!reg.test(item.score)) {
+                  this.errorMess(`第${i+1}行 标准分 最多两位小数的数字`);
+                  return false;
+                }
+                if(item.score>this.restrictScore){
+                  this.errorMess(`第${i+1}行 标准分 分数不能大于${this.restrictScore}`);
+                  return false;
+                }
+              }
+            }else {
+              if(item._isParent){
+                index++
+                if(item.score==''){
+                  this.errorMess(`第${index}行 标准分 必填`);
+                  return false;
+                }else {
+
+                  if (!reg.test(item.score)) {
+                    this.errorMess(`第${index}行 标准分 最多两位小数的数字`);
+                    return false;
+                  }
+
+                  if(item.score>this.restrictScore){
+                    this.errorMess(`第${i+1}行 标准分 分数不能大于${this.restrictScore}`);
+                    return false;
+                  }
+
+                }
+              }
+            }
+          }
+        }
+        return flag
+      },
 
       conductParams(data){
         let _scoreLevel = this.formValidate._scoreLevel;
@@ -687,7 +830,7 @@
 
           if(item._id){//如果是父元素
             if(tempIndex>=0){  //计算上一次的总分
-              tempArr[tempIndex].maxScore = maxScore;
+              tempArr[tempIndex].maxScore = parseInt(maxScore*100);
               Total += +maxScore;
             }
             tempIndex++;
@@ -696,8 +839,8 @@
               "title":item.parentTitle,
               "hasRemark":this.formValidate.hasRemark,
               "remark":item.remark,
-              "maxScore":maxScore||'0',
-              "score":item.score,
+              "maxScore":parseInt(maxScore*100)||'0',
+              "score":parseInt(item.score*100),
               "hasScore":'Y',
               "scoreType":this.formValidate.scoreType,
               templateItemOptionList:item.templateItemOptionList,
@@ -706,8 +849,8 @@
                   "title":item.titleSub,
                   "hasRemark":this.formValidate.hasRemark,
                   "remark":item.remark,
-                  "maxScore":item.maxScore||'0',
-                  "score":item.score,
+                  "maxScore":parseInt(item.maxScore*100)||'0',
+                  "score":parseInt(item.score*100),
                   "hasScore":'Y',
                   "scoreType":this.formValidate.scoreType,
                   templateItemOptionList:item.templateItemOptionList,
@@ -720,22 +863,22 @@
 
             if(this.formValidate.hasGroupScore=='N') maxScore += +item.maxScore;
             if(index==data.length-1){  //计算上一次的总分
-              tempArr[tempIndex].maxScore = maxScore;
+              tempArr[tempIndex].maxScore = parseInt(maxScore*100);
               Total += +maxScore;
             }
             tempArr[tempIndex].child.push({
               "title":item.titleSub,
               "hasRemark":this.formValidate.hasRemark,
               "remark":item.remark,
-              "maxScore":item.maxScore||'0',
-              "score":'0',
+              "maxScore":parseInt(item.maxScore*100)||'0',
+              "score":parseInt(item.score*100),
               "hasScore":'N',
               "scoreType":this.formValidate.scoreType,
               templateItemOptionList:item.templateItemOptionList,
             })
           }
         })
-        this.formValidate.score = Total;
+//        this.formValidate.score = Total;
         return tempArr;
       },
 
@@ -749,7 +892,7 @@
           this.formValidate._scoreLevel.forEach(function (item,index) {
             _scoreLevel.push({
               title:item.label,
-              val:data[item.key],
+              val:parseInt(data[item.key]*100),
             });
             score.push(data[item.key]);
           });
@@ -774,8 +917,8 @@
             "title":item.titleSub,
             "hasRemark":this.formValidate.hasRemark,
             "remark":item.remark,
-            "maxScore":item.maxScore,
-            "score":item.score,
+            "maxScore":parseInt(item.maxScore*100),
+            "score":parseInt(item.score*100),
             "hasScore":'Y',
             "scoreType":this.formValidate.scoreType,
             child:[],
@@ -783,7 +926,7 @@
           })
         });
 
-        this.formValidate.score = Total;
+//        this.formValidate.score = Total;
         return tempArr
       },
 
@@ -794,12 +937,15 @@
        * @return flag boolean   form表单验证是否通过
        * */
       submitForm(formName){
-        let flag = false;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            flag= true;
+        let flag = true;
+        for(let i=0;i<this.$refs[formName].length;i++){
+          this.$refs[formName][i].validate((valid) => {
+            if (!valid) {
+            flag= false;
           }
         });
+        }
+
         return flag;
       },
 
@@ -856,7 +1002,10 @@
             }
 
           }
-          this.formValidate.score = maxScore
+          if(maxScore>this.restrictScore){
+            this.errorMess(`总分不能大于${this.restrictScore}`);
+          }
+          this.formValidate.score = Math.round(maxScore*100)/100;
         }
 
       },
@@ -869,7 +1018,7 @@
           this.select.push(`select${count}`);  //添加候选数组
           for (let i=0;i<this.body.length;i++){  //向body内部添加候选数据
             this.body[i][`select${count}`] = '';
-            this.groupScoreChange(this.formValidate.hasGroupScore) //是否需要合并单元格
+            this.groupScoreChange(this.formValidate.hasGroupScore,true) //是否需要合并单元格
           }
 
           for(let i=0;i<this.header.length;i++){ //向头部添加候选
@@ -882,7 +1031,7 @@
             }
           }
         }else {
-          this.showMess( `候选项${this.formValidate._scoreLevel.length}内容不能为空`)
+          this.errorMess( `候选项${this.formValidate._scoreLevel.length}内容不能为空`)
         }
       },
 
@@ -906,7 +1055,7 @@
 
           }
         }else {
-          this.showMess('无法移除')
+          this.errorMess('无法移除')
         }
         this.ceelClick('score')
       },
@@ -920,7 +1069,7 @@
           //更改头部
           this.header.unshift({
             key :'parentTitle',
-            label :'项目名称',
+            label :'考核项目',
           });
           this.header.push(
             {
@@ -963,10 +1112,10 @@
       },
 
       //改变是否按照分组评分
-      groupScoreChange(val){
+      groupScoreChange(val,flag){
 
         //清除数据的分值信息
-        if(!this.isFirst) {
+        if(!this.isFirst&&!flag) {
           for (let k = 0; k < this.body.length; k++) {
             let item = this.body[k];
             item.score = '';
@@ -996,16 +1145,13 @@
             }
           }
           this.ceelClick('score',val)
-
         }
-
       },
 
       //改变是否有备注
       hasRemarkChange(val){
         if(val=='Y'){
           for (let i=0;i<this.header.length;i++){
-
             if(this.header[i].key =='titleSub'){
               this.header.splice(i+1,0,{
                 key:'remark',
@@ -1157,14 +1303,14 @@
 
         ///标准分决定插入的位置
         this.body.splice(index,0,obj);
-        this.groupScoreChange(this.formValidate.hasGroupScore) // 标准分合并
+        this.groupScoreChange(this.formValidate.hasGroupScore,true) // 标准分合并
 
       },
 
       //内容移除
       operateSubRemove(item,key,index){
         if(this.body.length<2){
-          this.showMess('无法移除');
+          this.errorMess('无法移除');
           return;
         }
         //是否有分类
@@ -1213,7 +1359,7 @@
           }
         }
         this.body.splice(index,1);
-        this.groupScoreChange(this.formValidate.hasGroupScore) // 标准分合并
+        this.groupScoreChange(this.formValidate.hasGroupScore,true) // 标准分合并
       },
 
       //项目添加
@@ -1261,7 +1407,7 @@
 
         }
         this.body=this.body.concat(tempArr);
-        this.groupScoreChange(this.formValidate.hasGroupScore) // 标准分合并
+        this.groupScoreChange(this.formValidate.hasGroupScore,true) // 标准分合并
 
 
       },
@@ -1269,7 +1415,7 @@
       //项目移除
       operateParentRemove(item,key,index){
         if(Object.keys(this.constructionMerge).length<2){ //如果项目还剩最后一个无法删除
-          this.showMess('无法移除');
+          this.errorMess('无法移除');
           return
         }
         let count = this.constructionMerge[item._id];
@@ -1298,8 +1444,6 @@
         }else {
           return true
         }
-
-
       }
 
     },

@@ -30,13 +30,14 @@
     created(){
       //给当前组件注入全局util
       Util = this.$util;
-      if(this.operailityData.ctype=="YXZL"){
-        this.showWhat= 'imageTemplate';
-      }else if(this.operailityData.ctype=="MJJL"){
-        this.showWhat= 'electrocardiogramTemplate';
-      }else {
-        this.showWhat= 'largeCase';
-      }
+//      if(this.operailityData.ctype=="YXZL"){
+//        this.showWhat= 'imageTemplate';
+//      }else if(this.operailityData.ctype=="MJJL"){
+//        this.showWhat= 'electrocardiogramTemplate';
+//      }else {
+//        this.showWhat= 'largeCase';
+//      }
+      this.showWhat= 'largeCase';
     },
     mounted(){
       //初始化

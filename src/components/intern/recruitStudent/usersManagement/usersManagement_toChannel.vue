@@ -41,7 +41,7 @@
     <!--导入-->
     <Modal close-on-click-modal="false" width="1100" v-model="toChannelModal" title="对话框标题" class-name="vertical-center-modal">
       <modal-header slot="header" :content="toChannelId"></modal-header>
-      <to-channel v-if="toChannelModal" @cancel="closeChannel" :url="'/user/import/user/'+deptId" @success="subHandelEvent" :data="convertedData"
+      <to-channel v-if="toChannelModal" @cancel="closeChannel" :url="'/user/importSXS/'+deptId" @success="subHandelEvent" :data="convertedData"
         :format="format"></to-channel>
       <div slot="footer"></div>
     </Modal>
@@ -69,34 +69,37 @@
           id: 'toChannelId',
           title: '人员信息表'
         },
-        convertedData: {},
+        convertedData: ['startDate'],
         format: {
           '姓名': 'name',
+          "编号":"codeNumber",
           // "部门": "deptName",
-          "性别": "sex",
-          "民族": "nation",
-          "出生年月": "birth",
-          "籍贯": "origin",
-          "政治面貌": "political",
-          "最高学历": "highestEdu",
-          "专业": "specialty",
-          "毕业学校": "schoolName",
-          "参加工作时间": "jobTime",
-          "年级": "grade",
-          "班级": "classNum",
-          "学制": "length",
-          "职务": "duties",
-          "是否职业医师": "doctor",
-          "医师资格级别": "doctorLevel",
-          "身份证号码": "idNumber",
+//          "性别": "sex",
+//          "民族": "nation",
+//          "出生年月": "birth",
+//          "籍贯": "origin",
+//          "政治面貌": "political",
+//          "最高学历": "highestEdu",
+//          "专业": "specialty",
+          "学校": "school",
+//          "参加工作时间": "jobTime",
+//          "年级": "grade",
+//          "班级": "classNum",
+//          "学制": "length",
+//          "职务": "duties",
+//          "是否执业医师": "doctor",
+//          "医师资格级别": "doctorLevel",
+//          "身份证号码": "idNumber",
           "手机号码": "mobile",
-          "紧急联系人": "emgContact",
-          "紧急联系人电话": "emgContactMobile",
-          "QQ": "qq",
-          "邮箱": "email",
-          "办公电话": "telephone",
-          "现住地址": "address",
-          "邮编": "postCode",
+//          "紧急联系人": "emgContact",
+//          "紧急联系人电话": "emgContactMobile",
+//          "QQ": "qq",
+//          "邮箱": "email",
+//          "办公电话": "telephone",
+//          "现住地址": "address",
+//          "邮编": "postCode",
+          "实习开始日期":"startDate",
+          "实习期（月）": "internshipNum",
         },
 
         //记录总条数
@@ -124,11 +127,7 @@
         },
         //table
         dynamicHt: 100,
-        tableData1: [{
-          l: '1'
-        }, {
-          l: '1'
-        }],
+        tableData1: [],
         http: '',
       }
     },
@@ -139,7 +138,7 @@
     mounted() {
       //初始化
       let http = this.$store.getters.getEnvPath.http;
-      this.http = http + 'static/template/部门人员信息模板.xls';
+      this.http = http + 'static/template/部门人员信息模板-实习生.xls';
       this.init();
     },
     methods: {

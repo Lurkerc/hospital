@@ -37,45 +37,53 @@
     </el-row >
     </div>
 
-   <!-- <div class="shxx">
-    <el-row class="step">
-      <el-col :span="20" :offset="2">
-        <el-steps :space="350" :active="2">
-          <el-step title="带教老师" description="已审批"></el-step>
-          <el-step title="教学秘书" description="审批中"></el-step>
-          <el-step title="教育处" description="待审批"></el-step>
-        </el-steps>
-      </el-col >
-    </el-row >-->
-
-
-   <!-- <el-row >
-      <el-col :span="8" :offset="2">
-        <p class="center"><span class="name">审核人</span><span>张三</span></p>
-      </el-col >
-    </el-row >
-
-    <el-row >
-      <el-col :span="18" :offset="2">
-        <p class="center"><span class="name">审核时间</span><span>2017/12/29   12：00</span></p>
-      </el-col >
-    </el-row >-->
   <div v-if="data.status!='WSB'">
-
     <el-row >
       <el-col :span="18" :offset="2">
-        <p class="center"><span class="name">审核结果</span><span>{{converterStatus(data.status)}}</span></p>
+        <img :src="data.hisProcess.base64Img" alt="">
       </el-col >
     </el-row >
-
-    <el-row >
-      <el-col :span="18" :offset="2">
-        <div class="center">
-          <span class="shiy-text">审核意见</span>
-          <div class="shiy"></div>
-        </div>
-      </el-col >
-    </el-row >
+    <el-table
+      v-if="data.hisProcess.listHisTaskLog && data.hisProcess.listHisTaskLog!=0"
+      align="center"
+      :height="200"
+      :data="data.hisProcess.listHisTaskLog"
+      tooltip-effect="dark"
+      highlight-current-row
+      style="width: 100%;height: 100%">
+      <el-table-column
+        align="center"
+        label="序号"
+        type="index"
+        width="100">
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="spUserName"
+        label="审核人"
+        width="200">
+      </el-table-column>
+      <el-table-column
+        prop="createTime"
+        label="审核时间"
+        width="300">
+      </el-table-column>
+      <el-table-column
+        prop="mess"
+        label="审核意见"
+        align="center"
+        width="200"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="status"
+        label="审核状态"
+      >
+        <template scope="scope">
+          {{ scope.row.status | workFlower}}
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 
 
@@ -91,7 +99,7 @@
       return{
 
         "data": {
-
+          hisProcess:{listHisTaskLog:[]},
           }
         ,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置

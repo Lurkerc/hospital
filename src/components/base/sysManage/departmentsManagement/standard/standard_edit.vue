@@ -1,7 +1,7 @@
 <template>
 
   <div >
-    <el-form ref="formValidate"   class="demo-form-inline" label-width="110px" >
+    <el-form ref="formValidate"  :rules="rules" :model="formValidate" class="demo-form-inline" label-width="110px" >
 
       <el-row >
         <el-col :span="22" >
@@ -25,12 +25,13 @@
 <script>
   //当前组件引入全局的util
   let Util=null;
+  import {nosocomial as rules} from '../../rules'
   export default {
     //props接收父组件传递过来的数据
     props: ['operailityData'],
     data (){
       return{
-
+        rules,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
         countDate:0,

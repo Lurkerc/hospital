@@ -32,7 +32,28 @@
       </div>
     </div>
     <div v-if="isShowMoreSearch" class="listUpArea-moreSearchBox">
+      <el-form :rules="form" :inline="true" style="margin-top:10px;" label-width="74px">
+        <el-row>
 
+          <!--<el-form-item label="排序方式:">-->
+            <!--<el-select v-model="formValidate.order" placeholder="请选择状态">-->
+              <!--<el-option label="全部" value=""></el-option>-->
+              <!--<el-option label="ASC" value="ASC"></el-option>-->
+              <!--<el-option label="DESC" value="DESC"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <el-form-item label="专业:" prop="specialty">
+            <el-input v-model="formValidate.specialty"></el-input>
+          </el-form-item>
+          <!--<el-form-item label="考核状态:">
+            <el-select v-model="searchObj.status" placeholder="请选择">
+              <el-option v-for="item in examineStatuOption" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>-->
+          <el-button type="info" @click="search">查询</el-button>
+        </el-row>
+      </el-form>
     </div>
     <br />
     <div>
@@ -231,7 +252,6 @@
   //引入--审查--组件
   import edit from "./internOutline_edit.vue";
   import copy from "./internOutline_copy.vue";
-
   //引入--查看--组件
   import show from "./internOutline_view.vue";
   //引入--添加--组件
@@ -241,7 +261,7 @@
   import toChannel from "./internOutline_toChannel.vue";
 
   //引入--验证--组件
-  import {internOutline} from "../../rules";
+  import {internOutline,form} from "../../rules";
 
   //引入--操作url的api
   import api from "../api.js";
@@ -251,10 +271,13 @@
     data() {
       return {
         internOutline,
+        form,
         //查询表单
         deleteUrl: api.dgList.path,
         formValidate: {
           schoolName: '',
+          order:'',
+          specialty:''
         },
 
         /*--按钮button--*/
@@ -426,7 +449,10 @@
         this.openModel('remove') ;
       },
 
-
+      //查询
+      search(){
+        this.setTableData();
+      },
       //导入
       toChannel(){
         //if(!this.undistributedDep()) return;

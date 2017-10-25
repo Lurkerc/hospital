@@ -4,17 +4,26 @@
     <el-form>
       <fieldset>
         <legend>&nbsp;&nbsp;可选项目&nbsp;&nbsp;</legend>
-        <el-radio-group v-model="reservePoject" @change="selectProject">
+        <el-radio-group v-model="reservePoject" @change="selectProject" class="baProBox">
           <el-radio v-for="item in projectData" :key="item.reservePojectId" :label="item">{{ item.name }}</el-radio>
         </el-radio-group>
       </fieldset>
     </el-form>
-    <div class="bpaColorBox">
-      <span class="optional">可预约</span>
-      <span class="tenancyEnds">已约满</span>
-      <span class="NO">未开放</span>
-      <span class="select">已预约</span>
-    </div>
+
+    <el-row>
+      <el-col :span="16">
+        <div class="bpaColorBox">
+          <span class="optional">可预约</span>
+          <span class="tenancyEnds">已约满</span>
+          <span class="NO">未开放</span>
+          <span class="select">已预约</span>
+        </div>
+      </el-col>
+      <el-col :span="8" align="right">
+        <el-date-picker v-if="showSelectDay" v-model="pickerSelectDay" type="date" placeholder="选择日期" :picker-options="pickerOptions" @change="getAllDay" style="margin-top: 5px;"> </el-date-picker>
+      </el-col>
+    </el-row>
+
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane v-for="(item,index) in days" :key="index" :label="item" :name="item+''"></el-tab-pane>
     </el-tabs>
@@ -38,10 +47,12 @@
           </td>
           <td v-for="(dataItem,index) in roomItem.dataList" :key="roomItem.roomId + '-' + index" align="center">
             <div class="cell">
-              <template v-if="selRoomIndex === roomIndex && selTimeSlotIndex === index">
+              <p v-if="isObsolete(tableBody.timeSetList[index].courseTime)" class="NO" title="未开放">X</p>
+              <template v-else-if="selReserveProjectId === formValidate.reserveProjectId && selRoomIndex === roomIndex && selTimeSlotIndex === index">
                 <p v-if="dataItem === 'tenancyEnds' && selRoomIndex === -1" class="optional" title="可预约" @click="selectThisTime(roomItem,roomIndex,index,dataItem,true)">预</p>
                 <p v-else class="select" title="已预约" @click="initSelectTime(false)">约</p>
               </template>
+              <p v-else-if="selRoomIndex === roomIndex && selTimeSlotIndex === index" class="select" title="已预约" @click="initSelectTime(false)">约</p>
               <p v-else :class="dataItem" :title="getTitle(dataItem)" @click="selectThisTime(roomItem,roomIndex,index,dataItem)">{{ dataItem | dataListType }}</p>
             </div>
           </td>
@@ -64,11 +75,14 @@
       return {
         // 临时数据
         reservePoject: '', // 项目
-        activeName: '', // 日期视图 
+        activeName: '', // 日期视图
         selRoomIndex: -1, // 房间
         selTimeSlotIndex: -1, // 时间段
         selDay: '', // 日期
+        selReserveProjectId:'', // 原选中的项目id
         // 展示数据
+        showSelectDay: false, // 是否显示日期选框
+        pickerSelectDay: '', // 选择的日期
         days: [], // 日期
         projectData: [], // 可预约项目
         tableBody: [], // 房间预约
@@ -84,7 +98,12 @@
           status: "", // 预约状态 UNREPORTED|待上报 START|待使用
         },
         // 原数据
-        showData: {}
+        showData: {},
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+        },
       }
     },
     methods: {
@@ -99,10 +118,13 @@
             this.showData = res.data;
             this.selDay = res.data.reserveDate;
             this.formValidate.id = this.showData.id;
+            this.formValidate.reserveProjectId = res.data.reserveProjectId;
             this.projectData[0] = {
               name: res.data.reservePojectName,
               reservePojectId: res.data.reserveProjectId
             };
+            this.selReserveProjectId = res.data.reserveProjectId;
+
             this.getProjectList();
           },
           ajaxParams: {
@@ -134,12 +156,22 @@
         this.ajax({
           ajaxSuccess: res => {
             this.days = res.data || [];
-            for (let i in res.data) {
-              if (this.showData.reserveDate === res.data[i]) {
-                this.activeName = res.data[i];
-                this.selectDay(res.data[i]); // 指定日期
-                break;
+            this.showSelectDay = false;
+            if(!this.days.length){
+              this.getAllDay()
+            }
+
+            if(this.selReserveProjectId === this.formValidate.reserveProjectId){ // 如果是预约项目则进行数据还原（日期、房间、时间段）
+              for (let i in res.data) {
+                if (this.showData.reserveDate === res.data[i]) {
+                  this.activeName = res.data[i];
+                  this.selectDay(res.data[i]); // 指定日期
+                  break;
+                }
               }
+            }else{
+              this.activeName = this.days[0];
+              this.selectDay(this.days[0]); // 指定日期
             }
           },
           ajaxParams: {
@@ -151,12 +183,27 @@
           }
         })
       },
+      /**
+       * 计算全天候的日期
+       * 指定日期后的五天日期
+       * */
+      getAllDay(day){
+        let now = (day ? new Date(day) : new Date()).getTime();
+        this.days.length = 0;
+        for(let i=0;i<5;i++){
+          this.days.push(this.conductDate(new Date(now + (i * 24*60*60*1000)),'yyyy-MM-dd'))
+        }
+        this.showSelectDay = true;
+        this.activeName = this.days[0];
+        this.selectDay(this.days[0]); // 指定日期
+      },
       // 获取项目日期对应的房间信息
       getRoomInfoByDay() {
         this.ajax({
           ajaxSuccess: res => {
             this.tableBody = res.data || {};
-            if (this.selDay != this.formValidate.reserveDate) { // 不是同一天不进行预约状态选择
+            // 不是同一项目的同一天不进行预约状态选择
+            if (this.selReserveProjectId != this.formValidate.reserveProjectId || this.selDay != this.formValidate.reserveDate) {
               return
             }
             // 时间段
@@ -198,6 +245,12 @@
         this.formValidate.reserveDate = date;
         this.initSelectTime(data);
         this.getRoomInfoByDay();
+      },
+      // 时间段在今天是否已过期
+      isObsolete(dataItem) {
+        let selectTime = new Date(this.activeName + ' ' + dataItem.split('-')[0]).getTime();
+        let now = new Date().getTime();
+        return now > selectTime
       },
       /************************************* 按钮事件 **********************************/
       // 日期选择
@@ -264,7 +317,7 @@
           this.formValidate.status = obj.status;
         } else {
           this.formValidate.roomId = '';
-          this.formValidate.roomNum = ''
+          this.formValidate.roomNum = '';
           this.formValidate.timeSetId = '';
         }
       },
@@ -357,6 +410,12 @@
         border-radius: 12px;
         cursor: pointer;
       }
+    }
+  }
+
+  .baProBox{
+    .el-radio{
+      margin: 8px;
     }
   }
 

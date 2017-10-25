@@ -241,6 +241,10 @@
     methods: {
       //初始化请求列表数据
       init(){
+          //获取时间
+        let  myDate = new Date();
+        this.formValidate.planTime = this.conductDate(myDate,'yyyy-MM');
+
         Util = this.$util;
         //ajax请求参数设置
         this.myPages =  Util.pageInitPrams;

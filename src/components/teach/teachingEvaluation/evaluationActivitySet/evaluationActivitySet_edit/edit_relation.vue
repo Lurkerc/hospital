@@ -18,9 +18,9 @@
       </el-row>
       </br>
       <el-row >
-        <el-col :span="20"  :offset="3">
-          <el-button  @click="relation">确认并继续</el-button>
+        <el-col :span="10"  :offset="9">
           <el-button  @click="$emit('last') ">上一步</el-button>
+          <el-button  @click="relation">确认并继续</el-button>
         </el-col>
 
       </el-row>

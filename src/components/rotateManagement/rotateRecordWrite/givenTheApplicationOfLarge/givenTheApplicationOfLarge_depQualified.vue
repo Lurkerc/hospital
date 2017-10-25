@@ -29,30 +29,72 @@
       </el-col>
 
       <el-col class="subDepAppraise">
-        <div class="subDepAppraiseItem" :class="{'marginLeft':index % 2 === 1}" v-for="(item,index) in viewData.subDepAppraise" :key="index">
+        <div class="subDepAppraiseItem" :class="{'marginLeft':index % 2 === 1,'onlyOne': (index === (viewData.subDepAppraise.length -1)) && (index  % 2 === 0)}" v-for="(item,index) in viewData.subDepAppraise" :key="index">
           <fieldset>
             <legend style="font-size:16px">&nbsp;&nbsp;{{ item.depName }}出科情况汇总&nbsp;&nbsp;</legend>
-            <el-form-item label="考勤：">
-              <span>旷工 {{ item.minerDays || 0 }} 天，</span>
-              <span>病假 {{ item.sickDays || 0 }} 天，</span>
-              <span>事假 {{ item.personalDays || 0 }} 天</span>
-            </el-form-item>
-            <el-form-item label="奖惩情况：">
-              <span>奖励 {{ item.rewardNum || 0 }} 次，</span>
-              <span>惩罚 {{ item.penaltyNum || 0 }} 次</span>
-            </el-form-item>
+            <!--<el-form-item label="考勤：">-->
+              <!--<span>旷工 {{ item.minerDays || 0 }} 天，</span>-->
+              <!--<span>病假 {{ item.sickDays || 0 }} 天，</span>-->
+              <!--<span>事假 {{ item.personalDays || 0 }} 天</span>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="奖惩情况：">-->
+              <!--<span>奖励 {{ item.rewardNum || 0 }} 次，</span>-->
+              <!--<span>惩罚 {{ item.penaltyNum || 0 }} 次</span>-->
+            <!--</el-form-item>-->
             <div>
               <el-form-item label="老师评价：">{{ item.teacherEvaluation || '-' }}</el-form-item>
             </div>
             <div>
               <el-form-item label="老师评语：">{{ item.teacherComment || '暂无' }}</el-form-item>
             </div>
-            <h4>轮转记录填写：</h4>
-            <el-table align="center" :context="self" :data="item.depRequired" tooltip-effect="dark">
-              <el-table-column label="名称" prop="requiredName"></el-table-column>
-              <el-table-column label="要求例数" prop="requiredNum" show-overflow-tooltip></el-table-column>
-              <el-table-column label="实填例数" prop="userNum" show-overflow-tooltip></el-table-column>
-            </el-table>
+
+            <table class="el-table">
+              <thead>
+              <tr>
+                <th>
+                  <div class="cell">旷工</div>
+                </th>
+                <th>
+                  <div class="cell">病假</div>
+                </th>
+                <th>
+                  <div class="cell">事假</div>
+                </th>
+                <th>
+                  <div class="cell">奖励</div>
+                </th>
+                <th>
+                  <div class="cell">惩罚</div>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>
+                  <div class="cell">{{ item.minerDays || 0 }} 天</div>
+                </td>
+                <td>
+                  <div class="cell">{{ item.sickDays || 0 }} 天</div>
+                </td>
+                <td>
+                  <div class="cell">{{ item.personalDays || 0 }} 天</div>
+                </td>
+                <td>
+                  <div class="cell">{{ item.rewardNum || 0 }} 次</div>
+                </td>
+                <td>
+                  <div class="cell">{{ item.penaltyNum || 0 }} 次</div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+            <!--<h4>轮转记录填写：</h4>-->
+            <!--<el-table align="center" :context="self" :data="item.depRequired" tooltip-effect="dark">-->
+              <!--<el-table-column label="名称" prop="requiredName"></el-table-column>-->
+              <!--<el-table-column label="要求例数" prop="requiredNum" show-overflow-tooltip></el-table-column>-->
+              <!--<el-table-column label="实填例数" prop="userNum" show-overflow-tooltip></el-table-column>-->
+            <!--</el-table>-->
             <h4>出科成绩：</h4>
             <table class="el-table">
               <thead>
@@ -174,7 +216,11 @@
           ajaxSuccess: 'getDataSuccess',
           ajaxParams: {
             url: api.get.path + this.operailityData.examinationId,
-            method: api.get.method
+            method: api.get.method,
+            params: {
+              rtId: this.operailityData.rtId,
+              groupNo: this.operailityData.groupNo,
+            }
           }
         })
       },
@@ -223,6 +269,9 @@
       float: left;
       &:nth-child(2n) {
         margin-left: 2%;
+      }
+      &.onlyOne{
+        width: 100%;
       }
     }
   }

@@ -7,6 +7,17 @@
           <el-form-item label="评分指标名称：" prop="scoreTableName">
             <el-input v-model.trim="formValidate.scoreTableName"></el-input>
           </el-form-item>
+          <el-form-item label="评分指标类型：" prop="scoreType">
+            <el-select v-model="formValidate.scoreType" placeholder="请选择活动区域" @change="selectChange">
+              <el-option label="星级" value="STAR"></el-option>
+              <el-option label="分级" value="GRADE"></el-option>
+              <el-option label="分值" value="SCORE"></el-option>
+            </el-select>
+            <!--<el-input v-model.trim="formValidate.scoreType"></el-input>-->
+          </el-form-item>
+          <!--<el-form-item v-if="formValidate.scoreType == 'GRADE'" label="评分指标等级描述：" prop="scoreTableName">-->
+            <!--<el-input v-model="classifyDescribe" placeholder="请使用，分割每一项"></el-input>-->
+          <!--</el-form-item>-->
         </el-col>
         <el-table align="center" border :context="self" :data="formValidate.detailsList" tooltip-effect="dark" show-summary :summary-method="getSummaries"
           class="asmContable" style="width: 100%">
@@ -15,12 +26,12 @@
               <el-input v-model="scope.row.classify" placeholder="请填写项目名"></el-input>
             </template>
           </el-table-column>
-          <el-table-column label="评分标准及要求" prop="content" show-overflow-tooltip>
+          <el-table-column label="评分标准及要求" width="180px" prop="content" show-overflow-tooltip>
             <template scope="scope">
               <el-input type="textarea" :autosize="{maxRows:5}" :maxlength="500" v-model="scope.row.content" placeholder="最多只能输入500字"></el-input>
             </template>
           </el-table-column>
-          <el-table-column label="描述" prop="remark" show-overflow-tooltip>
+          <el-table-column label="描述" width="180px" prop="remark" show-overflow-tooltip>
             <template scope="scope">
               <el-input type="textarea" :autosize="{maxRows:5}" :maxlength="500" v-model="scope.row.remark" placeholder="最多只能输入500字"></el-input>
             </template>
@@ -28,6 +39,24 @@
           <el-table-column label="标准分" width="90px" prop="score" show-overflow-tooltip>
             <template scope="scope">
               <el-input v-model.number="scope.row.score" :maxlength="3"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column v-if="formValidate.scoreType == 'GRADE'" label="评分指标等级描述" width="180px" prop="classifyDescribe" show-overflow-tooltip>
+            <template scope="scope">
+              <el-input v-model="scope.row.classifyDescribe" placeholder="请用，分割每一项"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column v-if="formValidate.scoreType == 'GRADE'" label="对应分值" width="180px" prop="classifyScore" show-overflow-tooltip>
+            <template scope="scope">
+              <el-input v-model="scope.row.classifyScore" placeholder="请用，分割每一项"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column  label="扣分项" width="100px" prop="isPoints" show-overflow-tooltip>
+            <template scope="scope">
+              <el-select v-model="scope.row.isPoints" placeholder="">
+                <el-option label="是" value="1"></el-option>
+                <el-option label="否" value="0"></el-option>
+              </el-select>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="140px" align="left">
@@ -69,15 +98,20 @@
       return {
         rules,
         self: this,
+        classifyDescribe:'',
         formValidate: {
           scoreTableName: "",
           totalScore: "",
+          scoreType:'',
           detailsList: [{
             classify: "",
             content: "",
             score: "",
             detailOrder: 1,
-            remark: ""
+            remark: "",
+            isPoints:'',
+            classifyScore:'',
+            classifyDescribe:''
           }]
         },
         //保存按钮基本信息
@@ -103,13 +137,28 @@
     methods: {
       // 添加
       add(index) {
-        this.formValidate.detailsList.push({
-          classify: "",
-          content: "",
-          score: "",
-          detailOrder: ++index,
-          remark: ""
-        })
+        if(this.formValidate.scoreType == 'GRADE'){
+          this.formValidate.detailsList.push({
+            classify: "",
+            content: "",
+            score: "",
+            detailOrder: ++index,
+            remark: "",
+            isPoints:'',
+            classifyDescribe:'',
+            classifyScore:'',
+          })
+        }else{
+          this.formValidate.detailsList.push({
+            classify: "",
+            content: "",
+            score: "",
+            detailOrder: ++index,
+            remark: "",
+            isPoints:''
+          })
+        }
+
       },
       // 删除
       del(index) {
@@ -130,6 +179,7 @@
           const values = data.map(item => Number(item[column.property]));
           if (!values.every(value => isNaN(value)) && index === 3) {
             sums[index] = values.reduce((prev, curr) => {
+              console.log(curr);
               const value = Number(curr);
               if (!isNaN(value)) {
                 return prev + curr;
@@ -139,6 +189,11 @@
             }, 0);
           }
         });
+        for(let a = 0;a < param.data.length; a++){
+          if(param.data[a].isPoints == '1'){
+            sums[3] = sums[3] - param.data[a].score
+          }
+        };
         this.formValidate.totalScore = sums[3];
         return sums;
       },
@@ -168,6 +223,10 @@
           }
         });
         return flag;
+      },
+      //评分指标类型
+      selectChange(val){
+        console.log(val)
       },
       // 检测评分表数据是否有效
       checkData() {

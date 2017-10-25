@@ -26,7 +26,6 @@
         <el-col :span="8" :offset="2">
           <el-form-item label="借用人：" prop="borrower" required>
             <el-input v-model="formValidate.borrower"></el-input>
-            </el-select>
           </el-form-item>
         </el-col>
 
@@ -108,7 +107,7 @@
           purpose: '', // 用途
           borrowTime: '', // 借出时间
           returnTime: '', // 归还时间
-          remark: '', // 备注        
+          remark: '', // 备注
         },
         //当前组件提交(add)数据时,ajax处理的 基础信息设置
         addMessTitle: {

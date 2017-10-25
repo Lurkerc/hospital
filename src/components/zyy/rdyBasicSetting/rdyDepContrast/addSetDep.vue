@@ -8,8 +8,8 @@
   <div class="cal-schoolTit">{{operailityData["cdepName"]}}：{{operailityData["ts"]}}月</div>
   <div class="cal-schoolTit">是否连续轮转：
     <el-radio-group v-model="formValidate.depIsCou">
-      <el-radio :label="1">是</el-radio>
-      <el-radio :label="0">否</el-radio>
+      <el-radio :label="0">是</el-radio>
+      <el-radio :label="1">否</el-radio>
     </el-radio-group>
   </div>
   <br />
@@ -128,7 +128,7 @@
       <ul class="sltDepUl">
         <div v-for="(item,index) in depTreeData" :key="item.id" class="sltDepBox">
           <li class="sltDep"><el-checkbox @change="handleCheck(item)" :disabled="item.checked" v-model="item.checked">{{item.name}}</el-checkbox></li>
-          <li class="sltSubDep" v-if="typeof item.children!='undefined'" v-for="(subItem,subIndex) in item.children"><el-checkbox @change="handleCheck(subItem)" :disabled="subItem.checked" v-model="subItem.checked">{{subItem.name}}</el-checkbox></li>
+          <li class="sltSubDep" v-if="typeof item.childList!='undefined'" v-for="(subItem,subIndex) in item.childList"><el-checkbox @change="handleCheck(subItem)" :disabled="subItem.checked" v-model="subItem.checked">{{subItem.name}}</el-checkbox></li>
         </div>
       </ul>
   </div>
@@ -155,9 +155,9 @@ export default{
           "rtId":this.operailityData["rtId"],
           "rdId":this.operailityData["rdId"],
           "hgGroup":this.operailityData["hgGroup"],
-          "deType":1,
+          "deType":0,
           "depRandomNum":1,
-          "depIsCou":1,
+          "depIsCou":0,
           "chTs":1,
           "ch2Ts":1,
           "ch1Ts":1,
@@ -189,8 +189,10 @@ export default{
         getDepMessTitle:{
           ajaxSuccess:'setDepData',
           ajaxParams:{
-            url: api.getDepTree.path,
-            params:{}
+            url: api.getByDepth.path,
+            params:{
+              depth:3
+            }
           }
         },
 
@@ -256,7 +258,7 @@ export default{
               "name":"内科",
               "id":1,
               "leaf":false,
-              "children":[
+              "childList":[
                 {
                   "expand":true,
                   "name":"内科A1",
@@ -288,9 +290,10 @@ export default{
       setDepData(responseData){
         let data = responseData.data;
         if(this.valDataType(data,"Array")){
-          if(typeof data[0].children!="undefined"){
-            this.initFormateDepTree(data[0].children);
-          }
+          //if(typeof data[0].childList!="undefined"){
+            //this.initFormateDepTree(data[0].childList);
+          //}
+          this.initFormateDepTree(data);
         }
       },
 
@@ -366,8 +369,8 @@ export default{
       setChecked(data){
         for (var i = 0; i < data.length; i++) {
           data[i]["checked"] = false;
-          if (typeof data[i].children != "undefined" && data[i].children.length > 0) {
-            this.setChecked(data[i].children);
+          if (this.valDataType(data,"Array")&&data[i].childList!==null) {
+            this.setChecked(data[i].childList);
           }
         }
       },
@@ -380,8 +383,8 @@ export default{
             idArr.splice(idx,1);
             data[i]["checked"] = flag;
           }
-          if (typeof data[i].children != "undefined" && data[i].children.length > 0) {
-            this.canelChecked(data[i].children,idArr,flag);
+          if (this.valDataType(data,"Array") && data[i].childList!==null) {
+            this.canelChecked(data[i].childList,idArr,flag);
           }
         }
       },
@@ -539,7 +542,7 @@ export default{
             return a.name.indexOf(val) < b.name.indexOf(val);
           })
           for(var i=0,item;i<this.depTreeData.length;i++){
-            item = this.depTreeData[i]["children"];
+            item = this.depTreeData[i]["childList"];
             if(typeof item!="undefined"){
               item.sort(function(a, b) {
                 return a.name.indexOf(val) < b.name.indexOf(val);

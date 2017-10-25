@@ -44,7 +44,7 @@
             </div>
           </el-col>
           <el-col :span="1">
-            <div class="cal-schoolTit"><!--学年,-->&nbsp;&nbsp;&nbsp;&nbsp;第</div>
+            <div class="cal-schoolTit"><!--学年,-->&nbsp;&nbsp;第</div>
           </el-col>
           <el-col :span="3">
             <el-select v-model="formValidate.semester" placeholder="请选择">
@@ -480,6 +480,10 @@
             }
             if(this.formValidate.gradeNum==""){
               this.showMess("请选择级!");
+              return
+            }
+            if (!/^\+?[1-9]\d*$/.test(this.formValidate.classNum)) {
+              this.showMess("班级必须正整数且大于零!");
               return
             }
             if(this.formValidate.classNum==""){

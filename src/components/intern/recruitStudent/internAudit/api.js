@@ -20,6 +20,10 @@ const api = {
     path: thisFile + '/trial/add', // {userId}
     method: 'post'
   },
+  modifySpTrialSxUsers:{ // 批量审核
+    path: thisFile + '/modifySpTrialSxUsers/', // {userIds}
+    method: 'post'
+  },
 
   /************************ 选择宿舍 *********************************/
   allBuild: { // 获取所有宿舍大楼

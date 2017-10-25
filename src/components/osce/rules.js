@@ -14,6 +14,8 @@ let tree = {
 let assessmentContentScore = {
   scoreTableName: baseRules.required, // 评分名称 - 必填
   // scope.row.content: baseRules.required, // 评分名称 - 必填
+  scoreType:baseRules.required,//评分类型
+  classifyDescribe:baseRules.required,//评分标准描述
 };
 
 /**

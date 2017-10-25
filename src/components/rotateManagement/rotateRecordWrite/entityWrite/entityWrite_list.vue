@@ -18,7 +18,7 @@
             </el-input>
           </el-form-item>
           <el-form-item label="病历号:"  prop="patienNo">
-            <el-input   v-model="formValidate.patienNo" placeholder="输入住院号搜索">
+            <el-input   v-model="formValidate.patienNo" placeholder="输入病历号搜索">
             </el-input>
           </el-form-item>
           <el-button @click="searchEvent"    icon="search">搜索</el-button>

@@ -2,20 +2,23 @@
   <div>
     <el-row>
       <el-col :span="8" :offset="14">
-        <el-input placeholder="请输入房间号" v-model="roomNum">
-          <el-button slot="append" icon="search" @click="search"></el-button>
-        </el-input>
+        <el-form labelWidth="160px">
+          <el-form-item label="输入房间号进行筛选：">
+            <el-input placeholder="请输入房间号" v-model="roomNum" @input="search">
+              <!--<el-button slot="append" icon="search" @click="search"></el-button>-->
+            </el-input>
+          </el-form-item>
+        </el-form>
       </el-col>
       <el-col :span="20" :offset="2">
-        <div style="padding-top:20px;">
           <el-table ref="multipleTable" align="center" :context="self" :data="tableData" tooltip-effect="dark" :height="dynamicHt"
             style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="selection" :selectable="selectable" width="55"></el-table-column>
             <el-table-column label="房间号" prop="roomNum" align="center"></el-table-column>
             <el-table-column label="房间名称" prop="roomName" show-overflow-tooltip></el-table-column>
+            <el-table-column label="可容量" prop="capacity" show-overflow-tooltip></el-table-column>
             <el-table-column label="简介" prop="summary" show-overflow-tooltip></el-table-column>
           </el-table>
-        </div>
         <!-- 分页按钮 -->
         <!--<div style="float: right;margin-top:10px;">
           <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
@@ -60,7 +63,7 @@
         type: Boolean,
         default: false
       },
-      unSelectRoom: { // 禁选房间 
+      unSelectRoom: { // 禁选房间
         type: Array,
         default: () => []
       }
@@ -71,7 +74,8 @@
         roomNum: '', // 搜索房间号
         dynamicHt: 300,
         selectData: [], // 已选择的数据
-        tableData: []
+        tableData: [],
+        allData:[],
       }
     },
     methods: {
@@ -83,8 +87,8 @@
         this.queryQptions = {
           url: this.urlParams.path,
           params: {
-            curPage: 1,
-            pageSize: Util.pageInitPrams.pageSize
+//            curPage: 1,
+//            pageSize: Util.pageInitPrams.pageSize
           }
         }
 
@@ -123,6 +127,7 @@
       listDataSuccess(res, m, loading) {
         this.listTotal = res.totalCount || 0;
         this.tableData = res.data;
+        this.allData = res.data;
         this.$nextTick(() => {
           if (this.select.length) {
             let thisPageIds = [];
@@ -166,10 +171,13 @@
         }
       },
       search() {
-        Object.assign(this.queryQptions.params, {
-          roomNum: this.roomNum
-        });
-        this.setTableData();
+        let arr = [];
+        (this.allData || []).map(item=>{
+          if (~item.roomNum.indexOf(this.roomNum)){
+            arr.push(item)
+          }
+        })
+        this.tableData = arr
       }
     },
     created() {

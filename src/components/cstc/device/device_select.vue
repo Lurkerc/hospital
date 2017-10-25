@@ -5,29 +5,29 @@
       <tree-menu slot="left" @tree-click="treeClick" :treeOptions="leftTreeOpt.treeDefaults" :fromWhereTreeType="leftTreeOpt.fromWhereTree" @setCurrSltNodeId="setCurrSltNodeId"></tree-menu>
       <!-- 右侧内容 -->
       <div slot="right" id="content" ref="content" class="modal" style="padding:0;">
-        <div ref="selSearch">
-          <el-input placeholder="请输入设备名称" v-model="deviceTypeName" style="margin-bottom:18px;">
-            <el-button slot="append" icon="search" @click="setTableData"></el-button>
-          </el-input>
-        </div>
+        <!--<div ref="selSearch">-->
+          <!--<el-input placeholder="请输入设备名称" v-model="deviceTypeName" style="margin-bottom:18px;">-->
+            <!--<el-button slot="append" icon="search" @click="setTableData"></el-button>-->
+          <!--</el-input>-->
+        <!--</div>-->
         <!-- 表格数据 -->
         <div id="deviceTable" ref="deviceTable">
           <el-table align="center" ref="multipleTable" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo" style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column label="序号" type="index" width="100" align="center"></el-table-column>
             <el-table-column label="名称" prop="deviceTypeName" show-overflow-tooltip></el-table-column>
-            <el-table-column label="开放数量" prop="openNum" show-overflow-tooltip>
+            <el-table-column label="数量" prop="deviceNum" width="100" show-overflow-tooltip>
               <template scope="scope">
-                {{ scope.row.openNum || 0 }}
+                {{ scope.row.deviceNum || 0 }}
               </template>
             </el-table-column>
           </el-table>
         </div>
         <!-- 分页 -->
-        <!-- <div style="float: right;margin-top:10px;">
+        <div style="float: right;margin-top:10px;">
           <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
             :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
-        </div> -->
+        </div>
       </div>
     </layout-tree>
     <el-row style="clear:both;padding-top:20px;">
@@ -44,7 +44,7 @@
 <script>
   let Util;
   // API
-  import api from './api';
+  import api from './deviceStorage/api';
   import treeApi from './treeApi';
 
   // 左侧菜单树
@@ -53,13 +53,13 @@
   import treeMenu from "./tree/menu";
   export default {
     props: {
-      timeData: {
-        type: Object,
-        default: () => ({
-          date: '', // 日期
-          reserveTimeSetId: '', // 时间段id
-        })
-      },
+//      timeData: {
+//        type: Object,
+//        default: () => ({
+//          date: '', // 日期
+//          reserveTimeSetId: '', // 时间段id
+//        })
+//      },
       select: { // 已经选中的id集合（数组）
         type: Array,
         default: () => []
@@ -107,13 +107,13 @@
         this.myPages = Util.pageInitPrams;
 
         this.queryQptions = {
-          url: api.select.path,
-          method: api.select.method,
+          url: api.list.path,
+          method: api.list.method,
           params: {
-            date: this.timeData.date,
-            reserveTimeSetId: this.timeData.reserveTimeSetId,
-            // curPage: 1,
-            // pageSize: Util.pageInitPrams.pageSize
+//            date: this.timeData.date,
+//            reserveTimeSetId: this.timeData.reserveTimeSetId,
+             curPage: 1,
+             pageSize: Util.pageInitPrams.pageSize
           }
         }
       },

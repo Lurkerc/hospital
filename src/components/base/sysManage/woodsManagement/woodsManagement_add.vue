@@ -162,7 +162,7 @@
 
       /*
        * 设置专业
-       * @param val string || number  选中毕业学校的id
+       * @param val string || number  选中学校的id
        * */
       setSpecialtyOptionValue(val,id){
         //this.formValidate.schoolId = id;

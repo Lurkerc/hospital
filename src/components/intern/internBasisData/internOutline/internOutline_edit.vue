@@ -363,8 +363,8 @@
 
 
       /*
-       * 设置毕业学校选中的值
-       * @param val string || number  选中毕业学校的id
+       * 设置学校选中的值
+       * @param val string || number  选中学校的id
        * */
       setSltOptionValue(val,id){
         this.formValidate.schoolId = id;
@@ -374,7 +374,7 @@
 
       /*
        * 设置专业
-       * @param val string || number  选中毕业学校的id
+       * @param val string || number  选中学校的id
        * */
       setSpecialtyOptionValue(val,id){
         //this.formValidate.schoolId = id;

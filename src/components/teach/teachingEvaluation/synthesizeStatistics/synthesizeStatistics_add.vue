@@ -1,10 +1,11 @@
 <template>
   <!-- 新建分析策略 -->
   <div>
-    <el-form :inline="true" :model="formValidate" ref="formValidate" :rules="rules">
+    <el-form :inline="true" v-for="item in 1" :key="item" :model="formValidate" ref="formValidate" :rules="synthesizeStatistics">
       <el-form-item label="策略名称：" prop="title">
         <el-input v-model.trim="formValidate.title" placeholder="请输入" :maxlength="50"></el-input>
       </el-form-item>
+
       <fieldset>
         <legend style="font-size:16px">&nbsp;&nbsp;分析对象设置&nbsp;&nbsp;</legend>
         <el-form-item label="分析对象：">
@@ -27,35 +28,45 @@
             <el-checkbox label="培训年限"></el-checkbox>
           </el-checkbox-group>
         </el-form-item>
+
       </fieldset>
+    </el-form>
       <fieldset style="margin-top:20px">
         <legend style="font-size:16px">&nbsp;&nbsp;分析数据来源&nbsp;&nbsp;</legend>
         <p align="right">
           <el-button size="small" type="info" @click="addScoreToTable">添加评价</el-button>
         </p>
-        <el-table align="center" :context="self" :data="tableData" tooltip-effect="dark" style="width: 100%;margin-top:10px;">
-          <el-table-column label="名称" prop="title" show-overflow-tooltip>
+        <el-table v-for="item in 1" :key="item" align="center" :context="self" :data="tableData" tooltip-effect="dark" style="width: 100%;margin-top:10px;">
+          <el-table-column  class-name="valiTableStyle" label="名称" prop="activityId" show-overflow-tooltip>
             <template scope="scope">
-              <el-select v-model="scope.row.activityId" placeholder="请选择" @change="getSelectDataInfo(scope.$index,scope.row.activityId)">
-                <el-option v-for="item in scoreSelectData" :key="item.id" :label="item.name" :value="item.id">
-                </el-option>
-              </el-select>
+              <el-form :inline="true" :model="scope.row" ref="formValidate" :rules="synthesizeStatistics">
+                <el-form-item prop="activityId" label-width="0">
+                  <el-select v-model="scope.row.activityId" placeholder="请选择" @change="getSelectDataInfo(scope.$index,scope.row.activityId)">
+                    <el-option v-for="item in scoreSelectData" :key="item.id" :label="item.name" :value="item.id">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-form>
             </template>
           </el-table-column>
           <el-table-column label="评价时间" prop="timeText" show-overflow-tooltip></el-table-column>
           <el-table-column label="评价人" prop="appraiser" show-overflow-tooltip>
-            <template scope="scope">
-              {{ scope.row.appraiser && scope.row.appraiser.split('=')[1] }}
-            </template>
+            <!--<template scope="scope">-->
+              <!--{{ scope.row.appraiser && scope.row.appraiser.split('=')[1] }}-->
+            <!--</template>-->
           </el-table-column>
           <el-table-column label="被评价人" prop="evaluated" show-overflow-tooltip>
-            <template scope="scope">
-              {{ scope.row.evaluated && scope.row.evaluated.split('=')[1] }}
-            </template>
+            <!--<template scope="scope">-->
+              <!--{{ scope.row.evaluated && scope.row.evaluated.split('=')[1] }}-->
+            <!--</template>-->
           </el-table-column>
-          <el-table-column label="权重" prop="weight">
+          <el-table-column  class-name="valiTableStyle" label="权重" prop="weight">
             <template scope="scope">
-              <el-input v-model="scope.row.weight" :maxlength="3"></el-input>
+              <el-form :inline="true" :model="scope.row" ref="formValidate" :rules="synthesizeStatistics">
+                <el-form-item prop="weight" label-width="0">
+                   <el-input v-model="scope.row.weight" :maxlength="3"></el-input>
+                </el-form-item>
+              </el-form>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="80" align="center">
@@ -65,7 +76,6 @@
           </el-table-column>
         </el-table>
       </fieldset>
-    </el-form>
 
     <div style="margin-top:20px;" align="center">
       <load-btn @listenSubEvent="listenSubEvent" :btnData="loadBtn"></load-btn>
@@ -76,15 +86,13 @@
 
 <script>
   let Util;
+  import {synthesizeStatistics} from '../../rules'
   import api from './api';
   import typeOption from './objTypeOption';
-  import {
-    synthesizeStatistics as rules
-  } from '../../rules';
   export default {
     data() {
       return {
-        rules,
+        synthesizeStatistics,
         typeOption,
         //保存按钮基本信息
         loadBtn: {
@@ -140,7 +148,11 @@
         let isSubmit = this.submitForm("formValidate");
         let DtoList = [];
         let tag = true;
-        if (!isSubmit || !this.tableData.length) {
+        if (!isSubmit) {
+          this.errorMess('填写的数据有误，请修改！')
+          return
+        }
+        if(!this.tableData.length){
           this.errorMess('至少需要一条评价！')
           return
         }
@@ -165,11 +177,10 @@
         }
         if (!isLoadingFun) isLoadingFun = function () {};
         isLoadingFun(true);
-        this.formValidate.viewContent = this.viewContent
-          .join(',');
+        this.formValidate.viewContent = this.viewContent.join(',');
         this.formValidate.queryContent = this.queryContent.join(',');
-        this.formValidate.strategyResourceDtoList =
-          DtoList;
+
+        this.formValidate.strategyResourceDtoList = DtoList;
         this.addMessTitle.ajaxParams.data = this.getFormData(this.formValidate);
         this.ajax(this.addMessTitle,
           isLoadingFun)
@@ -179,13 +190,16 @@
        * @param formName string  form表单v-model数据对象名称
        * @return flag boolean   form表单验证是否通过
        * */
-      submitForm(formName) {
-        let flag = false;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            flag = true;
-          }
-        });
+      submitForm(formName){
+        let flag = true;
+        for(let i=0;i<this.$refs[formName].length;i++){
+          this.$refs[formName][i].validate((valid) => {
+            if (!valid) {
+              flag= false;
+            }
+          });
+        }
+
         return flag;
       },
       // 更换分析对象
@@ -230,7 +244,7 @@
         this.ajax({
           ajaxSuccess: res => {
             this.scoreSelectData = res.data;
-            this.tableData = []
+            this.tableData = [];
             if (res.data.length && !this.tableData.length) {
               this.addScoreToTable()
             }
@@ -259,10 +273,11 @@
       },
       // 根据选择的评分表获取详细信息
       getSelectDataInfo(index, id) {
+          if(id=='')return;
         this.ajax({
           ajaxSuccess: res => {
-            this.tableData[index].appraiser = res.data.appraiser; // 评价对象
-            this.tableData[index].evaluated = res.data.evaluated; // 被评价对象
+            this.tableData[index].appraiser =this.conductRole(res.data.appraiser,res.data,0) ; // 评价对象
+            this.tableData[index].evaluated =this.conductRole(res.data.evaluated,res.data,1) ; // 评价对象
             this.tableData[index].timeText = this.getTimeText(res.data); // 评价时间
           },
           ajaxParams: {
@@ -275,50 +290,47 @@
         })
       },
       // 获取评价时间描述文本
-      getTimeText(res) {
-        let dateType = (res.dateType || 0) - 1; // 时间类型
-        let startDay = res.startDay; // 开始
-        let endDay = res.endDay; // 截止
-        let week = {
-          1: '一',
-          2: '二',
-          3: '三',
-          4: '四',
-          5: '五',
-          6: '六',
-          7: '日'
-        };
-        let dateText = [{
-            start: `出科前${startDay}天`,
-            end: `后${endDay}天`
-          },
-          {
-            start: `每周${week[startDay]}`,
-            end: `周${week[endDay]}`
-          },
-          {
-            start: `每月${startDay}日`,
-            end: `${endDay}日`
-          },
-          {
-            start: `${res.startDate}`,
-            end: `${res.endDate}`
-          },
-          '每天',
-          '每季度',
-          '每半年',
-          '每年'
-        ];
-        let text = '';
-        if (dateType > -1) {
-          if (dateType > 3) {
-            text = dateText[dateType]
-          } else {
-            text = dateText[dateType].start;
-            endDay && (text += ' - ' + dateText[dateType].end)
+      getTimeText({dateType,startDay,endDay,startDate,endDate}){
+        let date='' ;
+        switch (dateType){
+          case 1:date = `出科前${startDay}天——后${endDay}天评价一次`;
+            break;
+          case 2:date = `每周${startDay}——周${endDay}评价一次`;
+            break;
+          case 3:date = `每月${startDay}日——${endDay}日评价一次`;
+            break;
+          case 4:date = `${startDate}~${endDate}`;
+            break;
+          case 5:date = `每天评价一次`;
+            break;
+          case 6:date = `每季度评价一次`;
+            break;
+          case 7:date = `每半年评价一次`;
+            break;
+          case 8:date = `每年评价一次`;
+            break;
+        }
+        return date;
+      },
+
+      conductRole(data,item,index){
+        if(item.relationship== 'NO'&&!data){
+          return '所有人'
+        }
+        if(item.relationship== 'LOOP'){
+          let tempArr=[['学生','老师'],['学生','科室'],['老师','学生']];
+          return tempArr[item.loopType-1][index]
+        }
+
+        let tempArr=[]
+        if(typeof data == 'string'){
+          data=data.split(',')
+          for(let i=0;i<data.length;i++){
+            let temp=data[i].split('=');
+            tempArr.push(temp[1]);
           }
         }
-        return text
+        return tempArr.join(' ; ');
       },
       /*
        * 组件初始化入口

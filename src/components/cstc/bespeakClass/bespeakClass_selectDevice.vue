@@ -1,35 +1,19 @@
 <template>
   <div>
-    <layout-tree style="height:500px;" ref="selectContent">
-      <!-- 左侧目录树 -->
-      <tree-menu slot="left" @tree-click="treeClick" :treeOptions="leftTreeOpt.treeDefaults" :fromWhereTreeType="leftTreeOpt.fromWhereTree" @setCurrSltNodeId="setCurrSltNodeId"></tree-menu>
-      <!-- 右侧内容 -->
-      <div slot="right" id="content" ref="content" class="modal" style="padding:0;">
-        <div ref="selSearch">
-          <el-input placeholder="请输入设备名称" v-model="deviceTypeName" style="margin-bottom:18px;">
-            <el-button slot="append" icon="search" @click="setTableData"></el-button>
-          </el-input>
-        </div>
-        <!-- 表格数据 -->
-        <div id="deviceTable" ref="deviceTable">
-          <el-table align="center" ref="multipleTable" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo" style="width: 100%" @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column label="序号" type="index" width="100" align="center"></el-table-column>
-            <el-table-column label="名称" prop="deviceTypeName" show-overflow-tooltip></el-table-column>
-            <el-table-column label="开放数量" prop="openNum" show-overflow-tooltip>
-              <template scope="scope">
-                {{ scope.row.openNum || 0 }}
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-        <!-- 分页 -->
-        <!-- <div style="float: right;margin-top:10px;">
-          <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
-            :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
-        </div> -->
-      </div>
-    </layout-tree>
+    <!-- 表格数据 -->
+    <div id="deviceTable" ref="deviceTable">
+      <el-table align="center" ref="multipleTable" :height="dynamicHt" :context="self" :data="tableData" tooltip-effect="dark" class="tableShowMoreInfo" style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column label="序号" type="index" width="100" align="center"></el-table-column>
+        <el-table-column label="名称" prop="deviceTypeName" show-overflow-tooltip></el-table-column>
+        <el-table-column label="编号" prop="deviceIdentifier" show-overflow-tooltip></el-table-column>
+      </el-table>
+    </div>
+    <!-- 分页 -->
+    <!-- <div style="float: right;margin-top:10px;">
+      <el-pagination @size-change="changePageSize" @current-change="changePage" :current-page="myPages.currentPage" :page-sizes="myPages.pageSizes"
+        :page-size="myPages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount"></el-pagination>
+    </div> -->
     <el-row style="clear:both;padding-top:20px;">
       <el-col :span="6" :offset="6" align="center">
         <el-button type="primary" @click="selectDevice">确定</el-button>
@@ -45,20 +29,8 @@
   let Util;
   // API
   import api from './api';
-
-  // 左侧菜单树
-  import layoutTree from "../../common/layoutTree";
-  // 右侧内容
-  import treeMenu from "../device/tree/menu";
   export default {
     props: {
-      timeData: {
-        type: Object,
-        default: () => ({
-          date: '', // 日期
-          reserveTimeSetId: '', // 时间段id
-        })
-      },
       select: { // 已经选中的id集合（数组）
         type: Array,
         default: () => []
@@ -67,6 +39,10 @@
         type: Boolean,
         default: false
       },
+      roomId:{ // 房间id
+        type:[Number,String],
+        default: ''
+      },
     },
     data() {
       return {
@@ -74,19 +50,6 @@
         dynamicHt: 446,
         // 默认激活视图
         selectData: [],
-        // 左侧菜单
-        leftTreeOpt: {
-          //tree默认项设置
-          treeDefaults: {
-            getTreeUrl: api.tree.path, //目录树结构请求地址
-            baseUrl: api.baseUrl,
-            // getDataUrl: '', //获取目录树叶子节点请求数据地址
-            isShowSearch: false, // 隐藏搜索
-            isShowMenus: false, // 隐藏操作菜单
-          },
-          fromWhereTree: "user", // 菜单类型
-        },
-        depId: '', // 菜单选中id
         self: this,
         // 表格数据
         totalCount: 0,
@@ -95,7 +58,6 @@
         multipleSelection: '', // 选项
         operailityData: '', // 操作的数据
         loading: false,
-
       }
     },
     methods: {
@@ -109,40 +71,11 @@
           url: api.select.path,
           method: api.select.method,
           params: {
-            date: this.timeData.date,
-            reserveTimeSetId: this.timeData.reserveTimeSetId,
-            // curPage: 1,
-            // pageSize: Util.pageInitPrams.pageSize
+            roomId:this.roomId
           }
         }
-      },
-      //---------------------------------- 左侧菜单树 ------------------------------------------//
-      // 设置默认ID
-      setCurrSltNodeId(id) {
-        if (this.depId == "") {
-          this.depId = id;
-        } else {
-          this.depId = id;
-        }
         this.setTableData()
       },
-      /*
-       * 左侧目录树节点click调用父组件方法
-       *
-       * @param obj {} 当前选中节点的一级数据
-       * @param node  {}  整个tree节点所有数据
-       * @param  self  {}  当前tree vue实例
-       *
-       * */
-      treeClick(obj, node, self) {
-        this.depId = obj.id;
-        this.deviceTypeName = '';
-        this.setTableData()
-      },
-      // 获取内容部分高度
-      // getContentHeight() {
-      //   this.contenHeight = this.$refs.content.parentNode.offsetHeight;
-      // },
       //*--------------------------- 表格 -----------------------*//
       /*
        * checkbox 选择后触发事件
@@ -156,8 +89,6 @@
        * @param isLoading Boolean 是否加载
        */
       setTableData() {
-        this.queryQptions.params.depId = this.depId;
-        this.queryQptions.params.deviceTypeName = this.deviceTypeName || '';
         this.ajax({
           ajaxSuccess: 'listDataSuccess',
           ajaxParams: this.queryQptions
@@ -217,8 +148,6 @@
       },
     },
     components: {
-      layoutTree,
-      treeMenu,
     },
     // mounted() {
     //   //页面dom稳定后调用

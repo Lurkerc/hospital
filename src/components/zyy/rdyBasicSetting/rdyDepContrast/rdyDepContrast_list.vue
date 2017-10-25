@@ -202,6 +202,10 @@ import setDepList from "./setDepList.vue";
 let Util = null;
 export default{
   props:{
+    rtModelType:{   //各个生源类型判断ZYY(住院医)、YJS(研究生)、JXS(进修生)
+      type: String,
+      default:'ZYY',
+    },
     isShowRt:{
       type:Number,
       default:0
@@ -240,7 +244,7 @@ export default{
         ajaxParams:{
           url: api.rulesgetList.path,
           params:{
-            rtProclass:'',rtModelType:''
+            rtProclass:'',rtModelType:this.rtModelType,
           }
         }
       },
@@ -445,8 +449,9 @@ export default{
       }else{
         option.ajaxParams.url+=this.sltedRtId;
       }
-
-      this.ajax(option);
+      if(this.isShowRt!=""||this.sltedRtId!=""){
+        this.ajax(option);
+      }
     },
 
 

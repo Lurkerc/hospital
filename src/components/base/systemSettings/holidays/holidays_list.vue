@@ -67,8 +67,8 @@
               <el-button
                 size="small"
                 @click="edit(scope.$index, scope.row)">修改</el-button>
-              <el-button v-if="scope.row.status==1" size="small" @click="forbidden(scope.$index, scope.row)">启 用</el-button>
-              <el-button v-if="scope.row.status==0" size="small" @click="startUsing(scope.$index, scope.row)" type="danger">禁 用</el-button>
+              <el-button v-if="scope.row.status==1" type="success" size="small" @click="forbidden(scope.$index, scope.row)">启 用</el-button>
+              <el-button v-if="!scope.row.status" size="small" @click="startUsing(scope.$index, scope.row)" type="danger">禁 用</el-button>
             </template>
           </el-table-column>
           <el-table-column

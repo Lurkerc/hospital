@@ -26,7 +26,25 @@ const rotateRouters = {
         resolve(require('../../components/rotateManagement/rotateRecordAudit/entityAudit/entityAudit_list.vue'));
       }, 'rotateRecordAudit');
     }
-   },
+   }, {
+    //手术操作审核  2017-08-31
+    path:'operationAudit',
+    name:'operationAudit',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/rotateManagement/rotateRecordAudit/operationAudit/operationAudit_list.vue'));
+      }, 'rotateRecordAudit');
+    }
+  }, {
+    //延期出科审核  2017-09-02
+    path:'extensionRequestAudit',
+    name:'extensionRequestAudit',
+    component:resolve=> {
+      require.ensure([], () => {
+        resolve(require('../../components/rotateManagement/rotateRecordAudit/extensionRequestAudit/extensionRequestAudit_list.vue'));
+      }, 'rotateRecordAudit');
+    }
+  },
     {
       //技能操作审核
       path:'skillAudit',

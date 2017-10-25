@@ -20,7 +20,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3" style="text-align: right;line-height: 30px;">相关资料</el-col>
+          <el-col :span="3" style="text-align: right;line-height: 30px;">相关证明材料</el-col>
           <el-col :span="20">
             <el-form-item label="">
               <upload-file @setUploadFiles="addFileEvent"></upload-file>

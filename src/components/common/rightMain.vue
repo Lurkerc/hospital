@@ -7,7 +7,7 @@
                 <div  class="ng-isolate-scope"></div>
                 <div class="main-nav-list">
                     <ul id="subMeunwrapperid" ref="subMeunwrapperid">
-                        <li :class="{active:item.index==selected}" @click="selectedMenus(item.index)" v-for="item in router.children">
+                        <li :class="{active:item.index==selected}" @click="selectedMenus(item,item.index)" v-for="item in router.children">
                             <div v-if="!item.children" class="ng-isolate-scope">
                                 <router-link v-show="!item.unShow" v-if="currentRoute!=''" :to="dataStructure[currentRoute].path+'/'+item.modName">
                                     <div class="nav-icon"></div>
@@ -45,7 +45,8 @@
     </div>
     <div class="viewFramework-main-content" id="zyyMain">
         <div class="layout-content">
-            <router-view></router-view>
+          <iframe-view v-if="selectedObj && selectedObj.url" :url="selectedObj.url"></iframe-view>
+          <router-view v-else></router-view>
         </div>
     </div>
 </div>
@@ -54,11 +55,13 @@
   //todo 工作台未完待实现
   let Util = null;
   import work from "./workbench.vue"
+  import iframeView from './iframeView.vue';
     export default{
         props: ["subNavs","subIndex","dataStructure"],
         data(){
             return{
                 selected:-1,
+                selectedObj: null,
                 isViewSubNav:true,
                 //当为工作台是否隐藏三级菜单
                 isWork:true,
@@ -92,7 +95,8 @@
             showAndHide(item){
                 item.expand = !item.expand;
             },
-            selectedMenus(n){
+            selectedMenus(obj,n){
+                this.selectedObj = obj;
                 this.selected = n;
             },
             getRouterName(n){
@@ -103,20 +107,30 @@
             },
             handleViewSubNav(){
               this.isViewSubNav = !this.isViewSubNav;
-            }
+            },
+            getRouterByIndex(arr,n){
+              for(let i=0,l=arr.length;i<l;i++){
+                if(arr[i].index === n){
+                  return arr[i]
+                }
+              }
+            },
         },
         computed:{
             router(){
               let currentRoute = this.getRouterName(1);
+              let data = this.getSubMenusData();
               if(currentRoute!="workbench"){
                 let n = this.dataStructure["structureIndex"][currentRoute].index;
-                this.selectedMenus(n);
+                let routerObj = this.getRouterByIndex(data.children,n);
+                this.selectedMenus(routerObj,n);
               }
-              return this.getSubMenusData(2);
+              return data
             }
         },
       components:{
-        work
+        work,
+        iframeView,
       },
     }
 </script>

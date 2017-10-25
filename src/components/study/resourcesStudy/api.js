@@ -80,6 +80,11 @@ const api={
     path: "/userHistory/query",
     method: "get",
   },
+  //上传视频进度(观看视频时，不定时上传视频进度)
+  saveProgress:{  //详情/{id}
+    path: "/video/saveProgress",
+    method: "post",
+  },
 }
 
 export default api;

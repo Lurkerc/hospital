@@ -44,7 +44,7 @@
           </el-table-column>
           <el-table-column
             prop="remark"
-            label="相关资料">
+            label="相关证明材料">
           </el-table-column>
         </el-table>
       </el-col>

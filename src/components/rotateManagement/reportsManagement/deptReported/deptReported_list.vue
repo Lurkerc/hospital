@@ -11,15 +11,14 @@
         <el-form-item label="专业：">
           <el-input v-model="searchObj.specialty"></el-input>
         </el-form-item>
-        <el-form-item label="生源：">
-          <el-select v-model="searchObj.userType" clearable filterable placeholder="请选择">
-            <el-option v-for="item in userTypeOption" :key="item.label" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item label="生源：">-->
+          <!--<el-select v-model="searchObj.userType" clearable filterable placeholder="请选择">-->
+            <!--<el-option v-for="item in userTypeOption" :key="item.label" :label="item.label" :value="item.value"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <el-form-item label="科室：">
           <el-select v-model="searchObj.depId" clearable filterable placeholder="请选择">
-            <el-option :key="0" label="全部" value=""></el-option>
-            <el-option v-for="item in depOption" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <select-option type="byUserType"></select-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态：">
@@ -85,7 +84,7 @@
   import userTypeOption from './userTypeOption'; // 生源类型
   import isRegisterOption from './isRegisterOption'; // 报到状态
   // com
-  import show from './deptReported_view'; // 查看  
+  import show from './deptReported_view'; // 查看
   import depSign from './deptReported_sign'; // 报到
   //当前组件引入全局的util
   let Util = null;
@@ -122,13 +121,14 @@
           showId: {
             id: 'showId',
             title: '查看'
-          }
+          },
         },
       }
     },
     methods: {
       //初始化请求列表数据
       init() {
+
         Util = this.$util;
 
         //ajax请求参数设置
@@ -142,7 +142,7 @@
           }
         }
         this.setTableData();
-        this.getDepOption();
+//        this.getDepOption();
       },
       /************************* 表格逻辑 *********************************/
       /*

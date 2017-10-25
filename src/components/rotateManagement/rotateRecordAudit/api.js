@@ -82,6 +82,14 @@ export default {
   /*导出word大病例*/
   caseRecordExportToWord:'/rotationProcess/caseRecord/exportToWord/',//{casesId}
 
+//根据模块获取对应的评分表
+  configurationGet:'/rotaryevaluation/configuration/get/',
+
+  //根据评分表打分
+  configurationAddMark:'/rotaryevaluation/configuration/addMark',
+
+  //查分数
+  getMark:'/rotaryevaluation/configuration/getMark/',//{businessId}_{model}
 
 /**
  * 临床操作记录列表
@@ -185,5 +193,72 @@ export default {
 
   /*批量驳回 post*/
   medicalEthicsModifySubReject:'/traineeRotary/medicalEthics/modifySubReject',//{ids}
+
+  /**
+   * 手术操作审核
+   * */
+
+  operationManageList:{  //手术操作列表(管理员查看)
+    path:"/surgeryOperation/pageListManage",
+    method:"get",
+  },
+
+  operationGet:{  //手术操作详情查看 /{id}
+    path:"/surgeryOperation/get/",
+    method:"get",
+  },
+
+  operationModifyState:{  //手术操作批量审核 /{ids}
+    path:"/surgeryOperation/modifyState/",
+    method:"put",
+  },
+
+  /**
+   * 延期出科审核
+   * */
+  userRotaryByUserId:{ //根据人员ID和人员类型查看轮转表(自动排班--查看轮转表)  {userType}-{userId}
+    path:"/traineeRotary/arrangeRotary/userRotaryByUserId/",
+    method:"get",
+  },
+  delayGivenManageList:{  //延期出科申请列表(教学秘书)
+    path:"/rotationProcess/delayGiven/pageListManage",
+    method:"get",
+  },
+
+  delayGivenGet:{  //延期出科申请查看 /get-{id}
+    path:"/rotationProcess/delayGiven/get-",
+    method:"get",
+  },
+
+  delayGivenModifyState:{  //手术操作批量审核 /{ids}
+    path:"/rotationProcess/delayGiven/modifyState/",
+    method:"put",
+  },
+
+  /**
+   * 科研日志
+   * */
+  scientificResearchLogGet:{  //查看科研日志
+    path:"/rotationProcess/scientificResearchLog/get/",//{ids}
+    method:"get",
+  },
+  managePageList:{  //科研日志审核分页列表
+    path:"/rotationProcess/scientificResearchLog/managePageList",
+    method:"get",
+  },
+  modifyState:{  //单个审核科研日志
+    path:"/rotationProcess/scientificResearchLog/modifyState/",
+    method:"post",
+  },
+  modifySubPass:{  //批量审核科研日志
+    path:"/rotationProcess/scientificResearchLog/modifySubPass",
+    method:"post",
+  },
+  modifySubReject:{  //批量审核科研日志
+    path:"/rotationProcess/scientificResearchLog/modifySubReject",
+    method:"post",
+  },
+
+
 
 }

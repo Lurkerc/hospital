@@ -66,7 +66,7 @@
 
       <el-row >
         <el-col :span="16" :offset="2">
-          <el-form-item label="相关资料:" prop="name" >
+          <el-form-item label="相关证明材料:" prop="name" >
             <upload-file :uploadFiles="formValidate.fileList"   @setUploadFiles="expenseFileEvent"></upload-file>
           </el-form-item>
         </el-col>
@@ -301,9 +301,9 @@
         let userInfo = this.$store.getters.getUserInfo;
         let role = userInfo.roleList[0].identify;
         this.role = role;
-        if(role == 'SXS'){
+        if(role == 'SXS'||role=='JXS'){
           listMessTitle.ajaxParams.url =  this.url.getMyRotaryRequirements + 'jn-' + val;
-        }else if (role == 'ZYY'){
+        }else if (role == 'ZYY' ||role=='YJS'){
           listMessTitle.ajaxParams.url =  this.url.ZYYgetMyRotaryRequirements + 'jn_' + val;
         };
         this.ajax(listMessTitle);

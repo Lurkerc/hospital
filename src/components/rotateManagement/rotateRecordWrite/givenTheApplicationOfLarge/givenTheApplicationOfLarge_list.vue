@@ -1,7 +1,7 @@
 <!-- 出科申请（大科） -->
 <template>
   <div ref="givenTheApplicationOfLarge">
-    <el-row>
+    <!--<el-row>
       <el-col>
         <el-form :inline="true">
           <el-form-item label="排序字段：">
@@ -17,7 +17,7 @@
           <el-button type="info" @click="search">搜索</el-button>
         </el-form>
       </el-col>
-    </el-row>
+    </el-row>-->
     <!-- 数据表格 -->
     <div id="tableData" ref="tableData" class="givenTheAppTable">
       <el-table align="center" :context="self" :height="dynamicHt" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
@@ -45,7 +45,7 @@
         <el-table-column label="理论考核成绩" prop="theoryScore" width="120px">
           <template scope="scope">
             {{ scope.row.theoryScore || '---' }}
-            <el-button type="info" size="mini" @click="theory(scope.row)" v-if="scope.row.theoryScore && scope.row.theoryIsMakeup">补考</el-button>
+            <!--<el-button type="info" size="mini" @click="theory(scope.row)" v-if="scope.row.theoryScore && scope.row.theoryIsMakeup">补考</el-button>-->
           </template>
         </el-table-column>
         <el-table-column label="技能考核成绩" prop="skillScore" width="120px">
@@ -87,7 +87,7 @@
     <!-- 模态框 技能补考 -->
     <Modal :mask-closable="false" v-model="skillModal" height="200" class-name="vertical-center-modal" :width="800">
       <modal-header slot="header" :content="contentHeader.skillId"></modal-header>
-      <skill v-if="skillModal" @cancel="cancel" @add="subCallback" :operaility-data="operailityData"></skill>
+      <skill v-if="skillModal" @cancel="cancel" @skill="subCallback" :operaility-data="operailityData"></skill>
       <div slot="footer"></div>
     </Modal>
     <!-- 模态框 理论补考 -->
@@ -125,7 +125,7 @@
         loading: false,
         operailityData: [],
         otherParams: {
-          sortby: '', // rotaryBeginTime|开始时间 endBeginTime|结束时间 theoryScore|理论成绩 skillScore|技能成绩  
+          sortby: '', // rotaryBeginTime|开始时间 endBeginTime|结束时间 theoryScore|理论成绩 skillScore|技能成绩
           order: 'DESC',
         },
         rotaryModal: false,
@@ -215,7 +215,8 @@
         if (row.rotaryEndTime) {
           rotaryEndTime = new Date(row.rotaryEndTime).getTime();
           // 前五天                                       后五天
-          tag = ((thisTime > (rotaryEndTime - validTime)) && (thisTime < (rotaryEndTime + validTime)));
+//          tag = ((thisTime > (rotaryEndTime - validTime)) && (thisTime < (rotaryEndTime + validTime)));
+          tag = thisTime > (rotaryEndTime - validTime);
         }
         if (tag && row.state) {
           tag = row.state === 'USER_NOT_REPORT';

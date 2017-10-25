@@ -12,8 +12,8 @@
         <!--<el-button type="success">导出Excel</el-button>-->
       </el-col>
       <el-col align="right" style="margin-top:20px;">
-        <el-form :inline="true">
-          <el-form-item label="姓名：">
+        <el-form :inline="true" ref="formValidate" :model="searchObj"  :rules="singleTableAnalysisList">
+          <el-form-item label="姓名：" prop="evaluatedName">
             <el-input v-model="searchObj.evaluatedName"></el-input>
           </el-form-item>
           <el-form-item label="时间范围：">
@@ -38,7 +38,7 @@
           </template>
         </el-table-column>
         <el-table-column label="被评对象" prop="evaluatedName" show-overflow-tooltip></el-table-column>
-        <el-table-column label="平均分" prop="averagScore" show-overflow-tooltip></el-table-column>
+        <el-table-column label="综合得分" prop="averagScore" show-overflow-tooltip></el-table-column>
       </el-table>
     </div>
     <!-- 查看报告 -->
@@ -52,12 +52,14 @@
 
 <script>
   let Util;
+  import {singleTableAnalysisList} from '../../../rules'
   import api from '../api';
   import report from './analysis_report';
   export default {
     props: ['scoreData'],
     data() {
       return {
+        singleTableAnalysisList,
         self: this,
         dynamicHt: 0,
         reportModal: false,

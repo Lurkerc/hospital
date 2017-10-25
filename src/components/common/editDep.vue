@@ -1,7 +1,7 @@
 <template>
 
   <div >
-    <el-form ref="formValidate"    class="demo-form-inline" label-width="110px" >
+    <el-form ref="formValidate" :model="formValidate" :rules="rules" class="demo-form-inline" label-width="110px" >
 
       <el-row >
         <el-col :span="10" :offset="2">
@@ -9,18 +9,16 @@
             <el-input v-model="formValidate.name" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
 
         <el-col :span="10" >
           <el-form-item label="管理员：" prop="parentId" >
             <el-input readonly v-model="userNames" @focus="addUser" placeholder="请输入"></el-input>
           </el-form-item>
         </el-col>
-        </el-col >
       </el-row >
       <el-row >
-        <el-col :span="16" :offset="2">
-          <el-form-item label="简介" prop="leaf">
+        <el-col :span="20" :offset="2">
+          <el-form-item label="简介：" prop="leaf">
             <el-input v-model="formValidate.remark" type="textarea" resize="none" :rows="8"></el-input>
           </el-form-item>
         </el-col>
@@ -37,7 +35,6 @@
     <Modal
       width="890"
       v-model="selectUserModal"
-      title="新建教学活动"
       class-name="vertical-center-modal">
       <modal-header slot="header" :content="selectUserId"></modal-header>
       <select-user v-if="selectUserModal" @cancel="closeUserModal"  @setUsers="setUsers" :initUser="users"></select-user>
@@ -48,12 +45,14 @@
 <script>
   //当前组件引入全局的util
   let Util=null;
+  import { tree as rules } from '../base/sysManage/rules';
   export default {
     //props接收父组件传递过来的数据
     props: ['operailityData'],
     data (){
       let fromWhereTre = this.operailityData.fromWhereTre=='custom'?'/get':"/tree"
       return{
+        rules,
         //保存按钮基本信息
         loadBtn:{title:'提交',callParEvent:'listenSubEvent'},
 

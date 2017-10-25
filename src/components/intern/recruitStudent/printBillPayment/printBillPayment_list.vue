@@ -21,19 +21,19 @@
           <el-form-item label="学校：">
             <el-input v-model="searchObj.schoolName"></el-input>
           </el-form-item>
-          <el-form-item label="年份：">
-            <el-date-picker v-model="searchObj.year" align="right" :editable="false" type="year" placeholder="选择年">
-            </el-date-picker>
-          </el-form-item>
+          <!--<el-form-item label="年份：">-->
+            <!--<el-date-picker v-model="searchObj.year" align="right" :editable="false" type="year" placeholder="选择年">-->
+            <!--</el-date-picker>-->
+          <!--</el-form-item>-->
           <el-form-item label="手机号：">
             <el-input v-model="searchObj.mobile"></el-input>
           </el-form-item>
-          <el-form-item label="民族：">
-            <el-select v-model="searchObj.nation" filterable clearable placeholder="请选择" style="width:175px;" class="nation">
-              <el-option v-for="(item,index) in nationOption" :key="index" :label="item.id" :value="item.name">
-              </el-option>
-            </el-select>
-          </el-form-item>
+          <!--<el-form-item label="民族：">-->
+            <!--<el-select v-model="searchObj.nation" filterable clearable placeholder="请选择" style="width:175px;" class="nation">-->
+              <!--<el-option v-for="(item,index) in nationOption" :key="index" :label="item.id" :value="item.name">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
           <el-button type="info" @click="search">搜索</el-button>
         </div>
       </el-row>
@@ -88,7 +88,7 @@
                 请收
                 <div>{{ item.schoolName }}</div>学校
                 <div>{{ item.majors || item.major }}</div>专业
-                <template v-if="['user','zsf','batch'].indexOf(printType) > -1">
+                <template v-if="['user','zsf','batch','dorm'].indexOf(printType) > -1">
                   <!-- 个人/批量 -->
                   <div>{{ item.userName }}</div>同学{{ ['zsf','dorm'].indexOf(printType) > -1 ? '住宿费' : '实习费' }}
                 </template>
@@ -97,13 +97,13 @@
                   <div>{{ (item.userNames || item.userName).split(',').slice(0,3).join('，') }}</div>等{{ (item.userNames || item.userName).split(',').length }}人{{ ['zsf','dorm'].indexOf(printType) > -1 ? '住宿费' : '实习费' }}
                 </template>
                 <template v-if="['zsf','dorm'].indexOf(printType) > -1">
-                  <div>{{ item.totalCost }}</div>元及押金
+                  <div>{{ item.totalCost || item.totalZsCost }}</div>元及押金
                   <div>{{ item.deposit }}</div>
                 </template>
-                <div v-else>{{ item.totalCost }}</div>元。
+                <div v-else>{{ item.totalCost || item.totalZsCost }}</div>元。
               </div>
               <div class="signature">
-                <p>教育处</p>
+                <p>财务处</p>
                 <p>日期：</p>
               </div>
             </div>
@@ -115,7 +115,7 @@
                 已收
                 <div>{{ item.schoolName }}</div>学校
                 <div>{{ item.majors || item.major }}</div>专业
-                <template v-if="printType == 'user' || printType == 'batch'">
+                <template  v-if="['user','zsf','batch','dorm'].indexOf(printType) > -1">
                   <!-- 个人/批量 -->
                   <div>{{ item.userName }}</div>同学{{ ['zsf','dorm'].indexOf(printType) > -1 ? '住宿费' : '实习费' }}
                 </template>
@@ -123,10 +123,15 @@
                   <!-- 学校/专业 -->
                   <div>{{ (item.userNames || item.userName).split(',').slice(0,3).join('，') }}</div>等{{ (item.userNames || item.userName).split(',').length }}人{{ ['zsf','dorm'].indexOf(printType) > -1 ? '住宿费' : '实习费' }}
                 </template>
-                <div>{{ item.totalCost }}</div>元。
+                <!--<div>{{ item.totalCost || item.totalZsCost }}</div>元。-->
+                <template v-if="['zsf','dorm'].indexOf(printType) > -1">
+                  <div>{{ item.totalCost || item.totalZsCost }}</div>元及押金
+                  <div>{{ item.deposit }}</div>
+                </template>
+                <div v-else>{{ item.totalCost || item.totalZsCost }}</div>元。
               </div>
               <div class="signature">
-                <p>财务处</p>
+                <p>教育处</p>
                 <p>日期：</p>
               </div>
             </div>
@@ -288,8 +293,8 @@
             }
             for (let i = 0, schoolName, d = this.multipleSelection, l = d.length; i < l; i++) {
               this.userIds.push(d[i].userId);
-              // 住宿费打印（按学校）
-              if (type === 'dorm') {
+              // 合并打印（按学校）
+              if (['merge'].indexOf(type) > -1) {
                 if (!schoolName) {
                   schoolName = d[0].schoolName
                 }
@@ -319,6 +324,10 @@
             if (res.data.length) {
               this.printDatas = res.data;
               this.getPrintUser(res.data);
+              this.openModel('printData')
+            } else if (res.data.userIds) { // 合并打印
+              this.printDatas = [res.data];
+              this.userIds = res.data.userIds.split(',');
               this.openModel('printData')
             } else {
               this.showMess('暂无可打印的数据')
@@ -356,6 +365,9 @@
           ajaxParams: {
             url: api.modifyPrint.path + this.userIds.join(','),
             method: api.modifyPrint.method,
+            data:{
+              type: ['user','school','major','batch'].indexOf(this.printType) > -1 ? 'sx' : 'zs', // sx 实习费用 | zs 住宿费用
+            }
           }
         })
       },
@@ -412,7 +424,9 @@
         padding-right: 120px;
       }
     }
-  } // .printBPMain {
+  }
+
+  // .printBPMain {
   //   // position: relative;
   //   // &:before {
   //   //   content: ' ';
@@ -427,16 +441,16 @@
   //     // width: 48%;
   //   }
   // }
-  @media print {
-    .printBPMain {
-      .printBPItem {
-        margin-top: 150px;
-        &:nth-child(2n) {
-          margin-top: 350px;
-          page-break-after: always;
-        }
-      }
-    }
-  }
+  /*@media print {*/
+    /*.printBPMain {*/
+      /*.printBPItem {*/
+        /*margin-top: 150px;*/
+        /*&:nth-child(2n) {*/
+          /*margin-top: 350px;*/
+          /*page-break-after: always;*/
+        /*}*/
+      /*}*/
+    /*}*/
+  /*}*/
 
 </style>

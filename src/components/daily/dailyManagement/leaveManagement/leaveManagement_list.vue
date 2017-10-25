@@ -4,8 +4,9 @@
     <el-form  :model="formValidate" ref="formValidate" :rules="rules.leaveManagementList" inline label-width="90px" class="demo-ruleForm">
       <el-row >
         <el-col :span="10" >
-          <el-button  class="but-col"  @click="pass" type="primary">批量通过</el-button>
-          <el-button class="but-col" @click="reject" type="danger">批量驳回</el-button>
+          &nbsp;
+          <!--<el-button  class="but-col"  @click="pass" type="primary">批量通过</el-button>-->
+          <!--<el-button class="but-col" @click="reject" type="danger">批量驳回</el-button>-->
         </el-col>
         <el-col :span="14"  align="right">
           <input class="hidden">
@@ -53,15 +54,15 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="生源类型" prop="userType" >
-          <el-select filterable  v-model="formValidate.userType" placeholder="请选择">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="实习生" value="SXS"></el-option>
-            <el-option label="研究生" value="YJS"></el-option>
-            <el-option label="住院医" value="ZYY"></el-option>
-            <el-option label="进修生" value="JXS"></el-option>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item label="生源类型" prop="userType" >-->
+          <!--<el-select filterable  v-model="formValidate.userType" placeholder="请选择">-->
+            <!--<el-option label="全部" value=""></el-option>-->
+            <!--<el-option label="实习生" value="SXS"></el-option>-->
+            <!--<el-option label="研究生" value="YJS"></el-option>-->
+            <!--<el-option label="住院医" value="ZYY"></el-option>-->
+            <!--<el-option label="进修生" value="JXS"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
 
         <el-button type="info" @click="searchEvent">查询</el-button>
 
@@ -102,7 +103,7 @@
               @click="show(scope.row)">查看</el-button>
             <el-button
               size="small"
-              v-if="scope.row.status == 'DSH'"
+              v-if="scope.row.hasSp"
               @click="audit(scope.row)">审核</el-button>
           </template>
         </el-table-column>

@@ -4,7 +4,7 @@
 
       <el-row >
         <el-col :span="9" :offset="2">
-          <el-form-item label="课程类型：">
+          <el-form-item label="字典名称：">
             {{formValidate.parentName}}
           </el-form-item>
         </el-col>

@@ -24,6 +24,14 @@ const api = {
     path: '/teachCourseTime/list',
     method: 'get'
   },
+  room:{ // 房间内的设备
+    path: '/reserve/room/device/', // {roomId}
+    method: 'get'
+  },
+  other:{ // 房间外的设备
+    path: 'reserve/room/no/device/', // {roomId}
+    method: 'get'
+  },
   delete: thisFile + '/remove', // 删除
 };
 

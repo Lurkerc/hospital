@@ -1,7 +1,7 @@
 <template>
   <!-- 综合分析统计 - 视图切换 -->
   <div>
-    <index v-if="activeName === 'index'" @show="show"></index>
+    <index v-show="activeName === 'index'" @show="show"></index>
     <!--<ays-list v-if="activeName === 'list'"></ays-list>-->
     <ays-score v-if="activeName === 'score'" @show="show" :scoreData="scoreData"></ays-score>
   </div>

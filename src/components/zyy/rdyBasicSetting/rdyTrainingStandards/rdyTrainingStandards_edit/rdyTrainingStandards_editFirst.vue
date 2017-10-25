@@ -15,16 +15,60 @@
           </el-form-item>
         </el-col >
       </el-row >
-      <el-row >
+      <el-row v-if="rtModelType=='YJS'">
+        <el-col :span="7" :offset="3">
+          <el-form-item  style="width:300px" label="学校名称:" prop="jdName"  >
+            <el-select style="width:300px" v-model="formValidate.jdId" placeholder="请选择" @change="selectSchool" >
+              <el-option
+                style="width:300px"
+                v-for="item in schoolData"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+                <!--:value="item.jdName+'-'+item.jdId+'-'+item.jdProclass">-->
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col >
+        <el-col :span="6" :offset="3">
+          <el-form-item  style="width:300px" label="培训方向:" prop="rtProclass" >
+            <el-select style="width:300px" v-model="formValidate.rtProclass" placeholder="请选择" >
+              <el-option
+                style="width:300px"
+                v-for="(item,index) in trainingData"
+                :key="item.index"
+                :label="item.value"
+                :value="item.value">
+                <!--:value="item.jdName+'-'+item.jdId+'-'+item.jdProclass">-->
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col >
+        <!--<el-col :span="9"  >
+          <el-form-item  style="width:350px" label="学历:" prop="rtSchlength">
+            <el-select  style="width:348px" v-model="formValidate.rtSchlength" placeholder="请选择">
+              <el-option
+                style="width:300px"
+                v-for="item in rtSchlengthData"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col >-->
+      </el-row >
+      <el-row v-else>
         <el-col :span="18" :offset="3">
           <el-form-item  style="width:300px" label="基地名称:" prop="jdName"  >
-            <el-select style="width:300px" v-model="formValidate.jdName" placeholder="请选择">
+            <el-select style="width:300px" v-model="formValidate.jdId" placeholder="请选择" @change="selectJD">
               <el-option
                 style="width:300px"
                 v-for="item in jDData"
-                :key="item.value"
+                :key="item.jdId"
                 :label="item.jdName"
-                :value="item.jdName+'-'+item.jdId+'-'+item.jdProclass">
+                :value="item.jdId">
+                <!--:value="item.jdName+'-'+item.jdId+'-'+item.jdProclass">-->
               </el-option>
             </el-select>
           </el-form-item>
@@ -94,7 +138,6 @@
                 :data="groupItem.mustRotaryDep[0]"
                 tooltip-effect="dark"
                 style="width: 100%">
-                </el-table-column>
                 <el-table-column
                   prop="depName"
                   label="科室"
@@ -230,7 +273,7 @@
   //当前组件引入全局的util
   let Util = null;
   export default{
-    props:['resizeFirst','rtId'],
+    props:['resizeFirst','rtId','rtModelType'],
     data() {
       return {
         rdyTrainingStandardsFirst,
@@ -247,8 +290,30 @@
 
         //必选科室
         tableData1:[],
-
+        //学校
+        schoolData:[],
+        changSchoolData:{}, // 以对象的形式保存
+        //培训方向
+        trainingData:[],
         //自选科室
+
+        //获取学校数据
+        getSchool :{
+          ajaxSuccess:'getSchoolData',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url:'/schools/queryList'
+          },
+        },
+        //获取培训方向
+        getTraining :{
+          ajaxSuccess:'getTrainingData',
+          ajaxError:'ajaxError',
+          ajaxParams:{
+            url:'/dictionary/getByCode/'+'ROTARY_PROCLASS'
+          },
+        },
+
         noMustHeader:[{
           key :'parentTitle',
           label :'科室',
@@ -310,7 +375,7 @@
           }
         ],
         //基地
-        jDData:[],
+        jDData:{},
         //学历
         rtSchlengthData:[],
         //获取基地数组
@@ -351,7 +416,6 @@
             method:api.rulesAddOrEdit.method,
           },
         },
-
       }
     },
     methods: {
@@ -362,7 +426,35 @@
         this.ajax(this.getSchlength);
         this.getOutline.ajaxParams.url = api.rulesgetGet.path+this.rtId;
         this.ajax(this.getOutline);
+
+        if(this.rtModelType=='YJS'){
+          this.ajax(this.getSchool);
+          this.ajax(this.getTraining);
+        }
       },
+
+      /**
+       * ajax 获取成功回调
+       * */
+
+      //获取培训方向（YJS）
+      getTrainingData(res){
+        let data = res.data;
+        data = data.child;
+        this.trainingData = data;
+
+      },
+      //获取学校（YJS）
+      getSchoolData(res){
+        let data = res.data;
+        this.schoolData = data;
+        let TempObj = {}
+        data.map(item=>{
+          TempObj[item.id] = item;
+        })
+        this.changSchoolData = TempObj;
+      },
+
 
 
       //当存在rtId时获取细则
@@ -422,7 +514,18 @@
           obj.randomRotaryDep = randomRotaryDep;
           obj.optionalNum = optionalNum;
           tempArr[index]=obj;
+        }
 
+        for (let l=0;l<tempArr.length;l++){
+          let item = tempArr[l];
+          if(!item){
+            tempArr[l] =  {
+              "mustRotaryDep":[[]],
+              "randomRotaryDep": [[]],
+              ts:[''],
+              optionalNum:[''],
+            }
+          }
         }
         return tempArr;
 
@@ -430,12 +533,39 @@
 
       },
 
+      /**
+       * 下拉改变回调
+       * */
+
+      selectSchool(value){
+        let item =   this.changSchoolData[this.formValidate.jdId];
+        if(!item)return;
+        this.formValidate.jdName = item.name
+
+      },
       //获取基地集合
       getJdData(res){
         let data = res.data;
         if(!data)return;
-        this.jDData = data;
+        this.jDData = {};
+        (data || []).map(item=>{
+          this.jDData[item.jdId] = item;
+        })
+//        this.jDData = data;
+      },
 
+      // 基地选择
+      selectJD(){
+        let selectJDObj = this.jDData[this.formValidate.jdId];
+        if(selectJDObj){
+          this.formValidate.jdName = selectJDObj.jdName;
+          this.formValidate.rtProclass = selectJDObj.jdProclass;
+        }else{
+          this.errorMess('原基地数据被删除，请重新选择基地！');
+          this.formValidate.jdName = '';
+          this.formValidate.rtProclass = '';
+          this.formValidate.jdId = '';
+        }
       },
 
       /**
@@ -583,12 +713,12 @@
       conductFormValidate(formValidate,outlines){
         let tempArr = [];
         let flag = true;
-        if(formValidate.jdName){
-          let depArr = formValidate.jdName.split('-');
-          formValidate.jdName = depArr[0];
-          formValidate.jdId = depArr[1];
-          formValidate.rtProclass = depArr[2];
-        }
+//        if(formValidate.jdName){
+//          let depArr = formValidate.jdName.split('-');
+//          formValidate.jdName = depArr[0];
+//          formValidate.jdId = depArr[1];
+//          formValidate.rtProclass = depArr[2];
+//        }
         for(let i=0 ;i<outlines.length;i++){
           let item = outlines[i];
             //处理必选科室
@@ -597,7 +727,6 @@
             mustRotaryDep.depPhase = this.groupOtions[i];
             mustRotaryDep.depPhaseNum = i+1;
             tempArr.push(mustRotaryDep);
-
           }
 
           for(let k=0;k<item.randomRotaryDep.length;k++){

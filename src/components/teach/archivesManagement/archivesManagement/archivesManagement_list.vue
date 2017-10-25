@@ -2,37 +2,37 @@
 <template>
   <div style="height: 100%">
     <layout-tree>
-      <left-tree slot="left"  @tree-click="treeClick" @tree-remove-node="treeRemoveNode" :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
-    <div id="content"  ref="content" slot="right" >
-
-
-      <div class="listUpAreaBox">
-        <div class="listUpArea-menus">
-          <!--表格数据操作按钮-->
-          <div class="ivu-row">
-            <div class="ivu-col ivu-col-span-24">
-              <el-button type="primary" @click="exportData">导出档案到word</el-button>
+      <left-tree slot="left" @setCurrSltNodeId="setTreeDepId" @tree-click="treeClick" @tree-remove-node="treeRemoveNode"
+                 :treeOptions="treeDefaults" :fromWhereTreeType="fromWhereTree"></left-tree>
+      <div id="content" ref="content" slot="right">
+        <div class="listUpAreaBox">
+          <div class="listUpArea-menus">
+            <!--表格数据操作按钮-->
+            <div class="ivu-row">
+              <!--<div class="ivu-col ivu-col-span-24">-->
+              <!--<el-button type="primary" @click="exportData">导出档案到word</el-button>-->
+              <!--</div>-->
+            </div>
+          </div>
+          <div class="listUpArea-search">
+            <div class="listUpArea-searchWrapper">
+              <!--右侧查询-->
+              <el-form ref="formValidate" :inline="true" :model="formValidate" class="form-inline lose-margin"
+                       label-width="60px">
+                <div class="listUpArea-searchLeft">
+                  <el-input placeholder="请输入内容" v-model="formValidate.name">
+                    <div slot="prepend">姓名</div>
+                    <el-button slot="append" @click="handleSubmit('formValidate')" icon="search"></el-button>
+                  </el-input>
+                </div>
+                <div class="listUpArea-moreSearch">
+                  <el-button @click="showMoreSearch" type="text">高级查询</el-button>
+                </div>
+              </el-form>
             </div>
           </div>
         </div>
-        <div class="listUpArea-search">
-          <div class="listUpArea-searchWrapper">
-            <!--右侧查询-->
-            <el-form ref="formValidate"  :inline="true" :model="formValidate" class="form-inline lose-margin" label-width="60px" >
-              <div class="listUpArea-searchLeft">
-                <el-input placeholder="请输入内容" v-model="formValidate.name">
-                  <div slot="prepend">姓名</div>
-                  <el-button slot="append" @click="handleSubmit('formValidate')" icon="search"></el-button>
-                </el-input>
-              </div>
-              <div class="listUpArea-moreSearch">
-                <el-button @click="showMoreSearch" type="text">高级查询</el-button>
-              </div>
-            </el-form>
-          </div>
-        </div>
-      </div>
-       <br />
+        <br/>
         <!--表格数据-->
         <div id="myTable" ref="myTable">
           <el-table
@@ -49,8 +49,7 @@
             </el-table-column>
             <el-table-column
               label="序号"
-              prop="index"
-              width="70">
+              prop="index">
               <!--<template scope="scope">-->
               <!--<span>{{scope.row.index}}</span>-->
               <!--</template>-->
@@ -58,12 +57,11 @@
             <el-table-column
               label="操作"
               align="center"
-              width="200"
+              width="140"
             >
               <template scope="scope">
                 <el-button
                   size="small"
-
                   @click="show(scope.$index)">查看
                 </el-button>
                 <el-button
@@ -75,15 +73,17 @@
             <el-table-column
               prop="name"
               label="姓名"
-              align="center"
-              width="100">
+              align="center">
             </el-table-column>
             <el-table-column
-              prop="school.sex"
+              prop="sex"
               label="性别"
               align="center"
               width="80"
               show-overflow-tooltip>
+              <template scope="scope">
+                {{ scope.row.sex | typeText }}
+              </template>
             </el-table-column>
             <el-table-column
               prop="mobile"
@@ -91,7 +91,7 @@
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="rewardDate"
+              prop="email"
               label="邮箱"
               show-overflow-tooltip>
             </el-table-column>
@@ -111,42 +111,49 @@
             </el-pagination>
           </div>
         </div>
-      <!--修改角色弹窗-->
-      <Modal
-        :mask-closable="false"
-        v-model="editModal"
-        height="200"
-        title="对话框标题"
-        class-name="vertical-center-modal"
-        :width="1100">
-        <modal-header slot="header" :content="editId"></modal-header>
-        <edit v-if="editModal"   @cancel="cancel"  @edit="subCallback" :operaility-data="operailityData"></edit>
-        <div slot="footer"></div>
-      </Modal>
-      <!--导出档案到word-->
-      <Modal
-        :mask-closable="false"
-        width="1000"
-        v-model="exportModal"
-        title="对话框标题"
-        class-name="vertical-center-modal"
-        :loading="loading">
-        <modal-header slot="header" :content="exportId"></modal-header>
-        <ept-archives v-if="exportModal" @cancel="cancel" @export="subCallback" :operaility-data="operailityData"></ept-archives>
-        <div slot="footer"></div>
-      </Modal>
-      <!--查看档案管理弹窗-->
-      <Modal
-        :mask-closable="false"
-        width="1000"
-        v-model="showModal"
-        title="查看"
-        class-name="vertical-center-modal"
-        :loading="loading">
-        <modal-header slot="header" :content="viewId"></modal-header>
-        <show v-if="showModal" @cancel="cancel" @person="subCallback" :operaility-data="operailityData"></show>
-        <div slot="footer"></div>
-      </Modal>
+        <!--修改角色弹窗-->
+        <Modal
+          :mask-closable="false"
+          v-model="editModal"
+          height="200"
+          title="对话框标题"
+          class-name="vertical-center-modal"
+          :width="1100">
+          <modal-header slot="header" :content="editId"></modal-header>
+          <edit v-if="editModal" @cancel="cancel" @edit="subCallback" :operaility-data="operailityData"></edit>
+          <div slot="footer"></div>
+        </Modal>
+        <!--导出档案到word-->
+        <Modal
+          :mask-closable="false"
+          width="1000"
+          v-model="exportModal"
+          title="对话框标题"
+          class-name="vertical-center-modal"
+          :loading="loading">
+          <modal-header slot="header" :content="exportId"></modal-header>
+          <ept-archives v-if="exportModal" @cancel="cancel" @export="subCallback"
+                        :operaility-data="operailityData"></ept-archives>
+          <div slot="footer"></div>
+        </Modal>
+        <!--查看档案管理弹窗-->
+        <Modal
+          :mask-closable="false"
+          :width="1100"
+          v-model="showModal"
+          title="查看"
+          class-name="vertical-center-modal"
+          :loading="loading">
+          <modal-header slot="header" :content="viewId"></modal-header>
+          <template v-if="showModal">
+            <!-- 实习生查看 -->
+            <sxs-show v-if="showUserType === 'SXS'" :operaility-data="operailityData"></sxs-show>
+            <zyy-show v-else-if="showUserType === 'ZYY'" :operaility-data="operailityData"></zyy-show>
+            <!-- 其他人员查看 -->
+            <other-show v-else :operaility-data="operailityData"></other-show>
+          </template>
+          <div slot="footer"></div>
+        </Modal>
 
       </div>
     </layout-tree>
@@ -156,15 +163,19 @@
   /*当前组件必要引入*/
   //引入--导出档案到word--组件
   import eptArchives from "./archivesManagement_export.vue";
-  //引入--查看--组件
-  import edit from "./archivesManagement_edit.vue";
   //引入--修改--组件
-  import show from "./archivesManagement_view.vue";
+  import edit from "./archivesManagement_edit.vue";
+  //引入--查看--组件
+  import otherShow from "../../../base/sysManage/departmentStaff/departmentStaff_view.vue"; // 其他人员
+  import sxsShow from '../../../intern/recruitStudent/usersManagement/usersManagement_view.vue'; // 实习生
+  import zyyShow from '../../../zyy/rdyEnrollEnroll/rdyPersonnelManagement/rdyPersonnelManagement_view.vue'; // 住院医
+  //  import zyyShow from '../../../'; // 住院医
   //当前组件引入全局的util
-  let Util=null;
+  let Util = null;
   export default {
-    data () {
+    data() {
       return {
+        showUserType: 'PYTH', // 查看用户类型
         //查询
         formValidate: {
           name: '',
@@ -172,51 +183,51 @@
         //左侧
         theme1: 'light',
         //默认请求数据
-        listUrl:'role/list?name=&identify=&type=',
-        exportModal:false,
-        operailityData:'',
+        listUrl: 'role/list?name=&identify=&type=',
+        exportModal: false,
+        operailityData: '',
         multipleSelection: [],
         dynamicHt: 100,
         self: this,
         tableData1: [],
-        loading:false,
-        listTotal:0,
+        loading: false,
+        listTotal: 0,
         //当前组件默认请求(list)数据时,ajax处理的 基础信息设置
-        listMessTitle:{
-          paramsData:'listUrl',
-          ajaxSuccess:'updateListData',
-          ajaxParams:{
-            url:"/archives/list",
-            params:{
-                name:""
+        listMessTitle: {
+          paramsData: 'listUrl',
+          ajaxSuccess: 'updateListData',
+          ajaxParams: {
+            url: "/archives/list",
+            params: {
+              name: ""
             }
           }
         },
         /*--按钮button--*/
-        viewId:{
-          id:'viewId',
-          title:'查看'
+        viewId: {
+          id: 'viewId',
+          title: '查看'
         },
-        editId:{
-          id:'editId',
-          title:'修改'
+        editId: {
+          id: 'editId',
+          title: '修改'
         },
-        exportId:{id:'exportId',title:'导出档案到word'},
+        exportId: {id: 'exportId', title: '导出档案到word'},
 
         //tree默认项设置
-        deptId:'',
-        treeDefaults:{
-          getDataUrl:'',
-          isShowMenus:false,
+        deptId: '',
+        treeDefaults: {
+          getDataUrl: '',
+          isShowMenus: false,
         },
-        fromWhereTree:"user",
+        fromWhereTree: "user",
 
       }
     },
-    created(){
+    created() {
       this.init();
     },
-    mounted(){
+    mounted() {
       //页面dom稳定后调用
       this.$nextTick(function () {
         /*//初始表格高度及分页位置
@@ -226,22 +237,22 @@
         Event.addHandler(window, "resize", this.setTableDynHeight);*/
       })
     },
-    methods:{
+    methods: {
       //初始化请求列表数据
-      init(){
+      init() {
         Util = this.$util;
         //ajax请求参数设置
-        this.myPages =  Util.pageInitPrams;
+        this.myPages = Util.pageInitPrams;
 
         this.queryQptions = {
-          params:{curPage: 1,pageSize: Util.pageInitPrams.pageSize}
+          params: {curPage: 1, pageSize: Util.pageInitPrams.pageSize}
         }
-        this.setTableData();
+//        this.setTableData();
       },
 
 
       //设置表格及分页的位置
-      setTableDynHeight(){
+      setTableDynHeight() {
         let content = this.$refs.content;
         let parHt = content.parentNode.offsetHeight;
         let myTable = this.$refs.myTable;
@@ -260,17 +271,17 @@
 
 
       //查询调用方法
-      handleSubmit(name){
+      handleSubmit(name) {
         this.setTableData();
       },
 
 
       //通过get请求列表数据并渲染表格数据
-      updateListData(responseData){
+      updateListData(responseData) {
         let data = responseData.data;
-        this.tableData1=[];
+        this.tableData1 = [];
         data = this.addIndex(data);
-        this.tableData1= data;
+        this.tableData1 = data;
         this.listTotal = responseData.totalCount || 0;
       },
 
@@ -280,13 +291,13 @@
        * @param formName string  form表单v-model数据对象名称
        * @return flag boolean   form表单验证是否通过
        * */
-      submitForm(formName){
+      submitForm(formName) {
 
       },
 
 
       /*--点击--导出--按钮--*/
-      exportData(){
+      exportData() {
         this.openModel('export');
       },
 
@@ -295,12 +306,12 @@
        * 点击--修改角色--按钮
        * @param index string|number  当前行索引
        * */
-      edit(index){
-        if(typeof index == 'undefined'){
+      edit(index) {
+        if (typeof index == 'undefined') {
           //if(!this.isSelected(true)) return;
           this.operailityData = this.multipleSelection[0];
           this.openModel('edit')
-        }else {
+        } else {
           this.operailityData = this.tableData1[index];
           this.openModel('edit')
         }
@@ -311,7 +322,7 @@
        * 点击--查看--按钮
        * @param index string|number  当前行索引
        * */
-      show(index){
+      show(index) {
         this.operailityData = this.tableData1[index];
         this.openModel('show');
       },
@@ -321,8 +332,8 @@
        * 当前组件发送事件给父组件
        * 发送关闭(cancel)模态事件给父组件,请求关闭当前模态窗
        * */
-      cancel(){
-        this.$emit('cancel',this.listMessTitle.type);
+      cancel() {
+        this.$emit('cancel', this.listMessTitle.type);
       },
 
 
@@ -345,12 +356,12 @@
        *    }
        * @param udata boolean 默认false  是否不需要刷新当前表格数据
        * */
-      subCallback(target,title,updata){
+      subCallback(target, title, updata) {
         this.cancel(target);
-        if(title){
+        if (title) {
           this.successMess(title);
         }
-        if(!updata){
+        if (!updata) {
           this.setTableData();
         }
       },
@@ -360,8 +371,8 @@
        * 打开指定的模态窗体
        * @param options string 当前指定的模态:"add"、"edit"
        * */
-      openModel(options){
-        this[options+'Modal'] = true;
+      openModel(options) {
+        this[options + 'Modal'] = true;
       },
 
 
@@ -369,8 +380,8 @@
        * 获取表单数据
        * @return string  格式:id=0&name=aa
        * */
-      getFormData(data){
-        let myData = Util._.defaultsDeep({},data);
+      getFormData(data) {
+        let myData = Util._.defaultsDeep({}, data);
         myData.type = data.type.join(",");
         return myData;
       },
@@ -386,7 +397,7 @@
        * @param  self  {}  当前tree vue实例
        *
        * */
-      treeClick(obj,node,self){
+      treeClick(obj, node, self) {
 
         /*if(node.isLeaf){  //当前是否为叶子节点
          alert("====")
@@ -395,18 +406,19 @@
          }*/
         this.setTreeDepId(obj.id);
         this.showTreeList(obj.id);
+        this.showUserType = obj.types.toLocaleUpperCase();
       },
 
       //初始化加载列表数据
-      setTableData(){
-        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params,this.queryQptions.params,this.formValidate);
+      setTableData() {
+        this.listMessTitle.ajaxParams.params = Object.assign(this.listMessTitle.ajaxParams.params, this.queryQptions.params, this.formValidate);
         this.postParamToServer(this.listMessTitle);
       },
 
 
       //向服务器发送数据
-      postParamToServer(options){
-        if(this.deptId!=""){
+      postParamToServer(options) {
+        if (this.deptId != "") {
           options["ajaxParams"]["params"]["deptId"] = this.deptId;
         }
         this.ajax(options);
@@ -417,7 +429,7 @@
        * 删除目录树回调
        *
        * */
-      treeRemoveNode(){
+      treeRemoveNode() {
         this.setTreeDepId("");
         this.showTreeList("")
       },
@@ -427,11 +439,11 @@
        * 根据部门id查询当前部门的人员信息
        * @param id number 当前部门id
        * */
-      showTreeList(id){
+      showTreeList(id) {
         //初始化加载页面信息
-        let params = Util._.defaultsDeep({},this.queryQptions,{deptId:id});
-        let listMessTitle = Util._.defaultsDeep({},this.listMessTitle);
-        listMessTitle.ajaxParams["params"]["deptId"]=id;
+        let params = Util._.defaultsDeep({}, this.queryQptions, {deptId: id});
+        let listMessTitle = Util._.defaultsDeep({}, this.listMessTitle);
+        listMessTitle.ajaxParams["params"]["deptId"] = id;
         this.postParamToServer(listMessTitle);
       },
 
@@ -440,9 +452,9 @@
        * 是否选择部门
        * @return flag blooean  是否选择目录树节点
        * */
-      isSltedTree(isSltedTreeNode){
+      isSltedTree(isSltedTreeNode) {
         let flag = false;
-        if(this.deptId!="" || isSltedTreeNode(this.treeClickInit)){
+        if (this.deptId != "" || isSltedTreeNode(this.treeClickInit)) {
           flag = true;
         }
         return flag;
@@ -452,7 +464,7 @@
       /*
        *  初始化或者刷新数列表的时候  调用treeClick函数 为deptId赋值
        * */
-      treeClickInit(obj){
+      treeClickInit(obj) {
         this.treeClick(obj)
       },
 
@@ -460,17 +472,17 @@
       /*
        * 设置当前部门Id
        * */
-      setTreeDepId(id){
+      setTreeDepId(id) {
         this.deptId = id;
-      }
-
+        this.setTableData();
+      },
 
     },
-    components:{
+    components: {
       //当前组件引入的子组件
-      show,edit,eptArchives
+      otherShow, sxsShow, zyyShow, edit, eptArchives
     },
-    mounted(){
+    mounted() {
       //页面dom稳定后调用
       this.$nextTick(function () {
         //初始表格高度及分页位置

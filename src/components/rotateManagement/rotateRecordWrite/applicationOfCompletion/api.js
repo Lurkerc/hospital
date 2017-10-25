@@ -4,8 +4,12 @@ const api = {
     path: thisFile + '/userGet',
     method: 'get'
   },
-  userAdd: { // 学员添加结业鉴定个人小结
+  userAdd: { // 学员修改结业鉴定个人小结
     path: thisFile + '/userAdd/', // {appraisalId}
+    method: 'post'
+  },
+  userSubmit: { // 添加
+    path: thisFile + '/userSubmit/', //
     method: 'post'
   },
 };

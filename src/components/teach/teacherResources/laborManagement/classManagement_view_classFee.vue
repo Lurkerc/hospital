@@ -84,6 +84,7 @@
   </div>
 </template>
 <script>
+  import api from './api';
   //当前组件引入全局的util
   let Util=null;
   export default {
@@ -99,7 +100,7 @@
           paramsData:'listUrl',
           ajaxSuccess:'SuccessGetCurrData',
           ajaxParams:{
-            url:'/role/get/'+this.operailityData.id,
+            url:api.get.method+this.operailityData.id,
           }
         }
       }
