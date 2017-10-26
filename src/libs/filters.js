@@ -158,6 +158,10 @@ const getVueObj = function (vue) {
       // 缴费方式
       'CASH':'现金',
       'TRANSFER': '转账',
+
+      // 出入账
+      'OUT':'出账',
+      'ENTER':'入账',
     },
     /* 特殊描述文本（与公共部分冲突的可以作为特殊处理） */
     unit: { // 单位

@@ -242,7 +242,7 @@
                 tempArr.push({
                   isParent:true,
                   key: item.key,
-                    label: '<i dep="dep" class="ivu-icon ivu-icon-android-folder ambuf-tree-icon" style="margin-left:0;font-size:16px;"></i>' + item.label,
+                  label: '<i dep="dep" class="ivu-icon ivu-icon-android-folder ambuf-tree-icon" style="margin-left:0;font-size:16px;"></i>' + item.label,
                   specialty: item.specialty,
                   codeNumber:item.codeNumber,
                   description: '内容---' + item.key + '的描述信息',
@@ -271,7 +271,8 @@
                 specialty: item.specialty,
                 codeNumber:item.codeNumber,
                 description: '人员id---' + item.id + '的描述信息',
-                disabled: false
+                disabled: false,
+                data: item
               })
             }
             if (this.rightSltedData.length > 0) {

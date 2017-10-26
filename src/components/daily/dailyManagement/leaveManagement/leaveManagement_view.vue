@@ -79,7 +79,7 @@
         label="审核状态"
       >
         <template scope="scope">
-          {{ scope.row.status | workFlower}}
+          {{ scope.row.status }}
         </template>
       </el-table-column>
     </el-table>

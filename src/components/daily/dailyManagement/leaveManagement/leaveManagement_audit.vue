@@ -85,7 +85,7 @@
           label="审核状态"
         >
           <template scope="scope">
-            {{ scope.row.spState | typeText}}
+            {{ scope.row.spState }}
           </template>
         </el-table-column>
       </el-table>
@@ -95,9 +95,7 @@
           <el-col :span="18" :offset="2">
             <el-form-item label="审核结果" prop="status">
               <el-radio-group  v-model="formValidate.status"  >
-                <el-radio label="TG">通过</el-radio>
-                <el-radio label="BTG">不通过</el-radio>
-                <el-radio label="BH">驳回修改</el-radio>
+                <el-radio v-for="(item,index) in data.hisProcess.commentTypes" :key="index" :label="item"></el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col >
@@ -140,7 +138,7 @@
         }],
         formValidate:{
           id:this.operailityData.id,
-          status:'TG',
+          status:'',
           content:'',
         },
         data:
@@ -243,10 +241,11 @@
        * @param res JSON  数据请求成功后返回的数据
        * */
       SuccessGetCurrData(responseData){
+        let data = responseData.data;
+       this.formValidate.status =  data.hisProcess.commentTypes[0]
+        this.data = data;
 
-        this.data =responseData.data;
-
-        this.auditMessTitle.ajaxParams.url+=responseData.data.hisProcess.taskId
+        this.auditMessTitle.ajaxParams.url+=data.hisProcess.taskId
       },
 
 
