@@ -56,8 +56,17 @@ const systemSettingsRouters = {
           resolve(require('../../components/base/systemSettings/rotaryBasisSet/rotaryBasisSet_list.vue'));
         }, 'systemSetting');
       }
+    },
+    {
+      //短信模版设置
+      path:'noteTemplate',
+      name:'noteTemplate',
+      component:resolve=> {
+        require.ensure([], () => {
+          resolve(require('../../components/base/systemSettings/noteTemplate/noteTemplate_list.vue'));
+        }, 'systemSetting');
+      }
     }
-
   ]
 }
 
