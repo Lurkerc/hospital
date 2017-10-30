@@ -33,7 +33,7 @@
         <td>
           <p class="cell">{{ userInfo.age }}</p>
         </td>
-        <td colspan="2" rowspan="4">
+        <td colspan="2" rowspan="5">
           <div class="pic">
             <img width="150px" v-if="userInfo.photo" :src="getPicUrl(userInfo.photo)">
           </div>
@@ -117,7 +117,7 @@
         <td>
           <div class="cell">是否住宿</div>
         </td>
-        <td colspan="3">
+        <td>
           <p class="cell">{{ userInfo.whehterAccommodation | typeText }}</p>
         </td>
       </tr>
@@ -183,7 +183,7 @@
       </tr>
 
       <tr>
-        <td rowspan="5">
+        <td rowspan="4">
           <div class="cell">主学历</div>
         </td>
         <td colspan="2">
@@ -210,7 +210,7 @@
       </tr>
 
       <tr>
-        <td rowspan="5">
+        <td rowspan="4">
           <div class="cell">主要经历</div>
         </td>
         <td colspan="2">
@@ -338,13 +338,13 @@
           {"beiginEndTime":"","type":"SCHOOL","name":"","note":""},
           {"beiginEndTime":"","type":"SCHOOL","name":"","note":""},
           {"beiginEndTime":"","type":"SCHOOL","name":"","note":""},
-          {"beiginEndTime":"","type":"SCHOOL","name":"","note":""},
+//          {"beiginEndTime":"","type":"SCHOOL","name":"","note":""},
         ],
         workList:[
           {"beiginEndTime":"","type":"WORK","name":"","title":""},
           {"beiginEndTime":"","type":"WORK","name":"","title":""},
           {"beiginEndTime":"","type":"WORK","name":"","title":""},
-          {"beiginEndTime":"","type":"WORK","name":"","title":""},
+//          {"beiginEndTime":"","type":"WORK","name":"","title":""},
         ],
         userInfo: {
           "userName": "", // "姓名",
@@ -447,6 +447,9 @@
           for (let j in work){
             this.workList[j]=work[j]
           }
+
+          this.workList.length = 3;
+          this.schoolList.length = 3;
 
           this.files = (res.data.fileInfo || '').split('/').pop();
         }

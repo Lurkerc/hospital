@@ -54,7 +54,7 @@
         <tr>
           <td colspan="2"><p class="cell">职称、执（职）业资格</p></td>
           <td colspan="2"><p class="cell">{{ userInfo.professionalQualification }}</p></td>
-          <td><p class="cell">毕业时间</p></td>
+          <td><p class="cell">取得时间</p></td>
           <td><p class="cell">{{ userInfo.qualificationTime }}</p></td>
         </tr>
 
@@ -69,7 +69,7 @@
           <td><p class="cell">户籍所在地</p></td>
           <td colspan="2"><p class="cell">{{ userInfo.placeOrigin }}</p></td>
           <td><p class="cell">婚姻状况</p></td>
-          <td><p class="cell">{{ userInfo.whetherMarry }}</p></td>
+          <td><p class="cell">{{ userInfo.whetherMarry | marry }}</p></td>
           <td><p class="cell">档案保管单位</p></td>
           <td colspan="2"><p class="cell">{{ userInfo.archivesKeepunit }}</p></td>
         </tr>
@@ -220,7 +220,7 @@
         this.getViewData()
       },
       getViewData() {
-        let id = this.operailityData.subjectsId;
+        let id = this.operailityData.id;
         let type = 'sq';
         if (this.operailityData.userId && this.operailityData.userId != 'null') {
           id = this.operailityData.userId;

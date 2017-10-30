@@ -1,6 +1,6 @@
 import {formatDate, parseDate} from './date';
 
-import  allUserRolu from '../config/userRolu';
+import allUserRolu from '../config/userRolu';
 
 const getVueObj = function (vue) {
   const typeNames = { // 声明全局类型描述文本
@@ -103,65 +103,65 @@ const getVueObj = function (vue) {
       "JUDGMENT": "判断题",
       "ANSWER": "问答题",
       //教学计划
-      'RELEASE':'发布',
-      'NO_RELEASE':'未发布',
+      'RELEASE': '发布',
+      'NO_RELEASE': '未发布',
 
       // 学位类型
-      "MAJOR":"学术学位",
-      "LEARNING":"专业学位",
+      "MAJOR": "学术学位",
+      "LEARNING": "专业学位",
 
       // 研究生 状态
-      "UNORGANIZED":"未组织",
-      "ORGANIZE":"已组织",
+      "UNORGANIZED": "未组织",
+      "ORGANIZE": "已组织",
       //通知类型
-      'OPENTOPIC':'开题通知',
-      'REPORT':'开题报告通知',
-      'MIDSEMESTER':'中期考核通知',
-      'DEFENSE':'答辩通知',
+      'OPENTOPIC': '开题通知',
+      'REPORT': '开题报告通知',
+      'MIDSEMESTER': '中期考核通知',
+      'DEFENSE': '答辩通知',
       //培养计划
-      'NOTPASS':"驳回",
-      'ADOPT':"通过",
-      'AUDIT':"待审核",
+      'NOTPASS': "驳回",
+      'ADOPT': "通过",
+      'AUDIT': "待审核",
 
       //开题
-      'WSB':'未上报',
-      'DSDSH':'导师审核中',
-      'DSBH':'导师审核驳回',
-      'JYSDSH':'教研室审核中',
-      'JYSBH':'教研室审核驳回',
-      'JYCDSH':'教育处审核中',
-      'JYCBH':'教育处审核驳回',
-      'TG':'通过',
+      'WSB': '未上报',
+      'DSDSH': '导师审核中',
+      'DSBH': '导师审核驳回',
+      'JYSDSH': '教研室审核中',
+      'JYSBH': '教研室审核驳回',
+      'JYCDSH': '教育处审核中',
+      'JYCBH': '教育处审核驳回',
+      'TG': '通过',
 
-      'DSB':'未上报',
-      'DSTG':'教研室审核中',
-      'JYSTG':'教育处审核中',
+      'DSB': '未上报',
+      'DSTG': '教研室审核中',
+      'JYSTG': '教育处审核中',
 
-      'MODIFY_END':'更改开题作废',
-      'AGAIN_END':'再次开题作废',
+      'MODIFY_END': '更改开题作废',
+      'AGAIN_END': '再次开题作废',
       //拟录取
-      'QUASIADMISSION':'拟录取',
-      'NONADMISSION':'不拟录取',
-      'GIVEUP':'放弃',
+      'QUASIADMISSION': '拟录取',
+      'NONADMISSION': '不拟录取',
+      'GIVEUP': '放弃',
       //录取
-      'ENROLL':'录取',
-      'NOENROLL':'不录取',
+      'ENROLL': '录取',
+      'NOENROLL': '不录取',
       //研究生答辩管理
       //'WSB':'未上报',   --已有
-      'DSH':'待审核',
+      'DSH': '待审核',
       //'TG':'通过',      --已有
-      'BH':'未通过',
+      'BH': '未通过',
 
       //大病历
-      'DRAFT':'草稿',
+      'DRAFT': '草稿',
 
       // 缴费方式
-      'CASH':'现金',
+      'CASH': '现金',
       'TRANSFER': '转账',
 
       // 出入账
-      'OUT':'出账',
-      'ENTER':'入账',
+      'OUT': '出账',
+      'ENTER': '入账',
     },
     /* 特殊描述文本（与公共部分冲突的可以作为特殊处理） */
     unit: { // 单位
@@ -171,55 +171,55 @@ const getVueObj = function (vue) {
     },
 
     //审批流
-    workFlower:{
-      'SB':'上报',
-      'TG':'通过',
-      'BH':'驳回',
-      'BTG':'不通过',
+    workFlower: {
+      'SB': '上报',
+      'TG': '通过',
+      'BH': '驳回',
+      'BTG': '不通过',
     },
 
     //导师审核
-    tutor:{
-      DSDSH:'待审核',
-      DSBH:' 不通过',
-      JYSDSH:'通过',
-      'MODIFY_END':'更改开题作废',
-      'AGAIN_END':'再次开题作废',
-      'DSH':'待审核',
-      'DSTG':'通过',
+    tutor: {
+      DSDSH: '待审核',
+      DSBH: ' 不通过',
+      JYSDSH: '通过',
+      'MODIFY_END': '更改开题作废',
+      'AGAIN_END': '再次开题作废',
+      'DSH': '待审核',
+      'DSTG': '通过',
     },
 
     //教研室审核
-    staffRoom:{
-      DSTG:'待审核',
-      JYSDSH:'待审核',
-      JYSBH:'不通过',
-      JYCDSH:'通过',
-      'MODIFY_END':'更改开题作废',
-      'AGAIN_END':'再次开题作废',
-      'JYSTG':'通过',
+    staffRoom: {
+      DSTG: '待审核',
+      JYSDSH: '待审核',
+      JYSBH: '不通过',
+      JYCDSH: '通过',
+      'MODIFY_END': '更改开题作废',
+      'AGAIN_END': '再次开题作废',
+      'JYSTG': '通过',
     },
     //教育处审核
-    education:{
-      JYCDSH:'待审核',
-      JYSTG:'待审核',
-      TG:'通过',
-      'MODIFY_END':'更改开题作废',
-      'AGAIN_END':'再次开题作废',
-      'JYCBH':'不通过',
+    education: {
+      JYCDSH: '待审核',
+      JYSTG: '待审核',
+      TG: '通过',
+      'MODIFY_END': '更改开题作废',
+      'AGAIN_END': '再次开题作废',
+      'JYCBH': '不通过',
     },
 
     //毕业
-    graduate:{
-      'DSB':'未上报',
+    graduate: {
+      'DSB': '未上报',
 
 
     },
     //开题状态
-    applicantType:{
-    'ORDINARY':'普通申请',
-    'CHANGE':'更改申请',
-    'AGAIN':'再次开题申请',
+    applicantType: {
+      'ORDINARY': '普通申请',
+      'CHANGE': '更改申请',
+      'AGAIN': '再次开题申请',
     },
     auditStatus: {
       NOT_SUBMIT: '草稿',
@@ -264,8 +264,8 @@ const getVueObj = function (vue) {
     print: { // 打印
       "0": '未打印',
       "1": '已打印',
-      "3":"住宿费未打印",
-      "4":"实习费未打印",
+      "3": "住宿费未打印",
+      "4": "实习费未打印",
     },
     isPay: { // 缴费
       "0": "未缴费",
@@ -329,33 +329,33 @@ const getVueObj = function (vue) {
       "NO": "离线",
     },
     //手术操作-术中职务
-    opDuty:{
-      "PERFORMER":"术者",
-      "AHELP":"一助",
-      "BHELP":"二助",
+    opDuty: {
+      "PERFORMER": "术者",
+      "AHELP": "一助",
+      "BHELP": "二助",
     },
-    loopType:{
-      1:'学生评价老师',
-      2:'学生评价科室',
-      3:'老师评价学生',
+    loopType: {
+      1: '学生评价老师',
+      2: '学生评价科室',
+      3: '老师评价学生',
     },
     // 劳务费人员类型
-    laborUserType:{
+    laborUserType: {
       0: '院内人员',
       1: '院内人员',
     },
     // 劳务费支付状态
-    laborPayStatus:{
-      0:'未支付',
-      1:'已支付',
+    laborPayStatus: {
+      0: '未支付',
+      1: '已支付',
     },
     // 补轮转状态
-    makeUpRotateState:{
-      "NO_SUBMIT":"待安排补轮转",
-      "SUBMIT":"已安排补轮转",
+    makeUpRotateState: {
+      "NO_SUBMIT": "待安排补轮转",
+      "SUBMIT": "已安排补轮转",
     },
     // 进修生（外出进修状态）
-    outEducationAntragWriteStatus:{
+    outEducationAntragWriteStatus: {
       0: '草稿',
       1: '已上报',
       2: '驳回',
@@ -373,116 +373,121 @@ const getVueObj = function (vue) {
       4: '差',
     },
     //进修过程记录
-    monthlyReview:{
-      'NO_SUBMIT':'未上报',
-      'SUBMIT':'上报待审核',
-      'PASS':'完成',
+    monthlyReview: {
+      'NO_SUBMIT': '未上报',
+      'SUBMIT': '上报待审核',
+      'PASS': '完成',
     },
     //安排面试
-    interview:{
+    interview: {
       "NOINTERVIEW": "未安排",
       "PUBLISH": "已安排",
-      "LEARNING":"专业学位",
-      "MAJOR":"学术学位" ,
-      'CONFIRM':'导师已确认',
-      'INTERVIEW':'已安排面试',
-      'JYCCONFIRM':'教育处已确认',
-      'KSCCONFIRM':'科室已确认',
+      "LEARNING": "专业学位",
+      "MAJOR": "学术学位",
+      'CONFIRM': '导师已确认',
+      'INTERVIEW': '已安排面试',
+      'JYCCONFIRM': '教育处已确认',
+      'KSCCONFIRM': '科室已确认',
     },
 
     //确认招生
-    dsInterview:{
+    dsInterview: {
       "NOINTERVIEW": "未安排",
-      'INTERVIEW':'导师未确认',
-      'CONFIRM':'科室未确认',//(老师确认)
-      'KSCCONFIRM':'教育未确认',//(科室确认)
-      'JYCCONFIRM':'教育处已确认'
+      'INTERVIEW': '导师未确认',
+      'CONFIRM': '科室未确认',//(老师确认)
+      'KSCCONFIRM': '教育未确认',//(科室确认)
+      'JYCCONFIRM': '教育处已确认'
     },
     //培养计划
-    plane:{
-      'AUDIT':'待审核',
-      'JYCADOPT':'教育处通过' ,
-      'JYCTPASS':'教育处未通过',
-      'KSZRADOPT':'科室主任通过',
-      'KSZRTPASS':'科室主任未通过',
-      'DSADOPT':'导师通过',
-      'DSTPASS':'导师未通过',
+    plane: {
+      'AUDIT': '待审核',
+      'JYCADOPT': '教育处通过',
+      'JYCTPASS': '教育处未通过',
+      'KSZRADOPT': '科室主任通过',
+      'KSZRTPASS': '科室主任未通过',
+      'DSADOPT': '导师通过',
+      'DSTPASS': '导师未通过',
     },
     //培养计划
-    dsPlanAudit:{
-      'AUDIT':'待审核',
-      'DSADOPT':'通过',
-      'DSTPASS':'不通过',
+    dsPlanAudit: {
+      'AUDIT': '待审核',
+      'DSADOPT': '通过',
+      'DSTPASS': '不通过',
     },
-    ksPlanAudit:{
-      'KSZRADOPT':'通过',
-      'KSZRTPASS':'不通过',
-      'DSADOPT':'待审核',
+    ksPlanAudit: {
+      'KSZRADOPT': '通过',
+      'KSZRTPASS': '不通过',
+      'DSADOPT': '待审核',
     },
-    jycPlanAudit:{
-      'JYCADOPT':'通过' ,
-      'JYCTPASS':'不通过',
-      'KSZRADOPT':'待审核',
+    jycPlanAudit: {
+      'JYCADOPT': '通过',
+      'JYCTPASS': '不通过',
+      'KSZRADOPT': '待审核',
     },
     //答辩结果记录
-    dsresultRecord:{
-      '0':'未答辩',
-      '1':'教研室未确认',
-      '2':'不通过',
-      '3':'教育处未确认',
-      '4':'教育处确认',
+    dsresultRecord: {
+      '0': '未答辩',
+      '1': '教研室未确认',
+      '2': '不通过',
+      '3': '教育处未确认',
+      '4': '教育处确认',
     },
-    ksresultRecord:{
-      '1':'未确认',
-      '3':'未确认',
-      '4':'教育处确认',
+    ksresultRecord: {
+      '1': '未确认',
+      '3': '未确认',
+      '4': '教育处确认',
 
     },
     // 是否结束
-    isEnd:{
-      0:'未结束',
-      1:'已结束',
+    isEnd: {
+      0: '未结束',
+      1: '已结束',
     },
     //报名招录
-    recruit:{
-      'HALF_YEAR':'半年',
-      'A_YEAR':'一年',
-      'SUBMIT':'待审核',
-      'PASS':'已通过',
+    recruit: {
+      'HALF_YEAR': '半年',
+      'A_YEAR': '一年',
+      'SUBMIT': '待审核',
+      'PASS': '已通过',
       'STOP': '结束进修',
-      'N':'未缴费',
-      'Y':'已缴费'
+      'N': '未缴费',
+      'Y': '已缴费'
     },
-    instudyConfirmation:{
-      'Y':'通过',
-      'N':'未通过',
-      'S':'待审核',
+    instudyConfirmation: {
+      'Y': '通过',
+      'N': '未通过',
+      'S': '待审核',
     },
-    wehterSelection:{
-      0:"未遴选",
-      1:"已遴选",
+    wehterSelection: {
+      0: "未遴选",
+      1: "已遴选",
     },
     // 学位
-    degree:{
-      MAJOR:"学术学位",
-      LEARNING:"专业学位",
+    degree: {
+      MAJOR: "学术学位",
+      LEARNING: "专业学位",
     },
     // 住院医网上预审状态
-    yjsYsState:{
-      SUBMIT:"待审核",
-      NO_PASS:"未通过",
-      PASS:"通过",
+    yjsYsState: {
+      SUBMIT: "待审核",
+      NO_PASS: "未通过",
+      PASS: "通过",
     },
     // 住院医考试通知状态
-    zskstzState:{
-      Y:"已通知",
-      N:"未通知",
+    zskstzState: {
+      Y: "已通知",
+      N: "未通知",
     },
     // 住院医录取状态
-    lqexamMarkState:{
-      SUBMIT:"待录取",
-      NO_PASS:"未录取",
-      PASS:"已录取",
+    lqexamMarkState: {
+      SUBMIT: "待录取",
+      NO_PASS: "未录取",
+      PASS: "已录取",
+    },
+    // 是否结婚
+    marry: {
+      Y: "已婚",
+      N: "未婚",
     },
   };
   let dictionary = {}; // 动态字典
@@ -559,9 +564,9 @@ const getVueObj = function (vue) {
           init = parseInt(value / 60);
           temp = (value % 60);
           return init + '分' + temp + '秒';
-        } else  {
-          init = parseInt(value/(60*60));
-          temp =  parseInt((value %(60*60))/60);
+        } else {
+          init = parseInt(value / (60 * 60));
+          temp = parseInt((value % (60 * 60)) / 60);
           //float = (value % (1024*1024))/1024;
           return init + '时' + temp + '分';
         }
@@ -570,8 +575,8 @@ const getVueObj = function (vue) {
     },
     {
       name: 'formatTime',
-      call(value,str) {
-        return getDateDiff(value,str);
+      call(value, str) {
+        return getDateDiff(value, str);
       },
     },
     { // 时间格式化
@@ -587,7 +592,7 @@ const getVueObj = function (vue) {
     },
     { // 用户角色字典
       name: "userRoluName",
-      call(value){
+      call(value) {
         return allUserRolu[value] && allUserRolu[value].name || value
       }
     },
@@ -601,16 +606,16 @@ const getVueObj = function (vue) {
        * @returns {*}
        * 使用示例： dictionary(this,'ROTARY_ZYY_TYPE') =>住院医人员属性
        */
-      call(value,v,getByCode){
-        if(!dictionary[getByCode]){
+      call(value, v, getByCode) {
+        if (!dictionary[getByCode]) {
           let opt = {
-            ajaxSuccess: res=>{
+            ajaxSuccess: res => {
               let t = {};
-              res.data.child.map(item=>t[item.code]=item.name)
+              res.data.child.map(item => t[item.code] = item.name)
               dictionary[getByCode] = t; // 缓存，相同字典码不再重复请求
             },
-            ajaxParams:{
-              url:"dictionary/getByCode/" + getByCode
+            ajaxParams: {
+              url: "dictionary/getByCode/" + getByCode
             }
           }
           v.ajax(opt)
@@ -620,7 +625,7 @@ const getVueObj = function (vue) {
     }
   ];
 
-  function getDateDiff(dateTimeStamp,str) {
+  function getDateDiff(dateTimeStamp, str) {
     let minute = 1000 * 60;
     let hour = minute * 60;
     let day = hour * 24;

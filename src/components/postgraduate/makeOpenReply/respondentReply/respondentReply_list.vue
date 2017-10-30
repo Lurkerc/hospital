@@ -373,10 +373,7 @@ export default{
     //通过get请求列表数据
     updateListData(responseData){
       let data = responseData.data;
-      if(!data.submit){
-        this.errorMess('未到答辩时间');
-        return;
-      }
+
       if(data){
         if(!data.id){
           this.isWrite = true;

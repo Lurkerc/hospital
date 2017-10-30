@@ -352,7 +352,7 @@
       },
       // 允许选择的行
       canSelect(row) {
-        return row.lqexamMarkState == 'PASS'
+        return row.lqexamMarkState != 'NO_PASS'
       },
       /********************************* 弹窗相关 *****************************/
       // 取消
